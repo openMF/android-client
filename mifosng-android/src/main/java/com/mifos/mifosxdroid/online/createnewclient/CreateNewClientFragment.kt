@@ -276,6 +276,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         // default values
         clientPayload.isActive = cbClientActiveStatus!!.isChecked
         clientPayload.activationDate = submissionDateString
+        clientPayload.submittedOnDate = submissionDateString
         clientPayload.dateOfBirth = dateOfBirthString
 
         //Optional Fields
@@ -311,11 +312,11 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
                 val fragment = DataTableListFragment.newInstance(
                         clientsTemplate!!.dataTables,
                         clientPayload, Constants.CREATE_CLIENT)
-                val fragmentTransaction = activity!!.supportFragmentManager
+                val fragmentTransaction = (activity as MifosBaseActivity?)!!.supportFragmentManager
                         .beginTransaction()
-                activity!!.supportFragmentManager.popBackStackImmediate()
+                (activity as MifosBaseActivity?)!!.supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST)
-                fragmentTransaction.replace(R.id.container, fragment).commit()
+                fragmentTransaction.replace(R.id.container_a, fragment).commit()
             } else {
                 clientPayload.datatables = null
                 createNewClientPresenter!!.createClient(clientPayload)

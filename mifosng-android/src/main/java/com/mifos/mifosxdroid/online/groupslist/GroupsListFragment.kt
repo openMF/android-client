@@ -173,11 +173,11 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
         sweetUIErrorHandler = SweetUIErrorHandler(activity, rootView)
     }
 
-    @OnClick(R.id.fab_create_group)
-    fun onClickCreateNewGroup() {
-        (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewGroupFragment.newInstance(),
-                true, R.id.container_a)
-    }
+//    @OnClick(R.id.fab_create_group)
+//    fun onClickCreateNewGroup() {
+//        (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewGroupFragment.newInstance(),
+//                true, R.id.container_a)
+//    }
 
     /**
      * This Method will be called. Whenever user will swipe down to refresh the group list.

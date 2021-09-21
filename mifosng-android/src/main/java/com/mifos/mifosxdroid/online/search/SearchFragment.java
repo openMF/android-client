@@ -73,8 +73,8 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
     @BindView(R.id.cb_exact_match)
     CheckBox cb_exactMatch;
 
-    @BindView(R.id.fab_create)
-    FloatingActionButton fabCreate;
+//    @BindView(R.id.fab_create)
+//    FloatingActionButton fabCreate;
 
     @BindView(R.id.fab_client)
     FloatingActionButton fabClient;
@@ -215,29 +215,29 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         }
     }
 
-    @OnClick(R.id.fab_create)
-    void onClickCreate() {
-        if (isFabOpen) {
-            fabCreate.startAnimation(rotate_backward);
-            fabClient.startAnimation(fab_close);
-            fabCenter.startAnimation(fab_close);
-            fabGroup.startAnimation(fab_close);
-            fabClient.setClickable(false);
-            fabCenter.setClickable(false);
-            fabGroup.setClickable(false);
-            isFabOpen = false;
-        } else {
-            fabCreate.startAnimation(rotate_forward);
-            fabClient.startAnimation(fab_open);
-            fabCenter.startAnimation(fab_open);
-            fabGroup.startAnimation(fab_open);
-            fabClient.setClickable(true);
-            fabCenter.setClickable(true);
-            fabGroup.setClickable(true);
-            isFabOpen = true;
-        }
-        autoTriggerSearch = false;
-    }
+//    @OnClick(R.id.fab_create)
+//    void onClickCreate() {
+//        if (isFabOpen) {
+//            fabCreate.startAnimation(rotate_backward);
+//            fabClient.startAnimation(fab_close);
+//            fabCenter.startAnimation(fab_close);
+//            fabGroup.startAnimation(fab_close);
+//            fabClient.setClickable(false);
+//            fabCenter.setClickable(false);
+//            fabGroup.setClickable(false);
+//            isFabOpen = false;
+//        } else {
+//            fabCreate.startAnimation(rotate_forward);
+//            fabClient.startAnimation(fab_open);
+//            fabCenter.startAnimation(fab_open);
+//            fabGroup.startAnimation(fab_open);
+//            fabClient.setClickable(true);
+//            fabCenter.setClickable(true);
+//            fabGroup.setClickable(true);
+//            isFabOpen = true;
+//        }
+//        autoTriggerSearch = false;
+//    }
 
     @Override
     public void showSearchedResources(List<SearchedEntity> searchedEntities) {

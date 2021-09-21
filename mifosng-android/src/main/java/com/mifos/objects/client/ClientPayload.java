@@ -96,7 +96,7 @@ public class ClientPayload extends MifosBaseModel implements Parcelable {
 
     @SerializedName("dateFormat")
     @Column
-    String dateFormat = "dd MMMM YYYY";
+    String dateFormat = "dd MMMM yyyy";
 
     @SerializedName("locale")
     @Column

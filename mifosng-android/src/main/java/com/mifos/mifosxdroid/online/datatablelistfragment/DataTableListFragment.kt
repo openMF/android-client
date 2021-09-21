@@ -24,16 +24,14 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.formwidgets.*
 import com.mifos.mifosxdroid.online.ClientActivity
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment
+import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.objects.client.Client
 import com.mifos.objects.client.ClientPayload
 import com.mifos.objects.noncore.DataTable
 import com.mifos.objects.noncore.DataTablePayload
 import com.mifos.services.data.GroupLoanPayload
 import com.mifos.services.data.LoansPayload
-import com.mifos.utils.Constants
-import com.mifos.utils.MifosResponseHandler
-import com.mifos.utils.PrefManager
-import com.mifos.utils.SafeUIBlockingUtility
+import com.mifos.utils.*
 import java.util.*
 import javax.inject.Inject
 
@@ -133,7 +131,7 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
                 } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_DATE) {
                     val formEditText = FormEditText(activity, columnHeader
                             .columnName)
-                    formEditText.setIsDateField(true, activity!!.supportFragmentManager)
+                    formEditText.setIsDateField(true, requireActivity().supportFragmentManager)
                     formWidgets.add(formEditText)
                     linearLayout!!.addView(formEditText.view)
                 } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_BOOL) {
@@ -188,7 +186,7 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
     fun addDataTableInput(index: Int): HashMap<String, Any> {
         val formWidgets = listFormWidgets[index]
         val payload = HashMap<String, Any>()
-        payload[Constants.DATE_FORMAT] = "dd-mm-YYYY"
+        payload[Constants.DATE_FORMAT] = "dd MMM yyyy"
         payload[Constants.LOCALE] = "en"
         for (formWidget in formWidgets) {
             if (formWidget.returnType == FormWidget.SCHEMA_KEY_INT) {
@@ -199,6 +197,12 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
             } else if (formWidget.returnType == FormWidget.SCHEMA_KEY_CODEVALUE) {
                 val formSpinner = formWidget as FormSpinner
                 payload[formWidget.getPropertyName()] = formSpinner.getIdOfSelectedItem(formWidget.getValue())
+            } else if(formWidget.propertyName == "Date of Birth"){
+                 var submissionDateString = formWidget.value
+                    submissionDateString = DateHelper
+                    .getDateAsStringUsedForCollectionSheetPayload(submissionDateString)
+                    .replace("-", " ")
+                payload[formWidget.propertyName] = submissionDateString
             } else {
                 payload[formWidget.propertyName] = formWidget.value
             }

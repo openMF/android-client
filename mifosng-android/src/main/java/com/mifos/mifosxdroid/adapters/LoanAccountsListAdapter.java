@@ -68,8 +68,13 @@ public class LoanAccountsListAdapter extends BaseAdapter {
 
         if (loanAccountList.get(i).getStatus().getActive()) {
 
-            reusableViewHolder.view_status_indicator.setBackgroundColor(
-                    ContextCompat.getColor(context, R.color.loan_status_disbursed));
+            if (loanAccountList.get(i).getInArrears()) {
+                reusableViewHolder.view_status_indicator.setBackgroundColor(
+                        ContextCompat.getColor(context, R.color.red));
+            } else {
+                reusableViewHolder.view_status_indicator.setBackgroundColor(
+                        ContextCompat.getColor(context, R.color.loan_status_disbursed));
+            }
 
         } else if (loanAccountList.get(i).getStatus().getWaitingForDisbursal()) {
 

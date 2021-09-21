@@ -84,13 +84,14 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.item_submit_sheet -> {
-                submitSheet()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
+//        when (item.itemId) {
+//            R.id.item_submit_sheet -> {
+//                submitSheet()
+//                return true
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+        return false
     }
 
     private fun showCollectionSheetViews(sheet: IndividualCollectionSheet?) {

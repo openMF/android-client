@@ -275,14 +275,14 @@ public class PinpointClientActivity extends MifosBaseActivity implements PinPoin
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.save_pin) {
-            if (CheckSelfPermissionAndRequest.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                showPlacePiker(REQUEST_ADD_PLACE_PICKER);
-            } else {
-                requestPermission(REQUEST_ADD_PLACE_PICKER);
-            }
-        }
+//        if (item.getItemId() == R.id.save_pin) {
+//            if (CheckSelfPermissionAndRequest.checkSelfPermission(this,
+//                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+//                showPlacePiker(REQUEST_ADD_PLACE_PICKER);
+//            } else {
+//                requestPermission(REQUEST_ADD_PLACE_PICKER);
+//            }
+//        }
         return super.onOptionsItemSelected(item);
     }
 

@@ -218,7 +218,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView{
                 val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
 
                 // Get the cursor
-                val cursor = activity!!.applicationContext.contentResolver.query(
+                val cursor = requireActivity().applicationContext.contentResolver.query(
                         selectedImage,
                         filePathColumn, null, null, null)
                 // Move to first row
@@ -262,11 +262,11 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView{
         menu.clear()
         if (isClientActive) {
             menu.add(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, getString(R.string.more_info))
-            menu.add(Menu.NONE, MENU_ITEM_PIN_POINT, Menu.NONE, getString(R.string.pinpoint))
+//            menu.add(Menu.NONE, MENU_ITEM_PIN_POINT, Menu.NONE, getString(R.string.pinpoint))
             menu.add(Menu.NONE, MENU_ITEM_CLIENT_CHARGES, Menu.NONE, getString(R.string.charges))
-            menu.add(Menu.NONE, MENU_ITEM_ADD_SAVINGS_ACCOUNT, Menu.NONE, getString(R.string.savings_account))
-            menu.add(Menu.NONE, MENU_ITEM_ADD_LOAN_ACCOUNT, Menu.NONE,
-                    getString(R.string.add_loan))
+//            menu.add(Menu.NONE, MENU_ITEM_ADD_SAVINGS_ACCOUNT, Menu.NONE, getString(R.string.savings_account))
+//            menu.add(Menu.NONE, MENU_ITEM_ADD_LOAN_ACCOUNT, Menu.NONE,
+//                    getString(R.string.add_loan))
             menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents))
             menu.add(Menu.NONE, MENU_ITEM_UPLOAD_SIGN, Menu.NONE, R.string.upload_sign)
             menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers))
@@ -282,14 +282,14 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView{
             MENU_ITEM_DOCUMENTS -> loadDocuments()
             MENU_ITEM_UPLOAD_SIGN -> loadSignUpload()
             MENU_ITEM_CLIENT_CHARGES -> loadClientCharges()
-            MENU_ITEM_ADD_SAVINGS_ACCOUNT -> addsavingsaccount()
-            MENU_ITEM_ADD_LOAN_ACCOUNT -> addloanaccount()
+//            MENU_ITEM_ADD_SAVINGS_ACCOUNT -> addsavingsaccount()
+//            MENU_ITEM_ADD_LOAN_ACCOUNT -> addloanaccount()
             MENU_ITEM_IDENTIFIERS -> loadIdentifiers()
-            MENU_ITEM_PIN_POINT -> {
-                val i = Intent(activity, PinpointClientActivity::class.java)
-                i.putExtra(Constants.CLIENT_ID, clientId)
-                startActivity(i)
-            }
+//            MENU_ITEM_PIN_POINT -> {
+//                val i = Intent(activity, PinpointClientActivity::class.java)
+//                i.putExtra(Constants.CLIENT_ID, clientId)
+//                startActivity(i)
+//            }
             MENU_ITEM_SURVEYS -> loadSurveys()
             MENU_ITEM_NOTE -> loadNotes()
         }
@@ -303,10 +303,10 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView{
     }
 
     private fun checkPermissions() {
-        if (ContextCompat.checkSelfPermission(activity!!,
+        if (ContextCompat.checkSelfPermission(requireActivity(),
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            ActivityCompat.requestPermissions(requireActivity()!!, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                     CHECK_PERMISSIONS)
         }
     }
@@ -476,7 +476,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView{
                 pb_imageProgressBar!!.visibility = View.GONE
             }
             iv_clientImage!!.setOnClickListener { view ->
-                val menu = PopupMenu(activity!!, view)
+                val menu = PopupMenu(requireActivity(), view)
                 menu.menuInflater.inflate(R.menu.client_image_popup, menu
                         .menu)
                 if (!client.isImagePresent) {
@@ -544,13 +544,13 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView{
         accountAccordion = AccountAccordion(activity)
         if (clientAccounts.loanAccounts.size > 0) {
             val section = AccountAccordion.Section.LOANS
-            val adapter = LoanAccountsListAdapter(activity!!.applicationContext,
+            val adapter = LoanAccountsListAdapter(requireActivity().applicationContext,
                     clientAccounts.loanAccounts)
             section.connect(activity, adapter, AdapterView.OnItemClickListener { adapterView, view, i, l -> mListener!!.loadLoanAccountSummary(adapter.getItem(i).id) })
         }
         if (clientAccounts.nonRecurringSavingsAccounts.size > 0) {
             val section = AccountAccordion.Section.SAVINGS
-            val adapter = SavingsAccountsListAdapter(activity!!.applicationContext,
+            val adapter = SavingsAccountsListAdapter(requireActivity()!!.applicationContext,
                     clientAccounts.nonRecurringSavingsAccounts)
             section.connect(activity, adapter, AdapterView.OnItemClickListener { adapterView, view, i, l ->
                 mListener!!.loadSavingsAccountSummary(adapter.getItem(i).id,

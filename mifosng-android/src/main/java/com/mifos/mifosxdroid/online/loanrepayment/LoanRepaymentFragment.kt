@@ -151,7 +151,7 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
 
     override fun onClick(dialog: DialogInterface, which: Int) {
         if (DialogInterface.BUTTON_POSITIVE == which) {
-            activity!!.supportFragmentManager.popBackStackImmediate()
+            requireActivity().supportFragmentManager.popBackStackImmediate()
         }
     }
 
@@ -229,7 +229,10 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
      * @return Total of the Amount + Additional Payment + Fee Amount
      */
     fun calculateTotal(): Double {
-        return et_amount!!.text.toString().toDouble() + et_additionalPayment!!.text.toString().toDouble() + et_fees!!.text.toString().toDouble()
+        var totalNew =
+            et_amount!!.text.toString().toDouble() + et_additionalPayment!!.text.toString()
+                .toDouble() + et_fees!!.text.toString().toDouble()
+        return String.format("%.3f", totalNew).toDouble()
     }
 
     /**
@@ -242,7 +245,7 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
             TODO Add Validation to make sure :
             1. Date Is in Correct Format
             2. Date Entered is not greater than Date Today i.e Date is not in future
-         */tv_repaymentDate!!.setOnClickListener { (mfDatePicker as MFDatePicker?)!!.show(activity!!.supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
+         */tv_repaymentDate!!.setOnClickListener { (mfDatePicker as MFDatePicker?)!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
     }
 
     /**

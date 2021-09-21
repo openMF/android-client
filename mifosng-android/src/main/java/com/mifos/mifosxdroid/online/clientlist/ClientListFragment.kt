@@ -180,11 +180,11 @@ class ClientListFragment : MifosBaseFragment(), RecyclerItemClickListener.OnItem
         sweetUIErrorHandler = SweetUIErrorHandler(activity, rootView)
     }
 
-    @OnClick(R.id.fab_create_client)
-    fun onClickCreateNewClient() {
-        (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewClientFragment.newInstance(),
-                true, R.id.container_a)
-    }
+//    @OnClick(R.id.fab_create_client)
+//    fun onClickCreateNewClient() {
+//        (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewClientFragment.newInstance(),
+//                true, R.id.container_a)
+//    }
 
     /**
      * This method will be called when user will swipe down to Refresh the ClientList then

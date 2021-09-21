@@ -11,6 +11,7 @@ import com.google.gson.Gson
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment
+import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryFragment
 import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentFragment
 import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleFragment

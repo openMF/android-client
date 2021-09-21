@@ -6,11 +6,14 @@ package com.mifos.mifosxdroid.online
 
 import android.os.Bundle
 import android.view.Menu
+import android.widget.Toast
 import com.mifos.api.model.IndividualCollectionSheetPayload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
+import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.online.collectionsheetindividual.IndividualCollectionSheetFragment
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment.OnPayloadSelectedListener
+import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetFragment
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryFragment
 import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentFragment

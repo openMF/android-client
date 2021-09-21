@@ -8,11 +8,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mifos.mifosxdroid.online.ClientActivity">
 
-    <item
-        android:id="@+id/save_pin"
-        android:enabled="true"
-        android:icon="@drawable/ic_path_tracker_white"
-        app:showAsAction="always"
-        android:title="TODO" />
+<!--    <item-->
+<!--        android:id="@+id/save_pin"-->
+<!--        android:enabled="true"-->
+<!--        android:icon="@drawable/ic_path_tracker_white"-->
+<!--        app:showAsAction="always"-->
+<!--        android:title="TODO" />-->
 
 </menu>

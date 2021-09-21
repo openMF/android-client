@@ -331,22 +331,27 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
             inflateLoanSummary(loanWithAssociations)
             // if Loan is already active
             // the Transaction Would be Make Repayment
-            view_status_indicator!!.setBackgroundColor(
-                    ContextCompat.getColor(activity!!, R.color.light_green))
+            if (loanWithAssociations.inArrears) {
+                view_status_indicator!!.setBackgroundColor(
+                    ContextCompat.getColor(requireActivity()!!, R.color.red))
+            } else {
+                view_status_indicator!!.setBackgroundColor(
+                    ContextCompat.getColor(requireActivity()!!, R.color.light_green))
+            }
             bt_processLoanTransaction!!.text = "Make Repayment"
             processLoanTransactionAction = TRANSACTION_REPAYMENT
         } else if (loanWithAssociations.status.pendingApproval) {
             // if Loan is Pending for Approval
             // the Action would be Approve Loan
             view_status_indicator!!.setBackgroundColor(
-                    ContextCompat.getColor(activity!!, R.color.light_yellow))
+                    ContextCompat.getColor(requireActivity()!!, R.color.light_yellow))
             bt_processLoanTransaction!!.text = "Approve Loan"
             processLoanTransactionAction = ACTION_APPROVE_LOAN
         } else if (loanWithAssociations.status.waitingForDisbursal) {
             // if Loan is Waiting for Disbursal
             // the Action would be Disburse Loan
             view_status_indicator!!.setBackgroundColor(
-                    ContextCompat.getColor(activity!!, R.color.blue))
+                    ContextCompat.getColor(requireActivity()!!, R.color.blue))
             bt_processLoanTransaction!!.text = "Disburse Loan"
             processLoanTransactionAction = ACTION_DISBURSE_LOAN
         } else if (loanWithAssociations.status.closedObligationsMet) {
@@ -354,13 +359,13 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
             // if Loan is Closed after the obligations are met
             // the make payment will be disabled so that no more payment can be collected
             view_status_indicator!!.setBackgroundColor(
-                    ContextCompat.getColor(activity!!, R.color.black))
+                    ContextCompat.getColor(requireActivity(), R.color.black))
             bt_processLoanTransaction!!.isEnabled = false
             bt_processLoanTransaction!!.text = "Make Repayment"
         } else {
             inflateLoanSummary(loanWithAssociations)
             view_status_indicator!!.setBackgroundColor(
-                    ContextCompat.getColor(activity!!, R.color.black))
+                    ContextCompat.getColor(requireActivity()!!, R.color.black))
             bt_processLoanTransaction!!.isEnabled = false
             bt_processLoanTransaction!!.text = "Loan Closed"
         }

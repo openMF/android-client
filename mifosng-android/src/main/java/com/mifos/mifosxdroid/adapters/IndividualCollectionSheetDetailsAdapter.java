@@ -90,13 +90,13 @@ public class IndividualCollectionSheetDetailsAdapter extends
 
             if (loanCollectionSheetItem.getChargesDue() != null) {
                 holder.etCharges.setText(
-                        String.format(Locale.getDefault(), "%f",
+                        String.format(Locale.getDefault(), "%.2f",
                                 loanCollectionSheetItem.getChargesDue()));
             }
 
             if (loanCollectionSheetItem.getTotalDue() != null) {
                 holder.etTotalDues.setText(
-                        String.format(Locale.getDefault(), "%f",
+                        String.format(Locale.getDefault(), "%.2f",
                                 loanCollectionSheetItem.getTotalDue()));
             }
 

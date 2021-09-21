@@ -141,11 +141,11 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, RecyclerItemC
         sweetUIErrorHandler = SweetUIErrorHandler(activity, rootView)
     }
 
-    @OnClick(R.id.fab_create_center)
-    fun onClickCreateNewCenter() {
-        (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewCenterFragment.newInstance(),
-                true, R.id.container_a)
-    }
+//    @OnClick(R.id.fab_create_center)
+//    fun onClickCreateNewCenter() {
+//        (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewCenterFragment.newInstance(),
+//                true, R.id.container_a)
+//    }
 
     /**
      * This Method will be called, whenever user will pull down to RefreshLayout.
