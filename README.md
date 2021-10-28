@@ -2,7 +2,7 @@
 
 # Android Client for MifosX
 
-This is an Android Application built on top of the [MifosX](https://mifosforge.jira.com/wiki/spaces/MIFOSX/overview) platform and written in Java and Kotlin. It is based on Mifos X - a robust core banking platform that is developed for field officers using which they process transactions, keep track of their client’s data, center records, group details, different types of accounts (loan, savings and recurring) of the client, run reports of clients, etc. Its sole purpose is to make field operations easier and effortless. This application also provides an offline feature that allows officers to connect with clients and provide them financial support in remote areas as well.
+This is an Android Application built on top of the [MifosX](https://mifosforge.jira.com/wiki/spaces/MIFOSX/overview) platform and written in Java and Kotlin. It is based on Mifos X - a robust core banking platform that is developed for field officers using which they process transactions, keep track of their client’s data, center records, group details, different types of accounts (loan, savings, and recurring) of the client, run reports of clients, etc. Its sole purpose is to make field operations easier and effortless. This application also provides an offline feature that allows officers to connect with clients and provide them financial support in remote areas as well.
 
 ### Status
 
@@ -17,8 +17,8 @@ Some **features** that are available in the app are:
 - Creating new Clients, Groups, and Centers
 - Savings Accounts and Loan Accounts Viewing
 - Savings Account Transactions (Withdrawal & Deposit)
-- Loan Accounts (Approval, Disbursal, Repayments etc.)
-- Identifiers and Documents (Creation, Upload, Download and View)
+- Loan Accounts (Approval, Disbursal, Repayments, etc.)
+- Identifiers and Documents (Creation, Upload, Download, and View)
 - Collection Sheet Access (Online), Datatables (View, Add/Remove Entries).
 - Offline Sync (for Clients, Centers, and Groups) and Offline Dashboard.
 - Cheker Inbox
@@ -33,7 +33,7 @@ Some **features** that are available in the app are:
 
 ## How to Contribute
 
-This is an OpenSource project and we like to see new contributors contibuting to the project. The issues should be raised via the GitHub issue tracker.
+This is an OpenSource project and we like to see new contributors contributing to the project. The issues should be raised via the GitHub issue tracker.
 For Issue tracker guidelines please click <a href="https://github.com/openMF/android-client/blob/master/.github/ISSUE_TEMPLATE.md">here</a>. All fixes should be proposed via pull requests.
 For pull request guidelines please click <a href="https://github.com/openMF/android-client/blob/master/.github/PULL_REQUEST_TEMPLATE.md">here</a>. For commit style guidelines please click <a href="https://github.com/openMF/android-client/wiki/Commit-Style-Guide">here</a>.
 
@@ -44,26 +44,29 @@ Before you begin, you should have already downloaded the Android Studio SDK and 
 
 ## Building the Code
 
-1. Clone the repository using HTTP: git clone https://github.com/openMF/android-client.git
+1. Clone the repository.
+ ```bash
+  https://github.com/openMF/android-client.git
+   ```
 
-2. Open Android Studio.
+2. Open [Android Studio](https://developer.android.com/studio).
 
-3. Click on 'Open an existing Android Studio project'
+3. Click on 'Open an existing Android Studio project'.
 
 4. Browse to the directory where you cloned the android-client repo and click OK.
 
 5. Let Android Studio import the project.
 
-6. Build the application in your device by clicking run button.
+6. Build the application on your device by clicking the run button.
 
 ## Travis CI
-<a href="https://travis-ci.com">Travis CI</a> is a hosted continuous integration service used to build and test software projects hosted at GitHub. We use Travis CI for continous integration and clean maintainence of code. All your pull requests must pass the CI build only then, it will be allowed to merge. Sometimes,when the build doesn't pass you can use these commands in your local terminal and check for the errors,</br>
+<a href="https://travis-ci.com">Travis CI</a> is a hosted continuous integration service used to build and test software projects hosted at GitHub. We use Travis CI for continous integration and clean maintenance of code. All your pull requests must pass the CI build only then, it will be allowed to merge. Sometimes, when the build doesn't pass you can use these commands in your local terminal and check for the errors,</br>
 
 For Mac OS and Linux based, you can use the following commands:
 
 * `./gradlew checkstyle` quality checks on your project’s code using Checkstyle and generates reports from these checks.</br>
-* `./gradlew pmd` an check and apply formatting to any plain-text file.</br>
-* `./gradlew findbugs`  a program which uses static analysis to look for bugs in Java code.</br>
+* `./gradlew pmd` a check and apply formatting to any plain-text file.</br>
+* `./gradlew findbugs`  a program that uses static analysis to look for bugs in Java code.</br>
 * `./gradlew build`  provides a command line to execute build script.</br>
 
 
@@ -71,17 +74,16 @@ For Windows, you can use the following commands:
 
 * `gradlew checkstyle` quality checks on your project’s code using Checkstyle and generates reports from these checks.</br>
 * `gradlew pmd` an check and apply formatting to any plain-text file.</br>
-* `gradlew findbugs`  a program which uses static analysis to look for bugs in Java code.</br>
+* `gradlew findbugs`  a program that uses static analysis to look for bugs in Java code.</br>
 * `gradlew build`  provides a command line to execute build script.</br>
 ## Wiki
 
-https://github.com/openMF/android-client/wiki
+[Android-client](https://github.com/openMF/android-client/wiki)
 
 ## Product Roadmap
 
-https://mifosforge.jira.com/wiki/display/MIFOSX/Usability+and+Design - Product Mockup
+[Product Mockup](https://mifosforge.jira.com/wiki/display/MIFOSX/Usability+and+Design) 
 
 ## License
 
-This project is licensed under the open source MPL V2. See
-https://github.com/openMF/android-client/blob/master/LICENSE.md
+[This project is licensed under the open-source MPL V2. See](https://github.com/openMF/android-client/blob/master/LICENSE.md)
