@@ -1,30 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 ~ This project is licensed under the open source MPL V2.
 ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
 -->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/rl_center">
+    android:layout_height="match_parent">
 
-    <ScrollView style="@style/ScrollView.Base"
-        android:id="@+id/container">
+    <ScrollView
+        android:id="@+id/container"
+        style="@style/ScrollView.Base">
 
         <TableLayout
             android:id="@+id/tbl_centerDetails"
             style="@style/Table">
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:gravity="center_horizontal"
                 style="@style/TextView.Client"
-                android:textColor="@color/black"
-                android:text="@string/center_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:paddingTop="@dimen/dimension_32_dp"
-                android:paddingBottom="@dimen/layout_padding_16dp"/>
+                android:paddingBottom="@dimen/layout_padding_16dp"
+                android:text="@string/center_details"
+                android:textColor="@color/black" />
 
             <TableRow
                 android:id="@+id/row_activation_date"
@@ -61,8 +60,8 @@
                     android:text="@string/meeting_frequency" />
 
                 <TextView
-                    style="@style/TextView.Row.Value"
-                    android:id="@+id/tv_meeting_frequency" />
+                    android:id="@+id/tv_meeting_frequency"
+                    style="@style/TextView.Row.Value" />
 
             </TableRow>
 
@@ -80,22 +79,22 @@
             </TableRow>
 
             <TextView
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:layout_height="2dp"
                 android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="8dp"
                 android:background="@color/black"
-                android:layout_marginTop="8dp"/>
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp" />
 
             <TextView
-                android:layout_height="wrap_content"
+                style="@style/TextView.Client"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:paddingTop="@dimen/dimension_32_dp"
                 android:paddingBottom="@dimen/layout_padding_16dp"
-                style="@style/TextView.Client"
-                android:textColor="@color/black"
-                android:text="@string/summary_info"/>
+                android:text="@string/summary_info"
+                android:textColor="@color/black" />
 
             <TableRow
                 android:id="@+id/row_active_clients"
@@ -132,8 +131,8 @@
                     android:text="@string/active_client_loans" />
 
                 <TextView
-                    style="@style/TextView.Row.Value"
-                    android:id="@+id/tv_active_client_loans" />
+                    android:id="@+id/tv_active_client_loans"
+                    style="@style/TextView.Row.Value" />
 
             </TableRow>
 
@@ -198,15 +197,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/btn_activate_center"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="@string/activate_center"
-            android:background="@color/primary_dark" />
+            android:background="@color/primary_dark"
+            android:text="@string/activate_center" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -16,19 +16,20 @@
 
         <TextView
             android:id="@+id/tv_search"
-            android:paddingRight="4dp"
             style="@style/TextView.Search"
-            android:paddingEnd="4dp" />
+            android:paddingHorizontal="4dp" />
 
         <Spinner
             android:id="@+id/sp_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginStart="50dp"
             android:layout_marginLeft="50dp"
-            android:gravity="end"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="end" />
     </LinearLayout>
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,6 +43,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="10dp">
+
             <ImageView
                 android:id="@+id/iv_search_icon"
                 android:layout_width="@dimen/dimension_32_dp"
@@ -55,19 +57,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
+                android:layout_marginEnd="4dp"
                 android:layout_marginRight="4dp"
+                android:layout_toStartOf="@id/iv_filter_search_icon"
                 android:layout_toLeftOf="@id/iv_filter_search_icon"
+                android:layout_toEndOf="@id/iv_search_icon"
                 android:layout_toRightOf="@id/iv_search_icon"
                 android:background="@android:color/transparent"
                 android:hint="@string/search_hint"
                 android:singleLine="true"
                 android:textSize="15sp"
-                tools:ignore="NotSibling"
-                android:layout_marginEnd="4dp"
-                android:layout_toEndOf="@id/iv_search_icon"
-                android:layout_toStartOf="@id/iv_filter_search_icon"
-                android:layout_marginStart="8dp" />
+                tools:ignore="NotSibling" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
@@ -83,13 +85,13 @@
     <TextView
         android:id="@+id/tv_title_search_results"
         style="@style/TextView.Search.Results"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <CheckBox
         android:id="@+id/cb_exact_match"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/exact_match"/>
+        android:text="@string/exact_match" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -100,48 +102,48 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_client"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="260dp"
             android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/fab_margin"
             android:layout_marginRight="@dimen/fab_margin"
+            android:layout_marginBottom="260dp"
+            android:tint="@color/white"
             android:visibility="invisible"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"
-            android:tint ="@color/white"
-            app:srcCompat="@drawable/ic_person_black_24dp"
-            android:layout_marginEnd="@dimen/fab_margin" />
+            app:srcCompat="@drawable/ic_person_black_24dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="180dp"
             android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/fab_margin"
             android:layout_marginRight="@dimen/fab_margin"
+            android:layout_marginBottom="180dp"
+            android:tint="@color/white"
             android:visibility="invisible"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"
-            android:tint ="@color/white"
-            app:srcCompat="@drawable/ic_centers_24dp"
-            android:layout_marginEnd="@dimen/fab_margin" />
+            app:srcCompat="@drawable/ic_centers_24dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="100dp"
             android:layout_gravity="bottom|end"
             android:layout_marginRight="@dimen/fab_margin"
+            android:layout_marginBottom="100dp"
+            android:tint="@color/white"
             android:visibility="invisible"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"
-            android:tint ="@color/white"
             app:srcCompat="@drawable/ic_group_black_24dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -149,9 +151,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"
-            android:layout_margin="@dimen/fab_margin"
             app:srcCompat="@drawable/ic_add_white_24dp" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>

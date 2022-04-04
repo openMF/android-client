@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_client"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginStart="@dimen/default_padding"
-    android:layout_marginEnd="@dimen/default_padding"
-    android:id="@+id/rl_client">
+    android:layout_marginEnd="@dimen/default_padding">
 
     <ScrollView style="@style/ScrollView.Base">
 
         <LinearLayout style="@style/LinearLayout.Base">
 
-            <LinearLayout style="@style/LinearLayout.Width"
+            <LinearLayout
+                style="@style/LinearLayout.Width"
                 android:orientation="vertical">
 
                 <FrameLayout
                     android:layout_width="75dp"
                     android:layout_height="75dp"
-                    android:layout_marginTop="@dimen/marginItemsInSectionSmall"
-                    android:layout_gravity="center">
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/marginItemsInSectionSmall">
 
 
                     <com.mifos.mifosxdroid.views.CircularImageView
                         android:id="@+id/iv_clientImage"
                         style="@style/ClientImage"
                         android:layout_gravity="center"
-                        tools:src="@drawable/ic_launcher"/>
+                        tools:src="@drawable/ic_launcher" />
 
                     <ProgressBar
                         android:id="@+id/pb_imageProgressBar"
                         style="@style/ProgressBar.Base"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center" />
 
                 </FrameLayout>
             </LinearLayout>
@@ -50,12 +51,12 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/account_number"/>
+                        android:text="@string/account_number" />
 
                     <TextView
                         android:id="@+id/tv_accountNumber"
                         style="@style/TextView.Row.Value"
-                        tools:text="000000325"/>
+                        tools:text="000000325" />
                 </TableRow>
 
                 <TableRow
@@ -64,12 +65,12 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/external_id"/>
+                        android:text="@string/external_id" />
 
                     <TextView
                         android:id="@+id/tv_externalId"
                         style="@style/TextView.Row.Value"
-                        tools:text="ID-123"/>
+                        tools:text="ID-123" />
                 </TableRow>
 
                 <TableRow
@@ -78,12 +79,12 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/activation_date"/>
+                        android:text="@string/activation_date" />
 
                     <TextView
                         android:id="@+id/tv_activationDate"
                         style="@style/TextView.Row.Value"
-                        tools:text="Nov 16, 2016"/>
+                        tools:text="Nov 16, 2016" />
                 </TableRow>
 
                 <TableRow
@@ -92,12 +93,12 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/office"/>
+                        android:text="@string/office" />
 
                     <TextView
                         android:id="@+id/tv_office"
                         style="@style/TextView.Row.Value"
-                        tools:text="GROUP AD"/>
+                        tools:text="GROUP AD" />
                 </TableRow>
 
                 <TableRow
@@ -106,12 +107,12 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/mobile_no"/>
+                        android:text="@string/mobile_no" />
 
                     <TextView
                         android:id="@+id/tv_mobile_no"
                         style="@style/TextView.Row.Value"
-                        tools:text="1234567890"/>
+                        tools:text="1234567890" />
                 </TableRow>
 
                 <TableRow
@@ -120,12 +121,12 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/group"/>
+                        android:text="@string/group" />
 
                     <TextView
                         android:id="@+id/tv_group"
                         style="@style/TextView.Row.Value"
-                        tools:text="foodies"/>
+                        tools:text="foodies" />
                 </TableRow>
 
                 <TableRow
@@ -135,13 +136,13 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/staff"/>
+                        android:text="@string/staff" />
 
                     <TextView
                         android:id="@+id/tv_loanOfficer"
                         style="@style/TextView.Row"
-                        android:gravity="right"
-                        android:text=""/>
+                        android:gravity="end"
+                        android:text="" />
                 </TableRow>
 
                 <TableRow
@@ -151,36 +152,38 @@
 
                     <TextView
                         style="@style/TextView.Row"
-                        android:text="@string/loan_cycle"/>
+                        android:text="@string/loan_cycle" />
 
                     <TextView
                         android:id="@+id/tv_loanCycle"
                         style="@style/TextView.Row"
-                        android:gravity="right"
-                        android:text=""/>
+                        android:gravity="end"
+                        android:text="" />
                 </TableRow>
 
             </TableLayout>
 
-            <LinearLayout style="@style/LinearLayout.Width"
+            <LinearLayout
+                style="@style/LinearLayout.Width"
                 android:layout_marginTop="22dp"
                 android:layout_marginBottom="12dp">
+
                 <TextView
                     android:id="@+id/tv_accountHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/accounts"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
+
                 <View
                     android:id="@+id/line2"
                     android:layout_width="wrap_content"
                     android:layout_height="2dp"
-                    android:background="@color/primary"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="6dp"
                     android:layout_marginStart="6dp"
-                    android:layout_marginTop="2dp"/>
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/primary" />
             </LinearLayout>
 
             <include
@@ -209,15 +212,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/btn_activate_client"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="@string/activate_client"
-            android:background="@color/accent" />
+            android:background="@color/accent"
+            android:text="@string/activate_client" />
     </LinearLayout>
 
 </RelativeLayout>

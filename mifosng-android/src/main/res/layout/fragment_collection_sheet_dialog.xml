@@ -1,78 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<TextView
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
-    android:text="@string/found_sheet"
-    android:textSize="24sp"
-    android:gravity="center"/>
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/found_sheet"
+        android:textSize="24sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       android:layout_margin="20dp"
-        android:text="@string/save_sheet_text"/>
+        android:layout_margin="20dp"
+        android:text="@string/save_sheet_text" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-           android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:text="@string/date"
-            android:textStyle="bold"/>
+            android:layout_marginLeft="20dp"
+            android:textStyle="bold" />
+
         <TextView
+            android:id="@+id/tv_due_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:id="@+id/tv_due_date"
-            />
+            android:layout_marginStart="20dp" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
-            android:textStyle="bold"
-            android:text="@string/members" />
+            android:text="@string/members"
+            android:textStyle="bold" />
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
             android:id="@+id/tv_members"
-            />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="20dp"
         android:orientation="horizontal"
-        android:layout_gravity="right"
         android:layout_marginRight="20dp">
+
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/fill_now"
-            android:background="@color/white"
-            android:textColor="@color/primary"
             android:id="@+id/btn_fillnow"
-            />
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:textColor="@color/primary"
+            android:text="@string/fill_now"
+            android:textColor="@color/primary" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
             android:text="@string/cancel"
-            android:id="@+id/btn_cancel"/>
+            android:textColor="@color/primary" />
     </LinearLayout>
 </LinearLayout>
