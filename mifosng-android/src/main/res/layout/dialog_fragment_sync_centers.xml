@@ -5,8 +5,7 @@
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -18,8 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="10dp"
-        android:text="@string/sync_centers_full_information"
-        />
+        android:text="@string/sync_centers_full_information" />
 
     <TableLayout
         android:id="@+id/tableLayout"
@@ -36,17 +34,15 @@
                 android:id="@+id/center_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/name"
-                />
+                android:layout_gravity="start"
+                android:text="@string/name" />
 
             <TextView
                 android:id="@+id/tv_center_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/name"
-                />
+                android:layout_gravity="start"
+                android:text="@string/name" />
         </TableRow>
 
         <TableRow
@@ -59,17 +55,15 @@
                 android:id="@+id/total_centers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/total"
-                />
+                android:layout_gravity="start"
+                android:text="@string/total" />
 
             <TextView
                 android:id="@+id/tv_total_centers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/total"
-                />
+                android:layout_gravity="start"
+                android:text="@string/total" />
 
         </TableRow>
 
@@ -83,17 +77,15 @@
                 android:id="@+id/syncing_center"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/syncing_center"
-                />
+                android:layout_gravity="start"
+                android:text="@string/syncing_center" />
 
             <TextView
                 android:id="@+id/tv_syncing_center"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/syncing_center"
-                />
+                android:layout_gravity="start"
+                android:text="@string/syncing_center" />
 
         </TableRow>
 
@@ -102,7 +94,7 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:indeterminate="false"/>
+            android:indeterminate="false" />
 
         <TableRow
             android:id="@+id/tableRow6"
@@ -114,17 +106,15 @@
                 android:id="@+id/syncing_group"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/syncing_group"
-                />
+                android:layout_gravity="start"
+                android:text="@string/syncing_group" />
 
             <TextView
                 android:id="@+id/tv_syncing_group"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/syncing_group"
-                />
+                android:layout_gravity="start"
+                android:text="@string/syncing_group" />
 
         </TableRow>
 
@@ -133,7 +123,7 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:indeterminate="false"/>
+            android:indeterminate="false" />
 
         <TableRow
             android:id="@+id/tableRow7"
@@ -145,17 +135,15 @@
                 android:id="@+id/syncing_client"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/syncing_client"
-                />
+                android:layout_gravity="start"
+                android:text="@string/syncing_client" />
 
             <TextView
                 android:id="@+id/tv_syncing_client"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/syncing_client"
-                />
+                android:layout_gravity="start"
+                android:text="@string/syncing_client" />
 
         </TableRow>
 
@@ -164,7 +152,7 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:indeterminate="false"/>
+            android:indeterminate="false" />
 
         <TableRow
             android:id="@+id/tableRow4"
@@ -176,17 +164,15 @@
                 android:id="@+id/total_progress"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/total_sync_progress"
-                />
+                android:layout_gravity="start"
+                android:text="@string/total_sync_progress" />
 
             <TextView
                 android:id="@+id/tv_total_progress"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/total_sync_progress"
-                />
+                android:layout_gravity="start"
+                android:text="@string/total_sync_progress" />
 
         </TableRow>
 
@@ -196,7 +182,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dip"
-            android:indeterminate="false"/>
+            android:indeterminate="false" />
 
         <TableRow
             android:id="@+id/tableRow5"
@@ -208,17 +194,15 @@
                 android:id="@+id/sync_failed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/failed_sync"
-                />
+                android:layout_gravity="start"
+                android:text="@string/failed_sync" />
 
             <TextView
                 android:id="@+id/tv_sync_failed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="@string/failed_sync"
-                />
+                android:layout_gravity="start"
+                android:text="@string/failed_sync" />
 
         </TableRow>
 
@@ -235,8 +219,7 @@
             android:layout_margin="5dip"
             android:layout_marginBottom="20dp"
             android:layout_weight="1"
-            android:text="@string/cancel"
-            />
+            android:text="@string/cancel" />
 
         <Button
             android:id="@+id/btn_hide"
@@ -245,8 +228,7 @@
             android:layout_margin="5dip"
             android:layout_marginBottom="20dp"
             android:layout_weight="1"
-            android:text="@string/hide"
-            />
+            android:text="@string/hide" />
     </LinearLayout>
 
 </LinearLayout>

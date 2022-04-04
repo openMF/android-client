@@ -9,23 +9,27 @@
     style="@style/LinearLayout.Base">
 
 
-    <include layout="@layout/toolbar"
-        />
+    <include layout="@layout/toolbar" />
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/surveyPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <LinearLayout android:orientation="horizontal"
-        android:gravity="center" android:measureWithLargestChild="true"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_weight="0">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:gravity="center"
+        android:measureWithLargestChild="true"
+        android:orientation="horizontal">
 
-        <Button android:id="@+id/btnNext"
-            android:layout_width="200dp" android:layout_height="wrap_content"
-            android:text="@string/next">
-        </Button>
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/next" />
     </LinearLayout>
 
     <TextView
@@ -33,8 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="gone"
         android:text="@string/surveyEmpty"
-        />
+        android:visibility="gone" />
 </LinearLayout>
 

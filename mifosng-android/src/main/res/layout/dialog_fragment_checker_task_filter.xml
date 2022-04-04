@@ -1,161 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_height="wrap_content"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:paddingBottom="24dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
     android:minWidth="300dp"
     android:minHeight="300dp"
+    android:orientation="vertical"
     android:padding="@dimen/layout_padding_16dp"
-    android:scrollbars="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:paddingBottom="24dp"
+    android:scrollbars="vertical">
 
     <LinearLayout
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="16dp">
 
         <LinearLayout
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <ImageView
-                android:baselineAlignBottom="true"
-                android:layout_gravity="center"
-                android:layout_height="30dp"
-                android:layout_marginTop="4dp"
                 android:layout_width="30dp"
-                app:srcCompat="@drawable/ic_event_black_24dp"/>
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:baselineAlignBottom="true"
+                app:srcCompat="@drawable/ic_event_black_24dp" />
 
             <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_select_from_date"
                     style="@style/Base.TextAppearance.AppCompat.Small"
-                    android:layout_height="match_parent"
                     android:layout_width="wrap_content"
-                    android:textSize="12sp"
-                    android:text="From Date"/>
+                    android:layout_height="match_parent"
+                    android:text="From Date"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_from_date"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
         </LinearLayout>
+
         <View
-            android:background="@color/gray_dark"
+            android:layout_width="match_parent"
             android:layout_height="0.2dp"
             android:layout_marginTop="8dp"
-            android:layout_width="match_parent"/>
+            android:background="@color/gray_dark" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="16dp">
 
         <LinearLayout
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <ImageView
-                android:baselineAlignBottom="true"
-                android:layout_gravity="center"
-                android:layout_height="30dp"
-                android:layout_marginTop="4dp"
                 android:layout_width="30dp"
-                app:srcCompat="@drawable/ic_event_black_24dp"/>
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:baselineAlignBottom="true"
+                app:srcCompat="@drawable/ic_event_black_24dp" />
 
             <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_select_to_date"
                     style="@style/Base.TextAppearance.AppCompat.Small"
-                    android:layout_height="match_parent"
                     android:layout_width="wrap_content"
-                    android:textSize="12sp"
-                    android:text="To Date"/>
+                    android:layout_height="match_parent"
+                    android:text="To Date"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_to_date"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
         </LinearLayout>
+
         <View
-            android:background="@color/gray_dark"
+            android:layout_width="match_parent"
             android:layout_height="0.2dp"
             android:layout_marginTop="8dp"
-            android:layout_width="match_parent"/>
+            android:background="@color/gray_dark" />
 
     </LinearLayout>
 
     <TextView
+        style="@style/Base.TextAppearance.AppCompat.Small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
         android:text="Select Action"
-        android:textSize="12sp"
-        style="@style/Base.TextAppearance.AppCompat.Small"/>
+        android:textSize="12sp" />
 
     <androidx.appcompat.widget.AppCompatSpinner
-        style="@style/Widget.AppCompat.Spinner.Underlined"
         android:id="@+id/sp_action"
-        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
         android:layout_width="match_parent"
-        android:spinnerMode="dropdown"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/gray_dark"
         android:paddingTop="10dp"
-        android:backgroundTint="@color/gray_dark"/>
+        android:spinnerMode="dropdown" />
 
     <TextView
+        style="@style/Base.TextAppearance.AppCompat.Small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
         android:text="Select Entity"
-        android:textSize="12sp"
-        style="@style/Base.TextAppearance.AppCompat.Small"/>
+        android:textSize="12sp" />
 
     <androidx.appcompat.widget.AppCompatSpinner
-        style="@style/Widget.AppCompat.Spinner.Underlined"
         android:id="@+id/sp_entity"
-        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
         android:layout_width="match_parent"
-        android:spinnerMode="dropdown"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/gray_dark"
         android:paddingTop="10dp"
-        android:backgroundTint="@color/gray_dark"/>
+        android:spinnerMode="dropdown" />
 
     <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
         <EditText
             android:id="@+id/et_resource_id"
             style="@style/EditText.BaseWidth"
+            android:cursorVisible="false"
             android:gravity="start"
             android:hint="Resource Id"
-            android:cursorVisible="false"
             android:inputType="text"
-            android:paddingBottom="16dp"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:paddingBottom="16dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
