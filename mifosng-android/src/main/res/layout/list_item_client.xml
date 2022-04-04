@@ -7,12 +7,14 @@
     <ImageView
         android:id="@+id/tv_icon"
         style="@style/ImageView.ListIcon"
+        android:contentDescription="App Logo"
         tools:src="@drawable/ic_launcher" />
 
     <TextView
         android:id="@+id/tv_name"
         style="@style/TextView.BaseWidth"
         android:layout_gravity="center_vertical"
+        android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         tools:text="Client name" />
 </LinearLayout>

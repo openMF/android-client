@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="8dp">
+    android:elevation="8dp"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="0.30"
             android:layout_gravity="center"
-            android:gravity="center">
+            android:layout_weight="0.30"
+            android:gravity="center"
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tv_client_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                tools:text="Joseph Mobuto"/>
+                tools:text="Joseph Mobuto" />
+
             <TextView
+                android:id="@+id/tv_product_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="MDL (#Account No)"
-                android:id="@+id/tv_product_code"/>
+                tools:text="MDL (#Account No)" />
         </LinearLayout>
 
 
-
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_weight="0.17"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_margin="10dp">
+            android:layout_margin="10dp"
+            android:layout_weight="0.17"
+            android:gravity="center">
 
             <EditText
                 android:id="@+id/et_total_due"
@@ -52,16 +52,16 @@
                 android:layout_gravity="center"
                 android:gravity="top"
                 android:hint="@string/total_due"
-                android:inputType="numberDecimal"/>
+                android:inputType="numberDecimal" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/userWrapper"
-            android:layout_weight="0.17"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_weight="0.17"
             android:gravity="center">
 
             <EditText
@@ -71,7 +71,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:hint="@string/charges"
-                android:inputType="numberDecimal"/>
+                android:inputType="numberDecimal" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -79,134 +79,142 @@
             android:id="@+id/btn_additional_details"
             android:layout_width="0dp"
             android:layout_height="15dp"
+            android:layout_gravity="center"
             android:layout_weight="0.05"
             android:background="@drawable/triangle_bottom"
-            android:layout_gravity="center"
-            android:gravity="center"/>
+            android:gravity="center" />
 
 
     </LinearLayout>
 
     <TableLayout
+        android:id="@+id/table_additional_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/table_additional_details"
         android:layout_margin="5dp"
         android:visibility="gone">
+
         <TableRow>
+
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="@string/payment_type"
-                android:layout_weight="0.5"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/payment_type" />
 
             <Spinner
                 android:id="@+id/sp_payment_type_options"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:tag="payment_type"
-                android:layout_weight="0.5"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:tag="payment_type" />
         </TableRow>
 
         <TableRow>
+
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="@string/account_number"
-                android:layout_weight="0.5"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/account_number" />
 
             <EditText
                 android:id="@+id/et_account_number"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:hint="@string/account_number"
-                android:tag="account_number"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:imeOptions="actionNext"/>
+                android:hint="@string/account_number"
+                android:imeOptions="actionNext"
+                android:tag="account_number" />
         </TableRow>
 
         <TableRow>
+
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="@string/cheque_number"
-                android:layout_weight="0.5"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/cheque_number" />
 
             <EditText
                 android:id="@+id/et_cheque_number"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:hint="@string/cheque_number"
-                android:tag="cheque_number"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:imeOptions="actionNext"/>
+                android:hint="@string/cheque_number"
+                android:imeOptions="actionNext"
+                android:tag="cheque_number" />
         </TableRow>
 
         <TableRow>
+
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="@string/routing_code"
-                android:layout_weight="0.5"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/routing_code" />
 
             <EditText
                 android:id="@+id/et_routing_code"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:hint="@string/routing_code"
-                android:tag="routing_code"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:imeOptions="actionNext"/>
+                android:hint="@string/routing_code"
+                android:imeOptions="actionNext"
+                android:tag="routing_code" />
         </TableRow>
 
         <TableRow>
+
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="@string/receipt_number"
-                android:layout_weight="0.5"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/receipt_number" />
 
             <EditText
                 android:id="@+id/et_receipt_number"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:hint="@string/receipt_number"
-                android:tag="receipt_number"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:imeOptions="actionNext"/>
+                android:hint="@string/receipt_number"
+                android:imeOptions="actionNext"
+                android:tag="receipt_number" />
         </TableRow>
 
         <TableRow>
+
             <TextView
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:text="@string/bank_number"
-                android:layout_weight="0.5"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/bank_number" />
 
             <EditText
                 android:id="@+id/et_bank_number"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
                 android:hint="@string/bank_number"
-                android:tag="bank_number"
-                android:layout_weight="0.5"/>
+                android:tag="bank_number" />
         </TableRow>
 
         <TableRow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right">
-            <Button
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/save"
-                android:id="@+id/btn_save_additional"/>
 
             <Button
-                android:layout_height="wrap_content"
+                android:id="@+id/btn_save_additional"
                 android:layout_width="wrap_content"
-                android:text="@string/cancel"
-                android:id="@+id/btn_cancel_additional"/>
+                android:layout_height="wrap_content"
+                android:text="@string/save" />
+
+            <Button
+                android:id="@+id/btn_cancel_additional"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel" />
         </TableRow>
     </TableLayout>
 </LinearLayout>

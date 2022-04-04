@@ -66,6 +66,7 @@
                             style="@style/TextAppearance.AppCompat.Medium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
                             android:layout_marginLeft="8dp"
                             android:textAllCaps="true"
                             android:textColor="@color/black"
@@ -77,6 +78,7 @@
                             style="@style/TextAppearance.AppCompat.Medium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
                             android:layout_marginLeft="8dp"
                             android:maxLines="1"
                             android:text="Client"
@@ -90,6 +92,7 @@
                         android:id="@+id/cb_checker_task"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true" />
 
                 </RelativeLayout>
@@ -116,6 +119,7 @@
                         style="@style/TextAppearance.AppCompat.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:layout_marginLeft="8dp"
                         android:text="Ed Cable"
                         android:textColor="@color/black"
@@ -126,7 +130,7 @@
                         style="@style/TextAppearance.AppCompat.Small"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="right"
+                        android:gravity="end"
                         android:text="24 Jun 2019"
                         android:textStyle="bold" />
 
@@ -171,16 +175,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="right">
+                android:gravity="end">
 
                 <ImageView
                     android:id="@+id/iv_approve_icon"
                     android:layout_width="@dimen/dimension_32_dp"
                     android:layout_height="@dimen/dimension_32_dp"
-                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/layout_padding_16dp"
                     android:layout_marginRight="@dimen/layout_padding_16dp"
                     android:background="?selectableItemBackground"
                     android:clickable="true"
+                    android:focusable="true"
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/ic_check_green_24dp" />
 
