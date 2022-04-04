@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="200dp"
@@ -21,9 +20,8 @@
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:elevation="2dp"
-            app:srcCompat="@drawable/ic_account_circle_black_24dp"
             app:border="false"
-            />
+            app:srcCompat="@drawable/ic_account_circle_black_24dp" />
 
         <TextView
             android:id="@+id/tv_user_name"
@@ -34,19 +32,19 @@
             android:lines="1"
             android:text="@string/login"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/user_status_toggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/offline_mode"
-            android:textColor="@color/white"
-            app:showText="false"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:text="@string/offline_mode"
+            android:textColor="@color/white"
+            android:textOff="Off"
             android:textOn="On"
-            android:textOff="Off"/>
+            app:showText="false" />
 
     </LinearLayout>
 </LinearLayout>

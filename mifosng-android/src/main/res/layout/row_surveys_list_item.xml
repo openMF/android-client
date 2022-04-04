@@ -6,38 +6,40 @@
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent" android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/card_blueborder"
     android:padding="8dp">
 
     <TextView
+        android:id="@+id/tv_survey_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="survey_name"
-        android:id="@+id/tv_survey_name"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentTop="true"
+        android:text="survey_name"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
+        android:id="@+id/tv_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Description"
-        android:id="@+id/tv_description"
         android:layout_below="@+id/tv_survey_name"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:text="Description"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <ImageView
         android:id="@+id/iv_sync_status"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignBottom="@+id/tv_description"
-        android:layout_alignParentBottom="false"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="false"
         android:layout_gravity="center_vertical"
+        android:contentDescription="Done Image"
         app:srcCompat="@drawable/ic_done_all_black_24dp" />
 </RelativeLayout>

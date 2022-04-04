@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/tv_groupName"
             android:layout_weight="1"
-            android:gravity="right"/>
+            android:gravity="end" />
     </LinearLayout>
 
     <LinearLayout
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/tv_groupTotal"
             android:layout_weight="1"
-            android:gravity="right"/>
+            android:gravity="end" />
     </LinearLayout>
 
 

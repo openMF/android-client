@@ -15,6 +15,7 @@
         android:id="@+id/view_status_indicator"
         android:layout_width="16dp"
         android:layout_height="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:background="@color/light_red" />
 
@@ -23,15 +24,15 @@
         style="@style/TextView.Base.Weight"
         android:layout_weight="1"
         android:padding="@dimen/text_padding_normal"
-        android:textColor="@color/primary_text"
-        android:text="@string/medium_text" />
+        android:text="@string/medium_text"
+        android:textColor="@color/primary_text" />
 
     <TextView
         android:id="@+id/tv_amount"
         style="@style/TextView.Base.Weight"
         android:layout_weight="1"
-        android:gravity="right"
+        android:gravity="end"
         android:padding="@dimen/text_padding_normal"
-        android:textColor="@color/primary_text"
-        android:text="@string/medium_text" />
+        android:text="@string/medium_text"
+        android:textColor="@color/primary_text" />
 </LinearLayout>

@@ -6,41 +6,42 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="8dp">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/def_amount_one"
             android:id="@+id/tv_clientId"
-            android:layout_weight="1" />
-
-        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/def_name"
+            android:layout_weight="1"
+            android:text="@string/def_amount_one" />
+
+        <TextView
             android:id="@+id/tv_clientName"
-            android:layout_weight="1" />
-
-        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/def_name" />
+
+        <TextView
             android:id="@+id/tv_clientTotal"
-            android:layout_weight="1"/>
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
     <ListView
+        android:id="@+id/lv_loans"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lv_loans"
         android:layout_gravity="center_horizontal" />
 
 

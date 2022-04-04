@@ -6,31 +6,32 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:padding="8dp">
 
     <TextView
+        android:id="@+id/tv_doc_name"
         android:layout_width="0dp"
-        android:layout_weight="0.4"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_weight="0.4"
         android:text="@string/medium_text"
-        android:id="@+id/tv_doc_name" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
+        android:id="@+id/tv_doc_descrption"
         android:layout_width="0dp"
-        android:layout_weight="0.4"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_weight="0.4"
         android:text="@string/medium_text"
-        android:id="@+id/tv_doc_descrption" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <com.joanzapata.iconify.widget.IconTextView
         android:id="@+id/tv_doc_location_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:shadowColor="#22000000"
         android:shadowDx="3"

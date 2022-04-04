@@ -4,27 +4,25 @@
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:clickable="true"
+    android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardUseCompatPadding="true" >
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
         android:minHeight="?attr/listPreferredItemHeight"
         android:orientation="horizontal"
-        android:backgroundTint="@color/white"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:id="@+id/linearLayout">
+        android:paddingRight="16dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -33,7 +31,7 @@
             android:background="@color/white"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingLeft="16dp">
+            android:paddingHorizontal="16dp">
 
             <TextView
                 android:id="@+id/tv_group_name"
@@ -43,7 +41,7 @@
                 android:lines="1"
                 android:text="@string/medium_text"
                 android:textColor="@color/black"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
 
             <TextView
@@ -52,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/small_text"
                 android:textColor="@color/gray_dark"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -62,8 +60,7 @@
             android:layout_height="20dp"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            app:srcCompat="@drawable/ic_done_all_black_24dp"
-            />
+            app:srcCompat="@drawable/ic_done_all_black_24dp" />
 
     </LinearLayout>
 
