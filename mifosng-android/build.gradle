@@ -28,7 +28,6 @@ repositories {
     jcenter()
     maven { url "https://maven.google.com" }
     maven { url "https://jitpack.io" }
-    maven { url 'http://dl.bintray.com/amulyakhare/maven' }
 }
 
 apply plugin: 'com.android.application'
@@ -147,6 +146,7 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.0'
+    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
     // You must install or update the Support Repository through the SDK manager to use this dependency.
 

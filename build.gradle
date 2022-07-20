@@ -24,7 +24,7 @@ ext {
     okHttp3Version = '3.5.0'
     flipTableVersion = '1.0.1'
     butterKnifeVersion = '8.0.1'
-    mifosPasscodeVersion = '0.3.0'
+    mifosPasscodeVersion = '1.0.0'
     preference = '1.1.0'
 
 }
