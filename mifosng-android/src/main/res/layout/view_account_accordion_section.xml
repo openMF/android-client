@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="12dp"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginTop="10dp">
+    android:layout_marginTop="10dp"
+    android:paddingBottom="12dp">
 
 
     <com.joanzapata.iconify.widget.IconTextView
@@ -12,22 +12,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/tv_toggle_accounts"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_margin="4dp"
         android:text="{md-add-circle-outline}"
         android:textColor="@color/secondary_text"
-        android:textSize="20sp"
-        android:layout_alignParentStart="true" />
+        android:textSize="20sp" />
 
 
     <TextView
         android:id="@+id/tv_toggle_accounts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/tv_toggle_accounts_icon"
-        android:layout_toEndOf="@id/tv_toggle_accounts_icon"
-        android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_toEndOf="@id/tv_toggle_accounts_icon"
+        android:layout_toRightOf="@id/tv_toggle_accounts_icon"
         tools:text="@string/savingAccounts" />
 
 
@@ -36,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/tv_toggle_accounts"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:text="0"
         android:textStyle="bold" />

@@ -40,9 +40,10 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="@drawable/rounded_background"
-        android:gravity="left"
+        android:layout_alignParentEnd="true"
         android:inputType="numberDecimal"
-        android:paddingLeft="5dp"
         android:text="@string/def_amount_paid"
+        android:gravity="start"
+        android:paddingHorizontal="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 </RelativeLayout>

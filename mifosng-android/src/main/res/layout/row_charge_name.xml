@@ -11,33 +11,31 @@
     android:padding="8dp">
 
     <TableLayout
+        android:id="@+id/tableLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:padding="8dp"
-        android:id="@+id/tableLayout"
-        android:background="@color/light_blue">
+        android:background="@color/light_blue"
+        android:padding="8dp">
 
         <TableRow
+            android:id="@+id/tableRow1"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/tableRow1">
+            android:layout_height="fill_parent">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
                 android:id="@+id/textView2"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/charge_id"
-                />
+                android:layout_weight="1"
+                android:text="@string/charge_id" />
 
             <TextView
                 android:id="@+id/tv_charger_id"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                 />
+                android:layout_weight="1" />
         </TableRow>
 
         <TableRow
@@ -48,15 +46,15 @@
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/charge_name" />
 
             <TextView
                 android:id="@+id/tv_chargeName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
         </TableRow>
 
         <TableRow

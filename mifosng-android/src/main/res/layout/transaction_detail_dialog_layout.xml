@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@color/light_grey"
     app:cardCornerRadius="10dp">
 
@@ -20,11 +20,11 @@
 
                 <TextView
                     style="@style/TextView.Row"
-                    android:text="@string/transaction_id"/>
+                    android:text="@string/transaction_id" />
 
                 <TextView
                     android:id="@+id/tv_transactionId"
-                    style="@style/TextView.Row.Value"/>
+                    style="@style/TextView.Row.Value" />
             </TableRow>
 
             <TableRow
@@ -33,11 +33,11 @@
 
                 <TextView
                     style="@style/TextView.Row"
-                    android:text="@string/date"/>
+                    android:text="@string/date" />
 
                 <TextView
                     android:id="@+id/tv_date"
-                    style="@style/TextView.Row.Value"/>
+                    style="@style/TextView.Row.Value" />
             </TableRow>
 
             <TableRow
@@ -46,11 +46,11 @@
 
                 <TextView
                     style="@style/TextView.Row"
-                    android:text="@string/transaction_type"/>
+                    android:text="@string/transaction_type" />
 
                 <TextView
                     android:id="@+id/tv_transactionType"
-                    style="@style/TextView.Row.Value"/>
+                    style="@style/TextView.Row.Value" />
             </TableRow>
 
             <TableRow
@@ -59,11 +59,11 @@
 
                 <TextView
                     style="@style/TextView.Row"
-                    android:text="@string/running_balance"/>
+                    android:text="@string/running_balance" />
 
                 <TextView
                     android:id="@+id/tv_runningBalance"
-                    style="@style/TextView.Row.Value"/>
+                    style="@style/TextView.Row.Value" />
             </TableRow>
 
             <TableRow
@@ -72,11 +72,11 @@
 
                 <TextView
                     style="@style/TextView.Row"
-                    android:text="@string/saving_account_id"/>
+                    android:text="@string/saving_account_id" />
 
                 <TextView
                     android:id="@+id/tv_savingAccountId"
-                    style="@style/TextView.Row.Value"/>
+                    style="@style/TextView.Row.Value" />
             </TableRow>
 
             <TableRow
@@ -85,11 +85,11 @@
 
                 <TextView
                     style="@style/TextView.Row"
-                    android:text="@string/account_number"/>
+                    android:text="@string/account_number" />
 
                 <TextView
                     android:id="@+id/tv_accountNumber"
-                    style="@style/TextView.Row.Value"/>
+                    style="@style/TextView.Row.Value" />
             </TableRow>
 
             <TableRow
@@ -99,12 +99,12 @@
 
                 <TextView
                     style="@style/TextView.Row"
-                    android:text="@string/currency"/>
+                    android:text="@string/currency" />
 
                 <TextView
                     android:id="@+id/tv_currency"
                     style="@style/TextView.Row.Value"
-                    android:text=""/>
+                    android:text="" />
             </TableRow>
 
         </TableLayout>

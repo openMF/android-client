@@ -4,30 +4,29 @@
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
-<androidx.cardview.widget.CardView
-    android:id="@+id/card_view"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="2dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="2dp"
+    android:layout_marginBottom="5dp"
     android:background="@color/white"
     android:clickable="true"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
-    android:layout_marginLeft="2dp"
-    android:layout_marginRight="2dp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:minHeight="?attr/listPreferredItemHeight"
-        android:orientation="horizontal"
         android:layout_margin="5dp"
         android:backgroundTint="@color/white"
+        android:minHeight="?attr/listPreferredItemHeight"
+        android:orientation="horizontal"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:id="@+id/linearLayout">
+        android:paddingRight="16dp">
 
         <com.mifos.mifosxdroid.views.CircularImageView
             android:id="@+id/iv_status_indicator"
@@ -37,7 +36,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_weight="1"
-            android:src="@color/light_yellow"/>
+            android:src="@color/light_yellow" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -61,7 +60,7 @@
                     android:lines="1"
                     android:text="@string/medium_text"
                     android:textColor="@color/black"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_center_id"
@@ -71,7 +70,7 @@
                     android:gravity="end"
                     android:text="@string/small_text"
                     android:textColor="@color/black"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <TextView
@@ -80,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/small_text"
                 android:textColor="@color/gray_dark"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -91,8 +90,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -102,7 +101,7 @@
                         android:layout_weight="1"
                         android:text="@string/small_text"
                         android:textColor="@color/black"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_staff_name"
@@ -111,14 +110,14 @@
                         android:layout_weight="1"
                         android:text="@string/small_text"
                         android:textColor="@color/black"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:orientation="vertical"
                     android:paddingLeft="30dp">
 
@@ -129,7 +128,7 @@
                         android:layout_weight="1"
                         android:text="@string/small_text"
                         android:textColor="@color/black"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_staff_id"
@@ -138,17 +137,17 @@
                         android:layout_weight="1"
                         android:text="@string/small_text"
                         android:textColor="@color/black"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
         <ImageView
             android:id="@+id/iv_sync_status"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            app:srcCompat="@drawable/ic_done_all_black_24dp"
-            />
+            app:srcCompat="@drawable/ic_done_all_black_24dp" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

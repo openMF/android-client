@@ -1,46 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="16dp"
-    android:paddingTop="16dp"
+    android:orientation="horizontal"
     android:paddingLeft="8dp"
-    android:paddingRight="8dp">
+    android:paddingTop="16dp"
+    android:paddingRight="8dp"
+    android:paddingBottom="16dp">
 
     <TextView
+        android:id="@+id/tv_transaction_date"
+        style="@android:style/TextAppearance.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.35"
-        android:id="@+id/tv_transaction_date"
+        android:gravity="start"
         android:text="May 24,2014"
-        android:textColor="@color/black"
-        style="@android:style/TextAppearance.Medium"
-        android:gravity="left"/>
+        android:textColor="@color/black" />
 
     <TextView
+        android:id="@+id/tv_transaction_type"
+        style="@android:style/TextAppearance.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.30"
-        android:id="@+id/tv_transaction_type"
-        android:textColor="@color/black"
-        style="@android:style/TextAppearance.Medium"
+        android:gravity="center"
         android:text="@string/withdrawal"
-        android:gravity="center"/>
+        android:textColor="@color/black" />
 
     <TextView
+        android:id="@+id/tv_transaction_amount"
+        style="@android:style/TextAppearance.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.35"
-        android:id="@+id/tv_transaction_amount"
-        android:textColor="@color/black"
-        style="@android:style/TextAppearance.Medium"
+        android:gravity="start"
         android:text="2500 INR"
-        android:gravity="right"/>
+        android:textColor="@color/black" />
 
 </LinearLayout>

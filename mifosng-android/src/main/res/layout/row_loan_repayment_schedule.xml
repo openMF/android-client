@@ -6,8 +6,9 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="horizontal"
     android:paddingTop="8dp"
     android:paddingBottom="8dp">
 
@@ -15,35 +16,37 @@
         android:id="@+id/view_status_indicator"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:background="@color/light_red"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginLeft="8dp"/>
+        android:background="@color/light_red" />
 
     <TextView
+        android:id="@+id/tv_repayment_due_date"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="center"
         android:text="12-02-2014"
-        android:textColor="@color/primary_text"
-        android:id="@+id/tv_repayment_due_date"/>
+        android:textColor="@color/primary_text" />
 
     <TextView
+        android:id="@+id/tv_repayment_amount_due"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="center"
         android:text="200005"
-        android:textColor="@color/primary_text"
-        android:id="@+id/tv_repayment_amount_due"/>
+        android:textColor="@color/primary_text" />
 
     <TextView
+        android:id="@+id/tv_repayment_amount_paid"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="end"
         android:text="200005"
-        android:gravity="right"
-        android:textColor="@color/primary_text"
-        android:id="@+id/tv_repayment_amount_paid"/>
+        android:textColor="@color/primary_text" />
 
 </LinearLayout>

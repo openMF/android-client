@@ -8,8 +8,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/transaction_detail_bg">
+    android:background="@color/transaction_detail_bg"
+    android:orientation="vertical">
 
 
     <TableLayout
@@ -29,7 +29,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:gravity="left"
+                android:gravity="start"
                 android:text="@string/id"
                 android:textColor="@color/black" />
 
@@ -39,7 +39,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:gravity="right"
+                android:gravity="end"
                 android:text="09214"
                 android:textColor="@color/black" />
 
@@ -56,7 +56,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:gravity="left"
+                android:gravity="start"
                 android:text="@string/office"
                 android:textColor="@color/black" />
 
@@ -66,7 +66,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:gravity="right"
+                android:gravity="end"
                 android:text="@string/withdrawal"
                 android:textColor="@color/black" />
         </TableRow>
@@ -84,10 +84,10 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="4dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="4dp"
         android:background="@color/black" />
 
     <TableLayout
@@ -117,7 +117,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:gravity="right"
+                android:gravity="end"
                 android:padding="4dp"
                 android:text="@string/loan_interest"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -128,7 +128,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:gravity="right"
+                android:gravity="end"
                 android:padding="4dp"
                 android:text="@string/loan_fees"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -139,7 +139,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:gravity="right"
+                android:gravity="end"
                 android:padding="4dp"
                 android:text="@string/loan_penalty"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -165,7 +165,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:gravity="right"
+                android:gravity="end"
                 android:padding="4dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -174,7 +174,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:gravity="right"
+                android:gravity="end"
                 android:padding="4dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -183,7 +183,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:gravity="right"
+                android:gravity="end"
                 android:padding="4dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
