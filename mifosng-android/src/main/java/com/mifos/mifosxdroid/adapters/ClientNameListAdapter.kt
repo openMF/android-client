@@ -13,10 +13,12 @@ import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.SelectableAdapter
 import com.mifos.objects.client.Client
 import com.mifos.utils.ImageLoaderUtils
-import javax.inject.Inject
 
 
-class ClientNameListAdapter @Inject constructor() : SelectableAdapter<ClientNameListAdapter.ViewHolder>() {
+class ClientNameListAdapter(
+    val onClientNameClick: (Int) -> Unit,
+    val onClientNameLongClick: (Int) -> Unit
+) : SelectableAdapter<ClientNameListAdapter.ViewHolder>() {
     private var pageItems: List<Client> = ArrayList()
 
     fun getItem(position: Int) = pageItems[position]
@@ -27,6 +29,15 @@ class ClientNameListAdapter @Inject constructor() : SelectableAdapter<ClientName
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_client_name, parent, false)
         )
+        viewHolder.itemView.setOnClickListener {
+            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+                onClientNameClick(viewHolder.adapterPosition)
+        }
+        viewHolder.itemView.setOnLongClickListener {
+            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+                onClientNameLongClick(viewHolder.adapterPosition)
+            return@setOnLongClickListener true
+        }
         return viewHolder
     }
 

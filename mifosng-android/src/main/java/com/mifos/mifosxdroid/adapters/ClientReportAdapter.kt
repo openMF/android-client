@@ -7,10 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mifos.mifosxdroid.R
 import com.mifos.objects.runreports.client.ClientReportTypeItem
-import javax.inject.Inject
 
 
-class ClientReportAdapter @Inject constructor() : RecyclerView.Adapter<ClientReportAdapter.ViewHolder>() {
+class ClientReportAdapter(
+    val onClientReportClick: (Int) -> Unit
+) : RecyclerView.Adapter<ClientReportAdapter.ViewHolder>() {
     private var items: List<ClientReportTypeItem> = emptyList()
 
 
@@ -23,6 +24,10 @@ class ClientReportAdapter @Inject constructor() : RecyclerView.Adapter<ClientRep
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_client_runreport, parent, false)
         )
+        viewHolder.itemView.setOnClickListener {
+            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+                onClientReportClick(viewHolder.adapterPosition)
+        }
         return viewHolder
     }
 

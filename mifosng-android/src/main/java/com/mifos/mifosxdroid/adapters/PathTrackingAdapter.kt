@@ -15,10 +15,11 @@ import com.google.gson.reflect.TypeToken
 import com.mifos.mifosxdroid.R
 import com.mifos.objects.user.UserLatLng
 import com.mifos.objects.user.UserLocation
-import javax.inject.Inject
 
 
-class PathTrackingAdapter @Inject constructor() :RecyclerView.Adapter<PathTrackingAdapter.ViewHolder>() {
+class PathTrackingAdapter(
+    val onUserLocationClick: (UserLocation) -> Unit
+) :RecyclerView.Adapter<PathTrackingAdapter.ViewHolder>() {
 
     private var userLocations: List<UserLocation> = ArrayList()
     private var userLatLngs: List<UserLatLng> = ArrayList()
@@ -29,7 +30,10 @@ class PathTrackingAdapter @Inject constructor() :RecyclerView.Adapter<PathTracki
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_pinpoint_location, parent, false)
         )
-
+        viewHolder.itemView.setOnClickListener {
+            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+                onUserLocationClick(userLocations[viewHolder.adapterPosition])
+        }
         return viewHolder
     }
 
@@ -67,7 +71,6 @@ class PathTrackingAdapter @Inject constructor() :RecyclerView.Adapter<PathTracki
     override fun getItemId(i: Int) = 0L
 
     override fun getItemCount() = userLocations.size
-cd
 
     override fun onViewRecycled(holder: ViewHolder) {
         // Cleanup MapView here

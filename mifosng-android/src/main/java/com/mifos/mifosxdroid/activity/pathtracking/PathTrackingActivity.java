@@ -15,11 +15,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +25,6 @@ import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.PathTrackingAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.objects.user.UserLatLng;
 import com.mifos.objects.user.UserLocation;
 import com.mifos.utils.CheckSelfPermissionAndRequest;
@@ -42,6 +36,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -49,8 +48,7 @@ import butterknife.OnClick;
 /**
  * @author fomenkoo
  */
-public class PathTrackingActivity extends MifosBaseActivity implements PathTrackingMvpView,
-        SwipeRefreshLayout.OnRefreshListener, RecyclerItemClickListener.OnItemClickListener {
+public class PathTrackingActivity extends MifosBaseActivity implements PathTrackingMvpView, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.rv_path_tacker)
     RecyclerView rvPathTracker;
@@ -67,31 +65,12 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
     @Inject
     PathTrackingPresenter pathTrackingPresenter;
 
-    @Inject
     PathTrackingAdapter pathTrackingAdapter;
 
     private Intent intentLocationService;
     private BroadcastReceiver notificationReceiver;
     private List<UserLocation> userLocations;
     private SweetUIErrorHandler sweetUIErrorHandler;
-
-    @Override
-    public void onItemClick(View childView, int position) {
-        List<UserLatLng> userLatLngs =
-                pathTrackingAdapter.getLatLngList(userLocations.get(position).getLatlng());
-        String uri = "http://maps.google.com/maps?f=d&hl=en&saddr="
-                + userLatLngs.get(0).getLat() + "," + userLatLngs.get(0).getLng() + "&daddr="
-                + userLatLngs.get(userLatLngs.size() - 1).getLat() + "," + ""
-                + userLatLngs.get(userLatLngs.size() - 1).getLng();
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-        startActivity(Intent.createChooser(intent, getString(R.string.start_tracking)));
-    }
-
-    @Override
-    public void onItemLongPress(View childView, int position) {
-
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,8 +97,19 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
         rvPathTracker.setLayoutManager(mLayoutManager);
         rvPathTracker.setHasFixedSize(false);
         rvPathTracker.scrollToPosition(0);
+        pathTrackingAdapter = new PathTrackingAdapter(userLocation -> {
+            List<UserLatLng> userLatLngs =
+                    pathTrackingAdapter.getLatLngList(userLocation.getLatlng());
+            String uri = "http://maps.google.com/maps?f=d&hl=en&saddr="
+                    + userLatLngs.get(0).getLat() + "," + userLatLngs.get(0).getLng() + "&daddr="
+                    + userLatLngs.get(userLatLngs.size() - 1).getLat() + "," + ""
+                    + userLatLngs.get(userLatLngs.size() - 1).getLng();
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+            startActivity(Intent.createChooser(intent, getString(R.string.start_tracking)));
+            return null;
+        });
         rvPathTracker.setAdapter(pathTrackingAdapter);
-        rvPathTracker.addOnItemTouchListener(new RecyclerItemClickListener(this, this));
         swipeRefreshLayout.setColorSchemeColors(this
                 .getResources().getIntArray(R.array.swipeRefreshColors));
         swipeRefreshLayout.setOnRefreshListener(this);

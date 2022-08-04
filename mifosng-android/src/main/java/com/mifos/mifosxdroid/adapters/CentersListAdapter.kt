@@ -14,10 +14,12 @@ import com.mifos.mifosxdroid.core.SelectableAdapter
 import com.mifos.mifosxdroid.views.CircularImageView
 import com.mifos.objects.group.Center
 import com.mifos.utils.Utils
-import javax.inject.Inject
 
 
-class CentersListAdapter @Inject constructor() : SelectableAdapter<CentersListAdapter.ViewHolder>() {
+class CentersListAdapter(
+    val onCenterClick: (Int) -> Unit,
+    val onCenterLongClick: (Int) -> Unit
+) : SelectableAdapter<CentersListAdapter.ViewHolder>() {
 
     private var centers: List<Center> = ArrayList()
 
@@ -26,6 +28,15 @@ class CentersListAdapter @Inject constructor() : SelectableAdapter<CentersListAd
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_center_list_item, parent, false)
         )
+        viewHolder.itemView.setOnClickListener {
+            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+                onCenterClick(viewHolder.adapterPosition)
+        }
+        viewHolder.itemView.setOnLongClickListener {
+            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+                onCenterLongClick(viewHolder.adapterPosition)
+            return@setOnLongClickListener true
+        }
         return viewHolder
     }
 

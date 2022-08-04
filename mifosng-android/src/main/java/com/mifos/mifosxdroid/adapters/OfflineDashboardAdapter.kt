@@ -10,7 +10,9 @@ import com.mifos.mifosxdroid.R
 import javax.inject.Inject
 
 
-class OfflineDashboardAdapter @Inject constructor() : RecyclerView.Adapter<OfflineDashboardAdapter.ViewHolder>() {
+class OfflineDashboardAdapter(
+    val onItemClick: (Int) -> Unit
+) : RecyclerView.Adapter<OfflineDashboardAdapter.ViewHolder>() {
     private val payloadNames: MutableList<Int> = ArrayList()
     private val payloadCounts: MutableList<String> = ArrayList()
 
@@ -19,6 +21,10 @@ class OfflineDashboardAdapter @Inject constructor() : RecyclerView.Adapter<Offli
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_offline_dashboard, parent, false)
         )
+        viewHolder.itemView.setOnClickListener {
+            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+                onItemClick(viewHolder.adapterPosition)
+        }
         return viewHolder
     }
 

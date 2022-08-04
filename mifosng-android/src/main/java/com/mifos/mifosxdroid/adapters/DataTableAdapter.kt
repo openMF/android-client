@@ -7,9 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mifos.mifosxdroid.R
 import com.mifos.objects.noncore.DataTable
-import javax.inject.Inject
 
-class DataTableAdapter @Inject constructor() : RecyclerView.Adapter<DataTableAdapter.ViewHolder>() {
+class DataTableAdapter(
+    val onDateTableClick: (DataTable) -> Unit
+) : RecyclerView.Adapter<DataTableAdapter.ViewHolder>() {
     var dataTables: List<DataTable> = ArrayList()
         set(value) {
             field = value
@@ -21,6 +22,10 @@ class DataTableAdapter @Inject constructor() : RecyclerView.Adapter<DataTableAda
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_data_table, parent, false)
         )
+        viewHolder.itemView.setOnClickListener {
+            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+                onDateTableClick(dataTables[viewHolder.adapterPosition])
+        }
         return viewHolder
     }
 

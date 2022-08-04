@@ -22,7 +22,6 @@ import com.mifos.mifosxdroid.adapters.CentersListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.mifosxdroid.core.RecyclerItemClickListener
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogFragment
 import com.mifos.mifosxdroid.online.CentersActivity
@@ -43,7 +42,7 @@ import javax.inject.Inject
  * CenterListFragment Fetching and Showing CenterList in RecyclerView from
  * >demo.openmf.org/fineract-provider/api/v1/centers?paged=true&offset=0&limit=100>
  */
-class CenterListFragment : MifosBaseFragment(), CenterListMvpView, RecyclerItemClickListener.OnItemClickListener, OnRefreshListener {
+class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshListener {
     @JvmField
     @BindView(R.id.rv_center_list)
     var rvCenters: RecyclerView? = null
@@ -64,8 +63,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, RecyclerItemC
     @Inject
     var mCenterListPresenter: CenterListPresenter? = null
 
-    @JvmField
-    @Inject
+
     var centersListAdapter: CentersListAdapter? = null
     private lateinit var rootView: View
     private var centers: List<Center>? = null
@@ -74,22 +72,6 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, RecyclerItemC
     private var actionModeCallback: ActionModeCallback? = null
     private var actionMode: ActionMode? = null
     private var sweetUIErrorHandler: SweetUIErrorHandler? = null
-    override fun onItemClick(childView: View, position: Int) {
-        if (actionMode != null) {
-            toggleSelection(position)
-        } else {
-            val centerIntent = Intent(activity, CentersActivity::class.java)
-            centerIntent.putExtra(Constants.CENTER_ID, centers!![position].id)
-            startActivity(centerIntent)
-        }
-    }
-
-    override fun onItemLongPress(childView: View, position: Int) {
-        if (actionMode == null) {
-            actionMode = (activity as MifosBaseActivity?)!!.startSupportActionMode(actionModeCallback!!)
-        }
-        toggleSelection(position)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,11 +113,26 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, RecyclerItemC
         layoutManager = LinearLayoutManager(activity)
         layoutManager!!.orientation = LinearLayoutManager.VERTICAL
         rvCenters!!.layoutManager = layoutManager
-        rvCenters!!.addOnItemTouchListener(RecyclerItemClickListener(activity, this))
+        centersListAdapter = CentersListAdapter(
+            onCenterClick = { position ->
+                if (actionMode != null) {
+                    toggleSelection(position)
+                } else {
+                    val centerIntent = Intent(activity, CentersActivity::class.java)
+                    centerIntent.putExtra(Constants.CENTER_ID, centers!![position].id)
+                    startActivity(centerIntent)
+                }
+            },
+            onCenterLongClick = { position ->
+                if (actionMode == null)
+                    actionMode = (activity as MifosBaseActivity?)!!.startSupportActionMode(actionModeCallback!!)
+                toggleSelection(position)
+            }
+        )
         rvCenters!!.setHasFixedSize(true)
         rvCenters!!.adapter = centersListAdapter
         swipeRefreshLayout!!.setColorSchemeColors(*activity
-                ?.getResources()!!.getIntArray(R.array.swipeRefreshColors))
+                ?.resources!!.getIntArray(R.array.swipeRefreshColors))
         swipeRefreshLayout!!.setOnRefreshListener(this)
         sweetUIErrorHandler = SweetUIErrorHandler(activity, rootView)
     }

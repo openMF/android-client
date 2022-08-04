@@ -14,7 +14,10 @@ import com.mifos.mifosxdroid.core.SelectableAdapter
 import com.mifos.objects.group.Group
 import javax.inject.Inject
 
-class GroupNameListAdapter @Inject constructor() : SelectableAdapter<GroupNameListAdapter.ViewHolder>() {
+class GroupNameListAdapter(
+    val onGroupClick: (Int) -> Unit,
+    val onGroupLongClick: (Int) -> Unit
+) : SelectableAdapter<GroupNameListAdapter.ViewHolder>() {
     private var groups: List<Group> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,6 +25,15 @@ class GroupNameListAdapter @Inject constructor() : SelectableAdapter<GroupNameLi
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_group_name, parent, false)
         )
+        viewHolder.itemView.setOnClickListener {
+            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+                onGroupClick(viewHolder.adapterPosition)
+        }
+        viewHolder.itemView.setOnLongClickListener {
+            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+                onGroupLongClick(viewHolder.adapterPosition)
+            return@setOnLongClickListener true
+        }
         return viewHolder
     }
 

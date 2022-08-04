@@ -12,7 +12,9 @@ import com.mifos.objects.noncore.Document
 import javax.inject.Inject
 
 
-class DocumentListAdapter @Inject constructor() : RecyclerView.Adapter<DocumentListAdapter.ViewHolder>() {
+class DocumentListAdapter(
+    val onDocumentClick: (Document) -> Unit
+) : RecyclerView.Adapter<DocumentListAdapter.ViewHolder>() {
     var documents: List<Document> = emptyList()
         set(value) {
             field = value
@@ -27,6 +29,10 @@ class DocumentListAdapter @Inject constructor() : RecyclerView.Adapter<DocumentL
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.row_document_list, parent, false)
         )
+        viewHolder.itemView.setOnClickListener {
+            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+                onDocumentClick(documents[viewHolder.adapterPosition])
+        }
         return viewHolder
     }
 

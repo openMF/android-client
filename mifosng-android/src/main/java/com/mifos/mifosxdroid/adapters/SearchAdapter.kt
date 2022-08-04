@@ -15,7 +15,9 @@ import com.mifos.objects.SearchedEntity
 import javax.inject.Inject
 
 
-class SearchAdapter @Inject constructor() : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+class SearchAdapter(
+    val onSearchItemClick: (SearchedEntity) -> Unit
+) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
     private val mColorGenerator = ColorGenerator.MATERIAL
     private var mDrawableBuilder: IBuilder = TextDrawable.builder().round()
     private var searchedResults: List<SearchedEntity> = ArrayList()
@@ -25,6 +27,10 @@ class SearchAdapter @Inject constructor() : RecyclerView.Adapter<SearchAdapter.V
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.list_item_client, parent, false)
         )
+        viewHolder.itemView.setOnClickListener {
+            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+                onSearchItemClick(searchedResults[viewHolder.adapterPosition])
+        }
         return viewHolder
     }
 
