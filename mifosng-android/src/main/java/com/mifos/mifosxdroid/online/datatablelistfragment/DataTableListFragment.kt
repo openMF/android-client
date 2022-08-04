@@ -73,12 +73,12 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         rootView = inflater.inflate(R.layout.dialog_fragment_add_entry_to_datatable, container,
                 false)
         ButterKnife.bind(this, rootView)
         mDataTableListPresenter!!.attachView(this)
-        activity!!.title = activity!!.resources.getString(
+        requireActivity().title = requireActivity().resources.getString(
                 R.string.associated_datatables)
         safeUIBlockingUtility = SafeUIBlockingUtility(this@DataTableListFragment
                 .activity, getString(R.string.create_client_loading_message))
@@ -90,13 +90,13 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
     }
 
     fun createForm(table: DataTable) {
-        val tableName = TextView(activity!!.applicationContext)
+        val tableName = TextView(requireActivity().applicationContext)
         tableName.text = table.registeredTableName
         tableName.gravity = Gravity.CENTER_HORIZONTAL
         tableName.setTypeface(null, Typeface.BOLD)
-        tableName.setTextColor(activity!!.resources.getColor(R.color.black))
+        tableName.setTextColor(requireActivity().resources.getColor(R.color.black))
         tableName.setTextSize(TypedValue.COMPLEX_UNIT_SP,
-                activity!!.resources.getDimension(R.dimen.datatable_name_heading))
+                requireActivity().resources.getDimension(R.dimen.datatable_name_heading))
         linearLayout!!.addView(tableName)
         val formWidgets: MutableList<FormWidget> = ArrayList()
         for (columnHeader in table.columnHeaderData) {
@@ -133,7 +133,7 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
                 } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_DATE) {
                     val formEditText = FormEditText(activity, columnHeader
                             .columnName)
-                    formEditText.setIsDateField(true, activity!!.supportFragmentManager)
+                    formEditText.setIsDateField(true, requireActivity().supportFragmentManager)
                     formWidgets.add(formEditText)
                     linearLayout!!.addView(formEditText.view)
                 } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_BOOL) {
@@ -151,13 +151,13 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
         val bt_processForm = Button(activity)
         bt_processForm.layoutParams = FormWidget.defaultLayoutParams
         bt_processForm.text = getString(R.string.save)
-        bt_processForm.setBackgroundColor(activity!!.resources.getColor(R.color.blue_dark))
+        bt_processForm.setBackgroundColor(requireActivity().resources.getColor(R.color.blue_dark))
         linearLayout!!.addView(bt_processForm)
         bt_processForm.setOnClickListener {
             try {
                 onSaveActionRequested()
             } catch (e: RequiredFieldException) {
-                Log.d(LOG_TAG, e.message)
+                Log.d(LOG_TAG, e.message.toString())
             }
         }
     }
@@ -208,17 +208,17 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
 
     override fun showMessage(messageId: Int) {
         Toaster.show(rootView, getString(messageId))
-        activity!!.supportFragmentManager.popBackStackImmediate()
+        requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
     override fun showMessage(message: String?) {
         Toaster.show(rootView, message)
-        activity!!.supportFragmentManager.popBackStackImmediate()
+        requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
     override fun showClientCreatedSuccessfully(client: Client) {
-        activity!!.supportFragmentManager.popBackStack()
-        activity!!.supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.popBackStack()
         Toast.makeText(activity, getString(R.string.client) +
                 MifosResponseHandler.getResponse(), Toast.LENGTH_SHORT).show()
         if (PrefManager.getUserStatus() == Constants.USER_ONLINE) {
@@ -229,7 +229,7 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
     }
 
     override fun showWaitingForCheckerApproval(message: Int) {
-        activity!!.supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.popBackStack()
         Toaster.show(rootView, message, Toast.LENGTH_SHORT)
     }
 

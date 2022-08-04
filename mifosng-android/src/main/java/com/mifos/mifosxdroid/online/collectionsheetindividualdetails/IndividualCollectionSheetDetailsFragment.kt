@@ -50,9 +50,9 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
             sheet = savedInstanceState[Constants.EXTRA_COLLECTION_INDIVIDUAL] as IndividualCollectionSheet
             showCollectionSheetViews(sheet)
         }
-        sheet = arguments!!.getParcelable(Constants.INDIVIDUAL_SHEET)
-        actualDisbursementDate = arguments!!.getString(Constants.DISBURSEMENT_DATE)
-        transactionDate = arguments!!.getString(Constants.TRANSACTION_DATE)
+        sheet = requireArguments().getParcelable(Constants.INDIVIDUAL_SHEET)
+        actualDisbursementDate = requireArguments().getString(Constants.DISBURSEMENT_DATE)
+        transactionDate = requireArguments().getString(Constants.TRANSACTION_DATE)
         setHasOptionsMenu(true)
     }
 

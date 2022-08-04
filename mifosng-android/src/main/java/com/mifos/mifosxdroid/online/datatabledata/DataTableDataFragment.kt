@@ -151,7 +151,7 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
             val dataTableRowDialogFragment = DataTableRowDialogFragment
                     .newInstance(dataTable, entityId)
             dataTableRowDialogFragment.setTargetFragment(this, Constants.DIALOG_FRAGMENT)
-            val fragmentTransaction = activity!!.supportFragmentManager
+            val fragmentTransaction = requireActivity().supportFragmentManager
                     .beginTransaction()
             fragmentTransaction.addToBackStack(FragmentConstants.DFRAG_DATATABLE_ENTRY_FORM)
             dataTableRowDialogFragment.show(fragmentTransaction, "Document Dialog Fragment")

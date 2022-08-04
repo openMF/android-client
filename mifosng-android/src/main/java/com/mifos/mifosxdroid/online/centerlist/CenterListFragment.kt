@@ -224,7 +224,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, RecyclerItemC
                 showMessage(R.string.no_meeting_found)
             }
         }
-        mfDatePicker.show(activity!!.supportFragmentManager, MFDatePicker.TAG)
+        mfDatePicker.show(requireActivity().supportFragmentManager, MFDatePicker.TAG)
     }
 
     /**
@@ -263,7 +263,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, RecyclerItemC
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.mItem_search) activity!!.finish()
+        if (item.itemId == R.id.mItem_search) requireActivity().finish()
         return super.onOptionsItemSelected(item)
     }
 

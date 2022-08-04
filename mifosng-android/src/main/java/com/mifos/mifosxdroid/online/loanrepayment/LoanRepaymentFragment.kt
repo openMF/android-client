@@ -107,15 +107,12 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        if (arguments != null) {
-            val mLoanWithAssociations: LoanWithAssociations = arguments!!.getParcelable(Constants.LOAN_SUMMARY)
-            if (mLoanWithAssociations != null) {
-                clientName = mLoanWithAssociations.clientName
-                loanAccountNumber = mLoanWithAssociations.accountNo
-                loanId = mLoanWithAssociations.id.toString()
-                loanProductName = mLoanWithAssociations.loanProductName
-                amountInArrears = mLoanWithAssociations.summary.totalOverdue
-            }
+        arguments?.getParcelable<LoanWithAssociations>(Constants.LOAN_SUMMARY)?.let {  loanWithAssociations ->
+            clientName = loanWithAssociations.clientName
+            loanAccountNumber = loanWithAssociations.accountNo
+            loanId = loanWithAssociations.id.toString()
+            loanProductName = loanWithAssociations.loanProductName
+            amountInArrears = loanWithAssociations.summary.totalOverdue
         }
     }
 
@@ -151,7 +148,7 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
 
     override fun onClick(dialog: DialogInterface, which: Int) {
         if (DialogInterface.BUTTON_POSITIVE == which) {
-            activity!!.supportFragmentManager.popBackStackImmediate()
+            requireActivity().supportFragmentManager.popBackStackImmediate()
         }
     }
 
@@ -242,7 +239,7 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
             TODO Add Validation to make sure :
             1. Date Is in Correct Format
             2. Date Entered is not greater than Date Today i.e Date is not in future
-         */tv_repaymentDate!!.setOnClickListener { (mfDatePicker as MFDatePicker?)!!.show(activity!!.supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
+         */tv_repaymentDate!!.setOnClickListener { (mfDatePicker as MFDatePicker?)!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
     }
 
     /**
@@ -297,7 +294,7 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
      */
     @OnClick(R.id.bt_cancelPayment)
     fun onCancelPaymentButtonClicked() {
-        activity!!.supportFragmentManager.popBackStackImmediate()
+        requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
     /**
@@ -325,7 +322,7 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
             tv_amountDue!!.text = loanRepaymentTemplate.amount.toString()
             inflateRepaymentDate()
             val listOfPaymentTypes = Utils.getPaymentTypeOptions(loanRepaymentTemplate.paymentTypeOptions)
-            val paymentTypeAdapter = ArrayAdapter(activity,
+            val paymentTypeAdapter = ArrayAdapter(requireActivity(),
                     android.R.layout.simple_spinner_item, listOfPaymentTypes)
             paymentTypeAdapter.setDropDownViewResource(
                     android.R.layout.simple_spinner_dropdown_item)
@@ -352,7 +349,7 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
             Toaster.show(rootView, "Payment Successful, Transaction ID = " +
                     loanRepaymentResponse.resourceId)
         }
-        activity!!.supportFragmentManager.popBackStackImmediate()
+        requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
     override fun showError(errorMessage: Int) {

@@ -119,7 +119,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.mItem_search) activity!!.finish()
+        if (item.itemId == R.id.mItem_search) requireActivity().finish()
         return super.onOptionsItemSelected(item)
     }
 
@@ -696,7 +696,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     }
 
     private fun setMeetingDate() {
-        datePicker!!.show(activity!!.supportFragmentManager,
+        datePicker!!.show(requireActivity().supportFragmentManager,
                 FragmentConstants.DFRAG_DATE_PICKER)
     }
 
@@ -720,7 +720,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     }
 
     private fun setSpinner(spinner: Spinner?, values: List<String?>) {
-        val adapter = ArrayAdapter(activity,
+        val adapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, values)
         adapter.notifyDataSetChanged()
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

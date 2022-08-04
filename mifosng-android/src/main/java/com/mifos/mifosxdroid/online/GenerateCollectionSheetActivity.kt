@@ -20,16 +20,11 @@ class GenerateCollectionSheetActivity : MifosBaseActivity(), OnPayloadSelectedLi
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_toolbar_container)
         showBackButton()
-        val fragmentToOpen: String
-        if (intent != null) {
-            fragmentToOpen = intent.getStringExtra(Constants.COLLECTION_TYPE)
-            if (fragmentToOpen == Constants.EXTRA_COLLECTION_INDIVIDUAL) {
-                replaceFragment(IndividualCollectionSheetFragment.newInstance(),
-                        false, R.id.container)
-            } else if (fragmentToOpen == Constants.EXTRA_COLLECTION_COLLECTION) {
-                replaceFragment(GenerateCollectionSheetFragment.newInstance(),
-                        false, R.id.container)
-            }
+        intent?.getStringExtra(Constants.COLLECTION_TYPE)?.let { collectionType ->
+            if(collectionType == Constants.EXTRA_COLLECTION_INDIVIDUAL)
+                replaceFragment(IndividualCollectionSheetFragment.newInstance(),false, R.id.container)
+            else if(collectionType == Constants.EXTRA_COLLECTION_COLLECTION)
+                replaceFragment(GenerateCollectionSheetFragment.newInstance(),false, R.id.container)
         }
     }
 

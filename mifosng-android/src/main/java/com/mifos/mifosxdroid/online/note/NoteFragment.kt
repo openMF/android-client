@@ -63,8 +63,8 @@ class NoteFragment : MifosBaseFragment(), NoteMvpView, OnRefreshListener {
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         notes = ArrayList()
         if (arguments != null) {
-            entityType = arguments!!.getString(Constants.ENTITY_TYPE)
-            entityId = arguments!!.getInt(Constants.ENTITY_ID)
+            entityType = requireArguments().getString(Constants.ENTITY_TYPE)
+            entityId = requireArguments().getInt(Constants.ENTITY_ID)
         }
     }
 

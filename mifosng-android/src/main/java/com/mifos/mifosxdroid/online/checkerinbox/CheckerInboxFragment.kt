@@ -322,6 +322,7 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     showNetworkError()
                 }
             }
+            else -> {}
         }
     }
 
@@ -331,7 +332,7 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
         iv_filter_search_icon.setOnClickListener {
             val dialogSearchFilter = CheckerTaskFilterDialogFragment()
             dialogSearchFilter.setTargetFragment(this@CheckerInboxFragment, 1)
-            dialogSearchFilter.show(activity!!.supportFragmentManager, "DialogSearchFilter")
+            dialogSearchFilter.show(requireActivity().supportFragmentManager, "DialogSearchFilter")
         }
 
         iv_batch_approve_icon.setOnClickListener {

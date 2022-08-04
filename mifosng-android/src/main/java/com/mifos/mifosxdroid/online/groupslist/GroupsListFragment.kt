@@ -117,7 +117,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
         actionModeCallback = ActionModeCallback()
         if (arguments != null) {
             mGroupList = requireArguments().getParcelableArrayList(Constants.GROUPS)
-            isParentFragment = arguments!!
+            isParentFragment = requireArguments()
                     .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
         setHasOptionsMenu(true)

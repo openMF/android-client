@@ -116,8 +116,8 @@ class ClientListFragment : MifosBaseFragment(), RecyclerItemClickListener.OnItem
         selectedClients = ArrayList()
         actionModeCallback = ActionModeCallback()
         if (arguments != null) {
-            clientList = arguments!!.getParcelableArrayList(Constants.CLIENTS)
-            isParentFragment = arguments!!
+            clientList = requireArguments().getParcelableArrayList(Constants.CLIENTS)
+            isParentFragment = requireArguments()
                     .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
         setHasOptionsMenu(true)

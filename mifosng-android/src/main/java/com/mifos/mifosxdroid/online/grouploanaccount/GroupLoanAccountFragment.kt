@@ -200,13 +200,13 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        if (arguments != null) groupId = arguments!!.getInt(Constants.GROUP_ID)
+        if (arguments != null) groupId = requireArguments().getInt(Constants.GROUP_ID)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         // Inflate the layout for this fragment
-        if (activity!!.actionBar != null) activity!!.actionBar.setDisplayHomeAsUpEnabled(true)
+        activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         rootView = inflater.inflate(R.layout.fragment_add_loan, null)
         ButterKnife.bind(this, rootView)
         mGroupLoanAccountPresenter!!.attachView(this)
@@ -260,55 +260,55 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     }
 
     fun inflateLoanSpinner() {
-        amortizationTypeAdapter = ArrayAdapter(activity,
+        amortizationTypeAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, amortizationType)
         amortizationTypeAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spAmortization!!.adapter = amortizationTypeAdapter
         spAmortization!!.onItemSelectedListener = this
-        interestCalculationPeriodTypeAdapter = ArrayAdapter(activity,
+        interestCalculationPeriodTypeAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, interestCalculationPeriodType)
         interestCalculationPeriodTypeAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spInterestCalculationPeriod!!.adapter = interestCalculationPeriodTypeAdapter
         spInterestCalculationPeriod!!.onItemSelectedListener = this
-        transactionProcessingStrategyAdapter = ArrayAdapter(activity,
+        transactionProcessingStrategyAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, transactionProcessingStrategy)
         transactionProcessingStrategyAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spRepaymentStrategy!!.adapter = transactionProcessingStrategyAdapter
         spRepaymentStrategy!!.onItemSelectedListener = this
-        termFrequencyTypeAdapter = ArrayAdapter(activity,
+        termFrequencyTypeAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, termFrequencyType)
         termFrequencyTypeAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spPaymentPeriods!!.adapter = termFrequencyTypeAdapter
         spPaymentPeriods!!.onItemSelectedListener = this
-        loanProductAdapter = ArrayAdapter(activity,
+        loanProductAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, mListLoanProductsNames)
         loanProductAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spLoanProduct!!.adapter = loanProductAdapter
         spLoanProduct!!.onItemSelectedListener = this
-        loanPurposeTypeAdapter = ArrayAdapter(activity,
+        loanPurposeTypeAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, loanPurposeType)
         loanPurposeTypeAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spLoanPurpose!!.adapter = loanPurposeTypeAdapter
         spLoanPurpose!!.onItemSelectedListener = this
-        interestTypeOptionsAdapter = ArrayAdapter(activity,
+        interestTypeOptionsAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, interestTypeOptions)
         interestTypeOptionsAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spInterestType!!.adapter = interestTypeOptionsAdapter
         spInterestType!!.onItemSelectedListener = this
-        loanOfficerOptionsAdapter = ArrayAdapter(activity,
+        loanOfficerOptionsAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, loanOfficerOptions)
         loanOfficerOptionsAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spLoanOfficer!!.adapter = loanOfficerOptionsAdapter
         spLoanOfficer!!.onItemSelectedListener = this
-        fundOptionsAdapter = ArrayAdapter(activity,
+        fundOptionsAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, fundOptions)
         fundOptionsAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -318,14 +318,14 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
 
     private fun inflateRepaidMonthSpinners() {
         mRepaymentFrequencyNthDayTypeOptionsAdapter = ArrayAdapter(
-                activity, android.R.layout.simple_spinner_item,
+                requireActivity(), android.R.layout.simple_spinner_item,
                 mListRepaymentFrequencyNthDayTypeOptions)
         mRepaymentFrequencyNthDayTypeOptionsAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spRepaymentFreqNthDay!!.adapter = mRepaymentFrequencyNthDayTypeOptionsAdapter
         spRepaymentFreqNthDay!!.onItemSelectedListener = this
         mRepaymentFrequencyDayOfWeekTypeOptionsAdapter = ArrayAdapter(
-                activity, android.R.layout.simple_spinner_item,
+                requireActivity(), android.R.layout.simple_spinner_item,
                 mListRepaymentFrequencyDayOfWeekTypeOptions)
         mRepaymentFrequencyDayOfWeekTypeOptionsAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -366,7 +366,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     @OnClick(R.id.tv_submittedon_date)
     fun onClickSubmittedonDate() {
         issubmittedDate = true
-        mfDatePicker!!.show(activity!!.supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
+        mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
     }
 
     fun inflateDisbursementDate() {
@@ -377,7 +377,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     @OnClick(R.id.tv_disbursementon_date)
     fun onClickDisbursementonDate() {
         isdisbursementDate = true
-        mfDatePicker!!.show(activity!!.supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
+        mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
     }
 
     override fun showAllLoans(productLoans: List<LoanProducts?>?) {
@@ -432,7 +432,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     }
 
     override fun showGroupLoansAccountCreatedSuccessfully(loans: Loans?) {
-        Toast.makeText(activity, "The Loan has been submitted for Approval", Toast.LENGTH_LONG).show()
+        Toast.makeText(requireActivity(), "The Loan has been submitted for Approval", Toast.LENGTH_LONG).show()
     }
 
     override fun showFetchingError(s: String?) {

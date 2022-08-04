@@ -154,13 +154,13 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     }
 
     fun inflateSavingsSpinners() {
-        mFieldOfficerAdapter = ArrayAdapter(activity,
+        mFieldOfficerAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, mFieldOfficerNames)
         mFieldOfficerAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spFieldOfficer!!.adapter = mFieldOfficerAdapter
         spFieldOfficer!!.onItemSelectedListener = this
-        mSavingProductsAdapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, mListSavingProductsNames)
+        mSavingProductsAdapter = ArrayAdapter(requireActivity(), android.R.layout.simple_spinner_item, mListSavingProductsNames)
         mSavingProductsAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spProduct!!.adapter = mSavingProductsAdapter
         spProduct!!.onItemSelectedListener = this
@@ -211,7 +211,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
 
     @OnClick(R.id.tv_submittedon_date)
     fun onClickTextViewSubmissionDate() {
-        mfDatePicker!!.show(activity!!.supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
+        mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
     }
 
     fun setSubmissionDate() {
@@ -240,7 +240,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
         Toast.makeText(activity,
                 resources.getString(R.string.savings_account_submitted_for_approval),
                 Toast.LENGTH_LONG).show()
-        activity!!.supportFragmentManager.popBackStackImmediate()
+        requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
     override fun showFetchingError(errorMessage: Int) {

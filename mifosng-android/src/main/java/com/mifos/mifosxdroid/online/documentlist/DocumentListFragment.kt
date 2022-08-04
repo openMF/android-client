@@ -85,8 +85,8 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, RecyclerI
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         mDocumentList = ArrayList()
         if (arguments != null) {
-            entityType = arguments!!.getString(Constants.ENTITY_TYPE)
-            entityId = arguments!!.getInt(Constants.ENTITY_ID)
+            entityType = requireArguments().getString(Constants.ENTITY_TYPE)
+            entityId = requireArguments().getInt(Constants.ENTITY_ID)
         }
         setHasOptionsMenu(true)
     }
@@ -240,7 +240,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, RecyclerI
 
     override fun showDocumentDialog(documentAction: String?) {
         val documentDialogFragment = DocumentDialogFragment.newInstance(entityType, entityId, documentAction, document)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_DOCUMENT_LIST)
         documentDialogFragment.show(fragmentTransaction, "Document Dialog Fragment")
@@ -283,7 +283,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, RecyclerI
         menu.clear()
         val menuItemAddNewDocument = menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_DOCUMENT, Menu.NONE, getString(R.string.add_new))
         menuItemAddNewDocument.icon = ContextCompat
-                .getDrawable(activity!!, R.drawable.ic_add_white_24dp)
+                .getDrawable(requireActivity(), R.drawable.ic_add_white_24dp)
         menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
         super.onPrepareOptionsMenu(menu)
     }

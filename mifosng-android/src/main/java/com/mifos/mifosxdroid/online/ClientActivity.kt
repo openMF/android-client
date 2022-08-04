@@ -33,9 +33,11 @@ class ClientActivity : MifosBaseActivity(), ClientDetailsFragment.OnFragmentInte
         setContentView(R.layout.activity_toolbar_container)
         ButterKnife.bind(this)
         showBackButton()
-        clientId = intent.extras.getInt(Constants.CLIENT_ID)
-        loanAccountNumber = intent.extras.getInt(Constants.LOAN_ACCOUNT_NUMBER)
-        savingsAccountNumber = intent.extras.getInt(Constants.SAVINGS_ACCOUNT_NUMBER)
+        intent.extras?.let { extras ->
+            clientId = extras.getInt(Constants.CLIENT_ID)
+            loanAccountNumber = extras.getInt(Constants.LOAN_ACCOUNT_NUMBER)
+            savingsAccountNumber = extras.getInt(Constants.SAVINGS_ACCOUNT_NUMBER)   
+        }
         val depositType = DepositType()
         depositType.id = 100
         depositType.value = Constants.ENTITY_TYPE_SAVINGS

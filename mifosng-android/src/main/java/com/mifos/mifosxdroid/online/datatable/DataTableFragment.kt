@@ -68,7 +68,7 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
     private var dataTables: List<DataTable>? = null
     override fun onItemClick(childView: View, position: Int) {
         val dataTableDataFragment: DataTableDataFragment = DataTableDataFragment.Companion.newInstance(dataTables!![position], entityId)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
         fragmentTransaction.replace(R.id.container, dataTableDataFragment, FragmentConstants.FRAG_DATA_TABLE)
@@ -79,8 +79,8 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            tableName = arguments!!.getString(Constants.DATA_TABLE_NAME)
-            entityId = arguments!!.getInt(Constants.ENTITY_ID)
+            tableName = requireArguments().getString(Constants.DATA_TABLE_NAME)
+            entityId = requireArguments().getInt(Constants.ENTITY_ID)
         }
         dataTables = ArrayList()
     }

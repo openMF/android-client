@@ -58,9 +58,9 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         if (arguments != null) {
-            centerId = arguments!!.getInt(Constants.CENTER_ID)
-            dateOfCollection = arguments!!.getString(Constants.DATE_OF_COLLECTION)
-            calendarInstanceId = arguments!!.getInt(Constants.CALENDAR_INSTANCE_ID)
+            centerId = requireArguments().getInt(Constants.CENTER_ID)
+            dateOfCollection = requireArguments().getString(Constants.DATE_OF_COLLECTION)
+            calendarInstanceId = requireArguments().getInt(Constants.CALENDAR_INSTANCE_ID)
         }
         setHasOptionsMenu(true)
     }

@@ -67,7 +67,7 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         if (arguments != null) {
-            clientId = arguments!!.getInt(Constants.CLIENT_ID)
+            clientId = requireArguments().getInt(Constants.CLIENT_ID)
         }
         setHasOptionsMenu(true)
     }
@@ -149,7 +149,7 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
                     val documentListFragment = DocumentListFragment.newInstance(
                             Constants.ENTITY_TYPE_CLIENT_IDENTIFIERS,
                             identifiers!![position].id)
-                    val fragmentTransaction = activity!!.supportFragmentManager.beginTransaction()
+                    val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
                     fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_IDENTIFIER)
                     fragmentTransaction.replace(R.id.container, documentListFragment)
                     fragmentTransaction.commit()
@@ -189,7 +189,7 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
             R.id.menu_add -> {
                 val identifierDialogFragment = IdentifierDialogFragment.newInstance(clientId)
                 identifierDialogFragment.setOnClientIdentifierCreationListener(this)
-                val fragmentTransaction = activity!!.supportFragmentManager
+                val fragmentTransaction = requireActivity().supportFragmentManager
                         .beginTransaction()
                 fragmentTransaction.addToBackStack(FragmentConstants.FRAG_DOCUMENT_LIST)
                 identifierDialogFragment.show(fragmentTransaction, "Identifier Dialog Fragment")

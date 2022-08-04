@@ -41,7 +41,7 @@ class SurveyQuestionFragment : MifosBaseFragment(), RadioGroup.OnCheckedChangeLi
     private var mScorecardValues: ScorecardValues? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mQuestionDatas = Gson().fromJson(arguments!!.getString(Constants.QUESTION_DATA),
+        mQuestionDatas = Gson().fromJson(requireArguments().getString(Constants.QUESTION_DATA),
                 QuestionDatas::class.java)
         mScorecardValues = ScorecardValues()
     }

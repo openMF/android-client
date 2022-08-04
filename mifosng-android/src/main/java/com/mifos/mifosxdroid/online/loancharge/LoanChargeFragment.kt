@@ -67,7 +67,7 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, RecyclerItemC
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        if (arguments != null) loanAccountNumber = arguments!!.getInt(Constants.LOAN_ACCOUNT_NUMBER)
+        if (arguments != null) loanAccountNumber = requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -169,7 +169,7 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, RecyclerItemC
             val loanChargeDialogFragment = LoanChargeDialogFragment
                     .newInstance(loanAccountNumber)
             loanChargeDialogFragment.setOnChargeCreateListener(this)
-            val fragmentTransaction = activity!!.supportFragmentManager
+            val fragmentTransaction = requireActivity().supportFragmentManager
                     .beginTransaction()
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CHARGE_LIST)
             loanChargeDialogFragment.show(fragmentTransaction, "Loan Charge Dialog Fragment")

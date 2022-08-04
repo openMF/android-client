@@ -79,7 +79,7 @@ class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefr
                 })
 
         rl_checker_inbox.setOnClickListener {
-            val fragmentTransaction = activity!!
+            val fragmentTransaction = requireActivity()
                     .supportFragmentManager.beginTransaction()
             fragmentTransaction.addToBackStack("Checker Inbox")
             fragmentTransaction.replace(R.id.container,

@@ -70,7 +70,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, RecyclerI
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        if (arguments != null) clientId = arguments!!.getInt(Constants.CLIENT_ID)
+        if (arguments != null) clientId = requireArguments().getInt(Constants.CLIENT_ID)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -216,7 +216,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, RecyclerI
         if (id == MENU_ITEM_ADD_NEW_CHARGES) {
             val chargeDialogFragment = ChargeDialogFragment.newInstance(clientId)
             chargeDialogFragment.setOnChargeCreatedListener(this)
-            val fragmentTransaction = activity!!.supportFragmentManager
+            val fragmentTransaction = requireActivity().supportFragmentManager
                     .beginTransaction()
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CHARGE_LIST)
             chargeDialogFragment.show(fragmentTransaction, "Charge Dialog Fragment")

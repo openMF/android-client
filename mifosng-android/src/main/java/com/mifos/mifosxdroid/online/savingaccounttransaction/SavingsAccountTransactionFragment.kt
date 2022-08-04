@@ -80,11 +80,11 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         if (arguments != null) {
-            savingsAccountNumber = arguments!!.getString(Constants.SAVINGS_ACCOUNT_NUMBER)
-            savingsAccountId = arguments!!.getInt(Constants.SAVINGS_ACCOUNT_ID)
-            transactionType = arguments!!.getString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE)
-            clientName = arguments!!.getString(Constants.CLIENT_NAME)
-            savingsAccountType = arguments!!.getParcelable(Constants.SAVINGS_ACCOUNT_TYPE)
+            savingsAccountNumber = requireArguments().getString(Constants.SAVINGS_ACCOUNT_NUMBER)
+            savingsAccountId = requireArguments().getInt(Constants.SAVINGS_ACCOUNT_ID)
+            transactionType = requireArguments().getString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE)
+            clientName = requireArguments().getString(Constants.CLIENT_NAME)
+            savingsAccountType = requireArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE)
         }
     }
 
@@ -121,7 +121,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
                 .setTitle(R.string.sync_previous_transaction)
                 .setMessage(R.string.dialog_message_sync_savingaccounttransaction)
                 .setPositiveButton(R.string.dialog_action_ok
-                ) { dialog, which -> activity!!.supportFragmentManager.popBackStackImmediate() }
+                ) { dialog, which -> requireActivity().supportFragmentManager.popBackStackImmediate() }
                 .setCancelable(false)
                 .createMaterialDialog()
                 .show()
@@ -209,7 +209,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
 
     @OnClick(R.id.bt_cancelTransaction)
     fun onCancelTransactionButtonClicked() {
-        activity!!.supportFragmentManager.popBackStackImmediate()
+        requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
     fun inflateRepaymentDate() {
@@ -218,7 +218,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
         // TODO Add Validation to make sure :
         // 1. Date Is in Correct Format
         // 2. Date Entered is not greater than Date Today i.e Date is not in future
-        tv_transactionDate!!.setOnClickListener { (mfDatePicker as MFDatePicker?)?.show(activity!!.supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
+        tv_transactionDate!!.setOnClickListener { (mfDatePicker as MFDatePicker?)?.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
     }
 
     override fun onDatePicked(date: String) {
@@ -229,7 +229,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
         if (savingsAccountTransactionTemplate != null) {
             val listOfPaymentTypes = Utils.getPaymentTypeOptions(
                     savingsAccountTransactionTemplate.paymentTypeOptions)
-            val paymentTypeAdapter = ArrayAdapter(activity,
+            val paymentTypeAdapter = ArrayAdapter(requireActivity(),
                     android.R.layout.simple_spinner_item, listOfPaymentTypes)
             paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             sp_paymentType!!.adapter = paymentTypeAdapter
@@ -256,7 +256,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
                         + savingsAccountTransactionResponse.resourceId)
             }
         }
-        activity!!.supportFragmentManager.popBackStackImmediate()
+        requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
     override fun showError(errorMessage: Int) {
