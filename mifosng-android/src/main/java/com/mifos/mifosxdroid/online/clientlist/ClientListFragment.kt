@@ -169,7 +169,6 @@ class ClientListFragment : MifosBaseFragment(), RecyclerItemClickListener.OnItem
     override fun showUserInterface() {
         mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager!!.orientation = LinearLayoutManager.VERTICAL
-        mClientNameListAdapter!!.setContext(activity)
         rv_clients!!.layoutManager = mLayoutManager
         rv_clients!!.addOnItemTouchListener(RecyclerItemClickListener(activity, this))
         rv_clients!!.setHasFixedSize(true)
@@ -231,7 +230,7 @@ class ClientListFragment : MifosBaseFragment(), RecyclerItemClickListener.OnItem
      */
     override fun showClientList(clients: List<Client>?) {
         clientList = clients
-        mClientNameListAdapter!!.setClients(clients)
+        mClientNameListAdapter!!.setClients(clients ?: emptyList())
         mClientNameListAdapter!!.notifyDataSetChanged()
     }
 

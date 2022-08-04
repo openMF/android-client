@@ -135,8 +135,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, RecyclerI
          */
         if (mApiRestCounter == 1) {
             chargesList = chargesPage!!.pageItems as ArrayList<Charges>
-            mChargesNameListAdapter = ChargeNameListAdapter(activity,
-                    chargesList, clientId)
+            mChargesNameListAdapter = ChargeNameListAdapter(chargesList, clientId)
             rv_charges!!.adapter = mChargesNameListAdapter
             ll_error!!.visibility = View.GONE
         } else {
@@ -158,8 +157,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, RecyclerI
         }
         //If the adapter has not been initialized, there were 0 charge items earlier. Initialize it.
         if (mChargesNameListAdapter == null) {
-            mChargesNameListAdapter = ChargeNameListAdapter(activity,
-                    chargesList, clientId)
+            mChargesNameListAdapter = ChargeNameListAdapter(chargesList, clientId)
             rv_charges!!.adapter = mChargesNameListAdapter
         }
         mChargesNameListAdapter!!.notifyItemInserted(chargesList.size - 1)

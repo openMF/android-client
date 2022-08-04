@@ -114,7 +114,7 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
 
     override fun showDataTables(dataTables: List<DataTable>?) {
         this.dataTables = dataTables
-        dataTableAdapter!!.setDataTables(dataTables)
+        dataTableAdapter!!.dataTables = dataTables ?: emptyList()
     }
 
     override fun showEmptyDataTables() {

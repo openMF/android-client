@@ -124,8 +124,7 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, RecyclerItemC
 
     override fun showLoanChargesList(charges: MutableList<Charges>) {
         chargesList = charges
-        mChargesNameListAdapter = ChargeNameListAdapter(getContext(),
-                chargesList, loanAccountNumber)
+        mChargesNameListAdapter = ChargeNameListAdapter(chargesList, loanAccountNumber)
         rv_charges!!.adapter = mChargesNameListAdapter
         if (charges.size == 0) {
             ll_error!!.visibility = View.VISIBLE

@@ -181,8 +181,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, RecyclerI
 
     override fun showDocumentList(documents: List<Document>) {
         mDocumentList = documents
-        mDocumentListAdapter!!.setDocuments(mDocumentList)
-        mDocumentListAdapter!!.notifyDataSetChanged()
+        mDocumentListAdapter!!.documents = documents
         if (documents.isEmpty()) {
             showEmptyDocuments()
         } else {

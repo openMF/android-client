@@ -10,7 +10,6 @@ import android.os.Parcelable
 import android.view.*
 import android.widget.ProgressBar
 import androidx.appcompat.view.ActionMode
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -165,7 +164,6 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
         rv_groups!!.layoutManager = mLayoutManager
         rv_groups!!.addOnItemTouchListener(RecyclerItemClickListener(activity, this))
         rv_groups!!.setHasFixedSize(true)
-        mGroupListAdapter!!.setContext(activity)
         rv_groups!!.adapter = mGroupListAdapter
         swipeRefreshLayout!!.setColorSchemeColors(*activity
                 ?.getResources()!!.getIntArray(R.array.swipeRefreshColors))
@@ -207,7 +205,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
     override fun showGroups(groups: List<Group?>?) {
         mGroupList = groups as List<Group>?
         Collections.sort(mGroupList) { grp1, grp2 -> grp1.name.compareTo(grp2.name) }
-        mGroupListAdapter!!.setGroups(groups)
+        mGroupListAdapter!!.setGroups(mGroupList ?: emptyList())
     }
 
     /**

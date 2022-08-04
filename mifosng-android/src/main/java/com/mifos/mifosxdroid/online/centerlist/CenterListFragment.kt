@@ -133,7 +133,6 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, RecyclerItemC
         rvCenters!!.layoutManager = layoutManager
         rvCenters!!.addOnItemTouchListener(RecyclerItemClickListener(activity, this))
         rvCenters!!.setHasFixedSize(true)
-        centersListAdapter!!.setContext(activity)
         rvCenters!!.adapter = centersListAdapter
         swipeRefreshLayout!!.setColorSchemeColors(*activity
                 ?.getResources()!!.getIntArray(R.array.swipeRefreshColors))
@@ -173,7 +172,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, RecyclerItemC
     </Center> */
     override fun showCenters(centers: List<Center?>?) {
         this.centers = centers as List<Center>?
-        centersListAdapter!!.setCenters(centers)
+        centersListAdapter!!.setCenters(this.centers ?: emptyList())
         centersListAdapter!!.notifyDataSetChanged()
     }
 

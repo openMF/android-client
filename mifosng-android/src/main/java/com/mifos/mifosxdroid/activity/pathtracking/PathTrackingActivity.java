@@ -113,7 +113,6 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
         userLocations = new ArrayList<>();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        pathTrackingAdapter.setContext(this);
         mLayoutManager.setReverseLayout(true);
         mLayoutManager.setStackFromEnd(true);
         rvPathTracker.setLayoutManager(mLayoutManager);
@@ -200,6 +199,7 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case Constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
@@ -210,7 +210,7 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
                 } else {
                     // permission denied
                     Toast.makeText(getApplicationContext(), getResources()
-                                    .getString(R.string.permission_denied_to_access_fine_location) ,
+                                    .getString(R.string.permission_denied_to_access_fine_location),
                             Toast.LENGTH_SHORT).show();
                 }
             }
