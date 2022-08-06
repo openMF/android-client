@@ -96,7 +96,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         if (arguments != null) {
-            groupId = arguments!!.getInt(Constants.GROUP_ID)
+            groupId = requireArguments().getInt(Constants.GROUP_ID)
         }
         setHasOptionsMenu(true)
     }
@@ -112,7 +112,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
     @OnClick(R.id.btn_activate_group)
     fun onClickActivateGroup() {
         val activateFragment = ActivateFragment.newInstance(groupId, Constants.ACTIVATE_GROUP)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
         fragmentTransaction.replace(R.id.container, activateFragment)
@@ -121,7 +121,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
 
     fun loadDocuments() {
         val documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_GROUPS, groupId)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS)
         fragmentTransaction.replace(R.id.container, documentListFragment)
@@ -130,7 +130,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
 
     fun loadNotes() {
         val noteFragment = NoteFragment.newInstance(Constants.ENTITY_TYPE_GROUPS, groupId)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
         fragmentTransaction.replace(R.id.container, noteFragment)
@@ -139,7 +139,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
 
     fun addGroupSavingsAccount() {
         val savingsAccountFragment = SavingsAccountFragment.newInstance(groupId, true)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS)
         fragmentTransaction.replace(R.id.container, savingsAccountFragment)
@@ -148,7 +148,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
 
     fun addGroupLoanAccount() {
         val grouploanAccountFragment = GroupLoanAccountFragment.newInstance(groupId)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS)
         fragmentTransaction.replace(R.id.container, grouploanAccountFragment)
@@ -157,7 +157,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
 
     fun loadGroupDataTables() {
         val dataTableFragment = DataTableFragment.newInstance(Constants.DATA_TABLE_NAME_GROUP, groupId)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS)
         fragmentTransaction.replace(R.id.container, dataTableFragment)
@@ -212,13 +212,13 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         accountAccordion = AccountAccordion(activity)
         if (groupAccounts?.loanAccounts!!.size > 0) {
             val section = AccountAccordion.Section.LOANS
-            val adapter = LoanAccountsListAdapter(activity!!.applicationContext,
+            val adapter = LoanAccountsListAdapter(requireActivity().applicationContext,
                     groupAccounts?.loanAccounts)
             section.connect(activity, adapter, AdapterView.OnItemClickListener { adapterView, view, i, l -> mListener!!.loadLoanAccountSummary(adapter.getItem(i).id) })
         }
         if (groupAccounts.nonRecurringSavingsAccounts.size > 0) {
             val section = AccountAccordion.Section.SAVINGS
-            val adapter = SavingsAccountsListAdapter(activity!!.applicationContext,
+            val adapter = SavingsAccountsListAdapter(requireActivity().applicationContext,
                     groupAccounts.nonRecurringSavingsAccounts)
             section.connect(activity, adapter, AdapterView.OnItemClickListener { adapterView, view, i, l ->
                 mListener!!.loadSavingsAccountSummary(adapter.getItem(i).id,
@@ -227,7 +227,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         }
         if (groupAccounts.recurringSavingsAccounts.size > 0) {
             val section = AccountAccordion.Section.RECURRING
-            val adapter = SavingsAccountsListAdapter(activity!!.applicationContext,
+            val adapter = SavingsAccountsListAdapter(requireActivity().applicationContext,
                     groupAccounts.recurringSavingsAccounts)
             section.connect(activity, adapter, AdapterView.OnItemClickListener { adapterView, view, i, l ->
                 mListener!!.loadSavingsAccountSummary(adapter.getItem(i).id,

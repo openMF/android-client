@@ -27,7 +27,6 @@ import com.mifos.mifosxdroid.adapters.DocumentListAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.mifosxdroid.core.RecyclerItemClickListener
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment
 import com.mifos.objects.noncore.Document
@@ -37,10 +36,9 @@ import com.mifos.utils.FileUtils
 import com.mifos.utils.FragmentConstants
 import okhttp3.ResponseBody
 import java.io.File
-import java.util.*
 import javax.inject.Inject
 
-class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, RecyclerItemClickListener.OnItemClickListener, OnRefreshListener {
+class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefreshListener {
     @JvmField
     @BindView(R.id.rv_documents)
     var rv_documents: RecyclerView? = null
@@ -65,28 +63,28 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, RecyclerI
     @Inject
     var mDocumentListPresenter: DocumentListPresenter? = null
 
-    @JvmField
-    @Inject
-    var mDocumentListAdapter: DocumentListAdapter? = null
+    private val mDocumentListAdapter by lazy {
+        DocumentListAdapter(
+            onDocumentClick = { documentSelected ->
+                document = documentSelected
+                showDocumentActions(documentSelected.id)
+            }
+        )
+    }
     private lateinit var rootView: View
     private var entityType: String? = null
     private var entityId = 0
     private var document: Document? = null
     private var documentBody: ResponseBody? = null
     private var mDocumentList: List<Document>? = null
-    override fun onItemClick(childView: View, position: Int) {
-        document = mDocumentList!![position]
-        showDocumentActions(mDocumentList!![position].id)
-    }
 
-    override fun onItemLongPress(childView: View, position: Int) {}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         mDocumentList = ArrayList()
         if (arguments != null) {
-            entityType = arguments!!.getString(Constants.ENTITY_TYPE)
-            entityId = arguments!!.getInt(Constants.ENTITY_ID)
+            entityType = requireArguments().getString(Constants.ENTITY_TYPE)
+            entityId = requireArguments().getInt(Constants.ENTITY_ID)
         }
         setHasOptionsMenu(true)
     }
@@ -100,7 +98,6 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, RecyclerI
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         rv_documents!!.layoutManager = layoutManager
-        rv_documents!!.addOnItemTouchListener(RecyclerItemClickListener(activity, this))
         rv_documents!!.setHasFixedSize(true)
         rv_documents!!.adapter = mDocumentListAdapter
         swipeRefreshLayout!!.setColorSchemeColors(*activity
@@ -181,8 +178,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, RecyclerI
 
     override fun showDocumentList(documents: List<Document>) {
         mDocumentList = documents
-        mDocumentListAdapter!!.setDocuments(mDocumentList)
-        mDocumentListAdapter!!.notifyDataSetChanged()
+        mDocumentListAdapter!!.documents = documents
         if (documents.isEmpty()) {
             showEmptyDocuments()
         } else {
@@ -240,7 +236,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, RecyclerI
 
     override fun showDocumentDialog(documentAction: String?) {
         val documentDialogFragment = DocumentDialogFragment.newInstance(entityType, entityId, documentAction, document)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_DOCUMENT_LIST)
         documentDialogFragment.show(fragmentTransaction, "Document Dialog Fragment")
@@ -283,7 +279,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, RecyclerI
         menu.clear()
         val menuItemAddNewDocument = menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_DOCUMENT, Menu.NONE, getString(R.string.add_new))
         menuItemAddNewDocument.icon = ContextCompat
-                .getDrawable(activity!!, R.drawable.ic_add_white_24dp)
+                .getDrawable(requireActivity(), R.drawable.ic_add_white_24dp)
         menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
         super.onPrepareOptionsMenu(menu)
     }

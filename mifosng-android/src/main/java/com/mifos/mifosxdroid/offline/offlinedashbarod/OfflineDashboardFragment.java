@@ -2,10 +2,6 @@ package com.mifos.mifosxdroid.offline.offlinedashbarod;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,15 +14,12 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.OfflineDashboardAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadActivity;
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadActivity;
 import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsActivity;
 import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionActivity;
-
-import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction
-        .SyncSavingsAccountTransactionActivity;
+import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionActivity;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.client.ClientPayload;
@@ -39,6 +32,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -63,8 +60,7 @@ import butterknife.ButterKnife;
  *
  * Created by Rajan Maurya on 20/07/16.
  */
-public class OfflineDashboardFragment extends MifosBaseFragment implements
-        OfflineDashboardMvpView, RecyclerItemClickListener.OnItemClickListener {
+public class OfflineDashboardFragment extends MifosBaseFragment implements OfflineDashboardMvpView {
 
     public final String LOG_TAG = getClass().getSimpleName();
 
@@ -88,7 +84,6 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
     @Inject
     OfflineDashboardPresenter mOfflineDashboardPresenter;
 
-    @Inject
     OfflineDashboardAdapter mOfflineDashboardAdapter;
 
     // update mPayloadIndex to number of request is going to fetch data in Presenter;
@@ -103,17 +98,6 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
             R.string.sync_centers,
             R.string.sync_loanrepayments,
             R.string.sync_savingsaccounttransactions};
-
-
-    @Override
-    public void onItemClick(View childView, int position) {
-        startPayloadActivity(mPayloadClasses.get(position));
-    }
-
-    @Override
-    public void onItemLongPress(View childView, int position) {
-
-    }
 
     public static OfflineDashboardFragment newInstance() {
         OfflineDashboardFragment fragment = new OfflineDashboardFragment();
@@ -144,11 +128,13 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_offline_dashboard.setLayoutManager(mLayoutManager);
         rv_offline_dashboard.setHasFixedSize(true);
-        rv_offline_dashboard.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
-                this));
         rv_offline_dashboard.setItemAnimator(new DefaultItemAnimator());
         rv_offline_dashboard.addItemDecoration(new ItemOffsetDecoration(getActivity(),
                 R.dimen.item_offset));
+        mOfflineDashboardAdapter = new OfflineDashboardAdapter(position -> {
+            startPayloadActivity(mPayloadClasses.get(position));
+            return null;
+        });
         rv_offline_dashboard.setAdapter(mOfflineDashboardAdapter);
 
         return rootView;

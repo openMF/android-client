@@ -28,7 +28,7 @@ class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInter
         setContentView(R.layout.activity_toolbar_container)
         ButterKnife.bind(this)
         showBackButton()
-        val groupId = intent.extras.getInt(Constants.GROUP_ID)
+        val groupId = intent.extras!!.getInt(Constants.GROUP_ID)
         replaceFragment(newInstance(groupId), false, R.id.container)
     }
 

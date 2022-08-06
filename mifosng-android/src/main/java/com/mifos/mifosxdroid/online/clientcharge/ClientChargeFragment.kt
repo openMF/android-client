@@ -21,7 +21,6 @@ import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.mifosxdroid.core.RecyclerItemClickListener
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.OnChargeCreateListener
@@ -35,7 +34,7 @@ import javax.inject.Inject
 /**
  * Created by nellyk on 1/22/2016.
  */
-class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, RecyclerItemClickListener.OnItemClickListener, OnChargeCreateListener {
+class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeCreateListener {
     @JvmField
     @BindView(R.id.rv_charge)
     var rv_charges: RecyclerView? = null
@@ -65,12 +64,10 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, RecyclerI
     private var clientId = 0
     private var mApiRestCounter = 0
     private val limit = 10
-    override fun onItemClick(childView: View, position: Int) {}
-    override fun onItemLongPress(childView: View, position: Int) {}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        if (arguments != null) clientId = arguments!!.getInt(Constants.CLIENT_ID)
+        if (arguments != null) clientId = requireArguments().getInt(Constants.CLIENT_ID)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -81,7 +78,6 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, RecyclerI
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         rv_charges!!.layoutManager = layoutManager
-        rv_charges!!.addOnItemTouchListener(RecyclerItemClickListener(activity, this))
         rv_charges!!.setHasFixedSize(true)
         setToolbarTitle(getString(R.string.charges))
         mApiRestCounter = 1
@@ -135,8 +131,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, RecyclerI
          */
         if (mApiRestCounter == 1) {
             chargesList = chargesPage!!.pageItems as ArrayList<Charges>
-            mChargesNameListAdapter = ChargeNameListAdapter(activity,
-                    chargesList, clientId)
+            mChargesNameListAdapter = ChargeNameListAdapter(chargesList, clientId)
             rv_charges!!.adapter = mChargesNameListAdapter
             ll_error!!.visibility = View.GONE
         } else {
@@ -158,8 +153,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, RecyclerI
         }
         //If the adapter has not been initialized, there were 0 charge items earlier. Initialize it.
         if (mChargesNameListAdapter == null) {
-            mChargesNameListAdapter = ChargeNameListAdapter(activity,
-                    chargesList, clientId)
+            mChargesNameListAdapter = ChargeNameListAdapter(chargesList, clientId)
             rv_charges!!.adapter = mChargesNameListAdapter
         }
         mChargesNameListAdapter!!.notifyItemInserted(chargesList.size - 1)
@@ -216,7 +210,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, RecyclerI
         if (id == MENU_ITEM_ADD_NEW_CHARGES) {
             val chargeDialogFragment = ChargeDialogFragment.newInstance(clientId)
             chargeDialogFragment.setOnChargeCreatedListener(this)
-            val fragmentTransaction = activity!!.supportFragmentManager
+            val fragmentTransaction = requireActivity().supportFragmentManager
                     .beginTransaction()
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CHARGE_LIST)
             chargeDialogFragment.show(fragmentTransaction, "Charge Dialog Fragment")

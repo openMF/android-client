@@ -101,14 +101,14 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     private fun setUpUi() {
         setRepaymentDate()
         officeNameList = ArrayList()
-        officeAdapter = ArrayAdapter(activity,
-                android.R.layout.simple_spinner_item, officeNameList)
+        officeAdapter = ArrayAdapter(requireActivity(),
+                android.R.layout.simple_spinner_item, officeNameList ?: emptyList())
         officeAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spOffices!!.adapter = officeAdapter
         spOffices!!.onItemSelectedListener = this
         staffNameList = ArrayList()
-        staffAdapter = ArrayAdapter(activity,
-                android.R.layout.simple_spinner_item, staffNameList)
+        staffAdapter = ArrayAdapter(requireActivity(),
+                android.R.layout.simple_spinner_item, staffNameList ?: emptyList())
         staffAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spStaff!!.adapter = staffAdapter
         tvRepaymentDate!!.setOnClickListener(this)
@@ -187,7 +187,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     }
 
     fun setTvRepaymentDate() {
-        datePicker!!.show(activity!!.supportFragmentManager,
+        datePicker!!.show(requireActivity().supportFragmentManager,
                 FragmentConstants.DFRAG_DATE_PICKER)
     }
 
@@ -221,7 +221,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         val collectionSheetDialogFragment = CollectionSheetDialogFragment.newInstance(tvRepaymentDate!!.text.toString(),
                 sheet!!.clients.size)
         collectionSheetDialogFragment.setTargetFragment(this, requestCode)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_DOCUMENT_LIST)
         collectionSheetDialogFragment.show(fragmentTransaction, "Identifier Dialog Fragment")

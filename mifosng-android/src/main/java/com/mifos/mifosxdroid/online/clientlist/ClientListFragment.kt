@@ -10,7 +10,6 @@ import android.os.Parcelable
 import android.view.*
 import android.widget.ProgressBar
 import androidx.appcompat.view.ActionMode
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -24,7 +23,6 @@ import com.mifos.mifosxdroid.adapters.ClientNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.mifosxdroid.core.RecyclerItemClickListener
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment
 import com.mifos.mifosxdroid.online.ClientActivity
@@ -32,7 +30,6 @@ import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment
 import com.mifos.objects.client.Client
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -59,7 +56,7 @@ import javax.inject.Inject
  * boolean isParentFragment) {...}
  * and unregister the ScrollListener and SwipeLayout.
 </Client> */
-class ClientListFragment : MifosBaseFragment(), RecyclerItemClickListener.OnItemClickListener, ClientListMvpView, OnRefreshListener {
+class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshListener {
     @JvmField
     @BindView(R.id.rv_clients)
     var rv_clients: RecyclerView? = null
@@ -76,9 +73,26 @@ class ClientListFragment : MifosBaseFragment(), RecyclerItemClickListener.OnItem
     @BindView(R.id.pb_client)
     var pb_client: ProgressBar? = null
 
-    @JvmField
-    @Inject
-    var mClientNameListAdapter: ClientNameListAdapter? = null
+    val mClientNameListAdapter by lazy {
+        ClientNameListAdapter(
+            onClientNameClick = { position ->
+                if (actionMode != null) {
+                    toggleSelection(position)
+                } else {
+                    val clientActivityIntent = Intent(activity, ClientActivity::class.java)
+                    clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList!![position].id)
+                    startActivity(clientActivityIntent)
+                    clickedPosition = position
+                }
+            },
+            onClientNameLongClick = { position ->
+                if (actionMode == null) {
+                    actionMode = (activity as MifosBaseActivity?)!!.startSupportActionMode(actionModeCallback!!)
+                }
+                toggleSelection(position)
+            }
+        )
+    }
 
     @JvmField
     @Inject
@@ -92,23 +106,6 @@ class ClientListFragment : MifosBaseFragment(), RecyclerItemClickListener.OnItem
     private var mLayoutManager: LinearLayoutManager? = null
     private var clickedPosition = -1
     private var sweetUIErrorHandler: SweetUIErrorHandler? = null
-    override fun onItemClick(childView: View, position: Int) {
-        if (actionMode != null) {
-            toggleSelection(position)
-        } else {
-            val clientActivityIntent = Intent(activity, ClientActivity::class.java)
-            clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList!![position].id)
-            startActivity(clientActivityIntent)
-            clickedPosition = position
-        }
-    }
-
-    override fun onItemLongPress(childView: View, position: Int) {
-        if (actionMode == null) {
-            actionMode = (activity as MifosBaseActivity?)!!.startSupportActionMode(actionModeCallback!!)
-        }
-        toggleSelection(position)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,8 +113,8 @@ class ClientListFragment : MifosBaseFragment(), RecyclerItemClickListener.OnItem
         selectedClients = ArrayList()
         actionModeCallback = ActionModeCallback()
         if (arguments != null) {
-            clientList = arguments!!.getParcelableArrayList(Constants.CLIENTS)
-            isParentFragment = arguments!!
+            clientList = requireArguments().getParcelableArrayList(Constants.CLIENTS)
+            isParentFragment = requireArguments()
                     .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
         setHasOptionsMenu(true)
@@ -169,9 +166,7 @@ class ClientListFragment : MifosBaseFragment(), RecyclerItemClickListener.OnItem
     override fun showUserInterface() {
         mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager!!.orientation = LinearLayoutManager.VERTICAL
-        mClientNameListAdapter!!.setContext(activity)
         rv_clients!!.layoutManager = mLayoutManager
-        rv_clients!!.addOnItemTouchListener(RecyclerItemClickListener(activity, this))
         rv_clients!!.setHasFixedSize(true)
         rv_clients!!.adapter = mClientNameListAdapter
         swipeRefreshLayout!!.setColorSchemeColors(*activity
@@ -231,7 +226,7 @@ class ClientListFragment : MifosBaseFragment(), RecyclerItemClickListener.OnItem
      */
     override fun showClientList(clients: List<Client>?) {
         clientList = clients
-        mClientNameListAdapter!!.setClients(clients)
+        mClientNameListAdapter!!.setClients(clients ?: emptyList())
         mClientNameListAdapter!!.notifyDataSetChanged()
     }
 

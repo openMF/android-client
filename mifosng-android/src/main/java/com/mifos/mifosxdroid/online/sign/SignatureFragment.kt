@@ -47,7 +47,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
         safeUIBlockingUtility = SafeUIBlockingUtility(activity,
                 getString(R.string.signature_fragment_loading_message))
         if (arguments != null) {
-            mClientId = arguments!!.getInt(Constants.CLIENT_ID)
+            mClientId = requireArguments().getInt(Constants.CLIENT_ID)
         }
         setHasOptionsMenu(true)
     }

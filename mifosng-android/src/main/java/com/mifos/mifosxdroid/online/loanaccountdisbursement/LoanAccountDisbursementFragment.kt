@@ -73,14 +73,14 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         if (arguments != null) {
-            loanAccountNumber = arguments!!.getInt(Constants.LOAN_ACCOUNT_NUMBER)
+            loanAccountNumber = requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
         }
         paymentTypeOptions = ArrayList()
         setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (activity!!.actionBar != null) activity!!.actionBar.setDisplayHomeAsUpEnabled(true)
+        activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         rootView = inflater.inflate(R.layout.dialog_fragment_disburse_loan, null)
         ButterKnife.bind(this, rootView)
         loanAccountDisbursementPresenter!!.attachView(this)
@@ -113,8 +113,8 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
         mfDatePicker = MFDatePicker.newInsance(this)
         tvLoanDisbursementDates!!.text = MFDatePicker.getDatePickedAsString()
         showDisbursementDate(tvLoanDisbursementDates!!.text.toString())
-        paymentTypeOptionAdapter = ArrayAdapter(activity,
-                android.R.layout.simple_spinner_item, paymentTypeOptions)
+        paymentTypeOptionAdapter = ArrayAdapter(requireActivity(),
+                android.R.layout.simple_spinner_item, paymentTypeOptions ?: emptyList())
         paymentTypeOptionAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spPaymentType!!.adapter = paymentTypeOptionAdapter
@@ -128,7 +128,7 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
 
     @OnClick(R.id.tv_loan_disbursement_dates)
     fun onClickTvDisburseDate() {
-        mfDatePicker!!.show(activity!!.supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
+        mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
     }
 
     override fun onDatePicked(date: String) {
@@ -146,7 +146,7 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
     override fun showDisburseLoanSuccessfully(genericResponse: GenericResponse?) {
         Toast.makeText(activity, R.string.loan_disburse_successfully,
                 Toast.LENGTH_LONG).show()
-        activity!!.supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.popBackStack()
     }
 
     override fun showError(message: String?) {

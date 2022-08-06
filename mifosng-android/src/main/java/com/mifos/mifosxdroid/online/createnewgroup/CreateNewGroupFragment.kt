@@ -146,7 +146,7 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
     }
 
     private fun inflateOfficesSpinner() {
-        mOfficesAdapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item,
+        mOfficesAdapter = ArrayAdapter(requireActivity(), android.R.layout.simple_spinner_item,
                 mListOffices)
         mOfficesAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         sp_offices!!.adapter = mOfficesAdapter
@@ -156,13 +156,13 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
     fun inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this)
         tv_submissionDate!!.text = MFDatePicker.getDatePickedAsString()
-        tv_submissionDate!!.setOnClickListener { (mfDatePicker as MFDatePicker?)?.show(activity!!.supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
+        tv_submissionDate!!.setOnClickListener { (mfDatePicker as MFDatePicker?)?.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
     }
 
     fun inflateActivationDate() {
         newDatePicker = MFDatePicker.newInsance(this)
         tv_activationDate!!.text = MFDatePicker.getDatePickedAsString()
-        tv_activationDate!!.setOnClickListener { (newDatePicker as MFDatePicker?)?.show(activity!!.supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
+        tv_activationDate!!.setOnClickListener { (newDatePicker as MFDatePicker?)?.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
     }
 
     override fun onDatePicked(date: String) {
@@ -214,7 +214,7 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
     override fun showGroupCreatedSuccessfully(group: SaveResponse?) {
         Toast.makeText(activity, "Group " + MifosResponseHandler.getResponse(),
                 Toast.LENGTH_LONG).show()
-        activity!!.supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.popBackStack()
         if (PrefManager.getUserStatus() == Constants.USER_ONLINE) {
             val groupActivityIntent = Intent(activity, GroupsActivity::class.java)
             groupActivityIntent.putExtra(Constants.GROUP_ID, group?.groupId)

@@ -4,7 +4,6 @@
  */
 package com.mifos.mifosxdroid.online.loancharge
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -21,20 +20,18 @@ import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.mifosxdroid.core.RecyclerItemClickListener
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.OnChargeCreateListener
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment
 import com.mifos.objects.client.Charges
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
-import java.util.*
 import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
  */
-class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, RecyclerItemClickListener.OnItemClickListener, OnChargeCreateListener {
+class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, OnChargeCreateListener {
     @kotlin.jvm.JvmField
     @BindView(R.id.rv_charge)
     var rv_charges: RecyclerView? = null
@@ -62,12 +59,10 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, RecyclerItemC
     private var mChargesNameListAdapter: ChargeNameListAdapter? = null
     private lateinit var rootView: View
     private var loanAccountNumber = 0
-    override fun onItemClick(childView: View, position: Int) {}
-    override fun onItemLongPress(childView: View, position: Int) {}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        if (arguments != null) loanAccountNumber = arguments!!.getInt(Constants.LOAN_ACCOUNT_NUMBER)
+        if (arguments != null) loanAccountNumber = requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -78,7 +73,6 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, RecyclerItemC
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         rv_charges!!.layoutManager = layoutManager
-        rv_charges!!.addOnItemTouchListener(RecyclerItemClickListener(activity, this))
         rv_charges!!.setHasFixedSize(true)
 
 
@@ -124,8 +118,7 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, RecyclerItemC
 
     override fun showLoanChargesList(charges: MutableList<Charges>) {
         chargesList = charges
-        mChargesNameListAdapter = ChargeNameListAdapter(getContext(),
-                chargesList, loanAccountNumber)
+        mChargesNameListAdapter = ChargeNameListAdapter(chargesList, loanAccountNumber)
         rv_charges!!.adapter = mChargesNameListAdapter
         if (charges.size == 0) {
             ll_error!!.visibility = View.VISIBLE
@@ -169,7 +162,7 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, RecyclerItemC
             val loanChargeDialogFragment = LoanChargeDialogFragment
                     .newInstance(loanAccountNumber)
             loanChargeDialogFragment.setOnChargeCreateListener(this)
-            val fragmentTransaction = activity!!.supportFragmentManager
+            val fragmentTransaction = requireActivity().supportFragmentManager
                     .beginTransaction()
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CHARGE_LIST)
             loanChargeDialogFragment.show(fragmentTransaction, "Loan Charge Dialog Fragment")

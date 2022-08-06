@@ -75,8 +75,8 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         if (arguments != null) {
-            loanAccountNumber = arguments!!.getInt(Constants.LOAN_ACCOUNT_NUMBER)
-            loanWithAssociations = arguments!!.getParcelable(Constants.LOAN_SUMMARY)
+            loanAccountNumber = requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
+            loanWithAssociations = requireArguments().getParcelable(Constants.LOAN_SUMMARY)
         }
         setHasOptionsMenu(true)
     }
@@ -84,7 +84,7 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         // Inflate the layout for this fragment
-        if (activity!!.actionBar != null) activity!!.actionBar.setDisplayHomeAsUpEnabled(true)
+        activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         rootView = inflater.inflate(R.layout.dialog_fragment_approve_loan, null)
         ButterKnife.bind(this, rootView)
         mLoanAccountApprovalPresenter!!.attachView(this)
@@ -111,13 +111,13 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
     @OnClick(R.id.tv_loan_approval_dates)
     fun setApprovalDate() {
         isApprovalDate = true
-        mfDatePicker!!.show(activity!!.supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
+        mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
     }
 
     @OnClick(R.id.tv_expected_disbursement_dates)
     fun setDisbursementDate() {
         isDisbursebemntDate = true
-        mfDatePicker!!.show(activity!!.supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
+        mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
     }
 
     fun showApprovalDate() {
@@ -162,7 +162,7 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
 
     override fun showLoanApproveSuccessfully(genericResponse: GenericResponse?) {
         Toast.makeText(activity, "Loan Approved", Toast.LENGTH_LONG).show()
-        activity!!.supportFragmentManager.popBackStackImmediate()
+        requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
     override fun showLoanApproveFailed(s: String?) {

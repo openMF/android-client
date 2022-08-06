@@ -7,8 +7,6 @@ package com.mifos.mifosxdroid.online.search;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +27,6 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SearchAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.ClientActivity;
@@ -46,6 +43,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,8 +52,7 @@ import butterknife.OnClick;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
-public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
-        RecyclerItemClickListener.OnItemClickListener, AdapterView.OnItemSelectedListener {
+public class SearchFragment extends MifosBaseFragment implements SearchMvpView, AdapterView.OnItemSelectedListener {
 
     private static final String LOG_TAG = SearchFragment.class.getSimpleName();
 
@@ -88,7 +86,6 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
     @BindArray(R.array.search_options_values)
     String[] searchOptionsValues;
 
-    @Inject
     SearchAdapter searchAdapter;
 
     @Inject
@@ -137,8 +134,39 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_search.setLayoutManager(layoutManager);
-        rv_search.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
         rv_search.setHasFixedSize(true);
+        searchAdapter = new SearchAdapter(searchedEntity -> {
+            Intent activity = null;
+            switch (searchedEntity.getEntityType()) {
+                case Constants.SEARCH_ENTITY_LOAN:
+                    activity = new Intent(getActivity(), ClientActivity.class);
+                    activity.putExtra(Constants.LOAN_ACCOUNT_NUMBER,
+                            searchedEntity.getEntityId());
+                    break;
+                case Constants.SEARCH_ENTITY_CLIENT:
+                    activity = new Intent(getActivity(), ClientActivity.class);
+                    activity.putExtra(Constants.CLIENT_ID,
+                            searchedEntity.getEntityId());
+                    break;
+                case Constants.SEARCH_ENTITY_GROUP:
+                    activity = new Intent(getActivity(), GroupsActivity.class);
+                    activity.putExtra(Constants.GROUP_ID,
+                            searchedEntity.getEntityId());
+                    break;
+                case Constants.SEARCH_ENTITY_SAVING:
+                    activity = new Intent(getActivity(), ClientActivity.class);
+                    activity.putExtra(Constants.SAVINGS_ACCOUNT_NUMBER,
+                            searchedEntity.getEntityId());
+                    break;
+                case Constants.SEARCH_ENTITY_CENTER:
+                    activity = new Intent(getActivity(), CentersActivity.class);
+                    activity.putExtra(Constants.CENTER_ID,
+                            searchedEntity.getEntityId());
+                    break;
+            }
+            startActivity(activity);
+            return null;
+        });
         rv_search.setAdapter(searchAdapter);
 
         cb_exactMatch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -279,44 +307,6 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView,
         //Fragment getting detached, keyboard if open must be hidden
         hideKeyboard(et_search);
         super.onPause();
-    }
-
-    @Override
-    public void onItemClick(View childView, int position) {
-        Intent activity = null;
-        switch (searchedEntities.get(position).getEntityType()) {
-            case Constants.SEARCH_ENTITY_LOAN:
-                activity = new Intent(getActivity(), ClientActivity.class);
-                activity.putExtra(Constants.LOAN_ACCOUNT_NUMBER,
-                        searchedEntities.get(position).getEntityId());
-                break;
-            case Constants.SEARCH_ENTITY_CLIENT:
-                activity = new Intent(getActivity(), ClientActivity.class);
-                activity.putExtra(Constants.CLIENT_ID,
-                        searchedEntities.get(position).getEntityId());
-                break;
-            case Constants.SEARCH_ENTITY_GROUP:
-                activity = new Intent(getActivity(), GroupsActivity.class);
-                activity.putExtra(Constants.GROUP_ID,
-                        searchedEntities.get(position).getEntityId());
-                break;
-            case Constants.SEARCH_ENTITY_SAVING:
-                activity = new Intent(getActivity(), ClientActivity.class);
-                activity.putExtra(Constants.SAVINGS_ACCOUNT_NUMBER,
-                        searchedEntities.get(position).getEntityId());
-                break;
-            case Constants.SEARCH_ENTITY_CENTER:
-                activity = new Intent(getActivity(), CentersActivity.class);
-                activity.putExtra(Constants.CENTER_ID,
-                        searchedEntities.get(position).getEntityId());
-                break;
-        }
-        startActivity(activity);
-    }
-
-    @Override
-    public void onItemLongPress(View childView, int position) {
-
     }
 
     @Override

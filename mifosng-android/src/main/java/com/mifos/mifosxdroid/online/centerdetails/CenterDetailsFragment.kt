@@ -87,7 +87,7 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         if (arguments != null) {
-            centerId = arguments!!.getInt(Constants.CENTER_ID)
+            centerId = requireArguments().getInt(Constants.CENTER_ID)
         }
         setHasOptionsMenu(true)
     }
@@ -104,7 +104,7 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
     @OnClick(R.id.btn_activate_center)
     fun onClickActivateCenter() {
         val activateFragment = ActivateFragment.newInstance(centerId, Constants.ACTIVATE_CENTER)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CENTER_DETAIL)
         fragmentTransaction.replace(R.id.container, activateFragment)

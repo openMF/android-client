@@ -152,8 +152,8 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            loanAccountNumber = arguments!!.getInt(Constants.LOAN_ACCOUNT_NUMBER)
-            parentFragment = arguments!!.getBoolean(Constants.IS_A_PARENT_FRAGMENT)
+            loanAccountNumber = requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
+            parentFragment = requireArguments().getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
         //Necessary Call to add and update the Menu in a Fragment
         setHasOptionsMenu(true)
@@ -187,7 +187,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
         } else if (processLoanTransactionAction == ACTION_DISBURSE_LOAN) {
             disburseLoan()
         } else {
-            Log.i(activity!!.localClassName, "TRANSACTION ACTION NOT SET")
+            Log.i(requireActivity().localClassName, "TRANSACTION ACTION NOT SET")
         }
     }
 
@@ -204,7 +204,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
     override fun onDetach() {
         super.onDetach()
         if (!parentFragment) {
-            activity!!.finish()
+            requireActivity().finish()
         }
     }
 
@@ -272,7 +272,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
 
     fun loadDocuments() {
         val documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_LOANS, loanAccountNumber)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY)
         fragmentTransaction.replace(R.id.container, documentListFragment)
@@ -282,7 +282,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
     fun loadloanCharges() {
         val loanChargeFragment: LoanChargeFragment = LoanChargeFragment.Companion.newInstance(loanAccountNumber,
                 chargesList)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY)
         fragmentTransaction.replace(R.id.container, loanChargeFragment)
@@ -291,7 +291,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
 
     fun approveLoan() {
         val loanAccountApproval: LoanAccountApproval = LoanAccountApproval.Companion.newInstance(loanAccountNumber, clientLoanWithAssociations)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY)
         fragmentTransaction.replace(R.id.container, loanAccountApproval)
@@ -300,7 +300,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
 
     fun disburseLoan() {
         val loanAccountDisbursement: LoanAccountDisbursementFragment = LoanAccountDisbursementFragment.Companion.newInstance(loanAccountNumber)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY)
         fragmentTransaction.replace(R.id.container, loanAccountDisbursement)
@@ -309,7 +309,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
 
     fun loadLoanDataTables() {
         val loanAccountFragment = DataTableFragment.newInstance(Constants.DATA_TABLE_NAME_LOANS, loanAccountNumber)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY)
         fragmentTransaction.replace(R.id.container, loanAccountFragment)
@@ -332,21 +332,21 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
             // if Loan is already active
             // the Transaction Would be Make Repayment
             view_status_indicator!!.setBackgroundColor(
-                    ContextCompat.getColor(activity!!, R.color.light_green))
+                    ContextCompat.getColor(requireActivity(), R.color.light_green))
             bt_processLoanTransaction!!.text = "Make Repayment"
             processLoanTransactionAction = TRANSACTION_REPAYMENT
         } else if (loanWithAssociations.status.pendingApproval) {
             // if Loan is Pending for Approval
             // the Action would be Approve Loan
             view_status_indicator!!.setBackgroundColor(
-                    ContextCompat.getColor(activity!!, R.color.light_yellow))
+                    ContextCompat.getColor(requireActivity(), R.color.light_yellow))
             bt_processLoanTransaction!!.text = "Approve Loan"
             processLoanTransactionAction = ACTION_APPROVE_LOAN
         } else if (loanWithAssociations.status.waitingForDisbursal) {
             // if Loan is Waiting for Disbursal
             // the Action would be Disburse Loan
             view_status_indicator!!.setBackgroundColor(
-                    ContextCompat.getColor(activity!!, R.color.blue))
+                    ContextCompat.getColor(requireActivity(), R.color.blue))
             bt_processLoanTransaction!!.text = "Disburse Loan"
             processLoanTransactionAction = ACTION_DISBURSE_LOAN
         } else if (loanWithAssociations.status.closedObligationsMet) {
@@ -354,13 +354,13 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
             // if Loan is Closed after the obligations are met
             // the make payment will be disabled so that no more payment can be collected
             view_status_indicator!!.setBackgroundColor(
-                    ContextCompat.getColor(activity!!, R.color.black))
+                    ContextCompat.getColor(requireActivity(), R.color.black))
             bt_processLoanTransaction!!.isEnabled = false
             bt_processLoanTransaction!!.text = "Make Repayment"
         } else {
             inflateLoanSummary(loanWithAssociations)
             view_status_indicator!!.setBackgroundColor(
-                    ContextCompat.getColor(activity!!, R.color.black))
+                    ContextCompat.getColor(requireActivity(), R.color.black))
             bt_processLoanTransaction!!.isEnabled = false
             bt_processLoanTransaction!!.text = "Loan Closed"
         }

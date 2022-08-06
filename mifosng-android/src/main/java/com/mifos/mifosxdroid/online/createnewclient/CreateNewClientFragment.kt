@@ -172,29 +172,29 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     }
 
     override fun showUserInterface() {
-        genderOptionsAdapter = ArrayAdapter(activity,
-                android.R.layout.simple_spinner_item, genderOptionsList)
+        genderOptionsAdapter = ArrayAdapter(requireActivity(),
+                android.R.layout.simple_spinner_item, genderOptionsList ?: emptyList())
         genderOptionsAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spGender!!.adapter = genderOptionsAdapter
         spGender!!.onItemSelectedListener = this
-        clientClassificationAdapter = ArrayAdapter(activity,
-                android.R.layout.simple_spinner_item, clientClassificationList)
+        clientClassificationAdapter = ArrayAdapter(requireActivity(),
+                android.R.layout.simple_spinner_item, clientClassificationList ?: emptyList())
         clientClassificationAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spClientClassification!!.adapter = clientClassificationAdapter
         spClientClassification!!.onItemSelectedListener = this
-        clientTypeAdapter = ArrayAdapter(activity,
-                android.R.layout.simple_spinner_item, clientTypeList)
+        clientTypeAdapter = ArrayAdapter(requireActivity(),
+                android.R.layout.simple_spinner_item, clientTypeList ?: emptyList())
         clientTypeAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spClientType!!.adapter = clientTypeAdapter
         spClientType!!.onItemSelectedListener = this
-        officeAdapter = ArrayAdapter(activity,
-                android.R.layout.simple_spinner_item, officeList)
+        officeAdapter = ArrayAdapter(requireActivity(),
+                android.R.layout.simple_spinner_item, officeList ?: emptyList())
         officeAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spOffices!!.adapter = officeAdapter
         spOffices!!.onItemSelectedListener = this
-        staffAdapter = ArrayAdapter(activity,
-                android.R.layout.simple_spinner_item, staffList)
+        staffAdapter = ArrayAdapter(requireActivity(),
+                android.R.layout.simple_spinner_item, staffList ?: emptyList())
         staffAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spStaff!!.adapter = staffAdapter
         spStaff!!.onItemSelectedListener = this
@@ -203,7 +203,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         tvSubmissionDate!!.text = MFDatePicker.getDatePickedAsString()
         tvDateOfBirth!!.text = MFDatePicker.getDatePickedAsString()
         ivClientImage!!.setOnClickListener { view ->
-            val menu = PopupMenu(activity!!, view)
+            val menu = PopupMenu(requireActivity(), view)
             menu.menuInflater.inflate(R.menu.menu_create_client_image, menu
                     .menu)
             menu.setOnMenuItemClickListener { menuItem ->
@@ -224,7 +224,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     private fun captureClientImage() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         ClientImageFile = File(
-                activity!!.externalCacheDir, "client_image.png")
+                requireActivity().externalCacheDir, "client_image.png")
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(ClientImageFile))
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE)
     }
@@ -244,14 +244,14 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
 
     @OnClick(R.id.tv_submission_date)
     fun onClickTextViewSubmissionDate() {
-        datePickerSubmissionDate!!.show(activity!!.supportFragmentManager,
+        datePickerSubmissionDate!!.show(requireActivity().supportFragmentManager,
                 FragmentConstants.DFRAG_DATE_PICKER)
         mCurrentDateView = tvSubmissionDate
     }
 
     @OnClick(R.id.tv_dateofbirth)
     fun onClickTextViewDateOfBirth() {
-        datePickerDateOfBirth!!.show(activity!!.supportFragmentManager,
+        datePickerDateOfBirth!!.show(requireActivity().supportFragmentManager,
                 FragmentConstants.DFRAG_DATE_PICKER)
         mCurrentDateView = tvDateOfBirth
     }
@@ -311,9 +311,9 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
                 val fragment = DataTableListFragment.newInstance(
                         clientsTemplate!!.dataTables,
                         clientPayload, Constants.CREATE_CLIENT)
-                val fragmentTransaction = activity!!.supportFragmentManager
+                val fragmentTransaction = requireActivity().supportFragmentManager
                         .beginTransaction()
-                activity!!.supportFragmentManager.popBackStackImmediate()
+                requireActivity().supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST)
                 fragmentTransaction.replace(R.id.container, fragment).commit()
             } else {
@@ -379,7 +379,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
 
     override fun showWaitingForCheckerApproval(message: Int) {
         Toaster.show(rootView, message)
-        activity!!.supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.popBackStack()
     }
 
     override fun showMessage(message: Int) {
@@ -483,7 +483,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         if (createClientWithImage) {
             ClientImageFile?.let { createNewClientPresenter!!.uploadImage(returnedClientId!!, it) }
         } else {
-            activity!!.supportFragmentManager.popBackStack()
+            requireActivity().supportFragmentManager.popBackStack()
         }
     }
 
@@ -493,12 +493,12 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
             createClientWithImage = true
             ivClientImage!!.setImageBitmap(BitmapFactory.decodeFile(ClientImageFile!!.absolutePath))
         } else if (requestCode == PICK_IMAGE_ACTIVITY_REQUEST_CODE
-                && resultCode == Activity.RESULT_OK) {
+                && resultCode == Activity.RESULT_OK && data?.data != null) {
             createClientWithImage = true
-            pickedImageUri = data?.data
+            pickedImageUri = data.data
             val filePath = arrayOf(MediaStore.Images.Media.DATA)
-            val c = activity!!.contentResolver.query(pickedImageUri, filePath,
-                    null, null, null)
+            val c = requireActivity().contentResolver.query(pickedImageUri!!, filePath,
+                    null, null, null)!!
             c.moveToFirst()
             val columnIndex = c.getColumnIndex(filePath[0])
             val picturePath = c.getString(columnIndex)
@@ -523,7 +523,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     //permission is automatically granted on sdk<23 upon installation
     val isStoragePermissionGranted: Boolean
         get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (activity!!.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+            if (requireActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
                 true
             } else {

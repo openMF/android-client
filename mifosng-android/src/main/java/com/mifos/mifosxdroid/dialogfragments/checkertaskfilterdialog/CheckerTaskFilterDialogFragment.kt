@@ -125,12 +125,12 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
             actionOptionsList.addAll(checkerInboxSearchTemplate.actionNames)
             entityOptionsList.addAll(checkerInboxSearchTemplate.entityNames)
 
-            actionOptionsAdapter = ArrayAdapter(activity,
+            actionOptionsAdapter = ArrayAdapter(requireActivity(),
                     android.R.layout.simple_spinner_item, actionOptionsList)
             actionOptionsAdapter.setDropDownViewResource(
                     android.R.layout.simple_spinner_dropdown_item)
 
-            entityOptionsAdapter = ArrayAdapter(activity,
+            entityOptionsAdapter = ArrayAdapter(requireActivity(),
                     android.R.layout.simple_spinner_item, entityOptionsList)
             entityOptionsAdapter.setDropDownViewResource(
                     android.R.layout.simple_spinner_dropdown_item)
@@ -148,7 +148,7 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
         try {
             mOnInputSelected = targetFragment as OnInputSelected
         } catch (e: ClassCastException) {
-            Log.e("TaskFilterDialog", e.message)
+            Log.e("TaskFilterDialog", e.message.toString())
         }
     }
 

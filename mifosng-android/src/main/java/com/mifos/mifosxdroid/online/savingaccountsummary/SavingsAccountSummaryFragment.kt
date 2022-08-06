@@ -112,9 +112,9 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            savingsAccountNumber = arguments!!.getInt(Constants.SAVINGS_ACCOUNT_NUMBER)
-            savingsAccountType = arguments!!.getParcelable(Constants.SAVINGS_ACCOUNT_TYPE)
-            parentFragment = arguments!!.getBoolean(Constants.IS_A_PARENT_FRAGMENT)
+            savingsAccountNumber = requireArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER)
+            savingsAccountType = requireArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE)
+            parentFragment = requireArguments().getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
         inflateSavingsAccountSummary()
         setHasOptionsMenu(true)
@@ -155,7 +155,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         super.onDetach()
         mListener = null
         if (!parentFragment) {
-            activity!!.finish()
+            requireActivity().finish()
         }
     }
 
@@ -196,7 +196,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         } else if (processSavingTransactionAction == ACTION_ACTIVATE_SAVINGS) {
             activateSavings()
         } else {
-            Log.i(activity!!.localClassName,
+            Log.i(requireActivity().localClassName,
                     resources.getString(R.string.transaction_action_not_set))
         }
     }
@@ -241,7 +241,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
 
     fun loadDocuments() {
         val documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_SAVINGS, savingsAccountNumber)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY)
         fragmentTransaction.replace(R.id.container, documentListFragment)
@@ -251,7 +251,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     fun approveSavings() {
         val savingsAccountApproval = SavingsAccountApprovalFragment
                 .newInstance(savingsAccountNumber, savingsAccountType)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY)
         fragmentTransaction.replace(R.id.container, savingsAccountApproval)
@@ -261,7 +261,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     fun activateSavings() {
         val savingsAccountApproval = SavingsAccountActivateFragment
                 .newInstance(savingsAccountNumber, savingsAccountType)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY)
         fragmentTransaction.replace(R.id.container, savingsAccountApproval)
@@ -270,7 +270,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
 
     fun loadSavingsDataTables() {
         val loanAccountFragment = DataTableFragment.newInstance(Constants.DATA_TABLE_NAME_SAVINGS, savingsAccountNumber)
-        val fragmentTransaction = activity!!.supportFragmentManager
+        val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY)
         fragmentTransaction.replace(R.id.container, loanAccountFragment)
@@ -350,8 +350,8 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
 
     fun showTransaction(i: Int) {
         val transaction = listOfAllTransactions[i]
-        val dialog = Dialog(context)
-        dialog.window.setBackgroundDrawableResource(android.R.color.transparent)
+        val dialog = Dialog(requireContext())
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog.setContentView(R.layout.transaction_detail_dialog_layout)
         val transactionId = dialog.findViewById<TextView>(R.id.tv_transactionId)
         val date = dialog.findViewById<TextView>(R.id.tv_date)
@@ -374,7 +374,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     override fun showSavingsActivatedSuccessfully(genericResponse: GenericResponse?) {
         Toast.makeText(activity, resources.getString(R.string.savings_account_activated),
                 Toast.LENGTH_LONG).show()
-        activity!!.supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.popBackStack()
     }
 
     override fun showFetchingError(s: Int) {

@@ -123,7 +123,7 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
     fun inflateActivationDate() {
         newDatePicker = MFDatePicker.newInsance(this)
         tv_activationDate!!.text = MFDatePicker.getDatePickedAsString()
-        tv_activationDate!!.setOnClickListener { (newDatePicker as MFDatePicker?)!!.show(activity!!.supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
+        tv_activationDate!!.setOnClickListener { (newDatePicker as MFDatePicker?)!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
     }
 
     override fun onDatePicked(date: String) {
@@ -168,7 +168,7 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
             officeNameIdHashMap[office.name] = office.id
         }
         Collections.sort(officeList)
-        val officeAdapter = ArrayAdapter(activity,
+        val officeAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, officeList)
         officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         sp_offices!!.adapter = officeAdapter
@@ -191,7 +191,7 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
     override fun centerCreatedSuccessfully(saveResponse: SaveResponse?) {
         Toast.makeText(activity, "Center " + MifosResponseHandler.getResponse(),
                 Toast.LENGTH_LONG).show()
-        activity!!.supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.popBackStack()
     }
 
     override fun showFetchingError(errorMessage: Int) {

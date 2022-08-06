@@ -58,15 +58,15 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener, 
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         if (arguments != null) {
-            savingsAccountNumber = arguments!!.getInt(Constants.SAVINGS_ACCOUNT_NUMBER)
-            savingsAccountType = arguments!!.getParcelable(Constants.SAVINGS_ACCOUNT_TYPE)
+            savingsAccountNumber = requireArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER)
+            savingsAccountType = requireArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE)
         }
         setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        if (activity!!.actionBar != null) activity!!.actionBar.setDisplayHomeAsUpEnabled(true)
+        activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         rootView = inflater.inflate(R.layout.dialog_fragment_approve_savings, null)
         ButterKnife.bind(this, rootView)
         mSavingsAccountApprovalPresenter!!.attachView(this)
@@ -99,7 +99,7 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener, 
 
     @OnClick(R.id.tv_approval_date)
     fun onClickApprovalDate() {
-        mfDatePicker!!.show(activity!!.supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
+        mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
     }
 
     override fun onDatePicked(date: String) {
@@ -120,7 +120,7 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener, 
 
     override fun showSavingAccountApprovedSuccessfully(genericResponse: GenericResponse?) {
         Toast.makeText(activity, "Savings Approved", Toast.LENGTH_LONG).show()
-        activity!!.supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.popBackStack()
     }
 
     override fun showError(message: String?) {

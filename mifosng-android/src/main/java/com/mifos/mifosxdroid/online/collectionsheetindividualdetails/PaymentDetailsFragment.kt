@@ -109,12 +109,12 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        position = arguments!!.getInt(Constants.ADAPTER_POSITION)
-        loanAndClientNameItem = arguments!!.getParcelable(Constants.LOAN_AND_CLIENT)
-        paymentTypeList = arguments!!.getStringArrayList(Constants.PAYMENT_LIST)
-        payload = arguments!!.getParcelable(Constants.PAYLOAD)
-        paymentTypeOptionsList = arguments!!.getParcelableArrayList(Constants.PAYMENT_OPTIONS)
-        clientId = arguments!!.getInt(Constants.CLIENT_ID)
+        position = requireArguments().getInt(Constants.ADAPTER_POSITION)
+        loanAndClientNameItem = requireArguments().getParcelable(Constants.LOAN_AND_CLIENT)
+        paymentTypeList = requireArguments().getStringArrayList(Constants.PAYMENT_LIST)
+        payload = requireArguments().getParcelable(Constants.PAYLOAD)
+        paymentTypeOptionsList = requireArguments().getParcelableArrayList(Constants.PAYMENT_OPTIONS)
+        clientId = requireArguments().getInt(Constants.CLIENT_ID)
         bulkRepaymentTransaction = BulkRepaymentTransactions()
     }
 
@@ -155,8 +155,8 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
 
     private fun showAdditional() {
         tableAdditional!!.visibility = View.VISIBLE
-        val adapter = ArrayAdapter(context,
-                android.R.layout.simple_spinner_item, paymentTypeList)
+        val adapter = ArrayAdapter(requireActivity(),
+                android.R.layout.simple_spinner_item, paymentTypeList ?: emptyList())
         spPaymentOption!!.adapter = adapter
         spPaymentOption!!.setSelection(paymentTypeList!!.size - 1)
         spPaymentOption!!.onItemSelectedListener = this

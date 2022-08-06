@@ -5,11 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +13,6 @@ import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.ClientReportAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
-import com.mifos.mifosxdroid.core.RecyclerItemClickListener;
 import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment;
 import com.mifos.objects.runreports.client.ClientReportTypeItem;
@@ -28,6 +22,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -35,9 +34,7 @@ import butterknife.ButterKnife;
  * Created by Tarun on 02-08-17.
  */
 
-public class ReportCategoryFragment extends MifosBaseFragment
-        implements ReportCategoryMvpView,
-        RecyclerItemClickListener.OnItemClickListener {
+public class ReportCategoryFragment extends MifosBaseFragment implements ReportCategoryMvpView {
 
     @BindView(R.id.recycler_report)
     RecyclerView rvReports;
@@ -45,7 +42,6 @@ public class ReportCategoryFragment extends MifosBaseFragment
     @Inject
     ReportCategoryPresenter presenter;
 
-    @Inject
     ClientReportAdapter reportAdapter;
 
     private View rootView;
@@ -115,21 +111,14 @@ public class ReportCategoryFragment extends MifosBaseFragment
                 rvReports.getContext(), layoutManager.getOrientation());
         rvReports.setLayoutManager(layoutManager);
         rvReports.addItemDecoration(dividerItemDecoration);
+        reportAdapter = new ClientReportAdapter(position -> {
+            openDetailFragment(position);
+            return null;
+        });
         rvReports.setAdapter(reportAdapter);
-        rvReports.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
 
         reportAdapter.setReportItems(reportTypes);
         reportAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onItemClick(View childView, int position) {
-        openDetailFragment(position);
-    }
-
-    @Override
-    public void onItemLongPress(View childView, int position) {
-
     }
 
     private void openDetailFragment(int pos) {

@@ -51,7 +51,7 @@ class SurveyListFragment : ProgressableFragment(), SurveyListMvpView {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         if (arguments != null) {
-            clientId = arguments!!.getInt(Constants.CLIENT_ID)
+            clientId = requireArguments().getInt(Constants.CLIENT_ID)
         }
     }
 
@@ -83,7 +83,7 @@ class SurveyListFragment : ProgressableFragment(), SurveyListMvpView {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.mItem_search) activity!!.finish()
+        if (item.itemId == R.id.mItem_search) requireActivity().finish()
         return super.onOptionsItemSelected(item)
     }
 

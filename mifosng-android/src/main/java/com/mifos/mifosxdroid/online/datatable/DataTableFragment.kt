@@ -18,7 +18,6 @@ import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.DataTableAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.mifosxdroid.core.RecyclerItemClickListener
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment
 import com.mifos.objects.noncore.DataTable
@@ -30,7 +29,7 @@ import javax.inject.Inject
 /**
  * Created by Rajan Maurya on 12/02/17.
  */
-class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListener, RecyclerItemClickListener.OnItemClickListener {
+class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListener {
     @JvmField
     @BindView(R.id.rv_data_table)
     var rvDataTable: RecyclerView? = null
@@ -59,28 +58,28 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
     @Inject
     var dataTablePresenter: DataTablePresenter? = null
 
-    @JvmField
-    @Inject
-    var dataTableAdapter: DataTableAdapter? = null
+    val dataTableAdapter by lazy {
+        DataTableAdapter(
+            onDateTableClick = { dataTable ->
+                val dataTableDataFragment: DataTableDataFragment = DataTableDataFragment.Companion.newInstance(dataTable, entityId)
+                val fragmentTransaction = requireActivity().supportFragmentManager
+                    .beginTransaction()
+                fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
+                fragmentTransaction.replace(R.id.container, dataTableDataFragment, FragmentConstants.FRAG_DATA_TABLE)
+                fragmentTransaction.commit()
+            }
+        )
+    }
     lateinit var rootView: View
     private var tableName: String? = null
     private var entityId = 0
     private var dataTables: List<DataTable>? = null
-    override fun onItemClick(childView: View, position: Int) {
-        val dataTableDataFragment: DataTableDataFragment = DataTableDataFragment.Companion.newInstance(dataTables!![position], entityId)
-        val fragmentTransaction = activity!!.supportFragmentManager
-                .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-        fragmentTransaction.replace(R.id.container, dataTableDataFragment, FragmentConstants.FRAG_DATA_TABLE)
-        fragmentTransaction.commit()
-    }
 
-    override fun onItemLongPress(childView: View, position: Int) {}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            tableName = arguments!!.getString(Constants.DATA_TABLE_NAME)
-            entityId = arguments!!.getInt(Constants.ENTITY_ID)
+            tableName = requireArguments().getString(Constants.DATA_TABLE_NAME)
+            entityId = requireArguments().getInt(Constants.ENTITY_ID)
         }
         dataTables = ArrayList()
     }
@@ -106,7 +105,6 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
         rvDataTable!!.layoutManager = mLayoutManager
         rvDataTable!!.setHasFixedSize(true)
         rvDataTable!!.adapter = dataTableAdapter
-        rvDataTable!!.addOnItemTouchListener(RecyclerItemClickListener(activity, this))
         swipeRefreshLayout!!.setColorSchemeColors(*activity
                 ?.getResources()!!.getIntArray(R.array.swipeRefreshColors))
         swipeRefreshLayout!!.setOnRefreshListener(this)
@@ -114,7 +112,7 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
 
     override fun showDataTables(dataTables: List<DataTable>?) {
         this.dataTables = dataTables
-        dataTableAdapter!!.setDataTables(dataTables)
+        dataTableAdapter!!.dataTables = dataTables ?: emptyList()
     }
 
     override fun showEmptyDataTables() {

@@ -10,7 +10,6 @@ import android.os.Parcelable
 import android.view.*
 import android.widget.ProgressBar
 import androidx.appcompat.view.ActionMode
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -24,7 +23,6 @@ import com.mifos.mifosxdroid.adapters.GroupNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.mifosxdroid.core.RecyclerItemClickListener
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFragment
 import com.mifos.mifosxdroid.online.GroupsActivity
@@ -60,7 +58,7 @@ import javax.inject.Inject
  * boolean isParentFragment) {...}
  * and unregister the ScrollListener and SwipeLayout.
 </Group> */
-class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemClickListener.OnItemClickListener, OnRefreshListener {
+class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshListener {
     @JvmField
     @BindView(R.id.rv_groups)
     var rv_groups: RecyclerView? = null
@@ -81,9 +79,25 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
     @Inject
     var mGroupsListPresenter: GroupsListPresenter? = null
 
-    @JvmField
-    @Inject
-    var mGroupListAdapter: GroupNameListAdapter? = null
+    val mGroupListAdapter by lazy {
+        GroupNameListAdapter(
+            onGroupClick = { position ->
+                if (actionMode != null) {
+                    toggleSelection(position)
+                } else {
+                    val groupActivityIntent = Intent(activity, GroupsActivity::class.java)
+                    groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList!![position].id)
+                    startActivity(groupActivityIntent)
+                }
+            },
+            onGroupLongClick = { position ->
+                if (actionMode == null) {
+                    actionMode = (activity as MifosBaseActivity?)!!.startSupportActionMode(actionModeCallback!!)
+                }
+                toggleSelection(position)
+            }
+        )
+    }
     var mLayoutManager: LinearLayoutManager? = null
     private var mGroupList: List<Group>? = null
     private var selectedGroups: MutableList<Group>? = null
@@ -92,22 +106,6 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
     private var actionModeCallback: ActionModeCallback? = null
     private var actionMode: ActionMode? = null
     private var sweetUIErrorHandler: SweetUIErrorHandler? = null
-    override fun onItemClick(childView: View, position: Int) {
-        if (actionMode != null) {
-            toggleSelection(position)
-        } else {
-            val groupActivityIntent = Intent(activity, GroupsActivity::class.java)
-            groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList!![position].id)
-            startActivity(groupActivityIntent)
-        }
-    }
-
-    override fun onItemLongPress(childView: View, position: Int) {
-        if (actionMode == null) {
-            actionMode = (activity as MifosBaseActivity?)!!.startSupportActionMode(actionModeCallback!!)
-        }
-        toggleSelection(position)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,7 +115,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
         actionModeCallback = ActionModeCallback()
         if (arguments != null) {
             mGroupList = requireArguments().getParcelableArrayList(Constants.GROUPS)
-            isParentFragment = arguments!!
+            isParentFragment = requireArguments()
                     .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
         setHasOptionsMenu(true)
@@ -163,9 +161,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
         mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager!!.orientation = LinearLayoutManager.VERTICAL
         rv_groups!!.layoutManager = mLayoutManager
-        rv_groups!!.addOnItemTouchListener(RecyclerItemClickListener(activity, this))
         rv_groups!!.setHasFixedSize(true)
-        mGroupListAdapter!!.setContext(activity)
         rv_groups!!.adapter = mGroupListAdapter
         swipeRefreshLayout!!.setColorSchemeColors(*activity
                 ?.getResources()!!.getIntArray(R.array.swipeRefreshColors))
@@ -207,7 +203,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, RecyclerItemC
     override fun showGroups(groups: List<Group?>?) {
         mGroupList = groups as List<Group>?
         Collections.sort(mGroupList) { grp1, grp2 -> grp1.name.compareTo(grp2.name) }
-        mGroupListAdapter!!.setGroups(groups)
+        mGroupListAdapter!!.setGroups(mGroupList ?: emptyList())
     }
 
     /**
