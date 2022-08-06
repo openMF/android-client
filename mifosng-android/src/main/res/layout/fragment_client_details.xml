@@ -37,7 +37,10 @@
 
             <TextView
                 android:id="@+id/tv_fullName"
-                style="@style/TextView.Client"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/Mifos.DesignSystem.TextStyle.Heading"
+                android:layout_marginVertical="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsMedium"
                 tools:text="Client Name" />
 
             <TableLayout

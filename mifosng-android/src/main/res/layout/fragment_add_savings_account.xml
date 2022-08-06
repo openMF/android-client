@@ -20,7 +20,9 @@
         <LinearLayout style="@style/LinearLayout.Base">
 
             <TextView
-                style="@style/TextView.CreateSavingsAccount"
+                android:text="@string/create_savings_account"
+                style="@style/Mifos.DesignSystem.TextStyle.Heading"
+                android:layout_marginTop="@dimen/Mifos.DesignSystem.Spacing.screenVerticalMargin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -242,7 +244,8 @@
 
             <Button
                 android:id="@+id/btn_submit"
-                style="@style/Button.Base"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
                 android:text="@string/submit" />
         </LinearLayout>

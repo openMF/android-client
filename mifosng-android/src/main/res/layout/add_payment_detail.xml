@@ -98,11 +98,10 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/btn_add_payment"
         android:layout_marginTop="20dp"
-        style="@style/Button.Base"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:text="@string/add_payment_detail"/>
     <TextView
         android:layout_width="match_parent"

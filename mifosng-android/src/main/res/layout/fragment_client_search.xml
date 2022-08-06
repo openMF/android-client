@@ -16,9 +16,10 @@
 
         <TextView
             android:id="@+id/tv_search"
-            android:paddingRight="4dp"
-            style="@style/TextView.Search"
-            android:paddingEnd="4dp" />
+            style="@style/Mifos.DesignSystem.TextStyle.Heading"
+            android:text="@string/search"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
 
         <Spinner
             android:id="@+id/sp_search"
@@ -74,16 +75,19 @@
 
     <Button
         android:id="@+id/btn_search"
-        style="@style/Button.Base"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="@dimen/marginItemsInSectionSmall"
-        android:background="@drawable/login_button_rounded"
         android:text="@string/search" />
 
     <TextView
         android:id="@+id/tv_title_search_results"
-        style="@style/TextView.Search.Results"
-        android:visibility="gone"/>
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        style="@style/Mifos.DesignSystem.TextStyle.SubHeading"
+        android:text="@string/search_results"
+        android:visibility="visible"/>
 
     <CheckBox
         android:id="@+id/cb_exact_match"

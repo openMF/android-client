@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:gravity="center_horizontal"
-                style="@style/TextView.Client"
+                style="@style/Mifos.DesignSystem.TextStyle.Heading"
                 android:textColor="@color/black"
                 android:text="@string/center_details"
                 android:paddingTop="@dimen/dimension_32_dp"
@@ -93,7 +93,7 @@
                 android:gravity="center_horizontal"
                 android:paddingTop="@dimen/dimension_32_dp"
                 android:paddingBottom="@dimen/layout_padding_16dp"
-                style="@style/TextView.Client"
+                style="@style/Mifos.DesignSystem.TextStyle.Heading"
                 android:textColor="@color/black"
                 android:text="@string/summary_info"/>
 
