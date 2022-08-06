@@ -46,8 +46,7 @@ import butterknife.OnClick;
  * Use this Dialog Fragment to Create and/or Update charges
  */
 public class ChargeDialogFragment extends ProgressableDialogFragment implements
-        MFDatePicker.OnDatePickListener, ChargeDialogMvpView,
-        AdapterView.OnItemSelectedListener {
+        MFDatePicker.OnDatePickListener, ChargeDialogMvpView  {
 
     public final String LOG_TAG = getClass().getSimpleName();
 
@@ -106,6 +105,13 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
         return super.onCreateDialog(savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(getDialog() != null && getDialog().getWindow() != null)
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override
@@ -190,7 +196,18 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
         chargeNameAdapter
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spChargeName.setAdapter(chargeNameAdapter);
-        spChargeName.setOnItemSelectedListener(this);
+        spChargeName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                chargeId = mChargeTemplate.getChargeOptions().get(position).getId();
+                chargeName = mChargeTemplate.getChargeOptions().get(position).getName();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @Override
@@ -199,21 +216,6 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
         chargeNameList.addAll(mChargeDialogPresenter.filterChargeName
                 (chargeTemplate.getChargeOptions()));
         chargeNameAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (parent.getId()) {
-            case R.id.sp_charge_name:
-                chargeId = mChargeTemplate.getChargeOptions().get(position).getId();
-                chargeName = mChargeTemplate.getChargeOptions().get(position).getName();
-                break;
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     @Override
