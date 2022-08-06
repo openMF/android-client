@@ -7,8 +7,6 @@ package com.mifos.mifosxdroid.dialogfragments.chargedialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
@@ -36,6 +34,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -50,8 +50,8 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
 
     public final String LOG_TAG = getClass().getSimpleName();
 
-    @BindView(R.id.sp_charge_name)
-    Spinner spChargeName;
+    @BindView(R.id.chargeNameField)
+    MaterialAutoCompleteTextView spChargeName;
 
     @BindView(R.id.amount_due_charge)
     EditText etAmountDue;

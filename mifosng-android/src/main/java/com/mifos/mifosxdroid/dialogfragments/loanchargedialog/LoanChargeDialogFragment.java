@@ -61,7 +61,7 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
 
     private View rootView;
 
-    @BindView(R.id.sp_charge_name)
+    @BindView(R.id.chargeNameField)
     Spinner spChargeName;
 
     @BindView(R.id.amount_due_charge)
