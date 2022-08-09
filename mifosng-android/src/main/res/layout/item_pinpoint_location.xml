@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    android:id="@+id/card_view"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:map="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/default_horizontal_padding"
-    android:layout_marginRight="@dimen/default_horizontal_padding"
     android:layout_marginTop="@dimen/default_horizontal_padding"
+    android:layout_marginRight="@dimen/default_horizontal_padding"
     app:cardCornerRadius="2dp"
     app:cardElevation="2dp"
     app:cardPreventCornerOverlap="false"
-    app:contentPadding="0dp"
-    xmlns:map="http://schemas.android.com/tools">
+    app:contentPadding="0dp">
 
     <LinearLayout
         android:id="@+id/ll_address"
@@ -22,10 +21,10 @@
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mv_client_location"
-            map:liteMode="true"
-            map:mapType="none"
             android:layout_width="match_parent"
-            android:layout_height="150dp"/>
+            android:layout_height="150dp"
+            map:liteMode="true"
+            map:mapType="none" />
 
 
         <TextView
@@ -38,7 +37,7 @@
             android:textAlignment="inherit"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:typeface="sans"/>
+            android:typeface="sans" />
 
     </LinearLayout>
 

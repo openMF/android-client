@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cv_client"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    app:cardUseCompatPadding="true"
-    app:cardCornerRadius="10dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp"
     android:layout_marginRight="8dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginLeft="8dp">
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="10dp"
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <com.mifos.mifosxdroid.views.CircularImageView
             android:id="@+id/iv_user_picture"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/layout_padding_16dp"
+            android:layout_marginLeft="@dimen/layout_padding_16dp"
+            android:layout_marginTop="@dimen/layout_padding_16dp"
+            android:layout_marginBottom="@dimen/layout_padding_16dp"
             android:elevation="2dp"
             android:src="@drawable/ic_dp_placeholder"
-            app:border="false"
-            android:layout_marginLeft="@dimen/layout_padding_16dp"
-            android:layout_marginStart="@dimen/layout_padding_16dp"
-            android:layout_marginTop="@dimen/layout_padding_16dp"
-            android:layout_marginBottom="@dimen/layout_padding_16dp" />
+            app:border="false" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -39,8 +39,8 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:paddingLeft="18dp"
             android:paddingStart="18dp"
+            android:paddingLeft="18dp"
             android:paddingTop="@dimen/layout_padding_16dp"
             android:paddingBottom="@dimen/layout_padding_16dp"
             tools:ignore="RtlSymmetry">
@@ -62,19 +62,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:singleLine="true"
                     android:text="Total Due:"
-                    android:textSize="14sp"
-                    android:singleLine="true"/>
+                    android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/tv_total_due"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="due"
-                    android:textSize="14sp"
-                    android:id="@+id/tv_total_due"
+                    android:scrollbars="horizontal"
                     android:singleLine="true"
-                    android:scrollbars="horizontal"/>
+                    android:text="due"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -85,37 +85,37 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:singleLine="true"
                     android:text="Total Charges:"
-                    android:textSize="14sp"
-                    android:singleLine="true"/>
+                    android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/et_charges"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="charge"
-                    android:textSize="14sp"
-                    android:id="@+id/et_charges"
+                    android:scrollbars="horizontal"
                     android:singleLine="true"
-                    android:scrollbars="horizontal"/>
+                    android:text="charge"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_product_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="MDL (#Account No)"
                 android:textColor="@color/gray_dark"
-                android:id="@+id/tv_product_code"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tools:text="MDL (#Account No)" />
 
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/btn_additional_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/baseline_keyboard_arrow_right_black_36"
             android:layout_gravity="center_vertical"
-            android:id="@+id/btn_additional_details" />
+            android:src="@drawable/baseline_keyboard_arrow_right_black_36" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
