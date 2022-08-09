@@ -13,8 +13,8 @@
             android:id="@+id/tv_loan_approval_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
             android:paddingTop="16dp"
+            android:paddingBottom="10dp"
             android:text="@string/approved_on"
             android:textSize="16sp" />
 
@@ -24,16 +24,16 @@
             android:layout_height="wrap_content"
             android:background="@color/light_grey"
             android:imeOptions="actionNext"
-            android:paddingBottom="16dp"
             android:paddingTop="10dp"
+            android:paddingBottom="16dp"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/tv_expected_disbursement_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
             android:paddingTop="16dp"
+            android:paddingBottom="10dp"
             android:text="@string/approval_disbursement_date"
             android:textSize="16sp" />
 
@@ -43,8 +43,8 @@
             android:layout_height="wrap_content"
             android:background="@color/light_grey"
             android:imeOptions="actionNext"
-            android:paddingBottom="16dp"
             android:paddingTop="10dp"
+            android:paddingBottom="16dp"
             android:textSize="20sp" />
 
         <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">

@@ -9,44 +9,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:layout_marginBottom="@dimen/activity_vertical_margin">
 
 
     <TextView
+        android:id="@+id/tv_row_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/large_text"
-        android:id="@+id/tv_row_title"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-         />
+        android:text="@string/large_text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
+        android:id="@+id/tv_row_subTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/medium_text"
-        android:id="@+id/tv_row_subTitle"
         android:layout_below="@+id/tv_row_title"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:text="@string/medium_text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <ProgressBar
+        android:id="@+id/pb_row_completed_percent"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/pb_row_completed_percent"
         android:layout_below="@+id/tv_row_subTitle"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
-        android:minHeight="20dp"
+        android:layout_alignParentRight="true"
         android:maxHeight="20dp"
-        />
+        android:minHeight="20dp" />
 
 
 </RelativeLayout>

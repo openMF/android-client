@@ -5,8 +5,7 @@
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/layout_padding_16dp">
@@ -15,37 +14,37 @@
         android:id="@+id/tv_approval_date_on"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
         android:text="@string/approved_on"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tv_approval_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/approval_savings_date"
-        android:textSize="20sp"
+        android:layout_below="@+id/tv_approval_date_on"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:layout_below="@+id/tv_approval_date_on"/>
+        android:hint="@string/approval_savings_date"
+        android:textSize="20sp" />
 
 
     <EditText
         android:id="@+id/et_savings_approval_reason"
         style="@style/EditText.BaseWidth"
-        android:hint="@string/savings_approval_reason"
-        android:inputType="text"
-        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/tv_approval_date"
         android:layout_marginTop="5dp"
-        android:layout_below="@+id/tv_approval_date" />
+        android:layout_marginBottom="10dp"
+        android:hint="@string/savings_approval_reason"
+        android:inputType="text" />
 
     <Button
+        android:id="@+id/btn_approve_savings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/save"
-        android:id="@+id/btn_approve_savings"
-        android:background="@color/primary"
         android:layout_below="@+id/et_savings_approval_reason"
-        android:layout_margin="@dimen/layout_padding_16dp"/>
+        android:layout_margin="@dimen/layout_padding_16dp"
+        android:background="@color/primary"
+        android:text="@string/save" />
 </RelativeLayout>

@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical">
-        <include layout="@layout/toolbar"/>
+
+        <include layout="@layout/toolbar" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/about_app_card"
@@ -27,9 +28,9 @@
                 <ImageView
                     android:layout_width="200dp"
                     android:layout_height="100dp"
-                    android:layout_marginTop="20dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/mifos_logo"/>
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/mifos_logo" />
 
                 <TextView
                     android:id="@+id/textView"
@@ -50,8 +51,8 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
                     android:gravity="center"
-                    android:text="@string/about_mifos"
-                    android:onClick="goToWeb"/>
+                    android:onClick="goToWeb"
+                    android:text="@string/about_mifos" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -60,8 +61,8 @@
             android:id="@+id/about_support_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/card_spacing"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="@dimen/card_spacing"
             app:cardCornerRadius="@dimen/card_corner_radius"
             app:cardElevation="@dimen/card_elevation">
 
@@ -84,16 +85,16 @@
                     android:id="@+id/GitHub"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="goToGit"
                     android:gravity="center"
+                    android:onClick="goToGit"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="@dimen/about_icon_size"
                         android:layout_height="@dimen/about_icon_size"
-                        app:srcCompat="@drawable/about_icon_github"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginLeft="10dp"/>
+                        app:srcCompat="@drawable/about_icon_github" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -125,16 +126,16 @@
                     android:id="@+id/twitter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="goToTwitter"
                     android:gravity="center"
+                    android:onClick="goToTwitter"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="@dimen/about_icon_size"
                         android:layout_height="@dimen/about_icon_size"
-                        app:srcCompat="@drawable/about_icon_twitter"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginLeft="10dp"/>
+                        app:srcCompat="@drawable/about_icon_twitter" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
