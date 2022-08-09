@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.mifos.mifosxdroid.views.SignatureView
+        android:id="@+id/sign_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/sign_view"/>
+        android:layout_weight="1" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary">
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:itemIconTint="@color/light_blue"
             app:itemTextColor="@android:color/white"
-            app:menu="@menu/sign_bottom_navbar"/>
+            app:menu="@menu/sign_bottom_navbar" />
     </LinearLayout>
 
 

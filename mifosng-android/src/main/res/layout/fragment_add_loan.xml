@@ -93,8 +93,8 @@
                 <TextView
                     style="@style/TextView.Base.Weight"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_weight="0.5"
                     android:text="@string/loan_submission_date" />
 
@@ -102,8 +102,8 @@
                     android:id="@+id/tv_submittedon_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_weight="0.5"
                     android:background="@color/gray_light"
                     android:textSize="20sp" />
@@ -294,14 +294,14 @@
                     android:id="@+id/sp_loan_term_periods"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginEnd="3dp"
                     android:layout_marginRight="3dp"
                     android:layout_weight="0.5"
                     android:background="@color/light_grey"
-                    android:paddingTop="10dp"
-                    android:spinnerMode="dropdown"
                     android:gravity="center_vertical"
-                    android:layout_gravity="center_vertical"/>
+                    android:paddingTop="10dp"
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
 
             <TextView

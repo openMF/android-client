@@ -10,36 +10,36 @@
     android:layout_height="wrap_content"
     android:background="@color/light_grey"
     android:orientation="horizontal"
-    android:paddingBottom="8dp"
     android:paddingLeft="4dp"
+    android:paddingTop="8dp"
     android:paddingRight="4dp"
-    android:paddingTop="8dp">
+    android:paddingBottom="8dp">
 
     <TextView
         android:id="@+id/tv_total_paid"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:gravity="start"
         android:text="@string/medium_text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:gravity="left"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/tv_total_upcoming"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:gravity="center"
         android:text="@string/medium_text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:gravity="center"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/tv_total_overdue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:gravity="end"
         android:text="@string/medium_text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:gravity="right"/>
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

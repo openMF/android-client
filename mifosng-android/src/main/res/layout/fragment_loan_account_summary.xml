@@ -24,14 +24,14 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/linear_layout_1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:orientation="horizontal"
                 android:paddingBottom="8dp">
@@ -49,7 +49,8 @@
                     android:id="@+id/quickContactBadge_client"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right|end"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="100dp"
                     android:layout_marginLeft="100dp" />
 
             </LinearLayout>
@@ -65,9 +66,9 @@
                 android:id="@+id/linear_layout_2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/linear_layout_1"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_marginTop="8dp"
                 android:orientation="horizontal">
 
@@ -76,6 +77,7 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_gravity="center"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
                     android:background="@color/light_red" />
 
@@ -91,7 +93,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </LinearLayout>
@@ -109,9 +111,9 @@
                 android:id="@+id/loan_amount_disbursed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@id/divider_2"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_marginTop="8dp"
                 android:text="@string/loan_amount_disbursed"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -120,20 +122,20 @@
                 android:id="@+id/tv_amount_disbursed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/divider_2"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/divider_2"
                 android:layout_marginTop="8dp"
-                android:gravity="right"
+                android:gravity="end"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/loan_disbursement_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/loan_amount_disbursed"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_marginTop="8dp"
                 android:text="@string/loan_disbursement_date"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -142,20 +144,20 @@
                 android:id="@+id/tv_disbursement_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/loan_amount_disbursed"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/loan_amount_disbursed"
                 android:layout_marginTop="8dp"
-                android:gravity="right"
+                android:gravity="end"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/in_arrears"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/tv_disbursement_date"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_marginTop="8dp"
                 android:text="@string/loan_in_arrears"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -164,20 +166,20 @@
                 android:id="@+id/tv_in_arrears"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_disbursement_date"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/tv_disbursement_date"
                 android:layout_marginTop="8dp"
-                android:gravity="right"
+                android:gravity="end"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/loan_officer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/tv_in_arrears"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_marginTop="8dp"
                 android:text="@string/staff"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -187,11 +189,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
+                android:layout_below="@+id/tv_in_arrears"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/tv_in_arrears"
                 android:layout_marginTop="8dp"
-                android:gravity="right"
+                android:gravity="end"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
@@ -199,9 +201,9 @@
                 android:id="@+id/tbl_loanSummary"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/loan_officer"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_marginTop="8dp">
 
 
@@ -229,7 +231,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:text="@string/loan"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textStyle="bold" />
@@ -239,7 +241,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:text="@string/amount_paid"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textStyle="bold" />
@@ -249,7 +251,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:text="@string/balance"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textStyle="bold" />
@@ -279,7 +281,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                         <TextView
@@ -287,7 +289,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                         <TextView
@@ -295,7 +297,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     </LinearLayout>
@@ -327,7 +329,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                         <TextView
@@ -335,7 +337,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                         <TextView
@@ -343,7 +345,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
                     </LinearLayout>
                 </TableRow>
@@ -371,7 +373,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
 
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -380,7 +382,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                         <TextView
@@ -388,7 +390,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
                     </LinearLayout>
                 </TableRow>
@@ -417,7 +419,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
 
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -426,7 +428,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                         <TextView
@@ -434,7 +436,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
                     </LinearLayout>
                 </TableRow>
@@ -462,7 +464,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                         <TextView
@@ -470,7 +472,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                         <TextView
@@ -478,7 +480,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
                     </LinearLayout>
                 </TableRow>
@@ -490,8 +492,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tbl_loanSummary"
-                android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:text="@string/process_loan_transaction" />
 
 

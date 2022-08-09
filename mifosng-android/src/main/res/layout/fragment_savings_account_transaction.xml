@@ -28,8 +28,8 @@
             android:id="@+id/linear_layout_1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:orientation="horizontal"
             android:paddingBottom="8dp">
@@ -47,7 +47,8 @@
                 android:id="@+id/quickContactBadge_client"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|end"
+                android:layout_gravity="end"
+                android:layout_marginStart="100dp"
                 android:layout_marginLeft="100dp" />
 
         </LinearLayout>
@@ -70,8 +71,8 @@
                 android:id="@+id/tbl_transaction_details_row_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp">
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
 
                 <TextView
                     android:layout_width="0dp"
@@ -87,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0.4"
-                    android:gravity="left"
+                    android:gravity="start"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </TableRow>
@@ -96,8 +97,8 @@
                 android:id="@+id/tbl_transaction_details_row_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp">
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
 
                 <TextView
                     android:id="@+id/transaction_date"
@@ -112,9 +113,9 @@
                     android:id="@+id/tv_transaction_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right|center_vertical"
+                    android:layout_gravity="end|center_vertical"
                     android:layout_weight="0.4"
-                    android:gravity="left" />
+                    android:gravity="start" />
 
             </TableRow>
 
@@ -122,8 +123,8 @@
                 android:id="@+id/tbl_transaction_details_row_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp">
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
 
                 <TextView
                     android:id="@+id/tv_transaction_amount"
@@ -140,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0.4"
-                    android:gravity="left"
+                    android:gravity="start"
                     android:inputType="numberDecimal" />
 
             </TableRow>
@@ -149,8 +150,8 @@
                 android:id="@+id/tbl_transaction_details_row_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp">
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
 
                 <TextView
                     android:id="@+id/tv_payment_type"
@@ -166,7 +167,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
-                    android:gravity="left" />
+                    android:gravity="start" />
 
             </TableRow>
 
@@ -176,21 +177,21 @@
             android:id="@+id/bt_cancelTransaction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/tbl_transaction_details"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_marginTop="8dp"
-            android:text="@string/cancel"
-            android:layout_alignParentLeft="true" />
+            android:text="@string/cancel" />
 
         <Button
             android:id="@+id/bt_reviewTransaction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_below="@+id/tbl_transaction_details"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="8dp"
-            android:text="@string/review_transaction"
-            android:layout_alignParentRight="true" />
+            android:text="@string/review_transaction" />
 
     </RelativeLayout>
 </ViewFlipper>

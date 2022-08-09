@@ -39,9 +39,10 @@
             android:id="@+id/radio_btn_answer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dip"
             android:layout_marginTop="5dip"
-            android:background="#fff"/>
+            android:layout_marginStart="5dip"
+            android:layout_marginLeft="5dip"
+            android:background="#fff" />
 
         <View
             android:layout_width="wrap_content"

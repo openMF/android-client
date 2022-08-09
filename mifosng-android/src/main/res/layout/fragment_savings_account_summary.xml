@@ -45,7 +45,8 @@
                 android:id="@+id/quickContactBadge_client"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|end"
+                android:layout_gravity="end"
+                android:layout_marginStart="100dp"
                 android:layout_marginLeft="100dp" />
 
         </LinearLayout>
@@ -80,7 +81,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
-                android:gravity="right"
+                android:gravity="end"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </LinearLayout>
@@ -114,7 +115,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="8dp"
-            android:gravity="right"
+            android:gravity="end"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -136,7 +137,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="8dp"
-            android:gravity="right"
+            android:gravity="end"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -158,7 +159,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="8dp"
-            android:gravity="right"
+            android:gravity="end"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -180,7 +181,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="8dp"
-            android:gravity="right"
+            android:gravity="end"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <View

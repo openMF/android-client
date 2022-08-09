@@ -27,12 +27,14 @@
             android:id="@+id/tv_survey_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:paddingStart="20dip"
             android:paddingLeft="20dip"
-            android:paddingRight="10dip"
             android:paddingTop="20dip"
+            android:paddingEnd="10dip"
+            android:paddingRight="10dip"
             android:text="@string/select_one_survey"
             android:textSize="18sp" />
 
@@ -46,7 +48,7 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="10dp"
             android:paddingLeft="10dip"
-            android:paddingRight="10dip"
-            android:paddingTop="1dip" />
+            android:paddingTop="1dip"
+            android:paddingRight="10dip" />
     </RelativeLayout>
 </ViewFlipper>

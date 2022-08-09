@@ -65,16 +65,16 @@
                     android:hint="@string/external_id"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:paddingBottom="16dp"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:paddingBottom="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/tv_submittedon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
                 android:paddingTop="16dp"
+                android:paddingBottom="10dp"
                 android:text="@string/submittedon"
                 android:textSize="16sp" />
 
@@ -84,8 +84,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/submission_headline"
                 android:imeOptions="actionNext"
-                android:paddingBottom="16dp"
                 android:paddingTop="10dp"
+                android:paddingBottom="16dp"
                 android:textSize="20sp" />
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
@@ -97,8 +97,8 @@
                     android:hint="@string/nominal"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:paddingBottom="16dp"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:paddingBottom="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -113,8 +113,8 @@
                 android:id="@+id/sp_interest_calc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
                 android:paddingTop="10dp"
+                android:paddingBottom="16dp"
                 android:textSize="20sp" />
 
             <TextView
@@ -129,8 +129,8 @@
                 android:id="@+id/sp_interest_comp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
                 android:paddingTop="10dp"
+                android:paddingBottom="16dp"
                 android:textSize="20sp" />
 
             <TextView
@@ -145,8 +145,8 @@
                 android:id="@+id/sp_interest_p_period"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
                 android:paddingTop="10dp"
+                android:paddingBottom="16dp"
                 android:textSize="20sp" />
 
             <TextView
@@ -161,8 +161,8 @@
                 android:id="@+id/sp_days_in_year"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
                 android:paddingTop="10dp"
+                android:paddingBottom="16dp"
                 android:textSize="20sp" />
 
             <CheckBox
@@ -183,9 +183,9 @@
                     android:hint="@string/minbalance"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:paddingBottom="16dp"
                     android:maxLines="1"
-                    android:visibility="gone"/>
+                    android:paddingBottom="16dp"
+                    android:visibility="gone" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
@@ -206,9 +206,9 @@
                     android:hint="@string/maxoverdraft"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:paddingBottom="16dp"
                     android:maxLines="1"
-                    android:visibility="gone"/>
+                    android:paddingBottom="16dp"
+                    android:visibility="gone" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
@@ -220,9 +220,9 @@
                     android:hint="@string/nominal_overdraft"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:paddingBottom="16dp"
                     android:maxLines="1"
-                    android:visibility="gone"/>
+                    android:paddingBottom="16dp"
+                    android:visibility="gone" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
@@ -234,9 +234,9 @@
                     android:hint="@string/min_overdraft"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:paddingBottom="16dp"
                     android:maxLines="1"
-                    android:visibility="gone"/>
+                    android:paddingBottom="16dp"
+                    android:visibility="gone" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
