@@ -48,7 +48,8 @@ import butterknife.OnClick;
 /**
  * @author fomenkoo
  */
-public class PathTrackingActivity extends MifosBaseActivity implements PathTrackingMvpView, SwipeRefreshLayout.OnRefreshListener {
+public class PathTrackingActivity extends MifosBaseActivity
+        implements PathTrackingMvpView, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.rv_path_tacker)
     RecyclerView rvPathTracker;
@@ -98,17 +99,20 @@ public class PathTrackingActivity extends MifosBaseActivity implements PathTrack
         rvPathTracker.setHasFixedSize(false);
         rvPathTracker.scrollToPosition(0);
         pathTrackingAdapter = new PathTrackingAdapter(userLocation -> {
-            List<UserLatLng> userLatLngs =
-                    pathTrackingAdapter.getLatLngList(userLocation.getLatlng());
-            String uri = "http://maps.google.com/maps?f=d&hl=en&saddr="
-                    + userLatLngs.get(0).getLat() + "," + userLatLngs.get(0).getLng() + "&daddr="
-                    + userLatLngs.get(userLatLngs.size() - 1).getLat() + "," + ""
-                    + userLatLngs.get(userLatLngs.size() - 1).getLng();
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-            startActivity(Intent.createChooser(intent, getString(R.string.start_tracking)));
-            return null;
-        });
+                List<UserLatLng> userLatLngs =
+                        pathTrackingAdapter.getLatLngList(userLocation.getLatlng());
+                String uri = "http://maps.google.com/maps?f=d&hl=en&saddr="
+                        + userLatLngs.get(0).getLat() + ","
+                        + userLatLngs.get(0).getLng() + "&daddr="
+                        + userLatLngs.get(userLatLngs.size() - 1).getLat() + "," + ""
+                        + userLatLngs.get(userLatLngs.size() - 1).getLng();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                intent.setClassName("com.google.android.apps.maps",
+                        "com.google.android.maps.MapsActivity");
+                startActivity(Intent.createChooser(intent, getString(R.string.start_tracking)));
+                return null;
+            }
+        );
         rvPathTracker.setAdapter(pathTrackingAdapter);
         swipeRefreshLayout.setColorSchemeColors(this
                 .getResources().getIntArray(R.array.swipeRefreshColors));
