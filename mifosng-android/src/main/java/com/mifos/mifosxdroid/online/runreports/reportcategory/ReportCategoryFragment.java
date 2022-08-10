@@ -112,9 +112,10 @@ public class ReportCategoryFragment extends MifosBaseFragment implements ReportC
         rvReports.setLayoutManager(layoutManager);
         rvReports.addItemDecoration(dividerItemDecoration);
         reportAdapter = new ClientReportAdapter(position -> {
-            openDetailFragment(position);
-            return null;
-        });
+                openDetailFragment(position);
+                return null;
+            }
+        );
         rvReports.setAdapter(reportAdapter);
 
         reportAdapter.setReportItems(reportTypes);
