@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class GroupLoanTemplate implements Parcelable {
     @SerializedName("group")
-    com.mifos.objects.templates.loans.Group group;
+    Group group;
 
     @SerializedName("loanProductId")
     Integer loanProductId;
@@ -176,12 +177,81 @@ public class GroupLoanTemplate implements Parcelable {
     @SerializedName("maximumGap")
     Integer maximumGap;
 
-    public com.mifos.objects.templates.loans.Group getGroup() {
-        return group;
+    protected GroupLoanTemplate(Parcel in) {
+        this.group = in.readParcelable(Group.class.getClassLoader());
+        this.loanProductId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.loanProductName = in.readString();
+        this.isLoanProductLinkedToFloatingRate = (Boolean) in.readValue(Boolean.class
+                .getClassLoader());
+        this.fundId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.fundName = in.readString();
+        this.currency = in.readParcelable(Currency.class.getClassLoader());
+        this.principal = (Double) in.readValue(Double.class.getClassLoader());
+        this.approvedPrincipal = (Double) in.readValue(Double.class.getClassLoader());
+        this.proposedPrincipal = (Double) in.readValue(Double.class.getClassLoader());
+        this.termFrequency = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.termPeriodFrequencyType = in.readParcelable(TermPeriodFrequencyType.class
+                .getClassLoader());
+        this.numberOfRepayments = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.repaymentEvery = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.repaymentFrequencyType = in.readParcelable(RepaymentFrequencyType.class
+                .getClassLoader());
+        this.interestRatePerPeriod = (Double) in.readValue(Double.class.getClassLoader());
+        this.interestRateFrequencyType = in.readParcelable(InterestRateFrequencyType.class
+                .getClassLoader());
+        this.annualInterestRate = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.isFloatingInterestRate = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.amortizationType = in.readParcelable(AmortizationType.class.getClassLoader());
+        this.interestType = in.readParcelable(InterestType.class.getClassLoader());
+        this.interestCalculationPeriodType = in.readParcelable(InterestCalculationPeriodType
+                .class.getClassLoader());
+        this.allowPartialPeriodInterestCalcualtion = (Boolean) in.readValue(Boolean.class
+                .getClassLoader());
+        this.transactionProcessingStrategyId = (Integer) in.readValue(Integer.class
+                .getClassLoader());
+        this.timeline = in.readParcelable(Timeline.class.getClassLoader());
+        this.charges = in.readParcelable(Charges.class.getClassLoader());
+        this.productOptions = in.createTypedArrayList(ProductOptions.CREATOR);
+        this.loanOfficerOptions = in.createTypedArrayList(LoanOfficerOptions.CREATOR);
+        this.loanPurposeOptions = in.createTypedArrayList(LoanPurposeOptions.CREATOR);
+        this.fundOptions = in.createTypedArrayList(FundOptions.CREATOR);
+        this.termFrequencyTypeOptions = in.createTypedArrayList(TermFrequencyTypeOptions.CREATOR);
+        this.repaymentFrequencyTypeOptions = in.createTypedArrayList
+                (RepaymentFrequencyTypeOptions.CREATOR);
+        this.repaymentFrequencyNthDayTypeOptions = in.createTypedArrayList
+                (RepaymentFrequencyNthDayTypeOptions.CREATOR);
+        this.repaymentFrequencyDaysOfWeekTypeOptions = in.createTypedArrayList
+                (RepaymentFrequencyDaysOfWeekTypeOptions.CREATOR);
+        this.interestRateFrequencyTypeOptions = in.createTypedArrayList
+                (InterestRateFrequencyTypeOptions.CREATOR);
+        this.amortizationTypeOptions = in.createTypedArrayList(AmortizationTypeOptions.CREATOR);
+        this.interestTypeOptions = in.createTypedArrayList(InterestTypeOptions.CREATOR);
+        this.interestCalculationPeriodTypeOptions = in.createTypedArrayList
+                (InterestCalculationPeriodType.CREATOR);
+        this.transactionProcessingStrategyOptions = in.createTypedArrayList
+                (TransactionProcessingStrategyOptions.CREATOR);
+        this.chargeOptions = in.createTypedArrayList(ChargeOptions.CREATOR);
+        this.calendarOptions = in.createTypedArrayList(CalendarOptions.CREATOR);
+        this.multiDisburseLoan = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.canDefineInstallmentAmount = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.canDisburse = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.canUseForTopup = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.isTopup = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.product = in.readParcelable(Product.class.getClassLoader());
+        this.overdueCharges = in.createTypedArrayList(OverdueCharges.CREATOR);
+        this.daysInMonthType = in.readParcelable(DaysInMonthType.class.getClassLoader());
+        this.daysInYearType = in.readParcelable(DaysInYearType.class.getClassLoader());
+        this.isInterestRecalculationEnabled = (Boolean) in.readValue(Boolean.class
+                .getClassLoader());
+        this.interestRecalculationData = in.readParcelable
+                (InterestRecalculationData.class.getClassLoader());
+        this.isVariableInstallmentsAllowed = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.minimumGap = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.maximumGap = (Integer) in.readValue(Integer.class.getClassLoader());
     }
 
-    public void setGroup(com.mifos.objects.templates.loans.Group group) {
-        this.group = group;
+    public Group getGroup() {
+        return group;
     }
 
     public Integer getLoanProductId() {
@@ -702,79 +772,8 @@ public class GroupLoanTemplate implements Parcelable {
     public GroupLoanTemplate() {
     }
 
-
-    protected GroupLoanTemplate(Parcel in) {
-        this.group = in.readParcelable(com.mifos.objects.templates.loans.Group.class
-                .getClassLoader());
-        this.loanProductId = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.loanProductName = in.readString();
-        this.isLoanProductLinkedToFloatingRate = (Boolean) in.readValue(Boolean.class
-                .getClassLoader());
-        this.fundId = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.fundName = in.readString();
-        this.currency = in.readParcelable(Currency.class.getClassLoader());
-        this.principal = (Double) in.readValue(Double.class.getClassLoader());
-        this.approvedPrincipal = (Double) in.readValue(Double.class.getClassLoader());
-        this.proposedPrincipal = (Double) in.readValue(Double.class.getClassLoader());
-        this.termFrequency = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.termPeriodFrequencyType = in.readParcelable(TermPeriodFrequencyType.class
-                .getClassLoader());
-        this.numberOfRepayments = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.repaymentEvery = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.repaymentFrequencyType = in.readParcelable(RepaymentFrequencyType.class
-                .getClassLoader());
-        this.interestRatePerPeriod = (Double) in.readValue(Double.class.getClassLoader());
-        this.interestRateFrequencyType = in.readParcelable(InterestRateFrequencyType.class
-                .getClassLoader());
-        this.annualInterestRate = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.isFloatingInterestRate = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.amortizationType = in.readParcelable(AmortizationType.class.getClassLoader());
-        this.interestType = in.readParcelable(InterestType.class.getClassLoader());
-        this.interestCalculationPeriodType = in.readParcelable(InterestCalculationPeriodType
-                .class.getClassLoader());
-        this.allowPartialPeriodInterestCalcualtion = (Boolean) in.readValue(Boolean.class
-                .getClassLoader());
-        this.transactionProcessingStrategyId = (Integer) in.readValue(Integer.class
-                .getClassLoader());
-        this.timeline = in.readParcelable(Timeline.class.getClassLoader());
-        this.charges = in.readParcelable(Charges.class.getClassLoader());
-        this.productOptions = in.createTypedArrayList(ProductOptions.CREATOR);
-        this.loanOfficerOptions = in.createTypedArrayList(LoanOfficerOptions.CREATOR);
-        this.loanPurposeOptions = in.createTypedArrayList(LoanPurposeOptions.CREATOR);
-        this.fundOptions = in.createTypedArrayList(FundOptions.CREATOR);
-        this.termFrequencyTypeOptions = in.createTypedArrayList(TermFrequencyTypeOptions.CREATOR);
-        this.repaymentFrequencyTypeOptions = in.createTypedArrayList
-                (RepaymentFrequencyTypeOptions.CREATOR);
-        this.repaymentFrequencyNthDayTypeOptions = in.createTypedArrayList
-                (RepaymentFrequencyNthDayTypeOptions.CREATOR);
-        this.repaymentFrequencyDaysOfWeekTypeOptions = in.createTypedArrayList
-                (RepaymentFrequencyDaysOfWeekTypeOptions.CREATOR);
-        this.interestRateFrequencyTypeOptions = in.createTypedArrayList
-                (InterestRateFrequencyTypeOptions.CREATOR);
-        this.amortizationTypeOptions = in.createTypedArrayList(AmortizationTypeOptions.CREATOR);
-        this.interestTypeOptions = in.createTypedArrayList(InterestTypeOptions.CREATOR);
-        this.interestCalculationPeriodTypeOptions = in.createTypedArrayList
-                (InterestCalculationPeriodType.CREATOR);
-        this.transactionProcessingStrategyOptions = in.createTypedArrayList
-                (TransactionProcessingStrategyOptions.CREATOR);
-        this.chargeOptions = in.createTypedArrayList(ChargeOptions.CREATOR);
-        this.calendarOptions = in.createTypedArrayList(CalendarOptions.CREATOR);
-        this.multiDisburseLoan = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.canDefineInstallmentAmount = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.canDisburse = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.canUseForTopup = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.isTopup = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.product = in.readParcelable(Product.class.getClassLoader());
-        this.overdueCharges = in.createTypedArrayList(OverdueCharges.CREATOR);
-        this.daysInMonthType = in.readParcelable(DaysInMonthType.class.getClassLoader());
-        this.daysInYearType = in.readParcelable(DaysInYearType.class.getClassLoader());
-        this.isInterestRecalculationEnabled = (Boolean) in.readValue(Boolean.class
-                .getClassLoader());
-        this.interestRecalculationData = in.readParcelable
-                (InterestRecalculationData.class.getClassLoader());
-        this.isVariableInstallmentsAllowed = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.minimumGap = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.maximumGap = (Integer) in.readValue(Integer.class.getClassLoader());
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     public static final Parcelable.Creator<GroupLoanTemplate> CREATOR =

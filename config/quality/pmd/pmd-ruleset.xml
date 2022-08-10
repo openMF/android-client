@@ -36,5 +36,6 @@
         <exclude name="ShortVariable" />
         <exclude name="ShortClassName" />
         <exclude name="VariableNamingConventions" />
+        <exclude name="ClassNamingConventions" />
     </rule>
 </ruleset>
