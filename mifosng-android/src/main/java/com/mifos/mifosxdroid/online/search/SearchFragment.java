@@ -52,7 +52,8 @@ import butterknife.OnClick;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
-public class SearchFragment extends MifosBaseFragment implements SearchMvpView, AdapterView.OnItemSelectedListener {
+public class SearchFragment extends MifosBaseFragment
+        implements SearchMvpView, AdapterView.OnItemSelectedListener {
 
     private static final String LOG_TAG = SearchFragment.class.getSimpleName();
 
@@ -136,37 +137,38 @@ public class SearchFragment extends MifosBaseFragment implements SearchMvpView, 
         rv_search.setLayoutManager(layoutManager);
         rv_search.setHasFixedSize(true);
         searchAdapter = new SearchAdapter(searchedEntity -> {
-            Intent activity = null;
-            switch (searchedEntity.getEntityType()) {
-                case Constants.SEARCH_ENTITY_LOAN:
-                    activity = new Intent(getActivity(), ClientActivity.class);
-                    activity.putExtra(Constants.LOAN_ACCOUNT_NUMBER,
-                            searchedEntity.getEntityId());
-                    break;
-                case Constants.SEARCH_ENTITY_CLIENT:
-                    activity = new Intent(getActivity(), ClientActivity.class);
-                    activity.putExtra(Constants.CLIENT_ID,
-                            searchedEntity.getEntityId());
-                    break;
-                case Constants.SEARCH_ENTITY_GROUP:
-                    activity = new Intent(getActivity(), GroupsActivity.class);
-                    activity.putExtra(Constants.GROUP_ID,
-                            searchedEntity.getEntityId());
-                    break;
-                case Constants.SEARCH_ENTITY_SAVING:
-                    activity = new Intent(getActivity(), ClientActivity.class);
-                    activity.putExtra(Constants.SAVINGS_ACCOUNT_NUMBER,
-                            searchedEntity.getEntityId());
-                    break;
-                case Constants.SEARCH_ENTITY_CENTER:
-                    activity = new Intent(getActivity(), CentersActivity.class);
-                    activity.putExtra(Constants.CENTER_ID,
-                            searchedEntity.getEntityId());
-                    break;
+                Intent activity = null;
+                switch (searchedEntity.getEntityType()) {
+                    case Constants.SEARCH_ENTITY_LOAN:
+                        activity = new Intent(getActivity(), ClientActivity.class);
+                        activity.putExtra(Constants.LOAN_ACCOUNT_NUMBER,
+                                searchedEntity.getEntityId());
+                        break;
+                    case Constants.SEARCH_ENTITY_CLIENT:
+                        activity = new Intent(getActivity(), ClientActivity.class);
+                        activity.putExtra(Constants.CLIENT_ID,
+                                searchedEntity.getEntityId());
+                        break;
+                    case Constants.SEARCH_ENTITY_GROUP:
+                        activity = new Intent(getActivity(), GroupsActivity.class);
+                        activity.putExtra(Constants.GROUP_ID,
+                                searchedEntity.getEntityId());
+                        break;
+                    case Constants.SEARCH_ENTITY_SAVING:
+                        activity = new Intent(getActivity(), ClientActivity.class);
+                        activity.putExtra(Constants.SAVINGS_ACCOUNT_NUMBER,
+                                searchedEntity.getEntityId());
+                        break;
+                    case Constants.SEARCH_ENTITY_CENTER:
+                        activity = new Intent(getActivity(), CentersActivity.class);
+                        activity.putExtra(Constants.CENTER_ID,
+                                searchedEntity.getEntityId());
+                        break;
+                }
+                startActivity(activity);
+                return null;
             }
-            startActivity(activity);
-            return null;
-        });
+        );
         rv_search.setAdapter(searchAdapter);
 
         cb_exactMatch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

@@ -132,9 +132,10 @@ public class OfflineDashboardFragment extends MifosBaseFragment implements Offli
         rv_offline_dashboard.addItemDecoration(new ItemOffsetDecoration(getActivity(),
                 R.dimen.item_offset));
         mOfflineDashboardAdapter = new OfflineDashboardAdapter(position -> {
-            startPayloadActivity(mPayloadClasses.get(position));
-            return null;
-        });
+                startPayloadActivity(mPayloadClasses.get(position));
+                return null;
+            }
+        );
         rv_offline_dashboard.setAdapter(mOfflineDashboardAdapter);
 
         return rootView;
