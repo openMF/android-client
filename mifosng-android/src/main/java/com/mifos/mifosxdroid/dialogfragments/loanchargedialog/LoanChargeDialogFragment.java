@@ -61,7 +61,7 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
 
     private View rootView;
 
-    @BindView(R.id.sp_charge_name)
+    @BindView(R.id.chargeNameField)
     Spinner spChargeName;
 
     @BindView(R.id.amount_due_charge)
@@ -106,6 +106,13 @@ public class LoanChargeDialogFragment extends ProgressableDialogFragment impleme
         ((MifosBaseActivity) getActivity()).getActivityComponent().inject(this);
         if (getArguments() != null)
             loanAccountNumber = getArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(getDialog() != null && getDialog().getWindow() != null)
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override

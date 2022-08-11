@@ -9,7 +9,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:padding="8dp">
+    android:padding="@dimen/Mifos.DesignSystem.Spacing.CardInnerPaddingLarge">
 
     <View
         android:id="@+id/view_status_indicator"
@@ -21,18 +21,19 @@
 
     <TextView
         android:id="@+id/tv_accountNumber"
-        style="@style/TextView.Base.Weight"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        style="@style/Mifos.DesignSystem.TextStyle.CardTitle"
         android:layout_weight="1"
-        android:padding="@dimen/text_padding_normal"
-        android:text="@string/medium_text"
-        android:textColor="@color/primary_text" />
+        android:layout_gravity="center_vertical"
+        android:text="@string/medium_text" />
 
     <TextView
         android:id="@+id/tv_amount"
-        style="@style/TextView.Base.Weight"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        style="@style/Mifos.DesignSystem.TextStyle.BodyLarger"
         android:layout_weight="1"
-        android:gravity="end"
-        android:padding="@dimen/text_padding_normal"
-        android:text="@string/medium_text"
-        android:textColor="@color/primary_text" />
+        android:gravity="end|center_vertical"
+        android:text="@string/medium_text" />
 </LinearLayout>

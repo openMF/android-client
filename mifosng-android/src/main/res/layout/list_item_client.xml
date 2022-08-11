@@ -12,7 +12,8 @@
 
     <TextView
         android:id="@+id/tv_name"
-        style="@style/TextView.BaseWidth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"

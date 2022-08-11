@@ -20,9 +20,11 @@
         <LinearLayout style="@style/LinearLayout.Base">
 
             <TextView
-                style="@style/TextView.CreateLoanAccount"
+                android:text="@string/create_loan_account"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                style="@style/Mifos.DesignSystem.TextStyle.Heading"
+                android:layout_marginTop="@dimen/Mifos.DesignSystem.Spacing.screenVerticalMargin" />
 
             <TextView
                 android:id="@+id/tv_lproduct"
@@ -91,7 +93,8 @@
             <LinearLayout style="@style/LinearLayout.Width">
 
                 <TextView
-                    style="@style/TextView.Base.Weight"
+                    style="@style/Mifos.DesignSystem.TextStyle.CardTitle"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="16dp"
@@ -112,7 +115,8 @@
             <LinearLayout style="@style/LinearLayout.Width">
 
                 <TextView
-                    style="@style/TextView.Base.Weight"
+                    style="@style/Mifos.DesignSystem.TextStyle.CardTitle"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="0.5"
@@ -268,10 +272,11 @@
             </LinearLayout>
 
             <TextView
-                style="@style/TextView.CreateLoanTerms"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold" />
+                android:layout_width="wrap_content"
+                android:text="@string/create_group"
+                style="@style/Mifos.DesignSystem.TextStyle.SubHeading"
+                android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsMedium"/>
 
             <LinearLayout style="@style/LinearLayout.Width">
 
@@ -378,7 +383,8 @@
 
             <Button
                 android:id="@+id/btn_loan_submit"
-                style="@style/Button.Base"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
                 android:text="@string/submit" />
 

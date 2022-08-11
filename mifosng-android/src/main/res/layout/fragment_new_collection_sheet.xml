@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-
+<ScrollView android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         style="@style/LinearLayout.Base"
         android:padding="10dp">
@@ -22,64 +22,71 @@
             android:layout_marginBottom="10dp"
             android:text="@string/fill_collection_sheet_message"
             android:textColor="@color/gray_dark"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:focusableInTouchMode="true"
+            android:focusable="true"/>
 
-        <com.mifos.mifosxdroid.views.CustomSpinner
-            android:id="@+id/sp_office_list"
-            style="@style/spinner_style"
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="@string/office"
+            style="@style/Mifos.DesignSystem.Components.ExposedDropdownMenuField"
+            android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall">
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/officeListField"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="@string/repayment_date"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_baseline_calendar_today_24"
+            android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/repaymentDateField"
+                android:focusable="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:hint="@string/staff"
+            style="@style/Mifos.DesignSystem.Components.ExposedDropdownMenuField"
+            android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall">
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/staffSelectionField"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="40dp"
-            android:entries="@array/search_options"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown" />
-
-        <TextView
-            android:id="@+id/tv_repayment_date"
-            style="@style/repayment_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="40dp"
-            android:text="@string/repayment_date" />
-
-        <com.mifos.mifosxdroid.views.CustomSpinner
-            android:id="@+id/sp_staff_list"
-            style="@style/spinner_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="40dp"
-            android:entries="@array/search_options"
-            android:paddingTop="10dp"
-            android:spinnerMode="dropdown" />
-
-
-        <RelativeLayout
-            style="@style/LinearLayout.Width"
-            android:padding="10dp">
+            android:padding="@dimen/Mifos.DesignSystem.Spacing.CardInnerPaddingLarge">
 
             <Button
                 android:id="@+id/btn_fetch_collection_sheet"
-                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/login_button_rounded"
-                android:text="@string/generate"
-                android:textColor="@color/white" />
-
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsMedium"
+                android:text="@string/generate"/>
             <Button
-                android:id="@+id/btn_clear"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/login_button_rounded"
-                android:backgroundTint="@color/light_grey"
                 android:text="@string/clear"
-                android:textColor="@color/white" />
-        </RelativeLayout>
+                android:id="@+id/btn_clear"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

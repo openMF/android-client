@@ -7,8 +7,6 @@ package com.mifos.mifosxdroid.dialogfragments.chargedialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
@@ -36,6 +34,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,13 +46,12 @@ import butterknife.OnClick;
  * Use this Dialog Fragment to Create and/or Update charges
  */
 public class ChargeDialogFragment extends ProgressableDialogFragment implements
-        MFDatePicker.OnDatePickListener, ChargeDialogMvpView,
-        AdapterView.OnItemSelectedListener {
+        MFDatePicker.OnDatePickListener, ChargeDialogMvpView  {
 
     public final String LOG_TAG = getClass().getSimpleName();
 
-    @BindView(R.id.sp_charge_name)
-    Spinner spChargeName;
+    @BindView(R.id.chargeNameField)
+    MaterialAutoCompleteTextView spChargeName;
 
     @BindView(R.id.amount_due_charge)
     EditText etAmountDue;
@@ -106,6 +105,13 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
         if (getArguments() != null)
             clientId = getArguments().getInt(Constants.CLIENT_ID);
         return super.onCreateDialog(savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(getDialog() != null && getDialog().getWindow() != null)
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override
@@ -190,7 +196,18 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
         chargeNameAdapter
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spChargeName.setAdapter(chargeNameAdapter);
-        spChargeName.setOnItemSelectedListener(this);
+        spChargeName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                chargeId = mChargeTemplate.getChargeOptions().get(position).getId();
+                chargeName = mChargeTemplate.getChargeOptions().get(position).getName();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @Override
@@ -199,21 +216,6 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
         chargeNameList.addAll(mChargeDialogPresenter.filterChargeName
                 (chargeTemplate.getChargeOptions()));
         chargeNameAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (parent.getId()) {
-            case R.id.sp_charge_name:
-                chargeId = mChargeTemplate.getChargeOptions().get(position).getId();
-                chargeName = mChargeTemplate.getChargeOptions().get(position).getName();
-                break;
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     @Override

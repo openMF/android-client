@@ -13,69 +13,78 @@
 
         <TableLayout
             android:id="@+id/tbl_centerDetails"
-            style="@style/Table">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
-                style="@style/TextView.Client"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:gravity="center_horizontal"
-                android:paddingTop="@dimen/dimension_32_dp"
-                android:paddingBottom="@dimen/layout_padding_16dp"
+                style="@style/Mifos.DesignSystem.TextStyle.Heading"
+                android:textColor="@color/black"
                 android:text="@string/center_details"
-                android:textColor="@color/black" />
+                android:paddingTop="@dimen/dimension_32_dp"
+                android:paddingBottom="@dimen/layout_padding_16dp"/>
 
             <TableRow
                 android:id="@+id/row_activation_date"
-                style="@style/TableRow">
+                style="@style/Mifos.DesignSystem.Components.Table.Row">
 
                 <TextView
-                    style="@style/TextView.Row"
+                    android:layout_weight="1"
+                    style="@style/Mifos.DesignSystem.TextStyle.Label"
                     android:text="@string/activation_date" />
 
                 <TextView
                     android:id="@+id/tv_center_activation_date"
-                    style="@style/TextView.Row.Value" />
+                    android:layout_weight="1"
+                    android:gravity="end" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/row_meeting_date"
-                style="@style/TableRow">
+                style="@style/Mifos.DesignSystem.Components.Table.Row">
 
                 <TextView
-                    style="@style/TextView.Row"
+                    android:layout_weight="1"
+                    style="@style/Mifos.DesignSystem.TextStyle.Label"
                     android:text="@string/next_meeting_on" />
 
                 <TextView
                     android:id="@+id/tv_meeting_date"
-                    style="@style/TextView.Row.Value" />
+                    android:layout_weight="1"
+                    android:gravity="end" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/row_meeting_frequency"
-                style="@style/TableRow">
+                style="@style/Mifos.DesignSystem.Components.Table.Row">
 
                 <TextView
-                    style="@style/TextView.Row"
+                    android:layout_weight="1"
+                    style="@style/Mifos.DesignSystem.TextStyle.Label"
                     android:text="@string/meeting_frequency" />
 
                 <TextView
                     android:id="@+id/tv_meeting_frequency"
-                    style="@style/TextView.Row.Value" />
+                    android:layout_weight="1"
+                    android:gravity="end" />
 
             </TableRow>
 
             <TableRow
                 android:id="@+id/row_staff_name"
-                style="@style/TableRow">
+                style="@style/Mifos.DesignSystem.Components.Table.Row">
 
                 <TextView
-                    style="@style/TextView.Row"
+                    android:layout_weight="1"
+                    style="@style/Mifos.DesignSystem.TextStyle.Label"
                     android:text="@string/staff_name" />
 
                 <TextView
                     android:id="@+id/tv_staff_name"
-                    style="@style/TextView.Row.Value" />
+                    android:layout_weight="1"
+                    android:gravity="end" />
             </TableRow>
 
             <TextView
@@ -87,105 +96,119 @@
                 android:paddingBottom="5dp" />
 
             <TextView
-                style="@style/TextView.Client"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:gravity="center_horizontal"
                 android:paddingTop="@dimen/dimension_32_dp"
                 android:paddingBottom="@dimen/layout_padding_16dp"
-                android:text="@string/summary_info"
-                android:textColor="@color/black" />
+                style="@style/Mifos.DesignSystem.TextStyle.Heading"
+                android:textColor="@color/black"
+                android:text="@string/summary_info"/>
 
             <TableRow
                 android:id="@+id/row_active_clients"
-                style="@style/TableRow">
+                style="@style/Mifos.DesignSystem.Components.Table.Row">
 
                 <TextView
-                    style="@style/TextView.Row"
+                    android:layout_weight="1"
+                    style="@style/Mifos.DesignSystem.TextStyle.Label"
                     android:text="@string/active_clients" />
 
                 <TextView
                     android:id="@+id/tv_active_clients"
-                    style="@style/TextView.Row.Value" />
+                    android:layout_weight="1"
+                    android:gravity="end" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/row_active_group_loans"
-                style="@style/TableRow">
+                style="@style/Mifos.DesignSystem.Components.Table.Row">
 
                 <TextView
-                    style="@style/TextView.Row"
+                    android:layout_weight="1"
+                    style="@style/Mifos.DesignSystem.TextStyle.Label"
                     android:text="@string/active_group_loans" />
 
                 <TextView
                     android:id="@+id/tv_active_group_loans"
-                    style="@style/TextView.Row.Value" />
+                    android:layout_weight="1"
+                    android:gravity="end" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/row_active_client_loans"
-                style="@style/TableRow">
+                style="@style/Mifos.DesignSystem.Components.Table.Row">
 
                 <TextView
-                    style="@style/TextView.Row"
+                    android:layout_weight="1"
+                    style="@style/Mifos.DesignSystem.TextStyle.Label"
                     android:text="@string/active_client_loans" />
 
                 <TextView
-                    android:id="@+id/tv_active_client_loans"
-                    style="@style/TextView.Row.Value" />
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:id="@+id/tv_active_client_loans" />
 
             </TableRow>
 
             <TableRow
                 android:id="@+id/row_active_group_borrowers"
-                style="@style/TableRow">
+                style="@style/Mifos.DesignSystem.Components.Table.Row">
 
                 <TextView
-                    style="@style/TextView.Row"
+                    android:layout_weight="1"
+                    style="@style/Mifos.DesignSystem.TextStyle.Label"
                     android:text="@string/active_group_borrowers" />
 
                 <TextView
                     android:id="@+id/tv_active_group_borrowers"
-                    style="@style/TextView.Row.Value" />
+                    android:layout_weight="1"
+                    android:gravity="end" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/row_active_client_borrowers"
-                style="@style/TableRow">
+                style="@style/Mifos.DesignSystem.Components.Table.Row">
 
                 <TextView
-                    style="@style/TextView.Row"
+                    android:layout_weight="1"
+                    style="@style/Mifos.DesignSystem.TextStyle.Label"
                     android:text="@string/active_client_borrowers" />
 
                 <TextView
                     android:id="@+id/tv_active_client_borrowers"
-                    style="@style/TextView.Row.Value" />
+                    android:layout_weight="1"
+                    android:gravity="end" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/row_active_overdue_group_loans"
-                style="@style/TableRow">
+                style="@style/Mifos.DesignSystem.Components.Table.Row">
 
                 <TextView
-                    style="@style/TextView.Row"
+                    android:layout_weight="1"
+                    style="@style/Mifos.DesignSystem.TextStyle.Label"
                     android:text="@string/active_overdue_group_loans" />
 
                 <TextView
                     android:id="@+id/tv_active_overdue_group_loans"
-                    style="@style/TextView.Row.Value" />
+                    android:layout_weight="1"
+                    android:gravity="end" />
             </TableRow>
 
             <TableRow
                 android:id="@+id/row_active_overdue_client_loans"
-                style="@style/TableRow">
+                style="@style/Mifos.DesignSystem.Components.Table.Row">
 
                 <TextView
-                    style="@style/TextView.Row"
+                    android:layout_weight="1"
+                    style="@style/Mifos.DesignSystem.TextStyle.Label"
                     android:text="@string/active_overdue_client_loans" />
 
                 <TextView
                     android:id="@+id/tv_active_overdue_client_loans"
-                    style="@style/TextView.Row.Value" />
+                    android:layout_weight="1"
+                    android:gravity="end" />
             </TableRow>
 
         </TableLayout>

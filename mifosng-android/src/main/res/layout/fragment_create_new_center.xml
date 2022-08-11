@@ -8,8 +8,12 @@
         android:id="@+id/ll_center"
         style="@style/LinearLayout.Base">
 
-        <TextView style="@style/TextView.CreateCenter" />
-
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/create_center"
+            style="@style/Mifos.DesignSystem.TextStyle.Heading"
+            android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsMedium"/>
         <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
             <EditText
@@ -110,11 +114,12 @@
                 android:background="@color/gray_dark" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_submit"
-            style="@style/Button.Base"
-            android:layout_marginTop="10dp"
-            android:text="@string/submit" />
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:text="@string/submit" />
 
     </LinearLayout>
 </ScrollView>

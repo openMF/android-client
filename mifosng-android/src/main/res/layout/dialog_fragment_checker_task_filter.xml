@@ -162,7 +162,8 @@
 
     <Button
         android:id="@+id/btn_apply_filter"
-        style="@style/Button.Base"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:text="Apply Filters" />
 

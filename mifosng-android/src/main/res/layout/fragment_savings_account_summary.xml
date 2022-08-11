@@ -213,23 +213,27 @@
             style="@style/LinearLayout.Width"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
             android:layout_marginBottom="8dp">
 
             <Button
                 android:id="@+id/bt_withdrawal"
-                style="@style/Button.Base.Weight"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/savings_make_withdrawal" />
 
             <Button
                 android:id="@+id/bt_deposit"
-                style="@style/Button.Base.Weight"
-                android:layout_weight="0.84"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/savings_make_deposit" />
 
             <Button
                 android:id="@+id/bt_approve_saving"
-                style="@style/Button.Base.Weight"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/approve_savings" />
 

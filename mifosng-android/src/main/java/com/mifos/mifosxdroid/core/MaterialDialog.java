@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.mifos.mifosxdroid.R;
 
 /**
@@ -20,13 +21,13 @@ public final class MaterialDialog  {
         //This is the Default Builder Initialization with Material Style
         public Builder init(Context context) {
             mMaterialDialogBuilder =
-                    new AlertDialog.Builder(context, R.style.MaterialAlertDialogStyle);
+                    new MaterialAlertDialogBuilder(context);
             return this;
         }
 
         //This method set the custom Material Style
         public Builder init(Context context, int theme) {
-            mMaterialDialogBuilder = new AlertDialog.Builder(context, theme);
+            mMaterialDialogBuilder = new MaterialAlertDialogBuilder(context, theme);
             return this;
         }
 

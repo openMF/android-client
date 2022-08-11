@@ -21,7 +21,12 @@
 
         <LinearLayout style="@style/LinearLayout.Base">
 
-            <TextView style="@style/TextView.CreateClient" />
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/create_client"
+                style="@style/Mifos.DesignSystem.TextStyle.Heading"
+                android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsMedium"/>
 
             <com.mifos.mifosxdroid.views.CircularImageView
                 android:id="@+id/iv_clientImage"
@@ -332,7 +337,8 @@
 
             <Button
                 android:id="@+id/btn_submit"
-                style="@style/Button.Base"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
                 android:text="@string/submit" />
 

@@ -24,8 +24,11 @@
                 android:src="@drawable/mifos_logo" />
 
             <TextView
-                style="@style/TextView.Login"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:layout_gravity="center"
+                style="@style/Mifos.DesignSystem.TextStyle.BodyLarger"
+                android:layout_marginVertical="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
                 android:text="@string/enter_credentials" />
 
 
@@ -111,7 +114,8 @@
 
                 <TextView
                     android:id="@+id/tv_constructed_instance_url"
-                    style="@style/TextView.Base"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="16dp" />
 
@@ -131,11 +135,10 @@
 
             <Button
                 android:id="@+id/bt_login"
-                style="@style/Button.Login"
+                android:layout_width="match_parent"
+                android:text="@string/login"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@drawable/login_button_rounded"
                 android:gravity="center"
                 android:paddingTop="8.7dp"
                 android:paddingBottom="8.71dp"

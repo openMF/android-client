@@ -31,7 +31,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
                         android:layout_marginTop="16dp"
                         android:textSize="24sp"
                         android:textStyle="bold" />
@@ -119,7 +118,6 @@
 
         <Button
             android:id="@+id/btn_add_payment"
-            style="@style/Button.Base"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -284,7 +282,6 @@
                                 android:text="@string/save"
                                 android:textColor="@color/primary" />
                         </LinearLayout>
-
                     </TableRow>
                 </TableLayout>
             </androidx.cardview.widget.CardView>
