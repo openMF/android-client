@@ -1,115 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="@color/light_grey"
-    app:cardCornerRadius="10dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Mifos.DesignSystem.Components.Cards.Filled"
+    app:contentPadding="@dimen/Mifos.DesignSystem.Spacing.CardInnerPadding">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <TableLayout
+        android:id="@+id/tbl_transactionDetails"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TableLayout
-            android:id="@+id/tbl_transactionDetails"
-            style="@style/Table">
+        <TableRow
+            android:id="@+id/tr_transaction_id"
+            style="@style/Mifos.DesignSystem.Components.Table.Row">
 
-            <TableRow
-                android:id="@+id/tr_transaction_id"
-                style="@style/TableRow">
+            <TextView
+                android:layout_weight="1"
+                style="@style/Mifos.DesignSystem.TextStyle.Label"
+                android:text="@string/transaction_id" />
 
-                <TextView
-                    style="@style/TextView.Row"
-                    android:text="@string/transaction_id" />
+            <TextView
+                android:layout_weight="1"
+                android:gravity="end"
+                tools:text="3iid3d30f3f3"
+                android:id="@+id/tv_transactionId" />
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/tv_transactionId"
-                    style="@style/TextView.Row.Value" />
-            </TableRow>
+        <TableRow
+            android:id="@+id/tr_date"
+            android:gravity="center"
+            style="@style/Mifos.DesignSystem.Components.Table.Row">
 
-            <TableRow
-                android:id="@+id/tr_date"
-                style="@style/TableRow">
+            <TextView
+                android:layout_weight="1"
+                style="@style/Mifos.DesignSystem.TextStyle.Label"
+                android:text="@string/date" />
 
-                <TextView
-                    style="@style/TextView.Row"
-                    android:text="@string/date" />
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_weight="1"
+                android:gravity="end"
+                tools:text="12 July 2099"/>
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/tv_date"
-                    style="@style/TextView.Row.Value" />
-            </TableRow>
+        <TableRow
+            android:id="@+id/tr_transactionType"
+            android:gravity="center"
+            style="@style/Mifos.DesignSystem.Components.Table.Row">
 
-            <TableRow
-                android:id="@+id/tr_transactionType"
-                style="@style/TableRow">
+            <TextView
+                android:layout_weight="1"
+                style="@style/Mifos.DesignSystem.TextStyle.Label"
+                android:text="@string/transaction_type" />
 
-                <TextView
-                    style="@style/TextView.Row"
-                    android:text="@string/transaction_type" />
+            <TextView
+                android:id="@+id/tv_transactionType"
+                android:layout_weight="1"
+                android:gravity="end"
+                tools:text="Payment"/>
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/tv_transactionType"
-                    style="@style/TextView.Row.Value" />
-            </TableRow>
+        <TableRow
+            android:id="@+id/tr_runningBalance"
+            android:gravity="center"
+            style="@style/Mifos.DesignSystem.Components.Table.Row">
 
-            <TableRow
-                android:id="@+id/tr_runningBalance"
-                style="@style/TableRow">
+            <TextView
+                android:layout_weight="1"
+                style="@style/Mifos.DesignSystem.TextStyle.Label"
+                android:text="@string/running_balance" />
 
-                <TextView
-                    style="@style/TextView.Row"
-                    android:text="@string/running_balance" />
+            <TextView
+                android:id="@+id/tv_runningBalance"
+                android:layout_weight="1"
+                android:gravity="end"
+                tools:text="$ 100"/>
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/tv_runningBalance"
-                    style="@style/TextView.Row.Value" />
-            </TableRow>
+        <TableRow
+            android:id="@+id/tr_savingAccountId"
+            style="@style/Mifos.DesignSystem.Components.Table.Row">
 
-            <TableRow
-                android:id="@+id/tr_savingAccountId"
-                style="@style/TableRow">
+            <TextView
+                android:layout_weight="1"
+                style="@style/Mifos.DesignSystem.TextStyle.Label"
+                android:text="@string/saving_account_id" />
 
-                <TextView
-                    style="@style/TextView.Row"
-                    android:text="@string/saving_account_id" />
+            <TextView
+                android:id="@+id/tv_savingAccountId"
+                android:layout_weight="1"
+                android:gravity="end"
+                tools:text="3d3wr23das"/>
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/tv_savingAccountId"
-                    style="@style/TextView.Row.Value" />
-            </TableRow>
+        <TableRow
+            android:id="@+id/tr_accountNumber"
+            style="@style/Mifos.DesignSystem.Components.Table.Row">
 
-            <TableRow
-                android:id="@+id/tr_accountNumber"
-                style="@style/TableRow">
+            <TextView
+                android:layout_weight="1"
+                style="@style/Mifos.DesignSystem.TextStyle.Label"
+                android:text="@string/account_number" />
 
-                <TextView
-                    style="@style/TextView.Row"
-                    android:text="@string/account_number" />
+            <TextView
+                android:id="@+id/tv_accountNumber"
+                android:layout_weight="1"
+                android:gravity="end"
+                tools:text="3249329423"/>
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/tv_accountNumber"
-                    style="@style/TextView.Row.Value" />
-            </TableRow>
+        <TableRow
+            android:id="@+id/tr_currency"
+            style="@style/Mifos.DesignSystem.Components.Table.Row">
 
-            <TableRow
-                android:id="@+id/tr_currency"
-                style="@style/TableRow"
-                android:paddingBottom="12dp">
+            <TextView
+                android:layout_weight="1"
+                style="@style/Mifos.DesignSystem.TextStyle.Label"
+                android:text="@string/currency" />
 
-                <TextView
-                    style="@style/TextView.Row"
-                    android:text="@string/currency" />
+            <TextView
+                android:id="@+id/tv_currency"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text=""
+                tools:text="$ Dollar"/>
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/tv_currency"
-                    style="@style/TextView.Row.Value"
-                    android:text="" />
-            </TableRow>
-
-        </TableLayout>
+    </TableLayout>
 
 
-    </RelativeLayout>
-
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

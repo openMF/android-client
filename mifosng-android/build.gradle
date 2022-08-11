@@ -261,7 +261,7 @@ dependencies {
     //preferences
     implementation "androidx.preference:preference:$preference"
 
-    implementation 'com.github.rahul-gill.mifos-ui-library:uihouse:alpha-2.2'
+    implementation 'com.github.rahul-gill.mifos-ui-library:uihouse:alpha-2.3'
 }
 /*
 All direct/transitive dependencies shared between your test and production APKs need to be
