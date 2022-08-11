@@ -168,7 +168,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
 
     override fun setStaffSpinner(staffs: List<Staff>?) {
         staffSelectionField!!.setOnItemClickListener { adapterView, _, relativePosition, _ ->
-            val i = officeNameList!!.indexOf(adapterView.getItemAtPosition(relativePosition))
+            val i = staffNameList!!.indexOf(adapterView.getItemAtPosition(relativePosition))
             staffId = staffList!![i].id
         }
         staffList = staffs
@@ -236,7 +236,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.tv_repayment_date -> setTvRepaymentDate()
+            R.id.repaymentDateField -> setTvRepaymentDate()
             R.id.btn_fetch_collection_sheet -> {
                 if(!officeNameList!!.contains(officeListField!!.text.toString()))
                     Toaster.show(rootView, getStringMessage(R.string.error_select_office))
