@@ -4,23 +4,22 @@
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv_client"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    app:cardUseCompatPadding="true">
+    android:layout_marginHorizontal="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
+    android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:minHeight="?attr/listPreferredItemHeight"
         android:orientation="horizontal"
-        android:backgroundTint="@color/white"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:layout_margin="@dimen/Mifos.DesignSystem.Spacing.CardInnerPadding"
         android:id="@+id/linearLayout">
 
 
@@ -38,7 +37,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/white"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingLeft="16dp">
@@ -75,4 +73,4 @@
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

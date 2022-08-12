@@ -4,13 +4,13 @@
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardUseCompatPadding="true">
+    android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
+    android:layout_marginHorizontal="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -35,4 +35,4 @@
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

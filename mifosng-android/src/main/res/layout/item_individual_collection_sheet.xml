@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cv_client"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginRight="8dp"
+    android:layout_margin="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
     android:clickable="true"
-    android:focusable="true"
-    app:cardCornerRadius="10dp"
-    app:cardUseCompatPadding="true">
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -118,4 +112,4 @@
             android:src="@drawable/baseline_keyboard_arrow_right_black_36" />
 
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

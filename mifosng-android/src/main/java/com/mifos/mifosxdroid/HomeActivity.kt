@@ -18,7 +18,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.test.espresso.IdlingResource
@@ -37,9 +37,6 @@ import com.mifos.mifosxdroid.online.RunReportsActivity
 import com.mifos.mifosxdroid.online.centerlist.CenterListFragment
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxPendingTasksActivity
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment
-import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment
-import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment
-import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment
 import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment
 import com.mifos.mifosxdroid.online.search.SearchFragment
 import com.mifos.utils.Constants
@@ -78,7 +75,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         mNavigationView = findViewById(R.id.navigation_view)
         setSupportActionBar(toolbar)
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        val navController = ( supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
         appBarConfiguration = AppBarConfiguration.Builder()
                 .setDrawerLayout(mDrawerLayout)
                 .build()

@@ -1,53 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
+    android:layout_marginHorizontal="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
+    app:contentPadding="@dimen/Mifos.DesignSystem.Spacing.CardInnerPadding">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginBottom="2dp"
-        app:cardCornerRadius="2dp"
-        app:cardElevation="2dp"
-        app:cardPreventCornerOverlap="false"
-        app:contentPadding="0dp">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_sync_payload"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_sync_payload"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginBottom="2dp"
-                android:gravity="top|start"
-                android:text="Pyload Name"
-                android:textColor="@color/black" />
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="2dp"
+            android:gravity="top|start"
+            android:text="Pyload Name"
+            android:textColor="@color/black" />
 
 
-            <TextView
-                android:id="@+id/tv_payload_error_message"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginBottom="2dp"
-                android:gravity="bottom|start"
-                android:text="Error Message"
-                android:textColor="@color/black"
-                android:visibility="gone" />
+        <TextView
+            android:id="@+id/tv_payload_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="2dp"
+            android:gravity="bottom|start"
+            android:text="Error Message"
+            android:textColor="@color/black"
+            android:visibility="gone" />
 
-        </LinearLayout>
+    </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
-
-</FrameLayout>
+</com.google.android.material.card.MaterialCardView>

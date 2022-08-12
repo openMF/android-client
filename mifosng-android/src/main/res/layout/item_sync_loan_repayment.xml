@@ -1,181 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
+    app:contentPadding="@dimen/Mifos.DesignSystem.Spacing.CardInnerPadding"
+    android:layout_marginHorizontal="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view"
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginBottom="2dp"
-        app:cardCornerRadius="2dp"
-        app:cardElevation="2dp"
-        app:cardPreventCornerOverlap="false"
-        app:contentPadding="0dp">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="8dp">
-
-            <TableRow
-                android:id="@+id/tableRow_loan_id"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <TextView
-                    android:id="@+id/tv_loan_id"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:padding="4dp"
-                    android:text="@string/loan_id"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_db_loan_id"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:gravity="start"
-                    android:padding="4dp"
-                    android:text="@string/loan_id"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
-
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow_accountNumber"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <TextView
-                    android:id="@+id/tv_accountNumber"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:padding="4dp"
-                    android:text="@string/account_number"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_db_accountNumber"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:gravity="start"
-                    android:padding="4dp"
-                    android:text="@string/account_number"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
-
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow_payment_type"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <TextView
-                    android:id="@+id/tv_payment_type"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:padding="4dp"
-                    android:text="@string/payment_type"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_db_payment_type"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:gravity="start"
-                    android:padding="4dp"
-                    android:text="@string/payment_type"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
-
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow_transaction_amount"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <TextView
-                    android:id="@+id/tv_transaction_amount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:padding="4dp"
-                    android:text="@string/transaction_amount"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_db_transaction_amount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:gravity="start"
-                    android:padding="4dp"
-                    android:text="@string/transaction_amount"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
-
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow_transaction_date"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <TextView
-                    android:id="@+id/tv_transaction_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:padding="4dp"
-                    android:text="@string/loan_transaction_date"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_db_transaction_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:gravity="start"
-                    android:padding="4dp"
-                    android:text="@string/loan_transaction_date"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textStyle="bold" />
-
-            </TableRow>
+        <TableRow
+            android:id="@+id/tableRow_loan_id"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
             <TextView
-                android:id="@+id/tv_error_message"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_loan_id"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.25"
                 android:padding="4dp"
-                android:text="@string/error_message"
+                android:text="@string/loan_id"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/light_yellow"
-                android:visibility="gone" />
+                android:textStyle="bold" />
 
-        </TableLayout>
+            <TextView
+                android:id="@+id/tv_db_loan_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="start"
+                android:padding="4dp"
+                android:text="@string/loan_id"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow_accountNumber"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/tv_accountNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:padding="4dp"
+                android:text="@string/account_number"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_db_accountNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="start"
+                android:padding="4dp"
+                android:text="@string/account_number"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow_payment_type"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/tv_payment_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:padding="4dp"
+                android:text="@string/payment_type"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_db_payment_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="start"
+                android:padding="4dp"
+                android:text="@string/payment_type"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow_transaction_amount"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/tv_transaction_amount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:padding="4dp"
+                android:text="@string/transaction_amount"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_db_transaction_amount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="start"
+                android:padding="4dp"
+                android:text="@string/transaction_amount"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow_transaction_date"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/tv_transaction_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:padding="4dp"
+                android:text="@string/loan_transaction_date"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_db_transaction_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="start"
+                android:padding="4dp"
+                android:text="@string/loan_transaction_date"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+        </TableRow>
+
+        <TextView
+            android:id="@+id/tv_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="@string/error_message"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/light_yellow"
+            android:visibility="gone" />
+
+    </TableLayout>
 
 
-    </androidx.cardview.widget.CardView>
-
-</FrameLayout>
+</com.google.android.material.card.MaterialCardView>

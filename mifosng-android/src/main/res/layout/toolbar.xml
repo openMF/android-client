@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.appbar.MaterialToolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/toolbar"
-    style="@style/Toolbar.Common"
-    android:theme="@style/Toolbar.Common"
-    app:popupTheme="@style/AppToolbarPopup">
-
-    <!--<RelativeLayout style="@style/RelativeLayout.Base">-->
-
-    <!--<com.mifos.mifosxdroid.views.FontTextView-->
-    <!--android:id="@+id/title"-->
-    <!--style="@style/TextView.Toolbar"-->
-    <!--app:typeface="roboto_medium" />-->
-
-    <!--</RelativeLayout>-->
-</androidx.appcompat.widget.Toolbar>
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent" />
