@@ -1,19 +1,17 @@
 package com.mifos.mifosxdroid.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.SelectableAdapter
 import com.mifos.mifosxdroid.views.CircularImageView
 import com.mifos.objects.group.Center
 import com.mifos.utils.Utils
+import org.mifos.mobile.ui.getThemeAttributeColor
 
 
 class CentersListAdapter(
@@ -29,12 +27,10 @@ class CentersListAdapter(
                 .inflate(R.layout.row_center_list_item, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
-                onCenterClick(viewHolder.adapterPosition)
+                onCenterClick(viewHolder.bindingAdapterPosition)
         }
         viewHolder.itemView.setOnLongClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
-                onCenterLongClick(viewHolder.adapterPosition)
+                onCenterLongClick(viewHolder.bindingAdapterPosition)
             return@setOnLongClickListener true
         }
         return viewHolder
@@ -66,9 +62,10 @@ class CentersListAdapter(
 
             //Changing the Color of Selected Centers
             viewSelectedOverlay.setBackgroundColor(
-                if (isSelected(position))
-                    ContextCompat.getColor(itemView.context,R.color.gray_light)
-                else Color.WHITE
+                holder.itemView.context.getThemeAttributeColor(
+                    if (isSelected(position)) R.attr.colorSurfaceVariant
+                    else R.attr.colorSurface
+                )
             )
             ivSyncStatus.visibility = if (center.isSync) View.VISIBLE else View.INVISIBLE
         }
@@ -97,7 +94,7 @@ class CentersListAdapter(
         val tvStaffId: TextView = v.findViewById(R.id.tv_staff_id)
         val tvOfficeName: TextView = v.findViewById(R.id.tv_office_name)
         val tvOfficeId: TextView = v.findViewById(R.id.tv_office_id)
-        val viewSelectedOverlay: LinearLayout = v.findViewById(R.id.linearLayout)
+        val viewSelectedOverlay: View = v.findViewById(R.id.card_view)
         val ivSyncStatus: ImageView = v.findViewById(R.id.iv_sync_status)
     }
 

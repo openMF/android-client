@@ -28,8 +28,7 @@ class SearchAdapter(
                 .inflate(R.layout.list_item_client, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
-                onSearchItemClick(searchedResults[viewHolder.adapterPosition])
+                onSearchItemClick(searchedResults[viewHolder.bindingAdapterPosition])
         }
         return viewHolder
     }

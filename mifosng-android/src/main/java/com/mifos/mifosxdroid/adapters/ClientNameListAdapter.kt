@@ -1,18 +1,16 @@
 package com.mifos.mifosxdroid.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.SelectableAdapter
 import com.mifos.objects.client.Client
 import com.mifos.utils.ImageLoaderUtils
+import org.mifos.mobile.ui.getThemeAttributeColor
 
 
 class ClientNameListAdapter(
@@ -30,12 +28,10 @@ class ClientNameListAdapter(
                 .inflate(R.layout.row_client_name, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
-                onClientNameClick(viewHolder.adapterPosition)
+                onClientNameClick(viewHolder.bindingAdapterPosition)
         }
         viewHolder.itemView.setOnLongClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
-                onClientNameLongClick(viewHolder.adapterPosition)
+                onClientNameLongClick(viewHolder.bindingAdapterPosition)
             return@setOnLongClickListener true
         }
         return viewHolder
@@ -58,10 +54,10 @@ class ClientNameListAdapter(
 
         //Changing the Color of Selected Clients
         holder.view_selectedOverlay.setBackgroundColor(
-            if (isSelected(position))
-                ContextCompat.getColor(holder.itemView.context, R.color.gray_light)
-            else
-                Color.WHITE
+            holder.itemView.context.getThemeAttributeColor(
+                if (isSelected(position)) R.attr.colorSurfaceVariant
+                else R.attr.colorSurface
+            )
         )
         holder.iv_sync_status.visibility = if (client.isSync) View.VISIBLE else View.INVISIBLE
     }
@@ -82,7 +78,7 @@ class ClientNameListAdapter(
         val tv_clientName: TextView = v.findViewById(R.id.tv_clientName)
         val tv_clientAccountNumber: TextView = v.findViewById(R.id.tv_clientAccountNumber)
         val iv_userPicture: ImageView = v.findViewById(R.id.iv_user_picture)
-        val view_selectedOverlay: LinearLayout = v.findViewById(R.id.linearLayout)
+        val view_selectedOverlay: View = v.findViewById(R.id.cv_client)
         val iv_sync_status: ImageView = v.findViewById(R.id.iv_sync_status)
 
     }

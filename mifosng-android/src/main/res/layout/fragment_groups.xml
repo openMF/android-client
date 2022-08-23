@@ -23,7 +23,6 @@
             android:layout_centerHorizontal="true"
             android:layout_weight="1"
             android:fadeScrollbars="false"
-            android:padding="10dp"
             android:scrollbars="vertical" />
 
 
@@ -42,11 +41,11 @@
         android:id="@+id/fab_create_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/Mifos.DesignSystem.Spacing.FabMargin"
         android:layout_alignParentBottom="true"
-        app:srcCompat="@drawable/ic_add_white_24dp" />
+        app:srcCompat="@drawable/ic_add_white_24dp"
+        android:contentDescription="@string/create_group" />
 
     <include
         android:id="@+id/layout_error"

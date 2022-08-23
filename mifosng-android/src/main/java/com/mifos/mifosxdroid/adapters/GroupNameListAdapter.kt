@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.SelectableAdapter
 import com.mifos.objects.group.Group
+import org.mifos.mobile.ui.getThemeAttributeColor
 import javax.inject.Inject
 
 class GroupNameListAdapter(
@@ -26,12 +27,10 @@ class GroupNameListAdapter(
                 .inflate(R.layout.row_group_name, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
-                onGroupClick(viewHolder.adapterPosition)
+                onGroupClick(viewHolder.bindingAdapterPosition)
         }
         viewHolder.itemView.setOnLongClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
-                onGroupLongClick(viewHolder.adapterPosition)
+                onGroupLongClick(viewHolder.bindingAdapterPosition)
             return@setOnLongClickListener true
         }
         return viewHolder
@@ -44,9 +43,10 @@ class GroupNameListAdapter(
 
         //Changing the Color of Selected Groups
         holder.view_selectedOverlay.setBackgroundColor(
-            if (isSelected(position))
-                ContextCompat.getColor(holder.itemView.context,R.color.gray_light)
-            else Color.WHITE
+            holder.itemView.context.getThemeAttributeColor(
+                if (isSelected(position)) R.attr.colorSurfaceVariant
+                else R.attr.colorSurface
+            )
         )
         holder.iv_sync_status.visibility = if (group.isSync) View.VISIBLE else View.INVISIBLE
     }
@@ -68,7 +68,7 @@ class GroupNameListAdapter(
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val tv_groupsName: TextView = v.findViewById(R.id.tv_group_name)
         val tv_groupsId: TextView = v.findViewById(R.id.tv_group_id)
-        var view_selectedOverlay: LinearLayout = v.findViewById(R.id.linearLayout)
+        var view_selectedOverlay: View = v.findViewById(R.id.card_view)
         val iv_sync_status: ImageView = v.findViewById(R.id.iv_sync_status)
     }
 }

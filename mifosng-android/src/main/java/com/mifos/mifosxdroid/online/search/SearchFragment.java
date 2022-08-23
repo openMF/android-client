@@ -5,6 +5,7 @@
 
 package com.mifos.mifosxdroid.online.search;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,9 +20,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SearchAdapter;
@@ -40,6 +45,7 @@ import com.mifos.utils.EspressoIdlingResource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import javax.inject.Inject;
 
@@ -52,8 +58,7 @@ import butterknife.OnClick;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
-public class SearchFragment extends MifosBaseFragment
-        implements SearchMvpView, AdapterView.OnItemSelectedListener {
+public class SearchFragment extends MifosBaseFragment implements SearchMvpView {
 
     private static final String LOG_TAG = SearchFragment.class.getSimpleName();
 
@@ -63,8 +68,8 @@ public class SearchFragment extends MifosBaseFragment
     @BindView(R.id.et_search)
     EditText et_search;
 
-    @BindView(R.id.sp_search)
-    Spinner sp_search;
+    @BindView(R.id.filterSelectionButton)
+    Button filterSelectionButton;
 
     @BindView(R.id.rv_search)
     RecyclerView rv_search;
@@ -100,7 +105,6 @@ public class SearchFragment extends MifosBaseFragment
     private String resources;
     private Boolean isFabOpen = false;
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
-    private LinearLayoutManager layoutManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -123,16 +127,33 @@ public class SearchFragment extends MifosBaseFragment
         showUserInterface();
         return rootView;
     }
+    int checkedFilter = 0;
+    private void showFilterDialog(){
+        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(requireContext());
+        dialogBuilder.setSingleChoiceItems(
+            R.array.search_options,
+            checkedFilter,
+            (dialog, index) -> {
+                checkedFilter = index;
+                resources = checkedFilter == 0 ? String.join(",", searchOptionsValues) : searchOptionsValues[checkedFilter-1];
+                autoTriggerSearch = true;
+                onClickSearch();
+                filterSelectionButton.setText(getResources().getStringArray(R.array.search_options)[index]);
+                dialog.dismiss();
+            }
+        );
+        dialogBuilder.show();
+    }
 
     @Override
     public void showUserInterface() {
         searchOptionsAdapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.search_options, android.R.layout.simple_spinner_item);
         searchOptionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sp_search.setAdapter(searchOptionsAdapter);
-        sp_search.setOnItemSelectedListener(this);
+        filterSelectionButton.setOnClickListener(v -> showFilterDialog());
+        filterSelectionButton.setText(getResources().getStringArray(R.array.search_options)[0]);
         et_search.requestFocus();
-        layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rv_search.setLayoutManager(layoutManager);
         rv_search.setHasFixedSize(true);
@@ -202,7 +223,7 @@ public class SearchFragment extends MifosBaseFragment
 
         sequence.addSequenceItem(et_search,
                 et_search_intro, getString(R.string.got_it));
-        sequence.addSequenceItem(sp_search,
+        sequence.addSequenceItem(filterSelectionButton,
                 sp_search_intro, getString(R.string.next));
         sequence.addSequenceItem(cb_exactMatch,
                 cb_exactMatch_intro, getString(R.string.next));
@@ -309,25 +330,6 @@ public class SearchFragment extends MifosBaseFragment
         //Fragment getting detached, keyboard if open must be hidden
         hideKeyboard(et_search);
         super.onPause();
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getId() == R.id.sp_search) {
-            if (position == 0) {
-                resources = searchOptionsValues[0] + "," + searchOptionsValues[1] + "," +
-                        searchOptionsValues[2] + "," + searchOptionsValues[3];
-            } else {
-                resources = searchOptionsValues[position - 1];
-            }
-            autoTriggerSearch = true;
-            onClickSearch();
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     /**

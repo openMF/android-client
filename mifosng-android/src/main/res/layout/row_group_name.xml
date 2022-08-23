@@ -11,24 +11,23 @@
     android:clickable="true"
     android:focusable="true"
     android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:layout_marginHorizontal="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
+    android:id="@+id/card_view"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:contentPadding="@dimen/Mifos.DesignSystem.Spacing.CardInnerPadding">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/listPreferredItemHeight"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_group_name"
@@ -37,8 +36,7 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:text="@string/medium_text"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                style="@style/Mifos.DesignSystem.TextStyle.CardTitle"/>
 
 
             <TextView
@@ -46,15 +44,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/small_text"
-                android:textColor="@color/gray_dark"
-                android:textSize="14sp" />
+                style="@style/Mifos.DesignSystem.TextStyle.CardSubtitle"/>
 
         </LinearLayout>
 
         <ImageView
             android:id="@+id/iv_sync_status"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/Mifos.DesignSystem.Size.IconSize"
+            android:layout_height="@dimen/Mifos.DesignSystem.Size.IconSize"
             android:layout_gravity="center_vertical"
             android:gravity="center"
             app:srcCompat="@drawable/ic_done_all_black_24dp" />

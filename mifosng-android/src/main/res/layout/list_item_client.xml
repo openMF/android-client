@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/LinearLayout.Width"
-    android:padding="10dp">
+    android:orientation="horizontal"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:padding="@dimen/Mifos.DesignSystem.Spacing.CardInnerPadding">
 
     <ImageView
         android:id="@+id/tv_icon"
-        style="@style/ImageView.ListIcon"
-        android:contentDescription="App Logo"
+        android:layout_height="@dimen/Mifos.DesignSystem.Size.ListItemsIconSize"
+        android:layout_width="@dimen/Mifos.DesignSystem.Size.ListItemsIconSize"
+        android:contentDescription="@null"
         tools:src="@drawable/ic_launcher" />
 
     <TextView
@@ -15,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
+        style="@style/Mifos.DesignSystem.TextStyle.CardTitle"
+        android:layout_marginStart="@dimen/Mifos.DesignSystem.Spacing.BetweenCardImageTitle"
         tools:text="Client name" />
 </LinearLayout>
