@@ -131,6 +131,13 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 task buildAndEMailAPK(type: Exec, description: 'Builds and Generates a Signed APK and emails it') {
@@ -262,6 +269,8 @@ dependencies {
     implementation "androidx.preference:preference:$preference"
 
     implementation 'com.github.openMF.mifos-ui-library:uihouse:1.0.0-alpha1'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+
 }
 /*
 All direct/transitive dependencies shared between your test and production APKs need to be
