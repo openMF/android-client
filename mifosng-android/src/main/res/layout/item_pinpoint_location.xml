@@ -27,12 +27,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|start"
-            android:layout_margin="@dimen/text_padding_normal"
+            android:padding="@dimen/Mifos.DesignSystem.Spacing.marginWords"
             android:text="@string/title_head"
-            android:textAlignment="inherit"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:typeface="sans" />
+            style="@style/Mifos.DesignSystem.TextStyle.BodyLarger"/>
 
     </LinearLayout>
 

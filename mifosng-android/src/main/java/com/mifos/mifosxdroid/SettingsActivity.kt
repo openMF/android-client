@@ -14,7 +14,7 @@ class SettingsActivity : MifosBaseActivity() {
         setContentView(R.layout.activity_toolbar_container)
         setToolbarTitle(getString(R.string.settings))
         showBackButton()
-        fragmentManager.beginTransaction()
+        supportFragmentManager.beginTransaction()
                 .replace(R.id.container, SettingsFragment())
                 .commit()
     }

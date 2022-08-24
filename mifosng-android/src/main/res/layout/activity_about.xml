@@ -1,211 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:title="@string/about"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <include layout="@layout/toolbar" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="20dp">
-
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/mifos_logo" />
+            android:gravity="center_horizontal"
+            android:layout_marginHorizontal="@dimen/Mifos.DesignSystem.Spacing.screenHorizontalMargin">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/Mifos.DesignSystem.Size.LogoImageSize"
+                android:layout_height="@dimen/Mifos.DesignSystem.Size.LogoImageSize"
+                android:layout_marginTop="@dimen/Mifos.DesignSystem.Size.LogoImageVerticalMargin"
+                app:srcCompat="@drawable/ic_mifos_logo" />
 
             <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center"
-                android:text="@string/about_app" />
+                android:layout_marginTop="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
+                android:text="@string/app_name"
+                style="@style/Mifos.DesignSystem.TextStyle.MainFocusText"/>
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
+                android:text="@string/about_app"
+                android:textAlignment="center"
+                android:alpha="@dimen/alpha_low_emphasis"/>
 
             <TextView
                 android:id="@+id/contributor"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:gravity="center"
-                android:onClick="goToWeb"
-                android:text="@string/about_mifos" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/about_providers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginVertical="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical|start"
-                android:padding="@dimen/about_group_text_padding"
-                android:text="@string/about_us_connect"
-                android:textSize="@dimen/about_group_item_text_size" />
-
-            <LinearLayout
-                android:id="@+id/GitHub"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:onClick="goToGit"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/about_icon_size"
-                    android:layout_height="@dimen/about_icon_size"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    app:srcCompat="@drawable/about_icon_github" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="8dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="8dp">
-
-                    <TextView
-                        android:id="@+id/about_support_github_item"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_support_github"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/about_support_github_item_sub"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_support_github_sub"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/twitter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:onClick="goToTwitter"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/about_icon_size"
-                    android:layout_height="@dimen/about_icon_size"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    app:srcCompat="@drawable/about_icon_twitter" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="8dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="8dp">
-
-                    <TextView
-                        android:id="@+id/about_support_twitter_item"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_support_twitter"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/about_support_twitter_item_sub"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_support_twitter_sub"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical|start"
-                android:padding="@dimen/about_group_text_padding"
-                android:text="@string/about_license"
-                android:textSize="@dimen/about_group_item_text_size" />
-
-            <LinearLayout
-                android:id="@+id/ll_about_license"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
                 android:clickable="true"
-                android:gravity="center"
-                android:onClick="goToLicense"
-                android:orientation="horizontal">
+                android:focusable="true"
+                android:text="@string/about_mifos"
+                style="@style/Mifos.DesignSystem.TextStyle.Link"/>
 
-                <ImageView
-                    android:layout_width="@dimen/license_icon_size"
-                    android:layout_height="@dimen/license_icon_size"
-                    android:layout_margin="@dimen/about_icon_padding"
-                    app:srcCompat="@drawable/ic_about_license" />
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/version_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsMedium"
+                style="@style/Mifos.DesignSystem.Components.Cards.Filled"
+                app:contentPadding="@dimen/Mifos.DesignSystem.Spacing.CardInnerPaddingLarger">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/app_version_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_version_text" />
+
+                    <TextView
+                        android:id="@+id/app_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
+                        tools:text="1.0.0" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/about_website_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
+                style="@style/Mifos.DesignSystem.Components.Cards.NoBorderOrBackground"
+                app:contentPadding="@dimen/Mifos.DesignSystem.Spacing.CardInnerPaddingLarge">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_website" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/Mifos.DesignSystem.Spacing.BetweenCardImageTitle"
+                        android:layout_weight="1"
+                        android:text="@string/official_website"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/twitter_link_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentPadding="@dimen/Mifos.DesignSystem.Spacing.CardInnerPaddingLarge"
+                android:layout_marginTop="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
+                style="@style/Mifos.DesignSystem.Components.Cards.NoBorderOrBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/about_icon_twitter" />
+
+                    <TextView
+                        android:id="@+id/forum_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/Mifos.DesignSystem.Spacing.BetweenCardImageTitle"
+                        android:layout_weight="1"
+                        android:text="@string/about_support_twitter"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/about_sources_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentPadding="@dimen/Mifos.DesignSystem.Spacing.CardInnerPaddingLarge"
+                android:layout_marginVertical="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
+                style="@style/Mifos.DesignSystem.Components.Cards.NoBorderOrBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_source_code" />
+
+                    <TextView
+                        android:id="@+id/sources_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/Mifos.DesignSystem.Spacing.BetweenCardImageTitle"
+                        android:layout_weight="1"
+                        android:text="@string/sources" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/self_license_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Mifos.DesignSystem.Components.Cards.Filled"
+                app:contentPadding="@dimen/Mifos.DesignSystem.Spacing.CardInnerPaddingLarge">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingTop="8dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="8dp">
+                    android:gravity="center_vertical">
 
                     <TextView
-                        android:id="@+id/about_license_item"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_copy_right"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/about_license"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp" />
+                        android:text="@string/copy_right_mifos"/>
 
                     <TextView
-                        android:id="@+id/about_license_item_sub"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/about_license_sub"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:text="@string/license_string_with_value"/>
+
                 </LinearLayout>
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

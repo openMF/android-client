@@ -31,8 +31,7 @@ class PathTrackingAdapter(
                 .inflate(R.layout.item_pinpoint_location, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
-                onUserLocationClick(userLocations[viewHolder.adapterPosition])
+            onUserLocationClick(userLocations[viewHolder.bindingAdapterPosition])
         }
         return viewHolder
     }

@@ -9,13 +9,19 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import androidx.annotation.Nullable;
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -31,12 +37,21 @@ import com.mifos.utils.Constants;
 import com.mifos.utils.LanguageHelper;
 import com.mifos.utils.PrefManager;
 
+import org.mifos.mobile.ui.ColorUtilsKt;
+
 /**
  * @author fomenkoo
  */
 public class MifosBaseActivity extends BasePassCodeActivity implements BaseActivityCallback {
 
     protected Toolbar toolbar;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ColorUtilsKt.setStatusBarColor(this, ColorUtilsKt.getThemeAttributeColor(this, R.attr.colorSurface));
+    }
+
     private ActivityComponent mActivityComponent;
     private ProgressDialog progress;
 

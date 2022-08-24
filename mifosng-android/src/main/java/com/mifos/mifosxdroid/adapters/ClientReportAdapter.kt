@@ -25,8 +25,7 @@ class ClientReportAdapter(
                 .inflate(R.layout.item_client_runreport, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
-                onClientReportClick(viewHolder.adapterPosition)
+            onClientReportClick(viewHolder.bindingAdapterPosition)
         }
         return viewHolder
     }

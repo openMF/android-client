@@ -619,9 +619,7 @@
     !-- About App -->
     <string name="about_app">फील्ड ऑफिसर एप्लीकेशन एक एप्लीकेशन है बैंक स्टाफ फील्ड ऑफिसर के लिए विकसित किया गया
          ग्राहकों का केंद्र, समूह, ऋण खाता, बचत खाता, आदि।ट्रैक रखने के लिए </string>
-    <string name="about_mifos">द्वारा विकसित <a href="https://mifos.org/">Mifos</a>
-        <a href="https://github.com/openMF/android-client/graphs/contributors">contributors</a>.
-    </string>
+    <string name="about_mifos">मिफोस योगदानकर्ताओं द्वारा विकसित</string>
     <string name="about_us_connect">हमारे से जुड़िये</string>
     <string name="link">हमसे मिलें</string>
     <string name="about_support_github_sub">रेपो को फोर्क करें और परिवर्तनों को आगे बढ़ाएं या नए मुद्दे जमा करें।</string>

@@ -4,24 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="15dp"
+    android:layout_marginVertical="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
+    android:layout_marginHorizontal="@dimen/Mifos.DesignSystem.Spacing.screenHorizontalMargin"
     android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_image"
+        app:srcCompat="@drawable/ic_report_item"
+        style="@style/Mifos.DesignSystem.Components.roundedImageWithContentPadding"
+        android:layout_width="@dimen/Mifos.DesignSystem.Size.ListItemsIconSize"
+        android:layout_height="@dimen/Mifos.DesignSystem.Size.ListItemsIconSize"
         android:layout_gravity="center"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/circular_bg_gray"
-        android:gravity="center">
+        android:layout_marginEnd="@dimen/Mifos.DesignSystem.Spacing.BetweenCardImageTitle"/>
 
-        <ImageView
-            android:id="@+id/iv_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_report_item" />
-    </LinearLayout>
 
 
     <RelativeLayout
@@ -33,9 +28,8 @@
             android:id="@+id/tv_report_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:textColor="@color/black"
-            android:textSize="22sp"
+            style="@style/Mifos.DesignSystem.TextStyle.CardTitle"
+            android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.BetweenCardTitleSubtitle"
             tools:text="Client Listing(Pentaho)" />
 
         <TextView
@@ -43,8 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_report_name"
-            android:textColor="@color/gray_dark"
-            android:textSize="15sp"
+            style="@style/Mifos.DesignSystem.TextStyle.Label"
             tools:text="Table" />
 
         <TextView
@@ -53,9 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/tv_report_type"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/gray_dark"
-            android:textSize="15sp"
+            style="@style/Mifos.DesignSystem.TextStyle.Label"
             tools:text="Client" />
     </RelativeLayout>
 

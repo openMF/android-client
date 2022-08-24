@@ -4,25 +4,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
-        style="@style/LinearLayout.Base"
-        android:padding="10dp">
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/Mifos.DesignSystem.Spacing.screenHorizontalMargin"
+        android:paddingVertical="@dimen/Mifos.DesignSystem.Spacing.screenVerticalMargin">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall"
             android:text="@string/generate_new"
-            android:textSize="24sp" />
+            style="@style/Mifos.DesignSystem.TextStyle.Heading" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsLarge"
             android:text="@string/fill_collection_sheet_message"
-            android:textColor="@color/gray_dark"
-            android:textSize="12sp"
             android:focusableInTouchMode="true"
             android:focusable="true"/>
 

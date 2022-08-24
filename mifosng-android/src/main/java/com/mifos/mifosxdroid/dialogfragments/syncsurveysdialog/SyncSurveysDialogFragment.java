@@ -1,6 +1,5 @@
 package com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog;
 
-import android.app.DialogFragment;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -24,6 +23,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.fragment.app.DialogFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
