@@ -40,6 +40,7 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/repaymentDateFieldContainer"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:hint="@string/repayment_date"
@@ -47,7 +48,6 @@
             app:endIconDrawable="@drawable/ic_baseline_calendar_today_24"
             android:layout_marginBottom="@dimen/Mifos.DesignSystem.Spacing.marginBetweenItemsSmall">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/repaymentDateField"
                 android:focusable="false"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

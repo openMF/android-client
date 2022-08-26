@@ -11,7 +11,11 @@ import androidx.fragment.app.DialogFragment
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.google.android.material.textfield.TextInputLayout
 import com.mifos.api.model.RequestCollectionSheetPayload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -28,13 +32,16 @@ import com.mifos.objects.organisation.Staff
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 
 /**
  * Created by aksh on 18/6/18.
  */
-class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualCollectionSheetMvpView, OnDatePickListener, View.OnClickListener {
+class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualCollectionSheetMvpView, View.OnClickListener {
     @JvmField
     @BindView(R.id.btn_fetch_collection_sheet)
     var btnFetchSheet: Button? = null
@@ -48,8 +55,8 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     var staffSelectionField: MaterialAutoCompleteTextView? = null
 
     @JvmField
-    @BindView(R.id.repaymentDateField)
-    var tvRepaymentDate: TextView? = null
+    @BindView(R.id.repaymentDateFieldContainer)
+    var repaymentDateFieldContainer: TextInputLayout? = null
 
     @JvmField
     @BindView(R.id.btn_clear)
@@ -59,7 +66,23 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     @Inject
     var presenter: NewIndividualCollectionSheetPresenter? = null
     private var sheet: IndividualCollectionSheet? = null
-    private var datePicker: DialogFragment? = null
+    private var selectedRepaymentDate: Instant = Instant.now()
+    private val datePickerDialog by lazy {
+        MaterialDatePicker.Builder.datePicker()
+            .setSelection(selectedRepaymentDate.toEpochMilli())
+            .setCalendarConstraints(
+                CalendarConstraints.Builder().setValidator(
+                    DateValidatorPointBackward.now()).build())
+            .build()
+            .apply {
+                addOnPositiveButtonClickListener {
+                    selectedRepaymentDate = Instant.ofEpochMilli(it)
+                    val formattedDate = dateFormatter.format(selectedRepaymentDate.atZone(ZoneId.systemDefault()).toLocalDate())
+                    repaymentDateFieldContainer?.editText?.setText(formattedDate)
+                }
+            }
+    }
+    private val dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
     private var requestPayload: RequestCollectionSheetPayload? = null
     private lateinit var rootView: View
     private var officeNameList: ArrayList<String>? = null
@@ -107,7 +130,9 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         }
         staffNameList = ArrayList()
         staffSelectionField!!.setSimpleItems(staffNameList?.toTypedArray() ?: emptyArray())
-        tvRepaymentDate!!.setOnClickListener(this)
+        repaymentDateFieldContainer!!.setEndIconOnClickListener {
+            datePickerDialog.show(requireActivity().supportFragmentManager,FragmentConstants.DFRAG_DATE_PICKER)
+        }
         btnFetchSheet!!.setOnClickListener(this)
         presenter!!.fetchOffices()
 
@@ -130,10 +155,9 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     }
 
     fun setRepaymentDate() {
-        datePicker = MFDatePicker.newInsance(this)
-        val date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(MFDatePicker.getDatePickedAsString())
-        tvRepaymentDate!!.text = date.replace('-', ' ')
-        transactionDate = date.replace('-', ' ')
+        val formattedDate = dateFormatter.format(selectedRepaymentDate.atZone(ZoneId.systemDefault()).toLocalDate())
+        repaymentDateFieldContainer?.editText?.setText(formattedDate)
+        transactionDate = formattedDate
         actualDisbursementDate = transactionDate
     }
 
@@ -141,7 +165,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         requestPayload = RequestCollectionSheetPayload()
         requestPayload!!.officeId = officeId
         requestPayload!!.staffId = staffId
-        requestPayload!!.transactionDate = tvRepaymentDate!!.text.toString()
+        requestPayload!!.transactionDate = repaymentDateFieldContainer!!.editText!!.text.toString()
     }
 
     override fun setOfficeSpinner(offices: List<Office>?) {
@@ -151,19 +175,9 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         officeListField!!.setSimpleItems(officeNameList?.toTypedArray() ?: emptyArray())
     }
 
-    override fun onDatePicked(date: String) {
-        val d = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date)
-        tvRepaymentDate!!.text = d.replace('-', ' ')
-    }
-
     fun retrieveCollectionSheet() {
         prepareRequestPayload()
         presenter!!.fetchIndividualCollectionSheet(requestPayload)
-    }
-
-    fun setTvRepaymentDate() {
-        datePicker!!.show(requireActivity().supportFragmentManager,
-                FragmentConstants.DFRAG_DATE_PICKER)
     }
 
     override fun setStaffSpinner(staffs: List<Staff>?) {
@@ -179,7 +193,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
 
 
     fun popupDialog() {
-        val collectionSheetDialogFragment = CollectionSheetDialogFragment.newInstance(tvRepaymentDate!!.text.toString(),
+        val collectionSheetDialogFragment = CollectionSheetDialogFragment.newInstance(repaymentDateFieldContainer!!.editText!!.text.toString(),
                 sheet!!.clients.size)
         collectionSheetDialogFragment.setTargetFragment(this, requestCode)
         val fragmentTransaction = requireActivity().supportFragmentManager
@@ -236,7 +250,6 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.repaymentDateField -> setTvRepaymentDate()
             R.id.btn_fetch_collection_sheet -> {
                 if(!officeNameList!!.contains(officeListField!!.text.toString()))
                     Toaster.show(rootView, getStringMessage(R.string.error_select_office))
