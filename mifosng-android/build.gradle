@@ -147,7 +147,7 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
     // You must install or update the Support Repository through the SDK manager to use this dependency.
