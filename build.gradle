@@ -25,6 +25,6 @@ ext {
     flipTableVersion = '1.0.1'
     butterKnifeVersion = '8.0.1'
     mifosPasscodeVersion = '1.0.0'
-    preference = '1.1.0'
+    preference = '1.2.0'
 
 }
