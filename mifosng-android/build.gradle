@@ -213,7 +213,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$rootProject.okHttp3Version"
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttp3Version"
     implementation "com.jakewharton.fliptables:fliptables:$rootProject.flipTableVersion"
-    implementation 'com.github.therajanmaurya:Sweet-Error:1.0.0'
+    implementation 'com.github.therajanmaurya:Sweet-Error:1.0.7'
     implementation 'javax.annotation:jsr250-api:1.0@jar'
 
     implementation 'io.reactivex:rxandroid:1.1.0'
