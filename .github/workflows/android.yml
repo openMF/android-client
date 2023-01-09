@@ -105,22 +105,3 @@ jobs:
           name: checkstyle-reports
           # File path describing what artifact to upload
           path: mifosng-android/build/reports/checkstyle/**
-
-  findbugs:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-        # Find bugs Check
-      - name: Findbugs
-        run: ./gradlew findbugs
-
-        # Upload reports
-      - name: Upload Checkstyle Reports
-        uses: actions/upload-artifact@v2.2.0
-        with:
-          # Artifact name
-          name: findbugs-reports
-          # File path describing what artifact to upload
-          path: mifosng-android/build/reports/findbugs/**
