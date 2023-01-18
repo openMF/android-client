@@ -240,7 +240,7 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.1.0'
 
     // Espresso UI Testing dependencies.
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation('androidx.test.espresso:espresso-contrib:3.1.0') {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
