@@ -177,7 +177,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:$rootProject.playServicesVersion"
     implementation "com.google.maps.android:android-maps-utils:$rootProject.mapUtilsServices"
-    implementation 'androidx.test.espresso:espresso-idling-resource:3.1.0'
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.5.1'
 
     //Bottom navigation
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
