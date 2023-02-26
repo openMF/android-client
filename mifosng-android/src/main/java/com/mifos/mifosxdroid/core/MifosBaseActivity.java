@@ -135,7 +135,7 @@ public class MifosBaseActivity extends BasePassCodeActivity implements BaseActiv
 
     @Override
     public void logout() {
-        new MaterialDialog.Builder().init(MifosBaseActivity.this)
+        new MaterialDialog.Builder().init(MifosBaseActivity.this,R.style.AlertDialogTheme)
                 .setMessage(R.string.dialog_logout)
                 .setPositiveButton(getString(R.string.logout),
                         new DialogInterface.OnClickListener() {

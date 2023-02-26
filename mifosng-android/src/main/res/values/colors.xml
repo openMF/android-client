@@ -54,7 +54,8 @@
     <color name="blue_bright">#ff00ddff</color>
     <!-- A really bright Holo shade of gray -->
     <color name="gray_bright">#33CCCCCC</color>
-
+    <!-- A really dark Holo shade of gray -->
+    <color name="gray_dialog">#BBB4B4B4</color>
 
     <!-- Material design colors -->
 

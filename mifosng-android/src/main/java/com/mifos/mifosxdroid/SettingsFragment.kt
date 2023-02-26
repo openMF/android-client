@@ -92,6 +92,7 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
         mInstanceUrlPref!!.isSelectable = true
         mInstanceUrlPref!!.dialogTitle = "Edit Instance Url"
         mInstanceUrlPref!!.setDialogIcon(R.drawable.ic_baseline_edit_24)
+        mInstanceUrlPref!!.dialogLayoutResource = R.style.Preference_DialogPreference_EditTextPreference
         mInstanceUrlPref!!.onPreferenceChangeListener =
             OnPreferenceChangeListener { _, o ->
                 val newUrl = o.toString()
