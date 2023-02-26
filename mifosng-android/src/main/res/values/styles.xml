@@ -125,8 +125,4 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="PreferenceThemeDialog">
-        <item name="android:textColor">@color/blue_dark</item>
-    </style>
-
 </resources>
