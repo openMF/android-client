@@ -3,6 +3,7 @@ package com.mifos.mifosxdroid.passcode;
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.widget.NestedScrollView
 import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.SplashScreenActivity
@@ -19,6 +20,7 @@ class PassCodeActivity : MifosPassCodeActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        findViewById<NestedScrollView>(R.id.cl_rootview).setBackgroundColor(android.R.attr.colorBackground)
         intent?.let {
             currPassCode = it.getStringExtra(Constants.CURR_PASSWORD)
             isToUpdatePassCode = it.getBooleanExtra(Constants.IS_TO_UPDATE_PASS_CODE, false)
