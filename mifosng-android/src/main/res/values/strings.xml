@@ -895,6 +895,8 @@
     <string name="passcode">Passcode</string>
     <string name="change_passcode">Change Passcode</string>
     <string name="change_app_passcode">Change App Passcode</string>
+    <string name="unlocked_mifos">Unlock Mifos</string>
+    <string name="text_description_biometrics_dialog">Use your with PIN, Pattern, Password Face or fingerprint</string>
 
     <string name="currency">Currency</string>
     <string name="account_number">Account Number</string>
