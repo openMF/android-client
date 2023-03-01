@@ -126,7 +126,6 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
         themePreference.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue ->
             val themeOption = newValue as String
             ThemeHelper.applyTheme(themeOption)
-            startActivity(Intent(activity, activity.javaClass))
             Toast.makeText(activity, "Switched to $themeOption Mode", Toast.LENGTH_SHORT).show()
             true
         }

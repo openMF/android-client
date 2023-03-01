@@ -26,6 +26,7 @@ open class BiometricAuthentication(
                 super.onAuthenticationSucceeded(result)
                 val intent= Intent(context, HomeActivity::class.java)
                 context.startActivity(intent)
+                context.finish()
             }
 
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
