@@ -60,9 +60,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
 
     private var menu: Menu? = null
 
-    private var itemClient = true
-    private var itemCenter = true
-    private var itemGroup = true
+    private var mCount = 1
 
     var navController: NavController? = null
     private var mNavigationHeader: View? = null
@@ -92,18 +90,22 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_dashboard -> {
+                    mCount=1
                     openFragment(SearchFragment())
                     supportActionBar!!.setTitle(R.string.dashboard)
                 }
                 R.id.navigation_client_list -> {
+                    mCount=0
                     openFragment(ClientListFragment())
                     supportActionBar!!.setTitle(R.string.clients)
                 }
                 R.id.navigation_center_list -> {
+                    mCount=0
                     openFragment(CenterListFragment())
                     supportActionBar!!.setTitle(R.string.title_activity_centers)
                 }
                 R.id.navigation_group_list -> {
+                    mCount=0
                     openFragment(GroupsListFragment())
                     supportActionBar!!.setTitle(R.string.title_center_list)
                 }
@@ -111,27 +113,6 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
             true
         }
         setupNavigationBar()
-    }
-
-    private fun setMenuCreateGroup(isEnabled: Boolean) {
-        if (menu != null) {
-            //position of mItem_create_new_group is 2
-            menu!!.getItem(2).isEnabled = isEnabled
-        }
-    }
-
-    private fun setMenuCreateCentre(isEnabled: Boolean) {
-        if (menu != null) {
-            //position of mItem_create_new_centre is 1
-            menu!!.getItem(1).isEnabled = isEnabled
-        }
-    }
-
-    private fun setMenuCreateClient(isEnabled: Boolean) {
-        if (menu != null) {
-            //position of mItem_create_new_client is 0
-            menu!!.getItem(0).isEnabled = isEnabled
-        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -179,7 +160,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
                 startActivity(intent);
             }
         }
-        mDrawerLayout!!.closeDrawer(GravityCompat.START)
+        mDrawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
@@ -229,16 +210,13 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START)
         } else {
-            if (doubleBackToExitPressedOnce) {
-                setMenuCreateClient(true)
-                setMenuCreateCentre(true)
-                setMenuCreateGroup(true)
-                super.onBackPressed()
-                return
+            if(mCount == 0) {
+            goHomeFragment()
             }
-            doubleBackToExitPressedOnce = true
-            Toast.makeText(this, R.string.back_again, Toast.LENGTH_SHORT).show()
-            Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
+            else{
+            doubleBackToExit()
+            }
+            mCount++
         }
     }
 
@@ -295,7 +273,34 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
     fun openFragment(fragment: Fragment?) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container_a, fragment!!)
-        transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    private fun doubleBackToExit() {
+
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed()
+            return
+        }
+
+        this.doubleBackToExitPressedOnce = true
+
+        Toast.makeText(
+            this,
+            R.string.back_again,
+            Toast.LENGTH_SHORT
+        ).show()
+
+        Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
+    }
+
+    private fun goHomeFragment(){
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_view)
+        val fragmentSearch = SearchFragment()
+        bottomNavigationView.selectedItemId = R.id.navigation_dashboard
+        supportFragmentManager.beginTransaction().apply {
+            add(R.id.container_a,fragmentSearch)
+            commit()
+        }
     }
 }
