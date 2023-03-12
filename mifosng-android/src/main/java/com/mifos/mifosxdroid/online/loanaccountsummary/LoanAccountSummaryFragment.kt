@@ -8,17 +8,12 @@ import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.QuickContactBadge
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
+import com.mifos.mifosxdroid.databinding.FragmentLoanAccountSummaryBinding
 import com.mifos.mifosxdroid.online.datatable.DataTableFragment
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApproval
@@ -29,7 +24,6 @@ import com.mifos.objects.client.Charges
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -37,118 +31,19 @@ import javax.inject.Inject
  */
 class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvpView {
     var loanAccountNumber = 0
+    private lateinit var binding: FragmentLoanAccountSummaryBinding
 
-    @kotlin.jvm.JvmField
-    @BindView(R.id.view_status_indicator)
-    var view_status_indicator: View? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_clientName)
-    var tv_clientName: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.quickContactBadge_client)
-    var quickContactBadge: QuickContactBadge? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_loan_product_short_name)
-    var tv_loan_product_short_name: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_loanAccountNumber)
-    var tv_loanAccountNumber: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_amount_disbursed)
-    var tv_amount_disbursed: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_disbursement_date)
-    var tv_disbursement_date: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_in_arrears)
-    var tv_in_arrears: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_loan_officer)
-    var tv_loan_officer: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_principal)
-    var tv_principal: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_loan_principal_due)
-    var tv_loan_principal_due: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_loan_principal_paid)
-    var tv_loan_principal_paid: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_interest)
-    var tv_interest: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_loan_interest_due)
-    var tv_loan_interest_due: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_loan_interest_paid)
-    var tv_loan_interest_paid: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_fees)
-    var tv_fees: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_loan_fees_due)
-    var tv_loan_fees_due: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_loan_fees_paid)
-    var tv_loan_fees_paid: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_penalty)
-    var tv_penalty: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_loan_penalty_due)
-    var tv_loan_penalty_due: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_loan_penalty_paid)
-    var tv_loan_penalty_paid: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_total)
-    var tv_total: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_total_due)
-    var tv_total_due: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_total_paid)
-    var tv_total_paid: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.bt_processLoanTransaction)
-    var bt_processLoanTransaction: Button? = null
-
-    @kotlin.jvm.JvmField
+    @JvmField
     @Inject
     var mLoanAccountSummaryPresenter: LoanAccountSummaryPresenter? = null
     var chargesList: MutableList<Charges> = ArrayList()
-    private lateinit var rootView: View
 
     // Action Identifier in the onProcessTransactionClicked Method
     private var processLoanTransactionAction = -1
     private var parentFragment = true
     private var mListener: OnFragmentInteractionListener? = null
     private var clientLoanWithAssociations: LoanWithAssociations? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
@@ -160,34 +55,43 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_loan_account_summary, container, false)
+        binding = FragmentLoanAccountSummaryBinding.inflate(inflater,container,false)
 
         //Injecting Presenter
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        ButterKnife.bind(this, rootView)
         mLoanAccountSummaryPresenter!!.attachView(this)
         inflateLoanAccountSummary()
-        return rootView
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btProcessLoanTransaction.setOnClickListener { onProcessTransactionClicked() }
     }
 
     private fun inflateLoanAccountSummary() {
         showProgress(true)
         setToolbarTitle(resources.getString(R.string.loanAccountSummary))
         //TODO Implement cases to enable/disable repayment button
-        bt_processLoanTransaction!!.isEnabled = false
+        binding.btProcessLoanTransaction.isEnabled = false
         mLoanAccountSummaryPresenter!!.loadLoanById(loanAccountNumber)
     }
 
-    @OnClick(R.id.bt_processLoanTransaction)
     fun onProcessTransactionClicked() {
-        if (processLoanTransactionAction == TRANSACTION_REPAYMENT) {
-            mListener!!.makeRepayment(clientLoanWithAssociations)
-        } else if (processLoanTransactionAction == ACTION_APPROVE_LOAN) {
-            approveLoan()
-        } else if (processLoanTransactionAction == ACTION_DISBURSE_LOAN) {
-            disburseLoan()
-        } else {
-            Log.i(requireActivity().localClassName, "TRANSACTION ACTION NOT SET")
+        when (processLoanTransactionAction) {
+            TRANSACTION_REPAYMENT -> {
+                mListener!!.makeRepayment(clientLoanWithAssociations)
+            }
+            ACTION_APPROVE_LOAN -> {
+                approveLoan()
+            }
+            ACTION_DISBURSE_LOAN -> {
+                disburseLoan()
+            }
+            else -> {
+                Log.i(requireActivity().localClassName, "TRANSACTION ACTION NOT SET")
+            }
         }
     }
 
@@ -233,41 +137,41 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
     }
 
     fun inflateLoanSummary(loanWithAssociations: LoanWithAssociations) {
-        tv_amount_disbursed!!.text = loanWithAssociations.summary
+        binding.tvAmountDisbursed.text = loanWithAssociations.summary
                 .principalDisbursed.toString()
         try {
-            tv_disbursement_date!!.text = DateHelper.getDateAsString(loanWithAssociations
+            binding.tvDisbursementDate.text = DateHelper.getDateAsString(loanWithAssociations
                     .timeline.actualDisbursementDate)
         } catch (exception: IndexOutOfBoundsException) {
             Toast.makeText(activity, resources.getString(R.string.loan_rejected_message), Toast.LENGTH_SHORT).show()
         }
-        tv_in_arrears!!.text = loanWithAssociations.summary.totalOverdue.toString()
-        tv_principal!!.text = loanWithAssociations.summary
+        binding.tvInArrears.text = loanWithAssociations.summary.totalOverdue.toString()
+        binding.tvPrincipal.text = loanWithAssociations.summary
                 .principalDisbursed.toString()
-        tv_loan_principal_due!!.text = loanWithAssociations.summary
+        binding.tvLoanPrincipalDue.text = loanWithAssociations.summary
                 .principalOutstanding.toString()
-        tv_loan_principal_paid!!.text = loanWithAssociations.summary
+        binding.tvLoanPrincipalPaid.text = loanWithAssociations.summary
                 .principalPaid.toString()
-        tv_interest!!.text = loanWithAssociations.summary.interestCharged.toString()
-        tv_loan_interest_due!!.text = loanWithAssociations.summary
+        binding.tvInterest.text = loanWithAssociations.summary.interestCharged.toString()
+        binding.tvLoanInterestDue.text = loanWithAssociations.summary
                 .interestOutstanding.toString()
-        tv_loan_interest_paid!!.text = loanWithAssociations.summary
+        binding.tvLoanInterestPaid.text = loanWithAssociations.summary
                 .interestPaid.toString()
-        tv_fees!!.text = loanWithAssociations.summary.feeChargesCharged.toString()
-        tv_loan_fees_due!!.text = loanWithAssociations.summary
+        binding.tvFees.text = loanWithAssociations.summary.feeChargesCharged.toString()
+        binding.tvLoanFeesDue.text = loanWithAssociations.summary
                 .feeChargesOutstanding.toString()
-        tv_loan_fees_paid!!.text = loanWithAssociations.summary
+        binding.tvLoanFeesPaid.text = loanWithAssociations.summary
                 .feeChargesPaid.toString()
-        tv_penalty!!.text = loanWithAssociations.summary
+        binding.tvPenalty.text = loanWithAssociations.summary
                 .penaltyChargesCharged.toString()
-        tv_loan_penalty_due!!.text = loanWithAssociations.summary
+        binding.tvLoanPenaltyDue.text = loanWithAssociations.summary
                 .penaltyChargesOutstanding.toString()
-        tv_loan_penalty_paid!!.text = loanWithAssociations.summary
+        binding.tvLoanPenaltyPaid.text = loanWithAssociations.summary
                 .penaltyChargesPaid.toString()
-        tv_total!!.text = loanWithAssociations.summary
+        binding.tvTotal.text = loanWithAssociations.summary
                 .totalExpectedRepayment.toString()
-        tv_total_due!!.text = loanWithAssociations.summary.totalOutstanding.toString()
-        tv_total_paid!!.text = loanWithAssociations.summary.totalRepayment.toString()
+        binding.tvTotalDue.text = loanWithAssociations.summary.totalOutstanding.toString()
+        binding.tvTotalPaid.text = loanWithAssociations.summary.totalRepayment.toString()
     }
 
     fun loadDocuments() {
@@ -320,49 +224,49 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (activity == null) return
         clientLoanWithAssociations = loanWithAssociations
-        tv_clientName!!.text = loanWithAssociations.clientName
-        tv_loan_product_short_name!!.text = loanWithAssociations.loanProductName
-        tv_loanAccountNumber!!.text = "#" + loanWithAssociations.accountNo
-        tv_loan_officer!!.text = loanWithAssociations.loanOfficerName
+        binding.tvClientName.text = loanWithAssociations.clientName
+        binding.tvLoanProductShortName.text = loanWithAssociations.loanProductName
+        binding.tvLoanAccountNumber.text = "#" + loanWithAssociations.accountNo
+        binding.tvLoanOfficer.text = loanWithAssociations.loanOfficerName
         //TODO Implement QuickContactBadge
         //quickContactBadge.setImageToDefault();
-        bt_processLoanTransaction!!.isEnabled = true
+        binding.btProcessLoanTransaction.isEnabled = true
         if (loanWithAssociations.status.active) {
             inflateLoanSummary(loanWithAssociations)
             // if Loan is already active
             // the Transaction Would be Make Repayment
-            view_status_indicator!!.setBackgroundColor(
+            binding.viewStatusIndicator.setBackgroundColor(
                     ContextCompat.getColor(requireActivity(), R.color.light_green))
-            bt_processLoanTransaction!!.text = "Make Repayment"
+            binding.btProcessLoanTransaction.text = "Make Repayment"
             processLoanTransactionAction = TRANSACTION_REPAYMENT
         } else if (loanWithAssociations.status.pendingApproval) {
             // if Loan is Pending for Approval
             // the Action would be Approve Loan
-            view_status_indicator!!.setBackgroundColor(
+            binding.viewStatusIndicator.setBackgroundColor(
                     ContextCompat.getColor(requireActivity(), R.color.light_yellow))
-            bt_processLoanTransaction!!.text = "Approve Loan"
+            binding.btProcessLoanTransaction.text = "Approve Loan"
             processLoanTransactionAction = ACTION_APPROVE_LOAN
         } else if (loanWithAssociations.status.waitingForDisbursal) {
             // if Loan is Waiting for Disbursal
             // the Action would be Disburse Loan
-            view_status_indicator!!.setBackgroundColor(
+            binding.viewStatusIndicator.setBackgroundColor(
                     ContextCompat.getColor(requireActivity(), R.color.blue))
-            bt_processLoanTransaction!!.text = "Disburse Loan"
+            binding.btProcessLoanTransaction.text = "Disburse Loan"
             processLoanTransactionAction = ACTION_DISBURSE_LOAN
         } else if (loanWithAssociations.status.closedObligationsMet) {
             inflateLoanSummary(loanWithAssociations)
             // if Loan is Closed after the obligations are met
             // the make payment will be disabled so that no more payment can be collected
-            view_status_indicator!!.setBackgroundColor(
+            binding.viewStatusIndicator.setBackgroundColor(
                     ContextCompat.getColor(requireActivity(), R.color.black))
-            bt_processLoanTransaction!!.isEnabled = false
-            bt_processLoanTransaction!!.text = "Make Repayment"
+            binding.btProcessLoanTransaction.isEnabled = false
+            binding.btProcessLoanTransaction.text = "Make Repayment"
         } else {
             inflateLoanSummary(loanWithAssociations)
-            view_status_indicator!!.setBackgroundColor(
+            binding.viewStatusIndicator.setBackgroundColor(
                     ContextCompat.getColor(requireActivity(), R.color.black))
-            bt_processLoanTransaction!!.isEnabled = false
-            bt_processLoanTransaction!!.text = "Loan Closed"
+            binding.btProcessLoanTransaction.isEnabled = false
+            binding.btProcessLoanTransaction.text = "Loan Closed"
         }
     }
 
@@ -414,7 +318,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
         private const val ACTION_APPROVE_LOAN = 0
         private const val ACTION_DISBURSE_LOAN = 1
         private const val TRANSACTION_REPAYMENT = 2
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun newInstance(loanAccountNumber: Int,
                         parentFragment: Boolean): LoanAccountSummaryFragment {
             val fragment = LoanAccountSummaryFragment()

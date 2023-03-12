@@ -3,16 +3,11 @@ package com.mifos.mifosxdroid.online.centerdetails
 import android.app.Activity
 import android.os.Bundle
 import android.view.*
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentCenterDetailsBinding
 import com.mifos.mifosxdroid.online.activate.ActivateFragment
 import com.mifos.objects.group.CenterInfo
 import com.mifos.objects.group.CenterWithAssociations
@@ -25,62 +20,12 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 05/02/17.
  */
 class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
-    @JvmField
-    @BindView(R.id.tv_center_activation_date)
-    var tvActivationDate: TextView? = null
 
-    @JvmField
-    @BindView(R.id.tv_staff_name)
-    var tvStaffName: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_meeting_date)
-    var tvMeetingDate: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_meeting_frequency)
-    var tvMeetingFrequency: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_active_clients)
-    var tvActiveClients: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_active_group_loans)
-    var tvActiveGroupLoans: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_active_client_loans)
-    var tvActiveClientLoans: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_active_group_borrowers)
-    var tvActiveGroupBorrowers: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_active_client_borrowers)
-    var tvActiveClientBorrowers: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_active_overdue_group_loans)
-    var tvActiveOverdueGroupLoans: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_active_overdue_client_loans)
-    var tvActiveOverdueClientLoans: TextView? = null
-
-    @JvmField
-    @BindView(R.id.rl_center)
-    var rlCenter: RelativeLayout? = null
-
-    @JvmField
-    @BindView(R.id.ll_bottom_panel)
-    var llBottomPanel: LinearLayout? = null
+    private lateinit var binding: FragmentCenterDetailsBinding
 
     @JvmField
     @Inject
     var centerDetailsPresenter: CenterDetailsPresenter? = null
-    lateinit var rootView: View
     private var centerId = 0
     private var listener: OnFragmentInteractionListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,15 +38,19 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_center_details, container, false)
-        ButterKnife.bind(this, rootView)
+        binding = FragmentCenterDetailsBinding.inflate(inflater,container,false)
         centerDetailsPresenter!!.attachView(this)
         centerDetailsPresenter!!.loadCentersGroupAndMeeting(centerId)
         centerDetailsPresenter!!.loadSummaryInfo(centerId)
-        return rootView
+        return binding.root
     }
 
-    @OnClick(R.id.btn_activate_center)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnActivateCenter.setOnClickListener { onClickActivateCenter() }
+    }
+
     fun onClickActivateCenter() {
         val activateFragment = ActivateFragment.newInstance(centerId, Constants.ACTIVATE_CENTER)
         val fragmentTransaction = requireActivity().supportFragmentManager
@@ -113,42 +62,42 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
 
     override fun showProgressbar(show: Boolean) {
         if (show) {
-            rlCenter!!.visibility = View.GONE
+            binding.rlCenter.visibility = View.GONE
             showMifosProgressBar()
         } else {
-            rlCenter!!.visibility = View.VISIBLE
+            binding.rlCenter.visibility = View.VISIBLE
             hideMifosProgressBar()
         }
     }
 
     override fun showCenterDetails(centerWithAssociations: CenterWithAssociations?) {
         setToolbarTitle(centerWithAssociations!!.name)
-        if (!centerWithAssociations.activationDate.isEmpty()) {
+        if (centerWithAssociations.activationDate.isNotEmpty()) {
             if (centerWithAssociations.staffName != null) {
-                tvStaffName!!.text = centerWithAssociations.staffName
+                binding.tvStaffName.text = centerWithAssociations.staffName
             } else {
-                tvStaffName!!.setText(R.string.no_staff)
+                binding.tvStaffName.setText(R.string.no_staff)
             }
-            tvActivationDate!!.text = Utils.getStringOfDate(centerWithAssociations.activationDate)
+            binding.tvCenterActivationDate.text = Utils.getStringOfDate(centerWithAssociations.activationDate)
         }
     }
 
     override fun showMeetingDetails(centerWithAssociations: CenterWithAssociations?) {
         if (!centerWithAssociations!!.active) {
-            llBottomPanel!!.visibility = View.VISIBLE
+            binding.llBottomPanel.visibility = View.VISIBLE
             showErrorMessage(R.string.error_center_inactive)
         }
         if (centerWithAssociations.collectionMeetingCalendar.calendarInstanceId == null) {
-            tvMeetingDate!!.text = getString(R.string.unassigned)
+            binding.tvMeetingDate.text = getString(R.string.unassigned)
             if (view != null) {
-                view!!.findViewById<View>(R.id.row_meeting_frequency).visibility = View.GONE
+                requireView().findViewById<View>(R.id.row_meeting_frequency).visibility = View.GONE
             }
         } else {
-            tvMeetingDate!!.text = Utils.getStringOfDate(centerWithAssociations
+            binding.tvMeetingDate.text = Utils.getStringOfDate(centerWithAssociations
                     .collectionMeetingCalendar.nextTenRecurringDates[0])
             if (view != null) {
-                view!!.findViewById<View>(R.id.row_meeting_frequency).visibility = View.VISIBLE
-                tvMeetingFrequency!!.text = centerWithAssociations.collectionMeetingCalendar
+                requireView().findViewById<View>(R.id.row_meeting_frequency).visibility = View.VISIBLE
+                binding.tvMeetingFrequency.text = centerWithAssociations.collectionMeetingCalendar
                         .humanReadable
             }
         }
@@ -156,17 +105,17 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
 
     override fun showSummaryInfo(centerInfos: List<CenterInfo?>?) {
         val centerInfo = centerInfos?.get(0)
-        tvActiveClients!!.text = centerInfo!!.activeClients.toString()
-        tvActiveGroupLoans!!.text = centerInfo.activeGroupLoans.toString()
-        tvActiveClientLoans!!.text = centerInfo.activeClientLoans.toString()
-        tvActiveClientBorrowers!!.text = centerInfo.activeClientBorrowers.toString()
-        tvActiveGroupBorrowers!!.text = centerInfo.activeGroupBorrowers.toString()
-        tvActiveOverdueClientLoans!!.text = centerInfo.overdueClientLoans.toString()
-        tvActiveOverdueGroupLoans!!.text = centerInfo.overdueGroupLoans.toString()
+        binding.tvActiveClients.text = centerInfo!!.activeClients.toString()
+        binding.tvActiveGroupLoans.text = centerInfo.activeGroupLoans.toString()
+        binding.tvActiveClientLoans.text = centerInfo.activeClientLoans.toString()
+        binding.tvActiveClientBorrowers.text = centerInfo.activeClientBorrowers.toString()
+        binding.tvActiveGroupBorrowers.text = centerInfo.activeGroupBorrowers.toString()
+        binding.tvActiveOverdueClientLoans.text = centerInfo.overdueClientLoans.toString()
+        binding.tvActiveOverdueGroupLoans.text = centerInfo.overdueGroupLoans.toString()
     }
 
     override fun showErrorMessage(message: Int) {
-        Toaster.show(rootView, message)
+        Toaster.show(binding.root, message)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

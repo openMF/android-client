@@ -8,15 +8,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.*
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
-import com.mifos.mifosxdroid.views.SignatureView
+import com.mifos.mifosxdroid.databinding.FragmentSignBinding
 import com.mifos.mifosxdroid.views.SignatureView.OnSignatureSaveListener
 import com.mifos.utils.*
 import java.io.File
@@ -25,20 +23,15 @@ import javax.inject.Inject
 /**
  * Created by Tarun on 28-06-2017.
  */
-class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigationView.OnNavigationItemSelectedListener, OnSignatureSaveListener {
-    @JvmField
-    @BindView(R.id.sign_view)
-    var signView: SignatureView? = null
+class SignatureFragment : MifosBaseFragment(), SignatureMvpView,
+    BottomNavigationView.OnNavigationItemSelectedListener, OnSignatureSaveListener {
 
-    @JvmField
-    @BindView(R.id.navigation)
-    var bottomNavigationView: BottomNavigationView? = null
+    private lateinit var binding: FragmentSignBinding
 
     @JvmField
     @Inject
     var mSignaturePresenter: SignaturePresenter? = null
     private var mClientId: Int? = null
-    private lateinit var rootView: View
     private var signatureFile: File? = null
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,18 +47,18 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_sign, container, false)
-        ButterKnife.bind(this, rootView)
+        binding = FragmentSignBinding.inflate(inflater,container,false)
+
         mSignaturePresenter!!.attachView(this)
         showInterface()
-        return rootView
+        return binding.root
     }
 
     private fun showInterface() {
         setToolbarTitle(getString(R.string.upload_sign))
-        signView!!.setOnSignatureSaveListener(this)
-        bottomNavigationView!!.setOnNavigationItemSelectedListener(this)
-        bottomNavigationView!!.itemIconTintList = null
+        binding.signView.setOnSignatureSaveListener(this)
+        binding.navigation.setOnNavigationItemSelectedListener(this)
+        binding.navigation.itemIconTintList = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -75,7 +68,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.btn_reset_sign -> signView!!.clear()
+            R.id.btn_reset_sign -> binding.signView.clear()
             R.id.btn_from_gallery -> documentFromGallery
         }
         return true
@@ -133,7 +126,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     saveAndUploadSignature()
                 } else {
-                    Toaster.show(rootView, resources
+                    Toaster.show(binding.root, resources
                             .getString(R.string.permission_denied_to_write_external_document))
                 }
             }
@@ -176,25 +169,25 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
     }
 
     override fun onSignSavedError(errorMsg: String) {
-        Toaster.show(rootView, errorMsg)
+        Toaster.show(binding.root, errorMsg)
     }
 
     override fun onSignSavedSuccess(absoluteFilePath: String) {
         val signImageUri = Uri.parse("file://$absoluteFilePath")
         signatureFile = File(signImageUri.path)
-        Toaster.show(rootView, getString(R.string.sign_saved_success_msg)
+        Toaster.show(binding.root, getString(R.string.sign_saved_success_msg)
                 + signImageUri.path)
         uploadSignImage()
     }
 
     override fun showSignatureUploadedSuccessfully(response: GenericResponse?) {
         showProgressbar(false)
-        Toaster.show(rootView, R.string.sign_uploaded_success_msg)
+        Toaster.show(binding.root, R.string.sign_uploaded_success_msg)
     }
 
     override fun showError(errorId: Int) {
         showProgressbar(false)
-        Toaster.show(rootView, getStringMessage(errorId))
+        Toaster.show(binding.root, getStringMessage(errorId))
     }
 
     override fun showProgressbar(b: Boolean) {
@@ -206,10 +199,10 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
     }
 
     override fun saveAndUploadSignature() {
-        if (signView!!.xCoordinateSize > 0 && signView!!.yCoordinateSize > 0) {
-            signView!!.saveSignature(mClientId!!)
+        if (binding.signView.xCoordinateSize > 0 && binding.signView.yCoordinateSize > 0) {
+            binding.signView.saveSignature(mClientId!!)
         } else {
-            Toaster.show(rootView, R.string.empty_signature)
+            Toaster.show(binding.root, R.string.empty_signature)
         }
     }
 

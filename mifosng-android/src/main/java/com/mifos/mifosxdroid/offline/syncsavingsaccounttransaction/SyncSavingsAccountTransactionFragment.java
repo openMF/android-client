@@ -2,18 +2,17 @@ package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SyncSavingsAccountTransactionAdapter;
@@ -21,6 +20,7 @@ import com.mifos.mifosxdroid.core.MaterialDialog;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.utils.Constants;
@@ -31,10 +31,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 /**
  * Created by Rajan Maurya on 19/08/16.
  */
@@ -44,30 +40,13 @@ public class SyncSavingsAccountTransactionFragment extends MifosBaseFragment imp
 
 
     public final String LOG_TAG = getClass().getSimpleName();
-
-    @BindView(R.id.rv_sync_payload)
-    RecyclerView rv_loan_repayment;
-
-    @BindView(R.id.swipe_container)
-    SwipeRefreshLayout swipeRefreshLayout;
-
-    @BindView(R.id.noPayloadText)
-    TextView mNoPayloadText;
-
-    @BindView(R.id.noPayloadIcon)
-    ImageView mNoPayloadIcon;
-
-    @BindView(R.id.ll_error)
-    LinearLayout ll_error;
+    private FragmentSyncpayloadBinding binding;
 
     @Inject
     SyncSavingsAccountTransactionPresenter mSyncSavingsAccountTransactionPresenter;
 
     @Inject
     SyncSavingsAccountTransactionAdapter mSyncSavingsAccountTransactionAdapter;
-
-    private View rootView;
-
 
     public static SyncSavingsAccountTransactionFragment newInstance() {
         Bundle arguments = new Bundle();
@@ -86,25 +65,31 @@ public class SyncSavingsAccountTransactionFragment extends MifosBaseFragment imp
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_syncpayload, container, false);
 
-        ButterKnife.bind(this, rootView);
+        binding = FragmentSyncpayloadBinding.inflate(inflater, container, false);
         mSyncSavingsAccountTransactionPresenter.attachView(this);
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv_loan_repayment.setLayoutManager(mLayoutManager);
-        rv_loan_repayment.setHasFixedSize(true);
-        rv_loan_repayment.setAdapter(mSyncSavingsAccountTransactionAdapter);
-        swipeRefreshLayout.setColorSchemeColors(getActivity()
+        binding.rvSyncPayload.setLayoutManager(mLayoutManager);
+        binding.rvSyncPayload.setHasFixedSize(true);
+        binding.rvSyncPayload.setAdapter(mSyncSavingsAccountTransactionAdapter);
+        binding.swipeContainer.setColorSchemeColors(getActivity()
                 .getResources().getIntArray(R.array.swipeRefreshColors));
-        swipeRefreshLayout.setOnRefreshListener(this);
+        binding.swipeContainer.setOnRefreshListener(this);
 
         //Loading LoanRepayment Transactions  and PaymentTypeOptions From Database
         mSyncSavingsAccountTransactionPresenter.loadDatabaseSavingsAccountTransactions();
         mSyncSavingsAccountTransactionPresenter.loadPaymentTypeOption();
 
-        return rootView;
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.noPayloadIcon.setOnClickListener(view1 ->  reloadOnError());
     }
 
     /**
@@ -116,8 +101,8 @@ public class SyncSavingsAccountTransactionFragment extends MifosBaseFragment imp
         mSyncSavingsAccountTransactionPresenter.loadDatabaseSavingsAccountTransactions();
         mSyncSavingsAccountTransactionPresenter.loadPaymentTypeOption();
 
-        if (swipeRefreshLayout.isRefreshing()) {
-            swipeRefreshLayout.setRefreshing(false);
+        if (binding.swipeContainer.isRefreshing()) {
+            binding.swipeContainer.setRefreshing(false);
         }
     }
 
@@ -126,9 +111,8 @@ public class SyncSavingsAccountTransactionFragment extends MifosBaseFragment imp
      * List<SavingsAccountTransactionRequest>
      * Onclick Send Fresh Request for List<SavingsAccountTransactionRequest>.
      */
-    @OnClick(R.id.noPayloadIcon)
     public void reloadOnError() {
-        ll_error.setVisibility(View.GONE);
+        binding.llError.setVisibility(View.GONE);
         mSyncSavingsAccountTransactionPresenter.loadDatabaseSavingsAccountTransactions();
         mSyncSavingsAccountTransactionPresenter.loadPaymentTypeOption();
     }
@@ -167,9 +151,9 @@ public class SyncSavingsAccountTransactionFragment extends MifosBaseFragment imp
 
     @Override
     public void showEmptySavingsAccountTransactions(int message) {
-        ll_error.setVisibility(View.VISIBLE);
-        mNoPayloadText.setText(getActivity().getResources().getString(message));
-        mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+        binding.llError.setVisibility(View.VISIBLE);
+        binding.noPayloadText.setText(getActivity().getResources().getString(message));
+        binding.noPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
     }
 
     @Override
@@ -182,21 +166,22 @@ public class SyncSavingsAccountTransactionFragment extends MifosBaseFragment imp
         if (Network.isOnline(getActivity())) {
             mSyncSavingsAccountTransactionPresenter.syncSavingsAccountTransactions();
         } else {
-            Toaster.show(rootView, getResources().getString(R.string.error_network_not_available));
+            Toaster.show(binding.getRoot(),
+                    getResources().getString(R.string.error_network_not_available));
         }
     }
 
     @Override
     public void showError(int message) {
-        Toaster.show(rootView, getResources().getString(message));
+        Toaster.show(binding.getRoot(), getResources().getString(message));
     }
 
     @Override
     public void showProgressbar(boolean show) {
-        swipeRefreshLayout.setRefreshing(show);
+        binding.swipeContainer.setRefreshing(show);
         if (show && mSyncSavingsAccountTransactionAdapter.getItemCount() == 0) {
             showMifosProgressBar();
-            swipeRefreshLayout.setRefreshing(false);
+            binding.swipeContainer.setRefreshing(false);
         } else {
             hideMifosProgressBar();
         }

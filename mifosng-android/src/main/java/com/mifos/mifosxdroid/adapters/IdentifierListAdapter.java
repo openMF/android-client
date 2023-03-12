@@ -5,15 +5,17 @@
 
 package com.mifos.mifosxdroid.adapters;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.databinding.RowIdentifierListBinding;
 import com.mifos.objects.noncore.Identifier;
 
 import java.util.ArrayList;
@@ -21,8 +23,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by ishankhanna on 03/07/14.
@@ -39,9 +39,9 @@ public class IdentifierListAdapter extends RecyclerView.Adapter<IdentifierListAd
 
     @Override
     public IdentifierListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_identifier_list, parent, false);
-        return new IdentifierListAdapter.ViewHolder(view);
+        RowIdentifierListBinding binding = RowIdentifierListBinding
+                .inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new IdentifierListAdapter.ViewHolder(binding);
     }
 
     @Override
@@ -86,24 +86,23 @@ public class IdentifierListAdapter extends RecyclerView.Adapter<IdentifierListAd
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.tv_identifier_id)
         TextView tv_identifier_id;
 
-        @BindView(R.id.tv_identifier_type)
         TextView tv_identifier_type;
 
-        @BindView(R.id.tv_identifier_description)
         TextView tv_identifier_description;
 
-        @BindView(R.id.iv_identifier_options)
         ImageView iv_identifier_options;
 
-        @BindView(R.id.v_status)
         View v_status;
 
-        public ViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
+        public ViewHolder(RowIdentifierListBinding binding) {
+            super(binding.getRoot());
+            tv_identifier_id = binding.tvIdentifierId;
+            tv_identifier_type = binding.tvIdentifierType;
+            tv_identifier_description = binding.tvIdentifierDescription;
+            iv_identifier_options = binding.ivIdentifierOptions;
+            v_status = binding.vStatus;
             iv_identifier_options.setOnClickListener(this);
 
         }

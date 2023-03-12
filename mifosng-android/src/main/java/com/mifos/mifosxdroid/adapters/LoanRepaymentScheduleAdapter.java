@@ -6,21 +6,22 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
-import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.databinding.RowLoanRepaymentScheduleBinding;
 import com.mifos.objects.accounts.loan.Period;
 import com.mifos.utils.DateHelper;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 
 /**
  * Created by ishankhanna on 19/06/14.
@@ -58,13 +59,17 @@ public class LoanRepaymentScheduleAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
 
         ReusableViewHolder reusableViewHolder;
+        RowLoanRepaymentScheduleBinding binding;
 
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.row_loan_repayment_schedule, null);
-            reusableViewHolder = new ReusableViewHolder(view);
-            view.setTag(reusableViewHolder);
+            binding = RowLoanRepaymentScheduleBinding
+                    .inflate(layoutInflater, viewGroup, false);
+            reusableViewHolder = new ReusableViewHolder(binding);
+            reusableViewHolder.view = binding.getRoot();
+            reusableViewHolder.view.setTag(reusableViewHolder);
         } else {
             reusableViewHolder = (ReusableViewHolder) view.getTag();
+            reusableViewHolder.view = view;
         }
 
         reusableViewHolder.tv_repaymentDueDate.setText(DateHelper.getDateAsString(periodList.get
@@ -90,23 +95,23 @@ public class LoanRepaymentScheduleAdapter extends BaseAdapter {
         }
 
 
-        return view;
+        return reusableViewHolder.view;
     }
 
     public static class ReusableViewHolder {
 
 
-        @BindView(R.id.view_status_indicator)
+        private View view;
         View view_status_indicator;
-        @BindView(R.id.tv_repayment_due_date)
         TextView tv_repaymentDueDate;
-        @BindView(R.id.tv_repayment_amount_due)
         TextView tv_repaymentAmountDue;
-        @BindView(R.id.tv_repayment_amount_paid)
         TextView tv_repaymentAmountPaid;
 
-        public ReusableViewHolder(View view) {
-            ButterKnife.bind(this, view);
+        public ReusableViewHolder(RowLoanRepaymentScheduleBinding binding) {
+            view_status_indicator = binding.viewStatusIndicator;
+            tv_repaymentDueDate = binding.tvRepaymentDueDate;
+            tv_repaymentAmountDue = binding.tvRepaymentAmountDue;
+            tv_repaymentAmountPaid = binding.tvRepaymentAmountPaid;
         }
 
     }

@@ -1,12 +1,13 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -15,7 +16,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.databinding.ItemPinpointLocationBinding;
 import com.mifos.objects.client.ClientAddressResponse;
 
 import java.util.ArrayList;
@@ -23,8 +24,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by Rajan Maurya on 16/01/17.
@@ -42,9 +41,9 @@ public class PinpointClientAdapter extends RecyclerView.Adapter<PinpointClientAd
 
     @Override
     public PinpointClientAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_pinpoint_location, parent, false);
-        return new PinpointClientAdapter.ViewHolder(view);
+        ItemPinpointLocationBinding binding = ItemPinpointLocationBinding
+                .inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new PinpointClientAdapter.ViewHolder(binding);
     }
 
     @Override
@@ -119,20 +118,20 @@ public class PinpointClientAdapter extends RecyclerView.Adapter<PinpointClientAd
 
     public class ViewHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
 
-        @BindView(R.id.mv_client_location)
         MapView mvClientLocation;
 
-        @BindView(R.id.tv_address)
         TextView tvAddress;
 
-        @BindView(R.id.card_view)
         CardView cardView;
 
         GoogleMap map;
 
-        public ViewHolder(View v) {
-            super(v);
-            ButterKnife.bind(this, v);
+        public ViewHolder(ItemPinpointLocationBinding binding) {
+            super(binding.getRoot());
+
+            mvClientLocation = binding.mvClientLocation;
+            tvAddress = binding.tvAddress;
+            cardView = binding.cardView;
             initializeMapView();
         }
 

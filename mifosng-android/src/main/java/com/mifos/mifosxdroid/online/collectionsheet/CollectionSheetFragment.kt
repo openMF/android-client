@@ -7,10 +7,7 @@ package com.mifos.mifosxdroid.online.collectionsheet
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ExpandableListView
 import android.widget.Toast
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.mifos.api.model.BulkRepaymentTransactions
@@ -20,6 +17,7 @@ import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.CollectionListAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
+import com.mifos.mifosxdroid.databinding.FragmentCollectionSheetBinding
 import com.mifos.objects.db.CollectionSheet
 import com.mifos.objects.response.SaveResponse
 import com.mifos.utils.Constants
@@ -34,10 +32,7 @@ import javax.inject.Inject
  */
 class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
     val LOG_TAG = javaClass.simpleName
-
-    @JvmField
-    @BindView(R.id.exlv_collection_sheet)
-    var expandableListView: ExpandableListView? = null
+    private lateinit var binding: FragmentCollectionSheetBinding
 
     @JvmField
     @Inject
@@ -47,7 +42,6 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
     private var dateOfCollection // Date of Meeting on which collection has to be done.
             : String? = null
     private var calendarInstanceId = 0
-    private lateinit var rootView: View
 
     //Called from within the Adapters to show changes when payment amounts are updated
     fun refreshFragment() {
@@ -68,11 +62,10 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_collection_sheet, container, false)
-        ButterKnife.bind(this, rootView)
+        binding = FragmentCollectionSheetBinding.inflate(inflater,container,false)
         mCollectionSheetPresenter!!.attachView(this)
         fetchCollectionSheet()
-        return rootView
+        return binding.root
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -138,7 +131,7 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
         Log.i(COLLECTION_SHEET_ONLINE, "Received")
         val mifosGroups = collectionSheet.groups
         collectionListAdapter = CollectionListAdapter(activity, mifosGroups)
-        expandableListView!!.setAdapter(collectionListAdapter)
+        binding.exlvCollectionSheet.setAdapter(collectionListAdapter)
     }
 
     override fun showCollectionSheetSuccessfullySaved(saveResponse: SaveResponse?) {

@@ -20,24 +20,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnCheckedChanged
-import butterknife.OnClick
 import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentCreateNewClientBinding
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
-import com.mifos.mifosxdroid.views.CircularImageView
 import com.mifos.objects.client.ClientPayload
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.organisation.Staff
@@ -52,75 +50,16 @@ import javax.inject.Inject
 
 class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, CreateNewClientMvpView, OnItemSelectedListener {
     private val LOG_TAG = javaClass.simpleName
+    private lateinit var binding: FragmentCreateNewClientBinding
+
     @JvmField
     var datePickerSubmissionDate: DialogFragment? = null
     @JvmField
     var datePickerDateOfBirth: DialogFragment? = null
 
     @JvmField
-    @BindView(R.id.iv_clientImage)
-    var ivClientImage: CircularImageView? = null
-
-    @JvmField
-    @BindView(R.id.et_client_first_name)
-    var etClientFirstName: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_client_last_name)
-    var etClientLastName: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_client_middle_name)
-    var etClientMiddleName: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_client_mobile_no)
-    var etClientMobileNo: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_client_external_id)
-    var etClientExternalId: EditText? = null
-
-    @JvmField
-    @BindView(R.id.cb_client_active_status)
-    var cbClientActiveStatus: CheckBox? = null
-
-    @JvmField
-    @BindView(R.id.tv_submission_date)
-    var tvSubmissionDate: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_dateofbirth)
-    var tvDateOfBirth: TextView? = null
-
-    @JvmField
-    @BindView(R.id.sp_offices)
-    var spOffices: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.sp_gender)
-    var spGender: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.sp_client_type)
-    var spClientType: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.sp_staff)
-    var spStaff: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.sp_client_classification)
-    var spClientClassification: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.layout_submission)
-    var layout_submission: LinearLayout? = null
-
-    @JvmField
     @Inject
     var createNewClientPresenter: CreateNewClientPresenter? = null
-    lateinit var rootView: View
 
     // It checks whether the user wants to create the new client with or without picture
     private var createClientWithImage = false
@@ -139,7 +78,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     private var clientStaff: List<Staff>? = null
     private var mCurrentDateView // the view whose click opened the date picker
             : View? = null
-    private var ClientImageFile: File? = null
+    private var clientImageFile: File? = null
     private var pickedImageUri: Uri? = null
     private var genderOptionsList: MutableList<String>? = null
     private var clientClassificationList: MutableList<String>? = null
@@ -152,6 +91,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     private var officeAdapter: ArrayAdapter<String>? = null
     private var staffAdapter: ArrayAdapter<String>? = null
     private var progress: ProgressDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         genderOptionsList = ArrayList()
@@ -162,47 +102,56 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_create_new_client, null)
+        binding = FragmentCreateNewClientBinding.inflate(inflater,container,false)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        ButterKnife.bind(this, rootView)
         createNewClientPresenter!!.attachView(this)
         showUserInterface()
         createNewClientPresenter!!.loadClientTemplate()
-        return rootView
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.tvSubmissionDate.setOnClickListener { onClickTextViewSubmissionDate() }
+        binding.tvDateofbirth.setOnClickListener { onClickTextViewDateOfBirth() }
+        binding.btnSubmit.setOnClickListener { onClickSubmitButton() }
+        binding.cbClientActiveStatus.setOnCheckedChangeListener{_,_ -> onClickActiveCheckBox()}
+
     }
 
     override fun showUserInterface() {
         genderOptionsAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, genderOptionsList ?: emptyList())
         genderOptionsAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spGender!!.adapter = genderOptionsAdapter
-        spGender!!.onItemSelectedListener = this
+        binding.spGender.adapter = genderOptionsAdapter
+        binding.spGender.onItemSelectedListener = this
         clientClassificationAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, clientClassificationList ?: emptyList())
         clientClassificationAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spClientClassification!!.adapter = clientClassificationAdapter
-        spClientClassification!!.onItemSelectedListener = this
+        binding.spClientClassification.adapter = clientClassificationAdapter
+        binding.spClientClassification.onItemSelectedListener = this
         clientTypeAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, clientTypeList ?: emptyList())
         clientTypeAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spClientType!!.adapter = clientTypeAdapter
-        spClientType!!.onItemSelectedListener = this
+        binding.spClientType.adapter = clientTypeAdapter
+        binding.spClientType.onItemSelectedListener = this
         officeAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, officeList ?: emptyList())
         officeAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spOffices!!.adapter = officeAdapter
-        spOffices!!.onItemSelectedListener = this
+        binding.spOffices.adapter = officeAdapter
+        binding.spOffices.onItemSelectedListener = this
         staffAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, staffList ?: emptyList())
         staffAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spStaff!!.adapter = staffAdapter
-        spStaff!!.onItemSelectedListener = this
+        binding.spStaff.adapter = staffAdapter
+        binding.spStaff.onItemSelectedListener = this
         datePickerSubmissionDate = MFDatePicker.newInsance(this)
         datePickerDateOfBirth = MFDatePicker.newInsance(this)
-        tvSubmissionDate!!.text = MFDatePicker.getDatePickedAsString()
-        tvDateOfBirth!!.text = MFDatePicker.getDatePickedAsString()
-        ivClientImage!!.setOnClickListener { view ->
+        binding.tvSubmissionDate.text = MFDatePicker.getDatePickedAsString()
+        binding.tvDateofbirth.text = MFDatePicker.getDatePickedAsString()
+        binding.ivClientImage.setOnClickListener { view ->
             val menu = PopupMenu(requireActivity(), view)
             menu.menuInflater.inflate(R.menu.menu_create_client_image, menu
                     .menu)
@@ -223,9 +172,9 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
 
     private fun captureClientImage() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        ClientImageFile = File(
+        clientImageFile = File(
                 requireActivity().externalCacheDir, "client_image.png")
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(ClientImageFile))
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(clientImageFile))
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE)
     }
 
@@ -238,66 +187,63 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     }
 
     private fun removeExistingImage() {
-        ivClientImage!!.setImageDrawable(resources.getDrawable(R.drawable.ic_dp_placeholder))
+        binding.ivClientImage.setImageDrawable(resources.getDrawable(R.drawable.ic_dp_placeholder))
         createClientWithImage = false
     }
 
-    @OnClick(R.id.tv_submission_date)
     fun onClickTextViewSubmissionDate() {
         datePickerSubmissionDate!!.show(requireActivity().supportFragmentManager,
                 FragmentConstants.DFRAG_DATE_PICKER)
-        mCurrentDateView = tvSubmissionDate
+        mCurrentDateView = binding.tvSubmissionDate
     }
 
-    @OnClick(R.id.tv_dateofbirth)
     fun onClickTextViewDateOfBirth() {
         datePickerDateOfBirth!!.show(requireActivity().supportFragmentManager,
                 FragmentConstants.DFRAG_DATE_PICKER)
-        mCurrentDateView = tvDateOfBirth
+        mCurrentDateView = binding.tvDateofbirth
     }
 
-    @OnClick(R.id.btn_submit)
     fun onClickSubmitButton() {
-        submissionDateString = tvSubmissionDate!!.text.toString()
+        submissionDateString = binding.tvSubmissionDate.text.toString()
         submissionDateString = DateHelper
                 .getDateAsStringUsedForCollectionSheetPayload(submissionDateString)
                 .replace("-", " ")
-        dateOfBirthString = tvDateOfBirth!!.text.toString()
+        dateOfBirthString = binding.tvDateofbirth.text.toString()
         dateOfBirthString = DateHelper.getDateAsStringUsedForDateofBirth(dateOfBirthString)
                 .replace("-", " ")
         val clientPayload = ClientPayload()
 
         //Mandatory Fields
-        clientPayload.firstname = etClientFirstName!!.editableText.toString()
-        clientPayload.lastname = etClientLastName!!.editableText.toString()
+        clientPayload.firstname = binding.etClientFirstName.editableText.toString()
+        clientPayload.lastname = binding.etClientLastName.editableText.toString()
         clientPayload.officeId = officeId
 
         //Optional Fields, we do not need to add any check because these fields carry some
         // default values
-        clientPayload.isActive = cbClientActiveStatus!!.isChecked
+        clientPayload.isActive = binding.cbClientActiveStatus.isChecked
         clientPayload.activationDate = submissionDateString
         clientPayload.dateOfBirth = dateOfBirthString
 
         //Optional Fields
-        if (!TextUtils.isEmpty(etClientMiddleName!!.editableText.toString())) {
-            clientPayload.middlename = etClientMiddleName!!.editableText.toString()
+        if (!TextUtils.isEmpty(binding.etClientMiddleName.editableText.toString())) {
+            clientPayload.middlename = binding.etClientMiddleName.editableText.toString()
         }
-        if (PhoneNumberUtils.isGlobalPhoneNumber(etClientMobileNo!!.editableText.toString())) {
-            clientPayload.mobileNo = etClientMobileNo!!.editableText.toString()
+        if (PhoneNumberUtils.isGlobalPhoneNumber(binding.etClientMobileNo.editableText.toString())) {
+            clientPayload.mobileNo = binding.etClientMobileNo.editableText.toString()
         }
-        if (!TextUtils.isEmpty(etClientExternalId!!.editableText.toString())) {
-            clientPayload.externalId = etClientExternalId!!.editableText.toString()
+        if (!TextUtils.isEmpty(binding.etClientExternalId.editableText.toString())) {
+            clientPayload.externalId = binding.etClientExternalId.editableText.toString()
         }
-        if (!clientStaff!!.isEmpty()) {
+        if (clientStaff!!.isNotEmpty()) {
             clientPayload.staffId = staffId
         }
-        if (!genderOptionsList!!.isEmpty()) {
+        if (genderOptionsList!!.isNotEmpty()) {
             clientPayload.genderId = genderId
         }
-        if (!clientTypeList!!.isEmpty()) {
+        if (clientTypeList!!.isNotEmpty()) {
             clientPayload.clientTypeId = clientTypeId
         }
-        if (!clientClassificationList!!.isEmpty()) {
+        if (clientClassificationList!!.isNotEmpty()) {
             clientPayload.clientClassificationId = clientClassificationId
         }
         if (!isFirstNameValid) {
@@ -315,7 +261,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
                         .beginTransaction()
                 requireActivity().supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST)
-                fragmentTransaction.replace(R.id.container, fragment).commit()
+                fragmentTransaction.replace(R.id.container_a, fragment).commit()
             } else {
                 clientPayload.datatables = null
                 createNewClientPresenter!!.createClient(clientPayload)
@@ -323,16 +269,15 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         }
     }
 
-    @OnCheckedChanged(R.id.cb_client_active_status)
     fun onClickActiveCheckBox() {
-        layout_submission!!.visibility = if (cbClientActiveStatus!!.isChecked) View.VISIBLE else View.GONE
+        binding.layoutSubmission.visibility = if (binding.cbClientActiveStatus.isChecked) View.VISIBLE else View.GONE
     }
 
     override fun onDatePicked(date: String) {
-        if (mCurrentDateView != null && mCurrentDateView === tvSubmissionDate) {
-            tvSubmissionDate!!.text = date
-        } else if (mCurrentDateView != null && mCurrentDateView === tvDateOfBirth) {
-            tvDateOfBirth!!.text = date
+        if (mCurrentDateView != null && mCurrentDateView === binding.tvSubmissionDate) {
+            binding.tvSubmissionDate.text = date
+        } else if (mCurrentDateView != null && mCurrentDateView === binding.tvDateofbirth) {
+            binding.tvDateofbirth.text = date
         }
     }
 
@@ -374,16 +319,16 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     }
 
     override fun showClientCreatedSuccessfully(message: Int) {
-        Toaster.show(rootView, message)
+        Toaster.show(binding.root, message)
     }
 
     override fun showWaitingForCheckerApproval(message: Int) {
-        Toaster.show(rootView, message)
+        Toaster.show(binding.root, message)
         requireActivity().supportFragmentManager.popBackStack()
     }
 
     override fun showMessage(message: Int) {
-        Toaster.show(rootView, message)
+        Toaster.show(binding.root, message)
     }
 
     override fun showMessage(message: String?) {
@@ -417,11 +362,11 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         get() {
             result = true
             try {
-                if (TextUtils.isEmpty(etClientFirstName!!.editableText.toString())) {
+                if (TextUtils.isEmpty(binding.etClientFirstName.editableText.toString())) {
                     throw RequiredFieldException(resources.getString(R.string.first_name),
                             resources.getString(R.string.error_cannot_be_empty))
                 }
-                if (!ValidationUtil.isNameValid(etClientFirstName!!.editableText.toString())) {
+                if (!ValidationUtil.isNameValid(binding.etClientFirstName.editableText.toString())) {
                     throw InvalidTextInputException(resources.getString(R.string.first_name),
                             resources.getString(R.string.error_should_contain_only),
                             InvalidTextInputException.TYPE_ALPHABETS)
@@ -440,8 +385,9 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         get() {
             result = true
             try {
-                if (!TextUtils.isEmpty(etClientMiddleName!!.editableText.toString())
-                        && !ValidationUtil.isNameValid(etClientMiddleName!!.editableText
+                if (!TextUtils.isEmpty(binding.etClientMiddleName.editableText.toString())
+                        && !ValidationUtil.isNameValid(
+                        binding.etClientMiddleName.editableText
                                 .toString())) {
                     throw InvalidTextInputException(
                             resources.getString(R.string.middle_name),
@@ -459,11 +405,11 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         get() {
             result = true
             try {
-                if (TextUtils.isEmpty(etClientLastName!!.editableText.toString())) {
+                if (TextUtils.isEmpty(binding.etClientLastName.editableText.toString())) {
                     throw RequiredFieldException(resources.getString(R.string.last_name),
                             resources.getString(R.string.error_cannot_be_empty))
                 }
-                if (!ValidationUtil.isNameValid(etClientLastName!!.editableText.toString())) {
+                if (!ValidationUtil.isNameValid(binding.etClientLastName.editableText.toString())) {
                     throw InvalidTextInputException(resources.getString(R.string.last_name),
                             resources.getString(R.string.error_should_contain_only),
                             InvalidTextInputException.TYPE_ALPHABETS)
@@ -481,7 +427,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     override fun setClientId(id: Int?) {
         returnedClientId = id
         if (createClientWithImage) {
-            ClientImageFile?.let { createNewClientPresenter!!.uploadImage(returnedClientId!!, it) }
+            clientImageFile?.let { createNewClientPresenter!!.uploadImage(returnedClientId!!, it) }
         } else {
             requireActivity().supportFragmentManager.popBackStack()
         }
@@ -491,7 +437,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE
                 && resultCode == Activity.RESULT_OK) {
             createClientWithImage = true
-            ivClientImage!!.setImageBitmap(BitmapFactory.decodeFile(ClientImageFile!!.absolutePath))
+            binding.ivClientImage.setImageBitmap(BitmapFactory.decodeFile(clientImageFile!!.absolutePath))
         } else if (requestCode == PICK_IMAGE_ACTIVITY_REQUEST_CODE
                 && resultCode == Activity.RESULT_OK && data?.data != null) {
             createClientWithImage = true
@@ -502,8 +448,8 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
             c.moveToFirst()
             val columnIndex = c.getColumnIndex(filePath[0])
             val picturePath = c.getString(columnIndex)
-            ivClientImage!!.setImageBitmap(BitmapFactory.decodeFile(picturePath))
-            ClientImageFile = File(picturePath)
+            binding.ivClientImage.setImageBitmap(BitmapFactory.decodeFile(picturePath))
+            clientImageFile = File(picturePath)
         }
     }
 

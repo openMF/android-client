@@ -2,9 +2,6 @@ package com.mifos.mifosxdroid.offline.synccenterpayloads;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,9 +9,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SyncCenterPayloadAdapter;
@@ -22,6 +21,7 @@ import com.mifos.mifosxdroid.core.MaterialDialog;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding;
 import com.mifos.services.data.CenterPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.PrefManager;
@@ -31,37 +31,18 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
         SyncCenterPayloadsMvpView, DialogInterface.OnClickListener {
 
     public final String LOG_TAG = getClass().getSimpleName();
-
-    @BindView(R.id.rv_sync_payload)
-    RecyclerView rvPayloadCenter;
-
-    @BindView(R.id.swipe_container)
-    SwipeRefreshLayout swipeRefreshLayout;
-
-    @BindView(R.id.noPayloadText)
-    TextView mNoPayloadText;
-
-    @BindView(R.id.noPayloadIcon)
-    ImageView mNoPayloadIcon;
-
-    @BindView(R.id.ll_error)
-    LinearLayout llError;
+    private FragmentSyncpayloadBinding binding;
 
     @Inject
     SyncCenterPayloadsPresenter mSyncCenterPayloadsPresenter;
 
     @Inject
     SyncCenterPayloadAdapter mSyncCenterPayloadAdapter;
-
-    View rootView;
 
     List<CenterPayload> centerPayloads;
 
@@ -87,46 +68,51 @@ public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_syncpayload, container, false);
 
-        ButterKnife.bind(this, rootView);
+        binding = FragmentSyncpayloadBinding.inflate(inflater, container, false);
         mSyncCenterPayloadsPresenter.attachView(this);
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rvPayloadCenter.setLayoutManager(mLayoutManager);
-        rvPayloadCenter.setHasFixedSize(true);
-        rvPayloadCenter.setAdapter(mSyncCenterPayloadAdapter);
+        binding.rvSyncPayload.setLayoutManager(mLayoutManager);
+        binding.rvSyncPayload.setHasFixedSize(true);
+        binding.rvSyncPayload.setAdapter(mSyncCenterPayloadAdapter);
 
 
         /**
          * Loading All Center Payloads from Database
          */
-        swipeRefreshLayout.setColorSchemeColors(getActivity()
+        binding.swipeContainer.setColorSchemeColors(getActivity()
                 .getResources().getIntArray(R.array.swipeRefreshColors));
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
                 mSyncCenterPayloadsPresenter.loadDatabaseCenterPayload();
 
-                if (swipeRefreshLayout.isRefreshing())
-                    swipeRefreshLayout.setRefreshing(false);
+                if (binding.swipeContainer.isRefreshing())
+                    binding.swipeContainer.setRefreshing(false);
             }
         });
 
         mSyncCenterPayloadsPresenter.loadDatabaseCenterPayload();
 
-        return rootView;
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.noPayloadIcon.setOnClickListener(view1 -> reloadOnError());
     }
 
     /**
      * Show when Database response is null or failed to fetch the center payload
      * Onclick Send Fresh Request for Center Payload.
      */
-    @OnClick(R.id.noPayloadIcon)
     public void reloadOnError() {
-        llError.setVisibility(View.GONE);
+        binding.llError.setVisibility(View.GONE);
         mSyncCenterPayloadsPresenter.loadDatabaseCenterPayload();
     }
 
@@ -158,7 +144,7 @@ public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
                     mCenterSyncIndex = 0;
                     syncCenterPayload();
                 } else {
-                    Toaster.show(rootView,
+                    Toaster.show(binding.getRoot(),
                             getActivity().getResources().getString(R.string.nothing_to_sync));
                 }
                 break;
@@ -169,10 +155,10 @@ public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
 
     @Override
     public void showError(int stringId) {
-        llError.setVisibility(View.VISIBLE);
+        binding.llError.setVisibility(View.VISIBLE);
         String message = stringId + getResources().getString(R.string.click_to_refresh);
-        mNoPayloadText.setText(message);
-        Toaster.show(rootView, stringId);
+        binding.noPayloadText.setText(message);
+        Toaster.show(binding.getRoot(), stringId);
     }
 
     /**
@@ -187,10 +173,10 @@ public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
     public void showCenters(List<CenterPayload> centerPayload) {
         centerPayloads = centerPayload;
         if (centerPayload.size() == 0) {
-            llError.setVisibility(View.VISIBLE);
-            mNoPayloadText.setText(getActivity()
+            binding.llError.setVisibility(View.VISIBLE);
+            binding.noPayloadText.setText(getActivity()
                     .getResources().getString(R.string.no_center_payload_to_sync));
-            mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+            binding.noPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
         } else {
             mSyncCenterPayloadAdapter.setCenterPayload(centerPayloads);
         }
@@ -213,10 +199,10 @@ public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
         if (centerPayloads.size() != 0) {
             syncCenterPayload();
         } else {
-            llError.setVisibility(View.VISIBLE);
-            mNoPayloadText.setText(getActivity()
+            binding.llError.setVisibility(View.VISIBLE);
+            binding.noPayloadText.setText(getActivity()
                     .getResources().getString(R.string.all_centers_synced));
-            mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+            binding.noPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
         }
     }
 
@@ -233,10 +219,10 @@ public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
 
     @Override
     public void showProgressbar(boolean show) {
-        swipeRefreshLayout.setRefreshing(show);
+        binding.swipeContainer.setRefreshing(show);
         if (show && mSyncCenterPayloadAdapter.getItemCount() == 0) {
             showMifosProgressBar();
-            swipeRefreshLayout.setRefreshing(false);
+            binding.swipeContainer.setRefreshing(false);
         } else {
             hideMifosProgressBar();
         }
@@ -257,7 +243,7 @@ public class SyncCenterPayloadsFragment extends MifosBaseFragment implements
                         mCenterSyncIndex = 0;
                         syncCenterPayload();
                     } else {
-                        Toaster.show(rootView,
+                        Toaster.show(binding.getRoot(),
                                 getActivity().getResources().getString(R.string.nothing_to_sync));
                     }
                     break;

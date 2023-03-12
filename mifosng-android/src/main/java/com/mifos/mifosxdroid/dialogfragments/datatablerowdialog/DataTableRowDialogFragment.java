@@ -7,20 +7,21 @@ package com.mifos.mifosxdroid.dialogfragments.datatablerowdialog;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.mifos.api.GenericResponse;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.databinding.DialogFragmentAddEntryToDatatableBinding;
 import com.mifos.mifosxdroid.formwidgets.FormEditText;
 import com.mifos.mifosxdroid.formwidgets.FormNumericEditText;
 import com.mifos.mifosxdroid.formwidgets.FormSpinner;
@@ -38,8 +39,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by ishankhanna on 01/08/14.
@@ -48,14 +47,11 @@ public class DataTableRowDialogFragment extends DialogFragment
         implements DataTableRowDialogMvpView {
 
     private final String LOG_TAG = getClass().getSimpleName();
+    private DialogFragmentAddEntryToDatatableBinding binding;
 
-    @BindView(R.id.ll_data_table_entry_form)
-    LinearLayout linearLayout;
 
     @Inject
     DataTableRowDialogPresenter dataTableRowDialogPresenter;
-
-    private View rootView;
 
     private DataTable dataTable;
     private int entityId;
@@ -91,10 +87,7 @@ public class DataTableRowDialogFragment extends DialogFragment
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams
                 .SOFT_INPUT_ADJUST_RESIZE);
 
-        rootView = inflater.inflate(R.layout.dialog_fragment_add_entry_to_datatable, container,
-                false);
-
-        ButterKnife.bind(this, rootView);
+        binding = DialogFragmentAddEntryToDatatableBinding.inflate(inflater, container, false);
         dataTableRowDialogPresenter.attachView(this);
 
 
@@ -106,7 +99,7 @@ public class DataTableRowDialogFragment extends DialogFragment
         createForm(dataTable);
         addSaveButton();
 
-        return rootView;
+        return binding.getRoot();
     }
 
     public void createForm(DataTable table) {
@@ -122,7 +115,7 @@ public class DataTableRowDialogFragment extends DialogFragment
                     FormEditText formEditText = new FormEditText(getActivity(), columnHeader
                             .getColumnName());
                     formWidgets.add(formEditText);
-                    linearLayout.addView(formEditText.getView());
+                    binding.llDataTableEntryForm.addView(formEditText.getView());
 
                 } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_INT)) {
 
@@ -130,7 +123,7 @@ public class DataTableRowDialogFragment extends DialogFragment
                             (), columnHeader.getColumnName());
                     formNumericEditText.setReturnType(FormWidget.SCHEMA_KEY_INT);
                     formWidgets.add(formNumericEditText);
-                    linearLayout.addView(formNumericEditText.getView());
+                    binding.llDataTableEntryForm.addView(formNumericEditText.getView());
 
 
                 } else if (columnHeader.getColumnDisplayType().equals(FormWidget
@@ -140,7 +133,7 @@ public class DataTableRowDialogFragment extends DialogFragment
                             (), columnHeader.getColumnName());
                     formNumericEditText.setReturnType(FormWidget.SCHEMA_KEY_DECIMAL);
                     formWidgets.add(formNumericEditText);
-                    linearLayout.addView(formNumericEditText.getView());
+                    binding.llDataTableEntryForm.addView(formNumericEditText.getView());
 
 
                 } else if (columnHeader.getColumnDisplayType().equals(FormWidget
@@ -160,7 +153,7 @@ public class DataTableRowDialogFragment extends DialogFragment
                                 .getColumnName(), columnValueStrings, columnValueIds);
                         formSpinner.setReturnType(FormWidget.SCHEMA_KEY_CODEVALUE);
                         formWidgets.add(formSpinner);
-                        linearLayout.addView(formSpinner.getView());
+                        binding.llDataTableEntryForm.addView(formSpinner.getView());
                     }
 
                 } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_DATE)) {
@@ -169,13 +162,13 @@ public class DataTableRowDialogFragment extends DialogFragment
                             .getColumnName());
                     formEditText.setIsDateField(true, getActivity().getSupportFragmentManager());
                     formWidgets.add(formEditText);
-                    linearLayout.addView(formEditText.getView());
+                    binding.llDataTableEntryForm.addView(formEditText.getView());
                 } else if (columnHeader.getColumnDisplayType().equals(FormWidget.SCHEMA_KEY_BOOL)) {
 
                     FormToggleButton formToggleButton = new FormToggleButton(getActivity(),
                             columnHeader.getColumnName());
                     formWidgets.add(formToggleButton);
-                    linearLayout.addView(formToggleButton.getView());
+                    binding.llDataTableEntryForm.addView(formToggleButton.getView());
                 }
             }
         }
@@ -188,7 +181,7 @@ public class DataTableRowDialogFragment extends DialogFragment
         bt_processForm.setText(getString(R.string.save));
         bt_processForm.setBackgroundColor(getActivity().getResources().getColor(R.color.blue_dark));
 
-        linearLayout.addView(bt_processForm);
+        binding.llDataTableEntryForm.addView(bt_processForm);
         bt_processForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

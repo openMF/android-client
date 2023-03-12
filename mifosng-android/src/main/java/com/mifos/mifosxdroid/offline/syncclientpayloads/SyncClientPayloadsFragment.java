@@ -2,9 +2,6 @@ package com.mifos.mifosxdroid.offline.syncclientpayloads;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,9 +9,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SyncPayloadsAdapter;
@@ -22,6 +21,7 @@ import com.mifos.mifosxdroid.core.MaterialDialog;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding;
 import com.mifos.objects.client.ClientPayload;
 import com.mifos.utils.Constants;
 import com.mifos.utils.PrefManager;
@@ -31,9 +31,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * This Class for Syncing the clients that is created in offline mode.
@@ -45,26 +42,10 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
         implements SyncClientPayloadsMvpView, DialogInterface.OnClickListener {
 
     public final String LOG_TAG = getClass().getSimpleName();
-
-    @BindView(R.id.rv_sync_payload)
-    RecyclerView rv_payload_clients;
-
-    @BindView(R.id.swipe_container)
-    SwipeRefreshLayout swipeRefreshLayout;
-
-    @BindView(R.id.noPayloadText)
-    TextView mNoPayloadText;
-
-    @BindView(R.id.noPayloadIcon)
-    ImageView mNoPayloadIcon;
-
-    @BindView(R.id.ll_error)
-    LinearLayout ll_error;
+    private FragmentSyncpayloadBinding binding;
 
     @Inject
     SyncClientPayloadsPresenter mSyncPayloadsPresenter;
-
-    View rootView;
 
     List<ClientPayload> clientPayloads;
 
@@ -90,15 +71,14 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_syncpayload, container, false);
 
-        ButterKnife.bind(this, rootView);
+        binding = FragmentSyncpayloadBinding.inflate(inflater, container, false);
         mSyncPayloadsPresenter.attachView(this);
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv_payload_clients.setLayoutManager(mLayoutManager);
-        rv_payload_clients.setHasFixedSize(true);
+        binding.rvSyncPayload.setLayoutManager(mLayoutManager);
+        binding.rvSyncPayload.setHasFixedSize(true);
 
 
         mSyncPayloadsPresenter.loadDatabaseClientPayload();
@@ -106,29 +86,35 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
         /**
          * Loading All Client Payloads from Database
          */
-        swipeRefreshLayout.setColorSchemeColors(getActivity()
+        binding.swipeContainer.setColorSchemeColors(getActivity()
                 .getResources().getIntArray(R.array.swipeRefreshColors));
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
                 mSyncPayloadsPresenter.loadDatabaseClientPayload();
 
-                if (swipeRefreshLayout.isRefreshing())
-                    swipeRefreshLayout.setRefreshing(false);
+                if (binding.swipeContainer.isRefreshing())
+                    binding.swipeContainer.setRefreshing(false);
             }
         });
 
-        return rootView;
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.noPayloadIcon.setOnClickListener(view1 -> reloadOnError());
     }
 
     /**
      * Show when Database response is null or failed to fetch the client payload
      * Onclick Send Fresh Request for Client Payload.
      */
-    @OnClick(R.id.noPayloadIcon)
     public void reloadOnError() {
-        ll_error.setVisibility(View.GONE);
+        binding.llError.setVisibility(View.GONE);
         mSyncPayloadsPresenter.loadDatabaseClientPayload();
     }
 
@@ -145,28 +131,28 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
     public void showPayloads(List<ClientPayload> clientPayload) {
         clientPayloads = clientPayload;
         if (clientPayload.size() == 0) {
-            ll_error.setVisibility(View.VISIBLE);
-            mNoPayloadText.setText(getActivity()
+            binding.llError.setVisibility(View.VISIBLE);
+            binding.noPayloadText.setText(getActivity()
                     .getResources().getString(R.string.no_client_payload_to_sync));
-            mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+            binding.noPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
         } else {
             mSyncPayloadsAdapter = new SyncPayloadsAdapter(getActivity(), clientPayload);
-            rv_payload_clients.setAdapter(mSyncPayloadsAdapter);
+            binding.rvSyncPayload.setAdapter(mSyncPayloadsAdapter);
         }
     }
 
     /**
      * Showing Error when failed to fetch client payload from Database
      *
-     * @param s Error String
+     * @param stringId Error String
      */
     @Override
     public void showError(int stringId) {
-        ll_error.setVisibility(View.VISIBLE);
+        binding.llError.setVisibility(View.VISIBLE);
         String message =
                 stringId + getActivity().getResources().getString(R.string.click_to_refresh);
-        mNoPayloadText.setText(message);
-        Toaster.show(rootView, getResources().getString(stringId));
+        binding.noPayloadText.setText(message);
+        Toaster.show(binding.getRoot(), getResources().getString(stringId));
     }
 
 
@@ -223,7 +209,7 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
                     mClientSyncIndex = 0;
                     syncClientPayload();
                 } else {
-                    Toaster.show(rootView,
+                    Toaster.show(binding.getRoot(),
                             getActivity().getResources().getString(R.string.nothing_to_sync));
                 }
                 break;
@@ -265,10 +251,10 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
         if (clientPayloads.size() != 0) {
             syncClientPayload();
         } else {
-            ll_error.setVisibility(View.VISIBLE);
-            mNoPayloadText.setText(getActivity()
+            binding.llError.setVisibility(View.VISIBLE);
+            binding.noPayloadText.setText(getActivity()
                     .getResources().getString(R.string.all_clients_synced));
-            mNoPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
+            binding.noPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp);
         }
     }
 
@@ -296,7 +282,7 @@ public class SyncClientPayloadsFragment extends MifosBaseFragment
                         mClientSyncIndex = 0;
                         syncClientPayload();
                     } else {
-                        Toaster.show(rootView,
+                        Toaster.show(binding.getRoot(),
                                 getActivity().getResources().getString(R.string.nothing_to_sync));
                     }
                     break;

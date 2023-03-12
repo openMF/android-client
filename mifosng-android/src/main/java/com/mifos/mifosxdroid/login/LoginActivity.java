@@ -5,9 +5,11 @@
 
 package com.mifos.mifosxdroid.login;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -15,15 +17,16 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
+
 import com.mifos.api.BaseApiManager;
 import com.mifos.mifosxdroid.HomeActivity;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.databinding.ActivityLoginBinding;
 import com.mifos.mifosxdroid.passcode.PassCodeActivity;
 import com.mifos.objects.user.User;
 import com.mifos.utils.Constants;
@@ -32,39 +35,13 @@ import com.mifos.utils.PrefManager;
 import com.mifos.utils.ValidationUtil;
 
 import javax.inject.Inject;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnEditorAction;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 /**
  * Created by ishankhanna on 08/02/14.
  */
 public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
-    @BindView(R.id.et_instanceURL)
-    EditText et_domain;
-
-    @BindView(R.id.et_username)
-    EditText et_username;
-
-    @BindView(R.id.et_password)
-    EditText et_password;
-
-    @BindView(R.id.tv_constructed_instance_url)
-    TextView tv_full_url;
-
-    @BindView(R.id.et_tenantIdentifier)
-    EditText et_tenantIdentifier;
-
-    @BindView(R.id.et_instancePort)
-    EditText et_port;
-
-    @BindView(R.id.ll_connectionSettings)
-    LinearLayout ll_connectionSettings;
+    private ActivityLoginBinding binding;
 
     @Inject
     LoginPresenter mLoginPresenter;
@@ -88,19 +65,21 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            Integer port = et_port.getEditableText().toString().isEmpty() ? null : Integer
-                    .valueOf(et_port.getEditableText().toString());
-            instanceURL = ValidationUtil.getInstanceUrl(et_domain.getText().toString(), port);
+            Integer port = binding.etInstancePort
+                    .getEditableText().toString().isEmpty() ? null : Integer
+                    .valueOf(binding.etInstancePort.getEditableText().toString());
+            instanceURL = ValidationUtil
+                    .getInstanceUrl(binding.etInstanceURL.getText().toString(), port);
             isValidUrl = ValidationUtil.isValidUrl(instanceURL);
-            tv_full_url.setText(instanceURL);
+            binding.tvConstructedInstanceUrl.setText(instanceURL);
 
-            domain = et_domain.getEditableText().toString();
+            domain = binding.etInstanceURL.getEditableText().toString();
 
             if (domain.length() == 0 || domain.contains(" ")) {
                 isValidUrl = false;
             }
 
-            tv_full_url.setTextColor(isValidUrl ?
+            binding.tvConstructedInstanceUrl.setTextColor(isValidUrl ?
                     ContextCompat.getColor(getApplicationContext(), R.color.green_light) :
                     ContextCompat.getColor(getApplicationContext(), R.color.red_light));
 
@@ -111,24 +90,28 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
         getActivityComponent().inject(this);
-        setContentView(R.layout.activity_login);
+        setContentView(binding.getRoot());
 
-        ButterKnife.bind(this);
         mLoginPresenter.attachView(this);
 
-        et_port.setInputType(InputType.TYPE_CLASS_NUMBER);
+        binding.etInstancePort.setInputType(InputType.TYPE_CLASS_NUMBER);
         if (!PrefManager.getPort().equals("80"))
-            et_port.setText(PrefManager.getPort());
+            binding.etInstancePort.setText(PrefManager.getPort());
 
-        et_domain.setText(PrefManager.getInstanceDomain());
-        et_domain.addTextChangedListener(urlWatcher);
-        et_port.addTextChangedListener(urlWatcher);
+        binding.etInstanceURL.setText(PrefManager.getInstanceDomain());
+        binding.etInstanceURL.addTextChangedListener(urlWatcher);
+        binding.etInstancePort.addTextChangedListener(urlWatcher);
         urlWatcher.afterTextChanged(null);
+
+        binding.btLogin.setOnClickListener(view -> onLoginClick());
+        binding.etPassword
+                .setOnEditorActionListener((textView, i, keyEvent) -> passwordSubmitted(keyEvent));
     }
 
     public boolean validateUserInputs() {
-        domain = et_domain.getEditableText().toString();
+        domain = binding.etInstanceURL.getEditableText().toString();
         if (domain.length() == 0 || domain.contains(" ")) {
             showToastMessage(getString(R.string.error_invalid_url));
             return false;
@@ -137,8 +120,8 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
             showToastMessage(getString(R.string.error_invalid_connection));
             return false;
         }
-        username = et_username.getEditableText().toString();
-        password = et_password.getEditableText().toString();
+        username = binding.etUsername.getEditableText().toString();
+        password = binding.etPassword.getEditableText().toString();
         if (username.isEmpty() || password.isEmpty()) {
             showToastMessage(getString(R.string.error_enter_credentials));
             return false;
@@ -165,8 +148,8 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.mItem_connection_settings:
-                ll_connectionSettings.setVisibility(
-                        ll_connectionSettings.getVisibility() == VISIBLE ? GONE : VISIBLE);
+                binding.llConnectionSettings.setVisibility(
+                        binding.llConnectionSettings.getVisibility() == VISIBLE ? GONE : VISIBLE);
 
 
                 return true;
@@ -218,7 +201,6 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
         }
     }
 
-    @OnClick(R.id.bt_login)
     public void onLoginClick() {
         //Hide the keyboard, when user clicks on login button
         hideKeyboard(findViewById(R.id.bt_login));
@@ -230,13 +212,13 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
             return;
         }
         // Saving tenant
-        PrefManager.setTenant(et_tenantIdentifier.getEditableText().toString());
+        PrefManager.setTenant(binding.etTenantIdentifier.getEditableText().toString());
         // Saving InstanceURL for next usages
         PrefManager.setInstanceUrl(instanceURL);
         // Saving domain name
-        PrefManager.setInstanceDomain(et_domain.getEditableText().toString());
+        PrefManager.setInstanceDomain(binding.etInstanceURL.getEditableText().toString());
         // Saving port
-        PrefManager.setPort(et_port.getEditableText().toString());
+        PrefManager.setPort(binding.etInstancePort.getEditableText().toString());
         // Updating Services
         BaseApiManager.createService();
 
@@ -246,8 +228,6 @@ public class LoginActivity extends MifosBaseActivity implements LoginMvpView {
             showToastMessage(getString(R.string.error_not_connected_internet));
         }
     }
-
-    @OnEditorAction(R.id.et_password)
     public boolean passwordSubmitted(KeyEvent keyEvent) {
         if (keyEvent != null && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
             login();

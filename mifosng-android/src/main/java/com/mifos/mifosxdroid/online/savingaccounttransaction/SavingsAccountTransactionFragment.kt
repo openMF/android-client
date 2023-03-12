@@ -9,12 +9,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.google.gson.Gson
 import com.jakewharton.fliptables.FlipTable
 import com.mifos.exceptions.RequiredFieldException
@@ -23,6 +22,7 @@ import com.mifos.mifosxdroid.core.MaterialDialog
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentSavingsAccountTransactionBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.savings.DepositType
@@ -35,35 +35,11 @@ import javax.inject.Inject
 
 class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickListener, SavingsAccountTransactionMvpView {
     val LOG_TAG = javaClass.simpleName
-
-    @JvmField
-    @BindView(R.id.view_flipper)
-    var viewFlipper: ViewFlipper? = null
-
-    @JvmField
-    @BindView(R.id.tv_clientName)
-    var tv_clientName: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_savingsAccountNumber)
-    var tv_accountNumber: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_transaction_date)
-    var tv_transactionDate: TextView? = null
-
-    @JvmField
-    @BindView(R.id.et_transaction_amount)
-    var et_transactionAmount: EditText? = null
-
-    @JvmField
-    @BindView(R.id.sp_payment_type)
-    var sp_paymentType: Spinner? = null
+    private lateinit var binding: FragmentSavingsAccountTransactionBinding
 
     @JvmField
     @Inject
     var mSavingAccountTransactionPresenter: SavingsAccountTransactionPresenter? = null
-    private lateinit var rootView: View
     private var savingsAccountNumber: String? = null
     private var savingsAccountId = 0
     private var savingsAccountType: DepositType? = null
@@ -76,6 +52,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
     // Values to be fetched from Savings Account Template
     private var paymentTypeOptionId = 0
     private var mfDatePicker: DialogFragment? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
@@ -89,8 +66,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_savings_account_transaction, container,
-                false)
+        binding = FragmentSavingsAccountTransactionBinding.inflate(inflater,container,false)
         if (transactionType == Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT) {
             setToolbarTitle(resources.getString(R.string.savingsAccount) + resources
                     .getString(R.string.space) + resources.getString(R.string.deposit))
@@ -98,14 +74,20 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
             setToolbarTitle(resources.getString(R.string.savingsAccount) + resources
                     .getString(R.string.space) + resources.getString(R.string.withdrawal))
         }
-        ButterKnife.bind(this, rootView)
         mSavingAccountTransactionPresenter!!.attachView(this)
 
         //This Method Checking SavingAccountTransaction made before in Offline mode or not.
         //If yes then User have to sync that first then he will be able to make transaction.
         //If not then User able to make SavingAccountTransaction in Online or Offline.
         checkSavingAccountTransactionStatusInDatabase()
-        return rootView
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btReviewTransaction.setOnClickListener { onReviewTransactionButtonClicked() }
+        binding.btCancelTransaction.setOnClickListener { onCancelTransactionButtonClicked() }
     }
 
     override fun checkSavingAccountTransactionStatusInDatabase() {
@@ -116,7 +98,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
 
     override fun showSavingAccountTransactionExistInDatabase() {
         //Visibility of ParentLayout GONE, If SavingAccountTransaction Already made in Offline Mode
-        viewFlipper!!.visibility = View.GONE
+        binding.viewFlipper.visibility = View.GONE
         MaterialDialog.Builder().init(activity)
                 .setTitle(R.string.sync_previous_transaction)
                 .setMessage(R.string.dialog_message_sync_savingaccounttransaction)
@@ -134,8 +116,8 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
     }
 
     fun inflateUI() {
-        tv_clientName!!.text = clientName
-        tv_accountNumber!!.text = savingsAccountNumber
+        binding.tvClientName.text = clientName
+        binding.tvSavingsAccountNumber.text = savingsAccountNumber
         //TODO Implement QuickContactBadge here
         inflateRepaymentDate()
         inflateSavingsAccountTemplate()
@@ -146,18 +128,17 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
                 savingsAccountType!!.endpoint, savingsAccountId, transactionType)
     }
 
-    @OnClick(R.id.bt_reviewTransaction)
     fun onReviewTransactionButtonClicked() {
         // Notify user if Amount field is blank and Review
         // Transaction button is pressed.
-        if (et_transactionAmount!!.editableText.toString().isEmpty()) {
+        if (binding.etTransactionAmount.editableText.toString().isEmpty()) {
             RequiredFieldException(getString(R.string.amount), getString(R.string.message_field_required)).notifyUserWithToast(activity)
             return
         }
         // Notify the user if zero is entered in the Amount
         // field or only "." (Decimal point) is entered.
         try {
-            if (et_transactionAmount!!.editableText.toString().toFloat() == 0f) {
+            if (binding.etTransactionAmount.editableText.toString().toFloat() == 0f) {
                 RequiredFieldException(getString(R.string.amount), getString(R.string.message_cannot_be_zero)).notifyUserWithToast(activity)
                 return
             }
@@ -168,9 +149,9 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
         val headers = arrayOf(resources.getString(R.string.field),
                 resources.getString(R.string.value))
         val data = arrayOf(arrayOf(resources.getString(R.string.transaction_date),
-                tv_transactionDate!!.text.toString()), arrayOf(resources.getString(R.string.payment_type),
-                sp_paymentType!!.selectedItem.toString()), arrayOf(resources.getString(R.string.amount),
-                et_transactionAmount!!.editableText.toString()))
+                binding.tvTransactionDate.text.toString()), arrayOf(resources.getString(R.string.payment_type),
+                binding.spPaymentType.selectedItem.toString()), arrayOf(resources.getString(R.string.amount),
+                binding.etTransactionAmount.editableText.toString()))
         Log.d(LOG_TAG, FlipTable.of(headers, data))
         val formReviewStringBuilder = StringBuilder()
         for (i in 0..2) {
@@ -192,13 +173,13 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
     }
 
     fun processTransaction() {
-        val dateString = tv_transactionDate!!.text.toString().replace("-", " ")
+        val dateString = binding.tvTransactionDate.text.toString().replace("-", " ")
         val savingsAccountTransactionRequest = SavingsAccountTransactionRequest()
         savingsAccountTransactionRequest.locale = "en"
         savingsAccountTransactionRequest.dateFormat = "dd MM yyyy"
         savingsAccountTransactionRequest.transactionDate = dateString
-        savingsAccountTransactionRequest.transactionAmount = et_transactionAmount
-                ?.getEditableText().toString()
+        savingsAccountTransactionRequest.transactionAmount = binding.etTransactionAmount
+            .editableText.toString()
         savingsAccountTransactionRequest.paymentTypeId = paymentTypeOptionId.toString()
         val builtTransactionRequestAsJson = Gson().toJson(savingsAccountTransactionRequest)
         Log.i(resources.getString(R.string.transaction_body), builtTransactionRequestAsJson)
@@ -207,22 +188,21 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
                 savingsAccountId, transactionType, savingsAccountTransactionRequest)
     }
 
-    @OnClick(R.id.bt_cancelTransaction)
     fun onCancelTransactionButtonClicked() {
         requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
     fun inflateRepaymentDate() {
         mfDatePicker = MFDatePicker.newInsance(this)
-        tv_transactionDate!!.text = MFDatePicker.getDatePickedAsString()
+        binding.tvTransactionDate.text = MFDatePicker.getDatePickedAsString()
         // TODO Add Validation to make sure :
         // 1. Date Is in Correct Format
         // 2. Date Entered is not greater than Date Today i.e Date is not in future
-        tv_transactionDate!!.setOnClickListener { (mfDatePicker as MFDatePicker?)?.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
+        binding.tvTransactionDate.setOnClickListener { (mfDatePicker as MFDatePicker?)?.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
     }
 
     override fun onDatePicked(date: String) {
-        tv_transactionDate!!.text = date
+        binding.tvTransactionDate.text = date
     }
 
     override fun showSavingAccountTemplate(savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate?) {
@@ -232,8 +212,8 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
             val paymentTypeAdapter = ArrayAdapter(requireActivity(),
                     android.R.layout.simple_spinner_item, listOfPaymentTypes)
             paymentTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            sp_paymentType!!.adapter = paymentTypeAdapter
-            sp_paymentType!!.onItemSelectedListener = object : OnItemSelectedListener {
+            binding.spPaymentType.adapter = paymentTypeAdapter
+            binding.spPaymentType.onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
                     paymentTypeOptionId = savingsAccountTransactionTemplate
                             .paymentTypeOptions[position].id
@@ -246,13 +226,13 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
 
     override fun showTransactionSuccessfullyDone(savingsAccountTransactionResponse: SavingsAccountTransactionResponse?) {
         if (savingsAccountTransactionResponse!!.resourceId == null) {
-            Toaster.show(rootView, resources.getString(R.string.transaction_saved_in_db))
+            Toaster.show(binding.root, resources.getString(R.string.transaction_saved_in_db))
         } else {
             if (transactionType == Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT) {
-                Toaster.show(rootView, "Deposit Successful, Transaction ID = " +
+                Toaster.show(binding.root, "Deposit Successful, Transaction ID = " +
                         savingsAccountTransactionResponse.resourceId)
             } else if (transactionType == Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL) {
-                Toaster.show(rootView, "Withdrawal Successful, Transaction ID = "
+                Toaster.show(binding.root, "Withdrawal Successful, Transaction ID = "
                         + savingsAccountTransactionResponse.resourceId)
             }
         }
@@ -260,7 +240,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
     }
 
     override fun showError(errorMessage: Int) {
-        Toaster.show(rootView, errorMessage)
+        Toaster.show(binding.root, errorMessage)
     }
 
     override fun showProgressbar(b: Boolean) {

@@ -2,11 +2,7 @@ package com.mifos.mifosxdroid.online.collectionsheetindividualdetails
 
 import android.os.Bundle
 import android.view.*
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.api.model.BulkRepaymentTransactions
 import com.mifos.api.model.IndividualCollectionSheetPayload
 import com.mifos.mifosxdroid.R
@@ -15,20 +11,20 @@ import com.mifos.mifosxdroid.adapters.IndividualCollectionSheetDetailsAdapter.Li
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.IndividualCollectionsSheetDetailsBinding
 import com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity
 import com.mifos.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.objects.collectionsheet.LoanAndClientName
 import com.mifos.utils.Constants
-import java.util.*
 import javax.inject.Inject
 
 /**
  * Created by aksh on 20/6/18.
  */
-class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), IndividualCollectionSheetDetailsMvpView, OnRetrieveSheetItemData, ListAdapterListener {
-    @JvmField
-    @BindView(R.id.recycler_collections)
-    var recyclerSheets: RecyclerView? = null
+class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
+    IndividualCollectionSheetDetailsMvpView, OnRetrieveSheetItemData, ListAdapterListener {
+
+    private lateinit var binding: IndividualCollectionsSheetDetailsBinding
 
     @JvmField
     @Inject
@@ -39,10 +35,10 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
     private var loansAndClientNames: List<LoanAndClientName?>? = null
     var payload: IndividualCollectionSheetPayload? = null
         private set
-    private lateinit var rootView: View
     private val requestCode = 1
     private var actualDisbursementDate: String? = null
     private var transactionDate: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
@@ -58,15 +54,15 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.individual_collections_sheet_details,
-                container, false)
-        ButterKnife.bind(this, rootView)
+
+        binding = IndividualCollectionsSheetDetailsBinding.inflate(inflater,container,false)
+
         setToolbarTitle(getStringMessage(R.string.individual_collection_sheet))
         sheetsAdapter = IndividualCollectionSheetDetailsAdapter(context, this)
         presenter!!.attachView(this)
         payload = (activity as GenerateCollectionSheetActivity?)!!.payload
         showCollectionSheetViews(sheet)
-        return rootView
+        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -103,8 +99,8 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
             }
         }
         val layoutManager = LinearLayoutManager(context)
-        recyclerSheets!!.layoutManager = layoutManager
-        recyclerSheets!!.adapter = sheetsAdapter
+        binding.recyclerCollections.layoutManager = layoutManager
+        binding.recyclerCollections.adapter = sheetsAdapter
         sheetsAdapter!!.setSheetItemClickListener(this)
         sheetsAdapter!!.setLoans(loansAndClientNames)
         sheetsAdapter!!.setPaymentTypeList(paymentTypeList)
@@ -113,11 +109,11 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
     }
 
     override fun showSuccess() {
-        Toaster.show(rootView, getStringMessage(R.string.collectionsheet_submit_success))
+        Toaster.show(binding.root, getStringMessage(R.string.collectionsheet_submit_success))
     }
 
     override fun showError(error: String?) {
-        Toaster.show(rootView, error)
+        Toaster.show(binding.root, error)
     }
 
     override fun showProgressbar(b: Boolean) {
@@ -146,7 +142,7 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
 
     private fun submitSheet() {
         if (payload == null) {
-            Toaster.show(rootView, getStringMessage(R.string.error_generate_sheet_first))
+            Toaster.show(binding.root, getStringMessage(R.string.error_generate_sheet_first))
         } else {
             payload!!.actualDisbursementDate = actualDisbursementDate
             payload!!.transactionDate = transactionDate

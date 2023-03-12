@@ -4,55 +4,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.DataTableAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentDatatablesBinding
 import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment
 import com.mifos.objects.noncore.DataTable
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
-import java.util.*
 import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 12/02/17.
  */
 class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListener {
-    @JvmField
-    @BindView(R.id.rv_data_table)
-    var rvDataTable: RecyclerView? = null
 
-    @JvmField
-    @BindView(R.id.progressbar_data_table)
-    var pbDataTable: ProgressBar? = null
-
-    @JvmField
-    @BindView(R.id.swipe_container)
-    var swipeRefreshLayout: SwipeRefreshLayout? = null
-
-    @JvmField
-    @BindView(R.id.tv_error)
-    var tvError: TextView? = null
-
-    @JvmField
-    @BindView(R.id.iv_error)
-    var ivError: ImageView? = null
-
-    @JvmField
-    @BindView(R.id.ll_error)
-    var ll_error: LinearLayout? = null
+    private lateinit var binding: FragmentDatatablesBinding
 
     @JvmField
     @Inject
@@ -70,7 +41,6 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
             }
         )
     }
-    lateinit var rootView: View
     private var tableName: String? = null
     private var entityId = 0
     private var dataTables: List<DataTable>? = null
@@ -86,12 +56,12 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        rootView = inflater.inflate(R.layout.fragment_datatables, container, false)
-        ButterKnife.bind(this, rootView)
+
+        binding = FragmentDatatablesBinding.inflate(inflater,container,false)
         dataTablePresenter!!.attachView(this)
         showUserInterface()
         dataTablePresenter!!.loadDataTable(tableName)
-        return rootView
+        return binding.root
     }
 
     override fun onRefresh() {
@@ -102,12 +72,12 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
         setToolbarTitle(resources.getString(R.string.datatables))
         val mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        rvDataTable!!.layoutManager = mLayoutManager
-        rvDataTable!!.setHasFixedSize(true)
-        rvDataTable!!.adapter = dataTableAdapter
-        swipeRefreshLayout!!.setColorSchemeColors(*activity
-                ?.getResources()!!.getIntArray(R.array.swipeRefreshColors))
-        swipeRefreshLayout!!.setOnRefreshListener(this)
+        binding.rvDataTable.layoutManager = mLayoutManager
+        binding.rvDataTable.setHasFixedSize(true)
+        binding.rvDataTable.adapter = dataTableAdapter
+        binding.swipeContainer.setColorSchemeColors(*activity
+                ?.resources!!.getIntArray(R.array.swipeRefreshColors))
+        binding.swipeContainer.setOnRefreshListener(this)
     }
 
     override fun showDataTables(dataTables: List<DataTable>?) {
@@ -116,30 +86,30 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
     }
 
     override fun showEmptyDataTables() {
-        ll_error!!.visibility = View.VISIBLE
-        rvDataTable!!.visibility = View.GONE
-        tvError!!.setText(R.string.empty_data_table)
+        binding.llError.visibility = View.VISIBLE
+        binding.rvDataTable.visibility = View.GONE
+        binding.tvError.setText(R.string.empty_data_table)
     }
 
     override fun showResetVisibility() {
-        ll_error!!.visibility = View.GONE
-        rvDataTable!!.visibility = View.VISIBLE
+        binding.llError.visibility = View.GONE
+        binding.rvDataTable.visibility = View.VISIBLE
     }
 
     override fun showError(message: Int) {
-        Toaster.show(rootView, message)
-        ll_error!!.visibility = View.VISIBLE
-        rvDataTable!!.visibility = View.GONE
-        tvError!!.text = getString(R.string.failed_to_fetch_datatable)
+        Toaster.show(binding.root, message)
+        binding.llError.visibility = View.VISIBLE
+        binding.rvDataTable.visibility = View.GONE
+        binding.tvError.text = getString(R.string.failed_to_fetch_datatable)
     }
 
     override fun showProgressbar(show: Boolean) {
-        if (show && dataTableAdapter!!.itemCount == 0) {
-            pbDataTable!!.visibility = View.VISIBLE
-            swipeRefreshLayout!!.isRefreshing = false
+        if (show && dataTableAdapter.itemCount == 0) {
+            binding.progressbarDataTable.visibility = View.VISIBLE
+            binding.swipeContainer.isRefreshing = false
         } else {
-            pbDataTable!!.visibility = View.GONE
-            swipeRefreshLayout!!.isRefreshing = show
+            binding.progressbarDataTable.visibility = View.GONE
+            binding.swipeContainer.isRefreshing = show
         }
     }
 

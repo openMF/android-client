@@ -14,13 +14,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.databinding.RowSurveysListItemBinding;
 import com.mifos.objects.survey.Survey;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by Nasim Banu on 27,January,2016.
@@ -56,33 +54,36 @@ public class SurveyListAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
 
         ViewHolder viewHolder;
+        RowSurveysListItemBinding binding;
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.row_surveys_list_item, viewGroup, false);
-            viewHolder = new ViewHolder(view);
-            view.setTag(viewHolder);
+            binding = RowSurveysListItemBinding.inflate(layoutInflater, viewGroup, false);
+            viewHolder = new ViewHolder(binding);
+            viewHolder.view = binding.getRoot();
+            viewHolder.view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
+            viewHolder.view = view;
         }
         final Survey survey = listSurvey.get(i);
         viewHolder.tvSurveyName.setText(survey.getName());
         viewHolder.tvDescription.setText(survey.getDescription());
         viewHolder.ivSyncStatus
                 .setVisibility(survey.isSync() ? View.VISIBLE : View.INVISIBLE);
-        return view;
+        return viewHolder.view;
     }
 
     public static class ViewHolder {
-        @BindView(R.id.tv_survey_name)
+        private View view;
         TextView tvSurveyName;
 
-        @BindView(R.id.tv_description)
         TextView tvDescription;
 
-        @BindView(R.id.iv_sync_status)
         ImageView ivSyncStatus;
 
-        public ViewHolder(View view) {
-            ButterKnife.bind(this, view);
+        public ViewHolder(RowSurveysListItemBinding binding) {
+            tvSurveyName = binding.tvSurveyName;
+            tvDescription = binding.tvDescription;
+            ivSyncStatus = binding.ivSyncStatus;
         }
 
     }

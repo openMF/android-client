@@ -8,15 +8,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.*
-import android.widget.ProgressBar
+import android.widget.Button
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter
@@ -24,6 +19,7 @@ import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentClientBinding
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment
 import com.mifos.mifosxdroid.online.ClientActivity
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment
@@ -57,21 +53,7 @@ import javax.inject.Inject
  * and unregister the ScrollListener and SwipeLayout.
 </Client> */
 class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshListener {
-    @JvmField
-    @BindView(R.id.rv_clients)
-    var rv_clients: RecyclerView? = null
-
-    @JvmField
-    @BindView(R.id.swipe_container)
-    var swipeRefreshLayout: SwipeRefreshLayout? = null
-
-    @JvmField
-    @BindView(R.id.layout_error)
-    var errorView: View? = null
-
-    @JvmField
-    @BindView(R.id.pb_client)
-    var pb_client: ProgressBar? = null
+    private lateinit var binding: FragmentClientBinding
 
     val mClientNameListAdapter by lazy {
         ClientNameListAdapter(
@@ -97,7 +79,6 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
     @JvmField
     @Inject
     var mClientListPresenter: ClientListPresenter? = null
-    private lateinit var rootView: View
     private var clientList: List<Client>? = null
     private var selectedClients: MutableList<Client>? = null
     private var actionModeCallback: ActionModeCallback? = null
@@ -121,10 +102,9 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_client, container, false)
+        binding = FragmentClientBinding.inflate(inflater,container,false)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         setToolbarTitle(resources.getString(R.string.clients))
-        ButterKnife.bind(this, rootView)
         mClientListPresenter!!.attachView(this)
 
         //setting all the UI content to the view
@@ -133,7 +113,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
          * is shown on the Screen.
          */
-        rv_clients!!.addOnScrollListener(object : EndlessRecyclerViewScrollListener(mLayoutManager) {
+        binding.rvClients.addOnScrollListener(object : EndlessRecyclerViewScrollListener(mLayoutManager) {
             override fun onLoadMore(page: Int, totalItemCount: Int) {
                 mClientListPresenter!!.loadClients(true, totalItemCount)
             }
@@ -150,13 +130,20 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
             mClientListPresenter!!.loadClients(false, 0)
         }
         mClientListPresenter!!.loadDatabaseClients()
-        return rootView
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.fabCreateClient.setOnClickListener { onClickCreateNewClient() }
+        binding.layoutError.findViewById<Button>(R.id.btn_try_again).setOnClickListener { reloadOnError() }
     }
 
     override fun onResume() {
         super.onResume()
         if (clickedPosition != -1) {
-            mClientNameListAdapter!!.updateItem(clickedPosition)
+            mClientNameListAdapter.updateItem(clickedPosition)
         }
     }
 
@@ -166,16 +153,15 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
     override fun showUserInterface() {
         mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager!!.orientation = LinearLayoutManager.VERTICAL
-        rv_clients!!.layoutManager = mLayoutManager
-        rv_clients!!.setHasFixedSize(true)
-        rv_clients!!.adapter = mClientNameListAdapter
-        swipeRefreshLayout!!.setColorSchemeColors(*activity
-                ?.getResources()!!.getIntArray(R.array.swipeRefreshColors))
-        swipeRefreshLayout!!.setOnRefreshListener(this)
-        sweetUIErrorHandler = SweetUIErrorHandler(activity, rootView)
+        binding.rvClients.layoutManager = mLayoutManager
+        binding.rvClients.setHasFixedSize(true)
+        binding.rvClients.adapter = mClientNameListAdapter
+        binding.swipeContainer.setColorSchemeColors(*activity
+                ?.resources!!.getIntArray(R.array.swipeRefreshColors))
+        binding.swipeContainer.setOnRefreshListener(this)
+        sweetUIErrorHandler = SweetUIErrorHandler(activity, binding.root)
     }
 
-    @OnClick(R.id.fab_create_client)
     fun onClickCreateNewClient() {
         (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewClientFragment.newInstance(),
                 true, R.id.container_a)
@@ -198,8 +184,8 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      * and NoClientIcon click event.
      */
     override fun unregisterSwipeAndScrollListener() {
-        rv_clients!!.clearOnScrollListeners()
-        swipeRefreshLayout!!.isEnabled = false
+        binding.rvClients.clearOnScrollListeners()
+        binding.swipeContainer.isEnabled = false
     }
 
     /**
@@ -208,15 +194,14 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      * @param message String Message to show.
      */
     override fun showMessage(message: Int) {
-        Toaster.show(rootView, getStringMessage(message))
+        Toaster.show(binding.root, getStringMessage(message))
     }
 
     /**
      * Onclick Send Fresh Request for Client list.
      */
-    @OnClick(R.id.btn_try_again)
     fun reloadOnError() {
-        sweetUIErrorHandler!!.hideSweetErrorLayoutUI(rv_clients, errorView)
+        sweetUIErrorHandler!!.hideSweetErrorLayoutUI(binding.rvClients, binding.layoutError)
         mClientListPresenter!!.loadClients(false, 0)
         mClientListPresenter!!.loadDatabaseClients()
     }
@@ -247,7 +232,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      */
     override fun showEmptyClientList(message: Int) {
         sweetUIErrorHandler!!.showSweetEmptyUI(getString(R.string.client),
-                getString(message), R.drawable.ic_error_black_24dp, rv_clients, errorView)
+                getString(message), R.drawable.ic_error_black_24dp, binding.rvClients, binding.layoutError)
     }
 
     /**
@@ -257,7 +242,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
     override fun showError() {
         val errorMessage = getStringMessage(R.string.failed_to_load_client)
         sweetUIErrorHandler!!.showSweetErrorUI(errorMessage, R.drawable.ic_error_black_24dp,
-                rv_clients, errorView)
+                binding.rvClients, binding.layoutError)
     }
 
     /**
@@ -265,12 +250,12 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      * otherwise show SwipeRefreshLayout.
      */
     override fun showProgressbar(show: Boolean) {
-        swipeRefreshLayout!!.isRefreshing = show
+        binding.swipeContainer.isRefreshing = show
         if (show && mClientNameListAdapter!!.itemCount == 0) {
-            pb_client!!.visibility = View.VISIBLE
-            swipeRefreshLayout!!.isRefreshing = false
+            binding.pbClient.visibility = View.VISIBLE
+            binding.swipeContainer.isRefreshing = false
         } else {
-            pb_client!!.visibility = View.GONE
+            binding.pbClient.visibility = View.GONE
         }
     }
 
@@ -326,7 +311,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
                     }
                     val syncClientsDialogFragment = SyncClientsDialogFragment.newInstance(selectedClients)
                     val fragmentTransaction = activity
-                            ?.getSupportFragmentManager()!!.beginTransaction()
+                            ?.supportFragmentManager!!.beginTransaction()
                     fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC)
                     syncClientsDialogFragment.isCancelable = false
                     syncClientsDialogFragment.show(fragmentTransaction,

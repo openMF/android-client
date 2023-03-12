@@ -2,19 +2,19 @@ package com.mifos.mifosxdroid.dialogfragments.syncclientsdialog;
 
 import android.os.Bundle;
 import android.os.Parcelable;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.databinding.DialogFragmentSyncClientsBinding;
 import com.mifos.objects.client.Client;
 import com.mifos.utils.Constants;
 import com.mifos.utils.Network;
@@ -25,9 +25,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+
 
 /**
  * Created by Rajan Maurya on 08/08/16.
@@ -36,41 +34,10 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
 
 
     public static final String LOG_TAG = SyncClientsDialogFragment.class.getSimpleName();
-
-    @BindView(R.id.tv_sync_title)
-    TextView tv_sync_title;
-
-    @BindView(R.id.tv_client_name)
-    TextView tv_syncing_client_name;
-
-    @BindView(R.id.tv_total_clients)
-    TextView tv_total_clients;
-
-    @BindView(R.id.tv_syncing_client)
-    TextView tv_syncing_client;
-
-    @BindView(R.id.pb_sync_client)
-    ProgressBar pb_syncing_client;
-
-    @BindView(R.id.tv_total_progress)
-    TextView tv_total_progress;
-
-    @BindView(R.id.pb_total_sync_client)
-    ProgressBar pb_total_sync_client;
-
-    @BindView(R.id.tv_sync_failed)
-    TextView tv_sync_failed;
-
-    @BindView(R.id.btn_hide)
-    Button btn_hide;
-
-    @BindView(R.id.btn_cancel)
-    Button btn_cancel;
+    private DialogFragmentSyncClientsBinding binding;
 
     @Inject
     SyncClientsDialogPresenter mSyncClientsDialogPresenter;
-
-    View rootView;
 
     private List<Client> mClientList;
 
@@ -95,8 +62,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dialog_fragment_sync_clients, container, false);
-        ButterKnife.bind(this, rootView);
+        binding = DialogFragmentSyncClientsBinding.inflate(inflater, container, false);
         mSyncClientsDialogPresenter.attachView(this);
 
         showUI();
@@ -109,17 +75,23 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
             getActivity().getSupportFragmentManager().popBackStack();
         }
 
-        return rootView;
+        return binding.getRoot();
     }
 
-    @OnClick(R.id.btn_cancel)
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.btnCancel.setOnClickListener(view1 -> onClickCancelButton());
+        binding.btnHide.setOnClickListener(view1 -> onClickHideButton());
+    }
+
     void onClickCancelButton() {
         dismissDialog();
     }
 
-    @OnClick(R.id.btn_hide)
     void onClickHideButton() {
-        if (btn_hide.getText().equals(getResources().getString(R.string.dialog_action_ok))) {
+        if (binding.btnHide.getText().equals(getResources().getString(R.string.dialog_action_ok))) {
             dismissDialog();
         } else {
             hideDialog();
@@ -129,46 +101,46 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
 
     @Override
     public void showUI() {
-        pb_total_sync_client.setMax(mClientList.size());
+        binding.pbTotalSyncClient.setMax(mClientList.size());
         String total_clients = mClientList.size() + getResources().getString(R.string.space) +
                 getResources().getString(R.string.clients);
-        tv_total_clients.setText(total_clients);
-        tv_sync_failed.setText(String.valueOf(0));
+        binding.tvTotalClients.setText(total_clients);
+        binding.tvSyncFailed.setText(String.valueOf(0));
     }
 
     @Override
     public void showSyncingClient(String clientName) {
-        tv_syncing_client.setText(clientName);
-        tv_syncing_client_name.setText(clientName);
+        binding.tvSyncingClient.setText(clientName);
+        binding.tvClientName.setText(clientName);
     }
 
     @Override
     public void showSyncedFailedClients(int failedCount) {
-        tv_sync_failed.setText(String.valueOf(failedCount));
+        binding.tvSyncFailed.setText(String.valueOf(failedCount));
     }
 
     @Override
     public void setMaxSingleSyncClientProgressBar(int total) {
-        pb_syncing_client.setMax(total);
+        binding.pbSyncClient.setMax(total);
     }
 
     @Override
     public void updateSingleSyncClientProgressBar(int count) {
-        pb_syncing_client.setProgress(count);
+        binding.pbSyncClient.setProgress(count);
     }
 
     @Override
     public void updateTotalSyncClientProgressBarAndCount(int count) {
-        pb_total_sync_client.setProgress(count);
+        binding.pbTotalSyncClient.setProgress(count);
         String total_sync_count = getResources()
                 .getString(R.string.space) + count + getResources()
                 .getString(R.string.slash) + mClientList.size();
-        tv_total_progress.setText(total_sync_count);
+        binding.tvTotalProgress.setText(total_sync_count);
     }
 
     @Override
     public int getMaxSingleSyncClientProgressBar() {
-        return pb_syncing_client.getMax();
+        return binding.pbSyncClient.getMax();
     }
 
     @Override
@@ -179,8 +151,8 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
 
     @Override
     public void showClientsSyncSuccessfully() {
-        btn_cancel.setVisibility(View.INVISIBLE);
-        btn_hide.setText(getResources().getString(R.string.dialog_action_ok));
+        binding.btnCancel.setVisibility(View.INVISIBLE);
+        binding.btnHide.setText(getResources().getString(R.string.dialog_action_ok));
     }
 
     @Override
@@ -205,7 +177,7 @@ public class SyncClientsDialogFragment extends DialogFragment implements SyncCli
 
     @Override
     public void showError(int s) {
-        Toaster.show(rootView, s);
+        Toaster.show(binding.getRoot(), s);
     }
 
     @Override

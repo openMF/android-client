@@ -4,7 +4,6 @@
  */
 package com.mifos.mifosxdroid.online.generatecollectionsheet
 
-import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.InputType
@@ -12,14 +11,13 @@ import android.view.*
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.api.model.BulkRepaymentTransactions
 import com.mifos.api.model.ClientsAttendance
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentGenerateCollectionSheetBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.collectionsheet.*
@@ -34,56 +32,17 @@ import com.mifos.utils.FragmentConstants
 import java.util.*
 import javax.inject.Inject
 
-class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionSheetMvpView, OnItemSelectedListener, View.OnClickListener, OnDatePickListener {
+class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionSheetMvpView,
+    OnItemSelectedListener, View.OnClickListener, OnDatePickListener {
     private val TYPE_LOAN = "1"
     private val TYPE_SAVING = "2"
     private val TAG_TYPE_PRODUCTIVE = 111
     private val TAG_TYPE_COLLECTION = 222
-
-    @JvmField
-    @BindView(R.id.sp_branch_offices)
-    var spOffices: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.sp_staff)
-    var spStaff: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.sp_centers)
-    var spCenters: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.sp_groups)
-    var spGroups: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.tv_meeting_date)
-    var tvMeetingDate: TextView? = null
-
-    @JvmField
-    @BindView(R.id.btn_generate_collection_sheet)
-    var btnFetchCollectionSheet: Button? = null
-
-    @JvmField
-    @BindView(R.id.btn_generate_productive_collection_sheet)
-    var btnFetchProductiveCollectionSheet: Button? = null
-
-    @JvmField
-    @BindView(R.id.table_sheet)
-    var tableProductive: TableLayout? = null
-
-    @JvmField
-    @BindView(R.id.table_additional)
-    var tableAdditional: TableLayout? = null
-
-    @JvmField
-    @BindView(R.id.btn_submit_productive)
-    var btnSubmitProductive: Button? = null
+    private lateinit var binding: FragmentGenerateCollectionSheetBinding
 
     @JvmField
     @Inject
     var presenter: GenerateCollectionSheetPresenter? = null
-    private lateinit var rootView: View
     private var datePicker: DialogFragment? = null
     private var officeNameIdHashMap = HashMap<String, Int>()
     private var staffNameIdHashMap = HashMap<String, Int>()
@@ -104,6 +63,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     //id of the center whose Productive CollectionSheet has to be retrieved.
     private var productiveCenterId = -1
     private var calendarId = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
@@ -111,11 +71,10 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_generate_collection_sheet, container, false)
-        ButterKnife.bind(this, rootView)
+        binding = FragmentGenerateCollectionSheetBinding.inflate(inflater,container,false)
         presenter!!.attachView(this)
         setUpUi()
-        return rootView
+        return binding.root
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -141,9 +100,6 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         }
         presenter!!.loadCentersInOffice(officeId, params)
     }
-
-
-
 
     companion object {
         fun newInstance(): GenerateCollectionSheetFragment {
@@ -174,22 +130,22 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (activity == null) return
         officeNameIdHashMap = presenter!!.createOfficeNameIdMap(offices as List<Office>?, officeNames as MutableList<String?>)
-        setSpinner(spOffices, officeNames)
-        spOffices!!.onItemSelectedListener = this
+        setSpinner(binding.spBranchOffices, officeNames)
+        binding.spBranchOffices.onItemSelectedListener = this
     }
 
     override fun showStaffInOffice(staffs: List<Staff?>?, officeId: Int) {
         this.officeId = officeId
         staffNameIdHashMap = presenter!!.createStaffIdMap(staffs as List<Staff>?, staffNames as MutableList<String?>)
-        setSpinner(spStaff, staffNames)
-        spStaff!!.onItemSelectedListener = this
+        setSpinner(binding.spStaff, staffNames)
+        binding.spStaff.onItemSelectedListener = this
         staffId = -1 //Reset staff id
     }
 
     override fun showCentersInOffice(centers: List<Center?>?) {
         centerNameIdHashMap = presenter!!.createCenterIdMap(centers as List<Center>?, centerNames as MutableList<String?>)
-        setSpinner(spCenters, centerNames)
-        spCenters!!.onItemSelectedListener = this
+        setSpinner(binding.spCenters, centerNames)
+        binding.spCenters.onItemSelectedListener = this
         centerId = -1 //Reset Center id.
     }
 
@@ -200,7 +156,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                 if (centerId != -1) {
                     inflateGroupSpinner(centerId)
                 } else {
-                    Toaster.show(rootView, getString(R.string.error_select_center))
+                    Toaster.show(binding.root, getString(R.string.error_select_center))
                 }
             }
             R.id.sp_staff -> {
@@ -209,7 +165,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                     inflateCenterSpinner(officeId, staffId)
                     inflateGroupSpinner(officeId, staffId)
                 } else {
-                    Toaster.show(rootView, getString(R.string.error_select_staff))
+                    Toaster.show(binding.root, getString(R.string.error_select_staff))
                 }
             }
             R.id.sp_branch_offices -> {
@@ -219,13 +175,13 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                     inflateCenterSpinner(officeId, -1)
                     inflateGroupSpinner(officeId, -1)
                 } else {
-                    Toaster.show(rootView, getString(R.string.error_select_office))
+                    Toaster.show(binding.root, getString(R.string.error_select_office))
                 }
             }
             R.id.sp_groups -> {
                 groupId = groupNameIdHashMap.get(groupNames[i])!!
                 if (groupId == -1) {
-                    Toaster.show(rootView, getString(R.string.error_select_group))
+                    Toaster.show(binding.root, getString(R.string.error_select_group))
                 }
             }
         }
@@ -247,18 +203,18 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private fun setUpUi() {
         inflateOfficeSpinner()
         inflateMeetingDate()
-        tvMeetingDate!!.setOnClickListener(this)
-        btnFetchProductiveCollectionSheet!!.setOnClickListener(this)
-        btnFetchCollectionSheet!!.setOnClickListener(this)
+        binding.tvMeetingDate.setOnClickListener(this)
+        binding.btnGenerateProductiveCollectionSheet.setOnClickListener(this)
+        binding.btnGenerateCollectionSheet.setOnClickListener(this)
     }
 
     private fun fetchCollectionSheet() {
         if (groupId == -1) {
-            Toaster.show(rootView, getString(R.string.spinner_group))
+            Toaster.show(binding.root, getString(R.string.spinner_group))
             return
         }
         val requestPayload = CollectionSheetRequestPayload()
-        requestPayload.transactionDate = tvMeetingDate!!.text.toString()
+        requestPayload.transactionDate = binding.tvMeetingDate.text.toString()
         requestPayload.calendarId = calendarId
         presenter!!.loadCollectionSheet(groupId, requestPayload)
     }
@@ -266,19 +222,19 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private fun fetchProductiveCollectionSheet() {
         //Make RequestPayload and retrieve Productive CollectionSheet.
         val requestPayload = CollectionSheetRequestPayload()
-        requestPayload.transactionDate = tvMeetingDate!!.text.toString()
+        requestPayload.transactionDate = binding.tvMeetingDate.text.toString()
         requestPayload.calendarId = calendarId
         presenter!!.loadProductiveCollectionSheet(productiveCenterId, requestPayload)
     }
 
     private fun fetchCenterDetails() {
         presenter!!.loadCenterDetails(Constants.DATE_FORMAT_LONG, Constants.LOCALE_EN,
-                tvMeetingDate!!.text.toString(), officeId, staffId)
+                binding.tvMeetingDate.text.toString(), officeId, staffId)
     }
 
     override fun onCenterLoadSuccess(centerDetails: List<CenterDetail?>?) {
         if (centerDetails!!.size == 0) {
-            Toaster.show(rootView, getString(R.string.no_collectionsheet_found))
+            Toaster.show(binding.root, getString(R.string.no_collectionsheet_found))
             return
         }
 
@@ -298,18 +254,18 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
 
     private fun inflateCollectionTable(collectionSheetResponse: CollectionSheetResponse?) {
         //Clear old views in case they are present.
-        if (tableProductive!!.childCount > 0) {
-            tableProductive!!.removeAllViews()
+        if (binding.tableSheet.childCount > 0) {
+            binding.tableSheet.removeAllViews()
         }
 
         //A List to be used to inflate Attendance Spinners
         val attendanceTypes = ArrayList<String?>()
         attendanceTypeOptions.clear()
         attendanceTypeOptions = presenter!!.filterAttendanceTypes(collectionSheetResponse
-                ?.getAttendanceTypeOptions(), attendanceTypes)
+                ?.attendanceTypeOptions, attendanceTypes)
         additionalPaymentTypeMap.clear()
         additionalPaymentTypeMap = presenter!!.filterPaymentTypes(collectionSheetResponse
-                ?.getPaymentTypeOptions(), paymentTypes as MutableList<String?>)
+                ?.paymentTypeOptions, paymentTypes as MutableList<String?>)
 
         //Add the heading Row
         val headingRow = TableRow(context)
@@ -343,7 +299,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         tvAttendance.gravity = Gravity.CENTER
         tvAttendance.setTypeface(tvAttendance.typeface, Typeface.BOLD)
         headingRow.addView(tvAttendance)
-        tableProductive!!.addView(headingRow)
+        binding.tableSheet.addView(headingRow)
         for (clientCollectionSheet in collectionSheetResponse
                 .groups[0].clients) {
             //Insert rows
@@ -413,19 +369,19 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
             spAttendance.tag = clientCollectionSheet.clientId
             setSpinner(spAttendance, attendanceTypes)
             row.addView(spAttendance)
-            tableProductive!!.addView(row)
+            binding.tableSheet.addView(row)
         }
-        if (btnSubmitProductive!!.visibility != View.VISIBLE) {
+        if (binding.btnSubmitProductive.visibility != View.VISIBLE) {
             //Show the button the first time sheet is loaded.
-            btnSubmitProductive!!.visibility = View.VISIBLE
-            btnSubmitProductive!!.setOnClickListener(this)
+            binding.btnSubmitProductive.visibility = View.VISIBLE
+            binding.btnSubmitProductive.setOnClickListener(this)
         }
 
         //If this block has been executed, that means the CollectionSheet
         //which is already shown is for groups.
-        btnSubmitProductive!!.tag = TAG_TYPE_COLLECTION
-        if (tableAdditional!!.visibility != View.VISIBLE) {
-            tableAdditional!!.visibility = View.VISIBLE
+        binding.btnSubmitProductive.tag = TAG_TYPE_COLLECTION
+        if (binding.tableAdditional.visibility != View.VISIBLE) {
+            binding.tableAdditional.visibility = View.VISIBLE
         }
         //Show Additional Views
         val rowPayment = TableRow(context)
@@ -435,61 +391,61 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         val spPayment = Spinner(context)
         setSpinner(spPayment, paymentTypes)
         rowPayment.addView(spPayment)
-        tableAdditional!!.addView(rowPayment)
+        binding.tableAdditional.addView(rowPayment)
         val rowAccount = TableRow(context)
         val tvLabelAccount = TextView(context)
         tvLabelAccount.text = getString(R.string.account_number)
         rowAccount.addView(tvLabelAccount)
         val etPayment = EditText(context)
         rowAccount.addView(etPayment)
-        tableAdditional!!.addView(rowAccount)
+        binding.tableAdditional.addView(rowAccount)
         val rowCheck = TableRow(context)
         val tvLabelCheck = TextView(context)
         tvLabelCheck.text = getString(R.string.cheque_number)
         rowCheck.addView(tvLabelCheck)
         val etCheck = EditText(context)
         rowCheck.addView(etCheck)
-        tableAdditional!!.addView(rowCheck)
+        binding.tableAdditional.addView(rowCheck)
         val rowRouting = TableRow(context)
         val tvLabelRouting = TextView(context)
         tvLabelRouting.text = getString(R.string.routing_code)
         rowRouting.addView(tvLabelRouting)
         val etRouting = EditText(context)
         rowRouting.addView(etRouting)
-        tableAdditional!!.addView(rowRouting)
+        binding.tableAdditional.addView(rowRouting)
         val rowReceipt = TableRow(context)
         val tvLabelReceipt = TextView(context)
         tvLabelReceipt.text = getString(R.string.receipt_number)
         rowReceipt.addView(tvLabelReceipt)
         val etReceipt = EditText(context)
         rowReceipt.addView(etReceipt)
-        tableAdditional!!.addView(rowReceipt)
+        binding.tableAdditional.addView(rowReceipt)
         val rowBank = TableRow(context)
         val tvLabelBank = TextView(context)
         tvLabelBank.text = getString(R.string.bank_number)
         rowBank.addView(tvLabelBank)
         val etBank = EditText(context)
         rowBank.addView(etBank)
-        tableAdditional!!.addView(rowBank)
+        binding.tableAdditional.addView(rowBank)
     }
 
 
     private fun inflateProductiveCollectionTable(collectionSheetResponse: CollectionSheetResponse?) {
 
         //Clear old views in case they are present.
-        if (tableProductive!!.childCount > 0) {
-            tableProductive!!.removeAllViews()
+        if (binding.tableSheet.childCount > 0) {
+            binding.tableSheet.removeAllViews()
         }
-        if (tableAdditional!!.visibility == View.VISIBLE) {
-            tableAdditional!!.removeAllViews()
-            tableAdditional!!.visibility = View.GONE
+        if (binding.tableAdditional.visibility == View.VISIBLE) {
+            binding.tableAdditional.removeAllViews()
+            binding.tableAdditional.visibility = View.GONE
         }
 
         //A List to be used to inflate Attendance Spinners
         val attendanceTypes = ArrayList<String?>()
         attendanceTypeOptions.clear()
         attendanceTypeOptions = presenter!!.filterAttendanceTypes(collectionSheetResponse
-                ?.getAttendanceTypeOptions(), attendanceTypes)
+                ?.attendanceTypeOptions, attendanceTypes)
 
         //Add the heading Row
         val headingRow = TableRow(context)
@@ -516,7 +472,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         tvAttendance.gravity = Gravity.CENTER
         tvAttendance.setTypeface(tvAttendance.typeface, Typeface.BOLD)
         headingRow.addView(tvAttendance)
-        tableProductive!!.addView(headingRow)
+        binding.tableSheet.addView(headingRow)
         for (clientCollectionSheet in collectionSheetResponse.groups[0].clients) {
             //Insert rows
             val row = TableRow(context)
@@ -558,27 +514,27 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
             val spAttendance = Spinner(context)
             setSpinner(spAttendance, attendanceTypes)
             row.addView(spAttendance)
-            tableProductive!!.addView(row)
+            binding.tableSheet.addView(row)
         }
-        if (btnSubmitProductive!!.visibility != View.VISIBLE) {
+        if (binding.btnSubmitProductive.visibility != View.VISIBLE) {
             //Show the button the first time sheet is loaded.
-            btnSubmitProductive!!.visibility = View.VISIBLE
-            btnSubmitProductive!!.setOnClickListener(this)
+            binding.btnSubmitProductive.visibility = View.VISIBLE
+            binding.btnSubmitProductive.setOnClickListener(this)
         }
 
         //If this block has been executed, that the CollectionSheet
         //which is already shown on screen is for center - Productive.
-        btnSubmitProductive!!.tag = TAG_TYPE_PRODUCTIVE
+        binding.btnSubmitProductive.tag = TAG_TYPE_PRODUCTIVE
     }
 
     private fun submitProductiveSheet() {
         val payload = ProductiveCollectionSheetPayload()
         payload.calendarId = calendarId
-        payload.transactionDate = tvMeetingDate!!.text.toString()
-        for (i in 0 until tableProductive!!.childCount) {
+        payload.transactionDate = binding.tvMeetingDate.text.toString()
+        for (i in 0 until binding.tableSheet.childCount) {
             //In the tableRows which depicts the details of that client.
             //Loop through all the view of this TableRows.
-            val row = tableProductive!!.getChildAt(i) as TableRow
+            val row = binding.tableSheet.getChildAt(i) as TableRow
             for (j in 0 until row.childCount) {
                 //In a particular TableRow
                 //Loop through the views and check if it's LinearLayout
@@ -611,12 +567,12 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private fun submitCollectionSheet() {
         val payload = CollectionSheetPayload()
         payload.calendarId = calendarId
-        payload.transactionDate = tvMeetingDate!!.text.toString()
-        payload.actualDisbursementDate = tvMeetingDate!!.text.toString()
-        for (i in 0 until tableProductive!!.childCount) {
+        payload.transactionDate = binding.tvMeetingDate.text.toString()
+        payload.actualDisbursementDate = binding.tvMeetingDate.text.toString()
+        for (i in 0 until binding.tableSheet.childCount) {
             //In the tableRows which depicts the details of that client.
             //Loop through all the view of this TableRows.
-            val row = tableProductive!!.getChildAt(i) as TableRow
+            val row = binding.tableSheet.getChildAt(i) as TableRow
             for (j in 0 until row.childCount) {
                 //In a particular TableRow
                 //Loop through the views and check if it's LinearLayout
@@ -657,9 +613,9 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         }
 
         //Check if Additional details are there
-        if (tableAdditional != null && tableAdditional!!.childCount > 0) {
+        if (binding.tableAdditional.childCount > 0) {
             for (i in 0..5) {
-                val row = tableAdditional!!.getChildAt(i) as TableRow
+                val row = binding.tableAdditional.getChildAt(i) as TableRow
                 val v = row.getChildAt(1)
                 if (v is Spinner) {
                     val paymentId = additionalPaymentTypeMap[v.selectedItem.toString()]!!
@@ -692,7 +648,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private fun inflateMeetingDate() {
         datePicker = MFDatePicker.newInsance(this)
         val date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(MFDatePicker.getDatePickedAsString())
-        tvMeetingDate!!.text = date.replace('-', ' ')
+        binding.tvMeetingDate.text = date.replace('-', ' ')
     }
 
     private fun setMeetingDate() {
@@ -702,21 +658,21 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
 
     override fun onDatePicked(date: String) {
         val newDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date)
-        tvMeetingDate!!.text = newDate.replace('-', ' ')
+        binding.tvMeetingDate.text = newDate.replace('-', ' ')
     }
 
     override fun showGroupsInOffice(groups: List<Group?>?) {
         groupNameIdHashMap = presenter!!.createGroupIdMap(groups as List<Group>?, groupNames as MutableList<String?>)
-        setSpinner(spGroups, groupNames)
+        setSpinner(binding.spGroups, groupNames)
     }
 
     override fun showGroupByCenter(centerWithAssociations: CenterWithAssociations?) {
         groupNameIdHashMap = presenter!!.createGroupIdMap(
                 centerWithAssociations!!.groupMembers, groupNames as MutableList<String?>)
-        setSpinner(spGroups, groupNames)
+        setSpinner(binding.spGroups, groupNames)
         calendarId = centerWithAssociations.collectionMeetingCalendar.id
         groupId = -1 //Reset group Id
-        spGroups!!.onItemSelectedListener = this
+        binding.spGroups.onItemSelectedListener = this
     }
 
     private fun setSpinner(spinner: Spinner?, values: List<String?>) {
@@ -728,7 +684,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     }
 
     override fun showError(s: String?) {
-        Toaster.show(rootView, s)
+        Toaster.show(binding.root, s)
     }
 
     override fun showProgressbar(b: Boolean) {
