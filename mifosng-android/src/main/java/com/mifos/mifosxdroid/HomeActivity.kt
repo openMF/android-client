@@ -18,6 +18,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -78,7 +79,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         mNavigationView = findViewById(R.id.navigation_view)
         setSupportActionBar(toolbar)
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        navController = Navigation.findNavController(this,R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration.Builder()
                 .setDrawerLayout(mDrawerLayout)
                 .build()
