@@ -9,15 +9,16 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
@@ -135,7 +136,7 @@ public class MifosBaseActivity extends BasePassCodeActivity implements BaseActiv
 
     @Override
     public void logout() {
-        new MaterialDialog.Builder().init(MifosBaseActivity.this,R.style.AlertDialogTheme)
+        new MaterialDialog.Builder().init(MifosBaseActivity.this, R.style.AlertDialogTheme)
                 .setMessage(R.string.dialog_logout)
                 .setPositiveButton(getString(R.string.logout),
                         new DialogInterface.OnClickListener() {
