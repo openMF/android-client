@@ -256,7 +256,7 @@ dependencies {
     implementation 'com.evernote:android-job:1.2.6'
 
     // androidx annotations
-    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.annotation:annotation:1.6.0'
 
     //card view
     implementation 'androidx.cardview:cardview:1.0.0'
