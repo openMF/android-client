@@ -196,7 +196,7 @@ dependencies {
     kapt "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
 
     //LifeCycle
-    implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-reactivestreams:2.0.0'
