@@ -1,7 +1,6 @@
 package com.mifos.mifosxdroid.dialogfragments.identifierdialog;
 
 
-import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.noncore.DocumentType;

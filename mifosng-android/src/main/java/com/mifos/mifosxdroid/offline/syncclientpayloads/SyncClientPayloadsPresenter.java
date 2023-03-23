@@ -1,6 +1,5 @@
 package com.mifos.mifosxdroid.offline.syncclientpayloads;
 
-import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.client.Client;

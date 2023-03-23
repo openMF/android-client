@@ -146,7 +146,6 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
     }
 
     override fun onChargeCreatedSuccess(charge: Charges) {
-        chargesList.add()
         Toaster.show(rootView, getString(R.string.message_charge_created_success))
         if (ll_error!!.visibility == View.VISIBLE) {
             ll_error!!.visibility = View.GONE
@@ -241,7 +240,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
     }
 }
 
-private fun <E> List<E>.add() {
+private fun add() {
 
 }
 

@@ -101,7 +101,7 @@ class ClientListPresenter @Inject constructor(private val mDataManagerClient: Da
         mSubscriptions!!.add(mDataManagerClient.getAllClients(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Client?>?>() {
+                .subscribe(object : Subscriber<Page<Client>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         mvpView!!.showProgressbar(false)
@@ -113,8 +113,8 @@ class ClientListPresenter @Inject constructor(private val mDataManagerClient: Da
                         EspressoIdlingResource.decrement() // App is idle.
                     }
 
-                    override fun onNext(clientPage: Page<Client?>?) {
-                        mSyncClientList = clientPage!!.pageItems as List<Client>?
+                    override fun onNext(clientPage: Page<Client>) {
+                        mSyncClientList = clientPage.pageItems
                         if ((mSyncClientList as MutableList<Client>?)!!.size == 0 && !loadmore) {
                             mvpView!!.showEmptyClientList(R.string.client)
                             mvpView!!.unregisterSwipeAndScrollListener()
@@ -141,15 +141,15 @@ class ClientListPresenter @Inject constructor(private val mDataManagerClient: Da
         mSubscriptions!!.add(mDataManagerClient.allDatabaseClients
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Client?>?>() {
+                .subscribe(object : Subscriber<Page<Client>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         mvpView!!.showMessage(R.string.failed_to_load_db_clients)
                     }
 
-                    override fun onNext(clientPage: Page<Client?>?) {
+                    override fun onNext(clientPage: Page<Client>) {
                         mDatabaseClientSyncStatus = true
-                        mDbClientList = clientPage!!.pageItems as List<Client>
+                        mDbClientList = clientPage.pageItems as List<Client>
                         setAlreadyClientSyncStatus()
                     }
                 })

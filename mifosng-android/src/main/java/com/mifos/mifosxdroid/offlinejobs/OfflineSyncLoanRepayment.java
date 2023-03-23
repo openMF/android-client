@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 import com.mifos.App;
-import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse;
 import com.mifos.utils.MFErrorParser;

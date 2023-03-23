@@ -1,6 +1,5 @@
 package com.mifos.mifosxdroid.offline.synccenterpayloads;
 
-import com.mifos.api.datamanager.DataManagerCenter;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.response.SaveResponse;

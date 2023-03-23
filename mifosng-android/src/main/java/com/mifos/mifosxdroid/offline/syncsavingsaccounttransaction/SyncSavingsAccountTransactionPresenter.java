@@ -1,6 +1,5 @@
 package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction;
 
-import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;

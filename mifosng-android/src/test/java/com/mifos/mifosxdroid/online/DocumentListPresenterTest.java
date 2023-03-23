@@ -1,6 +1,5 @@
 package com.mifos.mifosxdroid.online;
 
-import com.mifos.api.datamanager.DataManagerDocument;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.documentlist.DocumentListMvpView;

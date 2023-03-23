@@ -31,7 +31,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.mifos.App;
 import com.mifos.api.GenericResponse;
-import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.mifosxdroid.R;
 import com.mifos.objects.user.UserLatLng;
 import com.mifos.objects.user.UserLocation;

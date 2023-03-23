@@ -1,6 +1,5 @@
 package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition;
 
-import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.PaymentTypeOption;

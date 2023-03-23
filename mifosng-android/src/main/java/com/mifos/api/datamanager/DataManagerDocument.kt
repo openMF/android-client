@@ -1,32 +1,21 @@
-package com.mifos.api.datamanager;
+package com.mifos.api.datamanager
 
-import com.mifos.api.BaseApiManager;
-import com.mifos.api.GenericResponse;
-import com.mifos.objects.noncore.Document;
+import com.mifos.api.BaseApiManager
+import com.mifos.api.GenericResponse
+import com.mifos.objects.noncore.Document
+import okhttp3.MultipartBody
+import okhttp3.ResponseBody
+import rx.Observable
+import javax.inject.Inject
+import javax.inject.Singleton
 
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
-import rx.Observable;
 
 /**
  * This DataManager Class for Handling the every request regarding the Document.
- * Created by Rajan Maurya on 02/09/16.
+ * Created by Atharv Tare on 23/03/23.
  */
 @Singleton
-public class DataManagerDocument {
-
-    public final BaseApiManager mBaseApiManager;
-
-    @Inject
-    public DataManagerDocument(BaseApiManager baseApiManager) {
-        mBaseApiManager = baseApiManager;
-    }
-
+class DataManagerDocument @Inject constructor(val mBaseApiManager: BaseApiManager) {
     /**
      * This Method for Fetching the Document List with EntityType and EntityId from the REST API.
      * REST END POINT:
@@ -35,9 +24,9 @@ public class DataManagerDocument {
      * @param entityType Entity Type
      * @param entityId   Entity Id
      * @return List<Document>
-     */
-    public Observable<List<Document>> getDocumentsList(String entityType, int entityId) {
-        return mBaseApiManager.getDocumentApi().getDocuments(entityType, entityId);
+    </Document> */
+    fun getDocumentsList(entityType: String?, entityId: Int): Observable<List<Document>> {
+        return mBaseApiManager.documentApi.getDocuments(entityType, entityId)
     }
 
     /**
@@ -52,11 +41,13 @@ public class DataManagerDocument {
      * @param file       Document File
      * @return GenericResponse
      */
-    public Observable<GenericResponse> createDocument(String entityType, int entityId, String name,
-                                                      String desc, MultipartBody.Part file) {
+    fun createDocument(
+        entityType: String?, entityId: Int, name: String?,
+        desc: String?, file: MultipartBody.Part?
+    ): Observable<GenericResponse> {
         return mBaseApiManager
-                .getDocumentApi()
-                .createDocument(entityType, entityId, name, desc, file);
+            .documentApi
+            .createDocument(entityType, entityId, name, desc, file)
     }
 
     /**
@@ -70,9 +61,11 @@ public class DataManagerDocument {
      * @param documentId Document Id
      * @return ResponseBody Binary File of Document
      */
-    public Observable<ResponseBody> downloadDocument(String entityType, int entityId,
-                                                     int documentId) {
-        return mBaseApiManager.getDocumentApi().downloadDocument(entityType, entityId, documentId);
+    fun downloadDocument(
+        entityType: String?, entityId: Int,
+        documentId: Int
+    ): Observable<ResponseBody> {
+        return mBaseApiManager.documentApi.downloadDocument(entityType, entityId, documentId)
     }
 
     /**
@@ -87,9 +80,11 @@ public class DataManagerDocument {
      * @param documentId Document Id
      * @return GenericResponse
      */
-    public Observable<GenericResponse> removeDocument(String entityType, int entityId,
-                                                      int documentId) {
-        return mBaseApiManager.getDocumentApi().removeDocument(entityType, entityId, documentId);
+    fun removeDocument(
+        entityType: String?, entityId: Int,
+        documentId: Int
+    ): Observable<GenericResponse> {
+        return mBaseApiManager.documentApi.removeDocument(entityType, entityId, documentId)
     }
 
     /**
@@ -107,9 +102,15 @@ public class DataManagerDocument {
      * @param file       Document File
      * @return GenericResponse
      */
-    public Observable<GenericResponse> updateDocument(String entityType, int entityId, int
-            documentId, String name, String desc, MultipartBody.Part file) {
-        return mBaseApiManager.getDocumentApi()
-                .updateDocument(entityType, entityId, documentId, name, desc, file);
+    fun updateDocument(
+        entityType: String?,
+        entityId: Int,
+        documentId: Int,
+        name: String?,
+        desc: String?,
+        file: MultipartBody.Part?
+    ): Observable<GenericResponse> {
+        return mBaseApiManager.documentApi
+            .updateDocument(entityType, entityId, documentId, name, desc, file)
     }
 }

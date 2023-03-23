@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 import com.mifos.App;
-import com.mifos.api.datamanager.DataManagerLoan;
 import com.mifos.api.datamanager.DataManagerSavings;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest;
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse;
