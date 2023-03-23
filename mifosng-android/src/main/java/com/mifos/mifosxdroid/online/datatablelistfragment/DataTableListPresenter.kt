@@ -80,9 +80,9 @@ class DataTableListPresenter @Inject constructor(private val mDataManagerLoan: D
         checkViewAttached()
         mvpView!!.showProgressbar(true)
         mSubscription!!.add(dataManagerClient.createClient(clientPayload)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Client?>() {
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribeOn(Schedulers.io())
+                ?.subscribe(object : Subscriber<Client?>() {
                     override fun onCompleted() {
                         mvpView!!.showProgressbar(false)
                     }

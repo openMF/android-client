@@ -78,7 +78,7 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
         mSubscriptions.add(mDataManagerCenter.getCenters(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Center?>?>() {
+                .subscribe(object : Subscriber<Page<Center>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         mvpView!!.showProgressbar(false)
@@ -89,7 +89,7 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
                         }
                     }
 
-                    override fun onNext(centerPage: Page<Center?>?) {
+                    override fun onNext(centerPage: Page<Center>) {
                         mSyncCenterList = centerPage!!.pageItems
                         if (mSyncCenterList.size == 0 && !loadmore) {
                             mvpView!!.showEmptyCenters(R.string.center)
@@ -136,17 +136,15 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
         mSubscriptions.add(mDataManagerCenter.allDatabaseCenters
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Center?>?>() {
+                .subscribe(object : Subscriber<Page<Center>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         mvpView!!.showMessage(R.string.failed_to_load_db_centers)
                     }
 
-                    override fun onNext(centerPage: Page<Center?>?) {
+                    override fun onNext(centerPage: Page<Center>) {
                         mDatabaseCenterSyncStatus = true
-                        if (centerPage != null) {
-                            mDbCenterList = centerPage.pageItems as List<Center>
-                        }
+                        mDbCenterList = centerPage.pageItems as List<Center>
                         setAlreadyCenterSyncStatus()
                     }
                 })

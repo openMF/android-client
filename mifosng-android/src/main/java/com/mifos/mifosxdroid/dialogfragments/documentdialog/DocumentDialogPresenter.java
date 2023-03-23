@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.dialogfragments.documentdialog;
 
 import com.mifos.api.GenericResponse;
+import com.mifos.api.datamanager.DataManagerDocument;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.utils.MFErrorParser;

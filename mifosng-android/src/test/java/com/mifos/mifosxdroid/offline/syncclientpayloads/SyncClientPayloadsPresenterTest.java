@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid.offline.syncclientpayloads;
 
+import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule;

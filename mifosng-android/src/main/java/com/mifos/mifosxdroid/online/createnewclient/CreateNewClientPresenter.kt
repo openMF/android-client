@@ -111,9 +111,9 @@ class CreateNewClientPresenter @Inject constructor(private val mDataManagerClien
         checkViewAttached()
         mvpView!!.showProgressbar(true)
         mSubscriptions.add(mDataManagerClient.createClient(clientPayload)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Client?>() {
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribeOn(Schedulers.io())
+                ?.subscribe(object : Subscriber<Client?>() {
                     override fun onCompleted() {
                         mvpView!!.showProgressbar(false)
                     }

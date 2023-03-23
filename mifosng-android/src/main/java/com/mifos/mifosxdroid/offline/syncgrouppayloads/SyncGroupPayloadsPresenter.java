@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid.offline.syncgrouppayloads;
 
+import com.mifos.api.datamanager.DataManagerGroups;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.group.GroupPayload;

@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid.online;
 
+import com.mifos.api.datamanager.DataManagerCharge;
 import com.mifos.mifosxdroid.FakeRemoteDataSource;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeMvpView;
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargePresenter;

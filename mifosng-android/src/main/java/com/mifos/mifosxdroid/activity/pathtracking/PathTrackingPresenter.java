@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid.activity.pathtracking;
 
+import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.user.UserLocation;
 

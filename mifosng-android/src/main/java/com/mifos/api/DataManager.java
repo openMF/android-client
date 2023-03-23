@@ -1,5 +1,6 @@
 package com.mifos.api;
 
+import com.mifos.api.datamanager.DataManagerClient;
 import com.mifos.api.model.CollectionSheetPayload;
 import com.mifos.api.model.Payload;
 import com.mifos.objects.accounts.loan.LoanApproval;

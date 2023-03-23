@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.dialogfragments.datatablerowdialog;
 
 import com.mifos.api.GenericResponse;
+import com.mifos.api.datamanager.DataManagerDataTable;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.utils.MFErrorParser;
 

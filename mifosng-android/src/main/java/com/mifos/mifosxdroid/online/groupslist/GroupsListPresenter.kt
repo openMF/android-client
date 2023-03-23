@@ -83,7 +83,7 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
         mSubscriptions.add(mDataManagerGroups.getGroups(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Group?>?>() {
+                .subscribe(object : Subscriber<Page<Group>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         mvpView!!.showProgressbar(false)
@@ -94,12 +94,12 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
                         }
                     }
 
-                    override fun onNext(groupPage: Page<Group?>?) {
-                        mSyncGroupList = groupPage!!.pageItems
-                        if (mSyncGroupList.size == 0 && !loadmore) {
+                    override fun onNext(groupPage: Page<Group>) {
+                        mSyncGroupList = groupPage.pageItems
+                        if (mSyncGroupList.isEmpty() && !loadmore) {
                             mvpView!!.showEmptyGroups(R.string.group)
                             mvpView!!.unregisterSwipeAndScrollListener()
-                        } else if (mSyncGroupList.size == 0 && loadmore) {
+                        } else if (mSyncGroupList.isEmpty() && loadmore) {
                             mvpView!!.showMessage(R.string.no_more_groups_available)
                         } else {
                             mRestApiGroupSyncStatus = true
@@ -115,15 +115,15 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
         mSubscriptions.add(mDataManagerGroups.databaseGroups
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Group?>?>() {
+                .subscribe(object : Subscriber<Page<Group>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         mvpView!!.showMessage(R.string.failed_to_load_db_groups)
                     }
 
-                    override fun onNext(groupPage: Page<Group?>?) {
+                    override fun onNext(groupPage: Page<Group>) {
                         mDatabaseGroupSyncStatus = true
-                        mDbGroupList = groupPage!!.pageItems as List<Group>
+                        mDbGroupList = groupPage.pageItems as List<Group>
                         setAlreadyClientSyncStatus()
                     }
                 })
