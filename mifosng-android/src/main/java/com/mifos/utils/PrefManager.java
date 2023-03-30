@@ -121,8 +121,8 @@ public class PrefManager {
         return getInt(USER_ID, -1);
     }
 
-    public static void setUserId(int id) {
-        putInt(USER_ID, id);
+    public static void setUserId(long id) {
+        putLong(USER_ID, id);
     }
 
     public static String getTenant() {

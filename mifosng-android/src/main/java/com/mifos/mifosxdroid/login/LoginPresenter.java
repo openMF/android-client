@@ -5,6 +5,8 @@ import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.user.User;
 import com.mifos.utils.MFErrorParser;
 
+import org.apache.fineract.client.models.PostAuthenticationResponse;
+
 import javax.inject.Inject;
 
 import retrofit2.adapter.rxjava.HttpException;
@@ -46,7 +48,7 @@ public class LoginPresenter extends BasePresenter<LoginMvpView> {
         subscription = dataManagerAuth.login(username, password)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<User>() {
+                .subscribe(new Subscriber<PostAuthenticationResponse>() {
                     @Override
                     public void onCompleted() {
                         getMvpView().showProgressbar(false);
@@ -68,8 +70,10 @@ public class LoginPresenter extends BasePresenter<LoginMvpView> {
                     }
 
                     @Override
-                    public void onNext(User user) {
+                    public void onNext(PostAuthenticationResponse response) {
                         getMvpView().showProgressbar(false);
+                        User user = new User();
+                        user.setUserFromPostAuthRes(response);
                         getMvpView().onLoginSuccessful(user);
                     }
                 });

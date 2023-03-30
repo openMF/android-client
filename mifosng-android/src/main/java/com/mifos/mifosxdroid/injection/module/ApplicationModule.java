@@ -40,4 +40,12 @@ public class ApplicationModule {
         return new BaseApiManager();
     }
 
+    @Provides
+    @Singleton
+    org.mifos.core.apimanager.BaseApiManager provideSdkBaseApiManager(){
+        org.mifos.core.apimanager.BaseApiManager baseApiManager =
+                org.mifos.core.apimanager.BaseApiManager.Companion.getInstance();
+        return baseApiManager;
+    }
+
 }

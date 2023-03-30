@@ -5,7 +5,10 @@
 
 package com.mifos.objects.user;
 
-import com.mifos.objects.client.Role;
+import androidx.annotation.NonNull;
+
+import org.apache.fineract.client.models.PostAuthenticationResponse;
+import org.apache.fineract.client.models.RoleData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +18,12 @@ public class User {
     public static final String AUTHENTICATION_KEY = "authenticationKey";
 
     private String username;
-    private int userId;
+    private long userId;
     private String base64EncodedAuthenticationKey;
     private boolean authenticated;
-    private int officeId;
+    private long officeId;
     private String officeName;
-    private List<Role> roles = new ArrayList<Role>();
+    private List<RoleData> roles = new ArrayList<RoleData>();
     private List<String> permissions = new ArrayList<String>();
 
     //{"username":"User1","userId":1,"base64EncodedAuthenticationKey":"VXNlcjE6dGVjaDRtZg\u003d
@@ -36,11 +39,11 @@ public class User {
         this.username = username;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -52,11 +55,11 @@ public class User {
         this.authenticated = authenticated;
     }
 
-    public int getOfficeId() {
+    public long getOfficeId() {
         return officeId;
     }
 
-    public void setOfficeId(int officeId) {
+    public void setOfficeId(long officeId) {
         this.officeId = officeId;
     }
 
@@ -68,11 +71,11 @@ public class User {
         this.officeName = officeName;
     }
 
-    public List<Role> getRoles() {
+    public List<RoleData> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(List<RoleData> roles) {
         this.roles = roles;
     }
 
@@ -104,5 +107,17 @@ public class User {
                 ", roles=" + roles +
                 ", permissions=" + permissions +
                 '}';
+    }
+
+    public User setUserFromPostAuthRes(@NonNull PostAuthenticationResponse response) {
+        username = response.getUsername();
+        userId = response.getUserId();
+        base64EncodedAuthenticationKey = response.getBase64EncodedAuthenticationKey();
+        authenticated = response.getAuthenticated();
+        officeId = response.getOfficeId();
+        officeName = response.getOfficeName();
+        roles = response.getRoles();
+        permissions = response.getPermissions();
+        return this;
     }
 }
