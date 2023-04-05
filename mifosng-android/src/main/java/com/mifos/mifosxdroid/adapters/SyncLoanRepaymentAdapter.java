@@ -1,12 +1,13 @@
 package com.mifos.mifosxdroid.adapters;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.mifos.mifosxdroid.R;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.mifos.mifosxdroid.databinding.ItemSyncLoanRepaymentBinding;
 import com.mifos.objects.PaymentTypeOption;
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest;
 import com.mifos.utils.Utils;
@@ -16,8 +17,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by Rajan Maurya on 30/07/16.
@@ -36,9 +35,9 @@ public class SyncLoanRepaymentAdapter extends
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_sync_loan_repayment, parent, false);
-        return new ViewHolder(view);
+        ItemSyncLoanRepaymentBinding binding = ItemSyncLoanRepaymentBinding
+                .inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -82,27 +81,27 @@ public class SyncLoanRepaymentAdapter extends
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_db_loan_id)
         TextView tv_loan_id;
 
-        @BindView(R.id.tv_db_accountNumber)
         TextView tv_account_number;
 
-        @BindView(R.id.tv_db_payment_type)
         TextView tv_payment_type;
 
-        @BindView(R.id.tv_db_transaction_amount)
         TextView tv_transaction_amount;
 
-        @BindView(R.id.tv_db_transaction_date)
         TextView tv_transaction_date;
 
-        @BindView(R.id.tv_error_message)
         TextView tv_error_message;
 
-        public ViewHolder(View v) {
-            super(v);
-            ButterKnife.bind(this, v);
+        public ViewHolder(ItemSyncLoanRepaymentBinding binding) {
+            super(binding.getRoot());
+
+            tv_loan_id = binding.tvDbLoanId;
+            tv_account_number = binding.tvDbAccountNumber;
+            tv_payment_type = binding.tvDbPaymentType;
+            tv_transaction_amount = binding.tvDbTransactionAmount;
+            tv_transaction_date = binding.tvDbTransactionDate;
+            tv_error_message = binding.tvErrorMessage;
         }
     }
 }

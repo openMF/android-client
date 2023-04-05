@@ -8,17 +8,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnCheckedChanged
-import butterknife.OnClick
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentAddSavingsAccountBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.client.Savings
@@ -29,7 +28,6 @@ import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Network
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -39,74 +37,12 @@ import javax.inject.Inject
  * Use this Dialog Fragment to Create and/or Update charges
  */
 class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener, SavingsAccountMvpView, OnItemSelectedListener {
-    @JvmField
-    @BindView(R.id.sp_product)
-    var spProduct: Spinner? = null
 
-    @JvmField
-    @BindView(R.id.sp_field_officer)
-    var spFieldOfficer: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.et_client_external_id)
-    var etClientExternalId: EditText? = null
-
-    @JvmField
-    @BindView(R.id.tv_submittedon_date)
-    var tvSubmissionDate: TextView? = null
-
-    @JvmField
-    @BindView(R.id.et_nominal_annual)
-    var etNominalAnnual: EditText? = null
-
-    @JvmField
-    @BindView(R.id.sp_interest_calc)
-    var tvInterestCalc: TextView? = null
-
-    @JvmField
-    @BindView(R.id.sp_interest_comp)
-    var tvInterestComp: TextView? = null
-
-    @JvmField
-    @BindView(R.id.sp_interest_p_period)
-    var tvInterestPeriod: TextView? = null
-
-    @JvmField
-    @BindView(R.id.sp_days_in_year)
-    var tvDaysInYear: TextView? = null
-
-    @JvmField
-    @BindView(R.id.cb_enforce_required_balance)
-    var cbEnforceRequiredBalance: CheckBox? = null
-
-    @JvmField
-    @BindView(R.id.et_min_required_balance)
-    var etMinRequiredBalance: EditText? = null
-
-    @JvmField
-    @BindView(R.id.cb_overdraft_allowed)
-    var cbOverdraftAllowed: CheckBox? = null
-
-    @JvmField
-    @BindView(R.id.et_max_overdraft_amount)
-    var etMaxOverdraftAmount: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_nominal_annual_overdraft)
-    var etNominalAnnualOverdraft: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_min_overdraft_required)
-    var etMinOverdraftRequired: EditText? = null
-
-    @JvmField
-    @BindView(R.id.btn_submit)
-    var btnSubmit: Button? = null
+    private lateinit var binding: FragmentAddSavingsAccountBinding
 
     @JvmField
     @Inject
     var mSavingsAccountPresenter: SavingsAccountPresenter? = null
-    private lateinit var rootView: View
     private var mfDatePicker: DialogFragment? = null
     private var productId = 0
     private var clientId = 0
@@ -132,25 +68,32 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_add_savings_account, null)
-        ButterKnife.bind(this, rootView)
+
+        binding = FragmentAddSavingsAccountBinding.inflate(inflater)
         mSavingsAccountPresenter!!.attachView(this)
         inflateSubmissionDate()
         inflateSavingsSpinners()
         mSavingsAccountPresenter!!.loadSavingsAccountsAndTemplate()
-        return rootView
+        return binding.root
     }
 
-    @OnCheckedChanged(R.id.cb_enforce_required_balance)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnSubmit.setOnClickListener { submitSavingsAccount() }
+        binding.tvSubmittedonDate.setOnClickListener { onClickTextViewSubmissionDate() }
+        binding.cbEnforceRequiredBalance.setOnCheckedChangeListener { compoundButton, b -> onClickOverdraftAllowedCheckBox() }
+        binding.cbOverdraftAllowed.setOnCheckedChangeListener{ _,_ -> onClickMinRequiredCheckBox()}
+    }
+
     fun onClickOverdraftAllowedCheckBox() {
-        etMinRequiredBalance!!.visibility = if (cbEnforceRequiredBalance!!.isChecked) View.VISIBLE else View.GONE
+        binding.etMinRequiredBalance.visibility = if (binding.cbEnforceRequiredBalance.isChecked) View.VISIBLE else View.GONE
     }
 
-    @OnCheckedChanged(R.id.cb_overdraft_allowed)
     fun onClickMinRequiredCheckBox() {
-        etMaxOverdraftAmount!!.visibility = if (cbOverdraftAllowed!!.isChecked) View.VISIBLE else View.GONE
-        etNominalAnnualOverdraft!!.visibility = if (cbOverdraftAllowed!!.isChecked) View.VISIBLE else View.GONE
-        etMinOverdraftRequired!!.visibility = if (cbOverdraftAllowed!!.isChecked) View.VISIBLE else View.GONE
+        binding.etMaxOverdraftAmount.visibility = if (binding.cbOverdraftAllowed.isChecked) View.VISIBLE else View.GONE
+        binding.etNominalAnnualOverdraft.visibility = if (binding.cbOverdraftAllowed.isChecked) View.VISIBLE else View.GONE
+        binding.etMinOverdraftRequired.visibility = if (binding.cbOverdraftAllowed.isChecked) View.VISIBLE else View.GONE
     }
 
     fun inflateSavingsSpinners() {
@@ -158,19 +101,18 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
                 android.R.layout.simple_spinner_item, mFieldOfficerNames)
         mFieldOfficerAdapter!!
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spFieldOfficer!!.adapter = mFieldOfficerAdapter
-        spFieldOfficer!!.onItemSelectedListener = this
+        binding.spFieldOfficer.adapter = mFieldOfficerAdapter
+        binding.spFieldOfficer.onItemSelectedListener = this
         mSavingProductsAdapter = ArrayAdapter(requireActivity(), android.R.layout.simple_spinner_item, mListSavingProductsNames)
         mSavingProductsAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spProduct!!.adapter = mSavingProductsAdapter
-        spProduct!!.onItemSelectedListener = this
+        binding.spProduct.adapter = mSavingProductsAdapter
+        binding.spProduct.onItemSelectedListener = this
     }
 
-    @OnClick(R.id.btn_submit)
     fun submitSavingsAccount() {
         if (Network.isOnline(context)) {
             val savingsPayload = SavingsPayload()
-            savingsPayload.externalId = etClientExternalId!!.editableText.toString()
+            savingsPayload.externalId = binding.etClientExternalId.editableText.toString()
             savingsPayload.locale = "en"
             savingsPayload.submittedOnDate = submission_date
             savingsPayload.dateFormat = "dd MMMM yyyy"
@@ -181,41 +123,40 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
             }
             savingsPayload.productId = productId
             savingsPayload.fieldOfficerId = fieldOfficerId
-            savingsPayload.nominalAnnualInterestRate = etNominalAnnual!!.editableText
+            savingsPayload.nominalAnnualInterestRate = binding.etNominalAnnual.editableText
                     .toString()
-            savingsPayload.allowOverdraft = cbOverdraftAllowed!!.isChecked
-            savingsPayload.nominalAnnualInterestRateOverdraft = etNominalAnnualOverdraft!!.editableText.toString()
-            savingsPayload.overdraftLimit = etMaxOverdraftAmount!!.editableText
+            savingsPayload.allowOverdraft = binding.cbOverdraftAllowed.isChecked
+            savingsPayload.nominalAnnualInterestRateOverdraft = binding.etNominalAnnualOverdraft.editableText.toString()
+            savingsPayload.overdraftLimit = binding.etMaxOverdraftAmount.editableText
                     .toString()
-            savingsPayload.minOverdraftForInterestCalculation = etMinOverdraftRequired!!.editableText.toString()
-            savingsPayload.enforceMinRequiredBalance = cbEnforceRequiredBalance!!.isChecked
-            savingsPayload.minRequiredOpeningBalance = etMinRequiredBalance!!.editableText
+            savingsPayload.minOverdraftForInterestCalculation = binding.etMinOverdraftRequired.editableText.toString()
+            savingsPayload.enforceMinRequiredBalance = binding.cbEnforceRequiredBalance.isChecked
+            savingsPayload.minRequiredOpeningBalance = binding.etMinRequiredBalance.editableText
                     .toString()
             mSavingsAccountPresenter!!.createSavingsAccount(savingsPayload)
         } else {
-            Toaster.show(rootView, R.string.error_network_not_available)
+            Toaster.show(binding.root, R.string.error_network_not_available)
         }
     }
 
     override fun onDatePicked(date: String) {
-        tvSubmissionDate!!.text = date
+        binding.tvSubmittedonDate.text = date
         submission_date = date
         setSubmissionDate()
     }
 
     fun inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this)
-        tvSubmissionDate!!.text = MFDatePicker.getDatePickedAsString()
+        binding.tvSubmittedonDate.text = MFDatePicker.getDatePickedAsString()
         setSubmissionDate()
     }
 
-    @OnClick(R.id.tv_submittedon_date)
     fun onClickTextViewSubmissionDate() {
         mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
     }
 
     fun setSubmissionDate() {
-        submission_date = tvSubmissionDate!!.text.toString()
+        submission_date = binding.tvSubmittedonDate.text.toString()
         submission_date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(submission_date).replace("-", " ")
     }
 
@@ -230,10 +171,10 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
         mSavingProductsTemplateByProductId = savingProductsTemplate
         mFieldOfficerNames.addAll(mSavingsAccountPresenter!!.filterFieldOfficerNames(savingProductsTemplate.fieldOfficerOptions))
         mFieldOfficerAdapter!!.notifyDataSetChanged()
-        tvInterestCalc!!.text = savingProductsTemplate.interestCalculationType.value
-        tvInterestComp!!.text = savingProductsTemplate.interestCompoundingPeriodType.value
-        tvInterestPeriod!!.text = savingProductsTemplate.interestPostingPeriodType.value
-        tvDaysInYear!!.text = savingProductsTemplate.interestCalculationDaysInYearType.value
+        binding.spInterestCalc.text = savingProductsTemplate.interestCalculationType.value
+        binding.spInterestComp.text = savingProductsTemplate.interestCompoundingPeriodType.value
+        binding.spInterestPPeriod.text = savingProductsTemplate.interestPostingPeriodType.value
+        binding.spDaysInYear.text = savingProductsTemplate.interestCalculationDaysInYearType.value
     }
 
     override fun showSavingsAccountCreatedSuccessfully(savings: Savings?) {
@@ -244,11 +185,11 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     }
 
     override fun showFetchingError(errorMessage: Int) {
-        Toaster.show(rootView, resources.getString(errorMessage))
+        Toaster.show(binding.root, resources.getString(errorMessage))
     }
 
     override fun showFetchingError(errorMessage: String?) {
-        Toaster.show(rootView, errorMessage)
+        Toaster.show(binding.root, errorMessage)
     }
 
     override fun showProgressbar(b: Boolean) {
@@ -263,7 +204,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         when (parent.id) {
             R.id.sp_field_officer -> fieldOfficerId = mSavingProductsTemplateByProductId
-                    ?.getFieldOfficerOptions()!![position].id
+                    ?.fieldOfficerOptions!![position].id
             R.id.sp_product -> {
                 productId = mProductSavings!![position].id
                 if (isGroupAccount) {

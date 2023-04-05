@@ -7,15 +7,10 @@ package com.mifos.mifosxdroid.online.centerlist
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.widget.ProgressBar
+import android.widget.Button
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.CentersListAdapter
@@ -23,6 +18,7 @@ import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentCentersListBinding
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogFragment
 import com.mifos.mifosxdroid.online.CentersActivity
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment
@@ -32,7 +28,6 @@ import com.mifos.objects.group.Center
 import com.mifos.objects.group.CenterWithAssociations
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -43,29 +38,14 @@ import javax.inject.Inject
  * >demo.openmf.org/fineract-provider/api/v1/centers?paged=true&offset=0&limit=100>
  */
 class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshListener {
-    @JvmField
-    @BindView(R.id.rv_center_list)
-    var rvCenters: RecyclerView? = null
 
-    @JvmField
-    @BindView(R.id.swipe_container)
-    var swipeRefreshLayout: SwipeRefreshLayout? = null
-
-    @JvmField
-    @BindView(R.id.progressbar_center)
-    var pbCenter: ProgressBar? = null
-
-    @JvmField
-    @BindView(R.id.layout_error)
-    var layoutError: View? = null
+    private lateinit var binding: FragmentCentersListBinding
 
     @JvmField
     @Inject
     var mCenterListPresenter: CenterListPresenter? = null
 
-
     var centersListAdapter: CentersListAdapter? = null
-    private lateinit var rootView: View
     private var centers: List<Center>? = null
     private var selectedCenters: MutableList<Center>? = null
     private var layoutManager: LinearLayoutManager? = null
@@ -82,9 +62,10 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_centers_list, container, false)
+
+        binding = FragmentCentersListBinding.inflate(inflater,container,false)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        ButterKnife.bind(this, rootView)
+
         mCenterListPresenter!!.attachView(this)
 
         //Showing User Interface.
@@ -95,14 +76,21 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
          * will shown on the Screen.
          */
-        rvCenters!!.addOnScrollListener(object : EndlessRecyclerViewScrollListener(layoutManager) {
+        binding.rvCenterList.addOnScrollListener(object : EndlessRecyclerViewScrollListener(layoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int) {
                 mCenterListPresenter!!.loadCenters(true, totalItemsCount)
             }
         })
         mCenterListPresenter!!.loadCenters(false, 0)
         mCenterListPresenter!!.loadDatabaseCenters()
-        return rootView
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.fabCreateCenter.setOnClickListener { onClickCreateNewCenter() }
+        binding.layoutError.findViewById<Button>(R.id.btn_try_again).setOnClickListener { reloadOnError() }
     }
 
     /**
@@ -112,7 +100,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
         setToolbarTitle(resources.getString(R.string.title_activity_centers))
         layoutManager = LinearLayoutManager(activity)
         layoutManager!!.orientation = LinearLayoutManager.VERTICAL
-        rvCenters!!.layoutManager = layoutManager
+        binding.rvCenterList.layoutManager = layoutManager
         centersListAdapter = CentersListAdapter(
             onCenterClick = { position ->
                 if (actionMode != null) {
@@ -129,15 +117,14 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
                 toggleSelection(position)
             }
         )
-        rvCenters!!.setHasFixedSize(true)
-        rvCenters!!.adapter = centersListAdapter
-        swipeRefreshLayout!!.setColorSchemeColors(*activity
+        binding.rvCenterList.setHasFixedSize(true)
+        binding.rvCenterList.adapter = centersListAdapter
+        binding.swipeContainer.setColorSchemeColors(*activity
                 ?.resources!!.getIntArray(R.array.swipeRefreshColors))
-        swipeRefreshLayout!!.setOnRefreshListener(this)
-        sweetUIErrorHandler = SweetUIErrorHandler(activity, rootView)
+        binding.swipeContainer.setOnRefreshListener(this)
+        sweetUIErrorHandler = SweetUIErrorHandler(activity, binding.root)
     }
 
-    @OnClick(R.id.fab_create_center)
     fun onClickCreateNewCenter() {
         (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewCenterFragment.newInstance(),
                 true, R.id.container_a)
@@ -155,9 +142,8 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
     /**
      * OnClick Error Image icon, reload the centers
      */
-    @OnClick(R.id.btn_try_again)
     fun reloadOnError() {
-        sweetUIErrorHandler!!.hideSweetErrorLayoutUI(rvCenters, layoutError)
+        sweetUIErrorHandler!!.hideSweetErrorLayoutUI(binding.rvCenterList, binding.layoutError)
         mCenterListPresenter!!.loadCenters(false, 0)
         mCenterListPresenter!!.loadDatabaseCenters()
     }
@@ -190,7 +176,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
      */
     override fun showEmptyCenters(message: Int) {
         sweetUIErrorHandler!!.showSweetEmptyUI(getString(R.string.center), getString(message),
-                R.drawable.ic_error_black_24dp, rvCenters, layoutError)
+                R.drawable.ic_error_black_24dp, binding.rvCenterList, binding.layoutError)
     }
 
     /**
@@ -199,7 +185,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
      * @param message
      */
     override fun showMessage(message: Int) {
-        Toaster.show(rootView, getStringMessage(message))
+        Toaster.show(binding.root, getStringMessage(message))
     }
 
     /**
@@ -230,22 +216,22 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
     override fun showFetchingError() {
         val errorMessage = getStringMessage(R.string.failed_to_fetch_centers)
         sweetUIErrorHandler!!.showSweetErrorUI(errorMessage,
-                R.drawable.ic_error_black_24dp, rvCenters, layoutError)
+                R.drawable.ic_error_black_24dp, binding.rvCenterList, binding.layoutError)
     }
 
     /**
      * This Method for showing Progress bar if the Center count is zero otherwise
-     * shows swipeRefreshLayout
+     * shows SwipeRefreshLayout
      *
      * @param show Boolean
      */
     override fun showProgressbar(show: Boolean) {
-        swipeRefreshLayout!!.isRefreshing = show
+        binding.swipeContainer.isRefreshing = show
         if (show && centersListAdapter!!.itemCount == 0) {
-            pbCenter!!.visibility = View.VISIBLE
-            swipeRefreshLayout!!.isRefreshing = false
+            binding.progressbarCenter!!.visibility = View.VISIBLE
+            binding.swipeContainer.isRefreshing = false
         } else {
-            pbCenter!!.visibility = View.GONE
+            binding.progressbarCenter!!.visibility = View.GONE
         }
     }
 
@@ -254,8 +240,8 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
      * and NoClientIcon click event.
      */
     override fun unregisterSwipeAndScrollListener() {
-        rvCenters!!.clearOnScrollListeners()
-        swipeRefreshLayout!!.isEnabled = false
+        binding.rvCenterList.clearOnScrollListeners()
+        binding.swipeContainer.isEnabled = false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -312,7 +298,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
                     }
                     val syncCentersDialogFragment = SyncCentersDialogFragment.newInstance(selectedCenters)
                     val fragmentTransaction = activity
-                            ?.getSupportFragmentManager()!!.beginTransaction()
+                            ?.supportFragmentManager!!.beginTransaction()
                     fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC)
                     syncCentersDialogFragment.isCancelable = false
                     syncCentersDialogFragment.show(fragmentTransaction,

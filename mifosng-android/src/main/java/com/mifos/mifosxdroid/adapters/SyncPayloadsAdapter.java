@@ -1,19 +1,17 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.mifos.mifosxdroid.R;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.mifos.mifosxdroid.databinding.ItemSyncClientBinding;
 import com.mifos.objects.client.ClientPayload;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by Rajan Maurya on 08/07/16.
@@ -37,9 +35,9 @@ public class SyncPayloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh;
-        View v = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.item_sync_client, parent, false);
-        vh = new ViewHolder(v);
+        ItemSyncClientBinding binding = ItemSyncClientBinding
+                .inflate(layoutInflater, parent, false);
+        vh = new ViewHolder(binding);
         return vh;
     }
 
@@ -106,43 +104,34 @@ public class SyncPayloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_db_first_name)
         TextView tv_first_name;
-
-        @BindView(R.id.tv_db_middle_name)
         TextView tv_middle_name;
-
-        @BindView(R.id.tv_db_last_name)
         TextView tv_last_name;
-
-        @BindView(R.id.tv_db_mobile_no)
         TextView tv_mobile_no;
-
-        @BindView(R.id.tv_db_externalId)
         TextView tv_external_id;
-
-        @BindView(R.id.tv_db_gender)
         TextView tv_gender;
-
-        @BindView(R.id.tv_db_dob)
         TextView tv_dob;
-
-        @BindView(R.id.tv_db_office_id)
         TextView tv_office_id;
-
-        @BindView(R.id.tv_db_activation_date)
         TextView tv_activation_date;
-
-        @BindView(R.id.tv_db_active_status)
         TextView tv_active_status;
-
-        @BindView(R.id.tv_error_message)
         TextView tv_error_message;
 
 
-        public ViewHolder(View v) {
-            super(v);
-            ButterKnife.bind(this, v);
+        public ViewHolder(ItemSyncClientBinding binding) {
+            super(binding.getRoot());
+
+            tv_first_name = binding.tvDbFirstName;
+            tv_middle_name = binding.tvDbMiddleName;
+            tv_last_name = binding.tvDbLastName;
+            tv_mobile_no = binding.tvDbMobileNo;
+            tv_external_id = binding.tvDbExternalId;
+            tv_gender = binding.tvDbGender;
+            tv_dob = binding.tvDbDob;
+            tv_office_id = binding.tvDbOfficeId;
+            tv_activation_date = binding.tvDbActivationDate;
+            tv_active_status = binding.tvDbActiveStatus;
+            tv_error_message = binding.tvErrorMessage;
+
         }
     }
 

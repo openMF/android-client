@@ -15,7 +15,7 @@ ext {
     supportLibraryVersion = '27.1.1'
     playServicesVersion = '10.0.1'
     mapUtilsServices = '0.4.2'
-    daggerVersion = '2.2'
+    daggerVersion = '2.45'
     raizLabsDBFlow = '3.1.1'
     espressoVersion = '2.2.2'
     runnerVersion = '0.4.1'
@@ -23,7 +23,6 @@ ext {
     retrofitVersionLatest = '2.1.0'
     okHttp3Version = '3.5.0'
     flipTableVersion = '1.0.1'
-    butterKnifeVersion = '8.0.1'
     mifosPasscodeVersion = '1.0.0'
     preference = '1.1.0'
 

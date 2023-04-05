@@ -4,23 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.mifos.api.model.RequestCollectionSheetPayload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentNewCollectionSheetBinding
 import com.mifos.mifosxdroid.dialogfragments.collectionsheetdialog.CollectionSheetDialogFragment
 import com.mifos.mifosxdroid.dialogfragments.searchdialog.SearchDialog
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsFragment
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
-import com.mifos.mifosxdroid.views.CustomSpinner
 import com.mifos.mifosxdroid.views.CustomSpinner.OnSpinnerEventsListener
 import com.mifos.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.objects.organisation.Office
@@ -28,33 +27,16 @@ import com.mifos.objects.organisation.Staff
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
-import java.util.*
 import javax.inject.Inject
 
 
 /**
  * Created by aksh on 18/6/18.
  */
-class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualCollectionSheetMvpView, OnDatePickListener, OnItemSelectedListener, View.OnClickListener {
-    @JvmField
-    @BindView(R.id.btn_fetch_collection_sheet)
-    var btnFetchSheet: Button? = null
+class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualCollectionSheetMvpView,
+    OnDatePickListener, OnItemSelectedListener, View.OnClickListener {
 
-    @JvmField
-    @BindView(R.id.sp_office_list)
-    var spOffices: CustomSpinner? = null
-
-    @JvmField
-    @BindView(R.id.sp_staff_list)
-    var spStaff: CustomSpinner? = null
-
-    @JvmField
-    @BindView(R.id.tv_repayment_date)
-    var tvRepaymentDate: TextView? = null
-
-    @JvmField
-    @BindView(R.id.btn_clear)
-    var btnClear: Button? = null
+    private lateinit var binding: FragmentNewCollectionSheetBinding
 
     @JvmField
     @Inject
@@ -62,7 +44,6 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     private var sheet: IndividualCollectionSheet? = null
     private var datePicker: DialogFragment? = null
     private var requestPayload: RequestCollectionSheetPayload? = null
-    private lateinit var rootView: View
     private var officeAdapter: ArrayAdapter<String>? = null
     private var officeNameList: ArrayList<String>? = null
     private var officeList: List<Office>? = null
@@ -90,12 +71,18 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_new_collection_sheet, container, false)
-        ButterKnife.bind(this, rootView)
+
+        binding = FragmentNewCollectionSheetBinding.inflate(inflater,container,false)
         setToolbarTitle(getStringMessage(R.string.individual_collection_sheet))
         presenter!!.attachView(this)
         setUpUi()
-        return rootView
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnClear.setOnClickListener { clear() }
     }
 
     private fun setUpUi() {
@@ -104,18 +91,18 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         officeAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, officeNameList ?: emptyList())
         officeAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spOffices!!.adapter = officeAdapter
-        spOffices!!.onItemSelectedListener = this
+        binding.spOfficeList.adapter = officeAdapter
+        binding.spOfficeList.onItemSelectedListener = this
         staffNameList = ArrayList()
         staffAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, staffNameList ?: emptyList())
         staffAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spStaff!!.adapter = staffAdapter
-        tvRepaymentDate!!.setOnClickListener(this)
-        btnFetchSheet!!.setOnClickListener(this)
+        binding.spStaffList.adapter = staffAdapter
+        binding.tvRepaymentDate.setOnClickListener(this)
+        binding.btnFetchCollectionSheet.setOnClickListener(this)
         presenter!!.fetchOffices()
 
-        spOffices!!.setSpinnerEventsListener(object : OnSpinnerEventsListener {
+        binding.spOfficeList.setSpinnerEventsListener(object : OnSpinnerEventsListener {
             override fun onSpinnerOpened(spinner: Spinner, isItemListLarge: Boolean) {
                 if (isItemListLarge) {
                     enableOfficeSearch()
@@ -125,7 +112,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
             override fun onSpinnerClosed(spinner: Spinner) {}
         })
 
-        spStaff!!.setSpinnerEventsListener(object : OnSpinnerEventsListener {
+        binding.spStaffList.setSpinnerEventsListener(object : OnSpinnerEventsListener {
             override fun onSpinnerOpened(spinner: Spinner, isItemListLarge: Boolean) {
                 if (isItemListLarge) {
                     enableStaffSearch()
@@ -139,7 +126,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
 
     fun enableOfficeSearch() {
         if (officeSearchDialog == null) {
-            val listener = AdapterView.OnItemClickListener { adapterView, view, i, l -> spOffices!!.setSelection(i) }
+            val listener = AdapterView.OnItemClickListener { adapterView, view, i, l -> binding.spOfficeList.setSelection(i) }
             officeSearchDialog = SearchDialog(requireContext(), officeNameList, listener)
         }
         officeSearchDialog!!.show()
@@ -147,7 +134,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
 
     fun enableStaffSearch() {
         if (staffSearchDialog == null) {
-            val listener = AdapterView.OnItemClickListener { adapterView, view, i, l -> spStaff!!.setSelection(i) }
+            val listener = AdapterView.OnItemClickListener { adapterView, view, i, l -> binding.spStaffList.setSelection(i) }
             staffSearchDialog = SearchDialog(requireContext(), staffNameList, listener)
         }
         staffSearchDialog!!.show()
@@ -156,7 +143,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     fun setRepaymentDate() {
         datePicker = MFDatePicker.newInsance(this)
         val date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(MFDatePicker.getDatePickedAsString())
-        tvRepaymentDate!!.text = date.replace('-', ' ')
+        binding.tvRepaymentDate.text = date.replace('-', ' ')
         transactionDate = date.replace('-', ' ')
         actualDisbursementDate = transactionDate
     }
@@ -165,7 +152,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         requestPayload = RequestCollectionSheetPayload()
         requestPayload!!.officeId = officeId
         requestPayload!!.staffId = staffId
-        requestPayload!!.transactionDate = tvRepaymentDate!!.text.toString()
+        requestPayload!!.transactionDate = binding.tvRepaymentDate.text.toString()
     }
 
     override fun setOfficeSpinner(offices: List<Office>?) {
@@ -178,7 +165,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
 
     override fun onDatePicked(date: String) {
         val d = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date)
-        tvRepaymentDate!!.text = d.replace('-', ' ')
+        binding.tvRepaymentDate.text = d.replace('-', ' ')
     }
 
     fun retrieveCollectionSheet() {
@@ -192,7 +179,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     }
 
     override fun setStaffSpinner(staffs: List<Staff>?) {
-        spStaff!!.onItemSelectedListener = this
+        binding.spStaffList.onItemSelectedListener = this
         staffList = staffs
         staffNameList!!.clear()
         staffNameList!!.add(getString(R.string.spinner_staff))
@@ -203,14 +190,14 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
         when (adapterView.id) {
             R.id.sp_office_list -> if (i == officeList!!.size || i == 0) {
-                Toaster.show(rootView, getStringMessage(R.string.error_select_office))
+                Toaster.show(binding.root, getStringMessage(R.string.error_select_office))
             } else {
-                Toaster.show(rootView, officeNameList!![i])
+                Toaster.show(binding.root, officeNameList!![i])
                 officeId = officeList!![i - 1].id
                 presenter!!.fetchStaff(officeId)
             }
             R.id.sp_staff_list -> if (i == staffList!!.size || i == 0) {
-                Toaster.show(rootView, getStringMessage(R.string.error_select_staff))
+                Toaster.show(binding.root, getStringMessage(R.string.error_select_staff))
             } else {
                 staffId = staffList!![i - 1].id
             }
@@ -218,7 +205,8 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     }
 
     fun popupDialog() {
-        val collectionSheetDialogFragment = CollectionSheetDialogFragment.newInstance(tvRepaymentDate!!.text.toString(),
+        val collectionSheetDialogFragment = CollectionSheetDialogFragment.newInstance(
+            binding.tvRepaymentDate.text.toString(),
                 sheet!!.clients.size)
         collectionSheetDialogFragment.setTargetFragment(this, requestCode)
         val fragmentTransaction = requireActivity().supportFragmentManager
@@ -231,7 +219,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         when (response) {
             Constants.FILLNOW -> {
                 val fm = activity
-                        ?.getSupportFragmentManager()
+                        ?.supportFragmentManager
                 fm!!.popBackStack()
                 val fragment: IndividualCollectionSheetDetailsFragment = IndividualCollectionSheetDetailsFragment().newInstance(sheet,
                         actualDisbursementDate, transactionDate)
@@ -258,12 +246,12 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     }
 
     override fun showError(message: String?) {
-        Toaster.show(rootView, message)
+        Toaster.show(binding.root, message)
     }
 
     override fun showNoSheetFound() {
         success = false
-        Toaster.show(rootView, getStringMessage(R.string.no_collectionsheet_found))
+        Toaster.show(binding.root, getStringMessage(R.string.no_collectionsheet_found))
     }
 
     override fun showProgressbar(b: Boolean) {
@@ -281,10 +269,9 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         }
     }
 
-    @OnClick(R.id.btn_clear)
     fun clear() {
-        spOffices!!.adapter = null
-        spStaff!!.adapter = null
+        binding.spOfficeList.adapter = null
+        binding.spStaffList.adapter = null
         setUpUi()
     }
 

@@ -11,19 +11,16 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.DialogFragmentAddEntryToDatatableBinding
 import com.mifos.mifosxdroid.formwidgets.*
 import com.mifos.mifosxdroid.online.ClientActivity
-import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment
 import com.mifos.objects.client.Client
 import com.mifos.objects.client.ClientPayload
 import com.mifos.objects.noncore.DataTable
@@ -50,10 +47,7 @@ import javax.inject.Inject
  */
 class DataTableListFragment : Fragment(), DataTableListMvpView {
     private val LOG_TAG = javaClass.simpleName
-
-    @JvmField
-    @BindView(R.id.ll_data_table_entry_form)
-    var linearLayout: LinearLayout? = null
+    private lateinit var binding: DialogFragmentAddEntryToDatatableBinding
 
     @JvmField
     @Inject
@@ -64,19 +58,20 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
     private var groupLoanPayload: GroupLoanPayload? = null
     private var clientPayload: ClientPayload? = null
     private var requestType = 0
-    private lateinit var rootView: View
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
     private val listFormWidgets: MutableList<List<FormWidget>> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i("DataTableListFrag", "onCreate: called ")
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        rootView = inflater.inflate(R.layout.dialog_fragment_add_entry_to_datatable, container,
-                false)
-        ButterKnife.bind(this, rootView)
+        Log.i("DataTableListFrag", "onCreateView: called ")
+
+        binding = DialogFragmentAddEntryToDatatableBinding.inflate(inflater,container,false)
         mDataTableListPresenter!!.attachView(this)
         requireActivity().title = requireActivity().resources.getString(
                 R.string.associated_datatables)
@@ -86,10 +81,12 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
             createForm(datatable)
         }
         addSaveButton()
-        return rootView
+        return binding.root
     }
 
     fun createForm(table: DataTable) {
+        Log.i("DataTableListFrag", "createForm: called ")
+
         val tableName = TextView(requireActivity().applicationContext)
         tableName.text = table.registeredTableName
         tableName.gravity = Gravity.CENTER_HORIZONTAL
@@ -97,26 +94,29 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
         tableName.setTextColor(requireActivity().resources.getColor(R.color.black))
         tableName.setTextSize(TypedValue.COMPLEX_UNIT_SP,
                 requireActivity().resources.getDimension(R.dimen.datatable_name_heading))
-        linearLayout!!.addView(tableName)
+        binding.llDataTableEntryForm.addView(tableName)
         val formWidgets: MutableList<FormWidget> = ArrayList()
         for (columnHeader in table.columnHeaderData) {
             if (!columnHeader.columnPrimaryKey) {
-                if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_STRING || columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_TEXT) {
+                if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_STRING ||
+                    columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_TEXT) {
                     val formEditText = FormEditText(activity, columnHeader
                             .columnName)
                     formWidgets.add(formEditText)
-                    linearLayout!!.addView(formEditText.view)
+                    binding.llDataTableEntryForm.addView(formEditText.view)
                 } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_INT) {
                     val formNumericEditText = FormNumericEditText(activity, columnHeader.columnName)
                     formNumericEditText.returnType = FormWidget.SCHEMA_KEY_INT
                     formWidgets.add(formNumericEditText)
-                    linearLayout!!.addView(formNumericEditText.view)
+                    binding.llDataTableEntryForm.addView(formNumericEditText.view)
                 } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_DECIMAL) {
                     val formNumericEditText = FormNumericEditText(activity, columnHeader.columnName)
                     formNumericEditText.returnType = FormWidget.SCHEMA_KEY_DECIMAL
                     formWidgets.add(formNumericEditText)
-                    linearLayout!!.addView(formNumericEditText.view)
-                } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_CODELOOKUP || columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_CODEVALUE) {
+                    binding.llDataTableEntryForm.addView(formNumericEditText.view)
+                } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_CODELOOKUP ||
+                    columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_CODEVALUE) {
+
                     if (columnHeader.columnValues.size > 0) {
                         val columnValueStrings: MutableList<String> = ArrayList()
                         val columnValueIds: MutableList<Int> = ArrayList()
@@ -128,19 +128,19 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
                                 .columnName, columnValueStrings, columnValueIds)
                         formSpinner.returnType = FormWidget.SCHEMA_KEY_CODEVALUE
                         formWidgets.add(formSpinner)
-                        linearLayout!!.addView(formSpinner.view)
+                        binding.llDataTableEntryForm.addView(formSpinner.view)
                     }
                 } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_DATE) {
                     val formEditText = FormEditText(activity, columnHeader
                             .columnName)
                     formEditText.setIsDateField(true, requireActivity().supportFragmentManager)
                     formWidgets.add(formEditText)
-                    linearLayout!!.addView(formEditText.view)
+                    binding.llDataTableEntryForm.addView(formEditText.view)
                 } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_BOOL) {
                     val formToggleButton = FormToggleButton(activity,
                             columnHeader.columnName)
                     formWidgets.add(formToggleButton)
-                    linearLayout!!.addView(formToggleButton.view)
+                    binding.llDataTableEntryForm.addView(formToggleButton.view)
                 }
             }
         }
@@ -148,13 +148,16 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
     }
 
     private fun addSaveButton() {
+        Log.i("DataTableListFrag", "addSaveButton: called ")
+
         val bt_processForm = Button(activity)
         bt_processForm.layoutParams = FormWidget.defaultLayoutParams
         bt_processForm.text = getString(R.string.save)
         bt_processForm.setBackgroundColor(requireActivity().resources.getColor(R.color.blue_dark))
-        linearLayout!!.addView(bt_processForm)
+        binding.llDataTableEntryForm.addView(bt_processForm)
         bt_processForm.setOnClickListener {
             try {
+                Log.i("DataTableListFrag", "addSaveButton: save btn clickListener")
                 onSaveActionRequested()
             } catch (e: RequiredFieldException) {
                 Log.d(LOG_TAG, e.message.toString())
@@ -164,6 +167,7 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
 
     @Throws(RequiredFieldException::class)
     fun onSaveActionRequested() {
+        Log.i("DataTableListFrag", "onSaveActionRequested: called")
         dataTablePayloadElements = ArrayList()
         for (i in dataTables!!.indices) {
             val dataTablePayload = DataTablePayload()
@@ -207,12 +211,12 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
     }
 
     override fun showMessage(messageId: Int) {
-        Toaster.show(rootView, getString(messageId))
+        Toaster.show(binding.root, getString(messageId))
         requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
     override fun showMessage(message: String?) {
-        Toaster.show(rootView, message)
+        Toaster.show(binding.root, message)
         requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
@@ -230,7 +234,7 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
 
     override fun showWaitingForCheckerApproval(message: Int) {
         requireActivity().supportFragmentManager.popBackStack()
-        Toaster.show(rootView, message, Toast.LENGTH_SHORT)
+        Toaster.show(binding.root, message, Toast.LENGTH_SHORT)
     }
 
     override fun showProgressbar(b: Boolean) {

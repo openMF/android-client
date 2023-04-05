@@ -2,18 +2,17 @@ package com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.databinding.DialogFragmentSyncSurveysBinding;
 import com.mifos.objects.survey.Survey;
 import com.mifos.utils.Constants;
 import com.mifos.utils.Network;
@@ -24,61 +23,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 
 public class SyncSurveysDialogFragment extends DialogFragment implements SyncSurveysDialogMvpView {
 
     public static final String LOG_TAG = SyncSurveysDialogFragment.class.getSimpleName();
-
-    @BindView(R.id.tv_sync_title)
-    TextView tvSyncTitle;
-
-    @BindView(R.id.tv_survey_name)
-    TextView tvSyncingSurveyName;
-
-    @BindView(R.id.tv_total_surveys)
-    TextView tvTotalSurveys;
-
-    @BindView(R.id.tv_syncing_survey)
-    TextView tvSyncingSurvey;
-
-    @BindView(R.id.pb_sync_survey)
-    ProgressBar pbSyncingSurvey;
-
-    @BindView(R.id.tv_total_progress)
-    TextView tvTotalProgress;
-
-    @BindView(R.id.pb_total_sync_survey)
-    ProgressBar pbTotalSyncSurvey;
-
-    @BindView(R.id.tv_syncing_question)
-    TextView tvSyncingQuestion;
-
-    @BindView(R.id.pb_sync_question)
-    ProgressBar pbSyncingQuestion;
-
-    @BindView(R.id.tv_syncing_response)
-    TextView tvSyncingResponse;
-
-    @BindView(R.id.pb_sync_response)
-    ProgressBar pbSyncingResponse;
-
-    @BindView(R.id.tv_sync_failed)
-    TextView tvSyncFailed;
-
-    @BindView(R.id.btn_hide)
-    Button btnHide;
-
-    @BindView(R.id.btn_cancel)
-    Button btnCancel;
+    private DialogFragmentSyncSurveysBinding binding;
 
     @Inject
     SyncSurveysDialogPresenter mSyncSurveysDialogPresenter;
-
-    View rootView;
 
     private List<Survey> mSurveyList;
 
@@ -100,8 +52,7 @@ public class SyncSurveysDialogFragment extends DialogFragment implements SyncSur
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dialog_fragment_sync_surveys, container, false);
-        ButterKnife.bind(this, rootView);
+        binding = DialogFragmentSyncSurveysBinding.inflate(inflater, container, false);
         mSyncSurveysDialogPresenter.attachView(this);
         //Start Syncing Surveys
         if (isOnline() && (PrefManager.getUserStatus() == Constants.USER_ONLINE)) {
@@ -111,17 +62,23 @@ public class SyncSurveysDialogFragment extends DialogFragment implements SyncSur
             getFragmentManager().popBackStack();
         }
 
-        return rootView;
+        return binding.getRoot();
     }
 
-    @OnClick(R.id.btn_cancel)
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.btnCancel.setOnClickListener(view1 -> onClickCancelButton());
+        binding.btnHide.setOnClickListener(view1 -> onClickHideButton());
+    }
+
     void onClickCancelButton() {
         dismissDialog();
     }
 
-    @OnClick(R.id.btn_hide)
     void onClickHideButton() {
-        if (btnHide.getText().equals(getResources().getString(R.string.dialog_action_ok))) {
+        if (binding.btnHide.getText().equals(getResources().getString(R.string.dialog_action_ok))) {
             dismissDialog();
         } else {
             hideDialog();
@@ -135,66 +92,66 @@ public class SyncSurveysDialogFragment extends DialogFragment implements SyncSur
 
     @Override
     public void showUI() {
-        pbTotalSyncSurvey.setMax(mSurveyList.size());
+        binding.pbTotalSyncSurvey.setMax(mSurveyList.size());
         String total_surveys = mSurveyList.size() + getResources().getString(R.string.space) +
                 getResources().getString(R.string.surveys);
-        tvTotalSurveys.setText(total_surveys);
-        tvSyncFailed.setText(String.valueOf(0));
+        binding.tvTotalSurveys.setText(total_surveys);
+        binding.tvSyncFailed.setText(String.valueOf(0));
     }
 
     @Override
     public void showSyncingSurvey(String surveyName) {
-        tvSyncingSurvey.setText(surveyName);
-        tvSyncingSurveyName.setText(surveyName);
+        binding.tvSyncingSurvey.setText(surveyName);
+        binding.tvSurveyName.setText(surveyName);
     }
 
     @Override
     public void showSyncedFailedSurveys(int failedCount) {
-        tvSyncFailed.setText(String.valueOf(failedCount));
+        binding.tvSyncFailed.setText(String.valueOf(failedCount));
     }
 
     @Override
     public void setMaxSingleSyncSurveyProgressBar(int total) {
-        pbSyncingSurvey.setMax(total);
+        binding.pbSyncSurvey.setMax(total);
     }
 
     @Override
     public void setQuestionSyncProgressBarMax(int count) {
-        pbSyncingQuestion.setMax(count);
+        binding.pbSyncQuestion.setMax(count);
     }
 
     @Override
     public void setResponseSyncProgressBarMax(int count) {
-        pbSyncingResponse.setMax(count);
+        binding.pbSyncResponse.setMax(count);
     }
 
     @Override
     public void updateSingleSyncSurveyProgressBar(int count) {
-        pbSyncingSurvey.setProgress(count);
+        binding.pbSyncSurvey.setProgress(count);
     }
 
     @Override
     public void updateQuestionSyncProgressBar(int i) {
-        pbSyncingQuestion.setProgress(i);
+        binding.pbSyncQuestion.setProgress(i);
     }
 
     @Override
     public void updateResponseSyncProgressBar(int i) {
-        pbSyncingResponse.setProgress(i);
+        binding.pbSyncResponse.setProgress(i);
     }
 
     @Override
     public void updateTotalSyncSurveyProgressBarAndCount(int count) {
-        pbTotalSyncSurvey.setProgress(count);
+        binding.pbTotalSyncSurvey.setProgress(count);
         String total_sync_count = getResources()
                 .getString(R.string.space) + count + getResources()
                 .getString(R.string.slash) + mSurveyList.size();
-        tvTotalProgress.setText(total_sync_count);
+        binding.tvTotalProgress.setText(total_sync_count);
     }
 
     @Override
     public int getMaxSingleSyncSurveyProgressBar() {
-        return pbSyncingSurvey.getMax();
+        return binding.pbSyncSurvey.getMax();
     }
 
     @Override
@@ -205,7 +162,7 @@ public class SyncSurveysDialogFragment extends DialogFragment implements SyncSur
 
     @Override
     public void showSurveysSyncSuccessfully() {
-        btnCancel.setVisibility(View.INVISIBLE);
+        binding.btnCancel.setVisibility(View.INVISIBLE);
         dismissDialog();
         Toast.makeText(getActivity(), R.string.sync_success, Toast.LENGTH_SHORT).show();
     }
@@ -232,7 +189,7 @@ public class SyncSurveysDialogFragment extends DialogFragment implements SyncSur
 
     @Override
     public void showError(int s) {
-        Toaster.show(rootView, s);
+        Toaster.show(binding.getRoot(), s);
     }
 
     @Override

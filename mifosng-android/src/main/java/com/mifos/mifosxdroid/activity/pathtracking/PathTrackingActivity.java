@@ -18,13 +18,18 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.PathTrackingAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
+import com.mifos.mifosxdroid.databinding.ActivityPathTrackerBinding;
 import com.mifos.objects.user.UserLatLng;
 import com.mifos.objects.user.UserLocation;
 import com.mifos.utils.CheckSelfPermissionAndRequest;
@@ -36,32 +41,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 /**
  * @author fomenkoo
  */
 public class PathTrackingActivity extends MifosBaseActivity
         implements PathTrackingMvpView, SwipeRefreshLayout.OnRefreshListener {
 
-    @BindView(R.id.rv_path_tacker)
-    RecyclerView rvPathTracker;
-
-    @BindView(R.id.swipe_container)
-    SwipeRefreshLayout swipeRefreshLayout;
-
-    @BindView(R.id.layout_error)
-    View layoutError;
-
-    @BindView(R.id.pb_path_tracking)
-    ProgressBar progressBar;
+    private ActivityPathTrackerBinding binding;
 
     @Inject
     PathTrackingPresenter pathTrackingPresenter;
@@ -76,16 +62,22 @@ public class PathTrackingActivity extends MifosBaseActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_path_tracker);
+        binding = ActivityPathTrackerBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         getActivityComponent().inject(this);
         pathTrackingPresenter.attachView(this);
-        ButterKnife.bind(this);
+
         showBackButton();
         intentLocationService = new Intent(this, PathTrackingService.class);
         createNotificationReceiver();
 
         showUserInterface();
         pathTrackingPresenter.loadPathTracking(PrefManager.getUserId());
+
+        binding.layoutError.findViewById(R.id.btn_try_again)
+                .setOnClickListener(view -> reloadOnError());
+
     }
 
     @Override
@@ -95,9 +87,9 @@ public class PathTrackingActivity extends MifosBaseActivity
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mLayoutManager.setReverseLayout(true);
         mLayoutManager.setStackFromEnd(true);
-        rvPathTracker.setLayoutManager(mLayoutManager);
-        rvPathTracker.setHasFixedSize(false);
-        rvPathTracker.scrollToPosition(0);
+        binding.rvPathTacker.setLayoutManager(mLayoutManager);
+        binding.rvPathTacker.setHasFixedSize(false);
+        binding.rvPathTacker.scrollToPosition(0);
         pathTrackingAdapter = new PathTrackingAdapter(userLocation -> {
                 List<UserLatLng> userLatLngs =
                         pathTrackingAdapter.getLatLngList(userLocation.getLatlng());
@@ -113,10 +105,10 @@ public class PathTrackingActivity extends MifosBaseActivity
                 return null;
             }
         );
-        rvPathTracker.setAdapter(pathTrackingAdapter);
-        swipeRefreshLayout.setColorSchemeColors(this
+        binding.rvPathTacker.setAdapter(pathTrackingAdapter);
+        binding.swipeContainer.setColorSchemeColors(this
                 .getResources().getIntArray(R.array.swipeRefreshColors));
-        swipeRefreshLayout.setOnRefreshListener(this);
+        binding.swipeContainer.setOnRefreshListener(this);
         sweetUIErrorHandler = new SweetUIErrorHandler(this, findViewById(android.R.id.content));
     }
 
@@ -131,9 +123,8 @@ public class PathTrackingActivity extends MifosBaseActivity
         pathTrackingAdapter.setPathTracker(userLocations);
     }
 
-    @OnClick(R.id.btn_try_again)
     public void reloadOnError() {
-        sweetUIErrorHandler.hideSweetErrorLayoutUI(rvPathTracker, layoutError);
+        sweetUIErrorHandler.hideSweetErrorLayoutUI(binding.rvPathTacker, binding.layoutError);
         pathTrackingPresenter.loadPathTracking(PrefManager.getUserId());
     }
 
@@ -141,14 +132,14 @@ public class PathTrackingActivity extends MifosBaseActivity
     @Override
     public void showEmptyPathTracking() {
         sweetUIErrorHandler.showSweetEmptyUI(getString(R.string.path_tracker),
-                R.drawable.ic_error_black_24dp, rvPathTracker, layoutError);
+                R.drawable.ic_error_black_24dp, binding.rvPathTacker, binding.layoutError);
     }
 
     @Override
     public void showError() {
         sweetUIErrorHandler.showSweetErrorUI(
                 getString(R.string.failed_to_fetch_path_tracking_details),
-                R.drawable.ic_error_black_24dp, rvPathTracker, layoutError);
+                R.drawable.ic_error_black_24dp, binding.rvPathTacker, binding.layoutError);
     }
 
     /**
@@ -271,12 +262,12 @@ public class PathTrackingActivity extends MifosBaseActivity
 
     @Override
     public void showProgressbar(boolean show) {
-        swipeRefreshLayout.setRefreshing(show);
+        binding.swipeContainer.setRefreshing(show);
         if (show && userLocations.size() == 0) {
-            progressBar.setVisibility(View.VISIBLE);
-            swipeRefreshLayout.setRefreshing(false);
+            binding.pbPathTracking.setVisibility(View.VISIBLE);
+            binding.swipeContainer.setRefreshing(false);
         } else {
-            progressBar.setVisibility(View.GONE);
+            binding.pbPathTracking.setVisibility(View.GONE);
         }
     }
 }

@@ -2,19 +2,19 @@ package com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog;
 
 import android.os.Bundle;
 import android.os.Parcelable;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.databinding.DialogFragmentSyncGroupsBinding;
 import com.mifos.objects.group.Group;
 import com.mifos.utils.Constants;
 import com.mifos.utils.Network;
@@ -25,56 +25,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by Rajan Maurya on 11/09/16.
  */
 public class SyncGroupsDialogFragment extends DialogFragment implements SyncGroupsDialogMvpView {
 
-
-    @BindView(R.id.tv_sync_title)
-    TextView tv_sync_title;
-
-    @BindView(R.id.tv_group_name)
-    TextView tv_syncing_group_name;
-
-    @BindView(R.id.tv_total_groups)
-    TextView tv_total_groups;
-
-    @BindView(R.id.tv_syncing_group)
-    TextView tv_syncing_group;
-
-    @BindView(R.id.pb_sync_group)
-    ProgressBar pb_syncing_group;
-
-    @BindView(R.id.tv_total_progress)
-    TextView tv_total_progress;
-
-    @BindView(R.id.pb_total_sync_group)
-    ProgressBar pb_total_sync_group;
-
-    @BindView(R.id.tv_syncing_client)
-    TextView tv_syncing_client;
-
-    @BindView(R.id.pb_sync_client)
-    ProgressBar pb_syncing_client;
-
-    @BindView(R.id.tv_sync_failed)
-    TextView tv_sync_failed;
-
-    @BindView(R.id.btn_hide)
-    Button btn_hide;
-
-    @BindView(R.id.btn_cancel)
-    Button btn_cancel;
+    private DialogFragmentSyncGroupsBinding binding;
 
     @Inject
     SyncGroupsDialogPresenter syncGroupsDialogPresenter;
-
-    View rootView;
 
     private List<Group> groups;
 
@@ -98,8 +58,7 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dialog_fragment_sync_groups, container, false);
-        ButterKnife.bind(this, rootView);
+        binding = DialogFragmentSyncGroupsBinding.inflate(inflater, container, false);
         syncGroupsDialogPresenter.attachView(this);
 
         showUI();
@@ -112,17 +71,23 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
             getActivity().getSupportFragmentManager().popBackStack();
         }
 
-        return rootView;
+        return binding.getRoot();
     }
 
-    @OnClick(R.id.btn_cancel)
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.btnCancel.setOnClickListener(view1 -> onClickCancelButton());
+        binding.btnHide.setOnClickListener(view1 -> onClickHideButton());
+    }
+
     void onClickCancelButton() {
         dismissDialog();
     }
 
-    @OnClick(R.id.btn_hide)
     void onClickHideButton() {
-        if (btn_hide.getText().equals(getResources().getString(R.string.dialog_action_ok))) {
+        if (binding.btnHide.getText().equals(getResources().getString(R.string.dialog_action_ok))) {
             dismissDialog();
         } else {
             hideDialog();
@@ -131,56 +96,56 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
 
     @Override
     public void showUI() {
-        pb_total_sync_group.setMax(groups.size());
+        binding.pbTotalSyncGroup.setMax(groups.size());
         String total_groups = groups.size() + getResources().getString(R.string.space) +
                 getResources().getString(R.string.groups);
-        tv_total_groups.setText(total_groups);
-        tv_sync_failed.setText(String.valueOf(0));
+        binding.tvTotalGroups.setText(total_groups);
+        binding.tvSyncFailed.setText(String.valueOf(0));
     }
 
     @Override
     public void showSyncingGroup(String groupName) {
-        tv_syncing_group.setText(groupName);
-        tv_syncing_group_name.setText(groupName);
+        binding.tvSyncingGroup.setText(groupName);
+        binding.tvGroupName.setText(groupName);
     }
 
     @Override
     public void showSyncedFailedGroups(int failedCount) {
-        tv_sync_failed.setText(String.valueOf(failedCount));
+        binding.tvSyncFailed.setText(String.valueOf(failedCount));
     }
 
     @Override
     public void setMaxSingleSyncGroupProgressBar(int total) {
-        pb_syncing_group.setMax(total);
+        binding.pbSyncGroup.setMax(total);
     }
 
     @Override
     public void setClientSyncProgressBarMax(int count) {
-        pb_syncing_client.setMax(count);
+        binding.pbSyncClient.setMax(count);
     }
 
     @Override
     public void updateClientSyncProgressBar(int i) {
-        pb_syncing_client.setProgress(i);
+        binding.pbSyncClient.setProgress(i);
     }
 
     @Override
     public void updateSingleSyncGroupProgressBar(int count) {
-        pb_syncing_group.setProgress(count);
+        binding.pbSyncGroup.setProgress(count);
     }
 
     @Override
     public void updateTotalSyncGroupProgressBarAndCount(int count) {
-        pb_total_sync_group.setProgress(count);
+        binding.pbTotalSyncGroup.setProgress(count);
         String total_sync_count = getResources()
                 .getString(R.string.space) + count + getResources()
                 .getString(R.string.slash) + groups.size();
-        tv_total_progress.setText(total_sync_count);
+        binding.tvTotalProgress.setText(total_sync_count);
     }
 
     @Override
     public int getMaxSingleSyncGroupProgressBar() {
-        return pb_syncing_group.getMax();
+        return binding.pbSyncGroup.getMax();
     }
 
     @Override
@@ -191,8 +156,8 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
 
     @Override
     public void showGroupsSyncSuccessfully() {
-        btn_cancel.setVisibility(View.INVISIBLE);
-        btn_hide.setText(getResources().getString(R.string.dialog_action_ok));
+        binding.btnCancel.setVisibility(View.INVISIBLE);
+        binding.btnHide.setText(getResources().getString(R.string.dialog_action_ok));
     }
 
     @Override
@@ -217,7 +182,7 @@ public class SyncGroupsDialogFragment extends DialogFragment implements SyncGrou
 
     @Override
     public void showError(int s) {
-        Toaster.show(rootView, s);
+        Toaster.show(binding.getRoot(), s);
     }
 
     @Override

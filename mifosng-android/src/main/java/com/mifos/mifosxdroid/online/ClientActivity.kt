@@ -6,10 +6,10 @@ package com.mifos.mifosxdroid.online
 
 import android.content.Intent
 import android.os.Bundle
-import butterknife.ButterKnife
 import com.google.gson.Gson
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
+import com.mifos.mifosxdroid.databinding.ActivityToolbarContainerBinding
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryFragment
 import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentFragment
@@ -24,14 +24,20 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.objects.survey.Survey
 import com.mifos.utils.Constants
 
-class ClientActivity : MifosBaseActivity(), ClientDetailsFragment.OnFragmentInteractionListener, LoanAccountSummaryFragment.OnFragmentInteractionListener, SavingsAccountSummaryFragment.OnFragmentInteractionListener, SurveyListFragment.OnFragmentInteractionListener {
+class ClientActivity : MifosBaseActivity(), ClientDetailsFragment.OnFragmentInteractionListener,
+    LoanAccountSummaryFragment.OnFragmentInteractionListener,
+    SavingsAccountSummaryFragment.OnFragmentInteractionListener,
+    SurveyListFragment.OnFragmentInteractionListener {
+
+    private lateinit var binding: ActivityToolbarContainerBinding
     private var clientId = 0
     private var loanAccountNumber = 0
     private var savingsAccountNumber = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_toolbar_container)
-        ButterKnife.bind(this)
+        binding = ActivityToolbarContainerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         showBackButton()
         intent.extras?.let { extras ->
             clientId = extras.getInt(Constants.CLIENT_ID)

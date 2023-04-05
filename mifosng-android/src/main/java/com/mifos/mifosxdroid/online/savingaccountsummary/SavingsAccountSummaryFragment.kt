@@ -9,15 +9,16 @@ import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.*
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
+import android.widget.AbsListView
+import android.widget.AdapterView
+import android.widget.TextView
+import android.widget.Toast
 import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
+import com.mifos.mifosxdroid.databinding.FragmentSavingsAccountSummaryBinding
 import com.mifos.mifosxdroid.online.datatable.DataTableFragment
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment
 import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateFragment
@@ -29,61 +30,13 @@ import com.mifos.objects.accounts.savings.Status
 import com.mifos.objects.accounts.savings.Transaction
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
-import java.util.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
 class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSummaryMvpView {
     var savingsAccountNumber = 0
     var savingsAccountType: DepositType? = null
-
-    @JvmField
-    @BindView(R.id.tv_clientName)
-    var tv_clientName: TextView? = null
-
-    @JvmField
-    @BindView(R.id.quickContactBadge_client)
-    var quickContactBadge: QuickContactBadge? = null
-
-    @JvmField
-    @BindView(R.id.tv_savings_product_short_name)
-    var tv_savingsProductName: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_savingsAccountNumber)
-    var tv_savingsAccountNumber: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_savings_account_balance)
-    var tv_savingsAccountBalance: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_total_deposits)
-    var tv_totalDeposits: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_total_withdrawals)
-    var tv_totalWithdrawals: TextView? = null
-
-    @JvmField
-    @BindView(R.id.lv_savings_transactions)
-    var lv_Transactions: ListView? = null
-
-    @JvmField
-    @BindView(R.id.tv_interest_earned)
-    var tv_interestEarned: TextView? = null
-
-    @JvmField
-    @BindView(R.id.bt_deposit)
-    var bt_deposit: Button? = null
-
-    @JvmField
-    @BindView(R.id.bt_withdrawal)
-    var bt_withdrawal: Button? = null
-
-    @JvmField
-    @BindView(R.id.bt_approve_saving)
-    var bt_approve_saving: Button? = null
+    private lateinit var binding: FragmentSavingsAccountSummaryBinding
 
     @JvmField
     @Inject
@@ -94,7 +47,6 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     // Infinite Scroll View
     var listOfAllTransactions: MutableList<Transaction> = ArrayList()
     var savingsAccountTransactionsListAdapter: SavingsAccountTransactionsListAdapter? = null
-    private lateinit var rootView: View
     private var processSavingTransactionAction = -1
     private var savingsAccountWithAssociations: SavingsAccountWithAssociations? = null
     private var parentFragment = true
@@ -109,6 +61,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     private val initial = 0
     private var last = 5
     private var mListener: OnFragmentInteractionListener? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
@@ -121,13 +74,20 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_savings_account_summary, container, false)
+        binding = FragmentSavingsAccountSummaryBinding.inflate(inflater,container,false)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        ButterKnife.bind(this, rootView)
         mSavingAccountSummaryPresenter!!.attachView(this)
         mSavingAccountSummaryPresenter!!
                 .loadSavingAccount(savingsAccountType!!.endpoint, savingsAccountNumber)
-        return rootView
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btDeposit.setOnClickListener { onDepositButtonClicked() }
+        binding.btWithdrawal.setOnClickListener { onWithdrawalButtonClicked() }
+        binding.btApproveSaving.setOnClickListener { onProcessTransactionClicked() }
     }
 
     /**
@@ -177,19 +137,16 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         return super.onOptionsItemSelected(item)
     }
 
-    @OnClick(R.id.bt_deposit)
     fun onDepositButtonClicked() {
         mListener!!.doTransaction(savingsAccountWithAssociations,
                 Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT, savingsAccountType)
     }
 
-    @OnClick(R.id.bt_withdrawal)
     fun onWithdrawalButtonClicked() {
         mListener!!.doTransaction(savingsAccountWithAssociations,
                 Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL, savingsAccountType)
     }
 
-    @OnClick(R.id.bt_approve_saving)
     fun onProcessTransactionClicked() {
         if (processSavingTransactionAction == ACTION_APPROVE_SAVINGS) {
             approveSavings()
@@ -202,7 +159,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     }
 
     fun enableInfiniteScrollOfTransactions() {
-        lv_Transactions!!.setOnScrollListener(object : AbsListView.OnScrollListener {
+        binding.lvSavingsTransactions.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScrollStateChanged(absListView: AbsListView, scrollState: Int) {
                 loadmore = scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE
             }
@@ -219,8 +176,8 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     }
 
     fun loadNextFiveTransactions() {
-        index = lv_Transactions!!.firstVisiblePosition
-        val v = lv_Transactions!!.getChildAt(0)
+        index = binding.lvSavingsTransactions.firstVisiblePosition
+        val v = binding.lvSavingsTransactions.getChildAt(0)
         top = v?.top ?: 0
         last += 5
         if (last > listOfAllTransactions.size) {
@@ -228,15 +185,15 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
             savingsAccountTransactionsListAdapter = SavingsAccountTransactionsListAdapter(activity,
                     listOfAllTransactions.subList(initial, last))
             savingsAccountTransactionsListAdapter!!.notifyDataSetChanged()
-            lv_Transactions!!.adapter = savingsAccountTransactionsListAdapter
-            lv_Transactions!!.setSelectionFromTop(index, top)
+            binding.lvSavingsTransactions.adapter = savingsAccountTransactionsListAdapter
+            binding.lvSavingsTransactions.setSelectionFromTop(index, top)
             return
         }
         savingsAccountTransactionsListAdapter = SavingsAccountTransactionsListAdapter(activity,
                 listOfAllTransactions.subList(initial, last))
         savingsAccountTransactionsListAdapter!!.notifyDataSetChanged()
-        lv_Transactions!!.adapter = savingsAccountTransactionsListAdapter
-        lv_Transactions!!.setSelectionFromTop(index, top)
+        binding.lvSavingsTransactions.adapter = savingsAccountTransactionsListAdapter
+        binding.lvSavingsTransactions.setSelectionFromTop(index, top)
     }
 
     fun loadDocuments() {
@@ -279,8 +236,8 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
 
     fun toggleTransactionCapabilityOfAccount(status: Status) {
         if (!status.active) {
-            bt_deposit!!.visibility = View.GONE
-            bt_withdrawal!!.visibility = View.GONE
+            binding.btDeposit.visibility = View.GONE
+            binding.btWithdrawal.visibility = View.GONE
         }
     }
 
@@ -289,60 +246,59 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         if (activity == null) return
         if (savingsAccountWithAssociations != null) {
             this.savingsAccountWithAssociations = savingsAccountWithAssociations
-            tv_clientName!!.text = savingsAccountWithAssociations.clientName
-            tv_savingsProductName!!.text = savingsAccountWithAssociations.savingsProductName
-            tv_savingsAccountNumber!!.text = savingsAccountWithAssociations.accountNo
+            binding.tvClientName.text = savingsAccountWithAssociations.clientName
+            binding.tvSavingsProductShortName.text = savingsAccountWithAssociations.savingsProductName
+            binding.tvSavingsAccountNumber.text = savingsAccountWithAssociations.accountNo
             if (savingsAccountWithAssociations.summary.totalInterestEarned != null) {
-                tv_interestEarned!!.text = savingsAccountWithAssociations
+                binding.tvInterestEarned.text = savingsAccountWithAssociations
                         .summary.totalInterestEarned.toString()
             } else {
-                tv_interestEarned!!.text = "0.0"
+                binding.tvInterestEarned.text = "0.0"
             }
-            tv_savingsAccountBalance!!.text = savingsAccountWithAssociations
+            binding.tvSavingsAccountBalance.text = savingsAccountWithAssociations
                     .summary.accountBalance.toString()
             if (savingsAccountWithAssociations.summary.totalDeposits != null) {
-                tv_totalDeposits!!.text = savingsAccountWithAssociations
+                binding.tvTotalDeposits.text = savingsAccountWithAssociations
                         .summary.totalDeposits.toString()
             } else {
-                tv_totalDeposits!!.text = "0.0"
+                binding.tvTotalDeposits.text = "0.0"
             }
             if (savingsAccountWithAssociations.summary.totalWithdrawals != null) {
-                tv_totalWithdrawals!!.text = savingsAccountWithAssociations
+                binding.tvTotalWithdrawals.text = savingsAccountWithAssociations
                         .summary.totalWithdrawals.toString()
             } else {
-                tv_totalWithdrawals!!.text = "0.0"
+                binding.tvTotalWithdrawals.text = "0.0"
             }
             savingsAccountTransactionsListAdapter = SavingsAccountTransactionsListAdapter(activity,
                     if (savingsAccountWithAssociations.transactions.size < last) savingsAccountWithAssociations.transactions else savingsAccountWithAssociations.transactions.subList(initial, last)
             )
-            lv_Transactions!!.adapter = savingsAccountTransactionsListAdapter
+            binding.lvSavingsTransactions.adapter = savingsAccountTransactionsListAdapter
 
             // Cache transactions here
             listOfAllTransactions.addAll(savingsAccountWithAssociations.transactions)
-            lv_Transactions!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
+            binding.lvSavingsTransactions.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
                 showTransaction(i)
             }
             if (savingsAccountWithAssociations.status.submittedAndPendingApproval) {
-                bt_approve_saving!!.isEnabled = true
-                bt_deposit!!.visibility = View.GONE
-                bt_withdrawal!!.visibility = View.GONE
-                bt_approve_saving!!.text = resources.getString(R.string.approve_savings)
+                binding.btApproveSaving.isEnabled = true
+                binding.btDeposit.visibility = View.GONE
+                binding.btWithdrawal.visibility = View.GONE
+                binding.btApproveSaving.text = resources.getString(R.string.approve_savings)
                 processSavingTransactionAction = ACTION_APPROVE_SAVINGS
             } else if (!savingsAccountWithAssociations.status.active) {
-                bt_approve_saving!!.isEnabled = true
-                bt_deposit!!.visibility = View.GONE
-                bt_withdrawal!!.visibility = View.GONE
-                bt_approve_saving!!.text = resources.getString(R.string.activate_savings)
+                binding.btApproveSaving.isEnabled = true
+                binding.btDeposit.visibility = View.GONE
+                binding.btWithdrawal.visibility = View.GONE
+                binding.btApproveSaving.text = resources.getString(R.string.activate_savings)
                 processSavingTransactionAction = ACTION_ACTIVATE_SAVINGS
             } else if (savingsAccountWithAssociations.status.closed) {
-                bt_approve_saving!!.isEnabled = false
-                bt_deposit!!.visibility = View.GONE
-                bt_withdrawal!!.visibility = View.GONE
-                bt_approve_saving!!
-                        .setText(resources.getString(R.string.savings_account_closed))
+                binding.btApproveSaving.isEnabled = false
+                binding.btDeposit.visibility = View.GONE
+                binding.btWithdrawal.visibility = View.GONE
+                binding.btApproveSaving.text = resources.getString(R.string.savings_account_closed)
             } else {
                 inflateSavingsAccountSummary()
-                bt_approve_saving!!.visibility = View.GONE
+                binding.btApproveSaving.visibility = View.GONE
             }
             enableInfiniteScrollOfTransactions()
         }

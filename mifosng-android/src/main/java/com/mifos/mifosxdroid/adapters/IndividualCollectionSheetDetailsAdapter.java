@@ -1,15 +1,17 @@
 package com.mifos.mifosxdroid.adapters;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.mifos.api.model.BulkRepaymentTransactions;
 import com.mifos.mifosxdroid.R;
+import com.mifos.mifosxdroid.databinding.ItemIndividualCollectionSheetBinding;
 import com.mifos.mifosxdroid.injection.ActivityContext;
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.OnRetrieveSheetItemData;
 import com.mifos.objects.accounts.loan.PaymentTypeOptions;
@@ -22,8 +24,6 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by aksh on 21/6/18.
@@ -68,10 +68,10 @@ public class IndividualCollectionSheetDetailsAdapter extends
     @Override
     public IndividualCollectionSheetDetailsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                                                  int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_individual_collection_sheet, parent, false);
+        ItemIndividualCollectionSheetBinding binding = ItemIndividualCollectionSheetBinding
+                .inflate(LayoutInflater.from(parent.getContext()), parent, false);
 
-        return new IndividualCollectionSheetDetailsAdapter.ViewHolder(view);
+        return new IndividualCollectionSheetDetailsAdapter.ViewHolder(binding);
     }
 
     @Override
@@ -135,28 +135,28 @@ public class IndividualCollectionSheetDetailsAdapter extends
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         int position;
-        @BindView(R.id.tv_client_name)
         TextView tvClientName;
 
-        @BindView(R.id.tv_product_code)
         TextView tvProductCode;
 
-        @BindView(R.id.et_charges)
         TextView etCharges;
 
-        @BindView(R.id.tv_total_due)
         TextView etTotalDues;
 
-        @BindView(R.id.btn_additional_details)
         ImageView btnAdditional;
 
-        @BindView(R.id.iv_user_picture)
         ImageView iv_userPicture;
 
-        public ViewHolder(View v) {
-            super(v);
-            ButterKnife.bind(this, v);
-            v.setOnClickListener(this);
+        public ViewHolder(ItemIndividualCollectionSheetBinding binding) {
+            super(binding.getRoot());
+
+            tvClientName = binding.tvClientName;
+            tvProductCode = binding.tvProductCode;
+            etCharges = binding.etCharges;
+            etTotalDues = binding.tvTotalDue;
+            btnAdditional = binding.btnAdditionalDetails;
+            iv_userPicture = binding.ivUserPicture;
+            binding.getRoot().setOnClickListener(this);
         }
 
         @Override

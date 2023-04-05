@@ -11,17 +11,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.exceptions.ShortOfLengthException
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
+import com.mifos.mifosxdroid.databinding.FragmentCreateNewCenterBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.organisation.Office
@@ -38,40 +39,15 @@ import javax.inject.Inject
  * Created by nellyk on 1/22/2016.
  */
 class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateNewCenterMvpView {
-    @JvmField
-    @BindView(R.id.et_center_name)
-    var et_centerName: EditText? = null
 
-    @JvmField
-    @BindView(R.id.cb_center_active_status)
-    var cb_centerActiveStatus: CheckBox? = null
+    private lateinit var binding: FragmentCreateNewCenterBinding
 
-    @JvmField
-    @BindView(R.id.tv_center_activationDate)
-    var tv_activationDate: TextView? = null
-
-    @JvmField
-    @BindView(R.id.sp_center_offices)
-    var sp_offices: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.btn_submit)
-    var bt_submit: Button? = null
-
-    @JvmField
-    @BindView(R.id.ll_center)
-    var llCenter: LinearLayout? = null
-
-    @JvmField
-    @BindView(R.id.layout_submission)
-    var layout_submission: LinearLayout? = null
     var officeId = 0
     var result = true
 
     @JvmField
     @Inject
     var mCreateNewCenterPresenter: CreateNewCenterPresenter? = null
-    private lateinit var rootView: View
     private var activationdateString: String? = null
     private var newDatePicker: DialogFragment? = null
     private val officeNameIdHashMap = HashMap<String, Int>()
@@ -81,32 +57,31 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_create_new_center, null)
-        ButterKnife.bind(this, rootView)
+        binding = FragmentCreateNewCenterBinding.inflate(inflater,container,false)
         mCreateNewCenterPresenter!!.attachView(this)
         inflateOfficeSpinner()
         inflateActivationDate()
         //client active checkbox onCheckedListener
-        cb_centerActiveStatus!!.setOnCheckedChangeListener { compoundButton, isChecked ->
+        binding.cbCenterActiveStatus.setOnCheckedChangeListener { compoundButton, isChecked ->
             if (isChecked) {
-                layout_submission!!.visibility = View.VISIBLE
-                activationdateString = tv_activationDate!!.text.toString()
+                binding.layoutSubmission.visibility = View.VISIBLE
+                activationdateString = binding.tvCenterActivationDate.text.toString()
                 activationdateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(activationdateString).replace("-", " ")
             } else {
-                layout_submission!!.visibility = View.GONE
+                binding.layoutSubmission.visibility = View.GONE
             }
         }
-        bt_submit!!.setOnClickListener {
+        binding.btnSubmit.setOnClickListener {
             val centerPayload = CenterPayload()
-            centerPayload.name = et_centerName!!.editableText.toString()
-            centerPayload.isActive = cb_centerActiveStatus!!.isChecked
+            centerPayload.name = binding.etCenterName.editableText.toString()
+            centerPayload.isActive = binding.cbCenterActiveStatus.isChecked
             centerPayload.activationDate = activationdateString
             centerPayload.officeId = officeId
             centerPayload.dateFormat = "dd MMMM yyyy"
             centerPayload.locale = "en"
             initiateCenterCreation(centerPayload)
         }
-        return rootView
+        return binding.root
     }
 
     //inflating office list spinner
@@ -122,27 +97,27 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
 
     fun inflateActivationDate() {
         newDatePicker = MFDatePicker.newInsance(this)
-        tv_activationDate!!.text = MFDatePicker.getDatePickedAsString()
-        tv_activationDate!!.setOnClickListener { (newDatePicker as MFDatePicker?)!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
+        binding.tvCenterActivationDate.text = MFDatePicker.getDatePickedAsString()
+        binding.tvCenterActivationDate.setOnClickListener { (newDatePicker as MFDatePicker?)!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
     }
 
     override fun onDatePicked(date: String) {
-        tv_activationDate!!.text = date
+        binding.tvCenterActivationDate.text = date
     }
 
     val isCenterNameValid: Boolean
         get() {
             result = true
             try {
-                if (TextUtils.isEmpty(et_centerName!!.editableText.toString())) {
+                if (TextUtils.isEmpty(binding.etCenterName.editableText.toString())) {
                     throw RequiredFieldException(resources.getString(R.string.center_name),
                             resources.getString(R.string.error_cannot_be_empty))
                 }
-                if (et_centerName!!.editableText.toString().trim { it <= ' ' }.length < 4 && et_centerName!!
+                if (binding.etCenterName.editableText.toString().trim { it <= ' ' }.length < 4 && binding.etCenterName
                                 .getEditableText().toString().trim { it <= ' ' }.length > 0) {
                     throw ShortOfLengthException(resources.getString(R.string.center_name), 4)
                 }
-                if (!ValidationUtil.isNameValid(et_centerName!!.editableText.toString())) {
+                if (!ValidationUtil.isNameValid(binding.etCenterName.editableText.toString())) {
                     throw InvalidTextInputException(
                             resources.getString(R.string.center_name),
                             resources.getString(R.string.error_should_contain_only),
@@ -171,8 +146,8 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
         val officeAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, officeList)
         officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        sp_offices!!.adapter = officeAdapter
-        sp_offices!!.onItemSelectedListener = object : OnItemSelectedListener {
+        binding.spCenterOffices.adapter = officeAdapter
+        binding.spCenterOffices.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>?,
                                         view: View, i: Int, l: Long) {
                 officeId = officeNameIdHashMap[officeList[i]]!!
@@ -204,10 +179,10 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
 
     override fun showProgressbar(show: Boolean) {
         if (show) {
-            llCenter!!.visibility = View.GONE
+            binding.llCenter.visibility = View.GONE
             showMifosProgressBar()
         } else {
-            llCenter!!.visibility = View.VISIBLE
+            binding.llCenter.visibility = View.VISIBLE
             hideMifosProgressBar()
         }
     }

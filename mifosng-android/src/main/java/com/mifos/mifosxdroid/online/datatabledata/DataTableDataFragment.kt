@@ -8,20 +8,15 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.google.gson.JsonArray
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MaterialDialog
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentDatatableBinding
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogFragment
 import com.mifos.objects.noncore.DataTable
 import com.mifos.utils.Constants
@@ -31,32 +26,15 @@ import com.mifos.utils.FragmentConstants
 import javax.inject.Inject
 
 class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, DataTableDataMvpView, OnRefreshListener {
-    @JvmField
-    @BindView(R.id.linear_layout_datatables)
-    var linearLayout: LinearLayout? = null
 
-    @JvmField
-    @BindView(R.id.swipe_container)
-    var swipeRefreshLayout: SwipeRefreshLayout? = null
-
-    @JvmField
-    @BindView(R.id.progressbar_data_table)
-    var pbDataTable: ProgressBar? = null
-
-    @JvmField
-    @BindView(R.id.ll_error)
-    var llError: LinearLayout? = null
-
-    @JvmField
-    @BindView(R.id.tv_error)
-    var tvError: TextView? = null
+    private lateinit var binding: FragmentDatatableBinding
 
     @JvmField
     @Inject
     var mDataTableDataPresenter: DataTableDataPresenter? = null
     private var dataTable: DataTable? = null
     private var entityId = 0
-    private lateinit var rootView: View
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
@@ -65,19 +43,18 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_datatable, container, false)
-        ButterKnife.bind(this, rootView)
+        binding = FragmentDatatableBinding.inflate(inflater,container,false)
         mDataTableDataPresenter!!.attachView(this)
         setToolbarTitle(dataTable!!.registeredTableName)
-        swipeRefreshLayout!!.setColorSchemeColors(*activity
-                ?.getResources()!!.getIntArray(R.array.swipeRefreshColors))
-        swipeRefreshLayout!!.setOnRefreshListener(this)
+        binding.swipeContainer.setColorSchemeColors(*activity
+                ?.resources!!.getIntArray(R.array.swipeRefreshColors))
+        binding.swipeContainer.setOnRefreshListener(this)
         mDataTableDataPresenter!!.loadDataTableInfo(dataTable!!.registeredTableName, entityId)
-        return rootView
+        return binding.root
     }
 
     override fun onRefresh() {
-        linearLayout!!.visibility = View.GONE
+        binding.linearLayoutDatatables.visibility = View.GONE
         mDataTableDataPresenter!!.loadDataTableInfo(dataTable!!.registeredTableName, entityId)
     }
 
@@ -96,15 +73,18 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
 
     override fun showDataTableInfo(jsonElements: JsonArray?) {
         if (jsonElements != null) {
-            linearLayout!!.visibility = View.VISIBLE
-            llError!!.visibility = View.GONE
-            linearLayout!!.removeAllViews()
-            linearLayout!!.invalidate()
+            binding.linearLayoutDatatables.visibility = View.VISIBLE
+            binding.llError.visibility = View.GONE
+            binding.linearLayoutDatatables.removeAllViews()
+            binding.linearLayoutDatatables.invalidate()
             val mListener = activity
-                    ?.getSupportFragmentManager()
+                    ?.supportFragmentManager
                     ?.findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE) as DataTableActionListener?
-            linearLayout = DataTableUIBuilder().getDataTableLayout(dataTable,
-                    jsonElements, linearLayout, activity, entityId, mListener)
+//            binding.linearLayoutDatatables = DataTableUIBuilder().getDataTableLayout(dataTable,
+//                    jsonElements, binding.linearLayoutDatatables, activity, entityId, mListener)
+
+            binding.linearLayoutDatatables.addView(DataTableUIBuilder().getDataTableLayout(dataTable,
+                jsonElements, binding.linearLayoutDatatables,activity,entityId,mListener))
         }
     }
 
@@ -113,10 +93,10 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
     }
 
     override fun showEmptyDataTable() {
-        linearLayout!!.visibility = View.GONE
-        llError!!.visibility = View.VISIBLE
-        tvError!!.setText(R.string.empty_data_table)
-        Toaster.show(rootView, R.string.empty_data_table)
+        binding.linearLayoutDatatables.visibility = View.GONE
+        binding.llError.visibility = View.VISIBLE
+        binding.tvError.setText(R.string.empty_data_table)
+        Toaster.show(binding.root, R.string.empty_data_table)
     }
 
     override fun showFetchingError(message: Int) {
@@ -124,20 +104,20 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
     }
 
     override fun showFetchingError(errorMessage: String?) {
-        linearLayout!!.visibility = View.GONE
-        llError!!.visibility = View.VISIBLE
-        tvError!!.text = errorMessage
+        binding.linearLayoutDatatables.visibility = View.GONE
+        binding.llError.visibility = View.VISIBLE
+        binding.tvError.text = errorMessage
         Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
     override fun showProgressbar(show: Boolean) {
-        swipeRefreshLayout!!.isRefreshing = false
+        binding.swipeContainer.isRefreshing = false
         if (show) {
-            linearLayout!!.visibility = View.GONE
-            pbDataTable!!.visibility = View.VISIBLE
+            binding.linearLayoutDatatables.visibility = View.GONE
+            binding.progressbarDataTable.visibility = View.VISIBLE
         } else {
-            linearLayout!!.visibility = View.VISIBLE
-            pbDataTable!!.visibility = View.GONE
+            binding.linearLayoutDatatables.visibility = View.VISIBLE
+            binding.progressbarDataTable.visibility = View.GONE
         }
     }
 

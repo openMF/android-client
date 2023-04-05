@@ -4,7 +4,7 @@
  */
 
 buildscript {
-    ext.kotlin_version = "1.7.0"
+    ext.kotlin_version = '1.7.0'
     repositories {
         google()
         mavenCentral()
@@ -19,7 +19,8 @@ buildscript {
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
-        classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:5.0.8"
+        classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:5.0.14"
+
     }
 }
 
@@ -42,6 +43,10 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
+
+    buildFeatures{
+        viewBinding = true
+    }
 
     defaultConfig {
         multiDexEnabled true
@@ -147,6 +152,7 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
+
     implementation 'androidx.multidex:multidex:2.0.0'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
@@ -190,11 +196,6 @@ dependencies {
     compileOnly 'javax.annotation:jsr250-api:1.0'                //Required by Dagger2
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
-    //Butter Knife
-    implementation "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
-    kapt "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
-
     //LifeCycle
     implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
@@ -236,8 +237,8 @@ dependencies {
     implementation "com.mifos.mobile:mifos-passcode:$mifosPasscodeVersion"
 
     // Android Testing Support Library's runner and rules
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
 
     // Espresso UI Testing dependencies.
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
@@ -249,14 +250,14 @@ dependencies {
     }
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
 
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:1.10.19'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:5.2.0'
 
     //Android-Jobs
     implementation 'com.evernote:android-job:1.2.6'
 
     // androidx annotations
-    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.annotation:annotation:1.6.0'
 
     //card view
     implementation 'androidx.cardview:cardview:1.0.0'

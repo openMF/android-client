@@ -9,7 +9,9 @@
     style="@style/LinearLayout.Base">
 
 
-    <include layout="@layout/toolbar" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/surveyPager"

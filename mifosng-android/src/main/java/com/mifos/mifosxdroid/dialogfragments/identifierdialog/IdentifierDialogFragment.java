@@ -1,20 +1,19 @@
 package com.mifos.mifosxdroid.dialogfragments.identifierdialog;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment;
+import com.mifos.mifosxdroid.databinding.DialogFragmentIdentifierBinding;
 import com.mifos.objects.noncore.DocumentType;
 import com.mifos.objects.noncore.Identifier;
 import com.mifos.objects.noncore.IdentifierCreationResponse;
@@ -28,10 +27,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindArray;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by Rajan Maurya on 01/10/16.
@@ -39,23 +34,9 @@ import butterknife.OnClick;
 public class IdentifierDialogFragment extends ProgressableDialogFragment implements
         IdentifierDialogMvpView, AdapterView.OnItemSelectedListener {
 
-    @BindView(R.id.sp_identifier_type)
-    Spinner spIdentifierType;
+    private DialogFragmentIdentifierBinding binding;
 
-    @BindView(R.id.sp_identifier_status)
-    Spinner spIdentifierStatus;
-
-    @BindView(R.id.et_description)
-    EditText etDescription;
-
-    @BindView(R.id.btn_create_identifier)
-    Button btnIdentifier;
-
-    @BindView(R.id.et_unique_id)
-    EditText etUniqueId;
-
-    @BindArray(R.array.status)
-    String[] identifierStatus;
+    String[] identifierStatus = getResources().getStringArray(R.array.status);
 
     @Inject
     IdentifierDialogPresenter mIdentifierDialogPresenter;
@@ -63,7 +44,6 @@ public class IdentifierDialogFragment extends ProgressableDialogFragment impleme
     @Nullable
     private ClientIdentifierCreationListener clientIdentifierCreationListener;
 
-    private View rootView;
     private int clientId;
     private IdentifierTemplate identifierTemplate;
     private int identifierDocumentTypeId;
@@ -96,18 +76,23 @@ public class IdentifierDialogFragment extends ProgressableDialogFragment impleme
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dialog_fragment_identifier, container, false);
 
-        ButterKnife.bind(this, rootView);
+        binding = DialogFragmentIdentifierBinding.inflate(inflater, container, false);
         mIdentifierDialogPresenter.attachView(this);
 
         showIdentifierSpinners();
 
         mIdentifierDialogPresenter.loadClientIdentifierTemplate(clientId);
 
-        return rootView;
+        return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.btnCreateIdentifier.setOnClickListener(view1 -> onClickCreateIdentifier());
+    }
 
     @Override
     public void showIdentifierSpinners() {
@@ -116,39 +101,38 @@ public class IdentifierDialogFragment extends ProgressableDialogFragment impleme
                 android.R.layout.simple_spinner_item, mListIdentifierType);
         mIdentifierTypeAdapter
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spIdentifierType.setAdapter(mIdentifierTypeAdapter);
-        spIdentifierType.setOnItemSelectedListener(this);
+        binding.spIdentifierType.setAdapter(mIdentifierTypeAdapter);
+        binding.spIdentifierType.setOnItemSelectedListener(this);
 
         mIdentifierStatusAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item, identifierStatus);
         mIdentifierStatusAdapter
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spIdentifierStatus.setAdapter(mIdentifierStatusAdapter);
-        spIdentifierStatus.setOnItemSelectedListener(this);
+        binding.spIdentifierStatus.setAdapter(mIdentifierStatusAdapter);
+        binding.spIdentifierStatus.setOnItemSelectedListener(this);
 
     }
 
-    @OnClick(R.id.btn_create_identifier)
     void onClickCreateIdentifier() {
-        if (etUniqueId.getText().toString().trim().equals("")) {
-            etUniqueId.setError(getResources().getString(R.string.unique_id_required));
+        if (binding.etUniqueId.getText().toString().trim().equals("")) {
+            binding.etUniqueId.setError(getResources().getString(R.string.unique_id_required));
         } else if (mListIdentifierType.size() == 0) {
             showError(R.string.empty_identifier_document_type);
         } else {
-            hideKeyboard(btnIdentifier);
+            hideKeyboard(binding.btnCreateIdentifier);
             IdentifierPayload identifierPayload = new IdentifierPayload();
             identifierPayload.setDocumentTypeId(identifierDocumentTypeId);
             identifierPayload.setStatus(status);
-            identifierPayload.setDocumentKey(etUniqueId.getText().toString());
-            identifierPayload.setDescription(etDescription.getText().toString());
+            identifierPayload.setDocumentKey(binding.etUniqueId.getText().toString());
+            identifierPayload.setDescription(binding.etDescription.getText().toString());
 
             // Add the values in the identifier. It'll be sent to the calling Fragment
             // if the request is successful.
             identifier = new Identifier();
-            identifier.setDescription(etDescription.getText().toString());
-            identifier.setDocumentKey(etUniqueId.getText().toString());
+            identifier.setDescription(binding.etDescription.getText().toString());
+            identifier.setDocumentKey(binding.etUniqueId.getText().toString());
             identifier.setDocumentType(documentTypeHashMap
-                    .get(spIdentifierType.getSelectedItem().toString()));
+                    .get(binding.spIdentifierType.getSelectedItem().toString()));
             mIdentifierDialogPresenter.createClientIdentifier(clientId, identifierPayload);
         }
     }

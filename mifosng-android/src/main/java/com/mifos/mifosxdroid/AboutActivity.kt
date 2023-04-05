@@ -5,15 +5,19 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import com.mifos.mifosxdroid.core.MifosBaseActivity
+import com.mifos.mifosxdroid.databinding.ActivityAboutBinding
 
 class AboutActivity : MifosBaseActivity() {
+
+    lateinit var binding: ActivityAboutBinding
     var contributors = "https://github.com/openMF/android-client/graphs/contributors"
     var gitHub = "https://github.com/openMF/android-client"
     var twitter = "https://twitter.com/mifos"
     var license = "https://github.com/openMF/android-client/blob/master/LICENSE.md"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_about)
+        binding = ActivityAboutBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         showBackButton()
     }
 

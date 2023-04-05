@@ -1,12 +1,13 @@
 package com.mifos.mifosxdroid.adapters;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.mifos.mifosxdroid.R;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.mifos.mifosxdroid.databinding.ItemSyncGroupBinding;
 import com.mifos.objects.group.GroupPayload;
 
 import java.util.ArrayList;
@@ -14,8 +15,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by Rajan Maurya on 20/07/16.
@@ -32,9 +31,9 @@ public class SyncGroupPayloadAdapter extends
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_sync_group, parent, false);
-        return new ViewHolder(view);
+        ItemSyncGroupBinding binding = ItemSyncGroupBinding
+                .inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -72,30 +71,29 @@ public class SyncGroupPayloadAdapter extends
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_db_name)
         TextView tv_name;
 
-        @BindView(R.id.tv_db_externalId)
         TextView tv_external_id;
 
-        @BindView(R.id.tv_db_office_id)
         TextView tv_office_id;
 
-        @BindView(R.id.tv_db_submit_date)
         TextView tv_submit_date;
 
-        @BindView(R.id.tv_db_activation_date)
         TextView tv_activation_date;
 
-        @BindView(R.id.tv_db_active_status)
         TextView tv_active_status;
 
-        @BindView(R.id.tv_error_message)
         TextView tv_error_message;
 
-        public ViewHolder(View v) {
-            super(v);
-            ButterKnife.bind(this, v);
+        public ViewHolder(ItemSyncGroupBinding binding) {
+            super(binding.getRoot());
+            tv_name = binding.tvDbName;
+            tv_external_id = binding.tvDbExternalId;
+            tv_office_id = binding.tvDbOfficeId;
+            tv_submit_date = binding.tvDbSubmitDate;
+            tv_activation_date = binding.tvDbActivationDate;
+            tv_active_status = binding.tvDbActiveStatus;
+            tv_error_message = binding.tvErrorMessage;
         }
     }
 }

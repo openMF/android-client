@@ -29,7 +29,7 @@ public class DataManagerAuth {
      */
     public Observable<User> login(String username, String password) {
 
-        LoginData loginData = new LoginData(username,password);
+        LoginData loginData = new LoginData(username, password);
 
         return baseApiManager.getAuthApi().authenticate(loginData);
     }

@@ -15,19 +15,18 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.adapters.SearchAdapter;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.databinding.FragmentClientSearchBinding;
 import com.mifos.mifosxdroid.online.CentersActivity;
 import com.mifos.mifosxdroid.online.ClientActivity;
 import com.mifos.mifosxdroid.online.GroupsActivity;
@@ -43,48 +42,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindArray;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class SearchFragment extends MifosBaseFragment
         implements SearchMvpView, AdapterView.OnItemSelectedListener {
 
+    private FragmentClientSearchBinding binding;
+
     private static final String LOG_TAG = SearchFragment.class.getSimpleName();
 
-    @BindView(R.id.btn_search)
-    Button bt_search;
-
-    @BindView(R.id.et_search)
-    EditText et_search;
-
-    @BindView(R.id.sp_search)
-    Spinner sp_search;
-
-    @BindView(R.id.rv_search)
-    RecyclerView rv_search;
-
-    @BindView(R.id.cb_exact_match)
-    CheckBox cb_exactMatch;
-
-    @BindView(R.id.fab_create)
-    FloatingActionButton fabCreate;
-
-    @BindView(R.id.fab_client)
-    FloatingActionButton fabClient;
-
-    @BindView(R.id.fab_center)
-    FloatingActionButton fabCenter;
-
-    @BindView(R.id.fab_group)
-    FloatingActionButton fabGroup;
-
-    @BindArray(R.array.search_options_values)
     String[] searchOptionsValues;
 
     SearchAdapter searchAdapter;
@@ -92,7 +59,7 @@ public class SearchFragment extends MifosBaseFragment
     @Inject
     SearchPresenter searchPresenter;
 
-    // determines weather search is triggered by user or system
+    // determines whether search is triggered by user or system
     boolean autoTriggerSearch = false;
 
     private List<SearchedEntity> searchedEntities;
@@ -116,12 +83,24 @@ public class SearchFragment extends MifosBaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_client_search, null);
+        binding = FragmentClientSearchBinding.inflate(inflater);
         setToolbarTitle(getResources().getString(R.string.dashboard));
-        ButterKnife.bind(this, rootView);
         searchPresenter.attachView(this);
+        searchOptionsValues = getResources().getStringArray(R.array.search_options_values);
         showUserInterface();
-        return rootView;
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.btnSearch.setOnClickListener(view1 -> onClickSearch());
+        binding.fabCreate.setOnClickListener(view1 -> onClickCreate());
+        binding.fabGroup.setOnClickListener(view1 -> onClickCreateCGroup());
+        binding.fabCenter.setOnClickListener(view1 -> onClickCreateCenter());
+        binding.fabClient.setOnClickListener(view1 -> onClickCreateClient());
+
     }
 
     @Override
@@ -129,13 +108,13 @@ public class SearchFragment extends MifosBaseFragment
         searchOptionsAdapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.search_options, android.R.layout.simple_spinner_item);
         searchOptionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sp_search.setAdapter(searchOptionsAdapter);
-        sp_search.setOnItemSelectedListener(this);
-        et_search.requestFocus();
+        binding.spSearch.setAdapter(searchOptionsAdapter);
+        binding.spSearch.setOnItemSelectedListener(this);
+        binding.etSearch.requestFocus();
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rv_search.setLayoutManager(layoutManager);
-        rv_search.setHasFixedSize(true);
+        binding.rvSearch.setLayoutManager(layoutManager);
+        binding.rvSearch.setHasFixedSize(true);
         searchAdapter = new SearchAdapter(searchedEntity -> {
                 Intent activity = null;
                 switch (searchedEntity.getEntityType()) {
@@ -169,14 +148,10 @@ public class SearchFragment extends MifosBaseFragment
                 return null;
             }
         );
-        rv_search.setAdapter(searchAdapter);
+        binding.rvSearch.setAdapter(searchAdapter);
 
-        cb_exactMatch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                onClickSearch();
-            }
-        });
+        binding.cbExactMatch
+                .setOnCheckedChangeListener((compoundButton, b) -> onClickSearch());
 
         showGuide();
     }
@@ -200,70 +175,65 @@ public class SearchFragment extends MifosBaseFragment
         String cb_exactMatch_intro = getString(R.string.cb_exactMatch_intro);
         String bt_search_intro = getString(R.string.bt_search_intro);
 
-        sequence.addSequenceItem(et_search,
+        sequence.addSequenceItem(binding.etSearch,
                 et_search_intro, getString(R.string.got_it));
-        sequence.addSequenceItem(sp_search,
+        sequence.addSequenceItem(binding.spSearch,
                 sp_search_intro, getString(R.string.next));
-        sequence.addSequenceItem(cb_exactMatch,
+        sequence.addSequenceItem(binding.cbExactMatch,
                 cb_exactMatch_intro, getString(R.string.next));
-        sequence.addSequenceItem(bt_search,
+        sequence.addSequenceItem(binding.btnSearch,
                 bt_search_intro, getString(R.string.finish));
 
         sequence.start();
     }
 
 
-    @OnClick(R.id.fab_client)
     public void onClickCreateClient() {
         ((MifosBaseActivity) getActivity()).replaceFragment(CreateNewClientFragment.newInstance(),
                 true, R.id.container_a);
     }
 
-    @OnClick(R.id.fab_center)
     public void onClickCreateCenter() {
         ((MifosBaseActivity) getActivity()).replaceFragment(CreateNewCenterFragment.newInstance(),
                 true, R.id.container_a);
     }
 
-    @OnClick(R.id.fab_group)
     public void onClickCreateCGroup() {
         ((MifosBaseActivity) getActivity()).replaceFragment(CreateNewGroupFragment.newInstance(),
                 true, R.id.container_a);
     }
 
-    @OnClick(R.id.btn_search)
     public void onClickSearch() {
-        hideKeyboard(et_search);
-        String query = et_search.getEditableText().toString().trim();
+        hideKeyboard(binding.etSearch);
+        String query = binding.etSearch.getEditableText().toString().trim();
         if (!query.isEmpty()) {
             EspressoIdlingResource.increment(); // App is busy until further notice.
-            searchPresenter.searchResources(query, resources, cb_exactMatch.isChecked());
+            searchPresenter.searchResources(query, resources, binding.cbExactMatch.isChecked());
         } else {
             if (!autoTriggerSearch) {
-                Toaster.show(et_search, getString(R.string.no_search_query_entered));
+                Toaster.show(binding.etSearch, getString(R.string.no_search_query_entered));
             }
         }
     }
 
-    @OnClick(R.id.fab_create)
     void onClickCreate() {
         if (isFabOpen) {
-            fabCreate.startAnimation(rotate_backward);
-            fabClient.startAnimation(fab_close);
-            fabCenter.startAnimation(fab_close);
-            fabGroup.startAnimation(fab_close);
-            fabClient.setClickable(false);
-            fabCenter.setClickable(false);
-            fabGroup.setClickable(false);
+            binding.fabCreate.startAnimation(rotate_backward);
+            binding.fabClient.startAnimation(fab_close);
+            binding.fabCenter.startAnimation(fab_close);
+            binding.fabGroup.startAnimation(fab_close);
+            binding.fabClient.setClickable(false);
+            binding.fabCenter.setClickable(false);
+            binding.fabGroup.setClickable(false);
             isFabOpen = false;
         } else {
-            fabCreate.startAnimation(rotate_forward);
-            fabClient.startAnimation(fab_open);
-            fabCenter.startAnimation(fab_open);
-            fabGroup.startAnimation(fab_open);
-            fabClient.setClickable(true);
-            fabCenter.setClickable(true);
-            fabGroup.setClickable(true);
+            binding.fabCreate.startAnimation(rotate_forward);
+            binding.fabClient.startAnimation(fab_open);
+            binding.fabCenter.startAnimation(fab_open);
+            binding.fabGroup.startAnimation(fab_open);
+            binding.fabClient.setClickable(true);
+            binding.fabCenter.setClickable(true);
+            binding.fabGroup.setClickable(true);
             isFabOpen = true;
         }
         autoTriggerSearch = false;
@@ -280,7 +250,7 @@ public class SearchFragment extends MifosBaseFragment
     public void showNoResultFound() {
         searchedEntities.clear();
         searchAdapter.notifyDataSetChanged();
-        Toaster.show(et_search, getString(R.string.no_search_result_found));
+        Toaster.show(binding.etSearch, getString(R.string.no_search_result_found));
     }
 
     @Override
@@ -307,7 +277,7 @@ public class SearchFragment extends MifosBaseFragment
     @Override
     public void onPause() {
         //Fragment getting detached, keyboard if open must be hidden
-        hideKeyboard(et_search);
+        hideKeyboard(binding.etSearch);
         super.onPause();
     }
 
@@ -342,9 +312,9 @@ public class SearchFragment extends MifosBaseFragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         try {
-            String queryString = et_search.getEditableText().toString();
+            String queryString = binding.etSearch.getEditableText().toString();
             if (!queryString.equals("")) {
-                outState.putString(LOG_TAG + et_search.getId(), queryString);
+                outState.putString(LOG_TAG + binding.etSearch.getId(), queryString);
             }
         } catch (NullPointerException npe) {
             //Looks like edit text didn't get initialized properly
@@ -355,9 +325,9 @@ public class SearchFragment extends MifosBaseFragment
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
-            String queryString = savedInstanceState.getString(LOG_TAG + et_search.getId());
+            String queryString = savedInstanceState.getString(LOG_TAG + binding.etSearch.getId());
             if (!TextUtils.isEmpty(queryString)) {
-                et_search.setText(queryString);
+                binding.etSearch.setText(queryString);
             }
         }
     }

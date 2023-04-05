@@ -10,15 +10,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
+import com.mifos.mifosxdroid.databinding.FragmentSurveyLastBinding
 import com.mifos.mifosxdroid.online.Communicator
 import com.mifos.mifosxdroid.online.SurveyQuestionActivity
 import com.mifos.objects.survey.Scorecard
@@ -29,13 +25,7 @@ import javax.inject.Inject
  */
 class SurveySubmitFragment : MifosBaseFragment(), Communicator, SurveySubmitMvpView {
 
-    @JvmField
-    @BindView(R.id.btn_submit)
-    var btn_submit: Button? = null
-
-    @JvmField
-    @BindView(R.id.survey_submit_textView)
-    var tv_submit: TextView? = null
+    private lateinit var binding: FragmentSurveyLastBinding
 
     @JvmField
     @Inject
@@ -43,6 +33,7 @@ class SurveySubmitFragment : MifosBaseFragment(), Communicator, SurveySubmitMvpV
     private var mDetachFragment: DisableSwipe? = null
     private var mScorecard: Scorecard? = null
     private var mSurveyId = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
@@ -50,10 +41,15 @@ class SurveySubmitFragment : MifosBaseFragment(), Communicator, SurveySubmitMvpV
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_survey_last, container, false)
-        ButterKnife.bind(this, view)
+        binding = FragmentSurveyLastBinding.inflate(inflater,container,false)
         mSurveySubmitPresenter!!.attachView(this)
-        return view
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnSubmit.setOnClickListener { submitScore() }
     }
 
     override fun passScoreCardData(scorecard: Scorecard, surveyId: Int) {
@@ -62,37 +58,38 @@ class SurveySubmitFragment : MifosBaseFragment(), Communicator, SurveySubmitMvpV
         if (isAdded) {
             val submitText = resources.getString(R.string.attempt_question) +
                     mScorecard!!.scorecardValues.size
-            tv_submit!!.text = submitText
-            btn_submit!!.text = resources.getString(R.string.submit_survey)
+            binding.surveySubmitTextView.text = submitText
+            binding.btnSubmit.text = resources.getString(R.string.submit_survey)
         }
     }
 
-    @OnClick(R.id.btn_submit)
     fun submitScore() {
         if (mScorecard!!.scorecardValues.size >= 1) {
             mDetachFragment!!.disableSwipe()
-            btn_submit!!.text = resources.getString(R.string.submitting_surveys)
-            btn_submit!!.isEnabled = false
-            btn_submit!!.visibility = View.GONE
+            binding.btnSubmit.text = resources.getString(R.string.submitting_surveys)
+            binding.btnSubmit.isEnabled = false
+            binding.btnSubmit.visibility = View.GONE
             mSurveySubmitPresenter!!.submitSurvey(mSurveyId, mScorecard)
         } else {
-            Toast.makeText(getContext(), resources
+            Toast.makeText(
+                context, resources
                     .getString(R.string.please_attempt_atleast_one_question), Toast.LENGTH_SHORT)
                     .show()
         }
     }
 
     override fun showSurveySubmittedSuccessfully(scorecard: Scorecard?) {
-        Toast.makeText(getContext(), resources.getString(R.string.scorecard_created_successfully),
+        Toast.makeText(
+            context, resources.getString(R.string.scorecard_created_successfully),
                 Toast.LENGTH_LONG).show()
-        tv_submit!!.text = resources.getString(R.string.survey_successfully_submitted)
-        btn_submit!!.visibility = View.GONE
+        binding.surveySubmitTextView.text = resources.getString(R.string.survey_successfully_submitted)
+        binding.btnSubmit.visibility = View.GONE
     }
 
     override fun showError(errorMessage: Int) {
-        Toast.makeText(getContext(), resources.getString(errorMessage), Toast.LENGTH_LONG).show()
-        tv_submit!!.text = resources.getString(R.string.error_submitting_survey)
-        btn_submit!!.visibility = View.GONE
+        Toast.makeText(context, resources.getString(errorMessage), Toast.LENGTH_LONG).show()
+        binding.surveySubmitTextView.text = resources.getString(R.string.error_submitting_survey)
+        binding.btnSubmit.visibility = View.GONE
     }
 
     override fun showProgressbar(b: Boolean) {

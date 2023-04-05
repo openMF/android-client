@@ -14,21 +14,21 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 import com.mifos.api.GenericResponse;
 import com.mifos.exceptions.RequiredFieldException;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.util.Toaster;
+import com.mifos.mifosxdroid.databinding.DialogFragmentDocumentBinding;
 import com.mifos.objects.noncore.Document;
 import com.mifos.utils.AndroidVersionUtil;
 import com.mifos.utils.CheckSelfPermissionAndRequest;
@@ -40,9 +40,6 @@ import java.io.File;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by ishankhanna on 04/07/14.
@@ -52,28 +49,12 @@ import butterknife.OnClick;
 public class DocumentDialogFragment extends DialogFragment implements DocumentDialogMvpView {
 
     private static final int FILE_SELECT_CODE = 0;
+    private DialogFragmentDocumentBinding binding;
 
     private final String LOG_TAG = getClass().getSimpleName();
 
-    @BindView(R.id.tv_document_action)
-    TextView tvDocumentAction;
-
-    @BindView(R.id.et_document_name)
-    EditText etDocumentName;
-
-    @BindView(R.id.et_document_description)
-    EditText etDocumentDescription;
-
-    @BindView(R.id.tv_choose_file)
-    TextView tvChooseFile;
-
-    @BindView(R.id.bt_upload)
-    Button btUpload;
-
     @Inject
     DocumentDialogPresenter mDocumentDialogPresenter;
-
-    View rootView;
 
     SafeUIBlockingUtility safeUIBlockingUtility;
 
@@ -124,23 +105,28 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dialog_fragment_document, container, false);
-        ButterKnife.bind(this, rootView);
+        binding = DialogFragmentDocumentBinding.inflate(inflater, container, false);
         mDocumentDialogPresenter.attachView(this);
         if (getResources().getString(R.string.update_document).equals(documentAction)) {
-            tvDocumentAction.setText(R.string.update_document);
-            etDocumentName.setText(document.getName());
-            etDocumentDescription.setText(document.getDescription());
+            binding.tvDocumentAction.setText(R.string.update_document);
+            binding.etDocumentName.setText(document.getName());
+            binding.etDocumentDescription.setText(document.getDescription());
         } else if (getResources().getString(R.string.upload_document).equals(documentAction)) {
-            tvDocumentAction.setText(R.string.upload_document);
+            binding.tvDocumentAction.setText(R.string.upload_document);
         }
 
-        btUpload.setEnabled(false);
-        return rootView;
+        binding.btUpload.setEnabled(false);
+        return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-    @OnClick(R.id.bt_upload)
+        binding.btUpload.setOnClickListener(view1 -> beginUpload());
+        binding.btnBrowseDocument.setOnClickListener(view1 -> openFilePicker());
+    }
+
     public void beginUpload() {
         try {
             validateInput();
@@ -149,7 +135,6 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
         }
     }
 
-    @OnClick(R.id.btn_browse_document)
     public void openFilePicker() {
         checkPermissionAndRequest();
     }
@@ -162,13 +147,13 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
      */
     public void validateInput() throws RequiredFieldException {
 
-        documentName = etDocumentName.getEditableText().toString();
+        documentName = binding.etDocumentName.getEditableText().toString();
 
         if (documentName.length() == 0 || documentName.equals(""))
             throw new RequiredFieldException(getResources().getString(R.string.name),
                     getString(R.string.message_field_required));
 
-        documentDescription = etDocumentDescription.getEditableText().toString();
+        documentDescription = binding.etDocumentDescription.getEditableText().toString();
 
         if (documentDescription.length() == 0 || documentDescription.equals(""))
             throw new RequiredFieldException(getResources().getString(R.string.description),
@@ -239,7 +224,7 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                 } else {
 
                     // permission denied, boo! Disable the
-                    Toaster.show(rootView, getResources()
+                    Toaster.show(binding.getRoot(), getResources()
                             .getString(R.string.permission_denied_to_read_external_document));
                 }
             }
@@ -285,11 +270,11 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
                     }
 
                     if (fileChoosen != null) {
-                        tvChooseFile.setText(fileChoosen.getName());
+                        binding.tvChooseFile.setText(fileChoosen.getName());
                     } else {
                         break;
                     }
-                    btUpload.setEnabled(true);
+                    binding.btUpload.setEnabled(true);
 
                 }
                 break;
