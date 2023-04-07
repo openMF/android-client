@@ -85,7 +85,7 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
     private var listener: OnFragmentInteractionListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity?)!!.activityComponent?.inject(this)
         if (arguments != null) {
             centerId = requireArguments().getInt(Constants.CENTER_ID)
         }

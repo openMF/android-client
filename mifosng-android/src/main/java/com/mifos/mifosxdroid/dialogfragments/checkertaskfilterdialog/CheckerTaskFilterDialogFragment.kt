@@ -60,7 +60,7 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
         datePickerFromDate = MFDatePicker.newInsance(this)
         datePickerToDate = MFDatePicker.newInsance(this)
 
-        (activity as MifosBaseActivity).activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?

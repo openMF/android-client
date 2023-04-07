@@ -66,7 +66,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
 
     var navController: NavController? = null
     private var mNavigationHeader: View? = null
-    var userStatusToggle: SwitchCompat? = null
+    lateinit var userStatusToggle: SwitchCompat
     private var doubleBackToExitPressedOnce = false
     var appBarConfiguration: AppBarConfiguration? = null
 
@@ -190,15 +190,15 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
     fun setupUserStatusToggle() {
         userStatusToggle = mNavigationHeader!!.findViewById(R.id.user_status_toggle)
         if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
-            userStatusToggle?.isChecked = true
+            userStatusToggle.isChecked = true
         }
-        userStatusToggle?.setOnClickListener(View.OnClickListener {
+        userStatusToggle.setOnClickListener(View.OnClickListener {
             if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
                 PrefManager.setUserStatus(Constants.USER_ONLINE)
-                userStatusToggle!!.isChecked = false
+                userStatusToggle.isChecked = false
             } else {
                 PrefManager.setUserStatus(Constants.USER_OFFLINE)
-                userStatusToggle!!.isChecked = true
+                userStatusToggle.isChecked = true
             }
         })
     }
