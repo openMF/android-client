@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.mifos.App;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.SplashScreenActivity;
@@ -135,7 +136,7 @@ public class MifosBaseActivity extends BasePassCodeActivity implements BaseActiv
 
     @Override
     public void logout() {
-        new MaterialDialog.Builder().init(MifosBaseActivity.this)
+        new MaterialAlertDialogBuilder(this)
                 .setMessage(R.string.dialog_logout)
                 .setPositiveButton(getString(R.string.logout),
                         new DialogInterface.OnClickListener() {
@@ -150,8 +151,12 @@ public class MifosBaseActivity extends BasePassCodeActivity implements BaseActiv
                                 finish();
                             }
                         })
-                .setNegativeButton(getString(R.string.cancel))
-                .createMaterialDialog()
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
                 .show();
     }
 
