@@ -146,6 +146,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
          */
         if (isParentFragment) {
             mClientListPresenter!!.showParentClients(clientList)
+            pb_client!!.visibility = View.GONE
         } else {
             mClientListPresenter!!.loadClients(false, 0)
         }
