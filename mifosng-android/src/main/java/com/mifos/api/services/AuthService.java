@@ -16,8 +16,8 @@ import rx.Observable;
  * @author fomenkoo
  */
 public interface AuthService {
-
     @POST(APIEndPoint.AUTHENTICATION)
-    Observable<User> authenticate(@Body LoginData loginData);
+
+    Observable<User> authenticate(@Body LoginData login );
 
 }
