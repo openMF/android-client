@@ -3,12 +3,11 @@ package com.mifos.api.datamanager;
 import com.mifos.api.BaseApiManager;
 import com.mifos.api.model.LoginData;
 import com.mifos.objects.user.User;
-
+import com.mifos.api.model.LoginData;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-
 /**
  * Created by Rajan Maurya on 19/02/17.
  */
