@@ -15,6 +15,7 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -56,11 +57,12 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar.toolbar)
+
         navController = Navigation.findNavController(this,R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration.Builder()
                 .setDrawerLayout(binding.drawer)
