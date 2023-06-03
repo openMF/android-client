@@ -86,6 +86,14 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     var bt_approve_saving: Button? = null
 
     @JvmField
+    @BindView(R.id.savings_transactions)
+    var tvSavingsTransactions: TextView? = null
+
+    @JvmField
+    @BindView(R.id.no_saving_transactions_view)
+    var tvNoSavingsTransactions: TextView? = null
+
+    @JvmField
     @Inject
     var mSavingAccountSummaryPresenter: SavingsAccountSummaryPresenter? = null
 
@@ -120,13 +128,17 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         rootView = inflater.inflate(R.layout.fragment_savings_account_summary, container, false)
         (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
         ButterKnife.bind(this, rootView)
         mSavingAccountSummaryPresenter!!.attachView(this)
         mSavingAccountSummaryPresenter!!
-                .loadSavingAccount(savingsAccountType!!.endpoint, savingsAccountNumber)
+            .loadSavingAccount(savingsAccountType!!.endpoint, savingsAccountNumber)
         return rootView
     }
 
@@ -146,8 +158,10 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         mListener = try {
             activity as OnFragmentInteractionListener
         } catch (e: ClassCastException) {
-            throw ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener")
+            throw ClassCastException(
+                activity.toString()
+                        + " must implement OnFragmentInteractionListener"
+            )
         }
     }
 
@@ -161,9 +175,16 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         menu.clear()
-        menu.add(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, Constants.DATA_TABLE_SAVINGS_ACCOUNTS_NAME)
-        menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE,
-                resources.getString(R.string.documents))
+        menu.add(
+            Menu.NONE,
+            MENU_ITEM_DATA_TABLES,
+            Menu.NONE,
+            Constants.DATA_TABLE_SAVINGS_ACCOUNTS_NAME
+        )
+        menu.add(
+            Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE,
+            resources.getString(R.string.documents)
+        )
         super.onPrepareOptionsMenu(menu)
     }
 
@@ -179,14 +200,18 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
 
     @OnClick(R.id.bt_deposit)
     fun onDepositButtonClicked() {
-        mListener!!.doTransaction(savingsAccountWithAssociations,
-                Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT, savingsAccountType)
+        mListener!!.doTransaction(
+            savingsAccountWithAssociations,
+            Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT, savingsAccountType
+        )
     }
 
     @OnClick(R.id.bt_withdrawal)
     fun onWithdrawalButtonClicked() {
-        mListener!!.doTransaction(savingsAccountWithAssociations,
-                Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL, savingsAccountType)
+        mListener!!.doTransaction(
+            savingsAccountWithAssociations,
+            Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL, savingsAccountType
+        )
     }
 
     @OnClick(R.id.bt_approve_saving)
@@ -196,8 +221,10 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         } else if (processSavingTransactionAction == ACTION_ACTIVATE_SAVINGS) {
             activateSavings()
         } else {
-            Log.i(requireActivity().localClassName,
-                    resources.getString(R.string.transaction_action_not_set))
+            Log.i(
+                requireActivity().localClassName,
+                resources.getString(R.string.transaction_action_not_set)
+            )
         }
     }
 
@@ -207,7 +234,12 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
                 loadmore = scrollState != AbsListView.OnScrollListener.SCROLL_STATE_IDLE
             }
 
-            override fun onScroll(absListView: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+            override fun onScroll(
+                absListView: AbsListView,
+                firstVisibleItem: Int,
+                visibleItemCount: Int,
+                totalItemCount: Int
+            ) {
                 val lastItem = firstVisibleItem + visibleItemCount
                 if (firstVisibleItem == 0) return
                 if (lastItem == totalItemCount && loadmore) {
@@ -225,24 +257,29 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         last += 5
         if (last > listOfAllTransactions.size) {
             last = listOfAllTransactions.size
-            savingsAccountTransactionsListAdapter = SavingsAccountTransactionsListAdapter(activity,
-                    listOfAllTransactions.subList(initial, last))
+            savingsAccountTransactionsListAdapter = SavingsAccountTransactionsListAdapter(
+                activity,
+                listOfAllTransactions.subList(initial, last)
+            )
             savingsAccountTransactionsListAdapter!!.notifyDataSetChanged()
             lv_Transactions!!.adapter = savingsAccountTransactionsListAdapter
             lv_Transactions!!.setSelectionFromTop(index, top)
             return
         }
-        savingsAccountTransactionsListAdapter = SavingsAccountTransactionsListAdapter(activity,
-                listOfAllTransactions.subList(initial, last))
+        savingsAccountTransactionsListAdapter = SavingsAccountTransactionsListAdapter(
+            activity,
+            listOfAllTransactions.subList(initial, last)
+        )
         savingsAccountTransactionsListAdapter!!.notifyDataSetChanged()
         lv_Transactions!!.adapter = savingsAccountTransactionsListAdapter
         lv_Transactions!!.setSelectionFromTop(index, top)
     }
 
     fun loadDocuments() {
-        val documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_SAVINGS, savingsAccountNumber)
+        val documentListFragment =
+            DocumentListFragment.newInstance(Constants.ENTITY_TYPE_SAVINGS, savingsAccountNumber)
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY)
         fragmentTransaction.replace(R.id.container, documentListFragment)
         fragmentTransaction.commit()
@@ -250,9 +287,9 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
 
     fun approveSavings() {
         val savingsAccountApproval = SavingsAccountApprovalFragment
-                .newInstance(savingsAccountNumber, savingsAccountType)
+            .newInstance(savingsAccountNumber, savingsAccountType)
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY)
         fragmentTransaction.replace(R.id.container, savingsAccountApproval)
         fragmentTransaction.commit()
@@ -260,18 +297,19 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
 
     fun activateSavings() {
         val savingsAccountApproval = SavingsAccountActivateFragment
-                .newInstance(savingsAccountNumber, savingsAccountType)
+            .newInstance(savingsAccountNumber, savingsAccountType)
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY)
         fragmentTransaction.replace(R.id.container, savingsAccountApproval)
         fragmentTransaction.commit()
     }
 
     fun loadSavingsDataTables() {
-        val loanAccountFragment = DataTableFragment.newInstance(Constants.DATA_TABLE_NAME_SAVINGS, savingsAccountNumber)
+        val loanAccountFragment =
+            DataTableFragment.newInstance(Constants.DATA_TABLE_NAME_SAVINGS, savingsAccountNumber)
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY)
         fragmentTransaction.replace(R.id.container, loanAccountFragment)
         fragmentTransaction.commit()
@@ -294,34 +332,39 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
             tv_savingsAccountNumber!!.text = savingsAccountWithAssociations.accountNo
             if (savingsAccountWithAssociations.summary.totalInterestEarned != null) {
                 tv_interestEarned!!.text = savingsAccountWithAssociations
-                        .summary.totalInterestEarned.toString()
+                    .summary.totalInterestEarned.toString()
             } else {
                 tv_interestEarned!!.text = "0.0"
             }
             tv_savingsAccountBalance!!.text = savingsAccountWithAssociations
-                    .summary.accountBalance.toString()
+                .summary.accountBalance.toString()
             if (savingsAccountWithAssociations.summary.totalDeposits != null) {
                 tv_totalDeposits!!.text = savingsAccountWithAssociations
-                        .summary.totalDeposits.toString()
+                    .summary.totalDeposits.toString()
             } else {
                 tv_totalDeposits!!.text = "0.0"
             }
             if (savingsAccountWithAssociations.summary.totalWithdrawals != null) {
                 tv_totalWithdrawals!!.text = savingsAccountWithAssociations
-                        .summary.totalWithdrawals.toString()
+                    .summary.totalWithdrawals.toString()
             } else {
                 tv_totalWithdrawals!!.text = "0.0"
             }
-            savingsAccountTransactionsListAdapter = SavingsAccountTransactionsListAdapter(activity,
-                    if (savingsAccountWithAssociations.transactions.size < last) savingsAccountWithAssociations.transactions else savingsAccountWithAssociations.transactions.subList(initial, last)
+            savingsAccountTransactionsListAdapter = SavingsAccountTransactionsListAdapter(
+                activity,
+                if (savingsAccountWithAssociations.transactions.size < last) savingsAccountWithAssociations.transactions else savingsAccountWithAssociations.transactions.subList(
+                    initial,
+                    last
+                )
             )
             lv_Transactions!!.adapter = savingsAccountTransactionsListAdapter
 
             // Cache transactions here
             listOfAllTransactions.addAll(savingsAccountWithAssociations.transactions)
-            lv_Transactions!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                showTransaction(i)
-            }
+            lv_Transactions!!.onItemClickListener =
+                AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                    showTransaction(i)
+                }
             if (savingsAccountWithAssociations.status.submittedAndPendingApproval) {
                 bt_approve_saving!!.isEnabled = true
                 bt_deposit!!.visibility = View.GONE
@@ -339,10 +382,14 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
                 bt_deposit!!.visibility = View.GONE
                 bt_withdrawal!!.visibility = View.GONE
                 bt_approve_saving!!
-                        .setText(resources.getString(R.string.savings_account_closed))
+                    .setText(resources.getString(R.string.savings_account_closed))
             } else {
                 inflateSavingsAccountSummary()
                 bt_approve_saving!!.visibility = View.GONE
+            }
+            if (listOfAllTransactions.isEmpty()) {
+                tvSavingsTransactions!!.visibility = View.INVISIBLE
+                tvNoSavingsTransactions!!.visibility = View.VISIBLE
             }
             enableInfiniteScrollOfTransactions()
         }
@@ -372,8 +419,10 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     }
 
     override fun showSavingsActivatedSuccessfully(genericResponse: GenericResponse?) {
-        Toast.makeText(activity, resources.getString(R.string.savings_account_activated),
-                Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            activity, resources.getString(R.string.savings_account_activated),
+            Toast.LENGTH_LONG
+        ).show()
         requireActivity().supportFragmentManager.popBackStack()
     }
 
@@ -395,7 +444,11 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     }
 
     interface OnFragmentInteractionListener {
-        fun doTransaction(savingsAccountWithAssociations: SavingsAccountWithAssociations?, transactionType: String?, accountType: DepositType?)
+        fun doTransaction(
+            savingsAccountWithAssociations: SavingsAccountWithAssociations?,
+            transactionType: String?,
+            accountType: DepositType?
+        )
     }
 
     companion object {
@@ -405,9 +458,11 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         private const val ACTION_ACTIVATE_SAVINGS = 5
 
         @JvmStatic
-        fun newInstance(savingsAccountNumber: Int,
-                        type: DepositType?,
-                        parentFragment: Boolean): SavingsAccountSummaryFragment {
+        fun newInstance(
+            savingsAccountNumber: Int,
+            type: DepositType?,
+            parentFragment: Boolean
+        ): SavingsAccountSummaryFragment {
             val fragment = SavingsAccountSummaryFragment()
             val args = Bundle()
             args.putInt(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountNumber)

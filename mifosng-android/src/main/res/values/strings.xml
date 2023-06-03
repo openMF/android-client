@@ -830,6 +830,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="entry">ENTRY</string>
     <string name="network_issue">Network Issue</string>
+    <string name="no_transactions">No Transactions Available</string>
 
     <string name="accounts">Accounts</string>
 
@@ -837,7 +838,7 @@
     <string name="ui">UI</string>
     <string name="dark_mode_def_value">MODE_NIGHT_FOLLOW_SYSTEM</string>
 
-    <string-array name="dark_mode_entries"  translatable="false">
+    <string-array name="dark_mode_entries" translatable="false">
         <item>Light</item>
         <item>Dark</item>
         <item>System Default</item>
@@ -860,7 +861,7 @@
     <string name="about_license">License</string>
     <string name="about_license_sub">Check Mozilla Public License 2.0</string>
 
-    <string-array name="dark_mode_values"  translatable="false">
+    <string-array name="dark_mode_values" translatable="false">
         <item>light</item>
         <item>dark</item>
         <item>default</item>
