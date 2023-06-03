@@ -81,6 +81,8 @@ public class Constants {
 
     public static final String GROUP_ID = "groupId";
 
+    public static final String GROUP_NAME = "groupName";
+
     public static final String GROUPS = "groups";
 
     public static final String GROUP_ACCOUNT = "isGroupAccount";
@@ -91,7 +93,7 @@ public class Constants {
 
     public static final String ENTITY_ID = "entityId";
 
-    public static final String DOCUMENT_ACTIONS =  "document_actions";
+    public static final String DOCUMENT_ACTIONS = "document_actions";
 
     public static final String DOCUMENT = "document_title";
 
@@ -128,7 +130,7 @@ public class Constants {
     public static final String SERVICE_STATUS = "service_status";
 
     public static final String DATA_TABLE_NAME = "data_table_name";
-    
+
     public static final int DIALOG_FRAGMENT = 1;
 
     public static final String ACTIVATE_CLIENT = "activate_client";
@@ -164,7 +166,6 @@ public class Constants {
     public static final String SAVED = "SAVED";
 
     public static final String FILLNOW = "FillNow";
-
 
 
     //This needs to be 8 bits because validateRequestPermissionsRequestCode
