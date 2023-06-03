@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -45,10 +46,12 @@ import javax.inject.Inject;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnEditorAction;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
@@ -137,37 +140,37 @@ public class SearchFragment extends MifosBaseFragment
         rv_search.setLayoutManager(layoutManager);
         rv_search.setHasFixedSize(true);
         searchAdapter = new SearchAdapter(searchedEntity -> {
-                Intent activity = null;
-                switch (searchedEntity.getEntityType()) {
-                    case Constants.SEARCH_ENTITY_LOAN:
-                        activity = new Intent(getActivity(), ClientActivity.class);
-                        activity.putExtra(Constants.LOAN_ACCOUNT_NUMBER,
-                                searchedEntity.getEntityId());
-                        break;
-                    case Constants.SEARCH_ENTITY_CLIENT:
-                        activity = new Intent(getActivity(), ClientActivity.class);
-                        activity.putExtra(Constants.CLIENT_ID,
-                                searchedEntity.getEntityId());
-                        break;
-                    case Constants.SEARCH_ENTITY_GROUP:
-                        activity = new Intent(getActivity(), GroupsActivity.class);
-                        activity.putExtra(Constants.GROUP_ID,
-                                searchedEntity.getEntityId());
-                        break;
-                    case Constants.SEARCH_ENTITY_SAVING:
-                        activity = new Intent(getActivity(), ClientActivity.class);
-                        activity.putExtra(Constants.SAVINGS_ACCOUNT_NUMBER,
-                                searchedEntity.getEntityId());
-                        break;
-                    case Constants.SEARCH_ENTITY_CENTER:
-                        activity = new Intent(getActivity(), CentersActivity.class);
-                        activity.putExtra(Constants.CENTER_ID,
-                                searchedEntity.getEntityId());
-                        break;
-                }
-                startActivity(activity);
-                return null;
+            Intent activity = null;
+            switch (searchedEntity.getEntityType()) {
+                case Constants.SEARCH_ENTITY_LOAN:
+                    activity = new Intent(getActivity(), ClientActivity.class);
+                    activity.putExtra(Constants.LOAN_ACCOUNT_NUMBER,
+                            searchedEntity.getEntityId());
+                    break;
+                case Constants.SEARCH_ENTITY_CLIENT:
+                    activity = new Intent(getActivity(), ClientActivity.class);
+                    activity.putExtra(Constants.CLIENT_ID,
+                            searchedEntity.getEntityId());
+                    break;
+                case Constants.SEARCH_ENTITY_GROUP:
+                    activity = new Intent(getActivity(), GroupsActivity.class);
+                    activity.putExtra(Constants.GROUP_ID,
+                            searchedEntity.getEntityId());
+                    break;
+                case Constants.SEARCH_ENTITY_SAVING:
+                    activity = new Intent(getActivity(), ClientActivity.class);
+                    activity.putExtra(Constants.SAVINGS_ACCOUNT_NUMBER,
+                            searchedEntity.getEntityId());
+                    break;
+                case Constants.SEARCH_ENTITY_CENTER:
+                    activity = new Intent(getActivity(), CentersActivity.class);
+                    activity.putExtra(Constants.CENTER_ID,
+                            searchedEntity.getEntityId());
+                    break;
             }
+            startActivity(activity);
+            return null;
+        }
         );
         rv_search.setAdapter(searchAdapter);
 
@@ -191,7 +194,7 @@ public class SearchFragment extends MifosBaseFragment
 
         String et_search_intro = getString(R.string.et_search_intro);
         int i = 1;
-        for (String s: searchOptionsValues) {
+        for (String s : searchOptionsValues) {
             et_search_intro += "\n" + i + '.' + s;
             i++;
         }
@@ -229,6 +232,15 @@ public class SearchFragment extends MifosBaseFragment
     public void onClickCreateCGroup() {
         ((MifosBaseActivity) getActivity()).replaceFragment(CreateNewGroupFragment.newInstance(),
                 true, R.id.container_a);
+    }
+
+    @OnEditorAction(R.id.et_search)
+    boolean onEditorAction(int actionId) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            onClickSearch();
+            return true;
+        }
+        return false;
     }
 
     @OnClick(R.id.btn_search)
