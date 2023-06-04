@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +23,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -211,7 +212,8 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView,
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (requestCode == Constants.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -238,8 +240,9 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView,
         protected void onPreExecute() {
             super.onPreExecute();
             showProgressbar(true);
-            reportDirectoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
-                    getString(R.string.export_csv_directory);
+            reportDirectoryPath =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
+                            getString(R.string.export_csv_directory);
             long timestamp = System.currentTimeMillis();
             reportPath = reportDirectoryPath + timestamp + ".csv";
             reportDirectory = new File(reportDirectoryPath);
@@ -260,7 +263,7 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView,
                 // write headers
                 int columnSize = report.getColumnHeaders().size();
                 int count = 1;
-                for (ColumnHeader header: report.getColumnHeaders()) {
+                for (ColumnHeader header : report.getColumnHeaders()) {
                     fileWriter.append(header.getColumnName());
                     if (count == columnSize) {
                         fileWriter.append("\n");
@@ -271,7 +274,7 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView,
                 }
 
                 // write row data
-                for (DataRow row: report.getData()) {
+                for (DataRow row : report.getData()) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         fileWriter.append(String.join(",", row.getRow()));
                     } else {
