@@ -262,6 +262,7 @@
     <string name="obligation_date_type">Obligation date type</string>
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
+    <string name="export_csv_directory" translatable="false">/mifos/documents/report/</string>
     <string name="enter_account_no">Enter Account No.</string>
     <string name="from_x_number">From X Number</string>
     <string name="to_y_number">To Y Number</string>
