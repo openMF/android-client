@@ -3,7 +3,6 @@ package com.mifos.mifosxdroid.core;
 import android.content.Context;
 import android.content.DialogInterface;
 import androidx.annotation.StringRes;
-import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.mifos.mifosxdroid.R;
