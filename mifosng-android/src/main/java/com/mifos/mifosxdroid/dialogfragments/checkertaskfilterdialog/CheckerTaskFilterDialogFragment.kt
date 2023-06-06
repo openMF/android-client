@@ -115,7 +115,7 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
         btn_clear_filter.setOnClickListener {
             mOnInputSelected.sendInput(null, null,
                     selectedAction, selectedEntity, "")
-            dialog.dismiss()
+            dialog?.dismiss()
         }
     }
 
