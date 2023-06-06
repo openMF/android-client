@@ -187,7 +187,7 @@ dependencies {
     //Dagger dependencies
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
     implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
-    compileOnly 'javax.annotation:jsr250-api:1.0'                //Required by Dagger2
+    compileOnly 'javax.annotation:jsr250-api:1.0-20050927.133100'                //Required by Dagger2
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
     //Butter Knife
@@ -214,7 +214,7 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttp3Version"
     implementation "com.jakewharton.fliptables:fliptables:$rootProject.flipTableVersion"
     implementation 'com.github.therajanmaurya:Sweet-Error:1.0.0'
-    implementation 'javax.annotation:jsr250-api:1.0@jar'
+    implementation 'javax.annotation:jsr250-api:1.0-20050927.133100@jar'
 
     implementation 'io.reactivex:rxandroid:1.1.0'
     implementation 'io.reactivex:rxjava:1.1.4'
