@@ -105,4 +105,13 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:background">#ECECEC</item>
     </style>
+
+    <!--Style for handling splash screen-->
+    <style name="SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/summer_sky</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/background</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/SplashTheme</item>
+    </style>
+
 </resources>
