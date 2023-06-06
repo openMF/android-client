@@ -38,10 +38,7 @@ public class FormToggleButton extends FormWidget {
         switchButton.setLayoutParams(weightedLayoutParams);
         switchButton.setGravity(Gravity.CENTER_HORIZONTAL);
         switchButton.setSwitchMinWidth(50);
-        switchButton.setShowText(true);
         switchButton.setChecked(false);
-        switchButton.setTextOn("True");
-        switchButton.setTextOff("False");
         switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

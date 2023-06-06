@@ -160,11 +160,28 @@
             android:paddingBottom="16dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/btn_apply_filter"
-        style="@style/Button.Base"
-        android:layout_marginTop="10dp"
-        android:text="Apply Filters" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp">
 
+        <Button
+            android:id="@+id/btn_clear_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clear Filter"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/btn_apply_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Apply Filters"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
 
 </LinearLayout>

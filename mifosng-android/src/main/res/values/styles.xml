@@ -51,7 +51,8 @@
         <item name="android:textColor">@color/primary_text</item>
     </style>
 
-    <style name="MaterialAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="MaterialAlertDialogStyle" parent="Theme.MaterialComponents.Dialog.Alert">
+        <item name="colorPrimary">@color/primary</item>
         <item name="colorAccent">@color/primary</item>
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:background">@color/white</item>
@@ -128,6 +129,13 @@
 
     <style name="PreferenceThemeDialog">
         <item name="android:textColor">@color/blue_dark</item>
+      
+    <!--Style for handling splash screen-->
+    <style name="SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/summer_sky</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/background</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/SplashTheme</item>
     </style>
 
 </resources>
