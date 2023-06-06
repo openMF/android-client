@@ -262,6 +262,10 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     //preferences
     implementation "androidx.preference:preference:$preference"
+
+    //Splash Screen
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
+
 }
 /*
 All direct/transitive dependencies shared between your test and production APKs need to be

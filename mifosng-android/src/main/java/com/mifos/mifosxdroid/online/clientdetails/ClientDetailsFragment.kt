@@ -11,12 +11,15 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.Layout
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
+import android.view.View.GONE
 import android.widget.*
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
@@ -142,12 +145,26 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     var rlClient: RelativeLayout? = null
 
     @JvmField
+    @BindView(R.id.account_accordion_section_loans)
+    var accountAccordionLoan: RelativeLayout? = null
+
+    @JvmField
+    @BindView(R.id.account_accordion_section_savings)
+    var accountAccordionSaving: RelativeLayout? = null
+
+    @JvmField
+    @BindView(R.id.account_accordion_section_recurring)
+    var accountAccordionRecurring: RelativeLayout? = null
+
+    @JvmField
     @Inject
     var mClientDetailsPresenter: ClientDetailsPresenter? = null
     private lateinit var rootView: View
     private var mListener: OnFragmentInteractionListener? = null
-    private val clientImageFile = File(Environment.getExternalStorageDirectory().toString() +
-            "/client_image.png")
+    private val clientImageFile = File(
+        Environment.getExternalStorageDirectory().toString() +
+                "/client_image.png"
+    )
     private var accountAccordion: AccountAccordion? = null
     private var isClientActive = false
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -160,7 +177,11 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         checkPermissions()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         rootView = inflater.inflate(R.layout.fragment_client_details, container, false)
         ButterKnife.bind(this, rootView)
         mClientDetailsPresenter!!.attachView(this)
@@ -182,8 +203,10 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         mListener = try {
             activity as OnFragmentInteractionListener
         } catch (e: ClassCastException) {
-            throw ClassCastException(requireActivity().javaClass.simpleName + " must " +
-                    "implement OnFragmentInteractionListener")
+            throw ClassCastException(
+                requireActivity().javaClass.simpleName + " must " +
+                        "implement OnFragmentInteractionListener"
+            )
         }
     }
 
@@ -198,8 +221,9 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
 
                 // Get the cursor
                 val cursor = requireActivity().applicationContext.contentResolver.query(
-                        selectedImage,
-                        filePathColumn, null, null, null)!!
+                    selectedImage,
+                    filePathColumn, null, null, null
+                )!!
                 // Move to first row
                 cursor.moveToFirst()
                 val columnIndex = cursor.getColumnIndex(filePathColumn[0])
@@ -209,11 +233,14 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                 saveBitmap(clientImageFile, pickedImage)
                 uploadImage(clientImageFile)
             } else if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE
-                    && resultCode == Activity.RESULT_OK) {
+                && resultCode == Activity.RESULT_OK
+            ) {
                 uploadImage(clientImageFile)
             } else {
-                Toaster.show(rootView, R.string.havent_picked_image,
-                        Toast.LENGTH_LONG)
+                Toaster.show(
+                    rootView, R.string.havent_picked_image,
+                    Toast.LENGTH_LONG
+                )
             }
         } catch (e: Exception) {
             Toaster.show(rootView, e.toString(), Toast.LENGTH_LONG)
@@ -243,9 +270,16 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
             menu.add(Menu.NONE, MENU_ITEM_DATA_TABLES, Menu.NONE, getString(R.string.more_info))
             menu.add(Menu.NONE, MENU_ITEM_PIN_POINT, Menu.NONE, getString(R.string.pinpoint))
             menu.add(Menu.NONE, MENU_ITEM_CLIENT_CHARGES, Menu.NONE, getString(R.string.charges))
-            menu.add(Menu.NONE, MENU_ITEM_ADD_SAVINGS_ACCOUNT, Menu.NONE, getString(R.string.savings_account))
-            menu.add(Menu.NONE, MENU_ITEM_ADD_LOAN_ACCOUNT, Menu.NONE,
-                    getString(R.string.add_loan))
+            menu.add(
+                Menu.NONE,
+                MENU_ITEM_ADD_SAVINGS_ACCOUNT,
+                Menu.NONE,
+                getString(R.string.savings_account)
+            )
+            menu.add(
+                Menu.NONE, MENU_ITEM_ADD_LOAN_ACCOUNT, Menu.NONE,
+                getString(R.string.add_loan)
+            )
             menu.add(Menu.NONE, MENU_ITEM_DOCUMENTS, Menu.NONE, getString(R.string.documents))
             menu.add(Menu.NONE, MENU_ITEM_UPLOAD_SIGN, Menu.NONE, R.string.upload_sign)
             menu.add(Menu.NONE, MENU_ITEM_IDENTIFIERS, Menu.NONE, getString(R.string.identifiers))
@@ -269,6 +303,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                 i.putExtra(Constants.CLIENT_ID, clientId)
                 startActivity(i)
             }
+
             MENU_ITEM_SURVEYS -> loadSurveys()
             MENU_ITEM_NOTE -> loadNotes()
         }
@@ -282,18 +317,25 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     }
 
     private fun checkPermissions() {
-        if (ContextCompat.checkSelfPermission(requireActivity(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    CHECK_PERMISSIONS)
+        if (ContextCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                CHECK_PERMISSIONS
+            )
         }
     }
 
     fun uploadClientImage() {
         // Create intent to Open Image applications like Gallery, Google Photos
-        val galleryIntent = Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val galleryIntent = Intent(
+            Intent.ACTION_PICK,
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        )
         // Start the Intent
         galleryIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(clientImageFile))
         startActivityForResult(galleryIntent, UPLOAD_IMAGE_ACTIVITY_REQUEST_CODE)
@@ -314,9 +356,10 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     }
 
     fun loadDocuments() {
-        val documentListFragment = DocumentListFragment.newInstance(Constants.ENTITY_TYPE_CLIENTS, clientId)
+        val documentListFragment =
+            DocumentListFragment.newInstance(Constants.ENTITY_TYPE_CLIENTS, clientId)
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
         fragmentTransaction.replace(R.id.container, documentListFragment)
         fragmentTransaction.commit()
@@ -325,26 +368,29 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     fun loadNotes() {
         val noteFragment = NoteFragment.newInstance(Constants.ENTITY_TYPE_CLIENTS, clientId)
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
         fragmentTransaction.replace(R.id.container, noteFragment)
         fragmentTransaction.commit()
     }
 
     fun loadClientCharges() {
-        val clientChargeFragment: ClientChargeFragment = ClientChargeFragment.Companion.newInstance(clientId,
-                chargesList)
+        val clientChargeFragment: ClientChargeFragment = ClientChargeFragment.Companion.newInstance(
+            clientId,
+            chargesList
+        )
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
         fragmentTransaction.replace(R.id.container, clientChargeFragment)
         fragmentTransaction.commit()
     }
 
     fun loadIdentifiers() {
-        val clientIdentifiersFragment: ClientIdentifiersFragment = ClientIdentifiersFragment.Companion.newInstance(clientId)
+        val clientIdentifiersFragment: ClientIdentifiersFragment =
+            ClientIdentifiersFragment.Companion.newInstance(clientId)
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
         fragmentTransaction.replace(R.id.container, clientIdentifiersFragment)
         fragmentTransaction.commit()
@@ -353,7 +399,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     fun loadSurveys() {
         val surveyListFragment = SurveyListFragment.newInstance(clientId)
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
         fragmentTransaction.replace(R.id.container, surveyListFragment)
         fragmentTransaction.commit()
@@ -362,7 +408,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     fun addsavingsaccount() {
         val savingsAccountFragment = SavingsAccountFragment.newInstance(clientId, false)
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
         fragmentTransaction.replace(R.id.container, savingsAccountFragment)
         fragmentTransaction.commit()
@@ -371,7 +417,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     fun addloanaccount() {
         val loanAccountFragment = LoanAccountFragment.newInstance(clientId)
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
         fragmentTransaction.replace(R.id.container, loanAccountFragment)
         fragmentTransaction.commit()
@@ -380,16 +426,17 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     fun activateClient() {
         val activateFragment = ActivateFragment.newInstance(clientId, Constants.ACTIVATE_CLIENT)
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
         fragmentTransaction.replace(R.id.container, activateFragment)
         fragmentTransaction.commit()
     }
 
     fun loadClientDataTables() {
-        val loanAccountFragment = DataTableFragment.newInstance(Constants.DATA_TABLE_NAME_CLIENT, clientId)
+        val loanAccountFragment =
+            DataTableFragment.newInstance(Constants.DATA_TABLE_NAME_CLIENT, clientId)
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
         fragmentTransaction.replace(R.id.container, loanAccountFragment)
         fragmentTransaction.commit()
@@ -401,7 +448,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         bundle.putInt(Constants.CLIENT_ID, clientId)
         fragment.arguments = bundle
         val fragmentTransaction = requireActivity().supportFragmentManager
-                .beginTransaction()
+            .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
         fragmentTransaction.replace(R.id.container, fragment).commit()
     }
@@ -435,12 +482,15 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
             if (TextUtils.isEmpty(client.groupNames)) rowGroup!!.visibility = View.GONE
             try {
                 val dateString = Utils.getStringOfDate(
-                        client.activationDate)
+                    client.activationDate
+                )
                 tv_activationDate!!.text = dateString
                 if (TextUtils.isEmpty(dateString)) rowActivation!!.visibility = View.GONE
             } catch (e: IndexOutOfBoundsException) {
-                Toast.makeText(activity, getString(R.string.error_client_inactive),
-                        Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    activity, getString(R.string.error_client_inactive),
+                    Toast.LENGTH_SHORT
+                ).show()
                 tv_activationDate!!.text = ""
             }
             tv_office!!.text = client.officeName
@@ -449,13 +499,16 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                 loadClientProfileImage()
             } else {
                 iv_clientImage!!.setImageDrawable(
-                        ResourcesCompat.getDrawable(resources, R.drawable.ic_launcher, null))
+                    ResourcesCompat.getDrawable(resources, R.drawable.ic_launcher, null)
+                )
                 pb_imageProgressBar!!.visibility = View.GONE
             }
             iv_clientImage!!.setOnClickListener { view ->
                 val menu = PopupMenu(requireActivity(), view)
-                menu.menuInflater.inflate(R.menu.client_image_popup, menu
-                        .menu)
+                menu.menuInflater.inflate(
+                    R.menu.client_image_popup, menu
+                        .menu
+                )
                 if (!client.isImagePresent) {
                     menu.menu.findItem(R.id.client_image_remove).isVisible = false
                 }
@@ -463,10 +516,15 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                     when (menuItem.itemId) {
                         R.id.client_image_upload -> uploadClientImage()
                         R.id.client_image_capture -> captureClientImage()
-                        R.id.client_image_remove -> mClientDetailsPresenter!!.deleteClientImage(clientId)
-                        else -> Log.e("ClientDetailsFragment", "Unrecognized " +
-                                "client " +
-                                "image menu item")
+                        R.id.client_image_remove -> mClientDetailsPresenter!!.deleteClientImage(
+                            clientId
+                        )
+
+                        else -> Log.e(
+                            "ClientDetailsFragment", "Unrecognized " +
+                                    "client " +
+                                    "image menu item"
+                        )
                     }
                     true
                 }
@@ -502,7 +560,12 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
 
     override fun showClientImageDeletedSuccessfully() {
         Toaster.show(rootView, "Image deleted")
-        iv_clientImage!!.setImageDrawable(ContextCompat.getDrawable(requireActivity(), R.drawable.ic_launcher))
+        iv_clientImage!!.setImageDrawable(
+            ContextCompat.getDrawable(
+                requireActivity(),
+                R.drawable.ic_launcher
+            )
+        )
     }
 
     override fun showClientAccount(clientAccounts: ClientAccounts) {
@@ -513,27 +576,54 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         accountAccordion = AccountAccordion(activity)
         if (clientAccounts.loanAccounts.size > 0) {
             val section = AccountAccordion.Section.LOANS
-            val adapter = LoanAccountsListAdapter(requireActivity().applicationContext,
-                    clientAccounts.loanAccounts)
-            section.connect(activity, adapter, AdapterView.OnItemClickListener { adapterView, view, i, l -> mListener!!.loadLoanAccountSummary(adapter.getItem(i).id) })
+            val adapter = LoanAccountsListAdapter(
+                requireActivity().applicationContext,
+                clientAccounts.loanAccounts
+            )
+            section.connect(
+                activity,
+                adapter,
+                AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                    mListener!!.loadLoanAccountSummary(adapter.getItem(i).id)
+                })
+        } else {
+            accountAccordionLoan?.visibility = GONE
         }
         if (clientAccounts.nonRecurringSavingsAccounts.size > 0) {
             val section = AccountAccordion.Section.SAVINGS
-            val adapter = SavingsAccountsListAdapter(requireActivity().applicationContext,
-                    clientAccounts.nonRecurringSavingsAccounts)
-            section.connect(activity, adapter, AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                mListener!!.loadSavingsAccountSummary(adapter.getItem(i).id,
-                        adapter.getItem(i).depositType)
-            })
+            val adapter = SavingsAccountsListAdapter(
+                requireActivity().applicationContext,
+                clientAccounts.nonRecurringSavingsAccounts
+            )
+            section.connect(
+                activity,
+                adapter,
+                AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                    mListener!!.loadSavingsAccountSummary(
+                        adapter.getItem(i).id,
+                        adapter.getItem(i).depositType
+                    )
+                })
+        } else {
+            accountAccordionSaving?.visibility = GONE
         }
         if (clientAccounts.recurringSavingsAccounts.size > 0) {
             val section = AccountAccordion.Section.RECURRING
-            val adapter = SavingsAccountsListAdapter(requireActivity().applicationContext,
-                    clientAccounts.recurringSavingsAccounts)
-            section.connect(activity, adapter, AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                mListener!!.loadSavingsAccountSummary(adapter.getItem(i).id,
-                        adapter.getItem(i).depositType)
-            })
+            val adapter = SavingsAccountsListAdapter(
+                requireActivity().applicationContext,
+                clientAccounts.recurringSavingsAccounts
+            )
+            section.connect(
+                activity,
+                adapter,
+                AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                    mListener!!.loadSavingsAccountSummary(
+                        adapter.getItem(i).id,
+                        adapter.getItem(i).depositType
+                    )
+                })
+        } else {
+            accountAccordionRecurring?.visibility = GONE
         }
     }
 
@@ -562,7 +652,15 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         }
 
         enum class Section(private val sectionId: Int, private val textViewStringId: Int) {
-            LOANS(R.id.account_accordion_section_loans, R.string.loanAccounts), SAVINGS(R.id.account_accordion_section_savings, R.string.savingAccounts), RECURRING(R.id.account_accordion_section_recurring, R.string.recurringAccount);
+            LOANS(
+                R.id.account_accordion_section_loans,
+                R.string.loanAccounts
+            ),
+            SAVINGS(
+                R.id.account_accordion_section_savings,
+                R.string.savingAccounts
+            ),
+            RECURRING(R.id.account_accordion_section_recurring, R.string.recurringAccount);
 
             private var mListViewCount = 0.0
             fun getTextView(context: Activity?): TextView {
@@ -585,7 +683,11 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                 return context!!.findViewById(sectionId)
             }
 
-            fun connect(context: Activity?, adapter: ListAdapter, onItemClickListener: AdapterView.OnItemClickListener?) {
+            fun connect(
+                context: Activity?,
+                adapter: ListAdapter,
+                onItemClickListener: AdapterView.OnItemClickListener?
+            ) {
                 getCountView(context).text = adapter.count.toString()
                 val listView = getListView(context)
                 listView.adapter = adapter
@@ -595,9 +697,11 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
             fun open(context: Activity?) {
                 val iconView = getIconView(context)
                 iconView.text = "{" + LIST_CLOSED_ICON.key() + "}"
-                mListViewCount = java.lang.Double.valueOf(getCountView(context)
+                mListViewCount = java.lang.Double.valueOf(
+                    getCountView(context)
                         .text
-                        .toString())
+                        .toString()
+                )
                 val listView = getListView(context)
                 resizeListView(context, listView)
                 listView.visibility = View.VISIBLE
@@ -640,7 +744,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                     // if listview items are less than 4
                     val heightInDp = mListViewCount / 4 * 200
                     val heightInPx = heightInDp * context!!.resources
-                            .displayMetrics.density
+                        .displayMetrics.density
                     val params = listView.layoutParams
                     params.height = heightInPx.toInt()
                     listView.layoutParams = params

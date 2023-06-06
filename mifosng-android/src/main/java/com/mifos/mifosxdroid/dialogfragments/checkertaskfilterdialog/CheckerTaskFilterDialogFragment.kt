@@ -111,6 +111,12 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
                     selectedAction, selectedEntity, resourceId)
             dialog?.dismiss()
         }
+
+        btn_clear_filter.setOnClickListener {
+            mOnInputSelected.sendInput(null, null,
+                    selectedAction, selectedEntity, "")
+            dialog.dismiss()
+        }
     }
 
 
@@ -167,7 +173,7 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
     }
 
     interface OnInputSelected {
-        fun sendInput(fromDate: Timestamp?, toDate: Timestamp, action: String = "",
+        fun sendInput(fromDate: Timestamp?, toDate: Timestamp?, action: String = "",
                       entity: String = "", resourceId: String = "")
     }
 
