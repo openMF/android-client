@@ -9,7 +9,7 @@
             android:id="@+id/item_checker_inbox"
             android:checked="false"
             android:icon="@drawable/ic_check_box_black_24dp"
-            android:title="@string/checker_inbox"
+            android:title="@string/checker_inbox_and_pending_tasks"
             />
 
         <item
