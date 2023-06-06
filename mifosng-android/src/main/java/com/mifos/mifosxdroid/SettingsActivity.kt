@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import com.mifos.mifosxdroid.core.MifosBaseActivity
-import com.mifos.mifosxdroid.online.DashboardActivity
 import com.mifos.utils.Constants
 
 /**
@@ -12,7 +11,7 @@ import com.mifos.utils.Constants
  */
 class SettingsActivity : MifosBaseActivity() {
 
-    private var hasSettingsChanged = false
+    private var hasLanguageSettingsChanged = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_toolbar_container)
@@ -22,7 +21,7 @@ class SettingsActivity : MifosBaseActivity() {
             .replace(R.id.container, SettingsFragment())
             .commit()
         if (intent.hasExtra(Constants.HAS_SETTING_CHANGED)) {
-            hasSettingsChanged = intent.getBooleanExtra(
+            hasLanguageSettingsChanged = intent.getBooleanExtra(
                 Constants.HAS_SETTING_CHANGED,
                 false
             )
@@ -31,7 +30,7 @@ class SettingsActivity : MifosBaseActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        if (hasSettingsChanged) {
+        if (hasLanguageSettingsChanged) {
             val i = Intent(this, HomeActivity::class.java)
             startActivity(i)
             ActivityCompat.finishAffinity(this)
