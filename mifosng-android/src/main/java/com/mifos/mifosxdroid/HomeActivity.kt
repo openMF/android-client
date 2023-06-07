@@ -37,9 +37,6 @@ import com.mifos.mifosxdroid.online.RunReportsActivity
 import com.mifos.mifosxdroid.online.centerlist.CenterListFragment
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxPendingTasksActivity
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment
-import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment
-import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment
-import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment
 import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment
 import com.mifos.mifosxdroid.online.search.SearchFragment
 import com.mifos.utils.Constants
@@ -60,7 +57,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
 
     private var menu: Menu? = null
 
-    private var mCount = 1
+    private var onSearchFragment = true
 
     var navController: NavController? = null
     private var mNavigationHeader: View? = null
@@ -90,22 +87,22 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_dashboard -> {
-                    mCount=1
+                    onSearchFragment= true
                     openFragment(SearchFragment())
                     supportActionBar!!.setTitle(R.string.dashboard)
                 }
                 R.id.navigation_client_list -> {
-                    mCount=0
+                    onSearchFragment=false
                     openFragment(ClientListFragment())
                     supportActionBar!!.setTitle(R.string.clients)
                 }
                 R.id.navigation_center_list -> {
-                    mCount=0
+                    onSearchFragment=false
                     openFragment(CenterListFragment())
                     supportActionBar!!.setTitle(R.string.title_activity_centers)
                 }
                 R.id.navigation_group_list -> {
-                    mCount=0
+                    onSearchFragment=false
                     openFragment(GroupsListFragment())
                     supportActionBar!!.setTitle(R.string.title_center_list)
                 }
@@ -210,13 +207,13 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START)
         } else {
-            if(mCount == 0) {
+            if(!onSearchFragment) {
             goHomeFragment()
             }
             else{
             doubleBackToExit()
             }
-            mCount++
+            onSearchFragment = true
         }
     }
 
