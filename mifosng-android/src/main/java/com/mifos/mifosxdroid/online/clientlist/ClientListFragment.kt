@@ -179,7 +179,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
     fun onClickCreateNewClient() {
         if(arguments == null)
         {
-            (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewClientFragment.newInstance(),
+            (activity as MifosBaseActivity?)?.replaceFragment(CreateNewClientFragment.newInstance(),
                 true, R.id.container_a)
         }
         else
