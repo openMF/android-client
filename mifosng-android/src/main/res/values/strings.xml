@@ -696,7 +696,7 @@
     <string name="failed_to_fetch_loan_products">Failed to fetch LoanProducts</string>
     <string name="failed_to_fetch_loan_template">Failed to fetch Loan Template</string>
     <string name="failed_to_fetch_center_info">Failed to fetch center info</string>
-    <string name="failed_to_fetch_datatable_info">Failed to fetch DataTableInfo</string>
+    <string name="failed_to_fetch_datatable_info">Failed to fetch DataTable Info</string>
     <string name="failed_to_fetch_loan_transaction_template">Failed to fetch loan transaction
         template</string>
     <string name="generic_failure_message">Request failed. Please try again.</string>

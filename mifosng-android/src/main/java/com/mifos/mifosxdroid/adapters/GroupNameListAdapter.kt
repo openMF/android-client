@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.adapters
 
 import android.graphics.Color
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,13 +43,20 @@ class GroupNameListAdapter(
         holder.tv_groupsName.text = group.name
         holder.tv_groupsId.text = group.id.toString()
 
-        //Changing the Color of Selected Groups
-        holder.view_selectedOverlay.setBackgroundColor(
-            if (isSelected(position))
-                ContextCompat.getColor(holder.itemView.context,R.color.gray_light)
-            else Color.WHITE
-        )
-        holder.iv_sync_status.visibility = if (group.isSync) View.VISIBLE else View.INVISIBLE
+        holder.apply {
+            //Changing the Color of Selected Groups
+            view_selectedOverlay.setBackgroundColor(
+                if (isSelected(position)) {
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        ContextCompat.getColor(itemView.context, R.color.primary)
+                    } else {
+                        itemView.context.resources.getColor(R.color.primary)
+                    }
+                }
+                else Color.WHITE
+            )
+            iv_sync_status.visibility = if (group.isSync) View.VISIBLE else View.INVISIBLE
+        }
     }
 
     fun setGroups(groups: List<Group>) {
@@ -68,7 +76,7 @@ class GroupNameListAdapter(
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val tv_groupsName: TextView = v.findViewById(R.id.tv_group_name)
         val tv_groupsId: TextView = v.findViewById(R.id.tv_group_id)
-        var view_selectedOverlay: LinearLayout = v.findViewById(R.id.linearLayout)
+        var view_selectedOverlay: View = v.findViewById(R.id.card_view)
         val iv_sync_status: ImageView = v.findViewById(R.id.iv_sync_status)
     }
 }
