@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-     
     <!-- dummy ids are given to ech group to make dividers between each group -->
     <group android:checkableBehavior="single"
         android:id="@+id/group1" >
@@ -9,7 +8,7 @@
             android:id="@+id/item_checker_inbox"
             android:checked="false"
             android:icon="@drawable/ic_check_box_black_24dp"
-            android:title="@string/checker_inbox"
+            android:title="@string/checker_inbox_and_pending_tasks"
             />
 
         <item
@@ -31,7 +30,6 @@
             android:icon="@drawable/ic_report_item"
             android:title="@string/run_report"
             />
-                
         <item
             android:id="@+id/item_path_tracker"
             android:checked="false"
@@ -54,17 +52,13 @@
             />
 
     </group>
-       
     <group android:checkableBehavior="single"
         android:id="@+id/group3">
-         
         <item
             android:id="@+id/item_offline"
             android:checked="false"
             android:icon="@drawable/ic_offline"
             android:title="@string/offline"
             />
-         
     </group>
-     
 </menu>

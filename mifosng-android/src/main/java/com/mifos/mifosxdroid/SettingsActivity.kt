@@ -21,7 +21,5 @@ class SettingsActivity : MifosBaseActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        val i = Intent(this, HomeActivity::class.java)
-        startActivity(i)
     }
 }

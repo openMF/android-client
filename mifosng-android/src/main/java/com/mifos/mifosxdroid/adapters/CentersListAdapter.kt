@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.adapters
 
 import android.graphics.Color
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,8 +67,13 @@ class CentersListAdapter(
 
             //Changing the Color of Selected Centers
             viewSelectedOverlay.setBackgroundColor(
-                if (isSelected(position))
-                    ContextCompat.getColor(itemView.context,R.color.gray_light)
+                if (isSelected(position)) {
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        ContextCompat.getColor(itemView.context, R.color.primary)
+                    } else {
+                        itemView.context.resources.getColor(R.color.primary)
+                    }
+                }
                 else Color.WHITE
             )
             ivSyncStatus.visibility = if (center.isSync) View.VISIBLE else View.INVISIBLE
@@ -97,7 +103,7 @@ class CentersListAdapter(
         val tvStaffId: TextView = v.findViewById(R.id.tv_staff_id)
         val tvOfficeName: TextView = v.findViewById(R.id.tv_office_name)
         val tvOfficeId: TextView = v.findViewById(R.id.tv_office_id)
-        val viewSelectedOverlay: LinearLayout = v.findViewById(R.id.linearLayout)
+        val viewSelectedOverlay: View = v.findViewById(R.id.card_view)
         val ivSyncStatus: ImageView = v.findViewById(R.id.iv_sync_status)
     }
 
