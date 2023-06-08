@@ -69,15 +69,18 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
     }
 
     private fun initSurveyPreferences() {
-        mEnableSyncSurvey = findPreference(resources.getString(R.string.sync_survey)) as SwitchPreference
+        mEnableSyncSurvey =
+            findPreference(resources.getString(R.string.sync_survey)) as SwitchPreference
         mEnableSyncSurvey!!.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue ->
             if (newValue as Boolean) {
                 val syncSurveysDialogFragment = SyncSurveysDialogFragment.newInstance()
                 val fragmentTransaction = fragmentManager.beginTransaction()
                 fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SURVEYS_SYNC)
                 syncSurveysDialogFragment.isCancelable = false
-                syncSurveysDialogFragment.show(fragmentTransaction,
-                    resources.getString(R.string.sync_clients))
+                syncSurveysDialogFragment.show(
+                    fragmentTransaction,
+                    resources.getString(R.string.sync_clients)
+                )
             }
             true
         }
@@ -113,7 +116,9 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
         val langPref = findPreference("language_type") as ListPreference
         langPref.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue ->
             LanguageHelper.setLocale(this.activity, newValue.toString())
-            startActivity(Intent(activity, activity.javaClass))
+            val intent = Intent(this.activity, activity.javaClass)
+            intent.putExtra(Constants.HAS_SETTING_CHANGED, true)
+            startActivity(intent)
             activity.finish()
             preferenceScreen = null
             addPreferencesFromResource(R.xml.preferences)
@@ -123,7 +128,8 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
     }
 
     private fun initThemePreferences() {
-        val themePreference = findPreference(resources.getString(R.string.mode_key)) as ListPreference
+        val themePreference =
+            findPreference(resources.getString(R.string.mode_key)) as ListPreference
         themePreference.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue ->
             val themeOption = newValue as String
             ThemeHelper.applyTheme(themeOption)
@@ -148,7 +154,10 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
 
     interface LanguageCallback
 
-    override fun onPreferenceTreeClick(preferenceScreen: PreferenceScreen?, preference: Preference?): Boolean {
+    override fun onPreferenceTreeClick(
+        preferenceScreen: PreferenceScreen?,
+        preference: Preference?
+    ): Boolean {
         when (preference?.key) {
             getString(R.string.password) -> {
                 //    TODO("create changePasswordActivity and implement the logic for password change")
