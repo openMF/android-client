@@ -140,7 +140,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
     @OnClick(R.id.fab_create_center)
     fun onClickCreateNewCenter() {
         (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewCenterFragment.newInstance(),
-                true, R.id.container_a)
+                false, R.id.container_a)
     }
 
     /**

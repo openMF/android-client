@@ -36,7 +36,15 @@ public class PrefManager {
     }
 
     public static void clearPrefs() {
-        getPreferences().edit().clear().commit();
+        SharedPreferences.Editor editor = getPreferences().edit();
+        if (getPreferences() != null) {
+            for (String key : getPreferences().getAll().keySet()) {
+                if (!key.equals("language_type")) {
+                    editor.remove(key);
+                }
+            }
+        }
+        editor.apply();
     }
 
     public static int getInt(String preferenceKey, int preferenceDefaultValue) {
@@ -101,6 +109,7 @@ public class PrefManager {
         return gson.fromJson(getString(USER_DETAILS, "null"),
                 User.class);
     }
+
     public static void saveToken(String token) {
         putString(TOKEN, token);
     }
@@ -209,7 +218,7 @@ public class PrefManager {
      * @return true if app is launched is first time and set the value to
      * false which is returned whenever next time it is called
      */
-    public  static Boolean isAppFirstTimeLaunched() {
+    public static Boolean isAppFirstTimeLaunched() {
         Boolean result = getBoolean(FIRST_TIME_APP_LAUNCH, true);
         if (result) {
             putBoolean(FIRST_TIME_APP_LAUNCH, false);

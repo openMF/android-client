@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -49,6 +50,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnEditorAction;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
@@ -229,6 +231,15 @@ public class SearchFragment extends MifosBaseFragment
     public void onClickCreateCGroup() {
         ((MifosBaseActivity) getActivity()).replaceFragment(CreateNewGroupFragment.newInstance(),
                 true, R.id.container_a);
+    }
+
+    @OnEditorAction(R.id.et_search)
+    boolean onEditorAction(int actionId) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            onClickSearch();
+            return true;
+        }
+        return false;
     }
 
     @OnClick(R.id.btn_search)
