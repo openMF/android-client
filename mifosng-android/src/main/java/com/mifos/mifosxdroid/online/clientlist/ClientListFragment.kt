@@ -80,14 +80,21 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
                     toggleSelection(position)
                 } else {
                     val clientActivityIntent = Intent(activity, ClientActivity::class.java)
-                    clientActivityIntent.putExtra(Constants.CLIENT_ID, clientList!![position].id)
+                    clientActivityIntent.putExtra(
+                        Constants.CLIENT_ID,
+                        clientList?.get(position)?.id
+                    )
                     startActivity(clientActivityIntent)
                     clickedPosition = position
                 }
             },
             onClientNameLongClick = { position ->
                 if (actionMode == null) {
-                    actionMode = (activity as MifosBaseActivity?)!!.startSupportActionMode(actionModeCallback!!)
+                    actionMode = actionModeCallback?.let {
+                        (activity as? MifosBaseActivity)?.startSupportActionMode(
+                            it
+                        )
+                    }
                 }
                 toggleSelection(position)
             }
@@ -115,17 +122,21 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
         if (arguments != null) {
             clientList = requireArguments().getParcelableArrayList(Constants.CLIENTS)
             isParentFragment = requireArguments()
-                    .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
+                .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         rootView = inflater.inflate(R.layout.fragment_client, container, false)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity?)?.activityComponent?.inject(this)
         setToolbarTitle(resources.getString(R.string.clients))
         ButterKnife.bind(this, rootView)
-        mClientListPresenter!!.attachView(this)
+        mClientListPresenter?.attachView(this)
 
         //setting all the UI content to the view
         showUserInterface()
@@ -133,9 +144,9 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
          * is shown on the Screen.
          */
-        rv_clients!!.addOnScrollListener(object : EndlessRecyclerViewScrollListener(mLayoutManager) {
+        rv_clients?.addOnScrollListener(object : EndlessRecyclerViewScrollListener(mLayoutManager) {
             override fun onLoadMore(page: Int, totalItemCount: Int) {
-                mClientListPresenter!!.loadClients(true, totalItemCount)
+                mClientListPresenter?.loadClients(true, totalItemCount)
             }
         })
         /**
@@ -145,18 +156,18 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
          * Client Lis to show. and Presenter make transaction to Database to load saved clients.
          */
         if (isParentFragment) {
-            mClientListPresenter!!.showParentClients(clientList)
+            mClientListPresenter?.showParentClients(clientList)
         } else {
-            mClientListPresenter!!.loadClients(false, 0)
+            mClientListPresenter?.loadClients(false, 0)
         }
-        mClientListPresenter!!.loadDatabaseClients()
+        mClientListPresenter?.loadDatabaseClients()
         return rootView
     }
 
     override fun onResume() {
         super.onResume()
         if (clickedPosition != -1) {
-            mClientNameListAdapter!!.updateItem(clickedPosition)
+            mClientNameListAdapter.updateItem(clickedPosition)
         }
     }
 
@@ -165,27 +176,29 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      */
     override fun showUserInterface() {
         mLayoutManager = LinearLayoutManager(activity)
-        mLayoutManager!!.orientation = LinearLayoutManager.VERTICAL
-        rv_clients!!.layoutManager = mLayoutManager
-        rv_clients!!.setHasFixedSize(true)
-        rv_clients!!.adapter = mClientNameListAdapter
-        swipeRefreshLayout!!.setColorSchemeColors(*activity
-                ?.getResources()!!.getIntArray(R.array.swipeRefreshColors))
-        swipeRefreshLayout!!.setOnRefreshListener(this)
+        mLayoutManager?.orientation = LinearLayoutManager.VERTICAL
+        rv_clients?.layoutManager = mLayoutManager
+        rv_clients?.setHasFixedSize(true)
+        rv_clients?.adapter = mClientNameListAdapter
+        swipeRefreshLayout?.setColorSchemeColors(
+            *activity?.resources?.getIntArray(R.array.swipeRefreshColors) ?: IntArray(0)
+        )
+        swipeRefreshLayout?.setOnRefreshListener(this)
         sweetUIErrorHandler = SweetUIErrorHandler(activity, rootView)
     }
 
     @OnClick(R.id.fab_create_client)
     fun onClickCreateNewClient() {
-        if(arguments == null)
-        {
-            (activity as MifosBaseActivity?)?.replaceFragment(CreateNewClientFragment.newInstance(),
-                true, R.id.container_a)
-        }
-        else
-        {
-            (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewClientFragment.newInstance(),
-                true, R.id.container)
+        if (arguments == null) {
+            (activity as MifosBaseActivity?)?.replaceFragment(
+                CreateNewClientFragment.newInstance(),
+                true, R.id.container_a
+            )
+        } else {
+            (activity as MifosBaseActivity?)?.replaceFragment(
+                CreateNewClientFragment.newInstance(),
+                true, R.id.container
+            )
         }
 
     }
@@ -197,9 +210,9 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      */
     override fun onRefresh() {
         showUserInterface()
-        mClientListPresenter!!.loadClients(false, 0)
-        mClientListPresenter!!.loadDatabaseClients()
-        if (actionMode != null) actionMode!!.finish()
+        mClientListPresenter?.loadClients(false, 0)
+        mClientListPresenter?.loadDatabaseClients()
+        if (actionMode != null) actionMode?.finish()
     }
 
     /**
@@ -207,8 +220,8 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      * and NoClientIcon click event.
      */
     override fun unregisterSwipeAndScrollListener() {
-        rv_clients!!.clearOnScrollListeners()
-        swipeRefreshLayout!!.isEnabled = false
+        rv_clients?.clearOnScrollListeners()
+        swipeRefreshLayout?.isEnabled = false
     }
 
     /**
@@ -225,9 +238,9 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      */
     @OnClick(R.id.btn_try_again)
     fun reloadOnError() {
-        sweetUIErrorHandler!!.hideSweetErrorLayoutUI(rv_clients, errorView)
-        mClientListPresenter!!.loadClients(false, 0)
-        mClientListPresenter!!.loadDatabaseClients()
+        sweetUIErrorHandler?.hideSweetErrorLayoutUI(rv_clients, errorView)
+        mClientListPresenter?.loadClients(false, 0)
+        mClientListPresenter?.loadDatabaseClients()
     }
 
     /**
@@ -235,8 +248,8 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      */
     override fun showClientList(clients: List<Client>?) {
         clientList = clients
-        mClientNameListAdapter!!.setClients(clients ?: emptyList())
-        mClientNameListAdapter!!.notifyDataSetChanged()
+        mClientNameListAdapter.setClients(clients ?: emptyList())
+        mClientNameListAdapter.notifyDataSetChanged()
     }
 
     /**
@@ -246,7 +259,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      */
     override fun showLoadMoreClients(clients: List<Client>?) {
         clientList.addAll()
-        mClientNameListAdapter!!.notifyDataSetChanged()
+        mClientNameListAdapter.notifyDataSetChanged()
     }
 
     /**
@@ -255,8 +268,10 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      * @param message String Message to show user.
      */
     override fun showEmptyClientList(message: Int) {
-        sweetUIErrorHandler!!.showSweetEmptyUI(getString(R.string.client),
-                getString(message), R.drawable.ic_error_black_24dp, rv_clients, errorView)
+        sweetUIErrorHandler?.showSweetEmptyUI(
+            getString(R.string.client),
+            getString(message), R.drawable.ic_error_black_24dp, rv_clients, errorView
+        )
     }
 
     /**
@@ -265,8 +280,10 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      */
     override fun showError() {
         val errorMessage = getStringMessage(R.string.failed_to_load_client)
-        sweetUIErrorHandler!!.showSweetErrorUI(errorMessage, R.drawable.ic_error_black_24dp,
-                rv_clients, errorView)
+        sweetUIErrorHandler?.showSweetErrorUI(
+            errorMessage, R.drawable.ic_error_black_24dp,
+            rv_clients, errorView
+        )
     }
 
     /**
@@ -274,21 +291,21 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      * otherwise show SwipeRefreshLayout.
      */
     override fun showProgressbar(show: Boolean) {
-        swipeRefreshLayout!!.isRefreshing = show
-        if (show && mClientNameListAdapter!!.itemCount == 0) {
-            pb_client!!.visibility = View.VISIBLE
-            swipeRefreshLayout!!.isRefreshing = false
+        swipeRefreshLayout?.isRefreshing = show
+        if (show && mClientNameListAdapter.itemCount == 0) {
+            pb_client?.visibility = View.VISIBLE
+            swipeRefreshLayout?.isRefreshing = false
         } else {
-            pb_client!!.visibility = View.GONE
+            pb_client?.visibility = View.GONE
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         hideMifosProgressBar()
-        mClientListPresenter!!.detachView()
+        mClientListPresenter?.detachView()
         //As the Fragment Detach Finish the ActionMode
-        if (actionMode != null) actionMode!!.finish()
+        if (actionMode != null) actionMode?.finish()
     }
 
     /**
@@ -301,13 +318,13 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      * @param position Position of the item to toggle the selection state
      */
     private fun toggleSelection(position: Int) {
-        mClientNameListAdapter!!.toggleSelection(position)
-        val count = mClientNameListAdapter!!.selectedItemCount
+        mClientNameListAdapter.toggleSelection(position)
+        val count = mClientNameListAdapter.selectedItemCount
         if (count == 0) {
-            actionMode!!.finish()
+            actionMode?.finish()
         } else {
-            actionMode!!.title = count.toString()
-            actionMode!!.invalidate()
+            actionMode?.title = count.toString()
+            actionMode?.invalidate()
         }
     }
 
@@ -329,26 +346,36 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             return when (item.itemId) {
                 R.id.action_sync -> {
-                    selectedClients!!.clear()
-                    for (position in mClientNameListAdapter!!.selectedItems) {
-                        selectedClients!!.add(clientList!![position!!])
+                    selectedClients?.clear()
+                    for (position in mClientNameListAdapter.selectedItems) {
+                        selectedClients?.let { list ->
+                            clientList?.get(position)?.let { client ->
+                                list.add(client)
+                            }
+                        }
                     }
-                    val syncClientsDialogFragment = SyncClientsDialogFragment.newInstance(selectedClients)
+                    val syncClientsDialogFragment =
+                        SyncClientsDialogFragment.newInstance(selectedClients)
                     val fragmentTransaction = activity
-                            ?.getSupportFragmentManager()!!.beginTransaction()
-                    fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC)
+                        ?.supportFragmentManager?.beginTransaction()
+                    fragmentTransaction?.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC)
                     syncClientsDialogFragment.isCancelable = false
-                    syncClientsDialogFragment.show(fragmentTransaction,
-                            resources.getString(R.string.sync_clients))
+                    fragmentTransaction?.let {
+                        syncClientsDialogFragment.show(
+                            it,
+                            resources.getString(R.string.sync_clients)
+                        )
+                    }
                     mode.finish()
                     true
                 }
+
                 else -> false
             }
         }
 
         override fun onDestroyActionMode(mode: ActionMode) {
-            mClientNameListAdapter!!.clearSelection()
+            mClientNameListAdapter.clearSelection()
             actionMode = null
         }
     }
@@ -384,13 +411,17 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
          * @return ClientListFragment
         </Client> */
         @JvmStatic
-        fun newInstance(clientList: List<Client?>?,
-                        isParentFragment: Boolean): ClientListFragment {
+        fun newInstance(
+            clientList: List<Client?>?,
+            isParentFragment: Boolean
+        ): ClientListFragment {
             val clientListFragment = ClientListFragment()
             val args = Bundle()
             if (isParentFragment && clientList != null) {
-                args.putParcelableArrayList(Constants.CLIENTS,
-                        clientList as ArrayList<out Parcelable?>?)
+                args.putParcelableArrayList(
+                    Constants.CLIENTS,
+                    clientList as ArrayList<out Parcelable?>?
+                )
                 args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, true)
                 clientListFragment.arguments = args
             }
