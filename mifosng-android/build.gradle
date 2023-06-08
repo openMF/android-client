@@ -181,7 +181,7 @@ dependencies {
 
     //Bottom navigation
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.navigation:navigation-fragment:2.2.2'
+    implementation 'androidx.navigation:navigation-fragment:2.6.0'
     implementation 'androidx.navigation:navigation-ui:2.2.2'
 
     //Dagger dependencies
