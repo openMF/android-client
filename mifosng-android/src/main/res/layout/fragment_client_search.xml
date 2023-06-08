@@ -67,6 +67,7 @@
                 android:layout_toRightOf="@id/iv_search_icon"
                 android:background="@android:color/transparent"
                 android:hint="@string/search_hint"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:textSize="15sp"
                 tools:ignore="NotSibling" />
