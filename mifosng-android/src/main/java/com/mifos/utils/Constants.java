@@ -281,4 +281,6 @@ public class Constants {
     public static final String ACTION_REPORT = "report";
     public static final String CURR_PASSWORD = "currentPassword";
     public static final String IS_TO_UPDATE_PASS_CODE = "updatePassCode";
+
+    public static final String HAS_SETTING_CHANGED = "hasSettingsChanged";
 }

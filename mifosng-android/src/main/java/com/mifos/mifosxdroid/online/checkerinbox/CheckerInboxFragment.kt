@@ -470,7 +470,7 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
      * @param resourceId String
      * @return MutableList<CheckerTask>
      */
-    private fun getFilteredList(fromDate: Timestamp?, toDate: Timestamp,
+    private fun getFilteredList(fromDate: Timestamp?, toDate: Timestamp?,
                                 action: String, entity: String,
                                 resourceId: String)
             : MutableList<CheckerTask> {
@@ -488,7 +488,11 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
             return filteredList
         } else {
             // Resource Id is not available.
-            if (fromDate == null) {
+
+            // If Clear Filter clicked
+            if (fromDate == null && toDate == null) {
+                return fetchedCheckerTaskList
+            } else if (fromDate == null) {
                 // From Date is not available
                 if (action == ALL && entity == ALL) {
                     // No need to check for Action and Entity
@@ -591,8 +595,8 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
      * @param entity String
      * @param resourceId String
      */
-    override fun sendInput(fromDate: Timestamp?, toDate: Timestamp,
-                           action: String, entity: String, resourceId: String) {
+    override fun sendInput(fromDate: Timestamp?, toDate: Timestamp?, action: String, entity: String,
+                           resourceId: String) {
         val filteredList = getFilteredList(fromDate, toDate, action, entity, resourceId)
         updateRecyclerViewWithNewList(filteredList)
     }
