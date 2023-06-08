@@ -172,7 +172,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
     @OnClick(R.id.fab_create_group)
     fun onClickCreateNewGroup() {
         (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewGroupFragment.newInstance(),
-                true, R.id.container_a)
+                false, R.id.container_a)
     }
 
     /**

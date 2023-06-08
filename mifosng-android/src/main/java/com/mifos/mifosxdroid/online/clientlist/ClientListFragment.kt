@@ -178,7 +178,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
     @OnClick(R.id.fab_create_client)
     fun onClickCreateNewClient() {
         (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewClientFragment.newInstance(),
-                true, R.id.container_a)
+                false, R.id.container_a)
     }
 
     /**
