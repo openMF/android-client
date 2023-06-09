@@ -22,13 +22,20 @@ import com.mifos.utils.Constants
 /**
  * Created by nellyk on 2/27/2016.
  */
-class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInteractionListener, LoanAccountSummaryFragment.OnFragmentInteractionListener, LoanRepaymentFragment.OnFragmentInteractionListener, SavingsAccountSummaryFragment.OnFragmentInteractionListener {
+class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInteractionListener,
+    LoanAccountSummaryFragment.OnFragmentInteractionListener,
+    LoanRepaymentFragment.OnFragmentInteractionListener,
+    SavingsAccountSummaryFragment.OnFragmentInteractionListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_toolbar_container)
         ButterKnife.bind(this)
         showBackButton()
         val groupId = intent.extras!!.getInt(Constants.GROUP_ID)
+        val groupName = intent.extras!!.getString(Constants.GROUP_NAME)
+        if (groupName != null) {
+            setToolbarTitle(getString(R.string.group) + " - " + groupName)
+        }
         replaceFragment(newInstance(groupId), false, R.id.container)
     }
 
@@ -38,8 +45,10 @@ class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInter
      * It displays the summary of the Selected Loan Account
      */
     override fun loadLoanAccountSummary(loanAccountNumber: Int) {
-        replaceFragment(LoanAccountSummaryFragment.newInstance(loanAccountNumber, true), true,
-                R.id.container)
+        replaceFragment(
+            LoanAccountSummaryFragment.newInstance(loanAccountNumber, true), true,
+            R.id.container
+        )
     }
 
     /**
@@ -50,8 +59,12 @@ class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInter
      * It displays the summary of the Selected Savings Account
      */
     override fun loadSavingsAccountSummary(savingsAccountNumber: Int, accountType: DepositType?) {
-        replaceFragment(SavingsAccountSummaryFragment.newInstance(savingsAccountNumber,
-                accountType, true), true, R.id.container)
+        replaceFragment(
+            SavingsAccountSummaryFragment.newInstance(
+                savingsAccountNumber,
+                accountType, true
+            ), true, R.id.container
+        )
     }
 
     /**
@@ -99,8 +112,18 @@ class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInter
      *
      * The transactionType defines if the transaction is a Deposit or a Withdrawal
      */
-    override fun doTransaction(savingsAccountWithAssociations: SavingsAccountWithAssociations?, transactionType: String?, accountType: DepositType?) {
-        replaceFragment(SavingsAccountTransactionFragment.newInstance(savingsAccountWithAssociations!!, transactionType, accountType), true, R.id.container)
+    override fun doTransaction(
+        savingsAccountWithAssociations: SavingsAccountWithAssociations?,
+        transactionType: String?,
+        accountType: DepositType?
+    ) {
+        replaceFragment(
+            SavingsAccountTransactionFragment.newInstance(
+                savingsAccountWithAssociations!!,
+                transactionType,
+                accountType
+            ), true, R.id.container
+        )
     }
 
     override fun loadGroupClients(clients: List<Client>?) {

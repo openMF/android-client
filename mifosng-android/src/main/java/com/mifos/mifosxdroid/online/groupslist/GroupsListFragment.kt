@@ -87,12 +87,14 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
                 } else {
                     val groupActivityIntent = Intent(activity, GroupsActivity::class.java)
                     groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList!![position].id)
+                    groupActivityIntent.putExtra(Constants.GROUP_NAME, mGroupList!![position].name)
                     startActivity(groupActivityIntent)
                 }
             },
             onGroupLongClick = { position ->
                 if (actionMode == null) {
-                    actionMode = (activity as MifosBaseActivity?)!!.startSupportActionMode(actionModeCallback!!)
+                    actionMode =
+                        (activity as MifosBaseActivity?)!!.startSupportActionMode(actionModeCallback!!)
                 }
                 toggleSelection(position)
             }
@@ -116,12 +118,16 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
         if (arguments != null) {
             mGroupList = requireArguments().getParcelableArrayList(Constants.GROUPS)
             isParentFragment = requireArguments()
-                    .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
+                .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         rootView = inflater.inflate(R.layout.fragment_groups, container, false)
         ButterKnife.bind(this, rootView)
         mGroupsListPresenter!!.attachView(this)
@@ -163,16 +169,20 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
         rv_groups!!.layoutManager = mLayoutManager
         rv_groups!!.setHasFixedSize(true)
         rv_groups!!.adapter = mGroupListAdapter
-        swipeRefreshLayout!!.setColorSchemeColors(*activity
-                ?.getResources()!!.getIntArray(R.array.swipeRefreshColors))
+        swipeRefreshLayout!!.setColorSchemeColors(
+            *activity
+                ?.getResources()!!.getIntArray(R.array.swipeRefreshColors)
+        )
         swipeRefreshLayout!!.setOnRefreshListener(this)
         sweetUIErrorHandler = SweetUIErrorHandler(activity, rootView)
     }
 
     @OnClick(R.id.fab_create_group)
     fun onClickCreateNewGroup() {
-        (activity as MifosBaseActivity?)!!.replaceFragment(CreateNewGroupFragment.newInstance(),
-                false, R.id.container_a)
+        (activity as MifosBaseActivity?)?.replaceFragment(
+            CreateNewGroupFragment.newInstance(),
+            true, R.id.container_a
+        )
     }
 
     /**
@@ -222,8 +232,10 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      * @param message String Message.
      */
     override fun showEmptyGroups(message: Int) {
-        sweetUIErrorHandler!!.showSweetEmptyUI(getString(R.string.group), getString(message),
-                R.drawable.ic_error_black_24dp, rv_groups, errorView)
+        sweetUIErrorHandler!!.showSweetEmptyUI(
+            getString(R.string.group), getString(message),
+            R.drawable.ic_error_black_24dp, rv_groups, errorView
+        )
     }
 
     /**
@@ -249,8 +261,10 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      */
     override fun showFetchingError() {
         val errorMessage = getStringMessage(R.string.failed_to_fetch_groups)
-        sweetUIErrorHandler!!.showSweetErrorUI(errorMessage,
-                R.drawable.ic_error_black_24dp, rv_groups, errorView)
+        sweetUIErrorHandler!!.showSweetErrorUI(
+            errorMessage,
+            R.drawable.ic_error_black_24dp, rv_groups, errorView
+        )
     }
 
     /**
@@ -318,16 +332,20 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
                     for (position in mGroupListAdapter!!.selectedItems) {
                         selectedGroups!!.add(mGroupList!![position!!])
                     }
-                    val syncGroupsDialogFragment = SyncGroupsDialogFragment.newInstance(selectedGroups)
+                    val syncGroupsDialogFragment =
+                        SyncGroupsDialogFragment.newInstance(selectedGroups)
                     val fragmentTransaction = activity
-                            ?.getSupportFragmentManager()!!.beginTransaction()
+                        ?.getSupportFragmentManager()!!.beginTransaction()
                     fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_SYNC)
                     syncGroupsDialogFragment.isCancelable = false
-                    syncGroupsDialogFragment.show(fragmentTransaction,
-                            resources.getString(R.string.sync_groups))
+                    syncGroupsDialogFragment.show(
+                        fragmentTransaction,
+                        resources.getString(R.string.sync_groups)
+                    )
                     mode.finish()
                     true
                 }
+
                 else -> false
             }
         }
@@ -352,18 +370,23 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
          * @return GroupsListFragment
         </Group> */
         @JvmStatic
-        fun newInstance(groupList: List<Group?>?,
-                        isParentFragment: Boolean): GroupsListFragment {
+        fun newInstance(
+            groupList: List<Group?>?,
+            isParentFragment: Boolean
+        ): GroupsListFragment {
             val groupListFragment = GroupsListFragment()
             val args = Bundle()
             if (isParentFragment && groupList != null) {
-                args.putParcelableArrayList(Constants.GROUPS,
-                        groupList as ArrayList<out Parcelable?>?)
+                args.putParcelableArrayList(
+                    Constants.GROUPS,
+                    groupList as ArrayList<out Parcelable?>?
+                )
                 args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, true)
                 groupListFragment.arguments = args
             }
             return groupListFragment
         }
+
         /**
          * This method will be called, whenever GroupsListFragment will not have Parent Fragment.
          * So, Presenter make the call to Rest API and fetch the Client List and show in UI
