@@ -7,7 +7,6 @@ import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.mifos.mifosxdroid.R
 import com.mifos.objects.CheckerTask
-import kotlinx.android.synthetic.main.item_checker_task.view.*
 
 class CheckerTaskListAdapter : ListAdapter<CheckerTask,
         CheckerTaskListAdapter.ViewHolder>(TaskDiffCallback()) {
@@ -40,9 +39,13 @@ class CheckerTaskListAdapter : ListAdapter<CheckerTask,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_checker_task, parent,
-                        false))
+        return ViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(
+                    R.layout.item_checker_task, parent,
+                    false
+                )
+        )
     }
 
     fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
@@ -85,30 +88,32 @@ class CheckerTaskListAdapter : ListAdapter<CheckerTask,
     }
 
     inner class ViewHolder(view: View) :
-            RecyclerView.ViewHolder(view) {
-        val tvCheckerTaskId: TextView = view.tv_checker_task_id
-        val tvCheckerTaskDate: TextView = view.tv_checker_task_date
-        val tvCheckerTaskStatus: TextView = view.tv_checker_task_status
-        val tvCheckerTaskMaker: TextView = view.tv_checker_task_maker
-        val tvCheckerTaskAction: TextView = view.tv_checker_task_action
-        val tvCheckerTaskEntity: TextView = view.tv_checker_task_entity
-        val tvCheckerTaskOptionsEntity: TextView = view.tv_checker_task_options_entity
-        val tvCheckerTaskOptionsDate: TextView = view.tv_checker_task_options_date
-        val cbCheckerTask: CheckBox = view.cb_checker_task
+        RecyclerView.ViewHolder(view) {
+        val tvCheckerTaskId: TextView = view.findViewById(R.id.tv_checker_task_id)
+        val tvCheckerTaskDate: TextView = view.findViewById(R.id.tv_checker_task_date)
+        val tvCheckerTaskStatus: TextView = view.findViewById(R.id.tv_checker_task_status)
+        val tvCheckerTaskMaker: TextView = view.findViewById(R.id.tv_checker_task_maker)
+        val tvCheckerTaskAction: TextView = view.findViewById(R.id.tv_checker_task_action)
+        val tvCheckerTaskEntity: TextView = view.findViewById(R.id.tv_checker_task_entity)
+        val tvCheckerTaskOptionsEntity: TextView =
+            view.findViewById(R.id.tv_checker_task_options_entity)
+        val tvCheckerTaskOptionsDate: TextView =
+            view.findViewById(R.id.tv_checker_task_options_date)
+        val cbCheckerTask: CheckBox = view.findViewById(R.id.cb_checker_task)
 
-        private val ivApproveIcon: ImageView = view.iv_approve_icon
-        private val ivRejectIcon: ImageView = view.iv_reject_icon
-        private val ivDeleteIcon: ImageView = view.iv_delete_icon
+        private val ivApproveIcon: ImageView = view.findViewById(R.id.iv_approve_icon)
+        private val ivRejectIcon: ImageView = view.findViewById(R.id.iv_reject_icon)
+        private val ivDeleteIcon: ImageView = view.findViewById(R.id.iv_delete_icon)
 
         init {
             view.setOnClickListener {
-                mListener?.let {
+                mListener.let {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION)
                         mListener.onItemClick(position)
                 }
                 val llCheckerTaskOptions =
-                        view.findViewById<LinearLayout>(R.id.ll_checker_task_options)
+                    view.findViewById<LinearLayout>(R.id.ll_checker_task_options)
                 if (llCheckerTaskOptions.visibility == View.GONE) {
                     llCheckerTaskOptions.visibility = View.VISIBLE
                 } else {
@@ -123,7 +128,7 @@ class CheckerTaskListAdapter : ListAdapter<CheckerTask,
             }
 
             ivApproveIcon.setOnClickListener {
-                mListener?.let {
+                mListener.let {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION)
                         mListener.onApproveClick(position)
@@ -131,7 +136,7 @@ class CheckerTaskListAdapter : ListAdapter<CheckerTask,
             }
 
             ivRejectIcon.setOnClickListener {
-                mListener?.let {
+                mListener.let {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION)
                         mListener.onRejectClick(position)
@@ -139,7 +144,7 @@ class CheckerTaskListAdapter : ListAdapter<CheckerTask,
             }
 
             ivDeleteIcon.setOnClickListener {
-                mListener?.let {
+                mListener.let {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION)
                         mListener.onDeleteClick(position)

@@ -4,7 +4,7 @@
  */
 
 buildscript {
-    ext.kotlin_version = "1.7.0"
+    ext.kotlin_version = "1.8.20"
     repositories {
         google()
         mavenCentral()
@@ -37,7 +37,6 @@ apply plugin: 'io.fabric'
 apply from: '../config/quality/quality.gradle'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
