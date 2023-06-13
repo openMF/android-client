@@ -189,15 +189,15 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
      */
     fun setupUserStatusToggle() {
         userStatusToggle = mNavigationHeader!!.findViewById(R.id.user_status_toggle)
-        if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
+        if (PrefManager.userStatus == Constants.USER_OFFLINE) {
             userStatusToggle?.isChecked = true
         }
         userStatusToggle?.setOnClickListener(View.OnClickListener {
-            if (PrefManager.getUserStatus() == Constants.USER_OFFLINE) {
-                PrefManager.setUserStatus(Constants.USER_ONLINE)
+            if (PrefManager.userStatus == Constants.USER_OFFLINE) {
+                PrefManager.userStatus = Constants.USER_ONLINE
                 userStatusToggle!!.isChecked = false
             } else {
-                PrefManager.setUserStatus(Constants.USER_OFFLINE)
+                PrefManager.userStatus = Constants.USER_OFFLINE
                 userStatusToggle!!.isChecked = true
             }
         })
@@ -214,7 +214,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
      */
     private fun loadClientDetails() {
         // download logged in user
-        val loggedInUser = PrefManager.getUser()
+        val loggedInUser = PrefManager.user
         val textViewUsername = ButterKnife.findById<TextView>(mNavigationHeader!!, R.id.tv_user_name)
         textViewUsername.text = loggedInUser.username
 
