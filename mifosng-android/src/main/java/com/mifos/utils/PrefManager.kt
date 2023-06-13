@@ -33,65 +33,65 @@ object PrefManager {
 
     @JvmStatic
     fun clearPrefs() {
-        val editor = preferences!!.edit()
-        if (preferences != null) {
-            for (key in preferences!!.all.keys) {
+        val editor = preferences?.edit()
+        preferences?.let { prefs ->
+            for (key in prefs.all.keys) {
                 if (key != "language_type") {
-                    editor.remove(key)
+                    editor?.remove(key)
                 }
             }
         }
-        editor.apply()
+        editor?.apply()
     }
 
     fun getInt(preferenceKey: String?, preferenceDefaultValue: Int): Int {
-        return preferences!!.getInt(preferenceKey, preferenceDefaultValue)
+        return preferences?.getInt(preferenceKey, preferenceDefaultValue) ?:preferenceDefaultValue
     }
 
     fun putInt(preferenceKey: String?, preferenceValue: Int) {
-        preferences!!.edit().putInt(preferenceKey, preferenceValue).apply()
+        preferences?.edit()?.putInt(preferenceKey, preferenceValue)?.apply()
     }
 
     fun getLong(preferenceKey: String?, preferenceDefaultValue: Long): Long {
-        return preferences!!.getLong(preferenceKey, preferenceDefaultValue)
+        return preferences?.getLong(preferenceKey, preferenceDefaultValue) ?:preferenceDefaultValue
     }
 
     fun putLong(preferenceKey: String?, preferenceValue: Long) {
-        preferences!!.edit().putLong(preferenceKey, preferenceValue).apply()
+        preferences?.edit()?.putLong(preferenceKey, preferenceValue)?.apply()
     }
 
     fun getFloat(preferenceKey: String?, preferenceDefaultValue: Float): Float {
-        return preferences!!.getFloat(preferenceKey, preferenceDefaultValue)
+        return preferences?.getFloat(preferenceKey, preferenceDefaultValue) ?:preferenceDefaultValue
     }
 
     fun putFloat(preferenceKey: String?, preferenceValue: Float) {
-        preferences!!.edit().putFloat(preferenceKey, preferenceValue).apply()
+        preferences?.edit()?.putFloat(preferenceKey, preferenceValue)?.apply()
     }
 
     @JvmStatic
     fun getBoolean(preferenceKey: String?, preferenceDefaultValue: Boolean): Boolean {
-        return preferences!!.getBoolean(preferenceKey, preferenceDefaultValue)
+        return preferences?.getBoolean(preferenceKey, preferenceDefaultValue) ?:preferenceDefaultValue
     }
 
     @JvmStatic
     fun putBoolean(preferenceKey: String?, preferenceValue: Boolean) {
-        preferences!!.edit().putBoolean(preferenceKey, preferenceValue).apply()
+        preferences?.edit()?.putBoolean(preferenceKey, preferenceValue)?.apply()
     }
 
     fun getString(preferenceKey: String?, preferenceDefaultValue: String?): String? {
-        return preferences!!.getString(preferenceKey, preferenceDefaultValue)
+        return preferences?.getString(preferenceKey, preferenceDefaultValue)
     }
 
     fun putString(preferenceKey: String?, preferenceValue: String?) {
-        preferences!!.edit().putString(preferenceKey, preferenceValue).apply()
+        preferences?.edit()?.putString(preferenceKey, preferenceValue)?.apply()
     }
 
     fun putStringSet(preferencesKey: String?, values: Set<String?>?) {
-        preferences!!.edit().putStringSet(preferencesKey, values).apply()
+        preferences?.edit()?.putStringSet(preferencesKey, values)?.apply()
     }
 
     fun getStringSet(preferencesKey: String?): Set<String>? {
-        return preferences!!.getStringSet(preferencesKey, null)
+        return preferences?.getStringSet(preferencesKey, null)
     }
     // Concrete methods
     /**
