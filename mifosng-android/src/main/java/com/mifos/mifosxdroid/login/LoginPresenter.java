@@ -59,8 +59,15 @@ public class LoginPresenter extends BasePresenter<LoginMvpView> {
                         try {
                             if (e instanceof HttpException) {
                                 errorMessage = ((HttpException) e).response().errorBody().string();
-                                getMvpView().onLoginError( MFErrorParser.parseError(errorMessage)
-                                        .getDeveloperMessage());
+                                if (((HttpException) e).code() == 400) {
+                                    getMvpView().onLoginError(
+                                            MFErrorParser.parseError400(errorMessage)
+                                            .getMessage());
+                                } else {
+                                    getMvpView().onLoginError(
+                                            MFErrorParser.parseError(errorMessage)
+                                            .getDeveloperMessage());
+                                }
                             }
                         } catch (Throwable throwable) {
                             RxJavaPlugins.getInstance().getErrorHandler().handleError(throwable);
