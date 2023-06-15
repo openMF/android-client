@@ -7,37 +7,19 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
 
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.CheckerInboxTasksFragmentBinding
 import com.mifos.objects.CheckerTask
 import com.mifos.objects.checkerinboxandtasks.RescheduleLoansTask
 import javax.inject.Inject
 
 class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
-    @JvmField
-    @BindView(R.id.badge_checker_inbox)
-    var badgeCheckerInbox: TextView? = null
-
-    @JvmField
-    @BindView(R.id.badge_reschedule_loan)
-    var badgeRescheduleLoan: TextView? = null
-
-    @JvmField
-    @BindView(R.id.ll_checker_inbox_tasks)
-    var llCheckerInboxTasks: LinearLayout? = null
-
-    @JvmField
-    @BindView(R.id.rl_checker_inbox)
-    var rlCheckerInbox: RelativeLayout? = null
+    private lateinit var binding: CheckerInboxTasksFragmentBinding
 
     override fun onRefresh() {
         viewModel.loadCheckerTasks()
@@ -51,7 +33,6 @@ class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefr
     @Inject
     lateinit var factory: CheckerInboxViewModelFactory
     private lateinit var viewModel: CheckerInboxTasksViewModel
-    private lateinit var rootView: View
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,15 +44,11 @@ class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefr
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        binding = CheckerInboxTasksFragmentBinding.inflate(inflater, container, false)
         setToolbarTitle(resources.getString(R.string.checker_inbox_and_pending_tasks))
-        rootView = inflater.inflate(
-            R.layout.checker_inbox_tasks_fragment,
-            container, false
-        )
-        ButterKnife.bind(this, rootView)
-        swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout)
+        swipeRefreshLayout = binding.swipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(this)
-        return rootView
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -83,12 +60,12 @@ class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefr
 
         viewModel.getCheckerTasks().observe(this,
             Observer<List<CheckerTask>> {
-                badgeCheckerInbox?.text = it?.size.toString()
+                binding.badgeCheckerInbox.text = it?.size.toString()
             })
 
         viewModel.getRescheduleLoanTasks().observe(this,
             Observer<List<RescheduleLoansTask>> {
-                badgeRescheduleLoan?.text = it?.size.toString()
+                binding.badgeRescheduleLoan.text = it?.size.toString()
             })
 
         viewModel.status.observe(this,
@@ -97,14 +74,14 @@ class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefr
                     hideMifosProgressBar()
                     swipeRefreshLayout.isRefreshing = false
                     if (status) {
-                        llCheckerInboxTasks?.visibility = View.VISIBLE
+                        binding.llCheckerInboxTasks.visibility = View.VISIBLE
                     } else {
-                        Toaster.show(rootView, getString(R.string.network_issue))
+                        Toaster.show(binding.root, getString(R.string.network_issue))
                     }
                 }
             })
 
-        rlCheckerInbox?.setOnClickListener {
+        binding.rlCheckerInbox.setOnClickListener {
             val fragmentTransaction = requireActivity()
                 .supportFragmentManager.beginTransaction()
             fragmentTransaction.addToBackStack("Checker Inbox")

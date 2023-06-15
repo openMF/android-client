@@ -11,14 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.CheckerTaskListAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
+import com.mifos.mifosxdroid.databinding.CheckerInboxFragmentBinding
 import com.mifos.mifosxdroid.dialogfragments.checkertaskfilterdialog.CheckerTaskFilterDialogFragment
 import com.mifos.objects.CheckerTask
 import java.sql.Timestamp
@@ -30,36 +28,12 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
     CheckerTaskListAdapter.OnItemClickListener,
     CheckerTaskListAdapter.CheckerTaskBadgeProcessMode {
 
-    @BindView(R.id.view_flipper)
-    lateinit var viewFlipper: ViewFlipper
+    private lateinit var binding: CheckerInboxFragmentBinding
 
-    @BindView(R.id.et_search)
-    lateinit var etSearch: EditText
-
-    @BindView(R.id.rv_checker_inbox)
-    lateinit var rvCheckerInbox: RecyclerView
-
-    @BindView(R.id.tv_no_of_selected_tasks)
-    lateinit var tvNoOfSelectedTasks: TextView
-
-    @BindView(R.id.iv_filter_search_icon)
-    lateinit var ivFilterSearchIcon: ImageView
-
-    @BindView(R.id.iv_batch_approve_icon)
-    lateinit var ivBatchApproveIcon: ImageView
-
-    @BindView(R.id.iv_batch_reject_icon)
-    lateinit var ivBatchRejectIcon: ImageView
-
-    @BindView(R.id.iv_batch_delete_icon)
-    lateinit var ivBatchDeleteIcon: ImageView
-
-    @BindView(R.id.iv_deselect_all)
-    lateinit var ivDeselectAll: ImageView
     override fun onItemLongPress(position: Int) {
-        viewFlipper.showNext()
+        binding.viewFlipper.showNext()
         if (inBadgeProcessingMode) {
-            tvNoOfSelectedTasks.text = "0"
+            binding.tvNoOfSelectedTasks.text = "0"
             selectedCheckerTaskList.clear()
             inBadgeProcessingMode = false
             checkerTaskListAdapter.notifyDataSetChanged()
@@ -108,25 +82,21 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(
-            R.layout.checker_inbox_fragment,
-            container, false
-        )
-        ButterKnife.bind(this, view)
+    ): View {
+        binding = CheckerInboxFragmentBinding.inflate(inflater, container, false)
         setToolbarTitle(resources.getString(R.string.checker_inbox))
         showMifosProgressBar()
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        etSearch.addTextChangedListener(this)
-        rvCheckerInbox.layoutManager = LinearLayoutManager(activity)
-        rvCheckerInbox.hasFixedSize()
+        binding.etSearch.addTextChangedListener(this)
+        binding.rvCheckerInbox.layoutManager = LinearLayoutManager(activity)
+        binding.rvCheckerInbox.hasFixedSize()
         checkerTaskListAdapter = CheckerTaskListAdapter()
         checkerTaskListAdapter.setBadgeProcessMode(this)
-        rvCheckerInbox.adapter = checkerTaskListAdapter
+        binding.rvCheckerInbox.adapter = checkerTaskListAdapter
         setUpOnClickListeners()
     }
 
@@ -244,10 +214,10 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     } else {
                         // No more tasks are available for batch processing
                         hideMifosProgressBar()
-                        tvNoOfSelectedTasks.text = "0"
+                        binding.tvNoOfSelectedTasks.text = "0"
                         inBadgeProcessingMode = false
                         checkerTaskListAdapter.submitList(checkerTaskList)
-                        viewFlipper.showNext()
+                        binding.viewFlipper.showNext()
                     }
                 } else {
                     // Single Entry Approved (without batch processing)
@@ -274,10 +244,10 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     } else {
                         // No more tasks are available for batch processing
                         hideMifosProgressBar()
-                        tvNoOfSelectedTasks.text = "0"
+                        binding.tvNoOfSelectedTasks.text = "0"
                         inBadgeProcessingMode = false
                         checkerTaskListAdapter.submitList(checkerTaskList)
-                        viewFlipper.showNext()
+                        binding.viewFlipper.showNext()
                     }
                 } else {
                     // Single Entry Rejected (without batch processing)
@@ -304,10 +274,10 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     } else {
                         // No more tasks are available for batch processing
                         hideMifosProgressBar()
-                        tvNoOfSelectedTasks.text = "0"
+                        binding.tvNoOfSelectedTasks.text = "0"
                         inBadgeProcessingMode = false
                         checkerTaskListAdapter.submitList(checkerTaskList)
-                        viewFlipper.showNext()
+                        binding.viewFlipper.showNext()
                     }
                 } else {
                     // Single Entry Deleted (without batch processing)
@@ -328,10 +298,10 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                         )
                     } else {
                         hideMifosProgressBar()
-                        tvNoOfSelectedTasks.text = "0"
+                        binding.tvNoOfSelectedTasks.text = "0"
                         inBadgeProcessingMode = false
                         checkerTaskListAdapter.submitList(checkerTaskList)
-                        viewFlipper.showNext()
+                        binding.viewFlipper.showNext()
                     }
                 } else {
                     hideMifosProgressBar()
@@ -348,10 +318,10 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                         )
                     } else {
                         hideMifosProgressBar()
-                        tvNoOfSelectedTasks.text = "0"
+                        binding.tvNoOfSelectedTasks.text = "0"
                         inBadgeProcessingMode = false
                         checkerTaskListAdapter.submitList(checkerTaskList)
-                        viewFlipper.showNext()
+                        binding.viewFlipper.showNext()
                     }
                 } else {
                     showNetworkError()
@@ -367,10 +337,10 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                         )
                     } else {
                         hideMifosProgressBar()
-                        tvNoOfSelectedTasks.text = "0"
+                        binding.tvNoOfSelectedTasks.text = "0"
                         inBadgeProcessingMode = false
                         checkerTaskListAdapter.submitList(checkerTaskList)
-                        viewFlipper.showNext()
+                        binding.viewFlipper.showNext()
                     }
                 } else {
                     showNetworkError()
@@ -384,13 +354,13 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
     private fun setUpOnClickListeners() {
         checkerTaskListAdapter.setOnItemClickListener(this)
 
-        ivFilterSearchIcon.setOnClickListener {
+        binding.ivFilterSearchIcon.setOnClickListener {
             val dialogSearchFilter = CheckerTaskFilterDialogFragment()
             dialogSearchFilter.setTargetFragment(this@CheckerInboxFragment, 1)
             dialogSearchFilter.show(requireActivity().supportFragmentManager, "DialogSearchFilter")
         }
 
-        ivBatchApproveIcon.setOnClickListener {
+        binding.ivBatchApproveIcon.setOnClickListener {
             if (selectedCheckerTaskList.isNotEmpty()) {
                 showConfirmationDialog(getString(R.string.approve),
                     getString(R.string.approve_selected_entries),
@@ -408,7 +378,7 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
             }
         }
 
-        ivBatchRejectIcon.setOnClickListener {
+        binding.ivBatchRejectIcon.setOnClickListener {
             if (selectedCheckerTaskList.isNotEmpty()) {
                 showConfirmationDialog(getString(R.string.reject),
                     getString(R.string.reject_selected_entries),
@@ -426,7 +396,7 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
             }
         }
 
-        ivBatchDeleteIcon.setOnClickListener {
+        binding.ivBatchDeleteIcon.setOnClickListener {
             if (selectedCheckerTaskList.isNotEmpty()) {
                 showConfirmationDialog(getString(R.string.reject),
                     getString(R.string.reject_selected_entries),
@@ -444,9 +414,9 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
             }
         }
 
-        ivDeselectAll.setOnClickListener {
-            viewFlipper.showNext()
-            tvNoOfSelectedTasks.text = "0"
+        binding.ivDeselectAll.setOnClickListener {
+            binding.viewFlipper.showNext()
+            binding.tvNoOfSelectedTasks.text = "0"
             selectedCheckerTaskList.clear()
             inBadgeProcessingMode = false
             checkerTaskListAdapter.notifyDataSetChanged()
@@ -519,12 +489,12 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
             task.selectedFlag = true
             checkerTaskListAdapter.notifyItemChanged(position)
             selectedCheckerTaskList.add(task)
-            tvNoOfSelectedTasks.text = selectedCheckerTaskList.size.toString()
+            binding.tvNoOfSelectedTasks.text = selectedCheckerTaskList.size.toString()
         } else {
             task.selectedFlag = false
             checkerTaskListAdapter.notifyItemChanged(position)
             selectedCheckerTaskList.remove(task)
-            tvNoOfSelectedTasks.text = selectedCheckerTaskList.size.toString()
+            binding.tvNoOfSelectedTasks.text = selectedCheckerTaskList.size.toString()
         }
     }
 

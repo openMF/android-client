@@ -9,12 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.widget.AppCompatSpinner
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
 import butterknife.ButterKnife
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
+import com.mifos.mifosxdroid.databinding.DialogFragmentCheckerTaskFilterBinding
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxViewModel
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxViewModelFactory
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
@@ -27,29 +26,7 @@ import javax.inject.Inject
 class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePickListener,
     AdapterView.OnItemSelectedListener {
 
-    @BindView(R.id.sp_action)
-    lateinit var spAction: AppCompatSpinner
-
-
-    @BindView(R.id.sp_entity)
-    lateinit var spEntity: AppCompatSpinner
-
-
-    @BindView(R.id.tv_from_date)
-    lateinit var tvFromDate: TextView
-
-
-    @BindView(R.id.tv_to_date)
-    lateinit var tvToDate: TextView
-
-    @BindView(R.id.btn_clear_filter)
-    lateinit var btnClearFilter: Button
-
-    @BindView(R.id.btn_apply_filter)
-    lateinit var btnApplyFilter: Button
-
-    @BindView(R.id.et_resource_id)
-    lateinit var etResourceId: EditText
+    private lateinit var binding: DialogFragmentCheckerTaskFilterBinding
 
     private lateinit var mOnInputSelected: OnInputSelected
 
@@ -91,46 +68,44 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        val rootView =
-            inflater.inflate(R.layout.dialog_fragment_checker_task_filter, container, false)
-        ButterKnife.bind(this, rootView)
-        return rootView
+    ): View {
+        binding = DialogFragmentCheckerTaskFilterBinding.inflate(inflater,container,false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        spAction.onItemSelectedListener = this
-        spEntity.onItemSelectedListener = this
+        binding.spAction.onItemSelectedListener = this
+        binding.spEntity.onItemSelectedListener = this
         setOnClickListeners()
-        tvFromDate.text = getString(R.string.select_from_date)
+        binding.tvFromDate.text = getString(R.string.select_from_date)
         toDate = "${MFDatePicker.getDatePickedAsString()} $TO_TIME"
-        tvToDate.text = toDate.substringBefore(" ")
+        binding.tvToDate.text = toDate.substringBefore(" ")
     }
 
     private fun setOnClickListeners() {
-        tvFromDate.setOnClickListener {
+        binding.tvFromDate.setOnClickListener {
             activity?.supportFragmentManager?.let { it1 ->
                 datePickerFromDate.show(
                     it1,
                     FragmentConstants.DFRAG_DATE_PICKER
                 )
             }
-            mCurrentDateView = tvFromDate
+            mCurrentDateView = binding.tvFromDate
         }
 
-        tvToDate.setOnClickListener {
+        binding.tvToDate.setOnClickListener {
             activity?.supportFragmentManager?.let { it1 ->
                 datePickerToDate.show(
                     it1,
                     FragmentConstants.DFRAG_DATE_PICKER
                 )
             }
-            mCurrentDateView = tvToDate
+            mCurrentDateView = binding.tvToDate
         }
 
-        btnApplyFilter.setOnClickListener {
-            val resourceId = etResourceId.text.toString().trim()
+        binding.btnApplyFilter.setOnClickListener {
+            val resourceId = binding.etResourceId.text.toString().trim()
             var fromDateTimeStamp: Timestamp? = null
             if (fromDate.isNotEmpty()) {
                 fromDateTimeStamp = Timestamp(
@@ -147,7 +122,7 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
             dialog?.dismiss()
         }
 
-        btnClearFilter.setOnClickListener {
+        binding.btnClearFilter.setOnClickListener {
             mOnInputSelected.sendInput(
                 null, null,
                 selectedAction, selectedEntity, ""
@@ -184,8 +159,8 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
                 android.R.layout.simple_spinner_dropdown_item
             )
 
-            spAction.adapter = actionOptionsAdapter
-            spEntity.adapter = entityOptionsAdapter
+            binding.spAction.adapter = actionOptionsAdapter
+            binding.spEntity.adapter = entityOptionsAdapter
 
             selectedAction = checkerInboxSearchTemplate.actionNames[0]
             selectedEntity = checkerInboxSearchTemplate.entityNames[0]
@@ -224,12 +199,12 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
     }
 
     override fun onDatePicked(date: String) {
-        if (mCurrentDateView === tvFromDate) {
+        if (mCurrentDateView === binding.tvFromDate) {
             fromDate = date
-            tvFromDate.text = fromDate
-        } else if (mCurrentDateView === tvToDate) {
+            binding.tvFromDate.text = fromDate
+        } else if (mCurrentDateView === binding.tvToDate) {
             toDate = "$date $TO_TIME"
-            tvToDate.text = toDate.substringBefore(" ")
+            binding.tvToDate.text = toDate.substringBefore(" ")
         }
     }
 }
