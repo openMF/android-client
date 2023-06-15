@@ -1,9 +1,13 @@
 package com.mifos.mifosxdroid.online.search;
 
+import android.content.Context;
+
+import com.mifos.App;
 import com.mifos.api.datamanager.DataManagerSearch;
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.base.BasePresenter;
 import com.mifos.objects.SearchedEntity;
+import com.mifos.utils.Network;
 
 import java.util.List;
 
@@ -40,6 +44,12 @@ public class SearchPresenter extends BasePresenter<SearchMvpView> {
 
     public void searchResources(String query, String resources, Boolean exactMatch) {
         checkViewAttached();
+        Context context = App.getContext();
+        if (context != null && !Network.isOnline(context)) {
+            getMvpView().showProgressbar(false);
+            getMvpView().showMessage(R.string.no_internet_connection);
+            return;
+        }
         getMvpView().showProgressbar(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = dataManagerSearch.searchResources(query, resources, exactMatch)
