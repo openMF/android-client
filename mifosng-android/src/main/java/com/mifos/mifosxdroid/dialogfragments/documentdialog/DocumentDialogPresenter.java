@@ -67,6 +67,7 @@ public class DocumentDialogPresenter extends BasePresenter<DocumentDialogMvpView
                                 errorMessage = ((HttpException) e).response().errorBody().string();
                                 getMvpView().showUploadError(MFErrorParser.parseError(errorMessage)
                                         .getDeveloperMessage());
+                                getMvpView().showError(R.string.failed_to_upload_document);
                             } else {
                                 getMvpView().showError(R.string.failed_to_upload_document);
                             }
