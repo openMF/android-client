@@ -90,7 +90,7 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
         mInstanceUrlPref = findPreference(
             getString(R.string.hint_instance_url)
         ) as EditTextPreference
-        val instanceUrl = PrefManager.getInstanceUrl()
+        val instanceUrl = PrefManager.instanceUrl
         mInstanceUrlPref!!.text = instanceUrl
         mInstanceUrlPref!!.isSelectable = true
         mInstanceUrlPref!!.dialogTitle = "Edit Instance Url"
@@ -99,7 +99,7 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
             OnPreferenceChangeListener { _, o ->
                 val newUrl = o.toString()
                 if (newUrl != instanceUrl) {
-                    PrefManager.setInstanceUrl(newUrl)
+                    PrefManager.instanceUrl = newUrl
                     Toast.makeText(activity, newUrl, Toast.LENGTH_SHORT).show()
                     startActivity(Intent(activity, DashboardActivity::class.java))
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

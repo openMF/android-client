@@ -22,11 +22,9 @@ class SplashScreenActivity : MifosBaseActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         splashScreen.setKeepOnScreenCondition { true }
-        if (!PrefManager.isAuthenticated()) {
-            PrefManager.setInstanceUrl(
-                BaseUrl.PROTOCOL_HTTPS
-                        + BaseUrl.API_ENDPOINT + BaseUrl.API_PATH
-            )
+        if (!PrefManager.isAuthenticated) {
+            PrefManager.instanceUrl = (BaseUrl.PROTOCOL_HTTPS
+                    + BaseUrl.API_ENDPOINT + BaseUrl.API_PATH)
             startActivity(Intent(this@SplashScreenActivity, LoginActivity::class.java))
         } else {
             val intent = Intent(

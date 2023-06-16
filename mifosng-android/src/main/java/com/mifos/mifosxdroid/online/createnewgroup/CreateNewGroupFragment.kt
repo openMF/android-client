@@ -215,7 +215,7 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
         Toast.makeText(activity, "Group " + MifosResponseHandler.getResponse(),
                 Toast.LENGTH_LONG).show()
         requireActivity().supportFragmentManager.popBackStack()
-        if (PrefManager.getUserStatus() == Constants.USER_ONLINE) {
+        if (PrefManager.userStatus == Constants.USER_ONLINE) {
             val groupActivityIntent = Intent(activity, GroupsActivity::class.java)
             groupActivityIntent.putExtra(Constants.GROUP_ID, group?.groupId)
             startActivity(groupActivityIntent)

@@ -202,7 +202,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
         savingsAccountTransactionRequest.paymentTypeId = paymentTypeOptionId.toString()
         val builtTransactionRequestAsJson = Gson().toJson(savingsAccountTransactionRequest)
         Log.i(resources.getString(R.string.transaction_body), builtTransactionRequestAsJson)
-        if (!Network.isOnline(activity)) PrefManager.setUserStatus(Constants.USER_OFFLINE)
+        if (!Network.isOnline(activity)) PrefManager.userStatus = Constants.USER_OFFLINE
         mSavingAccountTransactionPresenter!!.processTransaction(savingsAccountType!!.endpoint,
                 savingsAccountId, transactionType, savingsAccountTransactionRequest)
     }
