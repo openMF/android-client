@@ -49,6 +49,15 @@ public class MifosBaseActivity extends BasePassCodeActivity implements BaseActiv
         }
     }
 
+    @Override
+    public void setContentView(View view) {
+        super.setContentView(view);
+        toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+    }
+
     public ActivityComponent getActivityComponent() {
         if (mActivityComponent == null) {
             mActivityComponent = DaggerActivityComponent.builder()

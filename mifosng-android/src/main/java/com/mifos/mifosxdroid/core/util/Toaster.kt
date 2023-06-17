@@ -20,12 +20,14 @@ object Toaster {
 
     @JvmStatic
     fun show(view: View?, text: String?, duration: Int) {
-        val snackbar = Snackbar.make(view!!, text!!, duration)
-        val sbView = snackbar.view
-        val textView = sbView.findViewById<TextView>(R.id.snackbar_text)
-        textView.textSize = 12f
-        snackbar.setAction("OK") { snackbar.dismiss() }
-        snackbar.show()
+        if (view != null && text != null) {
+            val snackbar = Snackbar.make(view, text, duration)
+            val sbView = snackbar.view
+            val textView = sbView.findViewById<TextView>(R.id.snackbar_text)
+            textView.textSize = 12f
+            snackbar.setAction("OK") { snackbar.dismiss() }
+            snackbar.show()
+        }
     }
 
     @JvmStatic

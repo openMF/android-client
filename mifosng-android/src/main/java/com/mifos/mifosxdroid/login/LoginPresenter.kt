@@ -23,29 +23,27 @@ class LoginPresenter @Inject constructor(private val dataManagerAuth: DataManage
     }
 
     override fun detachView() {
-        if (subscription != null) subscription!!.unsubscribe()
+        subscription?.unsubscribe()
     }
 
     fun login(username: String?, password: String?) {
-        mvpView!!.showProgressbar(true)
-        if (subscription != null && !subscription!!.isUnsubscribed) {
-            subscription!!.unsubscribe()
-        }
+        mvpView?.showProgressbar(true)
+        subscription?.takeIf { !it.isUnsubscribed }?.unsubscribe()
         subscription = dataManagerAuth.login(username, password)
-            ?.observeOn(AndroidSchedulers.mainThread())
+            .observeOn(AndroidSchedulers.mainThread())
             ?.subscribeOn(Schedulers.io())
             ?.subscribe(object : Subscriber<User>() {
                 override fun onCompleted() {
-                    mvpView!!.showProgressbar(false)
+                    mvpView?.showProgressbar(false)
                 }
 
                 override fun onError(e: Throwable) {
-                    mvpView!!.showProgressbar(false)
+                    mvpView?.showProgressbar(false)
                     val errorMessage: String
                     try {
                         if (e is HttpException) {
                             errorMessage = e.response().errorBody().string()
-                            mvpView!!.onLoginError(
+                            mvpView?.onLoginError(
                                 MFErrorParser.parseError(errorMessage)
                                     .developerMessage
                             )
@@ -56,8 +54,8 @@ class LoginPresenter @Inject constructor(private val dataManagerAuth: DataManage
                 }
 
                 override fun onNext(user: User) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.onLoginSuccessful(user)
+                    mvpView?.showProgressbar(false)
+                    mvpView?.onLoginSuccessful(user)
                 }
             })
     }
