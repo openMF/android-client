@@ -11,7 +11,7 @@ public class CollectionSheetRequestPayload implements Parcelable {
 
     private int calendarId;
 
-    private String dateFormat = "dd MMM yyyy";
+    private String dateFormat = "dd MMMM YYYY";
 
     private String locale = "en";
 
