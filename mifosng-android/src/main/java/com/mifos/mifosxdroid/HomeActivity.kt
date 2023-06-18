@@ -19,6 +19,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.test.espresso.IdlingResource
@@ -78,7 +79,10 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         mNavigationView = findViewById(R.id.navigation_view)
         setSupportActionBar(toolbar)
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        //navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        // navController = binding.container.getFragment<NavHostFragment>().navController
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
         appBarConfiguration = AppBarConfiguration.Builder()
                 .setDrawerLayout(mDrawerLayout)
                 .build()
