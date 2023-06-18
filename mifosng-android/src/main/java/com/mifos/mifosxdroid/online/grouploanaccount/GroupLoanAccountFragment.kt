@@ -229,7 +229,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
                     .isChecked
             loansPayload.amortizationType = amortizationTypeId
             loansPayload.groupId = groupId
-            loansPayload.dateFormat = "dd MMMM yyyy"
+            loansPayload.dateFormat = "dd MMM yyyy"
             loansPayload.expectedDisbursementDate = disbursementDate
             loansPayload.interestCalculationPeriodType = interestCalculationPeriodTypeId
             loansPayload.loanType = "group"
