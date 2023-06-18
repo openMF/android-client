@@ -15,7 +15,7 @@ public class ActivatePayload implements Parcelable {
     String activationDate;
 
     @SerializedName("dateFormat")
-    String dateFormat = "dd MMMM YYYY";
+    String dateFormat = "dd MMM YYYY";
 
     @SerializedName("locale")
     String locale = "en";
