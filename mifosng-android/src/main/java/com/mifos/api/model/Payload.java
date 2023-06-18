@@ -7,7 +7,7 @@ package com.mifos.api.model;
 
 //TODO Remove calendarId and TransactionDate from this Payload class;
 public class Payload {
-    private String dateFormat = "dd MMMM YYYY";
+    private String dateFormat = "dd MMM YYYY";
     private String locale = "en";
     private long calendarId;
     private String transactionDate;
