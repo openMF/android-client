@@ -25,7 +25,7 @@ public class ClientAddressRequest implements Parcelable {
     Double longitude;
 
     // Defaults
-    String dateFormat = "dd MMMM YYYY";
+    String dateFormat = "dd MMM YYYY";
     String locale = "en";
 
     public String getPlaceId() {
