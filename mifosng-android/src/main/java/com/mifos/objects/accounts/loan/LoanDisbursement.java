@@ -24,7 +24,7 @@ public class LoanDisbursement implements Parcelable {
     Integer paymentTypeId;
 
     String locale = "en";
-    String dateFormat = "dd MMMM yyyy";
+    String dateFormat = "dd MMM yyyy";
 
     public String getLocale() {
         return locale;
