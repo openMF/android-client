@@ -228,7 +228,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
                 .isChecked()
         loansPayload.amortizationType = amortizationTypeId
         loansPayload.clientId = clientId
-        loansPayload.dateFormat = "dd MMM yyyy"
+        loansPayload.dateFormat = "dd MMM YYYY"
         loansPayload.expectedDisbursementDate = disbursementDate
         loansPayload.interestCalculationPeriodType = interestCalculationPeriodTypeId
         loansPayload.loanType = "individual"
