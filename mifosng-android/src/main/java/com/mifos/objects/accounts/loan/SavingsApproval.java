@@ -7,7 +7,7 @@ package com.mifos.objects.accounts.loan;
 public class SavingsApproval {
 
     private String locale = "en";
-    private String dateFormat = "dd MMM yyyy";
+    private String dateFormat = "dd MMM YYYY";
     private String approvedOnDate;
     private String note;
 
