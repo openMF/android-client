@@ -102,7 +102,7 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
             centerPayload.isActive = cb_centerActiveStatus!!.isChecked
             centerPayload.activationDate = activationdateString
             centerPayload.officeId = officeId
-            centerPayload.dateFormat = "dd MMM yyyy"
+            centerPayload.dateFormat = "dd MMM YYYY"
             centerPayload.locale = "en"
             initiateCenterCreation(centerPayload)
         }
