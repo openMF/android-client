@@ -6,7 +6,7 @@ package com.mifos.api.model;
 
 public class RequestCollectionSheetPayload {
 
-    private String dateFormat = "dd MMM yyyy";
+    private String dateFormat = "dd MMM YYYY";
 
     private String locale = "en";
 
