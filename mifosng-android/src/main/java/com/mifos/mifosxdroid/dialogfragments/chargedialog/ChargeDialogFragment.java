@@ -146,7 +146,7 @@ public class ChargeDialogFragment extends ProgressableDialogFragment implements
         chargesPayload.setAmount(etAmountDue.getEditableText().toString());
         chargesPayload.setLocale(etChargeLocale.getEditableText().toString());
         chargesPayload.setDueDate(dueDateString);
-        chargesPayload.setDateFormat("dd MMM yyyy");
+        chargesPayload.setDateFormat("dd MMM YYYY");
         chargesPayload.setChargeId(chargeId);
         initiateChargesCreation(chargesPayload);
     }
