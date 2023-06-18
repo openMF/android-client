@@ -25,7 +25,7 @@ public class CollectionSheetPayload implements Parcelable {
 
     private List<ClientsAttendance> clientsAttendance = new ArrayList<>();
 
-    private String dateFormat = "dd MMM yyyy";
+    private String dateFormat = "dd MMMM YYYY";
 
     private String locale = "en";
 
