@@ -5,7 +5,7 @@ package com.mifos.api.model;
  */
 public class DefaultPayload {
 
-    private String dateFormat = "dd MMMM YYYY";
+    private String dateFormat = "dd MMM YYYY";
     private String locale = "en";
 
 
