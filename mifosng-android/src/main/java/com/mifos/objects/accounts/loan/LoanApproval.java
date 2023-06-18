@@ -21,7 +21,7 @@ public class LoanApproval {
     String note;
 
     String locale = "en";
-    String dateFormat = "dd MMMM yyyy";
+    String dateFormat = "dd MMM yyyy";
 
     public String getExpectedDisbursementDate() {
         return expectedDisbursementDate;
