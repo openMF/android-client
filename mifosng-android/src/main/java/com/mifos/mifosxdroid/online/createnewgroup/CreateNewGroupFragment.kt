@@ -127,7 +127,7 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
                 groupPayload.activationDate = activationdateString
                 groupPayload.setSubmissionDate(dateofsubmissionstring)
                 groupPayload.officeId = officeId
-                groupPayload.dateFormat = "dd MMMM yyyy"
+                groupPayload.dateFormat = "dd MMM yyyy"
                 groupPayload.locale = "en"
                 initiateGroupCreation(groupPayload)
             } else {
