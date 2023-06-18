@@ -26,5 +26,7 @@ ext {
     butterKnifeVersion = '8.0.1'
     mifosPasscodeVersion = '1.0.0'
     preference = '1.1.0'
+    jUnitVersion = '4.13.2'
+    mockitoVersion = '5.3.1'
 
 }

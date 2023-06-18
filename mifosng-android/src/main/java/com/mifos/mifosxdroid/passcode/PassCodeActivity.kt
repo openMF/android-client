@@ -10,7 +10,6 @@ import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.SplashScreenActivity
 import com.mifos.mifosxdroid.core.util.Toaster
-import com.mifos.mifosxdroid.online.DashboardActivity
 import com.mifos.mobile.passcode.MifosPassCodeActivity
 import com.mifos.mobile.passcode.utils.EncryptionUtil
 import com.mifos.mobile.passcode.utils.PasscodePreferencesHelper
