@@ -173,7 +173,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
             savingsPayload.externalId = etClientExternalId!!.editableText.toString()
             savingsPayload.locale = "en"
             savingsPayload.submittedOnDate = submission_date
-            savingsPayload.dateFormat = "dd MMM yyyy"
+            savingsPayload.dateFormat = "dd MMM YYYY"
             if (isGroupAccount) {
                 savingsPayload.groupId = groupId
             } else {
