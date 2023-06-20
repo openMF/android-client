@@ -740,6 +740,7 @@
         <item>All</item>
         <item>Clients</item>
         <item>Groups</item>
+        <item>Centers</item>
         <item>Loan Accounts</item>
         <item>Savings Accounts</item>
     </string-array>
@@ -747,6 +748,7 @@
     <string-array name="search_options_values">
         <item>clients</item>
         <item>groups</item>
+        <item>centers</item>
         <item>loans</item>
         <item>savingsaccounts</item>
     </string-array>

@@ -327,7 +327,8 @@ public class SearchFragment extends MifosBaseFragment
         if (parent.getId() == R.id.sp_search) {
             if (position == 0) {
                 resources = searchOptionsValues[0] + "," + searchOptionsValues[1] + "," +
-                        searchOptionsValues[2] + "," + searchOptionsValues[3];
+                        searchOptionsValues[2] + "," + searchOptionsValues[3] + "," +
+                        searchOptionsValues[4];
             } else {
                 resources = searchOptionsValues[position - 1];
             }
