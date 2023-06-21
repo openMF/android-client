@@ -224,7 +224,7 @@ public class PathTrackingService extends Service implements GoogleApiClient.Conn
         Intent resultIntent = new Intent();
         resultIntent.setAction(Constants.STOP_TRACKING);
         PendingIntent intentBroadCast = PendingIntent.getBroadcast(this, 0, resultIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         notification.addAction(R.drawable.ic_assignment_turned_in_black_24dp,
                 getString(R.string.stop_tracking), intentBroadCast);
 
