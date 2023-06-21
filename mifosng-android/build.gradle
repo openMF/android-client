@@ -4,7 +4,7 @@
  */
 
 buildscript {
-    ext.kotlin_version = "1.7.0"
+    ext.kotlin_version = "1.8.20"
     repositories {
         google()
         mavenCentral()
@@ -37,7 +37,6 @@ apply plugin: 'io.fabric'
 apply from: '../config/quality/quality.gradle'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -130,6 +129,9 @@ android {
         testLogging {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
+    }
+    buildFeatures {
+        viewBinding true
     }
 }
 
@@ -249,8 +251,13 @@ dependencies {
     }
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
 
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:1.10.19'
+    testImplementation "junit:junit:$rootProject.jUnitVersion"
+    testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
+
+    androidTestImplementation "junit:junit:$rootProject.jUnitVersion"
+    androidTestImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    androidTestImplementation "org.mockito:mockito-android:$rootProject.mockitoVersion"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
 
     //Android-Jobs
     implementation 'com.evernote:android-job:1.2.6'

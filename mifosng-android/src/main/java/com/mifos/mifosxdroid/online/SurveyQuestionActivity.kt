@@ -121,7 +121,7 @@ class SurveyQuestionActivity : MifosBaseActivity(), OnAnswerSelectedListener, Di
             listScorecardValues.add(value)
         }
         mScorecard.clientId = clientId
-        mScorecard.userId = PrefManager.getUserId()
+        mScorecard.userId = PrefManager.userId
         mScorecard.createdOn = Date()
         mScorecard.scorecardValues = listScorecardValues
     }

@@ -221,7 +221,7 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
         requireActivity().supportFragmentManager.popBackStack()
         Toast.makeText(activity, getString(R.string.client) +
                 MifosResponseHandler.getResponse(), Toast.LENGTH_SHORT).show()
-        if (PrefManager.getUserStatus() == Constants.USER_ONLINE) {
+        if (PrefManager.userStatus == Constants.USER_ONLINE) {
             val clientActivityIntent = Intent(activity, ClientActivity::class.java)
             clientActivityIntent.putExtra(Constants.CLIENT_ID, client.clientId)
             startActivity(clientActivityIntent)

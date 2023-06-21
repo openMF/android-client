@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -49,6 +50,7 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnEditorAction;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
@@ -231,6 +233,15 @@ public class SearchFragment extends MifosBaseFragment
                 true, R.id.container_a);
     }
 
+    @OnEditorAction(R.id.et_search)
+    boolean onEditorAction(int actionId) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            onClickSearch();
+            return true;
+        }
+        return false;
+    }
+
     @OnClick(R.id.btn_search)
     public void onClickSearch() {
         hideKeyboard(et_search);
@@ -316,7 +327,8 @@ public class SearchFragment extends MifosBaseFragment
         if (parent.getId() == R.id.sp_search) {
             if (position == 0) {
                 resources = searchOptionsValues[0] + "," + searchOptionsValues[1] + "," +
-                        searchOptionsValues[2] + "," + searchOptionsValues[3];
+                        searchOptionsValues[2] + "," + searchOptionsValues[3] + "," +
+                        searchOptionsValues[4];
             } else {
                 resources = searchOptionsValues[position - 1];
             }

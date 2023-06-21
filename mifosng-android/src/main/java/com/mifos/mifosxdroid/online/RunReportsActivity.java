@@ -101,48 +101,9 @@ public class RunReportsActivity extends MifosBaseActivity
                         Fragment fragment = fragmentManager.findFragmentById(R.id.container);
 
                         if (fragment instanceof ReportDetailFragment) {
-                            spinner.setOnItemSelectedListener(
-                                    new AdapterView.OnItemSelectedListener() {
-                                        @Override
-                                        public void onItemSelected(
-                                                AdapterView<?> adapterView,
-                                                View view, int i, long l) {
-                                            switch (i) {
-                                                case 0: //Clients
-                                                    sendBroadcastFromReportDetailsFragment(
-                                                            fragmentManager, Constants.CLIENT);
-                                                    break;
-                                                case 1: //Loan
-                                                    sendBroadcastFromReportDetailsFragment(
-                                                            fragmentManager, Constants.LOAN);
-                                                    break;
-                                                case 2:
-                                                    sendBroadcastFromReportDetailsFragment(
-                                                            fragmentManager, Constants.SAVINGS);
-                                                    break;
-
-                                                case 3:
-                                                    sendBroadcastFromReportDetailsFragment(
-                                                            fragmentManager, Constants.FUND);
-                                                    break;
-
-                                                case 4:
-                                                    sendBroadcastFromReportDetailsFragment(
-                                                            fragmentManager, Constants.ACCOUNTING);
-                                                    break;
-
-                                                case 5:
-                                                    break;
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onNothingSelected(AdapterView<?> adapterView) {
-
-                                        }
-                                    }
-                            );
+                            spinner.setVisibility(View.INVISIBLE);
                         } else if (fragment instanceof ReportFragment) {
+                            spinner.setVisibility(View.INVISIBLE);
                             spinner.setOnItemSelectedListener(
                                     new AdapterView.OnItemSelectedListener() {
                                         @Override
@@ -186,6 +147,8 @@ public class RunReportsActivity extends MifosBaseActivity
                                         }
                                     }
                             );
+                        } else if (fragment instanceof ReportCategoryFragment) {
+                            spinner.setVisibility(View.INVISIBLE);
                         }
                     }
                 }

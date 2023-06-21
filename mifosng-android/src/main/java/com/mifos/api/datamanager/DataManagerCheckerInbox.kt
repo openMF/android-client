@@ -13,10 +13,13 @@ class DataManagerCheckerInbox @Inject constructor() {
     //class DataManagerCheckerInbox  {
     val mBaseApiManager = BaseApiManager()
 
-    fun getCheckerTaskList(actionName: String? = null, entityName: String? = null,
-                           resourceId: Int? = null): Observable<List<CheckerTask>> {
+    fun getCheckerTaskList(
+        actionName: String? = null, entityName: String? = null,
+        resourceId: Int? = null
+    ): Observable<List<CheckerTask>> {
         return mBaseApiManager.checkerInboxApi.getCheckerList(
-                actionName, entityName, resourceId)
+            actionName, entityName, resourceId
+        )
     }
 
     fun approveCheckerEntry(auditId: Int): Observable<GenericResponse> {
@@ -39,9 +42,12 @@ class DataManagerCheckerInbox @Inject constructor() {
         return mBaseApiManager.checkerInboxApi.getCheckerInboxSearchTempalate()
     }
 
-    fun getCheckerTaskFromResourceId(actionName: String? = null, entityName: String? = null,
-                                     resourceId: Int? = null): Observable<List<CheckerTask>> {
+    fun getCheckerTaskFromResourceId(
+        actionName: String? = null, entityName: String? = null,
+        resourceId: Int? = null
+    ): Observable<List<CheckerTask>> {
         return mBaseApiManager.checkerInboxApi.getCheckerTasksFromResourceId(
-                actionName, entityName, resourceId)
+            actionName, entityName, resourceId
+        )
     }
 }

@@ -68,7 +68,7 @@ class SurveyListPresenter @Inject constructor(private val mDataManagerSurveys: D
 
                     override fun onNext(surveyList: List<Survey?>?) {
                         mDbSurveyList = surveyList as List<Survey>?
-                        if (PrefManager.getUserStatus() == 1) {
+                        if (PrefManager.userStatus == 1) {
                             for (survey in mSyncSurveyList!!) {
                                 loadDatabaseQuestionDatas(survey!!.id, survey)
                             }

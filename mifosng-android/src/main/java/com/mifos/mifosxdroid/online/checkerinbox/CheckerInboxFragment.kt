@@ -16,21 +16,24 @@ import com.mifos.mifosxdroid.adapters.CheckerTaskListAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
+import com.mifos.mifosxdroid.databinding.CheckerInboxFragmentBinding
 import com.mifos.mifosxdroid.dialogfragments.checkertaskfilterdialog.CheckerTaskFilterDialogFragment
 import com.mifos.objects.CheckerTask
-import kotlinx.android.synthetic.main.checker_inbox_fragment.*
 import java.sql.Timestamp
+import java.util.Locale
 import javax.inject.Inject
 
 class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
-        CheckerTaskFilterDialogFragment.OnInputSelected,
-        CheckerTaskListAdapter.OnItemClickListener,
-        CheckerTaskListAdapter.CheckerTaskBadgeProcessMode {
+    CheckerTaskFilterDialogFragment.OnInputSelected,
+    CheckerTaskListAdapter.OnItemClickListener,
+    CheckerTaskListAdapter.CheckerTaskBadgeProcessMode {
+
+    private lateinit var binding: CheckerInboxFragmentBinding
 
     override fun onItemLongPress(position: Int) {
-        view_flipper.showNext()
+        binding.viewFlipper.showNext()
         if (inBadgeProcessingMode) {
-            tv_no_of_selected_tasks.text = "0"
+            binding.tvNoOfSelectedTasks.text = "0"
             selectedCheckerTaskList.clear()
             inBadgeProcessingMode = false
             checkerTaskListAdapter.notifyDataSetChanged()
@@ -76,35 +79,36 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
         (activity as MifosBaseActivity).activityComponent.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.checker_inbox_fragment,
-                container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = CheckerInboxFragmentBinding.inflate(inflater, container, false)
         setToolbarTitle(resources.getString(R.string.checker_inbox))
         showMifosProgressBar()
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        et_search.addTextChangedListener(this)
-        rv_checker_inbox.layoutManager = LinearLayoutManager(activity)
-        rv_checker_inbox.hasFixedSize()
+        binding.etSearch.addTextChangedListener(this)
+        binding.rvCheckerInbox.layoutManager = LinearLayoutManager(activity)
+        binding.rvCheckerInbox.hasFixedSize()
         checkerTaskListAdapter = CheckerTaskListAdapter()
         checkerTaskListAdapter.setBadgeProcessMode(this)
-        rv_checker_inbox.adapter = checkerTaskListAdapter
+        binding.rvCheckerInbox.adapter = checkerTaskListAdapter
         setUpOnClickListeners()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, factory)
-                .get(CheckerInboxViewModel::class.java)
+            .get(CheckerInboxViewModel::class.java)
 
         viewModel.getStatus().observe(this@CheckerInboxFragment,
-                Observer {
-                    handleStatus(it)
-                })
+            Observer {
+                handleStatus(it)
+            })
 
         viewModel.getCheckerTasks().observe(this, Observer {
             hideMifosProgressBar()
@@ -116,14 +120,15 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
     }
 
     private fun showConfirmationDialog(
-            title: String, message: String,
-            onPositiveClick: DialogInterface.OnClickListener) {
+        title: String, message: String,
+        onPositiveClick: DialogInterface.OnClickListener
+    ) {
         MaterialDialog.Builder().init(activity)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(getString(R.string.yes), onPositiveClick)
-                .setNegativeButton(getString(R.string.cancel))
-                .show()
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(getString(R.string.yes), onPositiveClick)
+            .setNegativeButton(getString(R.string.cancel))
+            .show()
     }
 
     override fun onItemClick(position: Int) {
@@ -138,12 +143,13 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
     override fun onApproveClick(position: Int) {
         adapterPosition = position
         showConfirmationDialog(getString(R.string.approve),
-                getString(R.string.approve_confirmation),
-                DialogInterface.OnClickListener { p0, p1 ->
-                    showMifosProgressBar()
-                    viewModel.approveCheckerEntry(
-                            checkerTaskList[adapterPosition].id)
-                })
+            getString(R.string.approve_confirmation),
+            DialogInterface.OnClickListener { p0, p1 ->
+                showMifosProgressBar()
+                viewModel.approveCheckerEntry(
+                    checkerTaskList[adapterPosition].id
+                )
+            })
     }
 
     /**
@@ -155,12 +161,13 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
     override fun onRejectClick(position: Int) {
         adapterPosition = position
         showConfirmationDialog(getString(R.string.reject),
-                getString(R.string.reject_confirmation),
-                DialogInterface.OnClickListener { p0, p1 ->
-                    showMifosProgressBar()
-                    viewModel.rejectCheckerEntry(
-                            checkerTaskList[adapterPosition].id)
-                })
+            getString(R.string.reject_confirmation),
+            DialogInterface.OnClickListener { p0, p1 ->
+                showMifosProgressBar()
+                viewModel.rejectCheckerEntry(
+                    checkerTaskList[adapterPosition].id
+                )
+            })
     }
 
     /**
@@ -172,12 +179,13 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
     override fun onDeleteClick(position: Int) {
         adapterPosition = position
         showConfirmationDialog(getString(R.string.delete),
-                getString(R.string.delete_confirmation),
-                DialogInterface.OnClickListener { p0, p1 ->
-                    showMifosProgressBar()
-                    viewModel.deleteCheckerEntry(
-                            checkerTaskList[adapterPosition].id)
-                })
+            getString(R.string.delete_confirmation),
+            DialogInterface.OnClickListener { p0, p1 ->
+                showMifosProgressBar()
+                viewModel.deleteCheckerEntry(
+                    checkerTaskList[adapterPosition].id
+                )
+            })
     }
 
     /**
@@ -201,20 +209,23 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     // Check if more tasks are available for batch processing
                     if (selectedCheckerTaskList.isNotEmpty()) {
                         viewModel.approveCheckerEntry(
-                                selectedCheckerTaskList[0].id)
+                            selectedCheckerTaskList[0].id
+                        )
                     } else {
                         // No more tasks are available for batch processing
                         hideMifosProgressBar()
-                        tv_no_of_selected_tasks.text = "0"
+                        binding.tvNoOfSelectedTasks.text = "0"
                         inBadgeProcessingMode = false
                         checkerTaskListAdapter.submitList(checkerTaskList)
-                        view_flipper.showNext()
+                        binding.viewFlipper.showNext()
                     }
                 } else {
                     // Single Entry Approved (without batch processing)
                     hideMifosProgressBar()
-                    updateRecyclerViewAfterOperation(adapterPosition,
-                            "APPROVED")
+                    updateRecyclerViewAfterOperation(
+                        adapterPosition,
+                        "APPROVED"
+                    )
                 }
             }
 
@@ -228,22 +239,26 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     // Check if more tasks are available for batch processing
                     if (selectedCheckerTaskList.isNotEmpty()) {
                         viewModel.rejectCheckerEntry(
-                                selectedCheckerTaskList[0].id)
+                            selectedCheckerTaskList[0].id
+                        )
                     } else {
                         // No more tasks are available for batch processing
                         hideMifosProgressBar()
-                        tv_no_of_selected_tasks.text = "0"
+                        binding.tvNoOfSelectedTasks.text = "0"
                         inBadgeProcessingMode = false
                         checkerTaskListAdapter.submitList(checkerTaskList)
-                        view_flipper.showNext()
+                        binding.viewFlipper.showNext()
                     }
                 } else {
                     // Single Entry Rejected (without batch processing)
                     hideMifosProgressBar()
-                    updateRecyclerViewAfterOperation(adapterPosition,
-                            "REJECTED")
+                    updateRecyclerViewAfterOperation(
+                        adapterPosition,
+                        "REJECTED"
+                    )
                 }
             }
+
             Status.DELETE_SUCCESS -> {
                 // Check if the tasks are being deleted using batch processing mode
                 if (selectedCheckerTaskList.isNotEmpty()) {
@@ -254,74 +269,84 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     // Check if more tasks are available for batch processing
                     if (selectedCheckerTaskList.isNotEmpty()) {
                         viewModel.deleteCheckerEntry(
-                                selectedCheckerTaskList[0].id)
+                            selectedCheckerTaskList[0].id
+                        )
                     } else {
                         // No more tasks are available for batch processing
                         hideMifosProgressBar()
-                        tv_no_of_selected_tasks.text = "0"
+                        binding.tvNoOfSelectedTasks.text = "0"
                         inBadgeProcessingMode = false
                         checkerTaskListAdapter.submitList(checkerTaskList)
-                        view_flipper.showNext()
+                        binding.viewFlipper.showNext()
                     }
                 } else {
                     // Single Entry Deleted (without batch processing)
                     hideMifosProgressBar()
-                    updateRecyclerViewAfterOperation(adapterPosition,
-                            "DELETED")
+                    updateRecyclerViewAfterOperation(
+                        adapterPosition,
+                        "DELETED"
+                    )
                 }
             }
+
             Status.APPROVE_ERROR -> {
                 if (selectedCheckerTaskList.isNotEmpty()) {
                     selectedCheckerTaskList.removeAt(0)
                     if (selectedCheckerTaskList.isNotEmpty()) {
                         viewModel.approveCheckerEntry(
-                                selectedCheckerTaskList[0].id)
+                            selectedCheckerTaskList[0].id
+                        )
                     } else {
                         hideMifosProgressBar()
-                        tv_no_of_selected_tasks.text = "0"
+                        binding.tvNoOfSelectedTasks.text = "0"
                         inBadgeProcessingMode = false
                         checkerTaskListAdapter.submitList(checkerTaskList)
-                        view_flipper.showNext()
+                        binding.viewFlipper.showNext()
                     }
                 } else {
                     hideMifosProgressBar()
                     showNetworkError()
                 }
             }
+
             Status.REJECT_ERROR -> {
                 if (selectedCheckerTaskList.isNotEmpty()) {
                     selectedCheckerTaskList.removeAt(0)
                     if (selectedCheckerTaskList.isNotEmpty()) {
                         viewModel.rejectCheckerEntry(
-                                selectedCheckerTaskList[0].id)
+                            selectedCheckerTaskList[0].id
+                        )
                     } else {
                         hideMifosProgressBar()
-                        tv_no_of_selected_tasks.text = "0"
+                        binding.tvNoOfSelectedTasks.text = "0"
                         inBadgeProcessingMode = false
                         checkerTaskListAdapter.submitList(checkerTaskList)
-                        view_flipper.showNext()
+                        binding.viewFlipper.showNext()
                     }
                 } else {
                     showNetworkError()
                 }
             }
+
             Status.DELETE_ERROR -> {
                 if (selectedCheckerTaskList.isNotEmpty()) {
                     selectedCheckerTaskList.removeAt(0)
                     if (selectedCheckerTaskList.isNotEmpty()) {
                         viewModel.deleteCheckerEntry(
-                                selectedCheckerTaskList[0].id)
+                            selectedCheckerTaskList[0].id
+                        )
                     } else {
                         hideMifosProgressBar()
-                        tv_no_of_selected_tasks.text = "0"
+                        binding.tvNoOfSelectedTasks.text = "0"
                         inBadgeProcessingMode = false
                         checkerTaskListAdapter.submitList(checkerTaskList)
-                        view_flipper.showNext()
+                        binding.viewFlipper.showNext()
                     }
                 } else {
                     showNetworkError()
                 }
             }
+
             else -> {}
         }
     }
@@ -329,60 +354,69 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
     private fun setUpOnClickListeners() {
         checkerTaskListAdapter.setOnItemClickListener(this)
 
-        iv_filter_search_icon.setOnClickListener {
+        binding.ivFilterSearchIcon.setOnClickListener {
             val dialogSearchFilter = CheckerTaskFilterDialogFragment()
             dialogSearchFilter.setTargetFragment(this@CheckerInboxFragment, 1)
             dialogSearchFilter.show(requireActivity().supportFragmentManager, "DialogSearchFilter")
         }
 
-        iv_batch_approve_icon.setOnClickListener {
+        binding.ivBatchApproveIcon.setOnClickListener {
             if (selectedCheckerTaskList.isNotEmpty()) {
                 showConfirmationDialog(getString(R.string.approve),
-                        getString(R.string.approve_selected_entries),
-                        DialogInterface.OnClickListener { p0, p1 ->
-                            viewModel.approveCheckerEntry(
-                                    selectedCheckerTaskList[0].id)
-                            showMifosProgressBar()
-                        })
+                    getString(R.string.approve_selected_entries),
+                    DialogInterface.OnClickListener { p0, p1 ->
+                        viewModel.approveCheckerEntry(
+                            selectedCheckerTaskList[0].id
+                        )
+                        showMifosProgressBar()
+                    })
             } else {
-                Toast.makeText(activity, getString(R.string.no_task_selected),
-                        Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    activity, getString(R.string.no_task_selected),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
-        iv_batch_reject_icon.setOnClickListener {
+        binding.ivBatchRejectIcon.setOnClickListener {
             if (selectedCheckerTaskList.isNotEmpty()) {
                 showConfirmationDialog(getString(R.string.reject),
-                        getString(R.string.reject_selected_entries),
-                        DialogInterface.OnClickListener { p0, p1 ->
-                            viewModel.rejectCheckerEntry(
-                                    selectedCheckerTaskList[0].id)
-                            showMifosProgressBar()
-                        })
+                    getString(R.string.reject_selected_entries),
+                    DialogInterface.OnClickListener { p0, p1 ->
+                        viewModel.rejectCheckerEntry(
+                            selectedCheckerTaskList[0].id
+                        )
+                        showMifosProgressBar()
+                    })
             } else {
-                Toast.makeText(activity, getString(R.string.no_task_selected),
-                        Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    activity, getString(R.string.no_task_selected),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
-        iv_batch_delete_icon.setOnClickListener {
+        binding.ivBatchDeleteIcon.setOnClickListener {
             if (selectedCheckerTaskList.isNotEmpty()) {
                 showConfirmationDialog(getString(R.string.reject),
-                        getString(R.string.reject_selected_entries),
-                        DialogInterface.OnClickListener { p0, p1 ->
-                            viewModel.rejectCheckerEntry(
-                                    selectedCheckerTaskList[0].id)
-                            showMifosProgressBar()
-                        })
+                    getString(R.string.reject_selected_entries),
+                    DialogInterface.OnClickListener { p0, p1 ->
+                        viewModel.rejectCheckerEntry(
+                            selectedCheckerTaskList[0].id
+                        )
+                        showMifosProgressBar()
+                    })
             } else {
-                Toast.makeText(activity, getString(R.string.no_task_selected),
-                        Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    activity, getString(R.string.no_task_selected),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
-        iv_deselect_all.setOnClickListener {
-            view_flipper.showNext()
-            tv_no_of_selected_tasks.text = "0"
+        binding.ivDeselectAll.setOnClickListener {
+            binding.viewFlipper.showNext()
+            binding.tvNoOfSelectedTasks.text = "0"
             selectedCheckerTaskList.clear()
             inBadgeProcessingMode = false
             checkerTaskListAdapter.notifyDataSetChanged()
@@ -403,8 +437,10 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
     }
 
     private fun showNetworkError() {
-        Toast.makeText(activity, getString(R.string.something_went_wrong),
-                Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            activity, getString(R.string.something_went_wrong),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     override fun afterTextChanged(p0: Editable?) {
@@ -430,7 +466,9 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
         } else {
             val filteredList = mutableListOf<CheckerTask>()
             for (checkerTask in fetchedCheckerTaskList) {
-                if (checkerTask.maker.toLowerCase().contains(text.toLowerCase())) {
+                if (checkerTask.maker.lowercase(Locale.getDefault())
+                        .contains(text.lowercase(Locale.getDefault()))
+                ) {
                     filteredList.add(checkerTask)
                 }
             }
@@ -451,12 +489,12 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
             task.selectedFlag = true
             checkerTaskListAdapter.notifyItemChanged(position)
             selectedCheckerTaskList.add(task)
-            tv_no_of_selected_tasks.text = selectedCheckerTaskList.size.toString()
+            binding.tvNoOfSelectedTasks.text = selectedCheckerTaskList.size.toString()
         } else {
             task.selectedFlag = false
             checkerTaskListAdapter.notifyItemChanged(position)
             selectedCheckerTaskList.remove(task)
-            tv_no_of_selected_tasks.text = selectedCheckerTaskList.size.toString()
+            binding.tvNoOfSelectedTasks.text = selectedCheckerTaskList.size.toString()
         }
     }
 
@@ -470,9 +508,11 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
      * @param resourceId String
      * @return MutableList<CheckerTask>
      */
-    private fun getFilteredList(fromDate: Timestamp?, toDate: Timestamp?,
-                                action: String, entity: String,
-                                resourceId: String)
+    private fun getFilteredList(
+        fromDate: Timestamp?, toDate: Timestamp?,
+        action: String, entity: String,
+        resourceId: String
+    )
             : MutableList<CheckerTask> {
         val filteredList = mutableListOf<CheckerTask>()
         val ALL = "ALL"
@@ -528,7 +568,8 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     for (checkerTask in fetchedCheckerTaskList) {
                         if (checkerTask.getTimeStamp().before(toDate)) {
                             if (action.equals(checkerTask.action, true) &&
-                                    entity.equals(checkerTask.entity, true)) {
+                                entity.equals(checkerTask.entity, true)
+                            ) {
                                 filteredList.add(checkerTask)
                             }
                         }
@@ -541,7 +582,8 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     // No need to check for Action and Entity
                     for (checkerTask in fetchedCheckerTaskList) {
                         if (checkerTask.getTimeStamp().after(fromDate)
-                                && checkerTask.getTimeStamp().before(toDate)) {
+                            && checkerTask.getTimeStamp().before(toDate)
+                        ) {
                             filteredList.add(checkerTask)
                         }
                     }
@@ -550,7 +592,8 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     // Entity has a specific value
                     for (checkerTask in fetchedCheckerTaskList) {
                         if (checkerTask.getTimeStamp().after(fromDate)
-                                && checkerTask.getTimeStamp().before(toDate)) {
+                            && checkerTask.getTimeStamp().before(toDate)
+                        ) {
                             if (entity.equals(checkerTask.entity, true)) {
                                 filteredList.add(checkerTask)
                             }
@@ -562,7 +605,8 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     // Action has a specific value
                     for (checkerTask in fetchedCheckerTaskList) {
                         if (checkerTask.getTimeStamp().after(fromDate)
-                                && checkerTask.getTimeStamp().before(toDate)) {
+                            && checkerTask.getTimeStamp().before(toDate)
+                        ) {
                             if (action.equals(checkerTask.action, true)) {
                                 filteredList.add(checkerTask)
                             }
@@ -573,9 +617,11 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
                     // Both Action and Entity have specific values
                     for (checkerTask in fetchedCheckerTaskList) {
                         if (checkerTask.getTimeStamp().after(fromDate)
-                                && checkerTask.getTimeStamp().before(toDate)) {
+                            && checkerTask.getTimeStamp().before(toDate)
+                        ) {
                             if (action.equals(checkerTask.action, true) &&
-                                    entity.equals(checkerTask.entity, true)) {
+                                entity.equals(checkerTask.entity, true)
+                            ) {
                                 filteredList.add(checkerTask)
                             }
                         }
@@ -595,8 +641,10 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
      * @param entity String
      * @param resourceId String
      */
-    override fun sendInput(fromDate: Timestamp?, toDate: Timestamp?, action: String, entity: String,
-                           resourceId: String) {
+    override fun sendInput(
+        fromDate: Timestamp?, toDate: Timestamp?, action: String, entity: String,
+        resourceId: String
+    ) {
         val filteredList = getFilteredList(fromDate, toDate, action, entity, resourceId)
         updateRecyclerViewWithNewList(filteredList)
     }

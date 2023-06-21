@@ -1,8 +1,17 @@
 package com.mifos.mifosxdroid.online.runreports.report;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import android.os.Environment;
+import android.text.TextUtils;
+import android.os.AsyncTask;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,17 +23,26 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.core.MifosBaseActivity;
 import com.mifos.mifosxdroid.core.MifosBaseFragment;
+import com.mifos.mifosxdroid.core.util.Toaster;
 import com.mifos.mifosxdroid.views.scrollview.CustomScrollView;
 import com.mifos.mifosxdroid.views.scrollview.ScrollChangeListener;
 import com.mifos.objects.runreports.ColumnHeader;
 import com.mifos.objects.runreports.DataRow;
 import com.mifos.objects.runreports.FullParameterListResponse;
+import com.mifos.utils.CheckSelfPermissionAndRequest;
 import com.mifos.utils.Constants;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -165,10 +183,121 @@ public class ReportFragment extends MifosBaseFragment implements ReportMvpView,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_download_report:
-                //Verify if menu should be there or not.
+                checkPermissionAndExport();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void checkPermissionAndExport() {
+        if (CheckSelfPermissionAndRequest.checkSelfPermission(getActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            ExportCsvAsyncTask exportCsvAsyncTask = new ExportCsvAsyncTask();
+            exportCsvAsyncTask.execute(report);
+        } else {
+            requestPermission();
+        }
+    }
+
+    public void requestPermission() {
+        CheckSelfPermissionAndRequest.requestPermission(
+                (MifosBaseActivity) getActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Constants.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE,
+                getResources().getString(
+                        R.string.dialog_message_write_external_storage_permission_denied),
+                getResources().getString(R.string.dialog_message_permission_never_ask_again_write),
+                Constants.WRITE_EXTERNAL_STORAGE_STATUS);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == Constants.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                ExportCsvAsyncTask exportCsvAsyncTask = new ExportCsvAsyncTask();
+                exportCsvAsyncTask.execute(report);
+            } else {
+                Toaster.show(rootView, getResources()
+                        .getString(R.string.permission_denied_to_write_external_document));
+            }
+        }
+    }
+
+    class ExportCsvAsyncTask extends AsyncTask<FullParameterListResponse, Void, String> {
+
+        String reportDirectoryPath;
+        String reportPath;
+
+        File reportDirectory;
+        FileWriter fileWriter;
+
+        FullParameterListResponse report;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressbar(true);
+            reportDirectoryPath =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +
+                            getString(R.string.export_csv_directory);
+            long timestamp = System.currentTimeMillis();
+            reportPath = reportDirectoryPath + timestamp + ".csv";
+            reportDirectory = new File(reportDirectoryPath);
+        }
+
+        @Override
+        protected String doInBackground(FullParameterListResponse... fullParameterListResponses) {
+            if (!reportDirectory.exists()) {
+                boolean makeRequiredDirectories = reportDirectory.mkdirs();
+                if (!makeRequiredDirectories) {
+                    return "Directory Creation Failed";
+                }
+            }
+            report = fullParameterListResponses[0];
+            try {
+                fileWriter = new FileWriter(reportPath);
+
+                // write headers
+                int columnSize = report.getColumnHeaders().size();
+                int count = 1;
+                for (ColumnHeader header : report.getColumnHeaders()) {
+                    fileWriter.append(header.getColumnName());
+                    if (count == columnSize) {
+                        fileWriter.append("\n");
+                    } else {
+                        fileWriter.append(",");
+                    }
+                    count++;
+                }
+
+                // write row data
+                for (DataRow row : report.getData()) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        fileWriter.append(String.join(",", row.getRow()));
+                    } else {
+                        fileWriter.append(TextUtils.join(",", row.getRow()));
+                    }
+                    fileWriter.append("\n");
+                }
+
+                fileWriter.flush();
+                fileWriter.close();
+
+            } catch (IOException e) {
+                return "File Creation Failed";
+            }
+
+            return "Saved at " + reportPath;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            showProgressbar(false);
+            Toast.makeText(getContext(), result, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
