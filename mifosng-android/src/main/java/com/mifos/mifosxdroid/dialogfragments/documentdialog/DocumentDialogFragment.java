@@ -281,7 +281,8 @@ public class DocumentDialogFragment extends DialogFragment implements DocumentDi
 
                     filePath = FileUtils.getPathReal(getActivity(), uri);
                     if (filePath != null) {
-                        fileChoosen = new File(filePath);
+                        String safeFileName = (new File(filePath)).getName();
+                        fileChoosen = new File(getActivity().getFilesDir(), safeFileName);
                     }
 
                     if (fileChoosen != null) {
