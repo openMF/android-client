@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.adapters
 
 import android.graphics.Color
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,10 +59,14 @@ class ClientNameListAdapter(
 
         //Changing the Color of Selected Clients
         holder.view_selectedOverlay.setBackgroundColor(
-            if (isSelected(position))
-                ContextCompat.getColor(holder.itemView.context, R.color.gray_light)
-            else
-                Color.WHITE
+            if (isSelected(position)) {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    ContextCompat.getColor(holder.itemView.context, R.color.primary)
+                } else {
+                    holder.itemView.context.resources.getColor(R.color.primary)
+                }
+            }
+            else Color.WHITE
         )
         holder.iv_sync_status.visibility = if (client.isSync) View.VISIBLE else View.INVISIBLE
     }
@@ -82,7 +87,7 @@ class ClientNameListAdapter(
         val tv_clientName: TextView = v.findViewById(R.id.tv_clientName)
         val tv_clientAccountNumber: TextView = v.findViewById(R.id.tv_clientAccountNumber)
         val iv_userPicture: ImageView = v.findViewById(R.id.iv_user_picture)
-        val view_selectedOverlay: LinearLayout = v.findViewById(R.id.linearLayout)
+        val view_selectedOverlay: View = v.findViewById(R.id.cv_client)
         val iv_sync_status: ImageView = v.findViewById(R.id.iv_sync_status)
 
     }
