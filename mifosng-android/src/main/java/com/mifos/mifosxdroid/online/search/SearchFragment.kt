@@ -16,25 +16,14 @@ import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.CompoundButton
-import android.widget.EditText
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindArray
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
-import butterknife.OnEditorAction
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SearchAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
+import com.mifos.mifosxdroid.databinding.FragmentClientSearchBinding
 import com.mifos.mifosxdroid.online.CentersActivity
 import com.mifos.mifosxdroid.online.ClientActivity
 import com.mifos.mifosxdroid.online.GroupsActivity
@@ -48,107 +37,134 @@ import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 import javax.inject.Inject
 
-class SearchFragment() : MifosBaseFragment(), SearchMvpView, OnItemSelectedListener {
-    @JvmField
-    @BindView(R.id.btn_search)
-    var bt_search: Button? = null
+class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListener {
 
-    @JvmField
-    @BindView(R.id.et_search)
-    var et_search: EditText? = null
+    private lateinit var binding: FragmentClientSearchBinding
 
-    @JvmField
-    @BindView(R.id.sp_search)
-    var sp_search: Spinner? = null
+    private lateinit var searchOptionsValues: Array<String>
+    private lateinit var searchAdapter: SearchAdapter
 
-    @JvmField
-    @BindView(R.id.rv_search)
-    var rv_search: RecyclerView? = null
-
-    @JvmField
-    @BindView(R.id.cb_exact_match)
-    var cb_exactMatch: CheckBox? = null
-
-    @JvmField
-    @BindView(R.id.fab_create)
-    var fabCreate: FloatingActionButton? = null
-
-    @JvmField
-    @BindView(R.id.fab_client)
-    var fabClient: FloatingActionButton? = null
-
-    @JvmField
-    @BindView(R.id.fab_center)
-    var fabCenter: FloatingActionButton? = null
-
-    @JvmField
-    @BindView(R.id.fab_group)
-    var fabGroup: FloatingActionButton? = null
-
-
-    @BindArray(R.array.search_options_values)
-    lateinit var searchOptionsValues: Array<String>
-    var searchAdapter: SearchAdapter? = null
-
-    @JvmField
     @Inject
-    var searchPresenter: SearchPresenter? = null
+    lateinit var searchPresenter: SearchPresenter
+
 
     // determines weather search is triggered by user or system
-    var autoTriggerSearch = false
-    private var searchedEntities: MutableList<SearchedEntity>? = null
-    private var searchOptionsAdapter: ArrayAdapter<CharSequence>? = null
-    private var resources: String? = null
+    private var autoTriggerSearch = false
+    private lateinit var searchedEntities: MutableList<SearchedEntity>
+    private lateinit var searchOptionsAdapter: ArrayAdapter<CharSequence>
+    private lateinit var resources: String
     private var isFabOpen = false
-    private var fab_open: Animation? = null
-    private var fab_close: Animation? = null
-    private var rotate_forward: Animation? = null
-    private var rotate_backward: Animation? = null
-    private var layoutManager: LinearLayoutManager? = null
+    private lateinit var fabOpen: Animation
+    private lateinit var fabClose: Animation
+    private lateinit var rotateForward: Animation
+    private lateinit var rotateBackward: Animation
+    private lateinit var layoutManager: LinearLayoutManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity?)?.activityComponent?.inject(this)
         searchedEntities = ArrayList()
-        fab_open = AnimationUtils.loadAnimation(context, R.anim.fab_open)
-        fab_close = AnimationUtils.loadAnimation(context, R.anim.fab_close)
-        rotate_forward = AnimationUtils.loadAnimation(context, R.anim.rotate_forward)
-        rotate_backward = AnimationUtils.loadAnimation(context, R.anim.rotate_backward)
+        fabOpen = AnimationUtils.loadAnimation(context, R.anim.fab_open)
+        fabClose = AnimationUtils.loadAnimation(context, R.anim.fab_close)
+        rotateForward = AnimationUtils.loadAnimation(context, R.anim.rotate_forward)
+        rotateBackward = AnimationUtils.loadAnimation(context, R.anim.rotate_backward)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_client_search, null)
+    ): View {
+        binding = FragmentClientSearchBinding.inflate(inflater, container, false)
         setToolbarTitle(getResources().getString(R.string.dashboard))
-        ButterKnife.bind(this, rootView)
-        searchPresenter!!.attachView(this)
+        searchPresenter.attachView(this)
+        searchOptionsValues =
+            requireActivity().resources.getStringArray(R.array.search_options_values)
         showUserInterface()
-        return rootView
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.fabClient.setOnClickListener {
+            (activity as MifosBaseActivity?)?.replaceFragment(
+                CreateNewClientFragment.newInstance(),
+                true, R.id.container_a
+            )
+        }
+
+        binding.fabCenter.setOnClickListener {
+            (activity as MifosBaseActivity?)?.replaceFragment(
+                CreateNewCenterFragment.newInstance(),
+                true, R.id.container_a
+            )
+        }
+
+        binding.fabGroup.setOnClickListener {
+            (activity as MifosBaseActivity?)?.replaceFragment(
+                CreateNewGroupFragment.newInstance(),
+                true, R.id.container_a
+            )
+        }
+
+        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                onClickSearch()
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
+
+
+        binding.btnSearch.setOnClickListener {
+            onClickSearch()
+        }
+
+        binding.fabCreate.setOnClickListener {
+            if (isFabOpen) {
+                binding.fabCreate.startAnimation(rotateBackward)
+                binding.fabClient.startAnimation(fabClose)
+                binding.fabCenter.startAnimation(fabClose)
+                binding.fabGroup.startAnimation(fabClose)
+                binding.fabClient.isClickable = false
+                binding.fabCenter.isClickable = false
+                binding.fabGroup.isClickable = false
+                isFabOpen = false
+            } else {
+                binding.fabCreate.startAnimation(rotateForward)
+                binding.fabClient.startAnimation(fabOpen)
+                binding.fabCenter.startAnimation(fabOpen)
+                binding.fabGroup.startAnimation(fabOpen)
+                binding.fabClient.isClickable = true
+                binding.fabCenter.isClickable = true
+                binding.fabGroup.isClickable = true
+                isFabOpen = true
+            }
+            autoTriggerSearch = false
+        }
     }
 
     override fun showUserInterface() {
         searchOptionsAdapter = ArrayAdapter.createFromResource(
-            (activity)!!,
+            (requireActivity()),
             R.array.search_options, android.R.layout.simple_spinner_item
         )
-        searchOptionsAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        sp_search!!.adapter = searchOptionsAdapter
-        sp_search!!.onItemSelectedListener = this
-        et_search!!.requestFocus()
+        searchOptionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spSearch.adapter = searchOptionsAdapter
+        binding.spSearch.onItemSelectedListener = this
+        binding.etSearch.requestFocus()
         layoutManager = LinearLayoutManager(activity)
-        layoutManager!!.orientation = LinearLayoutManager.VERTICAL
-        rv_search!!.layoutManager = layoutManager
-        rv_search!!.setHasFixedSize(true)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        binding.rvSearch.layoutManager = layoutManager
+        binding.rvSearch.setHasFixedSize(true)
         searchAdapter = SearchAdapter { searchedEntity: SearchedEntity ->
             var activity: Intent? = null
-            when (searchedEntity.getEntityType()) {
+            when (searchedEntity.entityType) {
                 Constants.SEARCH_ENTITY_LOAN -> {
                     activity = Intent(getActivity(), ClientActivity::class.java)
                     activity.putExtra(
                         Constants.LOAN_ACCOUNT_NUMBER,
-                        searchedEntity.getEntityId()
+                        searchedEntity.entityId
                     )
                 }
 
@@ -156,7 +172,7 @@ class SearchFragment() : MifosBaseFragment(), SearchMvpView, OnItemSelectedListe
                     activity = Intent(getActivity(), ClientActivity::class.java)
                     activity.putExtra(
                         Constants.CLIENT_ID,
-                        searchedEntity.getEntityId()
+                        searchedEntity.entityId
                     )
                 }
 
@@ -164,7 +180,7 @@ class SearchFragment() : MifosBaseFragment(), SearchMvpView, OnItemSelectedListe
                     activity = Intent(getActivity(), GroupsActivity::class.java)
                     activity.putExtra(
                         Constants.GROUP_ID,
-                        searchedEntity.getEntityId()
+                        searchedEntity.entityId
                     )
                 }
 
@@ -172,7 +188,7 @@ class SearchFragment() : MifosBaseFragment(), SearchMvpView, OnItemSelectedListe
                     activity = Intent(getActivity(), ClientActivity::class.java)
                     activity.putExtra(
                         Constants.SAVINGS_ACCOUNT_NUMBER,
-                        searchedEntity.getEntityId()
+                        searchedEntity.entityId
                     )
                 }
 
@@ -180,132 +196,60 @@ class SearchFragment() : MifosBaseFragment(), SearchMvpView, OnItemSelectedListe
                     activity = Intent(getActivity(), CentersActivity::class.java)
                     activity.putExtra(
                         Constants.CENTER_ID,
-                        searchedEntity.getEntityId()
+                        searchedEntity.entityId
                     )
                 }
             }
             startActivity(activity)
-            null
         }
-        rv_search!!.adapter = searchAdapter
-        cb_exactMatch!!.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b -> onClickSearch() })
+        binding.rvSearch.adapter = searchAdapter
+        binding.cbExactMatch.setOnCheckedChangeListener { _, _ -> onClickSearch() }
         showGuide()
     }
 
-    fun showGuide() {
+    private fun showGuide() {
         val config = ShowcaseConfig()
         config.delay = 250 // half second between each showcase view
         val sequence = MaterialShowcaseSequence(activity, "123")
         sequence.setConfig(config)
-        var et_search_intro: String = getString(R.string.et_search_intro)
+        var etSearchIntro: String = getString(R.string.et_search_intro)
         var i = 1
         for (s: String in searchOptionsValues) {
-            et_search_intro += "\n$i.$s"
+            etSearchIntro += "\n$i.$s"
             i++
         }
-        val sp_search_intro = getString(R.string.sp_search_intro)
-        val cb_exactMatch_intro = getString(R.string.cb_exactMatch_intro)
-        val bt_search_intro = getString(R.string.bt_search_intro)
+        val spSearchIntro = getString(R.string.sp_search_intro)
+        val cbExactMatchIntro = getString(R.string.cb_exactMatch_intro)
+        val btSearchIntro = getString(R.string.bt_search_intro)
         sequence.addSequenceItem(
-            et_search,
-            et_search_intro, getString(R.string.got_it)
+            binding.etSearch,
+            etSearchIntro, getString(R.string.got_it)
         )
         sequence.addSequenceItem(
-            sp_search,
-            sp_search_intro, getString(R.string.next)
+            binding.spSearch,
+            spSearchIntro, getString(R.string.next)
         )
         sequence.addSequenceItem(
-            cb_exactMatch,
-            cb_exactMatch_intro, getString(R.string.next)
+            binding.cbExactMatch,
+            cbExactMatchIntro, getString(R.string.next)
         )
         sequence.addSequenceItem(
-            bt_search,
-            bt_search_intro, getString(R.string.finish)
+            binding.btnSearch,
+            btSearchIntro, getString(R.string.finish)
         )
         sequence.start()
     }
 
-    @OnClick(R.id.fab_client)
-    fun onClickCreateClient() {
-        (activity as MifosBaseActivity?)!!.replaceFragment(
-            CreateNewClientFragment.newInstance(),
-            true, R.id.container_a
-        )
-    }
-
-    @OnClick(R.id.fab_center)
-    fun onClickCreateCenter() {
-        (activity as MifosBaseActivity?)!!.replaceFragment(
-            CreateNewCenterFragment.newInstance(),
-            true, R.id.container_a
-        )
-    }
-
-    @OnClick(R.id.fab_group)
-    fun onClickCreateCGroup() {
-        (activity as MifosBaseActivity?)!!.replaceFragment(
-            CreateNewGroupFragment.newInstance(),
-            true, R.id.container_a
-        )
-    }
-
-    @OnEditorAction(R.id.et_search)
-    fun onEditorAction(actionId: Int): Boolean {
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-            onClickSearch()
-            return true
-        }
-        return false
-    }
-
-    @OnClick(R.id.btn_search)
-    fun onClickSearch() {
-        hideKeyboard(et_search)
-        val query = et_search!!.editableText.toString().trim { it <= ' ' }
-        if (!query.isEmpty()) {
-            EspressoIdlingResource.increment() // App is busy until further notice.
-            searchPresenter!!.searchResources(query, resources, cb_exactMatch!!.isChecked)
-        } else {
-            if (!autoTriggerSearch) {
-                show(et_search, getString(R.string.no_search_query_entered))
-            }
-        }
-    }
-
-    @OnClick(R.id.fab_create)
-    fun onClickCreate() {
-        if (isFabOpen) {
-            fabCreate!!.startAnimation(rotate_backward)
-            fabClient!!.startAnimation(fab_close)
-            fabCenter!!.startAnimation(fab_close)
-            fabGroup!!.startAnimation(fab_close)
-            fabClient!!.isClickable = false
-            fabCenter!!.isClickable = false
-            fabGroup!!.isClickable = false
-            isFabOpen = false
-        } else {
-            fabCreate!!.startAnimation(rotate_forward)
-            fabClient!!.startAnimation(fab_open)
-            fabCenter!!.startAnimation(fab_open)
-            fabGroup!!.startAnimation(fab_open)
-            fabClient!!.isClickable = true
-            fabCenter!!.isClickable = true
-            fabGroup!!.isClickable = true
-            isFabOpen = true
-        }
-        autoTriggerSearch = false
-    }
-
     override fun showSearchedResources(searchedEntities: MutableList<SearchedEntity>) {
-        searchAdapter!!.setSearchResults(searchedEntities)
+        searchAdapter.setSearchResults(searchedEntities)
         this.searchedEntities = searchedEntities
         EspressoIdlingResource.decrement() // App is idle.
     }
 
     override fun showNoResultFound() {
-        searchedEntities!!.clear()
-        searchAdapter!!.notifyDataSetChanged()
-        show(et_search, getString(R.string.no_search_result_found))
+        searchedEntities.clear()
+        searchAdapter.notifyDataSetChanged()
+        show(binding.etSearch, getString(R.string.no_search_result_found))
     }
 
     override fun showMessage(message: Int) {
@@ -323,23 +267,23 @@ class SearchFragment() : MifosBaseFragment(), SearchMvpView, OnItemSelectedListe
 
     override fun onDestroyView() {
         super.onDestroyView()
-        searchPresenter!!.detachView()
+        searchPresenter.detachView()
     }
 
     override fun onPause() {
         //Fragment getting detached, keyboard if open must be hidden
-        hideKeyboard(et_search)
+        hideKeyboard(binding.etSearch)
         super.onPause()
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         if (parent.id == R.id.sp_search) {
-            if (position == 0) {
-                resources = (searchOptionsValues[0] + "," + searchOptionsValues[1] + "," +
+            resources = if (position == 0) {
+                (searchOptionsValues[0] + "," + searchOptionsValues[1] + "," +
                         searchOptionsValues[2] + "," + searchOptionsValues[3] + "," +
                         searchOptionsValues[4])
             } else {
-                resources = searchOptionsValues[position - 1]
+                searchOptionsValues[position - 1]
             }
             autoTriggerSearch = true
             onClickSearch()
@@ -360,9 +304,9 @@ class SearchFragment() : MifosBaseFragment(), SearchMvpView, OnItemSelectedListe
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         try {
-            val queryString = et_search!!.editableText.toString()
+            val queryString = binding.etSearch.editableText.toString()
             if (queryString != "") {
-                outState.putString(LOG_TAG + et_search!!.id, queryString)
+                outState.putString(LOG_TAG + binding.etSearch.id, queryString)
             }
         } catch (npe: NullPointerException) {
             //Looks like edit text didn't get initialized properly
@@ -372,9 +316,22 @@ class SearchFragment() : MifosBaseFragment(), SearchMvpView, OnItemSelectedListe
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         if (savedInstanceState != null) {
-            val queryString = savedInstanceState.getString(LOG_TAG + et_search!!.id)
+            val queryString = savedInstanceState.getString(LOG_TAG + binding.etSearch.id)
             if (!TextUtils.isEmpty(queryString)) {
-                et_search!!.setText(queryString)
+                binding.etSearch.setText(queryString)
+            }
+        }
+    }
+
+    private fun onClickSearch() {
+        hideKeyboard(binding.etSearch)
+        val query = binding.etSearch.editableText.toString().trim { it <= ' ' }
+        if (query.isNotEmpty()) {
+            EspressoIdlingResource.increment() // App is busy until further notice.
+            searchPresenter.searchResources(query, resources, binding.cbExactMatch.isChecked)
+        } else {
+            if (!autoTriggerSearch) {
+                show(binding.etSearch, getString(R.string.no_search_query_entered))
             }
         }
     }

@@ -8,14 +8,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.*
-import android.widget.ProgressBar
+import android.widget.Button
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import butterknife.BindView
-import butterknife.ButterKnife
 import butterknife.OnClick
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
 import com.mifos.mifosxdroid.R
@@ -24,6 +20,7 @@ import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentGroupsBinding
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFragment
 import com.mifos.mifosxdroid.online.GroupsActivity
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment
@@ -59,21 +56,8 @@ import javax.inject.Inject
  * and unregister the ScrollListener and SwipeLayout.
 </Group> */
 class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshListener {
-    @JvmField
-    @BindView(R.id.rv_groups)
-    var rv_groups: RecyclerView? = null
 
-    @JvmField
-    @BindView(R.id.progressbar_group)
-    var pb_groups: ProgressBar? = null
-
-    @JvmField
-    @BindView(R.id.swipe_container)
-    var swipeRefreshLayout: SwipeRefreshLayout? = null
-
-    @JvmField
-    @BindView(R.id.layout_error)
-    var errorView: View? = null
+    private lateinit var binding: FragmentGroupsBinding
 
     @JvmField
     @Inject
@@ -86,32 +70,38 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
                     toggleSelection(position)
                 } else {
                     val groupActivityIntent = Intent(activity, GroupsActivity::class.java)
-                    groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList!![position].id)
-                    groupActivityIntent.putExtra(Constants.GROUP_NAME, mGroupList!![position].name)
+                    groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList?.get(position)?.id)
+                    groupActivityIntent.putExtra(
+                        Constants.GROUP_NAME,
+                        mGroupList?.get(position)?.name
+                    )
                     startActivity(groupActivityIntent)
                 }
             },
             onGroupLongClick = { position ->
                 if (actionMode == null) {
                     actionMode =
-                        (activity as MifosBaseActivity?)!!.startSupportActionMode(actionModeCallback!!)
+                        actionModeCallback?.let {
+                            (activity as MifosBaseActivity?)?.startSupportActionMode(
+                                it
+                            )
+                        }
                 }
                 toggleSelection(position)
             }
         )
     }
-    var mLayoutManager: LinearLayoutManager? = null
+    private lateinit var mLayoutManager: LinearLayoutManager
     private var mGroupList: List<Group>? = null
     private var selectedGroups: MutableList<Group>? = null
     private var isParentFragment = false
-    private lateinit var rootView: View
     private var actionModeCallback: ActionModeCallback? = null
     private var actionMode: ActionMode? = null
     private var sweetUIErrorHandler: SweetUIErrorHandler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity?)?.activityComponent?.inject(this)
         mGroupList = ArrayList()
         selectedGroups = ArrayList()
         actionModeCallback = ActionModeCallback()
@@ -127,10 +117,9 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        rootView = inflater.inflate(R.layout.fragment_groups, container, false)
-        ButterKnife.bind(this, rootView)
-        mGroupsListPresenter!!.attachView(this)
+    ): View {
+        binding = FragmentGroupsBinding.inflate(inflater, container, false)
+        mGroupsListPresenter?.attachView(this)
 
         //setting all the UI content to the view
         showUserInterface()
@@ -138,9 +127,10 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
          * is shown on the Screen.
          */
-        rv_groups!!.addOnScrollListener(object : EndlessRecyclerViewScrollListener(mLayoutManager) {
+        binding.rvGroups.addOnScrollListener(object :
+            EndlessRecyclerViewScrollListener(mLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int) {
-                mGroupsListPresenter!!.loadGroups(true, totalItemsCount)
+                mGroupsListPresenter?.loadGroups(true, totalItemsCount)
             }
         })
         /**
@@ -151,12 +141,24 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
          * To show user that is there already any group is synced already or not.
          */
         if (isParentFragment) {
-            mGroupList?.let { mGroupsListPresenter!!.showParentClients(it) }
+            mGroupList?.let { mGroupsListPresenter?.showParentClients(it) }
         } else {
-            mGroupsListPresenter!!.loadGroups(false, 0)
+            mGroupsListPresenter?.loadGroups(false, 0)
         }
-        mGroupsListPresenter!!.loadDatabaseGroups()
-        return rootView
+        mGroupsListPresenter?.loadDatabaseGroups()
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.fabCreateGroup.setOnClickListener {
+            onClickCreateNewGroup()
+        }
+
+        binding.layoutError.findViewById<Button>(R.id.btn_try_again).setOnClickListener {
+            reloadOnError()
+        }
     }
 
     /**
@@ -165,20 +167,19 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
     override fun showUserInterface() {
         setToolbarTitle(resources.getString(R.string.groups))
         mLayoutManager = LinearLayoutManager(activity)
-        mLayoutManager!!.orientation = LinearLayoutManager.VERTICAL
-        rv_groups!!.layoutManager = mLayoutManager
-        rv_groups!!.setHasFixedSize(true)
-        rv_groups!!.adapter = mGroupListAdapter
-        swipeRefreshLayout!!.setColorSchemeColors(
-            *activity
-                ?.getResources()!!.getIntArray(R.array.swipeRefreshColors)
+        mLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        binding.rvGroups.layoutManager = mLayoutManager
+        binding.rvGroups.setHasFixedSize(true)
+        binding.rvGroups.adapter = mGroupListAdapter
+        binding.swipeContainer.setColorSchemeColors(
+            *activity?.resources?.getIntArray(R.array.swipeRefreshColors) ?: IntArray(0)
         )
-        swipeRefreshLayout!!.setOnRefreshListener(this)
-        sweetUIErrorHandler = SweetUIErrorHandler(activity, rootView)
+        binding.swipeContainer.setOnRefreshListener(this)
+        sweetUIErrorHandler = SweetUIErrorHandler(activity, binding.root)
     }
 
-    @OnClick(R.id.fab_create_group)
-    fun onClickCreateNewGroup() {
+
+    private fun onClickCreateNewGroup() {
         (activity as MifosBaseActivity?)?.replaceFragment(
             CreateNewGroupFragment.newInstance(),
             true, R.id.container_a
@@ -189,9 +190,9 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      * This Method will be called. Whenever user will swipe down to refresh the group list.
      */
     override fun onRefresh() {
-        mGroupsListPresenter!!.loadGroups(false, 0)
-        mGroupsListPresenter!!.loadDatabaseGroups()
-        if (actionMode != null) actionMode!!.finish()
+        mGroupsListPresenter?.loadGroups(false, 0)
+        mGroupsListPresenter?.loadDatabaseGroups()
+        if (actionMode != null) actionMode?.finish()
     }
 
     /**
@@ -200,11 +201,11 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      * As the error will occurred. user is able to see the error message and ability to reload
      * groupList.
      */
-    @OnClick(R.id.btn_try_again)
-    fun reloadOnError() {
-        sweetUIErrorHandler!!.hideSweetErrorLayoutUI(rv_groups, errorView)
-        mGroupsListPresenter!!.loadGroups(false, 0)
-        mGroupsListPresenter!!.loadDatabaseGroups()
+
+    private fun reloadOnError() {
+        sweetUIErrorHandler?.hideSweetErrorLayoutUI(binding.rvGroups, binding.layoutError)
+        mGroupsListPresenter?.loadGroups(false, 0)
+        mGroupsListPresenter?.loadDatabaseGroups()
     }
 
     /**
@@ -213,7 +214,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
     override fun showGroups(groups: List<Group?>?) {
         mGroupList = groups as List<Group>?
         Collections.sort(mGroupList) { grp1, grp2 -> grp1.name.compareTo(grp2.name) }
-        mGroupListAdapter!!.setGroups(mGroupList ?: emptyList())
+        mGroupListAdapter.setGroups(mGroupList ?: emptyList())
     }
 
     /**
@@ -223,7 +224,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      */
     override fun showLoadMoreGroups(clients: List<Group?>?) {
         mGroupList.addAll()
-        mGroupListAdapter!!.notifyDataSetChanged()
+        mGroupListAdapter.notifyDataSetChanged()
     }
 
     /**
@@ -232,9 +233,9 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      * @param message String Message.
      */
     override fun showEmptyGroups(message: Int) {
-        sweetUIErrorHandler!!.showSweetEmptyUI(
+        sweetUIErrorHandler?.showSweetEmptyUI(
             getString(R.string.group), getString(message),
-            R.drawable.ic_error_black_24dp, rv_groups, errorView
+            R.drawable.ic_error_black_24dp, binding.rvGroups, binding.layoutError
         )
     }
 
@@ -242,8 +243,8 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      * This Method unregistered the SwipeLayout and OnScrollListener
      */
     override fun unregisterSwipeAndScrollListener() {
-        rv_groups!!.clearOnScrollListeners()
-        swipeRefreshLayout!!.isEnabled = false
+        binding.rvGroups.clearOnScrollListeners()
+        binding.swipeContainer.isEnabled = false
     }
 
     /**
@@ -252,7 +253,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      * @param message String Message to show.
      */
     override fun showMessage(message: Int) {
-        Toaster.show(rootView, getStringMessage(message))
+        Toaster.show(binding.root, getStringMessage(message))
     }
 
     /**
@@ -261,9 +262,9 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      */
     override fun showFetchingError() {
         val errorMessage = getStringMessage(R.string.failed_to_fetch_groups)
-        sweetUIErrorHandler!!.showSweetErrorUI(
+        sweetUIErrorHandler?.showSweetErrorUI(
             errorMessage,
-            R.drawable.ic_error_black_24dp, rv_groups, errorView
+            R.drawable.ic_error_black_24dp, binding.rvGroups, binding.layoutError
         )
     }
 
@@ -274,20 +275,20 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      * @param show Status of Progressbar or SwipeRefreshLayout
      */
     override fun showProgressbar(show: Boolean) {
-        swipeRefreshLayout!!.isRefreshing = show
-        if (show && mGroupListAdapter!!.itemCount == 0) {
-            pb_groups!!.visibility = View.VISIBLE
-            swipeRefreshLayout!!.isRefreshing = false
+        binding.swipeContainer.isRefreshing = show
+        if (show && mGroupListAdapter.itemCount == 0) {
+            binding.progressbarGroup.visibility = View.VISIBLE
+            binding.swipeContainer.isRefreshing = false
         } else {
-            pb_groups!!.visibility = View.GONE
+            binding.progressbarGroup.visibility = View.GONE
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mGroupsListPresenter!!.detachView()
+        mGroupsListPresenter?.detachView()
         //As the Fragment Detach Finish the ActionMode
-        if (actionMode != null) actionMode!!.finish()
+        if (actionMode != null) actionMode?.finish()
     }
 
     /**
@@ -300,13 +301,13 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      * @param position Position of the item to toggle the selection state
      */
     private fun toggleSelection(position: Int) {
-        mGroupListAdapter!!.toggleSelection(position)
-        val count = mGroupListAdapter!!.selectedItemCount
+        mGroupListAdapter.toggleSelection(position)
+        val count = mGroupListAdapter.selectedItemCount
         if (count == 0) {
-            actionMode!!.finish()
+            actionMode?.finish()
         } else {
-            actionMode!!.title = count.toString()
-            actionMode!!.invalidate()
+            actionMode?.title = count.toString()
+            actionMode?.invalidate()
         }
     }
 
@@ -328,20 +329,22 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             return when (item.itemId) {
                 R.id.action_sync -> {
-                    selectedGroups!!.clear()
-                    for (position in mGroupListAdapter!!.selectedItems) {
-                        selectedGroups!!.add(mGroupList!![position!!])
+                    selectedGroups?.clear()
+                    for (position in mGroupListAdapter.selectedItems) {
+                        selectedGroups?.add(mGroupList?.get(position) ?: continue)
                     }
                     val syncGroupsDialogFragment =
                         SyncGroupsDialogFragment.newInstance(selectedGroups)
                     val fragmentTransaction = activity
-                        ?.getSupportFragmentManager()!!.beginTransaction()
-                    fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_SYNC)
+                        ?.supportFragmentManager?.beginTransaction()
+                    fragmentTransaction?.addToBackStack(FragmentConstants.FRAG_GROUP_SYNC)
                     syncGroupsDialogFragment.isCancelable = false
-                    syncGroupsDialogFragment.show(
-                        fragmentTransaction,
-                        resources.getString(R.string.sync_groups)
-                    )
+                    if (fragmentTransaction != null) {
+                        syncGroupsDialogFragment.show(
+                            fragmentTransaction,
+                            resources.getString(R.string.sync_groups)
+                        )
+                    }
                     mode.finish()
                     true
                 }
@@ -351,7 +354,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
         }
 
         override fun onDestroyActionMode(mode: ActionMode) {
-            mGroupListAdapter!!.clearSelection()
+            mGroupListAdapter.clearSelection()
             actionMode = null
         }
     }

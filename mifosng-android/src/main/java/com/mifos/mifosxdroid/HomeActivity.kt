@@ -6,31 +6,22 @@ import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SwitchCompat
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.test.espresso.IdlingResource
-
-import butterknife.BindView
-import butterknife.ButterKnife
-
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity
 import com.mifos.mifosxdroid.core.MifosBaseActivity
+import com.mifos.mifosxdroid.databinding.ActivityHomeBinding
+import com.mifos.mifosxdroid.databinding.ViewNavDrawerHeaderBinding
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment
 import com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity
 import com.mifos.mifosxdroid.online.RunReportsActivity
@@ -48,66 +39,57 @@ import com.mifos.utils.PrefManager
  */
 open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    private lateinit var binding: ActivityHomeBinding
+    private lateinit var navHeaderBinding: ViewNavDrawerHeaderBinding
 
-    @BindView(R.id.navigation_view)
-    lateinit var mNavigationView: NavigationView
-
-    @BindView(R.id.drawer)
-    lateinit var mDrawerLayout: DrawerLayout
-
-    private var menu: Menu? = null
-
+    private lateinit var menu: Menu
     private var onSearchFragment = true
-
-    var navController: NavController? = null
-    private var mNavigationHeader: View? = null
-    var userStatusToggle: SwitchCompat? = null
+    private lateinit var navController: NavController
+    private lateinit var userStatusToggle: SwitchCompat
     private var doubleBackToExitPressedOnce = false
-    var appBarConfiguration: AppBarConfiguration? = null
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-        mDrawerLayout = findViewById(R.id.drawer)
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_view)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        mNavigationView = findViewById(R.id.navigation_view)
+//        setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setSupportActionBar(toolbar)
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration.Builder()
-            .setDrawerLayout(mDrawerLayout)
+            .setDrawerLayout(binding.drawer)
             .build()
-        NavigationUI.setupActionBarWithNavController(this, navController!!, appBarConfiguration!!)
-        NavigationUI.setupWithNavController(mNavigationView, navController!!)
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
+        NavigationUI.setupWithNavController(binding.navigationView, navController)
         if (savedInstanceState == null) {
             val fragment: Fragment = SearchFragment()
             supportFragmentManager.beginTransaction().replace(R.id.container_a, fragment).commit()
-            supportActionBar!!.setTitle(R.string.dashboard)
+            supportActionBar?.setTitle(R.string.dashboard)
         }
-        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+        binding.navView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_dashboard -> {
                     onSearchFragment = true
                     openFragment(SearchFragment())
-                    supportActionBar!!.setTitle(R.string.dashboard)
+                    supportActionBar?.setTitle(R.string.dashboard)
                 }
 
                 R.id.navigation_client_list -> {
                     onSearchFragment = false
                     openFragment(ClientListFragment())
-                    supportActionBar!!.setTitle(R.string.clients)
+                    supportActionBar?.setTitle(R.string.clients)
                 }
 
                 R.id.navigation_center_list -> {
                     onSearchFragment = false
                     openFragment(CenterListFragment())
-                    supportActionBar!!.setTitle(R.string.title_activity_centers)
+                    supportActionBar?.setTitle(R.string.title_activity_centers)
                 }
 
                 R.id.navigation_group_list -> {
                     onSearchFragment = false
                     openFragment(GroupsListFragment())
-                    supportActionBar!!.setTitle(R.string.title_center_list)
+                    supportActionBar?.setTitle(R.string.title_center_list)
                 }
             }
             true
@@ -136,7 +118,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
 
             R.id.item_offline -> {
                 replaceFragment(OfflineDashboardFragment.newInstance(), false, R.id.container_a)
-                supportActionBar!!.setTitle(R.string.offline)
+                supportActionBar?.setTitle(R.string.offline)
             }
 
             R.id.individual_collection_sheet -> {
@@ -166,7 +148,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
                 startActivity(intent)
             }
         }
-        mDrawerLayout.closeDrawer(GravityCompat.START)
+        binding.drawer.closeDrawer(GravityCompat.START)
         return false
     }
 
@@ -174,18 +156,20 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
      * This SwitchCompat Toggle Handling the User Status.
      * Setting the User Status to Offline or Online
      */
-    private fun setupUserStatusToggle() {
-        userStatusToggle = mNavigationHeader!!.findViewById(R.id.user_status_toggle)
+    private fun setupUserStatusToggle(headerView: View) {
+        navHeaderBinding = ViewNavDrawerHeaderBinding.bind(headerView)
+        userStatusToggle = navHeaderBinding.userStatusToggle
+
         if (PrefManager.userStatus == Constants.USER_OFFLINE) {
-            userStatusToggle?.isChecked = true
+            userStatusToggle.isChecked = true
         }
-        userStatusToggle?.setOnClickListener(View.OnClickListener {
+        userStatusToggle.setOnClickListener(View.OnClickListener {
             if (PrefManager.userStatus == Constants.USER_OFFLINE) {
                 PrefManager.userStatus = Constants.USER_ONLINE
-                userStatusToggle!!.isChecked = false
+                userStatusToggle.isChecked = false
             } else {
                 PrefManager.userStatus = Constants.USER_OFFLINE
-                userStatusToggle!!.isChecked = true
+                userStatusToggle.isChecked = true
             }
         })
     }
@@ -202,20 +186,14 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
     private fun loadClientDetails() {
         // download logged in user
         val loggedInUser = PrefManager.user
-        val textViewUsername =
-            ButterKnife.findById<TextView>(mNavigationHeader!!, R.id.tv_user_name)
-        textViewUsername.text = loggedInUser.username
-
-        // no profile picture credential, using dummy profile picture
-        val imageViewUserPicture = ButterKnife
-            .findById<ImageView>(mNavigationHeader!!, R.id.iv_user_picture)
-        imageViewUserPicture.setImageResource(R.drawable.ic_dp_placeholder)
+        navHeaderBinding.tvUserName.text = loggedInUser.username
+        navHeaderBinding.ivUserPicture.setImageResource(R.drawable.ic_dp_placeholder)
     }
 
     override fun onBackPressed() {
         // check if the nav mDrawer is open
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START)
+        if (binding.drawer.isDrawerOpen(GravityCompat.START)) {
+            binding.drawer.closeDrawer(GravityCompat.START)
         } else {
             if (!onSearchFragment) {
                 goHomeFragment()
@@ -231,31 +209,33 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         get() = EspressoIdlingResource.getIdlingResource()
 
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navController!!, appBarConfiguration!!)
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
     }
 
     private fun setupNavigationBar() {
-        mNavigationHeader = mNavigationView.getHeaderView(0)
-        setupUserStatusToggle()
-        mNavigationView.setNavigationItemSelectedListener(this as NavigationView.OnNavigationItemSelectedListener)
+//        mNavigationHeader = binding.navigationView.getHeaderView(0)
+        binding.navigationView.getHeaderView(0)?.let { setupUserStatusToggle(it) }
+
+
+        binding.navigationView.setNavigationItemSelectedListener(this as NavigationView.OnNavigationItemSelectedListener)
 
         // setup drawer layout and sync to toolbar
         val actionBarDrawerToggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
             this,
-            mDrawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer
+            binding.drawer, toolbar, R.string.open_drawer, R.string.close_drawer
         ) {
 
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
                 setUserStatus(userStatusToggle)
-                hideKeyboard(mDrawerLayout)
+                hideKeyboard(binding.drawer)
             }
 
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 if (slideOffset != 0f) super.onDrawerSlide(drawerView, slideOffset)
             }
         }
-        mDrawerLayout.addDrawerListener(actionBarDrawerToggle)
+        binding.drawer.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
 
         // make an API call to fetch logged in client's details
@@ -277,7 +257,9 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
 
     private fun openFragment(fragment: Fragment?) {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.container_a, fragment!!)
+        if (fragment != null) {
+            transaction.replace(R.id.container_a, fragment)
+        }
         transaction.commit()
     }
 
@@ -300,9 +282,8 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
     }
 
     private fun goHomeFragment() {
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_view)
         val fragmentSearch = SearchFragment()
-        bottomNavigationView.selectedItemId = R.id.navigation_dashboard
+        binding.navView.selectedItemId = R.id.navigation_dashboard
         supportFragmentManager.beginTransaction().apply {
             add(R.id.container_a, fragmentSearch)
             commit()

@@ -17,19 +17,17 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ProgressBar
+import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.PathTrackingAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
+import com.mifos.mifosxdroid.databinding.ActivityPathTrackerBinding
 import com.mifos.objects.user.UserLocation
 import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
@@ -42,21 +40,8 @@ import javax.inject.Inject
  * @author fomenkoo
  */
 class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefreshListener {
-    @JvmField
-    @BindView(R.id.rv_path_tacker)
-    var rvPathTracker: RecyclerView? = null
 
-    @JvmField
-    @BindView(R.id.swipe_container)
-    var swipeRefreshLayout: SwipeRefreshLayout? = null
-
-    @JvmField
-    @BindView(R.id.layout_error)
-    var layoutError: View? = null
-
-    @JvmField
-    @BindView(R.id.pb_path_tracking)
-    var progressBar: ProgressBar? = null
+    private lateinit var binding: ActivityPathTrackerBinding
 
     @JvmField
     @Inject
@@ -68,15 +53,19 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
     private var sweetUIErrorHandler: SweetUIErrorHandler? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_path_tracker)
+        binding = ActivityPathTrackerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         activityComponent.inject(this)
-        pathTrackingPresenter!!.attachView(this)
+        pathTrackingPresenter?.attachView(this)
         ButterKnife.bind(this)
         showBackButton()
         intentLocationService = Intent(this, PathTrackingService::class.java)
         createNotificationReceiver()
         showUserInterface()
-        pathTrackingPresenter!!.loadPathTracking(userId)
+        pathTrackingPresenter?.loadPathTracking(userId)
+        binding.layoutError.findViewById<Button>(R.id.btn_try_again).setOnClickListener {
+            reloadOnError()
+        }
     }
 
     override fun showUserInterface() {
@@ -85,59 +74,66 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
         mLayoutManager.reverseLayout = true
         mLayoutManager.stackFromEnd = true
-        rvPathTracker!!.layoutManager = mLayoutManager
-        rvPathTracker!!.setHasFixedSize(false)
-        rvPathTracker!!.scrollToPosition(0)
+        binding.rvPathTracker.layoutManager = mLayoutManager
+        binding.rvPathTracker.setHasFixedSize(false)
+        binding.rvPathTracker.scrollToPosition(0)
         pathTrackingAdapter = PathTrackingAdapter { userLocation: UserLocation ->
-            val userLatLngs = pathTrackingAdapter!!.getLatLngList(userLocation.latlng)
-            val uri = ("http://maps.google.com/maps?f=d&hl=en&saddr="
-                    + userLatLngs[0].lat + ","
-                    + userLatLngs[0].lng + "&daddr="
-                    + userLatLngs[userLatLngs.size - 1].lat + "," + ""
-                    + userLatLngs[userLatLngs.size - 1].lng)
+            val userLatLngs = pathTrackingAdapter?.getLatLngList(userLocation.latlng)
+            val uri = userLatLngs?.let { userLatLngs ->
+                if (userLatLngs.isNotEmpty()) {
+                    val originLatLng = userLatLngs[0]
+                    val destinationLatLng = userLatLngs[userLatLngs.size - 1]
+                    "http://maps.google.com/maps?f=d&hl=en&saddr=${originLatLng.lat},${originLatLng.lng}&daddr=${destinationLatLng.lat},${destinationLatLng.lng}"
+                } else {
+                    // Handle the case when userLatLngs is empty
+                    ""
+                }
+            } ?: ""
+
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
             intent.setClassName(
-                "com.google.android.apps.maps",
-                "com.google.android.maps.MapsActivity"
+                "com.google.android.apps.maps", "com.google.android.maps.MapsActivity"
             )
             startActivity(Intent.createChooser(intent, getString(R.string.start_tracking)))
-            null
         }
-        rvPathTracker!!.adapter = pathTrackingAdapter
-        swipeRefreshLayout!!.setColorSchemeColors(
-            *this
-                .resources.getIntArray(R.array.swipeRefreshColors)
+        binding.rvPathTracker.adapter = pathTrackingAdapter
+        binding.swipeContainer.setColorSchemeColors(
+            *this.resources.getIntArray(R.array.swipeRefreshColors)
         )
-        swipeRefreshLayout!!.setOnRefreshListener(this)
+        binding.swipeContainer.setOnRefreshListener(this)
         sweetUIErrorHandler = SweetUIErrorHandler(this, findViewById(android.R.id.content))
     }
 
     override fun onRefresh() {
-        pathTrackingPresenter!!.loadPathTracking(userId)
+        pathTrackingPresenter?.loadPathTracking(userId)
     }
 
     override fun showPathTracking(userLocations: List<UserLocation>) {
         this.userLocations = userLocations
-        pathTrackingAdapter!!.setPathTracker(userLocations)
+        pathTrackingAdapter?.setPathTracker(userLocations)
     }
 
-    @OnClick(R.id.btn_try_again)
-    fun reloadOnError() {
-        sweetUIErrorHandler!!.hideSweetErrorLayoutUI(rvPathTracker, layoutError)
-        pathTrackingPresenter!!.loadPathTracking(userId)
+
+    private fun reloadOnError() {
+        sweetUIErrorHandler?.hideSweetErrorLayoutUI(binding.rvPathTracker, binding.layoutError)
+        pathTrackingPresenter?.loadPathTracking(userId)
     }
 
     override fun showEmptyPathTracking() {
-        sweetUIErrorHandler!!.showSweetEmptyUI(
+        sweetUIErrorHandler?.showSweetEmptyUI(
             getString(R.string.path_tracker),
-            R.drawable.ic_error_black_24dp, rvPathTracker, layoutError
+            R.drawable.ic_error_black_24dp,
+            binding.rvPathTracker,
+            binding.layoutError
         )
     }
 
     override fun showError() {
-        sweetUIErrorHandler!!.showSweetErrorUI(
+        sweetUIErrorHandler?.showSweetErrorUI(
             getString(R.string.failed_to_fetch_path_tracking_details),
-            R.drawable.ic_error_black_24dp, rvPathTracker, layoutError
+            R.drawable.ic_error_black_24dp,
+            binding.rvPathTracker,
+            binding.layoutError
         )
     }
 
@@ -146,10 +142,9 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
      * If not then prompt user a dialog to grant the ACCESS_FINE_LOCATION permission.
      * and If Permission is granted already then start Intent to get the
      */
-    fun checkPermissionAndRequest(): Boolean {
+    private fun checkPermissionAndRequest(): Boolean {
         return if (CheckSelfPermissionAndRequest.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                this, Manifest.permission.ACCESS_FINE_LOCATION
             )
         ) {
             true
@@ -186,25 +181,21 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
      * @param grantResults GrantResults
      */
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             Constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
 
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.size > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                ) {
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
                     startService(intentLocationService)
                 } else {
                     // permission denied
                     Toast.makeText(
-                        applicationContext, resources
-                            .getString(R.string.permission_denied_to_access_fine_location),
+                        applicationContext,
+                        resources.getString(R.string.permission_denied_to_access_fine_location),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -248,13 +239,13 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
         return true
     }
 
-    fun createNotificationReceiver() {
+    private fun createNotificationReceiver() {
         notificationReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val action = intent.action
                 if (Constants.STOP_TRACKING == action) {
                     invalidateOptionsMenu()
-                    pathTrackingPresenter!!.loadPathTracking(userId)
+                    pathTrackingPresenter?.loadPathTracking(userId)
                 }
             }
         }
@@ -263,17 +254,17 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
 
     override fun onDestroy() {
         super.onDestroy()
-        pathTrackingPresenter!!.detachView()
+        pathTrackingPresenter?.detachView()
         unregisterReceiver(notificationReceiver)
     }
 
     override fun showProgressbar(show: Boolean) {
-        swipeRefreshLayout!!.isRefreshing = show
-        if (show && userLocations!!.size == 0) {
-            progressBar!!.visibility = View.VISIBLE
-            swipeRefreshLayout!!.isRefreshing = false
+        binding.swipeContainer.isRefreshing = show
+        if (show && userLocations?.isEmpty() == true) {
+            binding.pbPathTracking.visibility = View.VISIBLE
+            binding.swipeContainer.isRefreshing = false
         } else {
-            progressBar!!.visibility = View.GONE
+            binding.pbPathTracking.visibility = View.GONE
         }
     }
 }

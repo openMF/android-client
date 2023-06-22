@@ -5,21 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.OfflineDashboardAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
+import com.mifos.mifosxdroid.databinding.FragmentOfflineDashboardBinding
 import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadActivity
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadActivity
 import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsActivity
@@ -55,33 +49,15 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 20/07/16.
 </Class> */
 class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
+
+    private lateinit var binding: FragmentOfflineDashboardBinding
+
     val LOG_TAG = javaClass.simpleName
-
-    @JvmField
-    @BindView(R.id.rv_offline_dashboard)
-    var rv_offline_dashboard: RecyclerView? = null
-
-    @JvmField
-    @BindView(R.id.pb_offline_dashboard)
-    var pb_offline_dashboard: ProgressBar? = null
-
-    @JvmField
-    @BindView(R.id.noPayloadText)
-    var mNoPayloadText: TextView? = null
-
-    @JvmField
-    @BindView(R.id.noPayloadIcon)
-    var mNoPayloadIcon: ImageView? = null
-
-    @JvmField
-    @BindView(R.id.ll_error)
-    var ll_error: LinearLayout? = null
-    var rootView: View? = null
 
     @JvmField
     @Inject
     var mOfflineDashboardPresenter: OfflineDashboardPresenter? = null
-    var mOfflineDashboardAdapter: OfflineDashboardAdapter? = null
+    private lateinit var mOfflineDashboardAdapter: OfflineDashboardAdapter
 
     // update mPayloadIndex to number of request is going to fetch data in Presenter;
     private var mPayloadIndex = 5
@@ -95,41 +71,43 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        rootView = inflater.inflate(R.layout.fragment_offline_dashboard, container, false)
+    ): View {
+        binding = FragmentOfflineDashboardBinding.inflate(inflater, container, false)
         setToolbarTitle(requireActivity().resources.getString(R.string.offline))
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
-        mOfflineDashboardPresenter!!.attachView(this)
-        ButterKnife.bind(this, rootView!!)
+        (activity as MifosBaseActivity?)?.activityComponent?.inject(this)
+        mOfflineDashboardPresenter?.attachView(this)
         val mLayoutManager: LinearLayoutManager = GridLayoutManager(activity, GRID_COUNT)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        rv_offline_dashboard!!.layoutManager = mLayoutManager
-        rv_offline_dashboard!!.setHasFixedSize(true)
-        rv_offline_dashboard!!.itemAnimator = DefaultItemAnimator()
-        rv_offline_dashboard!!.addItemDecoration(
+        binding.rvOfflineDashboard.layoutManager = mLayoutManager
+        binding.rvOfflineDashboard.setHasFixedSize(true)
+        binding.rvOfflineDashboard.itemAnimator = DefaultItemAnimator()
+        binding.rvOfflineDashboard.addItemDecoration(
             ItemOffsetDecoration(
                 requireActivity(),
                 R.dimen.item_offset
             )
         )
         mOfflineDashboardAdapter = OfflineDashboardAdapter { position: Int? ->
-            startPayloadActivity<Any>(mPayloadClasses!![position!!])
-            null
+            if (position != null) {
+                mPayloadClasses?.get(position)?.let { payloadClass ->
+                    startPayloadActivity<Any>(payloadClass)
+                }
+            }
         }
-        rv_offline_dashboard!!.adapter = mOfflineDashboardAdapter
-        return rootView
+        binding.rvOfflineDashboard.adapter = mOfflineDashboardAdapter
+        return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        mOfflineDashboardAdapter!!.removeAllCards()
-        mPayloadClasses!!.clear()
+        mOfflineDashboardAdapter.removeAllCards()
+        mPayloadClasses?.clear()
         mPayloadIndex = 5
-        mOfflineDashboardPresenter!!.loadDatabaseClientPayload()
-        mOfflineDashboardPresenter!!.loadDatabaseGroupPayload()
-        mOfflineDashboardPresenter!!.loadDatabaseCenterPayload()
-        mOfflineDashboardPresenter!!.loadDatabaseLoanRepaymentTransactions()
-        mOfflineDashboardPresenter!!.loadDatabaseSavingsAccountTransactions()
+        mOfflineDashboardPresenter?.loadDatabaseClientPayload()
+        mOfflineDashboardPresenter?.loadDatabaseGroupPayload()
+        mOfflineDashboardPresenter?.loadDatabaseCenterPayload()
+        mOfflineDashboardPresenter?.loadDatabaseLoanRepaymentTransactions()
+        mOfflineDashboardPresenter?.loadDatabaseSavingsAccountTransactions()
     }
 
     /**
@@ -141,12 +119,12 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
     </ClientPayload></ClientPayload> */
     override fun showClients(clientPayloads: List<ClientPayload>) {
         if (clientPayloads.isNotEmpty()) {
-            mOfflineDashboardAdapter!!.showCard(
+            mOfflineDashboardAdapter.showCard(
                 activity
                     ?.resources?.getString(R.string.payloads_count) +
                         clientPayloads.size, SYNC_CARD_UI_NAMES[0]
             )
-            mPayloadClasses!!.add(SyncClientPayloadActivity::class.java)
+            mPayloadClasses?.add(SyncClientPayloadActivity::class.java)
         } else {
             mPayloadIndex -= 1
             showNoPayloadToShow()
@@ -162,12 +140,12 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
     </GroupPayload></GroupsPayload> */
     override fun showGroups(groupPayloads: List<GroupPayload>) {
         if (groupPayloads.isNotEmpty()) {
-            mOfflineDashboardAdapter!!.showCard(
+            mOfflineDashboardAdapter.showCard(
                 activity
                     ?.resources?.getString(R.string.payloads_count) +
                         groupPayloads.size, SYNC_CARD_UI_NAMES[1]
             )
-            mPayloadClasses!!.add(SyncGroupPayloadsActivity::class.java)
+            mPayloadClasses?.add(SyncGroupPayloadsActivity::class.java)
         } else {
             mPayloadIndex -= 1
             showNoPayloadToShow()
@@ -183,12 +161,12 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
     </CenterPayload></CenterPayload> */
     override fun showCenters(centerPayloads: List<CenterPayload>) {
         if (centerPayloads.isNotEmpty()) {
-            mOfflineDashboardAdapter!!.showCard(
+            mOfflineDashboardAdapter.showCard(
                 activity
                     ?.resources?.getString(R.string.payloads_count) +
                         centerPayloads.size, SYNC_CARD_UI_NAMES[2]
             )
-            mPayloadClasses!!.add(SyncCenterPayloadActivity::class.java)
+            mPayloadClasses?.add(SyncCenterPayloadActivity::class.java)
         } else {
             mPayloadIndex -= 1
             showNoPayloadToShow()
@@ -205,14 +183,14 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
     </LoanRepaymentRequest></LoanRepaymentRequest> */
     override fun showLoanRepaymentTransactions(loanRepaymentRequests: List<LoanRepaymentRequest>) {
         if (loanRepaymentRequests.isNotEmpty()) {
-            mOfflineDashboardAdapter!!.showCard(
+            mOfflineDashboardAdapter.showCard(
                 requireActivity().resources
                     .getString(R.string.transactions_count) +
                         loanRepaymentRequests.size, SYNC_CARD_UI_NAMES[3]
             )
-            mPayloadClasses!!.add(SyncLoanRepaymentTransactionActivity::class.java)
+            mPayloadClasses?.add(SyncLoanRepaymentTransactionActivity::class.java)
         } else {
-            mPayloadIndex = mPayloadIndex - 1
+            mPayloadIndex -= 1
             showNoPayloadToShow()
         }
     }
@@ -227,12 +205,12 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
     </SavingsAccountTransaction></SavingsAccountTransactionRequest> */
     override fun showSavingsAccountTransaction(transactions: List<SavingsAccountTransactionRequest>) {
         if (transactions.isNotEmpty()) {
-            mOfflineDashboardAdapter!!.showCard(
+            mOfflineDashboardAdapter.showCard(
                 requireActivity().resources
                     .getString(R.string.transactions_count) +
                         transactions.size, SYNC_CARD_UI_NAMES[4]
             )
-            mPayloadClasses!!.add(SyncSavingsAccountTransactionActivity::class.java)
+            mPayloadClasses?.add(SyncSavingsAccountTransactionActivity::class.java)
         } else {
             mPayloadIndex -= 1
             showNoPayloadToShow()
@@ -246,23 +224,23 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
      */
     override fun showNoPayloadToShow() {
         if (mPayloadIndex == 0) {
-            rv_offline_dashboard!!.visibility = View.GONE
-            ll_error!!.visibility = View.VISIBLE
-            mNoPayloadText!!.text = activity
+            binding.rvOfflineDashboard.visibility = View.GONE
+            binding.llError.visibility = View.VISIBLE
+            binding.noPayloadText.text = activity
                 ?.resources?.getString(R.string.nothing_to_sync)
-            mNoPayloadIcon!!.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp)
+            binding.noPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp)
         }
     }
 
     override fun showError(stringId: Int) {
-        show(rootView, resources.getString(stringId))
+        show(binding.root, resources.getString(stringId))
     }
 
     override fun showProgressbar(b: Boolean) {
         if (b) {
-            pb_offline_dashboard!!.visibility = View.VISIBLE
+            binding.pbOfflineDashboard.visibility = View.VISIBLE
         } else {
-            pb_offline_dashboard!!.visibility = View.GONE
+            binding.pbOfflineDashboard.visibility = View.GONE
         }
     }
 
@@ -271,14 +249,14 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
      * @param t Activity Class that is user wants to start
      * @param <T>
     </T> */
-    fun <T> startPayloadActivity(t: Class<*>) {
+    private fun <T> startPayloadActivity(t: Class<*>) {
         val intent = Intent(activity, t)
         startActivity(intent)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mOfflineDashboardPresenter!!.detachView()
+        mOfflineDashboardPresenter?.detachView()
     }
 
     companion object {

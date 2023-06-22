@@ -17,7 +17,7 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 5/6/16.
  */
 class CenterListPresenter @Inject constructor(private val mDataManagerCenter: DataManagerCenter) : BasePresenter<CenterListMvpView?>() {
-    private val mSubscriptions: CompositeSubscription
+    private val mSubscriptions: CompositeSubscription = CompositeSubscription()
     private var mDbCenterList: List<Center>
     private var mSyncCenterList: List<Center?>
     private val limit = 100
@@ -51,9 +51,9 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
      */
     fun showCenters(centers: List<Center?>?) {
         if (loadmore) {
-            mvpView!!.showMoreCenters(centers)
+            mvpView?.showMoreCenters(centers)
         } else {
-            mvpView!!.showCenters(centers)
+            mvpView?.showCenters(centers)
         }
     }
 
@@ -72,55 +72,55 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
      * @param offset Value given from which position Center List will be fetched.
      * @param limit  Number of Centers to fetch.
      */
-    fun loadCenters(paged: Boolean, offset: Int, limit: Int) {
+    private fun loadCenters(paged: Boolean, offset: Int, limit: Int) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
+        mvpView?.showProgressbar(true)
         mSubscriptions.add(mDataManagerCenter.getCenters(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Center?>?>() {
+                .subscribe(object : Subscriber<Page<Center?>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
+                        mvpView?.showProgressbar(false)
                         if (loadmore) {
-                            mvpView!!.showMessage(R.string.failed_to_fetch_centers)
+                            mvpView?.showMessage(R.string.failed_to_fetch_centers)
                         } else {
-                            mvpView!!.showFetchingError()
+                            mvpView?.showFetchingError()
                         }
                     }
 
-                    override fun onNext(centerPage: Page<Center?>?) {
-                        mSyncCenterList = centerPage!!.pageItems
-                        if (mSyncCenterList.size == 0 && !loadmore) {
-                            mvpView!!.showEmptyCenters(R.string.center)
-                            mvpView!!.unregisterSwipeAndScrollListener()
-                        } else if (mSyncCenterList.size == 0 && loadmore) {
-                            mvpView!!.showMessage(R.string.no_more_centers_available)
+                    override fun onNext(centerPage: Page<Center?>) {
+                        mSyncCenterList = centerPage.pageItems
+                        if (mSyncCenterList.isEmpty() && !loadmore) {
+                            mvpView?.showEmptyCenters(R.string.center)
+                            mvpView?.unregisterSwipeAndScrollListener()
+                        } else if (mSyncCenterList.isEmpty() && loadmore) {
+                            mvpView?.showMessage(R.string.no_more_centers_available)
                         } else {
                             showCenters(mSyncCenterList)
                             mRestApiCenterSyncStatus = true
                             setAlreadyCenterSyncStatus()
                         }
-                        mvpView!!.showProgressbar(false)
+                        mvpView?.showProgressbar(false)
                     }
                 }))
     }
 
     fun loadCentersGroupAndMeeting(id: Int) {
-        mvpView!!.showProgressbar(true)
+        mvpView?.showProgressbar(true)
         mSubscriptions.add(mDataManagerCenter.getCentersGroupAndMeeting(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(object : Subscriber<CenterWithAssociations?>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showMessage(R.string.failed_to_fetch_Group_and_meeting)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showMessage(R.string.failed_to_fetch_Group_and_meeting)
                     }
 
                     override fun onNext(centerWithAssociations: CenterWithAssociations?) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showCentersGroupAndMeeting(centerWithAssociations, id)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showCentersGroupAndMeeting(centerWithAssociations, id)
                     }
                 }))
     }
@@ -139,7 +139,7 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
                 .subscribe(object : Subscriber<Page<Center?>?>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showMessage(R.string.failed_to_load_db_centers)
+                        mvpView?.showMessage(R.string.failed_to_load_db_centers)
                     }
 
                     override fun onNext(centerPage: Page<Center?>?) {
@@ -160,12 +160,12 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
      * @param
      * @return Page<Center>
     </Center> */
-    fun checkCenterAlreadySyncedOrNot(centers: List<Center?>): List<Center?> {
-        if (mDbCenterList.size != 0) {
+    private fun checkCenterAlreadySyncedOrNot(centers: List<Center?>): List<Center?> {
+        if (mDbCenterList.isNotEmpty()) {
             for (dbCenter in mDbCenterList) {
                 for (syncCenter in centers) {
-                    if (dbCenter.id == syncCenter!!.id) {
-                        syncCenter.isSync = true
+                    if (dbCenter.id == syncCenter?.id) {
+                        syncCenter?.isSync = true
                         break
                     }
                 }
@@ -175,7 +175,6 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
     }
 
     init {
-        mSubscriptions = CompositeSubscription()
         mDbCenterList = ArrayList()
         mSyncCenterList = ArrayList()
     }
