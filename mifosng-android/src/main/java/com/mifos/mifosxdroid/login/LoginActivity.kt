@@ -66,7 +66,7 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
             isValidUrl = ValidationUtil.isValidUrl(instanceURL)
             binding.tvConstructedInstanceUrl.text = instanceURL
             domain = binding.etInstanceURL.editableText.toString()
-            if (domain.isEmpty() == true || domain.contains(" ") == true) {
+            if (domain.isEmpty() || domain.contains(" ")) {
                 isValidUrl = false
             }
             binding.tvConstructedInstanceUrl.setTextColor(
