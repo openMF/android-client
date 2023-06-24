@@ -51,7 +51,6 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
                     android:gravity="center"
-                    android:onClick="goToWeb"
                     android:text="@string/about_mifos" />
 
             </LinearLayout>
@@ -86,7 +85,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:onClick="goToGit"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -127,7 +125,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:onClick="goToTwitter"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -193,7 +190,6 @@
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:gravity="center"
-                    android:onClick="goToLicense"
                     android:orientation="horizontal">
 
                     <ImageView

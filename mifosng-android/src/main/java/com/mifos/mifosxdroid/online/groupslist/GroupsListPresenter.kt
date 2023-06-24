@@ -16,7 +16,7 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 7/6/16.
  */
 class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: DataManagerGroups) : BasePresenter<GroupsListMvpView?>() {
-    private val mSubscriptions: CompositeSubscription
+    private val mSubscriptions: CompositeSubscription = CompositeSubscription()
     private var mDbGroupList: List<Group>
     private var mSyncGroupList: List<Group?>
     private val limit = 100
@@ -41,11 +41,11 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
      * Showing Groups List in View, If loadmore is true call showLoadMoreGroups(...) and else
      * call showGroupsList(...).
      */
-    fun showClientList(clients: List<Group?>?) {
+    private fun showClientList(clients: List<Group?>?) {
         if (loadmore) {
-            mvpView!!.showLoadMoreGroups(clients)
+            mvpView?.showLoadMoreGroups(clients)
         } else {
-            mvpView!!.showGroups(clients)
+            mvpView?.showGroups(clients)
         }
     }
 
@@ -57,9 +57,9 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
      * @param groups List<Group></Group>>
      */
     fun showParentClients(groups: List<Group?>) {
-        mvpView!!.unregisterSwipeAndScrollListener()
-        if (groups.size == 0) {
-            mvpView!!.showEmptyGroups(R.string.group)
+        mvpView?.unregisterSwipeAndScrollListener()
+        if (groups.isEmpty()) {
+            mvpView?.showEmptyGroups(R.string.group)
         } else {
             mRestApiGroupSyncStatus = true
             mSyncGroupList = groups
@@ -77,35 +77,35 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
         }
     }
 
-    fun loadGroups(paged: Boolean, offset: Int, limit: Int) {
+    private fun loadGroups(paged: Boolean, offset: Int, limit: Int) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
+        mvpView?.showProgressbar(true)
         mSubscriptions.add(mDataManagerGroups.getGroups(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Group?>?>() {
+                .subscribe(object : Subscriber<Page<Group?>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
+                        mvpView?.showProgressbar(false)
                         if (loadmore) {
-                            mvpView!!.showMessage(R.string.failed_to_fetch_groups)
+                            mvpView?.showMessage(R.string.failed_to_fetch_groups)
                         } else {
-                            mvpView!!.showFetchingError()
+                            mvpView?.showFetchingError()
                         }
                     }
 
-                    override fun onNext(groupPage: Page<Group?>?) {
-                        mSyncGroupList = groupPage!!.pageItems
-                        if (mSyncGroupList.size == 0 && !loadmore) {
-                            mvpView!!.showEmptyGroups(R.string.group)
-                            mvpView!!.unregisterSwipeAndScrollListener()
-                        } else if (mSyncGroupList.size == 0 && loadmore) {
-                            mvpView!!.showMessage(R.string.no_more_groups_available)
+                    override fun onNext(groupPage: Page<Group?>) {
+                        mSyncGroupList = groupPage.pageItems
+                        if (mSyncGroupList.isEmpty() && !loadmore) {
+                            mvpView?.showEmptyGroups(R.string.group)
+                            mvpView?.unregisterSwipeAndScrollListener()
+                        } else if (mSyncGroupList.isEmpty() && loadmore) {
+                            mvpView?.showMessage(R.string.no_more_groups_available)
                         } else {
                             mRestApiGroupSyncStatus = true
                             setAlreadyClientSyncStatus()
                         }
-                        mvpView!!.showProgressbar(false)
+                        mvpView?.showProgressbar(false)
                     }
                 }))
     }
@@ -118,12 +118,12 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
                 .subscribe(object : Subscriber<Page<Group?>?>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showMessage(R.string.failed_to_load_db_groups)
+                        mvpView?.showMessage(R.string.failed_to_load_db_groups)
                     }
 
                     override fun onNext(groupPage: Page<Group?>?) {
                         mDatabaseGroupSyncStatus = true
-                        mDbGroupList = groupPage!!.pageItems as List<Group>
+                        mDbGroupList = groupPage?.pageItems as List<Group>
                         setAlreadyClientSyncStatus()
                     }
                 })
@@ -137,11 +137,11 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
      * @param groups
      * @return List<Client>
     </Client> */
-    fun checkGroupAlreadySyncedOrNot(groups: List<Group?>): List<Group?> {
-        if (mDbGroupList.size != 0) {
+    private fun checkGroupAlreadySyncedOrNot(groups: List<Group?>): List<Group?> {
+        if (mDbGroupList.isNotEmpty()) {
             for (dbGroup in mDbGroupList) {
                 for (syncGroup in groups) {
-                    if (dbGroup.id.toInt() == syncGroup!!.id.toInt()) {
+                    if (dbGroup.id.toInt() == syncGroup?.id?.toInt()) {
                         syncGroup.isSync = true
                         break
                     }
@@ -152,7 +152,6 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
     }
 
     init {
-        mSubscriptions = CompositeSubscription()
         mDbGroupList = ArrayList()
         mSyncGroupList = ArrayList()
     }

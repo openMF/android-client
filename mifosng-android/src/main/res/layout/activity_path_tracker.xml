@@ -19,7 +19,7 @@
         android:layout_below="@+id/toolbar">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_path_tacker"
+            android:id="@+id/rv_path_tracker"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_centerHorizontal="true"
