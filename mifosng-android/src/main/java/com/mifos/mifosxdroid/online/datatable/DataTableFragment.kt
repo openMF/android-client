@@ -85,7 +85,7 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         rootView = inflater.inflate(R.layout.fragment_datatables, container, false)
         ButterKnife.bind(this, rootView)
         dataTablePresenter!!.attachView(this)

@@ -43,7 +43,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         safeUIBlockingUtility = SafeUIBlockingUtility(activity,
                 getString(R.string.signature_fragment_loading_message))
         if (arguments != null) {

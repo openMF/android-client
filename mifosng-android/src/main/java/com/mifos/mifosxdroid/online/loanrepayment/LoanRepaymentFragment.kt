@@ -106,7 +106,7 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
     private var mfDatePicker: DialogFragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         arguments?.getParcelable<LoanWithAssociations>(Constants.LOAN_SUMMARY)?.let {  loanWithAssociations ->
             clientName = loanWithAssociations.clientName
             loanAccountNumber = loanWithAssociations.accountNo

@@ -106,7 +106,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private var calendarId = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         setHasOptionsMenu(true)
     }
 
@@ -306,10 +306,10 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         val attendanceTypes = ArrayList<String?>()
         attendanceTypeOptions.clear()
         attendanceTypeOptions = presenter!!.filterAttendanceTypes(collectionSheetResponse
-                ?.getAttendanceTypeOptions(), attendanceTypes)
+                ?.attendanceTypeOptions, attendanceTypes)
         additionalPaymentTypeMap.clear()
         additionalPaymentTypeMap = presenter!!.filterPaymentTypes(collectionSheetResponse
-                ?.getPaymentTypeOptions(), paymentTypes as MutableList<String?>)
+                ?.paymentTypeOptions, paymentTypes as MutableList<String?>)
 
         //Add the heading Row
         val headingRow = TableRow(context)

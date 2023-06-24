@@ -94,7 +94,7 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
     override fun onNothingSelected(parent: AdapterView<*>?) {}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

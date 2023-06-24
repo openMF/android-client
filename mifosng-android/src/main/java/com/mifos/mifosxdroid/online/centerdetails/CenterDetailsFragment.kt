@@ -85,7 +85,7 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
     private var listener: OnFragmentInteractionListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             centerId = requireArguments().getInt(Constants.CENTER_ID)
         }
@@ -141,13 +141,13 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
         if (centerWithAssociations.collectionMeetingCalendar.calendarInstanceId == null) {
             tvMeetingDate!!.text = getString(R.string.unassigned)
             if (view != null) {
-                view!!.findViewById<View>(R.id.row_meeting_frequency).visibility = View.GONE
+                requireView().findViewById<View>(R.id.row_meeting_frequency).visibility = View.GONE
             }
         } else {
             tvMeetingDate!!.text = Utils.getStringOfDate(centerWithAssociations
                     .collectionMeetingCalendar.nextTenRecurringDates[0])
             if (view != null) {
-                view!!.findViewById<View>(R.id.row_meeting_frequency).visibility = View.VISIBLE
+                requireView().findViewById<View>(R.id.row_meeting_frequency).visibility = View.VISIBLE
                 tvMeetingFrequency!!.text = centerWithAssociations.collectionMeetingCalendar
                         .humanReadable
             }

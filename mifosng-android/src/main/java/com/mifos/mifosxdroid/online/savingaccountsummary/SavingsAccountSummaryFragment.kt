@@ -134,7 +134,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         savedInstanceState: Bundle?
     ): View? {
         rootView = inflater.inflate(R.layout.fragment_savings_account_summary, container, false)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         ButterKnife.bind(this, rootView)
         mSavingAccountSummaryPresenter!!.attachView(this)
         mSavingAccountSummaryPresenter!!

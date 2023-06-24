@@ -77,10 +77,10 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
     private val officeNameIdHashMap = HashMap<String, Int>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         rootView = inflater.inflate(R.layout.fragment_create_new_center, null)
         ButterKnife.bind(this, rootView)
         mCreateNewCenterPresenter!!.attachView(this)

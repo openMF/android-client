@@ -108,7 +108,7 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         position = requireArguments().getInt(Constants.ADAPTER_POSITION)
         loanAndClientNameItem = requireArguments().getParcelable(Constants.LOAN_AND_CLIENT)
         paymentTypeList = requireArguments().getStringArrayList(Constants.PAYMENT_LIST)

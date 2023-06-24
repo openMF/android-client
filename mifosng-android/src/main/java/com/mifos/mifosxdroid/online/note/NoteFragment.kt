@@ -60,7 +60,7 @@ class NoteFragment : MifosBaseFragment(), NoteMvpView, OnRefreshListener {
     private var notes: List<Note>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         notes = ArrayList()
         if (arguments != null) {
             entityType = requireArguments().getString(Constants.ENTITY_TYPE)

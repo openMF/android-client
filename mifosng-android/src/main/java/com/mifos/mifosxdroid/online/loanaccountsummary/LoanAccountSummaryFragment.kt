@@ -163,7 +163,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
         rootView = inflater.inflate(R.layout.fragment_loan_account_summary, container, false)
 
         //Injecting Presenter
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         ButterKnife.bind(this, rootView)
         mLoanAccountSummaryPresenter!!.attachView(this)
         inflateLoanAccountSummary()

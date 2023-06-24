@@ -54,7 +54,7 @@ class GroupListFragment : ProgressableFragment(), GroupListMvpView, AdapterView.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) centerId = requireArguments().getInt(Constants.CENTER_ID)
     }
 

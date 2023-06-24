@@ -122,7 +122,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     private var isGroupAccount = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         val arguments = arguments
         if (arguments != null) {
             isGroupAccount = arguments.getBoolean(Constants.GROUP_ACCOUNT)

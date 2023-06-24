@@ -78,7 +78,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
     private var mfDatePicker: DialogFragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             savingsAccountNumber = requireArguments().getString(Constants.SAVINGS_ACCOUNT_NUMBER)
             savingsAccountId = requireArguments().getInt(Constants.SAVINGS_ACCOUNT_ID)

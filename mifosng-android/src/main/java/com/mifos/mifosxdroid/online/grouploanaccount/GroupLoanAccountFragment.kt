@@ -199,7 +199,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     var mRepaymentFrequencyDaysOfWeekTypeOptions: List<RepaymentFrequencyDaysOfWeekTypeOptions> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) groupId = requireArguments().getInt(Constants.GROUP_ID)
     }
 
