@@ -43,7 +43,7 @@ class SavingsAccountSummaryPresenter @Inject constructor(private val mDataManage
                     override fun onError(e: Throwable) {
                         var error = R.string.failed_to_fetch_savingsaccount
                         mvpView!!.showProgressbar(false)
-                        if (!Network.isOnline(App.context)) {
+                        if (!Network.isOnline(App.context!!)) {
                             error = R.string.no_internet_connection
                         }
                         mvpView!!.showProgressbar(false)

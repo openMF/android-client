@@ -32,7 +32,7 @@ object Toaster {
 
     @JvmStatic
     fun show(view: View?, res: Int, duration: Int) {
-        show(view, App.context.resources.getString(res), duration)
+        show(view, App.context?.resources?.getString(res), duration)
     }
 
     @JvmStatic
@@ -42,6 +42,6 @@ object Toaster {
 
     @JvmStatic
     fun show(view: View?, res: Int) {
-        show(view, App.context.resources.getString(res))
+        show(view, App.context?.resources?.getString(res))
     }
 }

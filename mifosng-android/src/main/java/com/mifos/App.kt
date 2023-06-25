@@ -77,10 +77,10 @@ class App : MultiDexApplication() {
         @JvmField
         val typefaceManager: Map<Int, Typeface> = HashMap()
         @JvmStatic
-        lateinit var instance: App
+        var instance: App? =null
 
         @JvmStatic
-        val context: Context
+        val context: App?
             get() = instance
 
         @JvmStatic
