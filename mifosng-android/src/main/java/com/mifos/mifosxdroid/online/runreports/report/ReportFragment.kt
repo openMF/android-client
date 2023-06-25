@@ -57,7 +57,7 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
     private var bottom = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent!!.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
     override fun onCreateView(
@@ -67,7 +67,7 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
         rootView = inflater.inflate(R.layout.fragment_client_report, container, false)
         setHasOptionsMenu(true)
         ButterKnife.bind(this, rootView)
-        presenter!!.attachView(this)
+        presenter?.attachView(this)
         val time = Date().time
         report = requireArguments().getParcelable(Constants.REPORT_NAME)
         setUpUi()
@@ -77,12 +77,15 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
     private fun setUpUi() {
         showProgressbar(true)
         setUpHeading()
-        scrollView!!.setScrollChangeListener(this)
-        if (report!!.data?.size!! > 0) {
-            setUpValues()
-        } else {
-            Toast.makeText(activity, getString(R.string.msg_report_empty), Toast.LENGTH_SHORT)
-                .show()
+        scrollView?.setScrollChangeListener(this)
+        report?.data?.let { data ->
+            if (data.isNotEmpty()) {
+                setUpValues()
+            }
+            else {
+                Toast.makeText(activity, getString(R.string.msg_report_empty), Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
         showProgressbar(false)
     }
@@ -95,7 +98,7 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
         headingRowParams.gravity = Gravity.CENTER
         headingRowParams.setMargins(0, 0, 0, 10)
         row.layoutParams = headingRowParams
-        for (column in report!!.columnHeaders!!) {
+        for (column in report?.columnHeaders ?: emptyList()) {
             when (column.columnDisplayType) {
                 "STRING" -> {
                     val tv = TextView(context)
@@ -106,16 +109,13 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
                 }
             }
         }
-        tableReport!!.addView(row)
+        tableReport?.addView(row)
     }
 
     private fun setUpValues() {
-
-        // For each dataRow, the item in the index i refers to the column
-        // i of the columnHeader list.
         val ll = page * 100
-        val ul = report!!.data?.size?.let { Math.min(ll + 100, it) }
-        for (dataRow in ul?.let { report!!.data?.subList(ll, it) }!!) {
+        val ul = report?.data?.size?.let { Math.min(ll + 100, it) }
+        for (dataRow in ul?.let { report?.data?.subList(ll, it) } ?: emptyList()) {
             val row = TableRow(context)
             val rowParams = TableRow.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
@@ -123,25 +123,20 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
             rowParams.gravity = Gravity.CENTER
             rowParams.setMargins(0, 0, 0, 10)
             row.layoutParams = rowParams
-            for (i in report!!.columnHeaders?.indices!!) {
-
-                // Add more cases, if they are, for the other types of data here.
-                when (report!!.columnHeaders?.get(i)?.columnDisplayType) {
+            for (i in report?.columnHeaders?.indices ?: emptyList<Int>()) {
+                when (report?.columnHeaders?.get(i)?.columnDisplayType) {
                     "STRING" -> {
                         val tv = TextView(context)
                         tv.gravity = Gravity.CENTER
-                        if (dataRow.row[i] != null) {
-                            tv.text = dataRow.row[i]
-                        } else {
-                            tv.text = "-"
-                        }
+                        tv.text = dataRow.row.getOrNull(i) ?: "-"
                         row.addView(tv)
                     }
                 }
             }
-            tableReport!!.addView(row)
+            tableReport?.addView(row)
         }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_report, menu)
@@ -222,19 +217,20 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
             reportDirectory = File(reportDirectoryPath)
         }
 
-        protected override fun doInBackground(vararg p0: FullParameterListResponse?): String? {
-            if (!reportDirectory!!.exists()) {
-                val makeRequiredDirectories = reportDirectory!!.mkdirs()
-                if (!makeRequiredDirectories) {
+        override fun doInBackground(vararg p0: FullParameterListResponse?): String? {
+            if (reportDirectory?.exists() != true) {
+                val makeRequiredDirectories = reportDirectory?.mkdirs()
+                if (makeRequiredDirectories != true) {
                     return "Directory Creation Failed"
                 }
             }
+
             report = p0[0]
             try {
                 fileWriter = FileWriter(reportPath)
 
                 // write headers
-                val columnSize = report!!.columnHeaders?.size
+                val columnSize = report?.columnHeaders?.size
                 var count = 1
                 for (header in report?.columnHeaders ?: emptyList()) {
                     fileWriter?.append(header.columnName)
@@ -247,16 +243,16 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
                 }
 
                 // write row data
-                for (row in report!!.data!!) {
+                for (row in report?.data!!) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        fileWriter!!.append(java.lang.String.join(",", row.row))
+                        fileWriter?.append(java.lang.String.join(",", row.row))
                     } else {
-                        fileWriter!!.append(TextUtils.join(",", row.row))
+                        fileWriter?.append(TextUtils.join(",", row.row))
                     }
-                    fileWriter!!.append("\n")
+                    fileWriter?.append("\n")
                 }
-                fileWriter!!.flush()
-                fileWriter!!.close()
+                fileWriter?.flush()
+                fileWriter?.close()
             } catch (e: IOException) {
                 return "File Creation Failed"
             }

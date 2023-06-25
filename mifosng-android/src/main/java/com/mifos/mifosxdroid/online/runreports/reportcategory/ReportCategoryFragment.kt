@@ -41,7 +41,7 @@ class ReportCategoryFragment : MifosBaseFragment(), ReportCategoryMvpView {
     var broadCastNewMessage: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             reportCategory = intent.getStringExtra(Constants.REPORT_CATEGORY)
-            presenter!!.fetchCategories(reportCategory, false, true)
+            presenter?.fetchCategories(reportCategory, false, true)
         }
     }
 
@@ -60,7 +60,7 @@ class ReportCategoryFragment : MifosBaseFragment(), ReportCategoryMvpView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent!!.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
     override fun onCreateView(
@@ -70,8 +70,8 @@ class ReportCategoryFragment : MifosBaseFragment(), ReportCategoryMvpView {
         rootView = inflater.inflate(R.layout.fragment_runreport, container, false)
         setHasOptionsMenu(true)
         ButterKnife.bind(this, rootView)
-        presenter!!.attachView(this)
-        presenter!!.fetchCategories(reportCategory, false, true)
+        presenter?.attachView(this)
+        presenter?.fetchCategories(reportCategory, false, true)
         return rootView
     }
 
@@ -83,22 +83,22 @@ class ReportCategoryFragment : MifosBaseFragment(), ReportCategoryMvpView {
         reportTypeItems = reportTypes
         val layoutManager = LinearLayoutManager(context)
         val dividerItemDecoration = DividerItemDecoration(
-            rvReports!!.context, layoutManager.orientation
+            rvReports?.context, layoutManager.orientation
         )
-        rvReports!!.layoutManager = layoutManager
-        rvReports!!.addItemDecoration(dividerItemDecoration)
+        rvReports?.layoutManager = layoutManager
+        rvReports?.addItemDecoration(dividerItemDecoration)
         reportAdapter = ClientReportAdapter { position: Int ->
             openDetailFragment(position)
             null
         }
-        rvReports!!.adapter = reportAdapter
-        reportAdapter!!.setReportItems(reportTypes)
-        reportAdapter!!.notifyDataSetChanged()
+        rvReports?.adapter = reportAdapter
+        reportAdapter?.setReportItems(reportTypes)
+        reportAdapter?.notifyDataSetChanged()
     }
 
     private fun openDetailFragment(pos: Int) {
         val bundle = Bundle()
-        bundle.putParcelable(Constants.CLIENT_REPORT_ITEM, reportTypeItems!![pos])
+        bundle.putParcelable(Constants.CLIENT_REPORT_ITEM, reportTypeItems?.getOrNull(pos))
         val fragmentTransaction = requireActivity()
             .supportFragmentManager.beginTransaction()
         fragmentTransaction.addToBackStack("ClientCategory")

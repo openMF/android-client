@@ -36,7 +36,9 @@ class App : MultiDexApplication() {
         super.onCreate()
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val themePref = sharedPreferences.getString("dark_mode", ThemeHelper.DEFAULT_MODE)
-        ThemeHelper.applyTheme(themePref!!)
+        if (themePref != null) {
+            ThemeHelper.applyTheme(themePref)
+        }
         instance = this
         Fabric.with(this, Crashlytics())
         Iconify.with(MaterialModule())

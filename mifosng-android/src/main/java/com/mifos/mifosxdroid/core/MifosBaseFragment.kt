@@ -55,37 +55,37 @@ open class MifosBaseFragment() : Fragment() {
     }
 
     val toolbar: Toolbar?
-        get() = (getActivity() as MifosBaseActivity?)!!.toolbar
+        get() = (getActivity() as MifosBaseActivity).toolbar
 
     protected fun showMifosProgressDialog(message: String = "Working...") {
-        if (callback != null) callback!!.showProgress(message)
+        if (callback != null) callback?.showProgress(message)
     }
 
     protected fun hideMifosProgressDialog() {
-        if (callback != null) callback!!.hideProgress()
+        if (callback != null) callback?.hideProgress()
     }
 
     protected fun logout() {
-        callback!!.logout()
+        callback?.logout()
     }
 
     protected fun setToolbarTitle(title: String) {
-        callback!!.setToolbarTitle(title)
+        callback?.setToolbarTitle(title)
     }
 
     fun hideKeyboard(view: View) {
-        inputManager!!.hideSoftInputFromWindow(
+        inputManager?.hideSoftInputFromWindow(
             view.windowToken,
             InputMethodManager.RESULT_UNCHANGED_SHOWN
         )
     }
 
     protected fun showMifosProgressBar() {
-        mMifosProgressBarHandler!!.show()
+        mMifosProgressBarHandler?.show()
     }
 
     protected fun hideMifosProgressBar() {
-        mMifosProgressBarHandler!!.hide()
+        mMifosProgressBarHandler?.hide()
     }
 
     protected fun getStringMessage(message: Int): String {

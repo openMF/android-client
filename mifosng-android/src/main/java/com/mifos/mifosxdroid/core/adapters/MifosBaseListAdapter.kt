@@ -47,7 +47,7 @@ abstract class MifosBaseListAdapter<T>(
         }
         private set
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View, parent: ViewGroup): View? {
         return layout
     }
 
@@ -57,7 +57,7 @@ abstract class MifosBaseListAdapter<T>(
      * @param object The object to add at the end of the array.
      */
     fun add(`object`: T) {
-        synchronized(mLock) { list!!.add(`object`) }
+        synchronized(mLock) { list?.add(`object`) }
         notifyDataSetChanged()
     }
 
@@ -67,7 +67,11 @@ abstract class MifosBaseListAdapter<T>(
      * @param collection The Collection to add at the end of the array.
      */
     fun addAll(collection: Collection<T>?) {
-        synchronized(mLock) { list!!.addAll(collection!!) }
+        synchronized(mLock) {
+            if (collection != null) {
+                list?.addAll(collection)
+            }
+        }
         notifyDataSetChanged()
     }
 
@@ -88,7 +92,7 @@ abstract class MifosBaseListAdapter<T>(
      * @param index  The index at which the object must be inserted.
      */
     fun insert(`object`: T, index: Int) {
-        synchronized(mLock) { list!!.add(index, `object`) }
+        synchronized(mLock) { list?.add(index, `object`) }
         notifyDataSetChanged()
     }
 
@@ -98,7 +102,7 @@ abstract class MifosBaseListAdapter<T>(
      * @param object The object to remove.
      */
     fun remove(`object`: T) {
-        synchronized(mLock) { list!!.remove(`object`) }
+        synchronized(mLock) { list?.remove(`object`) }
         notifyDataSetChanged()
     }
 
@@ -106,7 +110,7 @@ abstract class MifosBaseListAdapter<T>(
      * Remove all elements from the list.
      */
     fun clear() {
-        synchronized(mLock) { list!!.clear() }
+        synchronized(mLock) { list?.clear() }
         notifyDataSetChanged()
     }
 
@@ -125,14 +129,14 @@ abstract class MifosBaseListAdapter<T>(
      * {@inheritDoc}
      */
     override fun getCount(): Int {
-        return if (list != null) list!!.size else 0
+        return list?.size ?: 0
     }
 
     /**
      * {@inheritDoc}
      */
     override fun getItem(position: Int): T? {
-        return if (list != null && position >= 0 && position < count) list!![position] else null
+        return list?.getOrNull(position)
     }
 
     /**
@@ -142,7 +146,7 @@ abstract class MifosBaseListAdapter<T>(
      * @return The position of the specified item.
      */
     fun getPosition(item: T): Int {
-        return if (list != null) list!!.indexOf(item) else -1
+        return list?.indexOf(item) ?: -1
     }
 
     /**
@@ -164,6 +168,6 @@ abstract class MifosBaseListAdapter<T>(
         notifyDataSetChanged()
     }
 
-    val layout: View
-        get() = inflater!!.inflate(layoutId, null)
+    val layout: View?
+        get() = inflater?.inflate(layoutId, null)
 }

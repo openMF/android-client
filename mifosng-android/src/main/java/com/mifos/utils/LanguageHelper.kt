@@ -11,7 +11,8 @@ import java.util.Locale
  * Created by shashankpriyadarshi on 20/06/20.
  */
 object LanguageHelper {
-    fun onAttach(context: Context): Context {
+    fun
+            onAttach(context: Context): Context {
         val lang = getPersistedData(context, Locale.getDefault().language)
         return setLocale(context, lang)
     }
@@ -37,8 +38,10 @@ object LanguageHelper {
 
     @TargetApi(Build.VERSION_CODES.N)
     private fun updateResources(context: Context, language: String?): Context {
-        val locale = Locale(language!!.lowercase(Locale.getDefault()))
-        Locale.setDefault(locale)
+        val locale = language?.lowercase(Locale.getDefault())?.let { Locale(it) }
+        if (locale != null) {
+            Locale.setDefault(locale)
+        }
         val resources = context.resources
         val configuration = resources.configuration
         configuration.setLocale(locale)

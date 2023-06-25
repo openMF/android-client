@@ -54,7 +54,7 @@ class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListene
     ): View? {
         rootView = inflater.inflate(R.layout.fragment_activate_client, container, false)
         ButterKnife.bind(this, rootView)
-        activatePresenter!!.attachView(this)
+        activatePresenter?.attachView(this)
         showUserInterface()
         return rootView
     }
@@ -62,8 +62,8 @@ class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListene
     override fun showUserInterface() {
         setToolbarTitle(getString(R.string.activate))
         mfDatePicker = MFDatePicker.newInsance(this)
-        tvActivationDate!!.text = MFDatePicker.getDatePickedAsString()
-        activationDate = tvActivationDate!!.text.toString()
+        tvActivationDate?.text = MFDatePicker.getDatePickedAsString()
+        activationDate = tvActivationDate?.text.toString()
         activationDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(activationDate)
             .replace("-", " ")
     }
@@ -76,20 +76,20 @@ class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListene
 
     @OnClick(R.id.tv_activation_date)
     fun onClickTextViewActivationDate() {
-        mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
+        mfDatePicker?.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
     }
 
     override fun onDatePicked(date: String) {
-        tvActivationDate!!.text = date
+        tvActivationDate?.text = date
         activationDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date)
             .replace("-", " ")
     }
 
     fun activate(clientActivate: ActivatePayload?) {
         when (activateType) {
-            Constants.ACTIVATE_CLIENT -> activatePresenter!!.activateClient(id, clientActivate)
-            Constants.ACTIVATE_CENTER -> activatePresenter!!.activateCenter(id, clientActivate)
-            Constants.ACTIVATE_GROUP -> activatePresenter!!.activateGroup(id, clientActivate)
+            Constants.ACTIVATE_CLIENT -> activatePresenter?.activateClient(id, clientActivate)
+            Constants.ACTIVATE_CENTER -> activatePresenter?.activateCenter(id, clientActivate)
+            Constants.ACTIVATE_GROUP -> activatePresenter?.activateGroup(id, clientActivate)
             else -> {}
         }
     }
@@ -116,7 +116,7 @@ class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListene
 
     override fun onDestroyView() {
         super.onDestroyView()
-        activatePresenter!!.detachView()
+        activatePresenter?.detachView()
     }
 
     companion object {

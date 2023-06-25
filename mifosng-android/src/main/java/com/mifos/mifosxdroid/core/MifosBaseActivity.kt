@@ -74,8 +74,8 @@ open class MifosBaseActivity : BasePassCodeActivity(), BaseActivityCallback {
 
     protected fun showBackButton() {
         if (supportActionBar != null) {
-            supportActionBar!!.setHomeButtonEnabled(true)
-            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setHomeButtonEnabled(true)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
     }
 
@@ -97,10 +97,10 @@ open class MifosBaseActivity : BasePassCodeActivity(), BaseActivityCallback {
     override fun showProgress(message: String) {
         if (progress == null) {
             progress = ProgressDialog(this, ProgressDialog.STYLE_SPINNER)
-            progress!!.setCancelable(false)
+            progress?.setCancelable(false)
         }
-        progress!!.setMessage(message)
-        progress!!.show()
+        progress?.setMessage(message)
+        progress?.show()
     }
 
     override fun setToolbarTitle(title: String) {
@@ -116,7 +116,7 @@ open class MifosBaseActivity : BasePassCodeActivity(), BaseActivityCallback {
     }
 
     override fun hideProgress() {
-        if (progress != null && progress!!.isShowing) progress!!.dismiss()
+        if (progress != null && progress?.isShowing == true) progress?.dismiss()
     }
 
     fun hideKeyboard(view: View) {
