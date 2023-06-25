@@ -33,7 +33,6 @@ import com.mifos.utils.PrefManager.clearPrefs
  */
 open class MifosBaseActivity : BasePassCodeActivity(), BaseActivityCallback {
     var toolbar: Toolbar? = null
-        protected set
     private var mActivityComponent: ActivityComponent? = null
     private var progress: ProgressDialog? = null
     override fun setContentView(layoutResID: Int) {
@@ -63,7 +62,7 @@ open class MifosBaseActivity : BasePassCodeActivity(), BaseActivityCallback {
             return mActivityComponent
         }
 
-    fun setActionBarTitle(title: String?) {
+    private fun setActionBarTitle(title: String?) {
         if (supportActionBar != null && getTitle() != null) {
             setTitle(title)
         }

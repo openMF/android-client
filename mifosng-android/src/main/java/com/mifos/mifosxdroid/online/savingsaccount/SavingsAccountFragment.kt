@@ -168,7 +168,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
 
     @OnClick(R.id.btn_submit)
     fun submitSavingsAccount() {
-        if (Network.isOnline(context)) {
+        if (Network.isOnline(requireContext())) {
             val savingsPayload = SavingsPayload()
             savingsPayload.externalId = etClientExternalId!!.editableText.toString()
             savingsPayload.locale = "en"

@@ -119,7 +119,7 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
         dateofsubmissionstring = tv_submissionDate!!.text.toString()
         dateofsubmissionstring = DateHelper.getDateAsStringUsedForDateofBirth(dateofsubmissionstring).replace("-", " ")
         bt_submit!!.setOnClickListener {
-            if (Network.isOnline(context)) {
+            if (Network.isOnline(requireContext())) {
                 val groupPayload = GroupPayload()
                 groupPayload.name = et_groupName!!.editableText.toString()
                 groupPayload.externalId = et_groupexternalId!!.editableText.toString()

@@ -85,7 +85,7 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener, 
 
     @OnClick(R.id.btn_approve_savings)
     fun onClickApproveSavings() {
-        if (Network.isOnline(context)) {
+        if (Network.isOnline(requireContext())) {
             val savingsApproval = SavingsApproval()
             savingsApproval.note = etSavingsApprovalReason!!.editableText.toString()
             savingsApproval.approvedOnDate = approvaldate

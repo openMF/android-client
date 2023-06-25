@@ -41,7 +41,7 @@ open class MifosBaseFragment() : Fragment() {
         super.onCreate(savedInstanceState)
         inputManager =
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        mMifosProgressBarHandler = MifosProgressBarHandler(getActivity())
+        mMifosProgressBarHandler = MifosProgressBarHandler(requireActivity())
     }
 
     fun showAlertDialog(title: String?, message: String?) {
@@ -57,7 +57,7 @@ open class MifosBaseFragment() : Fragment() {
     val toolbar: Toolbar?
         get() = (getActivity() as MifosBaseActivity?)!!.toolbar
 
-    protected fun showMifosProgressDialog(message: String? = "Working...") {
+    protected fun showMifosProgressDialog(message: String = "Working...") {
         if (callback != null) callback!!.showProgress(message)
     }
 
@@ -69,7 +69,7 @@ open class MifosBaseFragment() : Fragment() {
         callback!!.logout()
     }
 
-    protected fun setToolbarTitle(title: String?) {
+    protected fun setToolbarTitle(title: String) {
         callback!!.setToolbarTitle(title)
     }
 
@@ -93,5 +93,5 @@ open class MifosBaseFragment() : Fragment() {
     }
 
     protected val isOnline: Boolean
-        get() = Network.isOnline(getActivity())
+        get() = Network.isOnline(requireContext())
 }
