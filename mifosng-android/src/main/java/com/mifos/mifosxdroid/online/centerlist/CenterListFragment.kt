@@ -219,20 +219,21 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
         id: Int
     ) {
         val mfDatePicker = MFDatePicker()
-        mfDatePicker.setOnDatePickListener { date ->
-            if (centerWithAssociations?.collectionMeetingCalendar?.id != null) {
-                (activity as MifosBaseActivity?)
-                    ?.replaceFragment(
+        mfDatePicker.setCustomOnDatePickListener(object : MFDatePicker.OnDatePickListener {
+            override fun onDatePicked(date: String?) {
+                if (centerWithAssociations?.collectionMeetingCalendar?.id != null) {
+                    (activity as MifosBaseActivity?)?.replaceFragment(
                         CollectionSheetFragment.newInstance(
                             id, date,
                             centerWithAssociations.collectionMeetingCalendar.id
                         ),
                         true, R.id.container
                     )
-            } else {
-                showMessage(R.string.no_meeting_found)
+                } else {
+                    showMessage(R.string.no_meeting_found)
+                }
             }
-        }
+        })
         mfDatePicker.show(requireActivity().supportFragmentManager, MFDatePicker.TAG)
     }
 

@@ -155,17 +155,17 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
 
     fun inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this)
-        tv_submissionDate!!.text = MFDatePicker.getDatePickedAsString()
+        tv_submissionDate!!.text = MFDatePicker.datePickedAsString
         tv_submissionDate!!.setOnClickListener { (mfDatePicker as MFDatePicker?)?.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
     }
 
     fun inflateActivationDate() {
         newDatePicker = MFDatePicker.newInsance(this)
-        tv_activationDate!!.text = MFDatePicker.getDatePickedAsString()
+        tv_activationDate!!.text = MFDatePicker.datePickedAsString
         tv_activationDate!!.setOnClickListener { (newDatePicker as MFDatePicker?)?.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         tv_submissionDate!!.text = date
         tv_activationDate!!.text = date
     }

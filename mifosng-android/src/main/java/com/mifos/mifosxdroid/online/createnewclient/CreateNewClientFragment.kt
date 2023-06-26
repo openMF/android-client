@@ -200,8 +200,8 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         spStaff!!.onItemSelectedListener = this
         datePickerSubmissionDate = MFDatePicker.newInsance(this)
         datePickerDateOfBirth = MFDatePicker.newInsance(this)
-        tvSubmissionDate!!.text = MFDatePicker.getDatePickedAsString()
-        tvDateOfBirth!!.text = MFDatePicker.getDatePickedAsString()
+        tvSubmissionDate!!.text = MFDatePicker.datePickedAsString
+        tvDateOfBirth!!.text = MFDatePicker.datePickedAsString
         ivClientImage!!.setOnClickListener { view ->
             val menu = PopupMenu(requireActivity(), view)
             menu.menuInflater.inflate(R.menu.menu_create_client_image, menu
@@ -328,7 +328,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         layout_submission!!.visibility = if (cbClientActiveStatus!!.isChecked) View.VISIBLE else View.GONE
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         if (mCurrentDateView != null && mCurrentDateView === tvSubmissionDate) {
             tvSubmissionDate!!.text = date
         } else if (mCurrentDateView != null && mCurrentDateView === tvDateOfBirth) {

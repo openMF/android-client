@@ -214,14 +214,14 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
 
     fun inflateRepaymentDate() {
         mfDatePicker = MFDatePicker.newInsance(this)
-        tv_transactionDate!!.text = MFDatePicker.getDatePickedAsString()
+        tv_transactionDate!!.text = MFDatePicker.datePickedAsString
         // TODO Add Validation to make sure :
         // 1. Date Is in Correct Format
         // 2. Date Entered is not greater than Date Today i.e Date is not in future
         tv_transactionDate!!.setOnClickListener { (mfDatePicker as MFDatePicker?)?.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         tv_transactionDate!!.text = date
     }
 

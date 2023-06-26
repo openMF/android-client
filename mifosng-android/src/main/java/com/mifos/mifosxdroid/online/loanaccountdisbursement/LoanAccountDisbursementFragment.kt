@@ -111,7 +111,7 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
     override fun showUserInterface() {
         setToolbarTitle(getString(R.string.disburse_loan))
         mfDatePicker = MFDatePicker.newInsance(this)
-        tvLoanDisbursementDates!!.text = MFDatePicker.getDatePickedAsString()
+        tvLoanDisbursementDates!!.text = MFDatePicker.datePickedAsString
         showDisbursementDate(tvLoanDisbursementDates!!.text.toString())
         paymentTypeOptionAdapter = ArrayAdapter(requireActivity(),
                 android.R.layout.simple_spinner_item, paymentTypeOptions ?: emptyList())
@@ -131,7 +131,7 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
         mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         tvLoanDisbursementDates!!.text = date
         showDisbursementDate(date)
     }

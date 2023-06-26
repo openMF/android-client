@@ -91,7 +91,7 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     var paymentTypeOptionsList: List<PaymentTypeOptions>? = null
     var payload: IndividualCollectionSheetPayload? = null
     var mCallback: OnPayloadSelectedListener? = null
-    private var bulkRepaymentTransaction: BulkRepaymentTransactions? = null
+    private lateinit var bulkRepaymentTransaction: BulkRepaymentTransactions
     private var position = 0
     private var clientId = 0
     private lateinit var rootView: View
@@ -101,8 +101,10 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
         mCallback = try {
             activity as OnPayloadSelectedListener
         } catch (e: ClassCastException) {
-            throw ClassCastException(activity.toString()
-                    + " must implement OnPayloadSelectedListener")
+            throw ClassCastException(
+                activity.toString()
+                        + " must implement OnPayloadSelectedListener"
+            )
         }
     }
 
@@ -113,12 +115,17 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
         loanAndClientNameItem = requireArguments().getParcelable(Constants.LOAN_AND_CLIENT)
         paymentTypeList = requireArguments().getStringArrayList(Constants.PAYMENT_LIST)
         payload = requireArguments().getParcelable(Constants.PAYLOAD)
-        paymentTypeOptionsList = requireArguments().getParcelableArrayList(Constants.PAYMENT_OPTIONS)
+        paymentTypeOptionsList =
+            requireArguments().getParcelableArrayList(Constants.PAYMENT_OPTIONS)
         clientId = requireArguments().getInt(Constants.CLIENT_ID)
         bulkRepaymentTransaction = BulkRepaymentTransactions()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         rootView = inflater.inflate(R.layout.add_payment_detail, container, false)
         ButterKnife.bind(this, rootView)
         return rootView
@@ -127,36 +134,48 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     fun showUI() {
         val loanCollectionSheetItem = loanAndClientNameItem!!.loan
         tvName!!.text = loanAndClientNameItem!!.clientName
-        tvProduct!!.text = concatProductWithAccount(loanCollectionSheetItem
-                .productShortName, loanCollectionSheetItem.accountId)
-        if (loanCollectionSheetItem.chargesDue != null) {
-            tvCharges!!.text = String.format(Locale.getDefault(), "%f",
-                    loanCollectionSheetItem.chargesDue)
-        }
-        if (loanCollectionSheetItem.totalDue != null) {
-            etDue!!.text = String.format(Locale.getDefault(), "%f",
-                    loanCollectionSheetItem.totalDue)
-        }
-        ImageLoaderUtils.loadImage(context, clientId,
-                ivUserPicture)
+        tvProduct!!.text = concatProductWithAccount(
+            loanCollectionSheetItem
+                ?.productShortName, loanCollectionSheetItem?.accountId
+        )
+        tvCharges!!.text = String.format(
+            Locale.getDefault(), "%f",
+            loanCollectionSheetItem?.chargesDue
+        )
+        etDue!!.text = String.format(
+            Locale.getDefault(), "%f",
+            loanCollectionSheetItem?.totalDue
+        )
+        ImageLoaderUtils.loadImage(
+            context, clientId,
+            ivUserPicture
+        )
         val defaultBulkRepaymentTransaction = BulkRepaymentTransactions()
-        defaultBulkRepaymentTransaction.setLoanId(loanCollectionSheetItem.loanId)
-        defaultBulkRepaymentTransaction.setTransactionAmount(
-                if (loanCollectionSheetItem.chargesDue != null) loanCollectionSheetItem.chargesDue +
-                        loanCollectionSheetItem.totalDue else loanCollectionSheetItem.totalDue)
-        onShowSheetMandatoryItem(defaultBulkRepaymentTransaction,
-                position)
+        if (loanCollectionSheetItem != null) {
+            defaultBulkRepaymentTransaction.loanId = loanCollectionSheetItem.loanId
+        }
+        if (loanCollectionSheetItem != null) {
+            defaultBulkRepaymentTransaction.transactionAmount =
+                loanCollectionSheetItem.chargesDue +
+                        loanCollectionSheetItem.totalDue
+        }
+        onShowSheetMandatoryItem(
+            defaultBulkRepaymentTransaction,
+            position
+        )
         btnAddPayment!!.setOnClickListener(this)
     }
 
-    private fun concatProductWithAccount(productCode: String, accountNo: String): String {
+    private fun concatProductWithAccount(productCode: String?, accountNo: String?): String {
         return "$productCode (#$accountNo)"
     }
 
     private fun showAdditional() {
         tableAdditional!!.visibility = View.VISIBLE
-        val adapter = ArrayAdapter(requireActivity(),
-                android.R.layout.simple_spinner_item, paymentTypeList ?: emptyList())
+        val adapter = ArrayAdapter(
+            requireActivity(),
+            android.R.layout.simple_spinner_item, paymentTypeList ?: emptyList()
+        )
         spPaymentOption!!.adapter = adapter
         spPaymentOption!!.setSelection(paymentTypeList!!.size - 1)
         spPaymentOption!!.onItemSelectedListener = this
@@ -165,63 +184,63 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     }
 
     private fun cancelAdditional() {
-        bulkRepaymentTransaction!!.setLoanId(loanAndClientNameItem
-                ?.getLoan()!!.loanId)
-        val charge1: Double = if (!tvCharges!!.text
-                        .toString().isEmpty()) tvCharges!!.text.toString().toDouble() else 0.0
-        val charge2: Double = if (!etDue!!.text.toString()
-                        .isEmpty()) etDue!!.text.toString().toDouble() else 0.0
-        bulkRepaymentTransaction!!.setTransactionAmount(charge1+charge2)
+        bulkRepaymentTransaction.loanId = loanAndClientNameItem
+            ?.loan!!.loanId
+        val charge1: Double = if (tvCharges!!.text
+                .toString().isNotEmpty()
+        ) tvCharges!!.text.toString().toDouble() else 0.0
+        val charge2: Double = if (etDue!!.text.toString().isNotEmpty()
+        ) etDue!!.text.toString().toDouble() else 0.0
+        bulkRepaymentTransaction.transactionAmount = charge1 + charge2
         tableAdditional!!.visibility = View.GONE
-        bulkRepaymentTransaction!!.paymentTypeId = null
-        bulkRepaymentTransaction!!.accountNumber = null
-        bulkRepaymentTransaction!!.checkNumber = null
-        bulkRepaymentTransaction!!.routingCode = null
-        bulkRepaymentTransaction!!.receiptNumber = null
-        bulkRepaymentTransaction!!.bankNumber = null
+        bulkRepaymentTransaction.paymentTypeId = null
+        bulkRepaymentTransaction.accountNumber = null
+        bulkRepaymentTransaction.checkNumber = null
+        bulkRepaymentTransaction.routingCode = null
+        bulkRepaymentTransaction.receiptNumber = null
+        bulkRepaymentTransaction.bankNumber = null
         onSaveAdditionalItem(bulkRepaymentTransaction, position)
     }
 
     private fun saveAdditional() {
         var isAnyDetailNull = false
-        bulkRepaymentTransaction!!.setLoanId(loanAndClientNameItem
-                ?.getLoan()!!.loanId)
-        val charge1: Double =   if (!tvCharges?.getText().toString().isEmpty())
+        bulkRepaymentTransaction.loanId = loanAndClientNameItem
+            ?.loan!!.loanId
+        val charge1: Double = if (tvCharges?.text.toString().isNotEmpty())
             tvCharges!!.text.toString().toDouble() else 0.0
-        val charge2: Double = if (!etDue!!.text.toString().isEmpty()) {
+        val charge2: Double = if (etDue!!.text.toString().isNotEmpty()) {
             etDue!!.text.toString().toDouble()
-        }
-        else 0.0
+        } else 0.0
 
-        bulkRepaymentTransaction!!.setTransactionAmount((charge1+charge2))
+        bulkRepaymentTransaction.transactionAmount = (charge1 + charge2)
 
-        if (!etAccountNumber!!.text.toString().isEmpty()) {
-            bulkRepaymentTransaction!!.accountNumber = etAccountNumber!!.text.toString()
+        if (etAccountNumber!!.text.toString().isNotEmpty()) {
+            bulkRepaymentTransaction.accountNumber = etAccountNumber!!.text.toString()
         } else {
-            isAnyDetailNull = true;
+            isAnyDetailNull = true
         }
-        if (!etChequeNumber!!.text.toString().isEmpty()) {
-            bulkRepaymentTransaction!!.checkNumber = etChequeNumber!!.text.toString()
+        if (etChequeNumber!!.text.toString().isNotEmpty()) {
+            bulkRepaymentTransaction.checkNumber = etChequeNumber!!.text.toString()
         } else {
-            isAnyDetailNull = true;
+            isAnyDetailNull = true
         }
-        if (!etRoutingCode!!.text.toString().isEmpty()) {
-            bulkRepaymentTransaction!!.routingCode = etRoutingCode!!.text.toString()
+        if (etRoutingCode!!.text.toString().isNotEmpty()) {
+            bulkRepaymentTransaction.routingCode = etRoutingCode!!.text.toString()
         } else {
-            isAnyDetailNull = true;
+            isAnyDetailNull = true
         }
-        if (!etReceiptNumber!!.text.toString().isEmpty()) {
-            bulkRepaymentTransaction!!.receiptNumber = etReceiptNumber!!.text.toString()
+        if (etReceiptNumber!!.text.toString().isNotEmpty()) {
+            bulkRepaymentTransaction.receiptNumber = etReceiptNumber!!.text.toString()
         } else {
-            isAnyDetailNull = true;
+            isAnyDetailNull = true
         }
-        if (!etBankNumber!!.text.toString().isEmpty()) {
-            bulkRepaymentTransaction!!.bankNumber = etBankNumber!!.text.toString()
+        if (etBankNumber!!.text.toString().isNotEmpty()) {
+            bulkRepaymentTransaction.bankNumber = etBankNumber!!.text.toString()
         } else {
-            isAnyDetailNull = true;
+            isAnyDetailNull = true
         }
 
-        if(!isAnyDetailNull) {
+        if (!isAnyDetailNull) {
             tvNoPayment!!.visibility = View.GONE
         }
         onSaveAdditionalItem(bulkRepaymentTransaction, position)
@@ -233,12 +252,12 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
         showUI()
     }
 
-    fun onShowSheetMandatoryItem(transaction: BulkRepaymentTransactions?, position: Int) {
-        payload!!.getBulkRepaymentTransactions()[position] = transaction
+    private fun onShowSheetMandatoryItem(transaction: BulkRepaymentTransactions, position: Int) {
+        payload!!.bulkRepaymentTransactions[position] = transaction
     }
 
-    fun onSaveAdditionalItem(transaction: BulkRepaymentTransactions?, position: Int) {
-        payload!!.getBulkRepaymentTransactions()[position] = transaction
+    private fun onSaveAdditionalItem(transaction: BulkRepaymentTransactions, position: Int) {
+        payload!!.bulkRepaymentTransactions[position] = transaction
         mCallback!!.onPayloadSelected(payload)
     }
 
@@ -249,6 +268,7 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
             } else if (tableAdditional!!.visibility == View.GONE) {
                 showAdditional()
             }
+
             R.id.btn_cancel_additional -> cancelAdditional()
             R.id.btn_save_additional -> saveAdditional()
         }
@@ -256,9 +276,9 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
 
     override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
         if (i != paymentTypeList!!.size - 1) {
-            bulkRepaymentTransaction!!.paymentTypeId = paymentTypeOptionsList!![i].id
+            bulkRepaymentTransaction.paymentTypeId = paymentTypeOptionsList!![i].id
         } else {
-            bulkRepaymentTransaction!!.paymentTypeId = null
+            bulkRepaymentTransaction.paymentTypeId = null
         }
     }
 
@@ -267,12 +287,13 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
         fun onPayloadSelected(payload: IndividualCollectionSheetPayload?)
     }
 
-    fun newInstance(position: Int,
-                    payload: IndividualCollectionSheetPayload?,
-                    paymentTypeList: ArrayList<String?>?,
-                    loanAndClientNameItem: LoanAndClientName?,
-                    paymentTypeOptions: ArrayList<PaymentTypeOptions?>?
-                    , clientId: Int): PaymentDetailsFragment {
+    fun newInstance(
+        position: Int,
+        payload: IndividualCollectionSheetPayload?,
+        paymentTypeList: ArrayList<String?>?,
+        loanAndClientNameItem: LoanAndClientName?,
+        paymentTypeOptions: ArrayList<PaymentTypeOptions?>?, clientId: Int
+    ): PaymentDetailsFragment {
         val args = Bundle()
         args.putInt(Constants.ADAPTER_POSITION, position)
         args.putParcelable(Constants.PAYLOAD, payload)
@@ -285,6 +306,5 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
         return fragment
     }
 
-    companion object {
-    }
+    companion object
 }

@@ -122,11 +122,11 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
 
     fun inflateActivationDate() {
         newDatePicker = MFDatePicker.newInsance(this)
-        tv_activationDate!!.text = MFDatePicker.getDatePickedAsString()
+        tv_activationDate!!.text = MFDatePicker.datePickedAsString
         tv_activationDate!!.setOnClickListener { (newDatePicker as MFDatePicker?)!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER) }
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         tv_activationDate!!.text = date
     }
 

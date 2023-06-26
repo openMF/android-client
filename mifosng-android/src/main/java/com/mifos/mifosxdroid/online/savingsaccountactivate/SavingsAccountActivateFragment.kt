@@ -90,7 +90,7 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener, 
         etSavingsActivateReason!!.visibility = View.GONE
         tvActivateDateHeading!!.text = resources.getString(R.string.activated_on)
         mfDatePicker = MFDatePicker.newInsance(this)
-        tvActivationDate!!.text = MFDatePicker.getDatePickedAsString()
+        tvActivationDate!!.text = MFDatePicker.datePickedAsString
         activationDate = tvActivationDate!!.text.toString()
         showActivationDate()
     }
@@ -109,7 +109,7 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener, 
         mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         tvActivationDate!!.text = date
         activationDate = date
         showActivationDate()

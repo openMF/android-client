@@ -483,7 +483,7 @@ class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePic
         }
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         for (i in 0 until tableDetails!!.childCount) {
             val tableRow = tableDetails!!.getChildAt(i) as TableRow
             if (tableRow.getChildAt(1) is Spinner) {

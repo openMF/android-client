@@ -78,7 +78,7 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener, 
 
     override fun showUserInterface() {
         mfDatePicker = MFDatePicker.newInsance(this)
-        tvApprovalDate!!.text = MFDatePicker.getDatePickedAsString()
+        tvApprovalDate!!.text = MFDatePicker.datePickedAsString
         approvaldate = tvApprovalDate!!.text.toString()
         showApprovalDate()
     }
@@ -102,7 +102,7 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener, 
         mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         tvApprovalDate!!.text = date
         approvaldate = date
         showApprovalDate()

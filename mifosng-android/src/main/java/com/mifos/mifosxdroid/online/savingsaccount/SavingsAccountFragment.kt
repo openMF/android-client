@@ -197,7 +197,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
         }
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         tvSubmissionDate!!.text = date
         submission_date = date
         setSubmissionDate()
@@ -205,7 +205,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
 
     fun inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this)
-        tvSubmissionDate!!.text = MFDatePicker.getDatePickedAsString()
+        tvSubmissionDate!!.text = MFDatePicker.datePickedAsString
         setSubmissionDate()
     }
 

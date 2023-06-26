@@ -63,7 +63,7 @@ class NewIndividualCollectionSheetPresenter @Inject internal constructor(private
 
                     override fun onNext(individualCollectionSheet: IndividualCollectionSheet?) {
                         mvpView!!.showProgressbar(false)
-                        if (individualCollectionSheet!!.clients.size > 0) {
+                        if (individualCollectionSheet!!.clients?.size!! > 0) {
                             mvpView!!.showSheet(individualCollectionSheet)
                         } else {
                             mvpView!!.showNoSheetFound()

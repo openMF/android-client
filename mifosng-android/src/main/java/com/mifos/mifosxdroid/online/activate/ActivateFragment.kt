@@ -62,7 +62,7 @@ class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListene
     override fun showUserInterface() {
         setToolbarTitle(getString(R.string.activate))
         mfDatePicker = MFDatePicker.newInsance(this)
-        tvActivationDate?.text = MFDatePicker.getDatePickedAsString()
+        tvActivationDate?.text = MFDatePicker.datePickedAsString
         activationDate = tvActivationDate?.text.toString()
         activationDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(activationDate)
             .replace("-", " ")
@@ -79,7 +79,7 @@ class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListene
         mfDatePicker?.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         tvActivationDate?.text = date
         activationDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date)
             .replace("-", " ")

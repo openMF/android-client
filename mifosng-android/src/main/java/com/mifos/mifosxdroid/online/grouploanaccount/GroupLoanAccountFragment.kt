@@ -333,7 +333,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
         spRepaymentFreqDayOfWeek!!.onItemSelectedListener = this
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         if (isdisbursementDate) {
             tvDisbursementonDate!!.text = date
             disbursementDate = date
@@ -360,7 +360,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
 
     fun inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this)
-        tvSubmittedOnDate!!.text = MFDatePicker.getDatePickedAsString()
+        tvSubmittedOnDate!!.text = MFDatePicker.datePickedAsString
     }
 
     @OnClick(R.id.tv_submittedon_date)
@@ -371,7 +371,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
 
     fun inflateDisbursementDate() {
         mfDatePicker = MFDatePicker.newInsance(this)
-        tvDisbursementonDate!!.text = MFDatePicker.getDatePickedAsString()
+        tvDisbursementonDate!!.text = MFDatePicker.datePickedAsString
     }
 
     @OnClick(R.id.tv_disbursementon_date)

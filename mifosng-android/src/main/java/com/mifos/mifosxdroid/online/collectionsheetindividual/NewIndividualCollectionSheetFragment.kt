@@ -64,10 +64,10 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     private var requestPayload: RequestCollectionSheetPayload? = null
     private lateinit var rootView: View
     private var officeAdapter: ArrayAdapter<String>? = null
-    private var officeNameList: ArrayList<String>? = null
+    private lateinit var officeNameList: ArrayList<String>
     private var officeList: List<Office>? = null
     private var staffAdapter: ArrayAdapter<String>? = null
-    private var staffNameList: ArrayList<String>? = null
+    private lateinit var staffNameList: ArrayList<String>
     private var staffList: List<Staff>? = null
     private var officeId = 0
     private var staffId = 0
@@ -89,7 +89,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         rootView = inflater.inflate(R.layout.fragment_new_collection_sheet, container, false)
         ButterKnife.bind(this, rootView)
         setToolbarTitle(getStringMessage(R.string.individual_collection_sheet))
@@ -153,9 +153,9 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         staffSearchDialog!!.show()
     }
 
-    fun setRepaymentDate() {
+    private fun setRepaymentDate() {
         datePicker = MFDatePicker.newInsance(this)
-        val date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(MFDatePicker.getDatePickedAsString())
+        val date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(MFDatePicker.datePickedAsString)
         tvRepaymentDate!!.text = date.replace('-', ' ')
         transactionDate = date.replace('-', ' ')
         actualDisbursementDate = transactionDate
@@ -176,17 +176,17 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         officeAdapter!!.notifyDataSetChanged()
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         val d = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date)
         tvRepaymentDate!!.text = d.replace('-', ' ')
     }
 
-    fun retrieveCollectionSheet() {
+    private fun retrieveCollectionSheet() {
         prepareRequestPayload()
         presenter!!.fetchIndividualCollectionSheet(requestPayload)
     }
 
-    fun setTvRepaymentDate() {
+    private fun setTvRepaymentDate() {
         datePicker!!.show(requireActivity().supportFragmentManager,
                 FragmentConstants.DFRAG_DATE_PICKER)
     }
@@ -217,9 +217,11 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         }
     }
 
-    fun popupDialog() {
-        val collectionSheetDialogFragment = CollectionSheetDialogFragment.newInstance(tvRepaymentDate!!.text.toString(),
-                sheet!!.clients.size)
+    private fun popupDialog() {
+        val collectionSheetDialogFragment = CollectionSheetDialogFragment.newInstance(
+            tvRepaymentDate?.text.toString() ?: "",
+            sheet?.clients?.size ?: 0
+        )
         collectionSheetDialogFragment.setTargetFragment(this, requestCode)
         val fragmentTransaction = requireActivity().supportFragmentManager
                 .beginTransaction()
@@ -231,7 +233,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         when (response) {
             Constants.FILLNOW -> {
                 val fm = activity
-                        ?.getSupportFragmentManager()
+                        ?.supportFragmentManager
                 fm!!.popBackStack()
                 val fragment: IndividualCollectionSheetDetailsFragment = IndividualCollectionSheetDetailsFragment().newInstance(sheet,
                         actualDisbursementDate, transactionDate)

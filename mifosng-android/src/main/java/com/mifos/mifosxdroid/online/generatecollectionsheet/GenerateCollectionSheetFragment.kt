@@ -4,7 +4,6 @@
  */
 package com.mifos.mifosxdroid.online.generatecollectionsheet
 
-import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.InputType
@@ -691,7 +690,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
 
     private fun inflateMeetingDate() {
         datePicker = MFDatePicker.newInsance(this)
-        val date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(MFDatePicker.getDatePickedAsString())
+        val date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(MFDatePicker.datePickedAsString)
         tvMeetingDate!!.text = date.replace('-', ' ')
     }
 
@@ -700,7 +699,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                 FragmentConstants.DFRAG_DATE_PICKER)
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         val newDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date)
         tvMeetingDate!!.text = newDate.replace('-', ' ')
     }

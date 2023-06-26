@@ -132,7 +132,7 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
 
     override fun showUserInterface() {
         mfDatePicker = MFDatePicker.newInsance(this)
-        tv_loan_approval_dates!!.text = MFDatePicker.getDatePickedAsString()
+        tv_loan_approval_dates!!.text = MFDatePicker.datePickedAsString
         approvalDate = tv_loan_approval_dates!!.text.toString()
         tv_expected_disbursement_dates!!.text = DateHelper.getDateAsString(loanWithAssociations
                 ?.getTimeline()!!.expectedDisbursementDate)
@@ -142,7 +142,7 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
         et_transaction_amount!!.setText(loanWithAssociations!!.approvedPrincipal.toString())
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         if (isApprovalDate) {
             tv_loan_approval_dates!!.text = date
             approvalDate = date

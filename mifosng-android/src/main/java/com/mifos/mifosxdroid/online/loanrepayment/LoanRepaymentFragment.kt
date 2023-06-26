@@ -234,7 +234,7 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
      */
     fun inflateRepaymentDate() {
         mfDatePicker = MFDatePicker.newInsance(this)
-        tv_repaymentDate!!.text = MFDatePicker.getDatePickedAsString()
+        tv_repaymentDate!!.text = MFDatePicker.datePickedAsString
         /*
             TODO Add Validation to make sure :
             1. Date Is in Correct Format
@@ -247,7 +247,7 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
      *
      * @param date Selected Date by Date picker
      */
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         tv_repaymentDate!!.text = date
     }
 

@@ -268,7 +268,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         }
     }
 
-    override fun onDatePicked(date: String) {
+    override fun onDatePicked(date: String?) {
         if (isSubmissionDate) {
             tvSubmittedOnDate!!.text = date
             submissionDate = date
@@ -400,7 +400,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
 
     fun inflateSubmissionDate() {
         mfDatePicker = MFDatePicker.newInsance(this)
-        tvSubmittedOnDate!!.text = MFDatePicker.getDatePickedAsString()
+        tvSubmittedOnDate!!.text = MFDatePicker.datePickedAsString
     }
 
     @OnClick(R.id.tv_submittedon_date)
@@ -411,7 +411,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
 
     fun inflateDisbursementDate() {
         mfDatePicker = MFDatePicker.newInsance(this)
-        tvDisbursementOnDate!!.text = MFDatePicker.getDatePickedAsString()
+        tvDisbursementOnDate!!.text = MFDatePicker.datePickedAsString
     }
 
     @OnClick(R.id.tv_disbursementon_date)

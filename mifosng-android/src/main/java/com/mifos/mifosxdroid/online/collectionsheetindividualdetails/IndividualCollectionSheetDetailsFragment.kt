@@ -2,7 +2,6 @@ package com.mifos.mifosxdroid.online.collectionsheetindividualdetails
 
 import android.os.Bundle
 import android.view.*
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
@@ -25,7 +24,8 @@ import javax.inject.Inject
 /**
  * Created by aksh on 20/6/18.
  */
-class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), IndividualCollectionSheetDetailsMvpView, OnRetrieveSheetItemData, ListAdapterListener {
+class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
+    IndividualCollectionSheetDetailsMvpView, OnRetrieveSheetItemData, ListAdapterListener {
     @JvmField
     @BindView(R.id.recycler_collections)
     var recyclerSheets: RecyclerView? = null
@@ -35,10 +35,9 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
     var presenter: IndividualCollectionSheetDetailsPresenter? = null
     var sheetsAdapter: IndividualCollectionSheetDetailsAdapter? = null
     private var sheet: IndividualCollectionSheet? = null
-    private var paymentTypeList: List<String?>? = null
-    private var loansAndClientNames: List<LoanAndClientName?>? = null
+    private var paymentTypeList: List<String>? = null
+    private var loansAndClientNames: List<LoanAndClientName> = emptyList()
     var payload: IndividualCollectionSheetPayload? = null
-        private set
     private lateinit var rootView: View
     private val requestCode = 1
     private var actualDisbursementDate: String? = null
@@ -56,13 +55,17 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.individual_collections_sheet_details,
-                container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        rootView = inflater.inflate(
+            R.layout.individual_collections_sheet_details,
+            container, false
+        )
         ButterKnife.bind(this, rootView)
         setToolbarTitle(getStringMessage(R.string.individual_collection_sheet))
-        sheetsAdapter = IndividualCollectionSheetDetailsAdapter(context, this)
+        sheetsAdapter = IndividualCollectionSheetDetailsAdapter(requireContext(), this)
         presenter!!.attachView(this)
         payload = (activity as GenerateCollectionSheetActivity?)!!.payload
         showCollectionSheetViews(sheet)
@@ -85,8 +88,8 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
     }
 
     private fun showCollectionSheetViews(sheet: IndividualCollectionSheet?) {
-        paymentTypeList = presenter!!.filterPaymentTypeOptions(sheet!!.paymentTypeOptions)
-        loansAndClientNames = presenter!!.filterLoanAndClientNames(sheet.clients)
+        paymentTypeList = presenter!!.filterPaymentTypeOptions(sheet?.paymentTypeOptions)
+        loansAndClientNames = presenter!!.filterLoanAndClientNames(sheet?.clients)
 
         //Initialize payload's BulkRepaymentTransactions array with default values.
         //The changes made (if any) will be updated by the interface 'OnRetrieveSheetItemData'
@@ -94,12 +97,17 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
         //methods.
         if (payload == null) {
             payload = IndividualCollectionSheetPayload()
-            for (loanAndClientName in presenter!!.filterLoanAndClientNames(sheet.clients)) {
-                val loanCollectionSheet = loanAndClientName!!.loan
-                payload!!.getBulkRepaymentTransactions().add(BulkRepaymentTransactions(
-                        loanCollectionSheet.loanId,
-                        if (loanCollectionSheet.chargesDue == null) loanCollectionSheet.totalDue else loanCollectionSheet.totalDue +
-                                loanCollectionSheet.chargesDue))
+            for (loanAndClientName in presenter!!.filterLoanAndClientNames(sheet?.clients)) {
+                val loanCollectionSheet = loanAndClientName.loan
+                if (loanCollectionSheet != null) {
+                    payload!!.bulkRepaymentTransactions.add(
+                        BulkRepaymentTransactions(
+                            loanCollectionSheet.loanId,
+                            loanCollectionSheet.totalDue +
+                                    loanCollectionSheet.chargesDue
+                        )
+                    )
+                }
             }
         }
         val layoutManager = LinearLayoutManager(context)
@@ -108,7 +116,7 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
         sheetsAdapter!!.setSheetItemClickListener(this)
         sheetsAdapter!!.setLoans(loansAndClientNames)
         sheetsAdapter!!.setPaymentTypeList(paymentTypeList)
-        sheetsAdapter!!.setPaymentTypeOptionsList(sheet.paymentTypeOptions)
+        sheetsAdapter!!.setPaymentTypeOptionsList(sheet?.paymentTypeOptions)
         sheetsAdapter!!.notifyDataSetChanged()
     }
 
@@ -128,9 +136,9 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
         }
     }
 
-    override fun onShowSheetMandatoryItem(transaction: BulkRepaymentTransactions?, position: Int) {}
-    override fun onSaveAdditionalItem(transaction: BulkRepaymentTransactions?, position: Int) {
-        payload!!.getBulkRepaymentTransactions()[position] = transaction
+    override fun onShowSheetMandatoryItem(transaction: BulkRepaymentTransactions, position: Int) {}
+    override fun onSaveAdditionalItem(transaction: BulkRepaymentTransactions, position: Int) {
+        payload!!.bulkRepaymentTransactions[position] = transaction
     }
 
     override fun listItemPosition(position: Int) {
@@ -138,8 +146,9 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
         val paymentTypeOptions = ArrayList(sheet!!.paymentTypeOptions)
         val current = loansAndClientNames!![position]
         val clientId = current!!.id
-        val fragment: PaymentDetailsFragment = PaymentDetailsFragment().newInstance(position, payload
-                , paymentTypeOptionList, current, paymentTypeOptions, clientId)
+        val fragment: PaymentDetailsFragment = PaymentDetailsFragment().newInstance(
+            position, payload, paymentTypeOptionList, current, paymentTypeOptions, clientId
+        )
         fragment.setTargetFragment(this, requestCode)
         (context as MifosBaseActivity?)!!.replaceFragment(fragment, true, R.id.container)
     }
@@ -154,8 +163,10 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
         }
     }
 
-    fun newInstance(sheet: IndividualCollectionSheet?,
-                    actualDisbursementDate: String?, transactionDate: String?): IndividualCollectionSheetDetailsFragment {
+    fun newInstance(
+        sheet: IndividualCollectionSheet?,
+        actualDisbursementDate: String?, transactionDate: String?
+    ): IndividualCollectionSheetDetailsFragment {
         val args = Bundle()
         args.putParcelable(Constants.INDIVIDUAL_SHEET, sheet)
         args.putString(Constants.DISBURSEMENT_DATE, actualDisbursementDate)
@@ -165,7 +176,5 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
         return fragment
     }
 
-    companion object {
-
-    }
+    companion object
 }
