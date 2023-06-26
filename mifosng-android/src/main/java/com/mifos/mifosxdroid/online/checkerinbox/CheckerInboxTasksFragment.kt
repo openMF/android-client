@@ -37,7 +37,7 @@ class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefr
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
     override fun onCreateView(
@@ -58,17 +58,17 @@ class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefr
             this, factory
         ).get(CheckerInboxTasksViewModel::class.java)
 
-        viewModel.getCheckerTasks().observe(this,
+        viewModel.getCheckerTasks().observe(viewLifecycleOwner,
             Observer<List<CheckerTask>> {
                 binding.badgeCheckerInbox.text = it?.size.toString()
             })
 
-        viewModel.getRescheduleLoanTasks().observe(this,
+        viewModel.getRescheduleLoanTasks().observe(viewLifecycleOwner,
             Observer<List<RescheduleLoansTask>> {
                 binding.badgeRescheduleLoan.text = it?.size.toString()
             })
 
-        viewModel.status.observe(this,
+        viewModel.status.observe(viewLifecycleOwner,
             Observer { status ->
                 status?.let {
                     hideMifosProgressBar()

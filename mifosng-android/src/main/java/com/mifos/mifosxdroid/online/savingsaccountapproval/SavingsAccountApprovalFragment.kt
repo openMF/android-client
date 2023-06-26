@@ -56,7 +56,7 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener, 
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             savingsAccountNumber = requireArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER)
             savingsAccountType = requireArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE)
@@ -85,7 +85,7 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener, 
 
     @OnClick(R.id.btn_approve_savings)
     fun onClickApproveSavings() {
-        if (Network.isOnline(context)) {
+        if (Network.isOnline(requireContext())) {
             val savingsApproval = SavingsApproval()
             savingsApproval.note = etSavingsApprovalReason!!.editableText.toString()
             savingsApproval.approvedOnDate = approvaldate

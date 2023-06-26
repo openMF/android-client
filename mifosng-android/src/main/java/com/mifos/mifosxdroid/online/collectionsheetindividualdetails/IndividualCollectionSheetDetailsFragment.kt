@@ -45,7 +45,7 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), Individual
     private var transactionDate: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (savedInstanceState != null) {
             sheet = savedInstanceState[Constants.EXTRA_COLLECTION_INDIVIDUAL] as IndividualCollectionSheet
             showCollectionSheetViews(sheet)

@@ -163,7 +163,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.fragment_create_new_client, null)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         ButterKnife.bind(this, rootView)
         createNewClientPresenter!!.attachView(this)
         showUserInterface()

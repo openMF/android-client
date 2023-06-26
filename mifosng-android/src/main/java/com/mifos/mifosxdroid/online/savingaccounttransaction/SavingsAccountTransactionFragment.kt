@@ -78,7 +78,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
     private var mfDatePicker: DialogFragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             savingsAccountNumber = requireArguments().getString(Constants.SAVINGS_ACCOUNT_NUMBER)
             savingsAccountId = requireArguments().getInt(Constants.SAVINGS_ACCOUNT_ID)
@@ -202,7 +202,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
         savingsAccountTransactionRequest.paymentTypeId = paymentTypeOptionId.toString()
         val builtTransactionRequestAsJson = Gson().toJson(savingsAccountTransactionRequest)
         Log.i(resources.getString(R.string.transaction_body), builtTransactionRequestAsJson)
-        if (!Network.isOnline(activity)) PrefManager.userStatus = Constants.USER_OFFLINE
+        if (!Network.isOnline(requireActivity())) PrefManager.userStatus = Constants.USER_OFFLINE
         mSavingAccountTransactionPresenter!!.processTransaction(savingsAccountType!!.endpoint,
                 savingsAccountId, transactionType, savingsAccountTransactionRequest)
     }

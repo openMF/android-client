@@ -45,7 +45,7 @@ class SurveySubmitFragment : MifosBaseFragment(), Communicator, SurveySubmitMvpV
     private var mSurveyId = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

@@ -122,7 +122,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     private var isGroupAccount = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         val arguments = arguments
         if (arguments != null) {
             isGroupAccount = arguments.getBoolean(Constants.GROUP_ACCOUNT)
@@ -168,7 +168,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
 
     @OnClick(R.id.btn_submit)
     fun submitSavingsAccount() {
-        if (Network.isOnline(context)) {
+        if (Network.isOnline(requireContext())) {
             val savingsPayload = SavingsPayload()
             savingsPayload.externalId = etClientExternalId!!.editableText.toString()
             savingsPayload.locale = "en"

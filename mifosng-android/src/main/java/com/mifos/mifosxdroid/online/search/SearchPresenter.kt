@@ -29,7 +29,7 @@ class SearchPresenter @Inject constructor(private val dataManagerSearch: DataMan
 
     fun searchResources(query: String?, resources: String?, exactMatch: Boolean?) {
         checkViewAttached()
-        val context = App.getContext()
+        val context = App.context
         if (context != null && !Network.isOnline(context)) {
             mvpView?.showProgressbar(false)
             mvpView?.showMessage(R.string.no_internet_connection)

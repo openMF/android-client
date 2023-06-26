@@ -80,7 +80,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         mDocumentList = ArrayList()
         if (arguments != null) {
             entityType = requireArguments().getString(Constants.ENTITY_TYPE)

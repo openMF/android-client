@@ -207,7 +207,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         rootView = inflater.inflate(R.layout.fragment_add_loan, null)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         ButterKnife.bind(this, rootView)
         mLoanAccountPresenter!!.attachView(this)
         inflateSubmissionDate()

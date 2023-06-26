@@ -71,7 +71,7 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
     private var loanTransactionTemplate: LoanTransactionTemplate? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             loanAccountNumber = requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
         }
@@ -91,7 +91,7 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
 
     @OnClick(R.id.btn_disburse_loan)
     fun onSubmitDisburse() {
-        if (Network.isOnline(context)) {
+        if (Network.isOnline(requireContext())) {
             // Notify the user if Amount field is blank
             if (etDisbursedAmount!!.editableText.toString().isEmpty()) {
                 RequiredFieldException(getString(R.string.amount), getString(R.string.message_field_required)).notifyUserWithToast(activity)

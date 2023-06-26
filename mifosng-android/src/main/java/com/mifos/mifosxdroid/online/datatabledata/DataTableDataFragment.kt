@@ -59,7 +59,7 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
     private lateinit var rootView: View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         setHasOptionsMenu(true)
     }
 

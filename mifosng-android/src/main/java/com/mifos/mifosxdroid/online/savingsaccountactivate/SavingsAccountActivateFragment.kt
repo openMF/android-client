@@ -66,7 +66,7 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener, 
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             savingsAccountNumber = requireArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER)
             savingsAccountType = requireArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE)

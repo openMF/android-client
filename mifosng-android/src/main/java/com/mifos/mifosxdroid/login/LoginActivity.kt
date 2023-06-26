@@ -81,7 +81,7 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityComponent.inject(this)
+        activityComponent?.inject(this)
 //        ButterKnife.bind(this)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)

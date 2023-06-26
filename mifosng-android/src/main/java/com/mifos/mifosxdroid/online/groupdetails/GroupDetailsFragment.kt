@@ -108,7 +108,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
     private var mListener: OnFragmentInteractionListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             groupId = requireArguments().getInt(Constants.GROUP_ID)
         }

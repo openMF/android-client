@@ -55,7 +55,7 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
         super.onCreate(savedInstanceState)
         binding = ActivityPathTrackerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        activityComponent.inject(this)
+        activityComponent?.inject(this)
         pathTrackingPresenter?.attachView(this)
         ButterKnife.bind(this)
         showBackButton()

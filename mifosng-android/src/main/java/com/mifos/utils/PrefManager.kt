@@ -27,8 +27,8 @@ object PrefManager {
 
     private val preferences: SharedPreferences?
         get() = PreferenceManager.getDefaultSharedPreferences(
-            App.getInstance()
-                .applicationContext
+            App.instance
+                ?.applicationContext
         )
 
     @JvmStatic

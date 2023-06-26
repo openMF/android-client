@@ -76,7 +76,7 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
     override fun onCreateView(
@@ -105,12 +105,12 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
         viewModel = ViewModelProviders.of(this, factory)
             .get(CheckerInboxViewModel::class.java)
 
-        viewModel.getStatus().observe(this@CheckerInboxFragment,
+        viewModel.getStatus().observe(viewLifecycleOwner,
             Observer {
                 handleStatus(it)
             })
 
-        viewModel.getCheckerTasks().observe(this, Observer {
+        viewModel.getCheckerTasks().observe(viewLifecycleOwner, Observer {
             hideMifosProgressBar()
             checkerTaskList.clear()
             fetchedCheckerTaskList.addAll(it!!)
