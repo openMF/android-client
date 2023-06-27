@@ -37,8 +37,8 @@ class SearchDialog(
         listView = findViewById(com.mifos.mifosxdroid.R.id.lv_items)
         editText = findViewById(com.mifos.mifosxdroid.R.id.et_drop_down_search)
         editText?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(editable: Editable) {
                 filterList.clear()
                 val text = editable.toString().lowercase(Locale.getDefault())
