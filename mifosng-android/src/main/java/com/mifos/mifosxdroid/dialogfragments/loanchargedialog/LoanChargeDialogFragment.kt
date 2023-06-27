@@ -13,18 +13,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
+import com.mifos.mifosxdroid.databinding.DialogFragmentChargeBinding
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.OnChargeCreateListener
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.Companion.newInsance
@@ -49,33 +44,15 @@ import javax.inject.Inject
  */
 class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener,
     LoanChargeDialogMvpView {
+
+    private lateinit var binding: DialogFragmentChargeBinding
+
     val LOG_TAG = javaClass.simpleName
-    private lateinit var rootView: View
-
-    @JvmField
-    @BindView(R.id.sp_charge_name)
-    var spChargeName: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.amount_due_charge)
-    var etAmountDue: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_date)
-    var etChargeDueDate: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_charge_locale)
-    var etChargeLocale: EditText? = null
-
-    @JvmField
-    @BindView(R.id.bt_save_charge)
-    var btnSaveCharge: Button? = null
 
     @JvmField
     @Inject
     var mLoanChargeDialogPresenter: LoanChargeDialogPresenter? = null
-    private var dueDateString: String? = null
+    private lateinit var dueDateString: String
     private var mfDatePicker: DialogFragment? = null
     private var chargeId = 0
     private var loanAccountNumber = 0
@@ -87,11 +64,13 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) loanAccountNumber = requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
+        if (arguments != null) loanAccountNumber =
+            requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        if (arguments != null) loanAccountNumber = requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
+        if (arguments != null) loanAccountNumber =
+            requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
         return super.onCreateDialog(savedInstanceState)
     }
 
@@ -99,36 +78,48 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         // Inflate the layout for this fragment
-        if (requireActivity().actionBar != null) requireActivity().actionBar!!.setDisplayHomeAsUpEnabled(true)
-        rootView = inflater.inflate(R.layout.dialog_fragment_charge, null)
-        ButterKnife.bind(this, rootView)
-        mLoanChargeDialogPresenter!!.attachView(this)
+        if (requireActivity().actionBar != null) requireActivity().actionBar?.setDisplayHomeAsUpEnabled(
+            true
+        )
+        binding = DialogFragmentChargeBinding.inflate(inflater, container, false)
+        mLoanChargeDialogPresenter?.attachView(this)
         inflateDueDate()
         inflateChargesSpinner()
-        return rootView
+        return binding.root
     }
 
-    @OnClick(R.id.bt_save_charge)
-    fun createCharge() {
-        if (etAmountDue!!.text.toString().isEmpty()) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btSaveCharge.setOnClickListener {
+            createCharge()
+        }
+
+        binding.etDate.setOnClickListener {
+            inflateDatePicker()
+        }
+    }
+
+    private fun createCharge() {
+        if (binding.amountDueCharge.text.toString().isEmpty()) {
             show(
-                rootView, getString(R.string.amount)
+                binding.root, getString(R.string.amount)
                         + " " + getString(R.string.error_cannot_be_empty)
             )
             return
         }
         createdCharge = Charges()
-        createdCharge!!.id = chargeId
-        createdCharge!!.amount = etAmountDue!!.editableText.toString().toDouble()
-        createdCharge!!.name = chargeName
-        dueDateAsIntegerList = DateHelper.convertDateAsReverseInteger(dueDateString!!)
-        createdCharge!!.dueDate = dueDateAsIntegerList
+        createdCharge?.id = chargeId
+        createdCharge?.amount = binding.amountDueCharge.editableText.toString().toDouble()
+        createdCharge?.name = chargeName
+        dueDateAsIntegerList = DateHelper.convertDateAsReverseInteger(dueDateString)
+        createdCharge?.dueDate = dueDateAsIntegerList
         val chargesPayload = ChargesPayload()
-        chargesPayload.amount = etAmountDue!!.editableText.toString()
-        chargesPayload.locale = etChargeLocale!!.editableText.toString()
+        chargesPayload.amount = binding.amountDueCharge.editableText.toString()
+        chargesPayload.locale = binding.etChargeLocale.editableText.toString()
         chargesPayload.dueDate = dueDateString
         chargesPayload.dateFormat = "dd MMMM yyyy"
         chargesPayload.chargeId = chargeId
@@ -138,15 +129,15 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
     override fun onDatePicked(date: String?) {
         dueDateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date)
             .replace("-", " ")
-        etChargeDueDate!!.setText(dueDateString)
+        binding.chargeDueDate.text = dueDateString
     }
 
     private fun inflateChargesSpinner() {
-        mLoanChargeDialogPresenter!!.loanAllChargesV3(loanAccountNumber)
+        mLoanChargeDialogPresenter?.loanAllChargesV3(loanAccountNumber)
     }
 
     private fun initiateChargesCreation(chargesPayload: ChargesPayload) {
-        mLoanChargeDialogPresenter!!.createLoanCharges(loanAccountNumber, chargesPayload)
+        mLoanChargeDialogPresenter?.createLoanCharges(loanAccountNumber, chargesPayload)
     }
 
     private fun inflateDueDate() {
@@ -154,13 +145,16 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
         val receivedDate: String? = MFDatePicker.datePickedAsString
         dueDateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(receivedDate)
             .replace("-", " ")
-        dueDateAsIntegerList = DateHelper.convertDateAsListOfInteger(dueDateString!!)
-        etChargeDueDate!!.setText(dueDateString)
+        dueDateAsIntegerList = DateHelper.convertDateAsListOfInteger(dueDateString)
+        binding.chargeDueDate.text = dueDateString
     }
 
-    @OnClick(R.id.et_date)
-    fun inflateDatePicker() {
-        mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
+
+    private fun inflateDatePicker() {
+        mfDatePicker?.show(
+            requireActivity().supportFragmentManager,
+            FragmentConstants.DFRAG_DATE_PICKER
+        )
     }
 
     override fun showAllChargesV3(result: ResponseBody) {
@@ -201,8 +195,8 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
             android.R.layout.simple_spinner_item, chargesNames
         )
         chargesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spChargeName!!.adapter = chargesAdapter
-        spChargeName!!.onItemSelectedListener = object : OnItemSelectedListener {
+        binding.spChargeName.adapter = chargesAdapter
+        binding.spChargeName.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
                 chargeId = chargeNameIdHashMap[chargesNames[i]]!!
                 chargeName = chargesNames[i]
@@ -220,24 +214,24 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
 
     override fun showLoanChargesCreatedSuccessfully(chargeCreationResponse: ChargeCreationResponse) {
         if (onChargeCreateListener != null) {
-            createdCharge!!.clientId = chargeCreationResponse.clientId
-            createdCharge!!.id = chargeCreationResponse.resourceId
-            onChargeCreateListener!!.onChargeCreatedSuccess(createdCharge)
+            createdCharge?.clientId = chargeCreationResponse.clientId
+            createdCharge?.id = chargeCreationResponse.resourceId
+            onChargeCreateListener?.onChargeCreatedSuccess(createdCharge)
         } else {
-            show(rootView, getString(R.string.message_charge_created_success))
+            show(binding.root, getString(R.string.message_charge_created_success))
         }
-        dialog!!.dismiss()
+        dialog?.dismiss()
     }
 
     override fun showError(s: String) {
-        show(rootView, s)
+        show(binding.root, s)
     }
 
     override fun showChargeCreatedFailure(errorMessage: String) {
         if (onChargeCreateListener != null) {
-            onChargeCreateListener!!.onChargeCreatedFailure(errorMessage)
+            onChargeCreateListener?.onChargeCreatedFailure(errorMessage)
         } else {
-            show(rootView, errorMessage)
+            show(binding.root, errorMessage)
         }
     }
 
@@ -247,7 +241,7 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mLoanChargeDialogPresenter!!.detachView()
+        mLoanChargeDialogPresenter?.detachView()
     }
 
     fun setOnChargeCreateListener(onChargeCreateListener: OnChargeCreateListener?) {

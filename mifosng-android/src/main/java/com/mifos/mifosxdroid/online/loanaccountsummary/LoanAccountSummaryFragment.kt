@@ -180,14 +180,19 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
 
     @OnClick(R.id.bt_processLoanTransaction)
     fun onProcessTransactionClicked() {
-        if (processLoanTransactionAction == TRANSACTION_REPAYMENT) {
-            mListener!!.makeRepayment(clientLoanWithAssociations)
-        } else if (processLoanTransactionAction == ACTION_APPROVE_LOAN) {
-            approveLoan()
-        } else if (processLoanTransactionAction == ACTION_DISBURSE_LOAN) {
-            disburseLoan()
-        } else {
-            Log.i(requireActivity().localClassName, "TRANSACTION ACTION NOT SET")
+        when (processLoanTransactionAction) {
+            TRANSACTION_REPAYMENT -> {
+                mListener!!.makeRepayment(clientLoanWithAssociations)
+            }
+            ACTION_APPROVE_LOAN -> {
+                approveLoan()
+            }
+            ACTION_DISBURSE_LOAN -> {
+                disburseLoan()
+            }
+            else -> {
+                Log.i(requireActivity().localClassName, "TRANSACTION ACTION NOT SET")
+            }
         }
     }
 

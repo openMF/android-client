@@ -47,7 +47,7 @@ class SearchDialog(
                         filterList.add(s)
                     }
                 }
-                adapter!!.notifyDataSetChanged()
+                adapter?.notifyDataSetChanged()
             }
         })
         listView?.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->

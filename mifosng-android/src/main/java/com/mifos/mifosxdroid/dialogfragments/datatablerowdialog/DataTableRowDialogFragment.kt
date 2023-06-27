@@ -12,15 +12,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.api.GenericResponse
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
+import com.mifos.mifosxdroid.databinding.DialogFragmentAddEntryToDatatableBinding
 import com.mifos.mifosxdroid.formwidgets.FormEditText
 import com.mifos.mifosxdroid.formwidgets.FormNumericEditText
 import com.mifos.mifosxdroid.formwidgets.FormSpinner
@@ -35,104 +33,100 @@ import javax.inject.Inject
  * Created by ishankhanna on 01/08/14.
  */
 class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
-    private val LOG_TAG = javaClass.simpleName
 
-    @JvmField
-    @BindView(R.id.ll_data_table_entry_form)
-    var linearLayout: LinearLayout? = null
+    private lateinit var binding: DialogFragmentAddEntryToDatatableBinding
+
+    private val LOG_TAG = javaClass.simpleName
 
     @JvmField
     @Inject
     var dataTableRowDialogPresenter: DataTableRowDialogPresenter? = null
-    private lateinit var rootView: View
     private var dataTable: DataTable? = null
     private var entityId = 0
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
     private val listFormWidgets: MutableList<FormWidget> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent!!.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         /**
          * This is very Important
          * It is used to auto resize the dialog when a Keyboard appears.
          * And User can still easily scroll through the form. Sweet, isn't it?
          */
-        dialog!!.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        rootView = inflater.inflate(
-            R.layout.dialog_fragment_add_entry_to_datatable, container,
-            false
-        )
-        ButterKnife.bind(this, rootView)
-        dataTableRowDialogPresenter!!.attachView(this)
-        dialog!!.setTitle(dataTable!!.registeredTableName)
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        binding = DialogFragmentAddEntryToDatatableBinding.inflate(inflater, container, false)
+        dataTableRowDialogPresenter?.attachView(this)
+        dialog?.setTitle(dataTable?.registeredTableName)
         safeUIBlockingUtility = SafeUIBlockingUtility(
             this@DataTableRowDialogFragment
                 .activity, getString(R.string.data_table_row_dialog_loading_message)
         )
         createForm(dataTable)
         addSaveButton()
-        return rootView
+        return binding.root
     }
 
-    fun createForm(table: DataTable?) {
+    private fun createForm(table: DataTable?) {
         val formWidgets: MutableList<FormWidget> = ArrayList()
-        for (columnHeader in table!!.columnHeaderData) {
-            if (!columnHeader.columnPrimaryKey) {
-                if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_STRING || columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_TEXT) {
-                    val formEditText = FormEditText(
-                        activity, columnHeader
-                            .columnName
-                    )
-                    formWidgets.add(formEditText)
-                    linearLayout!!.addView(formEditText.view)
-                } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_INT) {
-                    val formNumericEditText = FormNumericEditText(activity, columnHeader.columnName)
-                    formNumericEditText.returnType = FormWidget.SCHEMA_KEY_INT
-                    formWidgets.add(formNumericEditText)
-                    linearLayout!!.addView(formNumericEditText.view)
-                } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_DECIMAL) {
-                    val formNumericEditText = FormNumericEditText(activity, columnHeader.columnName)
-                    formNumericEditText.returnType = FormWidget.SCHEMA_KEY_DECIMAL
-                    formWidgets.add(formNumericEditText)
-                    linearLayout!!.addView(formNumericEditText.view)
-                } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_CODELOOKUP || columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_CODEVALUE) {
-                    if (columnHeader.columnValues.size > 0) {
-                        val columnValueStrings: MutableList<String> = ArrayList()
-                        val columnValueIds: MutableList<Int> = ArrayList()
-                        for (columnValue in columnHeader.columnValues) {
-                            columnValueStrings.add(columnValue.value)
-                            columnValueIds.add(columnValue.id)
-                        }
-                        val formSpinner = FormSpinner(
+        if (table != null) {
+            for (columnHeader in table.columnHeaderData) {
+                if (!columnHeader.columnPrimaryKey) {
+                    if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_STRING || columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_TEXT) {
+                        val formEditText = FormEditText(
                             activity, columnHeader
-                                .columnName, columnValueStrings, columnValueIds
+                                .columnName
                         )
-                        formSpinner.returnType = FormWidget.SCHEMA_KEY_CODEVALUE
-                        formWidgets.add(formSpinner)
-                        linearLayout!!.addView(formSpinner.view)
+                        formWidgets.add(formEditText)
+                        binding.llDataTableEntryForm.addView(formEditText.view)
+                    } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_INT) {
+                        val formNumericEditText = FormNumericEditText(activity, columnHeader.columnName)
+                        formNumericEditText.returnType = FormWidget.SCHEMA_KEY_INT
+                        formWidgets.add(formNumericEditText)
+                        binding.llDataTableEntryForm.addView(formNumericEditText.view)
+                    } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_DECIMAL) {
+                        val formNumericEditText = FormNumericEditText(activity, columnHeader.columnName)
+                        formNumericEditText.returnType = FormWidget.SCHEMA_KEY_DECIMAL
+                        formWidgets.add(formNumericEditText)
+                        binding.llDataTableEntryForm.addView(formNumericEditText.view)
+                    } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_CODELOOKUP || columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_CODEVALUE) {
+                        if (columnHeader.columnValues.size > 0) {
+                            val columnValueStrings: MutableList<String> = ArrayList()
+                            val columnValueIds: MutableList<Int> = ArrayList()
+                            for (columnValue in columnHeader.columnValues) {
+                                columnValueStrings.add(columnValue.value)
+                                columnValueIds.add(columnValue.id)
+                            }
+                            val formSpinner = FormSpinner(
+                                activity, columnHeader
+                                    .columnName, columnValueStrings, columnValueIds
+                            )
+                            formSpinner.returnType = FormWidget.SCHEMA_KEY_CODEVALUE
+                            formWidgets.add(formSpinner)
+                            binding.llDataTableEntryForm.addView(formSpinner.view)
+                        }
+                    } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_DATE) {
+                        val formEditText = FormEditText(
+                            activity, columnHeader
+                                .columnName
+                        )
+                        formEditText.setIsDateField(true, requireActivity().supportFragmentManager)
+                        formWidgets.add(formEditText)
+                        binding.llDataTableEntryForm.addView(formEditText.view)
+                    } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_BOOL) {
+                        val formToggleButton = FormToggleButton(
+                            activity,
+                            columnHeader.columnName
+                        )
+                        formWidgets.add(formToggleButton)
+                        binding.llDataTableEntryForm.addView(formToggleButton.view)
                     }
-                } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_DATE) {
-                    val formEditText = FormEditText(
-                        activity, columnHeader
-                            .columnName
-                    )
-                    formEditText.setIsDateField(true, requireActivity().supportFragmentManager)
-                    formWidgets.add(formEditText)
-                    linearLayout!!.addView(formEditText.view)
-                } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_BOOL) {
-                    val formToggleButton = FormToggleButton(
-                        activity,
-                        columnHeader.columnName
-                    )
-                    formWidgets.add(formToggleButton)
-                    linearLayout!!.addView(formToggleButton.view)
                 }
             }
         }
@@ -144,20 +138,20 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
         bt_processForm.layoutParams = FormWidget.defaultLayoutParams
         bt_processForm.text = getString(R.string.save)
         bt_processForm.setBackgroundColor(requireActivity().resources.getColor(R.color.blue_dark))
-        linearLayout!!.addView(bt_processForm)
+        binding.llDataTableEntryForm.addView(bt_processForm)
         bt_processForm.setOnClickListener {
             try {
                 onSaveActionRequested()
             } catch (e: RequiredFieldException) {
-                Log.d(LOG_TAG, e.message!!)
+                Log.d(LOG_TAG, e.message.toString())
             }
         }
     }
 
     @Throws(RequiredFieldException::class)
     fun onSaveActionRequested() {
-        dataTableRowDialogPresenter!!.addDataTableEntry(
-            dataTable!!.registeredTableName,
+        dataTableRowDialogPresenter?.addDataTableEntry(
+            dataTable?.registeredTableName,
             entityId, addDataTableInput()
         )
     }
@@ -191,7 +185,7 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
 
     override fun showDataTableEntrySuccessfully(genericResponse: GenericResponse) {
         Toast.makeText(activity, R.string.data_table_entry_added, Toast.LENGTH_LONG).show()
-        targetFragment!!.onActivityResult(
+        targetFragment?.onActivityResult(
             targetRequestCode, Activity.RESULT_OK,
             requireActivity().intent
         )
@@ -205,15 +199,15 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
 
     override fun showProgressbar(b: Boolean) {
         if (b) {
-            safeUIBlockingUtility!!.safelyBlockUI()
+            safeUIBlockingUtility?.safelyBlockUI()
         } else {
-            safeUIBlockingUtility!!.safelyUnBlockUI()
+            safeUIBlockingUtility?.safelyUnBlockUI()
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        dataTableRowDialogPresenter!!.detachView()
+        dataTableRowDialogPresenter?.detachView()
     }
 
     companion object {

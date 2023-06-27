@@ -29,7 +29,7 @@ class MFDatePicker : DialogFragment(), OnDateSetListener {
             calendar!![Calendar.MONTH],
             calendar!![Calendar.DAY_OF_MONTH]
         )
-        dialog.datePicker.maxDate = Date().time
+        dialog.datePicker.minDate = Date().time
         return dialog
     }
 

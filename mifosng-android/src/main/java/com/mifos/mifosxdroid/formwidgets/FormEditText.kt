@@ -53,11 +53,15 @@ class FormEditText(context: Context?, name: String?) : FormWidget(context, name)
                     val mfDatePicker = MFDatePicker()
                     mfDatePicker.onDatePickListener = object : OnDatePickListener {
                         override fun onDatePicked(date: String?) {
-                            value = date!!
+                            if (date != null) {
+                                value = date
+                            }
                             mfDatePicker.dismiss()
                         }
                     }
-                    mfDatePicker.show(fragmentManager!!, MFDatePicker.TAG)
+                    if (fragmentManager != null) {
+                        mfDatePicker.show(fragmentManager, MFDatePicker.TAG)
+                    }
                 }
                 true
             }

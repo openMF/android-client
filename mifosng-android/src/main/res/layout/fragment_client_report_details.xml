@@ -9,7 +9,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/item_client_runreport" />
+        <include
+            android:id="@+id/item_client"
+            layout="@layout/item_client_runreport" />
 
         <TableLayout
             android:id="@+id/table_details"

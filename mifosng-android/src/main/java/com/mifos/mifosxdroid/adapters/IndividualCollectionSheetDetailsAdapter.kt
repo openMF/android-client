@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.api.model.BulkRepaymentTransactions
 import com.mifos.mifosxdroid.R
+import com.mifos.mifosxdroid.databinding.ItemIndividualCollectionSheetBinding
 import com.mifos.mifosxdroid.injection.ActivityContext
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.OnRetrieveSheetItemData
 import com.mifos.objects.accounts.loan.PaymentTypeOptions
@@ -53,9 +52,13 @@ class IndividualCollectionSheetDetailsAdapter @Inject constructor(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_individual_collection_sheet, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(
+            ItemIndividualCollectionSheetBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(
@@ -64,9 +67,9 @@ class IndividualCollectionSheetDetailsAdapter @Inject constructor(
     ) {
         val loanAndClientNameItem = loanAndClientNames[position]
         val loanCollectionSheetItem = loanAndClientNameItem.loan
-        holder.tvClientName!!.text = loanAndClientNameItem.clientName
+        holder.tvClientName.text = loanAndClientNameItem.clientName
         if (loanCollectionSheetItem != null) {
-            holder.tvProductCode!!.text = loanCollectionSheetItem
+            holder.tvProductCode.text = loanCollectionSheetItem
                 .productShortName?.let {
                     loanCollectionSheetItem.accountId?.let { it1 ->
                         concatProductWithAccount(
@@ -76,20 +79,20 @@ class IndividualCollectionSheetDetailsAdapter @Inject constructor(
                 }
         }
         if (loanCollectionSheetItem?.chargesDue != null) {
-            holder.etCharges!!.text = String.format(
+            holder.etCharges.text = String.format(
                 Locale.getDefault(), "%f",
                 loanCollectionSheetItem.chargesDue
             )
         }
         if (loanCollectionSheetItem?.totalDue != null) {
-            holder.etTotalDues!!.text = String.format(
+            holder.etTotalDues.text = String.format(
                 Locale.getDefault(), "%f",
                 loanCollectionSheetItem.totalDue
             )
         }
         ImageLoaderUtils.loadImage(
             c, loanAndClientNameItem.id,
-            holder.iv_userPicture
+            holder.ivUserPicture
         )
 
         //Add default value of transaction irrespective of they are 'saved' or 'cancelled'
@@ -121,36 +124,19 @@ class IndividualCollectionSheetDetailsAdapter @Inject constructor(
         fun listItemPosition(position: Int)
     }
 
-    inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
+    inner class ViewHolder(private val binding: ItemIndividualCollectionSheetBinding) :
+        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         var itemPosition = 0
 
-        @JvmField
-        @BindView(R.id.tv_client_name)
-        var tvClientName: TextView? = null
-
-        @JvmField
-        @BindView(R.id.tv_product_code)
-        var tvProductCode: TextView? = null
-
-        @JvmField
-        @BindView(R.id.et_charges)
-        var etCharges: TextView? = null
-
-        @JvmField
-        @BindView(R.id.tv_total_due)
-        var etTotalDues: TextView? = null
-
-        @JvmField
-        @BindView(R.id.btn_additional_details)
-        var btnAdditional: ImageView? = null
-
-        @JvmField
-        @BindView(R.id.iv_user_picture)
-        var iv_userPicture: ImageView? = null
+        val tvClientName: TextView = binding.tvClientName
+        var tvProductCode: TextView = binding.tvProductCode
+        var etCharges: TextView = binding.etCharges
+        var etTotalDues: TextView = binding.tvTotalDue
+        var btnAdditional: ImageView = binding.btnAdditionalDetails
+        var ivUserPicture: ImageView = binding.ivUserPicture
 
         init {
-            ButterKnife.bind(this, v)
-            v.setOnClickListener(this)
+            binding.root.setOnClickListener(this)
         }
 
         override fun onClick(view: View) {

@@ -12,17 +12,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
 import butterknife.OnClick
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
+import com.mifos.mifosxdroid.databinding.DialogFragmentChargeBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.Companion.newInsance
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
@@ -45,36 +41,17 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
     OnItemSelectedListener {
     val LOG_TAG = javaClass.simpleName
 
-    @JvmField
-    @BindView(R.id.sp_charge_name)
-    var spChargeName: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.amount_due_charge)
-    var etAmountDue: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_date)
-    var etChargeDueDate: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_charge_locale)
-    var etChargeLocale: EditText? = null
-
-    @JvmField
-    @BindView(R.id.bt_save_charge)
-    var btnSaveCharge: Button? = null
+    private lateinit var binding: DialogFragmentChargeBinding
 
     @JvmField
     @Inject
     var mChargeDialogPresenter: ChargeDialogPresenter? = null
     private var chargeCreateListener: OnChargeCreateListener? = null
     private val chargeNameList: MutableList<String> = ArrayList()
-    private var chargeNameAdapter: ArrayAdapter<String>? = null
+    private lateinit var chargeNameAdapter: ArrayAdapter<String>
     private var mChargeTemplate: ChargeTemplate? = null
-    private var dueDateString: String? = null
+    private lateinit var dueDateString: String
     private var dueDateAsIntegerList: List<Int>? = null
-    private lateinit var rootView: View
     private var mfDatePicker: DialogFragment? = null
     private var chargeId = 0
     private var chargeName: String? = null
@@ -95,38 +72,50 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         // Inflate the layout for this fragment
-        if (requireActivity().actionBar != null) requireActivity().actionBar?.setDisplayHomeAsUpEnabled(true)
-        rootView = inflater.inflate(R.layout.dialog_fragment_charge, null)
-        ButterKnife.bind(this, rootView)
-        mChargeDialogPresenter!!.attachView(this)
-        inflatedueDate()
+        if (requireActivity().actionBar != null) requireActivity().actionBar?.setDisplayHomeAsUpEnabled(
+            true
+        )
+        binding = DialogFragmentChargeBinding.inflate(inflater, container, false)
+        mChargeDialogPresenter?.attachView(this)
+        inflateDueDate()
         inflateChargesSpinner()
         inflateChargeNameSpinner()
-        return rootView
+        return binding.root
     }
 
-    @OnClick(R.id.bt_save_charge)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btSaveCharge.setOnClickListener {
+            saveNewCharge()
+        }
+
+        binding.etDate.setOnClickListener {
+            inflateDatePicker()
+        }
+    }
+
     fun saveNewCharge() {
         //Insert values for the new Charge.
-        if (etAmountDue!!.text.toString().isEmpty()) {
+        if (binding.amountDueCharge.text.toString().isEmpty()) {
             show(
-                rootView, getString(R.string.amount)
+                binding.root, getString(R.string.amount)
                         + " " + getString(R.string.error_cannot_be_empty)
             )
             return
         }
         createdCharge = Charges()
-        createdCharge!!.chargeId = chargeId
-        createdCharge!!.amount = etAmountDue!!.editableText.toString().toDouble()
-        dueDateAsIntegerList = DateHelper.convertDateAsReverseInteger(dueDateString!!)
-        createdCharge!!.dueDate = dueDateAsIntegerList
-        createdCharge!!.name = chargeName
+        createdCharge?.chargeId = chargeId
+        createdCharge?.amount = binding.amountDueCharge.editableText.toString().toDouble()
+        dueDateAsIntegerList = DateHelper.convertDateAsReverseInteger(dueDateString)
+        createdCharge?.dueDate = dueDateAsIntegerList
+        createdCharge?.name = chargeName
         val chargesPayload = ChargesPayload()
-        chargesPayload.amount = etAmountDue!!.editableText.toString()
-        chargesPayload.locale = etChargeLocale!!.editableText.toString()
+        chargesPayload.amount = binding.amountDueCharge.editableText.toString()
+        chargesPayload.locale = binding.etChargeLocale.editableText.toString()
         chargesPayload.dueDate = dueDateString
         chargesPayload.dateFormat = "dd MMMM yyyy"
         chargesPayload.chargeId = chargeId
@@ -136,55 +125,58 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
     override fun onDatePicked(date: String?) {
         dueDateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date)
             .replace("-", " ")
-        etChargeDueDate!!.setText(dueDateString)
+        binding.chargeDueDate.text = dueDateString
     }
 
     //Charges Fetching API
     private fun inflateChargesSpinner() {
-        mChargeDialogPresenter!!.loadAllChargesV2(clientId)
+        mChargeDialogPresenter?.loadAllChargesV2(clientId)
     }
 
     //Charges Creation APi
     private fun initiateChargesCreation(chargesPayload: ChargesPayload) {
-        mChargeDialogPresenter!!.createCharges(clientId, chargesPayload)
+        mChargeDialogPresenter?.createCharges(clientId, chargesPayload)
     }
 
-    fun inflatedueDate() {
+    private fun inflateDueDate() {
         mfDatePicker = newInsance(this)
         val receivedDate: String? = MFDatePicker.datePickedAsString
         dueDateString = DateHelper.getDateAsStringUsedForCollectionSheetPayload(receivedDate)
             .replace("-", " ")
-        dueDateAsIntegerList = DateHelper.convertDateAsListOfInteger(dueDateString!!)
-        etChargeDueDate!!.setText(dueDateString)
+        dueDateAsIntegerList = DateHelper.convertDateAsListOfInteger(dueDateString)
+        binding.chargeDueDate.text = dueDateString
     }
 
-    @OnClick(R.id.et_date)
-    fun inflateDatePicker() {
-        mfDatePicker!!.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
+    private fun inflateDatePicker() {
+        mfDatePicker?.show(
+            requireActivity().supportFragmentManager,
+            FragmentConstants.DFRAG_DATE_PICKER
+        )
     }
 
-    fun inflateChargeNameSpinner() {
+    private fun inflateChargeNameSpinner() {
         chargeNameAdapter = ArrayAdapter(
             requireActivity(),
             android.R.layout.simple_spinner_item, chargeNameList
         )
-        chargeNameAdapter!!
+        chargeNameAdapter
             .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spChargeName!!.adapter = chargeNameAdapter
-        spChargeName!!.onItemSelectedListener = this
+        binding.spChargeName.adapter = chargeNameAdapter
+        binding.spChargeName.onItemSelectedListener = this
     }
 
     override fun showAllChargesV2(chargeTemplate: ChargeTemplate) {
         mChargeTemplate = chargeTemplate
-        chargeNameList.addAll(mChargeDialogPresenter!!.filterChargeName(chargeTemplate.chargeOptions))
-        chargeNameAdapter!!.notifyDataSetChanged()
+        mChargeDialogPresenter?.filterChargeName(chargeTemplate.chargeOptions)
+            ?.let { chargeNameList.addAll(it) }
+        chargeNameAdapter.notifyDataSetChanged()
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         when (parent.id) {
             R.id.sp_charge_name -> {
-                chargeId = mChargeTemplate!!.chargeOptions[position].id
-                chargeName = mChargeTemplate!!.chargeOptions[position].name
+                chargeId = mChargeTemplate?.chargeOptions?.getOrNull(position)?.id!!
+                chargeName = mChargeTemplate?.chargeOptions?.getOrNull(position)?.name
             }
         }
     }
@@ -192,25 +184,25 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
     override fun onNothingSelected(parent: AdapterView<*>?) {}
     override fun showChargesCreatedSuccessfully(chargeCreationResponse: ChargeCreationResponse) {
         if (chargeCreateListener != null) {
-            createdCharge!!.clientId = chargeCreationResponse.clientId
-            createdCharge!!.id = chargeCreationResponse.resourceId
-            chargeCreateListener!!.onChargeCreatedSuccess(createdCharge)
+            createdCharge?.clientId = chargeCreationResponse.clientId
+            createdCharge?.id = chargeCreationResponse.resourceId
+            chargeCreateListener?.onChargeCreatedSuccess(createdCharge)
         } else {
-            show(rootView, getString(R.string.message_charge_created_success))
+            show(binding.root, getString(R.string.message_charge_created_success))
         }
-        dialog!!.dismiss()
+        dialog?.dismiss()
     }
 
     override fun showChargeCreatedFailure(errorMessage: String) {
         if (chargeCreateListener != null) {
-            chargeCreateListener!!.onChargeCreatedFailure(errorMessage)
+            chargeCreateListener?.onChargeCreatedFailure(errorMessage)
         } else {
-            show(rootView, errorMessage)
+            show(binding.root, errorMessage)
         }
     }
 
     override fun showFetchingError(s: String) {
-        show(rootView, s)
+        show(binding.root, s)
     }
 
     override fun showProgressbar(b: Boolean) {
@@ -219,7 +211,7 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mChargeDialogPresenter!!.detachView()
+        mChargeDialogPresenter?.detachView()
     }
 
     fun setOnChargeCreatedListener(chargeCreatedListener: OnChargeCreateListener?) {
