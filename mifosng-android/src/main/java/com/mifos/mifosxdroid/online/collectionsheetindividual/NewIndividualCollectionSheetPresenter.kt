@@ -15,18 +15,16 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
-import java.util.*
 import javax.inject.Inject
 
 /**
  * Created by Tarun on 05-07-2017.
  */
-class NewIndividualCollectionSheetPresenter @Inject internal constructor(private val mDataManager: DataManager,
-                                                                         private val mDataManagerCollection: DataManagerCollectionSheet) : BasePresenter<IndividualCollectionSheetMvpView?>() {
+class NewIndividualCollectionSheetPresenter @Inject internal constructor(
+    private val mDataManager: DataManager,
+    private val mDataManagerCollection: DataManagerCollectionSheet
+) : BasePresenter<IndividualCollectionSheetMvpView?>() {
     private val mSubscription: CompositeSubscription?
-    override fun attachView(mvpView: IndividualCollectionSheetMvpView?) {
-        super.attachView(mvpView)
-    }
 
     override fun detachView() {
         super.detachView()
@@ -35,112 +33,121 @@ class NewIndividualCollectionSheetPresenter @Inject internal constructor(private
 
     fun fetchIndividualCollectionSheet(requestCollectionSheetPayload: RequestCollectionSheetPayload?) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscription!!.add(mDataManagerCollection
-                .getIndividualCollectionSheet(requestCollectionSheetPayload)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<IndividualCollectionSheet?>() {
-                    override fun onCompleted() {
-                        mvpView!!.showSuccess()
-                    }
+        mvpView?.showProgressbar(true)
+        mSubscription?.add(mDataManagerCollection
+            .getIndividualCollectionSheet(requestCollectionSheetPayload)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<IndividualCollectionSheet?>() {
+                override fun onCompleted() {
+                    mvpView?.showSuccess()
+                }
 
-                    override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        if (e is HttpException) {
-                            try {
-                                val errorMessage = e.response().errorBody()
-                                        .string()
-                                mvpView!!.showError(MFErrorParser.parseError(errorMessage)
-                                        .errors[0].defaultUserMessage)
-                            } catch (throwable: Throwable) {
-                                RxJavaPlugins.getInstance().errorHandler.handleError(e)
-                            }
-                        } else {
-                            mvpView!!.showError(e.localizedMessage)
+                override fun onError(e: Throwable) {
+                    mvpView?.showProgressbar(false)
+                    if (e is HttpException) {
+                        try {
+                            val errorMessage = e.response().errorBody()
+                                .string()
+                            mvpView?.showError(
+                                MFErrorParser.parseError(errorMessage)
+                                    .errors[0].defaultUserMessage
+                            )
+                        } catch (throwable: Throwable) {
+                            RxJavaPlugins.getInstance().errorHandler.handleError(e)
                         }
+                    } else {
+                        mvpView?.showError(e.localizedMessage)
                     }
+                }
 
-                    override fun onNext(individualCollectionSheet: IndividualCollectionSheet?) {
-                        mvpView!!.showProgressbar(false)
-                        if (individualCollectionSheet!!.clients.size > 0) {
-                            mvpView!!.showSheet(individualCollectionSheet)
-                        } else {
-                            mvpView!!.showNoSheetFound()
-                        }
+                override fun onNext(individualCollectionSheet: IndividualCollectionSheet?) {
+                    mvpView?.showProgressbar(false)
+                    if (individualCollectionSheet?.clients?.size!! > 0) {
+                        mvpView?.showSheet(individualCollectionSheet)
+                    } else {
+                        mvpView?.showNoSheetFound()
                     }
-                }))
+                }
+            })
+        )
     }
 
     fun fetchOffices() {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscription!!.add(mDataManager.offices
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<List<Office?>?>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        try {
-                            if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
-                                        .string()
-                                mvpView!!.showError(MFErrorParser.parseError(errorMessage)
-                                        .errors[0].defaultUserMessage)
-                            }
-                        } catch (throwable: Throwable) {
-                            RxJavaPlugins.getInstance().errorHandler.handleError(e)
+        mvpView?.showProgressbar(true)
+        mSubscription?.add(mDataManager.offices
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<List<Office?>?>() {
+                override fun onCompleted() {}
+                override fun onError(e: Throwable) {
+                    mvpView?.showProgressbar(false)
+                    try {
+                        if (e is HttpException) {
+                            val errorMessage = e.response().errorBody()
+                                .string()
+                            mvpView?.showError(
+                                MFErrorParser.parseError(errorMessage)
+                                    .errors[0].defaultUserMessage
+                            )
                         }
+                    } catch (throwable: Throwable) {
+                        RxJavaPlugins.getInstance().errorHandler.handleError(e)
                     }
+                }
 
-                    override fun onNext(officeList: List<Office?>?) {
-                        mvpView!!.setOfficeSpinner(officeList as List<Office>?)
-                        mvpView!!.showProgressbar(false)
-                    }
-                }))
+                override fun onNext(officeList: List<Office?>?) {
+                    mvpView?.setOfficeSpinner(officeList as List<Office>?)
+                    mvpView?.showProgressbar(false)
+                }
+            })
+        )
     }
 
     fun fetchStaff(officeId: Int) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscription!!.add(mDataManager.getStaffInOffice(officeId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<List<Staff?>?>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        try {
-                            if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
-                                        .string()
-                                mvpView!!.showError(MFErrorParser.parseError(errorMessage)
-                                        .errors[0].defaultUserMessage)
-                            }
-                        } catch (throwable: Throwable) {
-                            RxJavaPlugins.getInstance().errorHandler.handleError(e)
+        mvpView?.showProgressbar(true)
+        mSubscription?.add(mDataManager.getStaffInOffice(officeId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<List<Staff?>?>() {
+                override fun onCompleted() {}
+                override fun onError(e: Throwable) {
+                    mvpView?.showProgressbar(false)
+                    try {
+                        if (e is HttpException) {
+                            val errorMessage = e.response().errorBody()
+                                .string()
+                            mvpView?.showError(
+                                MFErrorParser.parseError(errorMessage)
+                                    .errors[0].defaultUserMessage
+                            )
                         }
+                    } catch (throwable: Throwable) {
+                        RxJavaPlugins.getInstance().errorHandler.handleError(e)
                     }
+                }
 
-                    override fun onNext(staffList: List<Staff?>?) {
-                        mvpView!!.setStaffSpinner(staffList as List<Staff>?)
-                        mvpView!!.showProgressbar(false)
-                    }
-                }))
+                override fun onNext(staffList: List<Staff?>?) {
+                    mvpView?.setStaffSpinner(staffList as List<Staff>?)
+                    mvpView?.showProgressbar(false)
+                }
+            })
+        )
     }
 
     fun filterOffices(offices: List<Office>?): List<String> {
         val officesList: MutableList<String> = ArrayList()
         Observable.from(offices)
-                .subscribe { office -> officesList.add(office.name) }
+            .subscribe { office -> officesList.add(office.name) }
         return officesList
     }
 
     fun filterStaff(staffs: List<Staff>?): List<String> {
         val staffList: MutableList<String> = ArrayList()
         Observable.from(staffs)
-                .subscribe { staff -> staffList.add(staff.displayName) }
+            .subscribe { staff -> staffList.add(staff.displayName) }
         return staffList
     }
 
