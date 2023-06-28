@@ -211,7 +211,7 @@ class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePic
             var obligId: Int?
             var glAccountId: Int?
             var currencyId: String?
-            val map: MutableMap<String, String?> = HashMap()
+            val map: MutableMap<String?, String?> = HashMap()
 
             /* There are variable number of parameters in the request query.
               Hence, create a Map instead of hardcoding the number of

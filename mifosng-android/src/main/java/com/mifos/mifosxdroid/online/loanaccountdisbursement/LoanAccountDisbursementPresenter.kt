@@ -53,7 +53,7 @@ class LoanAccountDisbursementPresenter @Inject constructor(private val dataManag
     fun disburseLoan(loanId: Int, loanDisbursement: LoanDisbursement?) {
         checkViewAttached()
         mvpView!!.showProgressbar(true)
-        subscriptions.add(dataManagerLoan.dispurseLoan(loanId, loanDisbursement)
+        subscriptions.add(dataManagerLoan.disburseLoan(loanId, loanDisbursement)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(object : Subscriber<GenericResponse?>() {

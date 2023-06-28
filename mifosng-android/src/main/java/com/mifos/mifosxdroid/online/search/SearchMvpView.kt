@@ -8,7 +8,7 @@ import com.mifos.objects.SearchedEntity
  */
 interface SearchMvpView : MvpView {
     fun showUserInterface()
-    fun showSearchedResources(searchedEntities: MutableList<SearchedEntity>)
+    fun showSearchedResources(searchedEntities: List<SearchedEntity>)
     fun showNoResultFound()
     fun showMessage(message: Int)
 }

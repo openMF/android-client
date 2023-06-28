@@ -15,9 +15,9 @@ import javax.inject.Inject
 /**
  * Created by Rajan Maurya on 07/06/16.
  */
-class GroupDetailsPresenter @Inject constructor(private val mDataManagerGroups: DataManagerGroups) : BasePresenter<GroupDetailsMvpView?>() {
-    private val mSubscriptions: CompositeSubscription
-    override fun attachView(mvpView: GroupDetailsMvpView?) {
+class GroupDetailsPresenter @Inject constructor(private val mDataManagerGroups: DataManagerGroups) : BasePresenter<GroupDetailsMvpView>() {
+    private val mSubscriptions: CompositeSubscription = CompositeSubscription()
+    override fun attachView(mvpView: GroupDetailsMvpView) {
         super.attachView(mvpView)
     }
 
@@ -28,24 +28,24 @@ class GroupDetailsPresenter @Inject constructor(private val mDataManagerGroups: 
 
     fun loadGroupDetailsAndAccounts(groupId: Int) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
+        mvpView?.showProgressbar(true)
         mSubscriptions.add(Observable.combineLatest(
                 mDataManagerGroups.getGroup(groupId),
                 mDataManagerGroups.getGroupAccounts(groupId)
         ) { group, groupAccounts -> GroupAndGroupAccounts(group, groupAccounts) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<GroupAndGroupAccounts?>() {
+                .subscribe(object : Subscriber<GroupAndGroupAccounts>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showFetchingError(R.string.failed_to_fetch_group_and_account)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showFetchingError(R.string.failed_to_fetch_group_and_account)
                     }
 
-                    override fun onNext(groupAndGroupAccounts: GroupAndGroupAccounts?) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showGroup(groupAndGroupAccounts?.group)
-                        mvpView!!.showGroupAccounts(groupAndGroupAccounts?.groupAccounts)
+                    override fun onNext(groupAndGroupAccounts: GroupAndGroupAccounts) {
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showGroup(groupAndGroupAccounts.group)
+                        mvpView?.showGroupAccounts(groupAndGroupAccounts.groupAccounts)
                     }
                 })
         )
@@ -53,26 +53,23 @@ class GroupDetailsPresenter @Inject constructor(private val mDataManagerGroups: 
 
     fun loadGroupAssociateClients(groupId: Int) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
+        mvpView?.showProgressbar(true)
         mSubscriptions.add(mDataManagerGroups.getGroupWithAssociations(groupId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<GroupWithAssociations?>() {
+                .subscribe(object : Subscriber<GroupWithAssociations>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showFetchingError(R.string.failed_to_load_client)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showFetchingError(R.string.failed_to_load_client)
                     }
 
-                    override fun onNext(groupWithAssociations: GroupWithAssociations?) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showGroupClients(groupWithAssociations?.clientMembers)
+                    override fun onNext(groupWithAssociations: GroupWithAssociations) {
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showGroupClients(groupWithAssociations.clientMembers)
                     }
                 })
         )
     }
 
-    init {
-        mSubscriptions = CompositeSubscription()
-    }
 }

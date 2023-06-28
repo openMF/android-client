@@ -15,7 +15,7 @@ import javax.inject.Inject
  * Created by Tarun on 01/06/17.
  */
 class SavingsAccountActivatePresenter @Inject constructor(private val mDataManagerSavings: DataManagerSavings) : BasePresenter<SavingsAccountActivateMvpView?>() {
-    private val mSubscriptions: CompositeSubscription
+    private val mSubscriptions: CompositeSubscription = CompositeSubscription()
     override fun attachView(mvpView: SavingsAccountActivateMvpView?) {
         super.attachView(mvpView)
     }
@@ -25,27 +25,24 @@ class SavingsAccountActivatePresenter @Inject constructor(private val mDataManag
         mSubscriptions.clear()
     }
 
-    fun activateSavings(savingsAccountId: Int, request: HashMap<String, Any?>?) {
+    fun activateSavings(savingsAccountId: Int, request: HashMap<String?, Any?>) {
         checkViewAttached()
         mvpView!!.showProgressbar(true)
         mSubscriptions.add(mDataManagerSavings.activateSavings(savingsAccountId, request)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<GenericResponse?>() {
+                .subscribe(object : Subscriber<GenericResponse>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         mvpView!!.showProgressbar(false)
                         mvpView!!.showError(MFErrorParser.errorMessage(e))
                     }
 
-                    override fun onNext(genericResponse: GenericResponse?) {
+                    override fun onNext(genericResponse: GenericResponse) {
                         mvpView!!.showProgressbar(false)
                         mvpView!!.showSavingAccountActivatedSuccessfully(genericResponse)
                     }
                 }))
     }
 
-    init {
-        mSubscriptions = CompositeSubscription()
-    }
 }

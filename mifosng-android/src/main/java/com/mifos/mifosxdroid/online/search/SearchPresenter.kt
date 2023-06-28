@@ -16,9 +16,9 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 06/06/16.
  */
 class SearchPresenter @Inject constructor(private val dataManagerSearch: DataManagerSearch) :
-    BasePresenter<SearchMvpView?>() {
+    BasePresenter<SearchMvpView>() {
     private var mSubscription: Subscription? = null
-    override fun attachView(mvpView: SearchMvpView?) {
+    override fun attachView(mvpView: SearchMvpView) {
         super.attachView(mvpView)
     }
 
@@ -40,16 +40,16 @@ class SearchPresenter @Inject constructor(private val dataManagerSearch: DataMan
         mSubscription = dataManagerSearch.searchResources(query, resources, exactMatch)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<MutableList<SearchedEntity>>() {
+            .subscribe(object : Subscriber<List<SearchedEntity>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     mvpView?.showMessage(R.string.failed_to_fetch_resources_of_query)
                     mvpView?.showProgressbar(false)
                 }
 
-                override fun onNext(searchedEntities: MutableList<SearchedEntity>) {
+                override fun onNext(searchedEntities: List<SearchedEntity>) {
                     mvpView?.showProgressbar(false)
-                    if (searchedEntities.size == 0) {
+                    if (searchedEntities.isEmpty()) {
                         mvpView?.showNoResultFound()
                     } else {
                         mvpView?.showSearchedResources(searchedEntities)

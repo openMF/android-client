@@ -240,9 +240,9 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListene
         sequence.start()
     }
 
-    override fun showSearchedResources(searchedEntities: MutableList<SearchedEntity>) {
+    override fun showSearchedResources(searchedEntities: List<SearchedEntity>) {
         searchAdapter.setSearchResults(searchedEntities)
-        this.searchedEntities = searchedEntities
+        this.searchedEntities = searchedEntities.toMutableList()
         EspressoIdlingResource.decrement() // App is idle.
     }
 

@@ -124,13 +124,13 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
         this.chargesList = chargesList as ArrayList<Charges>
     }
 
-    override fun showChargesList(chargesPage: Page<Charges?>?) {
+    override fun showChargesList(chargesPage: Page<Charges>) {
         /**
          * if mApiRestCounter is 1, So this is the first Api Request.
          * else if mApiRestCounter is greater than 1, SO this is for loadmore request.
          */
         if (mApiRestCounter == 1) {
-            chargesList = chargesPage!!.pageItems as ArrayList<Charges>
+            chargesList = chargesPage.pageItems as ArrayList<Charges>
             mChargesNameListAdapter = ChargeNameListAdapter(chargesList, clientId)
             rv_charges!!.adapter = mChargesNameListAdapter
             ll_error!!.visibility = View.GONE

@@ -17,7 +17,7 @@ import javax.inject.Inject
  */
 class CenterDetailsPresenter @Inject constructor(private val dataManagerCenter: DataManagerCenter,
                                                  private val dataManagerRunReport: DataManagerRunReport) : BasePresenter<CenterDetailsMvpView?>() {
-    private val subscriptions: CompositeSubscription
+    private val subscriptions: CompositeSubscription = CompositeSubscription()
     override fun attachView(mvpView: CenterDetailsMvpView?) {
         super.attachView(mvpView)
     }
@@ -29,46 +29,43 @@ class CenterDetailsPresenter @Inject constructor(private val dataManagerCenter: 
 
     fun loadCentersGroupAndMeeting(centerId: Int) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
+        mvpView?.showProgressbar(true)
         subscriptions.add(dataManagerCenter.getCentersGroupAndMeeting(centerId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<CenterWithAssociations?>() {
+                .subscribe(object : Subscriber<CenterWithAssociations>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showErrorMessage(R.string.failed_to_fetch_Group_and_meeting)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showErrorMessage(R.string.failed_to_fetch_Group_and_meeting)
                     }
 
-                    override fun onNext(centerWithAssociations: CenterWithAssociations?) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showMeetingDetails(centerWithAssociations)
-                        mvpView!!.showCenterDetails(centerWithAssociations)
+                    override fun onNext(centerWithAssociations: CenterWithAssociations) {
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showMeetingDetails(centerWithAssociations)
+                        mvpView?.showCenterDetails(centerWithAssociations)
                     }
                 }))
     }
 
     fun loadSummaryInfo(centerId: Int) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        subscriptions.add(dataManagerRunReport.getCenterSummarInfo(centerId, false)
+        mvpView?.showProgressbar(true)
+        subscriptions.add(dataManagerRunReport.getCenterSummaryInfo(centerId, false)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<List<CenterInfo?>?>() {
+                .subscribe(object : Subscriber<List<CenterInfo>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showErrorMessage(R.string.failed_to_fetch_center_info)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showErrorMessage(R.string.failed_to_fetch_center_info)
                     }
 
-                    override fun onNext(centerInfos: List<CenterInfo?>?) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showSummaryInfo(centerInfos)
+                    override fun onNext(centerInfos: List<CenterInfo>) {
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showSummaryInfo(centerInfos)
                     }
                 }))
     }
 
-    init {
-        subscriptions = CompositeSubscription()
-    }
 }
