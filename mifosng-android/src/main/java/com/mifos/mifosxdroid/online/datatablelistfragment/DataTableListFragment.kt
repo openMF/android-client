@@ -23,7 +23,6 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.formwidgets.*
 import com.mifos.mifosxdroid.online.ClientActivity
-import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment
 import com.mifos.objects.client.Client
 import com.mifos.objects.client.ClientPayload
 import com.mifos.objects.noncore.DataTable
@@ -62,7 +61,7 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
     private var dataTablePayloadElements: ArrayList<DataTablePayload>? = null
     private var clientLoansPayload: LoansPayload? = null
     private var groupLoanPayload: GroupLoanPayload? = null
-    private var clientPayload: ClientPayload? = null
+    private lateinit var clientPayload: ClientPayload
     private var requestType = 0
     private lateinit var rootView: View
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
@@ -72,16 +71,25 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
         (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        rootView = inflater.inflate(R.layout.dialog_fragment_add_entry_to_datatable, container,
-                false)
+        rootView = inflater.inflate(
+            R.layout.dialog_fragment_add_entry_to_datatable, container,
+            false
+        )
         ButterKnife.bind(this, rootView)
         mDataTableListPresenter!!.attachView(this)
         requireActivity().title = requireActivity().resources.getString(
-                R.string.associated_datatables)
-        safeUIBlockingUtility = SafeUIBlockingUtility(this@DataTableListFragment
-                .activity, getString(R.string.create_client_loading_message))
+            R.string.associated_datatables
+        )
+        safeUIBlockingUtility = SafeUIBlockingUtility(
+            this@DataTableListFragment
+                .activity, getString(R.string.create_client_loading_message)
+        )
         for (datatable in dataTables!!) {
             createForm(datatable)
         }
@@ -95,15 +103,19 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
         tableName.gravity = Gravity.CENTER_HORIZONTAL
         tableName.setTypeface(null, Typeface.BOLD)
         tableName.setTextColor(requireActivity().resources.getColor(R.color.black))
-        tableName.setTextSize(TypedValue.COMPLEX_UNIT_SP,
-                requireActivity().resources.getDimension(R.dimen.datatable_name_heading))
+        tableName.setTextSize(
+            TypedValue.COMPLEX_UNIT_SP,
+            requireActivity().resources.getDimension(R.dimen.datatable_name_heading)
+        )
         linearLayout!!.addView(tableName)
         val formWidgets: MutableList<FormWidget> = ArrayList()
         for (columnHeader in table.columnHeaderData) {
             if (!columnHeader.columnPrimaryKey) {
                 if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_STRING || columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_TEXT) {
-                    val formEditText = FormEditText(activity, columnHeader
-                            .columnName)
+                    val formEditText = FormEditText(
+                        activity, columnHeader
+                            .columnName
+                    )
                     formWidgets.add(formEditText)
                     linearLayout!!.addView(formEditText.view)
                 } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_INT) {
@@ -124,21 +136,27 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
                             columnValueStrings.add(columnValue.value)
                             columnValueIds.add(columnValue.id)
                         }
-                        val formSpinner = FormSpinner(activity, columnHeader
-                                .columnName, columnValueStrings, columnValueIds)
+                        val formSpinner = FormSpinner(
+                            activity, columnHeader
+                                .columnName, columnValueStrings, columnValueIds
+                        )
                         formSpinner.returnType = FormWidget.SCHEMA_KEY_CODEVALUE
                         formWidgets.add(formSpinner)
                         linearLayout!!.addView(formSpinner.view)
                     }
                 } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_DATE) {
-                    val formEditText = FormEditText(activity, columnHeader
-                            .columnName)
+                    val formEditText = FormEditText(
+                        activity, columnHeader
+                            .columnName
+                    )
                     formEditText.setIsDateField(true, requireActivity().supportFragmentManager)
                     formWidgets.add(formEditText)
                     linearLayout!!.addView(formEditText.view)
                 } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_BOOL) {
-                    val formToggleButton = FormToggleButton(activity,
-                            columnHeader.columnName)
+                    val formToggleButton = FormToggleButton(
+                        activity,
+                        columnHeader.columnName
+                    )
                     formWidgets.add(formToggleButton)
                     linearLayout!!.addView(formToggleButton.view)
                 }
@@ -176,10 +194,12 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
                 clientLoansPayload!!.dataTables = dataTablePayloadElements
                 mDataTableListPresenter!!.createLoansAccount(clientLoansPayload)
             }
+
             Constants.GROUP_LOAN ->                 //Add Datatables in GroupLoan Payload and then add them here.
                 mDataTableListPresenter!!.createGroupLoanAccount(groupLoanPayload)
+
             Constants.CREATE_CLIENT -> {
-                clientPayload!!.datatables = dataTablePayloadElements
+                clientPayload.datatables = dataTablePayloadElements
                 mDataTableListPresenter!!.createClient(clientPayload)
             }
         }
@@ -193,12 +213,15 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
         for (formWidget in formWidgets) {
             if (formWidget.returnType == FormWidget.SCHEMA_KEY_INT) {
                 payload[formWidget.propertyName] = if (formWidget.value
-                        == "") "0" else formWidget.value.toInt()
+                    == ""
+                ) "0" else formWidget.value.toInt()
             } else if (formWidget.returnType == FormWidget.SCHEMA_KEY_DECIMAL) {
-                payload[formWidget.propertyName] = if (formWidget.value == "") "0.0" else formWidget.value.toDouble()
+                payload[formWidget.propertyName] =
+                    if (formWidget.value == "") "0.0" else formWidget.value.toDouble()
             } else if (formWidget.returnType == FormWidget.SCHEMA_KEY_CODEVALUE) {
                 val formSpinner = formWidget as FormSpinner
-                payload[formWidget.getPropertyName()] = formSpinner.getIdOfSelectedItem(formWidget.getValue())
+                payload[formWidget.getPropertyName()] =
+                    formSpinner.getIdOfSelectedItem(formWidget.getValue())
             } else {
                 payload[formWidget.propertyName] = formWidget.value
             }
@@ -219,8 +242,10 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
     override fun showClientCreatedSuccessfully(client: Client) {
         requireActivity().supportFragmentManager.popBackStack()
         requireActivity().supportFragmentManager.popBackStack()
-        Toast.makeText(activity, getString(R.string.client) +
-                MifosResponseHandler.getResponse(), Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            activity, getString(R.string.client) +
+                    MifosResponseHandler.getResponse(), Toast.LENGTH_SHORT
+        ).show()
         if (PrefManager.userStatus == Constants.USER_ONLINE) {
             val clientActivityIntent = Intent(activity, ClientActivity::class.java)
             clientActivityIntent.putExtra(Constants.CLIENT_ID, client.clientId)
@@ -248,16 +273,23 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
 
     companion object {
         @JvmStatic
-        fun newInstance(dataTables: List<DataTable>?,
-                        payload: Any?, type: Int): DataTableListFragment {
+        fun newInstance(
+            dataTables: List<DataTable>?,
+            payload: Any?, type: Int
+        ): DataTableListFragment {
             val dataTableListFragment = DataTableListFragment()
             val args = Bundle()
             dataTableListFragment.dataTables = dataTables
             dataTableListFragment.requestType = type
             when (type) {
-                Constants.CLIENT_LOAN -> dataTableListFragment.clientLoansPayload = payload as LoansPayload?
-                Constants.GROUP_LOAN -> dataTableListFragment.groupLoanPayload = payload as GroupLoanPayload?
-                Constants.CREATE_CLIENT -> dataTableListFragment.clientPayload = payload as ClientPayload?
+                Constants.CLIENT_LOAN -> dataTableListFragment.clientLoansPayload =
+                    payload as LoansPayload?
+
+                Constants.GROUP_LOAN -> dataTableListFragment.groupLoanPayload =
+                    payload as GroupLoanPayload?
+
+                Constants.CREATE_CLIENT -> dataTableListFragment.clientPayload =
+                    payload as ClientPayload
             }
             dataTableListFragment.arguments = args
             return dataTableListFragment

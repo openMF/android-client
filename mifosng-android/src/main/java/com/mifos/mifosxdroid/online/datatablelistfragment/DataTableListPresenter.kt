@@ -76,7 +76,7 @@ class DataTableListPresenter @Inject constructor(private val mDataManagerLoan: D
         )
     }
 
-    fun createClient(clientPayload: ClientPayload?) {
+    fun createClient(clientPayload: ClientPayload) {
         checkViewAttached()
         mvpView!!.showProgressbar(true)
         mSubscription!!.add(dataManagerClient.createClient(clientPayload)

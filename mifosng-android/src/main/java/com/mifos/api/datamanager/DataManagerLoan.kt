@@ -155,7 +155,7 @@ class DataManagerLoan @Inject constructor(
      */
     fun submitPayment(
         loanId: Int,
-        request: LoanRepaymentRequest?
+        request: LoanRepaymentRequest
     ): Observable<LoanRepaymentResponse> {
         return when (userStatus) {
             0 -> mBaseApiManager.loanApi.submitPayment(loanId, request)
@@ -227,7 +227,7 @@ class DataManagerLoan @Inject constructor(
      * @return LoanRepaymentRequest
      */
     fun updateLoanRepaymentTransaction(
-        loanRepaymentRequest: LoanRepaymentRequest?
+        loanRepaymentRequest: LoanRepaymentRequest
     ): Observable<LoanRepaymentRequest> {
         return mDatabaseHelperLoan.updateLoanRepaymentTransaction(loanRepaymentRequest)
     }

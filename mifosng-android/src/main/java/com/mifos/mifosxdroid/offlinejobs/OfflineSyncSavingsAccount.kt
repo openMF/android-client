@@ -88,7 +88,7 @@ class OfflineSyncSavingsAccount : Job() {
 
     private fun processTransaction(
         type: String?, accountId: Int, transactionType: String?,
-        request: SavingsAccountTransactionRequest?
+        request: SavingsAccountTransactionRequest
     ) {
         mSubscriptions?.add(
             mDataManagerSavings
@@ -115,7 +115,7 @@ class OfflineSyncSavingsAccount : Job() {
         updateSavingsAccountTransaction(transaction)
     }
 
-    private fun updateSavingsAccountTransaction(request: SavingsAccountTransactionRequest?) {
+    private fun updateSavingsAccountTransaction(request: SavingsAccountTransactionRequest) {
         mSubscriptions!!.add(
             mDataManagerSavings.updateLoanRepaymentTransaction(request)
                 .observeOn(AndroidSchedulers.mainThread())

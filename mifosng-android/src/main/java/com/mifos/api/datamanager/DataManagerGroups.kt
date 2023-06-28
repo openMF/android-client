@@ -25,8 +25,8 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerGroups @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperGroups: DatabaseHelperGroups,
-    val mDatabaseHelperClient: DatabaseHelperClient
+    private val mDatabaseHelperGroups: DatabaseHelperGroups,
+    private val mDatabaseHelperClient: DatabaseHelperClient
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -99,7 +99,7 @@ class DataManagerGroups @Inject constructor(
      * @param group Group
      * @return Group
      */
-    fun syncGroupInDatabase(group: Group?): Observable<Group> {
+    fun syncGroupInDatabase(group: Group): Observable<Group> {
         return mDatabaseHelperGroups.saveGroup(group)
     }
 
@@ -165,7 +165,7 @@ class DataManagerGroups @Inject constructor(
      * @param groupPayload GroupPayload
      * @return Group
      */
-    fun createGroup(groupPayload: GroupPayload?): Observable<SaveResponse> {
+    fun createGroup(groupPayload: GroupPayload): Observable<SaveResponse> {
         return when (userStatus) {
             0 -> mBaseApiManager.groupApi.createGroup(groupPayload)
             1 ->
@@ -204,7 +204,7 @@ class DataManagerGroups @Inject constructor(
      * @param groupPayload GroupPayload
      * @return GroupPayload
      */
-    fun updateGroupPayload(groupPayload: GroupPayload?): Observable<GroupPayload> {
+    fun updateGroupPayload(groupPayload: GroupPayload): Observable<GroupPayload> {
         return mDatabaseHelperGroups.updateDatabaseGroupPayload(groupPayload)
     }
 

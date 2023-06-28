@@ -17,7 +17,7 @@ import javax.inject.Inject
  */
 class LoanRepaymentPresenter @Inject constructor(private val mDataManagerLoan: DataManagerLoan) : BasePresenter<LoanRepaymentMvpView?>() {
     val LOG_TAG = javaClass.simpleName
-    private val mSubscriptions: CompositeSubscription
+    private val mSubscriptions: CompositeSubscription = CompositeSubscription()
     override fun attachView(mvpView: LoanRepaymentMvpView?) {
         super.attachView(mvpView)
     }
@@ -50,7 +50,7 @@ class LoanRepaymentPresenter @Inject constructor(private val mDataManagerLoan: D
                 }))
     }
 
-    fun submitPayment(loanId: Int, request: LoanRepaymentRequest?) {
+    fun submitPayment(loanId: Int, request: LoanRepaymentRequest) {
         checkViewAttached()
         mvpView!!.showProgressbar(true)
         mSubscriptions.add(mDataManagerLoan.submitPayment(loanId, request)
@@ -98,7 +98,4 @@ class LoanRepaymentPresenter @Inject constructor(private val mDataManagerLoan: D
         )
     }
 
-    init {
-        mSubscriptions = CompositeSubscription()
-    }
 }

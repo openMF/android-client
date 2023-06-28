@@ -89,7 +89,7 @@ class DataManagerSurveys @Inject constructor(
      * @param survey Survey
      * @return Survey
      */
-    fun syncSurveyInDatabase(survey: Survey?): Observable<Survey> {
+    fun syncSurveyInDatabase(survey: Survey): Observable<Survey> {
         return mDatabaseHelperSurveys.saveSurvey(survey)
     }
 
@@ -101,7 +101,7 @@ class DataManagerSurveys @Inject constructor(
      */
     fun syncQuestionDataInDatabase(
         surveyId: Int,
-        questionDatas: QuestionDatas?
+        questionDatas: QuestionDatas
     ): Observable<QuestionDatas> {
         return mDatabaseHelperSurveys.saveQuestionData(surveyId, questionDatas)
     }
@@ -114,7 +114,7 @@ class DataManagerSurveys @Inject constructor(
      */
     fun syncResponseDataInDatabase(
         questionId: Int,
-        responseDatas: ResponseDatas?
+        responseDatas: ResponseDatas
     ): Observable<ResponseDatas> {
         return mDatabaseHelperSurveys.saveResponseData(questionId, responseDatas)
     }

@@ -174,7 +174,7 @@ class DataManagerSavings @Inject constructor(
      */
     fun processTransaction(
         savingsAccountType: String?, savingsAccountId: Int, transactionType: String?,
-        request: SavingsAccountTransactionRequest?
+        request: SavingsAccountTransactionRequest
     ): Observable<SavingsAccountTransactionResponse> {
         return when (userStatus) {
             0 -> mBaseApiManager.savingsApi.processTransaction(
@@ -246,7 +246,7 @@ class DataManagerSavings @Inject constructor(
      * @return LoanRepaymentRequest
      */
     fun updateLoanRepaymentTransaction(
-        savingsAccountTransactionRequest: SavingsAccountTransactionRequest?
+        savingsAccountTransactionRequest: SavingsAccountTransactionRequest
     ): Observable<SavingsAccountTransactionRequest> {
         return mDatabaseHelperSavings.updateSavingsAccountTransaction(
             savingsAccountTransactionRequest

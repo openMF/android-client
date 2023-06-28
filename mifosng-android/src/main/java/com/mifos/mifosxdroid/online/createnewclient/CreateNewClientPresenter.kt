@@ -107,7 +107,7 @@ class CreateNewClientPresenter @Inject constructor(private val mDataManagerClien
                 }))
     }
 
-    fun createClient(clientPayload: ClientPayload?) {
+    fun createClient(clientPayload: ClientPayload) {
         checkViewAttached()
         mvpView?.showProgressbar(true)
         mSubscriptions.add(mDataManagerClient.createClient(clientPayload)

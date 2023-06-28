@@ -48,7 +48,7 @@ class SavingsAccountTransactionPresenter @Inject constructor(private val mDataMa
     }
 
     fun processTransaction(type: String?, accountId: Int, transactionType: String?,
-                           request: SavingsAccountTransactionRequest?) {
+                           request: SavingsAccountTransactionRequest) {
         checkViewAttached()
         mvpView?.showProgressbar(true)
         mSubscriptions.add(mDataManagerSavings

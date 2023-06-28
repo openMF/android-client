@@ -97,7 +97,7 @@ class DataManagerClient @Inject constructor(
         }
     }
 
-    fun syncClientInDatabase(client: Client?): Observable<Client> {
+    fun syncClientInDatabase(client: Client): Observable<Client> {
         return mDatabaseHelperClient.saveClient(client)
     }
 
@@ -208,7 +208,7 @@ class DataManagerClient @Inject constructor(
      * @param clientPayload Client details filled by user
      * @return Client
      */
-    fun createClient(clientPayload: ClientPayload?): Observable<Client> {
+    fun createClient(clientPayload: ClientPayload): Observable<Client> {
         return when (userStatus) {
             0 -> mBaseApiManager.clientsApi.createClient(clientPayload)
                 .concatMap { client -> Observable.just(client) }
@@ -253,7 +253,7 @@ class DataManagerClient @Inject constructor(
      * @param clientPayload ClientPayload
      * @return ClientPayload
      */
-    fun updateClientPayload(clientPayload: ClientPayload?): Observable<ClientPayload> {
+    fun updateClientPayload(clientPayload: ClientPayload): Observable<ClientPayload> {
         return mDatabaseHelperClient.updateDatabaseClientPayload(clientPayload)
     }
 

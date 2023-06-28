@@ -65,7 +65,7 @@ class DataManagerCenter @Inject constructor(
      * @param center Center
      * @return Center
      */
-    fun syncCenterInDatabase(center: Center?): Observable<Center> {
+    fun syncCenterInDatabase(center: Center): Observable<Center> {
         return mDatabaseHelperCenter.saveCenter(center)
     }
 
@@ -100,7 +100,7 @@ class DataManagerCenter @Inject constructor(
             .getCenterWithGroupMembersAndCollectionMeetingCalendar(id)
     }
 
-    fun createCenter(centerPayload: CenterPayload?): Observable<SaveResponse> {
+    fun createCenter(centerPayload: CenterPayload): Observable<SaveResponse> {
         return when (userStatus) {
             0 -> mBaseApiManager.centerApi.createCenter(centerPayload)
             1 ->
@@ -168,7 +168,7 @@ class DataManagerCenter @Inject constructor(
      * @param centerPayload CenterPayload
      * @return CenterPayload
      */
-    fun updateCenterPayload(centerPayload: CenterPayload?): Observable<CenterPayload> {
+    fun updateCenterPayload(centerPayload: CenterPayload): Observable<CenterPayload> {
         return mDatabaseHelperCenter.updateDatabaseCenterPayload(centerPayload)
     }
 
