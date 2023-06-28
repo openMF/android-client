@@ -216,15 +216,19 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
 
     @OnClick(R.id.bt_approve_saving)
     fun onProcessTransactionClicked() {
-        if (processSavingTransactionAction == ACTION_APPROVE_SAVINGS) {
-            approveSavings()
-        } else if (processSavingTransactionAction == ACTION_ACTIVATE_SAVINGS) {
-            activateSavings()
-        } else {
-            Log.i(
-                requireActivity().localClassName,
-                resources.getString(R.string.transaction_action_not_set)
-            )
+        when (processSavingTransactionAction) {
+            ACTION_APPROVE_SAVINGS -> {
+                approveSavings()
+            }
+            ACTION_ACTIVATE_SAVINGS -> {
+                activateSavings()
+            }
+            else -> {
+                Log.i(
+                    requireActivity().localClassName,
+                    resources.getString(R.string.transaction_action_not_set)
+                )
+            }
         }
     }
 

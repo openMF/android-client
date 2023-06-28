@@ -24,8 +24,6 @@ import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
 import butterknife.OnCheckedChanged
 import butterknife.OnClick
 import com.mifos.exceptions.InvalidTextInputException
@@ -34,10 +32,10 @@ import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentCreateNewClientBinding
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
-import com.mifos.mifosxdroid.views.CircularImageView
 import com.mifos.objects.client.ClientPayload
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.organisation.Staff
@@ -50,77 +48,21 @@ import java.io.File
 import java.util.*
 import javax.inject.Inject
 
-class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, CreateNewClientMvpView, OnItemSelectedListener {
+class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, CreateNewClientMvpView,
+    OnItemSelectedListener {
+
+    private lateinit var binding: FragmentCreateNewClientBinding
+
     private val LOG_TAG = javaClass.simpleName
+
     @JvmField
     var datePickerSubmissionDate: DialogFragment? = null
+
     @JvmField
     var datePickerDateOfBirth: DialogFragment? = null
 
-    @JvmField
-    @BindView(R.id.iv_clientImage)
-    var ivClientImage: CircularImageView? = null
-
-    @JvmField
-    @BindView(R.id.et_client_first_name)
-    var etClientFirstName: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_client_last_name)
-    var etClientLastName: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_client_middle_name)
-    var etClientMiddleName: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_client_mobile_no)
-    var etClientMobileNo: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_client_external_id)
-    var etClientExternalId: EditText? = null
-
-    @JvmField
-    @BindView(R.id.cb_client_active_status)
-    var cbClientActiveStatus: CheckBox? = null
-
-    @JvmField
-    @BindView(R.id.tv_submission_date)
-    var tvSubmissionDate: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_dateofbirth)
-    var tvDateOfBirth: TextView? = null
-
-    @JvmField
-    @BindView(R.id.sp_offices)
-    var spOffices: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.sp_gender)
-    var spGender: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.sp_client_type)
-    var spClientType: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.sp_staff)
-    var spStaff: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.sp_client_classification)
-    var spClientClassification: Spinner? = null
-
-    @JvmField
-    @BindView(R.id.layout_submission)
-    var layout_submission: LinearLayout? = null
-
-    @JvmField
     @Inject
-    var createNewClientPresenter: CreateNewClientPresenter? = null
-    lateinit var rootView: View
+    lateinit var createNewClientPresenter: CreateNewClientPresenter
 
     // It checks whether the user wants to create the new client with or without picture
     private var createClientWithImage = false
@@ -161,59 +103,91 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         staffList = ArrayList()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_create_new_client, null)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentCreateNewClientBinding.inflate(inflater, container, false)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        ButterKnife.bind(this, rootView)
-        createNewClientPresenter!!.attachView(this)
+        createNewClientPresenter.attachView(this)
         showUserInterface()
-        createNewClientPresenter!!.loadClientTemplate()
-        return rootView
+        createNewClientPresenter.loadClientTemplate()
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.tvSubmissionDate.setOnClickListener {
+            onClickTextViewSubmissionDate()
+        }
+
+        binding.tvDateofbirth.setOnClickListener {
+            onClickTextViewDateOfBirth()
+        }
+
+        binding.btnSubmit.setOnClickListener {
+            onClickSubmitButton()
+        }
     }
 
     override fun showUserInterface() {
-        genderOptionsAdapter = ArrayAdapter(requireActivity(),
-                android.R.layout.simple_spinner_item, genderOptionsList ?: emptyList())
-        genderOptionsAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spGender!!.adapter = genderOptionsAdapter
-        spGender!!.onItemSelectedListener = this
-        clientClassificationAdapter = ArrayAdapter(requireActivity(),
-                android.R.layout.simple_spinner_item, clientClassificationList ?: emptyList())
-        clientClassificationAdapter!!
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spClientClassification!!.adapter = clientClassificationAdapter
-        spClientClassification!!.onItemSelectedListener = this
-        clientTypeAdapter = ArrayAdapter(requireActivity(),
-                android.R.layout.simple_spinner_item, clientTypeList ?: emptyList())
-        clientTypeAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spClientType!!.adapter = clientTypeAdapter
-        spClientType!!.onItemSelectedListener = this
-        officeAdapter = ArrayAdapter(requireActivity(),
-                android.R.layout.simple_spinner_item, officeList ?: emptyList())
-        officeAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spOffices!!.adapter = officeAdapter
-        spOffices!!.onItemSelectedListener = this
-        staffAdapter = ArrayAdapter(requireActivity(),
-                android.R.layout.simple_spinner_item, staffList ?: emptyList())
-        staffAdapter!!.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spStaff!!.adapter = staffAdapter
-        spStaff!!.onItemSelectedListener = this
+        genderOptionsAdapter = ArrayAdapter(
+            requireActivity(),
+            android.R.layout.simple_spinner_item, genderOptionsList ?: emptyList()
+        )
+        genderOptionsAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spGender.adapter = genderOptionsAdapter
+        binding.spGender.onItemSelectedListener = this
+        clientClassificationAdapter = ArrayAdapter(
+            requireActivity(),
+            android.R.layout.simple_spinner_item, clientClassificationList ?: emptyList()
+        )
+        clientClassificationAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spClientClassification.adapter = clientClassificationAdapter
+        binding.spClientClassification.onItemSelectedListener = this
+        clientTypeAdapter = ArrayAdapter(
+            requireActivity(),
+            android.R.layout.simple_spinner_item, clientTypeList ?: emptyList()
+        )
+        clientTypeAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spClientType.adapter = clientTypeAdapter
+        binding.spClientType.onItemSelectedListener = this
+        officeAdapter = ArrayAdapter(
+            requireActivity(),
+            android.R.layout.simple_spinner_item, officeList ?: emptyList()
+        )
+        officeAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spOffices.adapter = officeAdapter
+        binding.spOffices.onItemSelectedListener = this
+        staffAdapter = ArrayAdapter(
+            requireActivity(),
+            android.R.layout.simple_spinner_item, staffList ?: emptyList()
+        )
+        staffAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spStaff.adapter = staffAdapter
+        binding.spStaff.onItemSelectedListener = this
         datePickerSubmissionDate = MFDatePicker.newInsance(this)
         datePickerDateOfBirth = MFDatePicker.newInsance(this)
-        tvSubmissionDate!!.text = MFDatePicker.getDatePickedAsString()
-        tvDateOfBirth!!.text = MFDatePicker.getDatePickedAsString()
-        ivClientImage!!.setOnClickListener { view ->
+        binding.tvSubmissionDate.text = MFDatePicker.datePickedAsString
+        binding.tvDateofbirth.text = MFDatePicker.datePickedAsString
+        binding.ivClientImage.setOnClickListener { view ->
             val menu = PopupMenu(requireActivity(), view)
-            menu.menuInflater.inflate(R.menu.menu_create_client_image, menu
-                    .menu)
+            menu.menuInflater.inflate(
+                R.menu.menu_create_client_image, menu
+                    .menu
+            )
             menu.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.client_image_capture -> captureClientImage()
                     R.id.client_image_upload -> uploadClientImageFromDevice()
                     R.id.client_image_remove -> removeExistingImage()
-                    else -> Log.e("CreateNewClientFragment", "Unrecognized " +
-                            "client " +
-                            "image menu item")
+                    else -> Log.e(
+                        "CreateNewClientFragment", "Unrecognized " +
+                                "client " +
+                                "image menu item"
+                    )
                 }
                 true
             }
@@ -224,80 +198,85 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     private fun captureClientImage() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         ClientImageFile = File(
-                requireActivity().externalCacheDir, "client_image.png")
+            requireActivity().externalCacheDir, "client_image.png"
+        )
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(ClientImageFile))
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE)
     }
 
     private fun uploadClientImageFromDevice() {
         if (isStoragePermissionGranted) {
-            val galleryIntent = Intent(Intent.ACTION_PICK,
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            val galleryIntent = Intent(
+                Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            )
             startActivityForResult(galleryIntent, PICK_IMAGE_ACTIVITY_REQUEST_CODE)
         }
     }
 
     private fun removeExistingImage() {
-        ivClientImage!!.setImageDrawable(resources.getDrawable(R.drawable.ic_dp_placeholder))
+        binding.ivClientImage.setImageDrawable(resources.getDrawable(R.drawable.ic_dp_placeholder))
         createClientWithImage = false
     }
 
-    @OnClick(R.id.tv_submission_date)
-    fun onClickTextViewSubmissionDate() {
-        datePickerSubmissionDate!!.show(requireActivity().supportFragmentManager,
-                FragmentConstants.DFRAG_DATE_PICKER)
-        mCurrentDateView = tvSubmissionDate
+    private fun onClickTextViewSubmissionDate() {
+        datePickerSubmissionDate?.show(
+            requireActivity().supportFragmentManager,
+            FragmentConstants.DFRAG_DATE_PICKER
+        )
+        mCurrentDateView = binding.tvSubmissionDate
     }
 
-    @OnClick(R.id.tv_dateofbirth)
-    fun onClickTextViewDateOfBirth() {
-        datePickerDateOfBirth!!.show(requireActivity().supportFragmentManager,
-                FragmentConstants.DFRAG_DATE_PICKER)
-        mCurrentDateView = tvDateOfBirth
+    private fun onClickTextViewDateOfBirth() {
+        datePickerDateOfBirth?.show(
+            requireActivity().supportFragmentManager,
+            FragmentConstants.DFRAG_DATE_PICKER
+        )
+        mCurrentDateView = binding.tvDateofbirth
     }
 
-    @OnClick(R.id.btn_submit)
-    fun onClickSubmitButton() {
-        submissionDateString = tvSubmissionDate!!.text.toString()
+
+    private fun onClickSubmitButton() {
+        submissionDateString = binding.tvSubmissionDate.text.toString()
         submissionDateString = DateHelper
-                .getDateAsStringUsedForCollectionSheetPayload(submissionDateString)
-                .replace("-", " ")
-        dateOfBirthString = tvDateOfBirth!!.text.toString()
+            .getDateAsStringUsedForCollectionSheetPayload(submissionDateString)
+            .replace("-", " ")
+        dateOfBirthString = binding.tvDateofbirth.text.toString()
         dateOfBirthString = DateHelper.getDateAsStringUsedForDateofBirth(dateOfBirthString)
-                .replace("-", " ")
+            .replace("-", " ")
         val clientPayload = ClientPayload()
 
         //Mandatory Fields
-        clientPayload.firstname = etClientFirstName!!.editableText.toString()
-        clientPayload.lastname = etClientLastName!!.editableText.toString()
+        clientPayload.firstname = binding.etClientFirstName.editableText.toString()
+        clientPayload.lastname = binding.etClientLastName.editableText.toString()
         clientPayload.officeId = officeId
 
         //Optional Fields, we do not need to add any check because these fields carry some
         // default values
-        clientPayload.isActive = cbClientActiveStatus!!.isChecked
+        clientPayload.isActive = binding.cbClientActiveStatus.isChecked
         clientPayload.activationDate = submissionDateString
         clientPayload.dateOfBirth = dateOfBirthString
 
         //Optional Fields
-        if (!TextUtils.isEmpty(etClientMiddleName!!.editableText.toString())) {
-            clientPayload.middlename = etClientMiddleName!!.editableText.toString()
+        if (!TextUtils.isEmpty(binding.etClientMiddleName.editableText.toString())) {
+            clientPayload.middlename = binding.etClientMiddleName.editableText.toString()
         }
-        if (PhoneNumberUtils.isGlobalPhoneNumber(etClientMobileNo!!.editableText.toString())) {
-            clientPayload.mobileNo = etClientMobileNo!!.editableText.toString()
+        if (PhoneNumberUtils.isGlobalPhoneNumber(binding.etClientMobileNo.editableText.toString())) {
+            clientPayload.mobileNo = binding.etClientMobileNo.editableText.toString()
         }
-        if (!TextUtils.isEmpty(etClientExternalId!!.editableText.toString())) {
-            clientPayload.externalId = etClientExternalId!!.editableText.toString()
+        if (!TextUtils.isEmpty(binding.etClientExternalId.editableText.toString())) {
+            clientPayload.externalId = binding.etClientExternalId.editableText.toString()
         }
-        if (!clientStaff!!.isEmpty()) {
+        if (clientStaff!!.isNotEmpty()) {
             clientPayload.staffId = staffId
         }
-        if (!genderOptionsList!!.isEmpty()) {
+        if (genderOptionsList!!.isNotEmpty()) {
             clientPayload.genderId = genderId
         }
-        if (!clientTypeList!!.isEmpty()) {
+        if (clientTypeList!!.isNotEmpty()) {
             clientPayload.clientTypeId = clientTypeId
         }
-        if (!clientClassificationList!!.isEmpty()) {
+        if (clientClassificationList!!.isNotEmpty()) {
             clientPayload.clientClassificationId = clientClassificationId
         }
         if (!isFirstNameValid) {
@@ -309,56 +288,62 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         if (isLastNameValid) {
             if (hasDataTables) {
                 val fragment = DataTableListFragment.newInstance(
-                        clientsTemplate!!.dataTables,
-                        clientPayload, Constants.CREATE_CLIENT)
+                    clientsTemplate?.dataTables,
+                    clientPayload, Constants.CREATE_CLIENT
+                )
                 val fragmentTransaction = requireActivity().supportFragmentManager
-                        .beginTransaction()
+                    .beginTransaction()
                 requireActivity().supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST)
                 fragmentTransaction.replace(R.id.container, fragment).commit()
             } else {
                 clientPayload.datatables = null
-                createNewClientPresenter!!.createClient(clientPayload)
+                createNewClientPresenter.createClient(clientPayload)
             }
         }
     }
 
     @OnCheckedChanged(R.id.cb_client_active_status)
     fun onClickActiveCheckBox() {
-        layout_submission!!.visibility = if (cbClientActiveStatus!!.isChecked) View.VISIBLE else View.GONE
+        binding.layoutSubmission.visibility =
+            if (binding.cbClientActiveStatus.isChecked) View.VISIBLE else View.GONE
     }
 
-    override fun onDatePicked(date: String) {
-        if (mCurrentDateView != null && mCurrentDateView === tvSubmissionDate) {
-            tvSubmissionDate!!.text = date
-        } else if (mCurrentDateView != null && mCurrentDateView === tvDateOfBirth) {
-            tvDateOfBirth!!.text = date
+    override fun onDatePicked(date: String?) {
+        if (mCurrentDateView != null && mCurrentDateView === binding.tvSubmissionDate) {
+            binding.tvSubmissionDate.text = date
+        } else if (mCurrentDateView != null && mCurrentDateView === binding.tvDateofbirth) {
+            binding.tvDateofbirth.text = date
         }
     }
 
     override fun showClientTemplate(clientsTemplate: ClientsTemplate?) {
         this.clientsTemplate = clientsTemplate
         if (clientsTemplate != null) {
-            if (!clientsTemplate.dataTables.isEmpty()) {
+            if (clientsTemplate.dataTables.isNotEmpty()) {
                 hasDataTables = true
             }
         }
-        genderOptionsList!!.addAll(
-                createNewClientPresenter!!.filterOptions(clientsTemplate?.genderOptions))
-        genderOptionsAdapter!!.notifyDataSetChanged()
-        clientTypeList!!.addAll(
-                createNewClientPresenter!!.filterOptions(clientsTemplate?.clientTypeOptions))
-        clientTypeAdapter!!.notifyDataSetChanged()
-        clientClassificationList!!.addAll(createNewClientPresenter!!
-                .filterOptions(clientsTemplate?.clientClassificationOptions))
-        clientClassificationAdapter!!.notifyDataSetChanged()
+        genderOptionsList?.addAll(
+            createNewClientPresenter.filterOptions(clientsTemplate?.genderOptions)
+        )
+        genderOptionsAdapter?.notifyDataSetChanged()
+        clientTypeList?.addAll(
+            createNewClientPresenter.filterOptions(clientsTemplate?.clientTypeOptions)
+        )
+        clientTypeAdapter?.notifyDataSetChanged()
+        clientClassificationList?.addAll(
+            createNewClientPresenter
+                .filterOptions(clientsTemplate?.clientClassificationOptions)
+        )
+        clientClassificationAdapter?.notifyDataSetChanged()
     }
 
     override fun showOffices(offices: List<Office?>?) {
         clientOffices = offices as List<Office>?
-        officeList!!.addAll(createNewClientPresenter!!.filterOffices(offices))
+        officeList?.addAll(createNewClientPresenter.filterOffices(offices))
         Collections.sort(officeList)
-        officeAdapter!!.notifyDataSetChanged()
+        officeAdapter?.notifyDataSetChanged()
     }
 
     override fun showStaffInOffices(staffs: List<Staff?>?) {
@@ -368,22 +353,22 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
             }
         }
         clientStaff = staffs as List<Staff>?
-        staffList!!.clear()
-        staffList!!.addAll(createNewClientPresenter!!.filterStaff(staffs))
-        staffAdapter!!.notifyDataSetChanged()
+        staffList?.clear()
+        staffList?.addAll(createNewClientPresenter.filterStaff(staffs))
+        staffAdapter?.notifyDataSetChanged()
     }
 
     override fun showClientCreatedSuccessfully(message: Int) {
-        Toaster.show(rootView, message)
+        Toaster.show(binding.root, message)
     }
 
     override fun showWaitingForCheckerApproval(message: Int) {
-        Toaster.show(rootView, message)
+        Toaster.show(binding.root, message)
         requireActivity().supportFragmentManager.popBackStack()
     }
 
     override fun showMessage(message: Int) {
-        Toaster.show(rootView, message)
+        Toaster.show(binding.root, message)
     }
 
     override fun showMessage(message: String?) {
@@ -396,19 +381,21 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
 
     override fun onDestroyView() {
         super.onDestroyView()
-        createNewClientPresenter!!.detachView()
+        createNewClientPresenter.detachView()
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         when (parent.id) {
             R.id.sp_offices -> {
                 officeId = clientOffices!![position].id
-                createNewClientPresenter!!.loadStaffInOffices(officeId)
+                createNewClientPresenter.loadStaffInOffices(officeId)
             }
+
             R.id.sp_gender -> genderId = clientsTemplate!!.genderOptions[position].id
             R.id.sp_client_type -> clientTypeId = clientsTemplate!!.clientTypeOptions[position].id
             R.id.sp_staff -> staffId = clientStaff!![position].id
-            R.id.sp_client_classification -> clientClassificationId = clientsTemplate!!.clientClassificationOptions[position].id
+            R.id.sp_client_classification -> clientClassificationId =
+                clientsTemplate!!.clientClassificationOptions[position].id
         }
     }
 
@@ -417,14 +404,18 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         get() {
             result = true
             try {
-                if (TextUtils.isEmpty(etClientFirstName!!.editableText.toString())) {
-                    throw RequiredFieldException(resources.getString(R.string.first_name),
-                            resources.getString(R.string.error_cannot_be_empty))
+                if (TextUtils.isEmpty(binding.etClientFirstName.editableText.toString())) {
+                    throw RequiredFieldException(
+                        resources.getString(R.string.first_name),
+                        resources.getString(R.string.error_cannot_be_empty)
+                    )
                 }
-                if (!ValidationUtil.isNameValid(etClientFirstName!!.editableText.toString())) {
-                    throw InvalidTextInputException(resources.getString(R.string.first_name),
-                            resources.getString(R.string.error_should_contain_only),
-                            InvalidTextInputException.TYPE_ALPHABETS)
+                if (!ValidationUtil.isNameValid(binding.etClientFirstName.editableText.toString())) {
+                    throw InvalidTextInputException(
+                        resources.getString(R.string.first_name),
+                        resources.getString(R.string.error_should_contain_only),
+                        InvalidTextInputException.TYPE_ALPHABETS
+                    )
                 }
             } catch (e: InvalidTextInputException) {
                 e.notifyUserWithToast(activity)
@@ -440,13 +431,17 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         get() {
             result = true
             try {
-                if (!TextUtils.isEmpty(etClientMiddleName!!.editableText.toString())
-                        && !ValidationUtil.isNameValid(etClientMiddleName!!.editableText
-                                .toString())) {
+                if (!TextUtils.isEmpty(binding.etClientMiddleName.editableText.toString())
+                    && !ValidationUtil.isNameValid(
+                        binding.etClientMiddleName.editableText
+                            .toString()
+                    )
+                ) {
                     throw InvalidTextInputException(
-                            resources.getString(R.string.middle_name),
-                            resources.getString(R.string.error_should_contain_only),
-                            InvalidTextInputException.TYPE_ALPHABETS)
+                        resources.getString(R.string.middle_name),
+                        resources.getString(R.string.error_should_contain_only),
+                        InvalidTextInputException.TYPE_ALPHABETS
+                    )
                 }
             } catch (e: InvalidTextInputException) {
                 e.notifyUserWithToast(activity)
@@ -459,14 +454,18 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         get() {
             result = true
             try {
-                if (TextUtils.isEmpty(etClientLastName!!.editableText.toString())) {
-                    throw RequiredFieldException(resources.getString(R.string.last_name),
-                            resources.getString(R.string.error_cannot_be_empty))
+                if (TextUtils.isEmpty(binding.etClientLastName.editableText.toString())) {
+                    throw RequiredFieldException(
+                        resources.getString(R.string.last_name),
+                        resources.getString(R.string.error_cannot_be_empty)
+                    )
                 }
-                if (!ValidationUtil.isNameValid(etClientLastName!!.editableText.toString())) {
-                    throw InvalidTextInputException(resources.getString(R.string.last_name),
-                            resources.getString(R.string.error_should_contain_only),
-                            InvalidTextInputException.TYPE_ALPHABETS)
+                if (!ValidationUtil.isNameValid(binding.etClientLastName.editableText.toString())) {
+                    throw InvalidTextInputException(
+                        resources.getString(R.string.last_name),
+                        resources.getString(R.string.error_should_contain_only),
+                        InvalidTextInputException.TYPE_ALPHABETS
+                    )
                 }
             } catch (e: InvalidTextInputException) {
                 e.notifyUserWithToast(activity)
@@ -481,7 +480,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     override fun setClientId(id: Int?) {
         returnedClientId = id
         if (createClientWithImage) {
-            ClientImageFile?.let { createNewClientPresenter!!.uploadImage(returnedClientId!!, it) }
+            ClientImageFile?.let { createNewClientPresenter.uploadImage(returnedClientId!!, it) }
         } else {
             requireActivity().supportFragmentManager.popBackStack()
         }
@@ -489,20 +488,24 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE
-                && resultCode == Activity.RESULT_OK) {
+            && resultCode == Activity.RESULT_OK
+        ) {
             createClientWithImage = true
-            ivClientImage!!.setImageBitmap(BitmapFactory.decodeFile(ClientImageFile!!.absolutePath))
+            binding.ivClientImage.setImageBitmap(BitmapFactory.decodeFile(ClientImageFile!!.absolutePath))
         } else if (requestCode == PICK_IMAGE_ACTIVITY_REQUEST_CODE
-                && resultCode == Activity.RESULT_OK && data?.data != null) {
+            && resultCode == Activity.RESULT_OK && data?.data != null
+        ) {
             createClientWithImage = true
             pickedImageUri = data.data
             val filePath = arrayOf(MediaStore.Images.Media.DATA)
-            val c = requireActivity().contentResolver.query(pickedImageUri!!, filePath,
-                    null, null, null)!!
+            val c = requireActivity().contentResolver.query(
+                pickedImageUri!!, filePath,
+                null, null, null
+            )!!
             c.moveToFirst()
             val columnIndex = c.getColumnIndex(filePath[0])
             val picturePath = c.getString(columnIndex)
-            ivClientImage!!.setImageBitmap(BitmapFactory.decodeFile(picturePath))
+            binding.ivClientImage.setImageBitmap(BitmapFactory.decodeFile(picturePath))
             ClientImageFile = File(picturePath)
         }
     }
@@ -510,25 +513,28 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     override fun showProgress(message: String?) {
         if (progress == null) {
             progress = ProgressDialog(activity, ProgressDialog.STYLE_SPINNER)
-            progress!!.setCancelable(false)
+            progress?.setCancelable(false)
         }
-        progress!!.setMessage(message)
-        progress!!.show()
+        progress?.setMessage(message)
+        progress?.show()
     }
 
     override fun hideProgress() {
-        if (progress != null && progress!!.isShowing) progress!!.dismiss()
+        if (progress != null && progress!!.isShowing) progress?.dismiss()
     }
 
     //permission is automatically granted on sdk<23 upon installation
     val isStoragePermissionGranted: Boolean
         get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (requireActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
+                == PackageManager.PERMISSION_GRANTED
+            ) {
                 true
             } else {
-                requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                        READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE)
+                requestPermissions(
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
+                )
                 false
             }
         } else { //permission is automatically granted on sdk<23 upon installation
@@ -536,7 +542,8 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         }
 
     override fun onRequestPermissionsResult(
-            requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && requestCode == READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE) {
             uploadClientImageFromDevice()
@@ -547,6 +554,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         private const val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1
         private const val PICK_IMAGE_ACTIVITY_REQUEST_CODE = 2
         private const val READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 3
+
         @JvmStatic
         fun newInstance(): CreateNewClientFragment {
             val createNewClientFragment = CreateNewClientFragment()

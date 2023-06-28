@@ -4,17 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
 import butterknife.OnClick
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.core.util.Toaster.show
+import com.mifos.mifosxdroid.databinding.FragmentActivateClientBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.client.ActivatePayload
@@ -27,14 +25,12 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 09/02/17.
  */
 class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListener {
-    @JvmField
-    @BindView(R.id.tv_activation_date)
-    var tvActivationDate: TextView? = null
+
+    private lateinit var binding: FragmentActivateClientBinding
 
     @JvmField
     @Inject
     var activatePresenter: ActivatePresenter? = null
-    private lateinit var rootView: View
     private var mfDatePicker: DialogFragment? = null
     private var activationDate: String? = null
     private var id = 0
@@ -49,40 +45,50 @@ class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListene
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        rootView = inflater.inflate(R.layout.fragment_activate_client, container, false)
-        ButterKnife.bind(this, rootView)
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentActivateClientBinding.inflate(inflater, container, false)
         activatePresenter?.attachView(this)
         showUserInterface()
-        return rootView
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnActivate.setOnClickListener {
+            onClickActivationButton()
+        }
+
+        binding.tvActivationDate.setOnClickListener {
+            onClickTextViewActivationDate()
+        }
     }
 
     override fun showUserInterface() {
         setToolbarTitle(getString(R.string.activate))
         mfDatePicker = MFDatePicker.newInsance(this)
-        tvActivationDate?.text = MFDatePicker.getDatePickedAsString()
-        activationDate = tvActivationDate?.text.toString()
+        binding.tvActivationDate.text = MFDatePicker.datePickedAsString
+        activationDate = binding.tvActivationDate.text.toString()
         activationDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(activationDate)
             .replace("-", " ")
     }
 
-    @OnClick(R.id.btn_activate)
-    fun onClickActivationButton() {
+    private fun onClickActivationButton() {
         val clientActivate = ActivatePayload(activationDate)
         activate(clientActivate)
     }
 
-    @OnClick(R.id.tv_activation_date)
-    fun onClickTextViewActivationDate() {
-        mfDatePicker?.show(requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER)
+    private fun onClickTextViewActivationDate() {
+        mfDatePicker?.show(
+            requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER
+        )
     }
 
-    override fun onDatePicked(date: String) {
-        tvActivationDate?.text = date
-        activationDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date)
-            .replace("-", " ")
+    override fun onDatePicked(date: String?) {
+        binding.tvActivationDate.text = date
+        activationDate =
+            DateHelper.getDateAsStringUsedForCollectionSheetPayload(date).replace("-", " ")
     }
 
     fun activate(clientActivate: ActivatePayload?) {
@@ -96,14 +102,13 @@ class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListene
 
     override fun showActivatedSuccessfully(message: Int) {
         Toast.makeText(
-            activity,
-            getString(message), Toast.LENGTH_SHORT
+            activity, getString(message), Toast.LENGTH_SHORT
         ).show()
         requireActivity().supportFragmentManager.popBackStack()
     }
 
     override fun showError(errorMessage: String) {
-        show(rootView, errorMessage, Toaster.INDEFINITE)
+        show(binding.root, errorMessage, Toaster.INDEFINITE)
     }
 
     override fun showProgressbar(show: Boolean) {
