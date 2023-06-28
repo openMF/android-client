@@ -26,7 +26,7 @@ class LoginPresenter @Inject constructor(private val dataManagerAuth: DataManage
         subscription?.unsubscribe()
     }
 
-    fun login(username: String?, password: String?) {
+    fun login(username: String, password: String) {
         mvpView?.showProgressbar(true)
         subscription?.takeIf { !it.isUnsubscribed }?.unsubscribe()
         subscription = dataManagerAuth.login(username, password)

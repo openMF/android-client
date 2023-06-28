@@ -17,10 +17,8 @@ class DataManagerAuth @Inject constructor(private val baseApiManager: BaseApiMan
      * @param password Password
      * @return Basic OAuth
      */
-    fun login(username: String?, password: String?): Observable<User> {
-        val loginData = LoginData()
-        loginData.username = username
-        loginData.password = password
+    fun login(username: String, password: String): Observable<User> {
+        val loginData = LoginData(username,password)
         return baseApiManager.authApi.authenticate(loginData)
     }
 }

@@ -2,37 +2,35 @@
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.api.services;
+package com.mifos.api.services
 
-import com.mifos.api.GenericResponse;
-import com.mifos.api.model.APIEndPoint;
-import com.mifos.objects.noncore.Document;
-
-import java.util.List;
-
-import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Part;
-import retrofit2.http.Path;
-import rx.Observable;
+import com.mifos.api.GenericResponse
+import com.mifos.api.model.APIEndPoint
+import com.mifos.objects.noncore.Document
+import okhttp3.MultipartBody
+import okhttp3.ResponseBody
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Part
+import retrofit2.http.Path
+import rx.Observable
 
 /**
  * @author fomenkoo
  */
-public interface DocumentService {
-
+interface DocumentService {
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
-    Observable<List<Document>> getDocuments(@Path("entityType") String entityType,
-                                            @Path("entityId") int entityId);
+    fun getDocuments(
+        @Path("entityType") entityType: String?,
+        @Path("entityId") entityId: Int
+    ): Observable<List<Document>>
 
     /**
      * @param entityType              - Type for which document is being uploaded (Client, Loan
-     *                                or Savings etc)
+     * or Savings etc)
      * @param entityId                - Id of Entity
      * @param nameOfDocument          - Document Name
      * @param description             - Mandatory - Document Description
@@ -40,12 +38,13 @@ public interface DocumentService {
      */
     @POST("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
     @Multipart
-    Observable<GenericResponse> createDocument(@Path("entityType") String entityType,
-                                               @Path("entityId") int entityId,
-                                               @Part("name") String nameOfDocument,
-                                               @Part("description") String description,
-                                               @Part() MultipartBody.Part typedFile);
-
+    fun createDocument(
+        @Path("entityType") entityType: String?,
+        @Path("entityId") entityId: Int,
+        @Part("name") nameOfDocument: String?,
+        @Part("description") description: String?,
+        @Part typedFile: MultipartBody.Part?
+    ): Observable<GenericResponse>
 
     /**
      * This Service is for downloading the Document with EntityType and EntityId and Document Id
@@ -54,15 +53,17 @@ public interface DocumentService {
      * {documentId}/attachment
      *
      * @param entityType    - Type for which document is being uploaded (Client, Loan
-     *                                or Savings etc)
+     * or Savings etc)
      * @param entityId      - Id of Entity
      * @param documentId    - Document Id
      * @return ResponseBody
      */
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}/attachment")
-    Observable<ResponseBody> downloadDocument(@Path("entityType") String entityType,
-                                              @Path("entityId") int entityId,
-                                              @Path("documentId") int documentId);
+    fun downloadDocument(
+        @Path("entityType") entityType: String?,
+        @Path("entityId") entityId: Int,
+        @Path("documentId") documentId: Int
+    ): Observable<ResponseBody>
 
     /**
      * This Service is for Deleting the Document with EntityType and EntityId and Document Id.
@@ -71,15 +72,17 @@ public interface DocumentService {
      * {documentId}
      *
      * @param entityType    - Type for which document is being uploaded (Client, Loan
-     *                                or Savings etc)
+     * or Savings etc)
      * @param entityId      - Id of Entity
      * @param documentId    - Document Id
      * @return
      */
     @DELETE("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}")
-    Observable<GenericResponse> removeDocument(@Path("entityType") String entityType,
-                                               @Path("entityId") int entityId,
-                                               @Path("documentId") int documentId);
+    fun removeDocument(
+        @Path("entityType") entityType: String?,
+        @Path("entityId") entityId: Int,
+        @Path("documentId") documentId: Int
+    ): Observable<GenericResponse>
 
     /**
      * This Service for Updating the Document with EntityType and EntityId and Document Id.
@@ -89,7 +92,7 @@ public interface DocumentService {
      * {documentId}
      *
      * @param entityType              - Type for which document is being uploaded (Client, Loan
-     *                                or Savings etc)
+     * or Savings etc)
      * @param entityId                - Id of Entity
      * @param documentId              - Id of document
      * @param nameOfDocument          - Document Name
@@ -98,10 +101,12 @@ public interface DocumentService {
      */
     @PUT("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}")
     @Multipart
-    Observable<GenericResponse> updateDocument(@Path("entityType") String entityType,
-                                               @Path("entityId") int entityId,
-                                               @Path("documentId") int documentId,
-                                               @Part("name") String nameOfDocument,
-                                               @Part("description") String description,
-                                               @Part() MultipartBody.Part typedFile);
+    fun updateDocument(
+        @Path("entityType") entityType: String?,
+        @Path("entityId") entityId: Int,
+        @Path("documentId") documentId: Int,
+        @Part("name") nameOfDocument: String?,
+        @Part("description") description: String?,
+        @Part typedFile: MultipartBody.Part?
+    ): Observable<GenericResponse>
 }

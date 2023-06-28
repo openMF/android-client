@@ -26,6 +26,7 @@ import com.mifos.utils.Constants
 import retrofit2.adapter.rxjava.HttpException
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.
@@ -124,7 +125,7 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
             bulkRepaymentTransactions.add(BulkRepaymentTransactions((repaymentTransaction.key as Int?)!!, (repaymentTransaction.value as Double?)!!))
             iterator.remove()
         }
-        collectionSheetPayload.bulkRepaymentTransactions = arrayOfNulls(bulkRepaymentTransactions.size)
+        collectionSheetPayload.bulkRepaymentTransactions = arrayOf()
         bulkRepaymentTransactions.toArray(collectionSheetPayload.bulkRepaymentTransactions)
         collectionSheetPayload.calendarId = calendarInstanceId.toLong()
         collectionSheetPayload.transactionDate = dateOfCollection
@@ -194,6 +195,6 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
     }
 }
 
-private fun <E> MutableList<E>.toArray(bulkRepaymentTransactions: Array<E?>) {
+private fun <E> MutableList<E>.toArray(bulkRepaymentTransactions: Array<BulkRepaymentTransactions>) {
 
 }

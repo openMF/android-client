@@ -2,43 +2,39 @@
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.api.services;
+package com.mifos.api.services
 
-import com.mifos.api.GenericResponse;
-import com.mifos.api.model.APIEndPoint;
-import com.mifos.objects.accounts.ClientAccounts;
-import com.mifos.objects.client.Client;
-import com.mifos.objects.client.ActivatePayload;
-import com.mifos.objects.client.ClientAddressRequest;
-import com.mifos.objects.client.ClientAddressResponse;
-import com.mifos.objects.client.ClientPayload;
-import com.mifos.objects.client.Page;
-import com.mifos.objects.noncore.Identifier;
-import com.mifos.objects.noncore.IdentifierCreationResponse;
-import com.mifos.objects.noncore.IdentifierPayload;
-import com.mifos.objects.noncore.IdentifierTemplate;
-import com.mifos.objects.templates.clients.ClientsTemplate;
-
-import java.util.List;
-
-import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Part;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
-import rx.Observable;
+import com.mifos.api.GenericResponse
+import com.mifos.api.model.APIEndPoint
+import com.mifos.objects.accounts.ClientAccounts
+import com.mifos.objects.client.ActivatePayload
+import com.mifos.objects.client.Client
+import com.mifos.objects.client.ClientAddressRequest
+import com.mifos.objects.client.ClientAddressResponse
+import com.mifos.objects.client.ClientPayload
+import com.mifos.objects.client.Page
+import com.mifos.objects.noncore.Identifier
+import com.mifos.objects.noncore.IdentifierCreationResponse
+import com.mifos.objects.noncore.IdentifierPayload
+import com.mifos.objects.noncore.IdentifierTemplate
+import com.mifos.objects.templates.clients.ClientsTemplate
+import okhttp3.MultipartBody
+import okhttp3.ResponseBody
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Part
+import retrofit2.http.Path
+import retrofit2.http.Query
+import rx.Observable
 
 /**
  * @author fomenkoo
  */
-public interface ClientService {
-
+interface ClientService {
     /**
      * @param b      True Enabling the Pagination of the API
      * @param offset Value give from which position Fetch ClientList
@@ -46,33 +42,36 @@ public interface ClientService {
      * @return List of Clients
      */
     @GET(APIEndPoint.CLIENTS)
-    Observable<Page<Client>> getAllClients(@Query("paged") boolean b,
-                                           @Query("offset") int offset,
-                                           @Query("limit") int limit);
+    fun getAllClients(
+        @Query("paged") b: Boolean,
+        @Query("offset") offset: Int,
+        @Query("limit") limit: Int
+    ): Observable<Page<Client>>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
-    Observable<Client> getClient(@Path("clientId") int clientId);
+    fun getClient(@Path("clientId") clientId: Int): Observable<Client>
 
     @Multipart
     @POST(APIEndPoint.CLIENTS + "/{clientId}/images")
-    Observable<ResponseBody> uploadClientImage(@Path("clientId") int clientId,
-                                               @Part MultipartBody.Part file);
+    fun uploadClientImage(
+        @Path("clientId") clientId: Int,
+        @Part file: MultipartBody.Part?
+    ): Observable<ResponseBody>
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
-    Observable<ResponseBody> deleteClientImage(@Path("clientId") int clientId);
+    fun deleteClientImage(@Path("clientId") clientId: Int): Observable<ResponseBody>
 
     //TODO: Implement when API Fixed
-//    @GET("/clients/{clientId}/images")
-//    Observable<TypedString> getClientImage(@Path("clientId") int clientId);
-
+    //    @GET("/clients/{clientId}/images")
+    //    Observable<TypedString> getClientImage(@Path("clientId") int clientId);
     @POST(APIEndPoint.CLIENTS)
-    Observable<Client> createClient(@Body ClientPayload clientPayload);
+    fun createClient(@Body clientPayload: ClientPayload?): Observable<Client>
 
-    @GET(APIEndPoint.CLIENTS + "/template")
-    Observable<ClientsTemplate> getClientTemplate();
+    @get:GET(APIEndPoint.CLIENTS + "/template")
+    val clientTemplate: Observable<ClientsTemplate>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/accounts")
-    Observable<ClientAccounts> getClientAccounts(@Path("clientId") int clientId);
+    fun getClientAccounts(@Path("clientId") clientId: Int): Observable<ClientAccounts>
 
     /**
      * This Service is for fetching the List of Identifiers.
@@ -81,10 +80,9 @@ public interface ClientService {
      *
      * @param clientId Client Id
      * @return List<Identifier>
-     */
+    </Identifier> */
     @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
-    Observable<List<Identifier>> getClientIdentifiers(@Path("clientId") int clientId);
-
+    fun getClientIdentifiers(@Path("clientId") clientId: Int): Observable<List<Identifier>>
 
     /**
      * This Service is for Creating the Client Identifier.
@@ -96,10 +94,10 @@ public interface ClientService {
      * @return IdentifierCreationResponse
      */
     @POST(APIEndPoint.CLIENTS + "/{clientId}/identifiers")
-    Observable<IdentifierCreationResponse> createClientIdentifier(
-            @Path("clientId") int clientId,
-            @Body IdentifierPayload identifierPayload);
-
+    fun createClientIdentifier(
+        @Path("clientId") clientId: Int,
+        @Body identifierPayload: IdentifierPayload?
+    ): Observable<IdentifierCreationResponse>
 
     /**
      * This Service is for the Fetching the Client Identifier Template.
@@ -110,7 +108,7 @@ public interface ClientService {
      * @return IdentifierTemplate
      */
     @GET(APIEndPoint.CLIENTS + "/{clientId}/identifiers/template")
-    Observable<IdentifierTemplate> getClientIdentifierTemplate(@Path("clientId") int clientId);
+    fun getClientIdentifierTemplate(@Path("clientId") clientId: Int): Observable<IdentifierTemplate>
 
     /**
      * This Service for Deleting the Client Identifier.
@@ -123,9 +121,10 @@ public interface ClientService {
      * @return GenericResponse
      */
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
-    Observable<GenericResponse> deleteClientIdentifier(@Path("clientId") int clientId,
-                                                       @Path("identifierId") int identifierId);
-
+    fun deleteClientIdentifier(
+        @Path("clientId") clientId: Int,
+        @Path("identifierId") identifierId: Int
+    ): Observable<GenericResponse>
 
     /**
      * This is the service for fetching the client pinpoint locations from the dataTable
@@ -142,9 +141,9 @@ public interface ClientService {
      * @return ClientAddressResponse
      */
     @GET(APIEndPoint.DATATABLES + "/client_pinpoint_location/{clientId}")
-    Observable<List<ClientAddressResponse>> getClientPinpointLocations(
-            @Path("clientId") int clientId);
-
+    fun getClientPinpointLocations(
+        @Path("clientId") clientId: Int
+    ): Observable<List<ClientAddressResponse>>
 
     /**
      * This is the service for adding the new Client Pinpoint Location in dataTable
@@ -158,10 +157,10 @@ public interface ClientService {
      * @return GenericResponse
      */
     @POST(APIEndPoint.DATATABLES + "/client_pinpoint_location/{clientId}")
-    Observable<GenericResponse> addClientPinpointLocation(
-            @Path("clientId") int clientId,
-            @Body ClientAddressRequest clientAddressRequest);
-
+    fun addClientPinpointLocation(
+        @Path("clientId") clientId: Int,
+        @Body clientAddressRequest: ClientAddressRequest?
+    ): Observable<GenericResponse>
 
     /**
      * This is the service for deleting the pinpoint location from the DataTable
@@ -175,8 +174,10 @@ public interface ClientService {
      * @return GenericResponse
      */
     @DELETE(APIEndPoint.DATATABLES + "/client_pinpoint_location/{apptableId}/{datatableId}")
-    Observable<GenericResponse> deleteClientPinpointLocation(@Path("apptableId") int apptableId,
-                                                             @Path("datatableId") int datatableId);
+    fun deleteClientPinpointLocation(
+        @Path("apptableId") apptableId: Int,
+        @Path("datatableId") datatableId: Int
+    ): Observable<GenericResponse>
 
     /**
      * This is the service for updating the pinpoint location from DataTable
@@ -191,9 +192,11 @@ public interface ClientService {
      * @return GenericResponse
      */
     @PUT(APIEndPoint.DATATABLES + "/client_pinpoint_location/{apptableId}/{datatableId}")
-    Observable<GenericResponse> updateClientPinpointLocation(@Path("apptableId") int apptableId,
-                                                             @Path("datatableId") int datatableId,
-                                                             @Body ClientAddressRequest address);
+    fun updateClientPinpointLocation(
+        @Path("apptableId") apptableId: Int,
+        @Path("datatableId") datatableId: Int,
+        @Body address: ClientAddressRequest?
+    ): Observable<GenericResponse>
 
     /**
      * This is the service to activate the client
@@ -204,6 +207,8 @@ public interface ClientService {
      * @return GenericResponse
      */
     @POST(APIEndPoint.CLIENTS + "/{clientId}?command=activate")
-    Observable<GenericResponse> activateClient(@Path("clientId") int clientId,
-                                               @Body ActivatePayload clientActivate);
+    fun activateClient(
+        @Path("clientId") clientId: Int,
+        @Body clientActivate: ActivatePayload?
+    ): Observable<GenericResponse>
 }
