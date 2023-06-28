@@ -62,7 +62,7 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener,
         ButterKnife.bind(this, binding.root)
         mSavingsAccountApprovalPresenter.attachView(this)
         safeUIBlockingUtility = SafeUIBlockingUtility(
-            activity,
+            requireContext(),
             getString(R.string.savings_account_approval_fragment_loading_message)
         )
         showUserInterface()

@@ -168,7 +168,7 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
 
     fun requestPermission() {
         CheckSelfPermissionAndRequest.requestPermission(
-            activity as MifosBaseActivity?,
+            activity as MifosBaseActivity,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Constants.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE,
             resources.getString(
@@ -184,7 +184,7 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
         grantResults: IntArray
     ) {
         if (requestCode == Constants.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {
-            if (grantResults.size > 0
+            if (grantResults.isNotEmpty()
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED
             ) {
                 val exportCsvAsyncTask = ExportCsvAsyncTask()

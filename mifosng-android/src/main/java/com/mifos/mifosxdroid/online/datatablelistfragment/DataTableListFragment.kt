@@ -87,8 +87,7 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
             R.string.associated_datatables
         )
         safeUIBlockingUtility = SafeUIBlockingUtility(
-            this@DataTableListFragment
-                .activity, getString(R.string.create_client_loading_message)
+            requireContext(), getString(R.string.create_client_loading_message)
         )
         for (datatable in dataTables!!) {
             createForm(datatable)
@@ -244,7 +243,7 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
         requireActivity().supportFragmentManager.popBackStack()
         Toast.makeText(
             activity, getString(R.string.client) +
-                    MifosResponseHandler.getResponse(), Toast.LENGTH_SHORT
+                    MifosResponseHandler.response, Toast.LENGTH_SHORT
         ).show()
         if (PrefManager.userStatus == Constants.USER_ONLINE) {
             val clientActivityIntent = Intent(activity, ClientActivity::class.java)

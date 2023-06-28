@@ -44,7 +44,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        safeUIBlockingUtility = SafeUIBlockingUtility(activity,
+        safeUIBlockingUtility = SafeUIBlockingUtility(requireContext(),
                 getString(R.string.signature_fragment_loading_message))
         if (arguments != null) {
             mClientId = requireArguments().getInt(Constants.CLIENT_ID)
@@ -53,7 +53,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         rootView = inflater.inflate(R.layout.fragment_sign, container, false)
         ButterKnife.bind(this, rootView)
         mSignaturePresenter!!.attachView(this)
@@ -108,7 +108,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
 
     override fun requestPermission() {
         CheckSelfPermissionAndRequest.requestPermission(
-                activity as MifosBaseActivity?,
+                activity as MifosBaseActivity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Constants.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE,
                 resources.getString(
@@ -129,7 +129,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
                                             grantResults: IntArray) {
         when (requestCode) {
             Constants.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE -> {
-                if (grantResults.size > 0
+                if (grantResults.isNotEmpty()
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     saveAndUploadSignature()
                 } else {
@@ -142,8 +142,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
 
     override val documentFromGallery: Unit
         get() {
-            val intentDocument: Intent
-            intentDocument = if (AndroidVersionUtil.isApiVersionGreaterOrEqual(Build.VERSION_CODES.KITKAT)) {
+            val intentDocument: Intent = if (AndroidVersionUtil.isApiVersionGreaterOrEqual(Build.VERSION_CODES.KITKAT)) {
                 Intent(Intent.ACTION_OPEN_DOCUMENT)
             } else {
                 Intent(Intent.ACTION_GET_CONTENT)
@@ -157,7 +156,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView, BottomNavigatio
         when (requestCode) {
             FILE_SELECT_CODE -> if (resultCode == Activity.RESULT_OK) {
                 val uri = data?.data
-                val filePath = FileUtils.getPathReal(activity, uri)
+                val filePath = FileUtils.getPathReal(requireContext(), uri!!)
                 if (filePath != null) {
                     signatureFile = File(filePath)
                 }

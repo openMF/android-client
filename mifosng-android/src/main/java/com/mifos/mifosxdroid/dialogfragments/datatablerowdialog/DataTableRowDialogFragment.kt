@@ -65,8 +65,7 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
         dataTableRowDialogPresenter?.attachView(this)
         dialog?.setTitle(dataTable?.registeredTableName)
         safeUIBlockingUtility = SafeUIBlockingUtility(
-            this@DataTableRowDialogFragment
-                .activity, getString(R.string.data_table_row_dialog_loading_message)
+            requireContext(), getString(R.string.data_table_row_dialog_loading_message)
         )
         createForm(dataTable)
         addSaveButton()
@@ -86,12 +85,14 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
                         formWidgets.add(formEditText)
                         binding.llDataTableEntryForm.addView(formEditText.view)
                     } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_INT) {
-                        val formNumericEditText = FormNumericEditText(activity, columnHeader.columnName)
+                        val formNumericEditText =
+                            FormNumericEditText(activity, columnHeader.columnName)
                         formNumericEditText.returnType = FormWidget.SCHEMA_KEY_INT
                         formWidgets.add(formNumericEditText)
                         binding.llDataTableEntryForm.addView(formNumericEditText.view)
                     } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_DECIMAL) {
-                        val formNumericEditText = FormNumericEditText(activity, columnHeader.columnName)
+                        val formNumericEditText =
+                            FormNumericEditText(activity, columnHeader.columnName)
                         formNumericEditText.returnType = FormWidget.SCHEMA_KEY_DECIMAL
                         formWidgets.add(formNumericEditText)
                         binding.llDataTableEntryForm.addView(formNumericEditText.view)

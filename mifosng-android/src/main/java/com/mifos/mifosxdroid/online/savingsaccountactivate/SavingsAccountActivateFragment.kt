@@ -64,7 +64,7 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
         binding = DialogFragmentApproveSavingsBinding.inflate(inflater, container, false)
         mSavingsAccountActivatePresenter.attachView(this)
         safeUIBlockingUtility = SafeUIBlockingUtility(
-            activity,
+            requireContext(),
             getString(R.string.savings_account_loading_message)
         )
         showUserInterface()

@@ -86,7 +86,7 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity?)!!.activityComponent!!.inject(this)
         safeUIBlockingUtility = SafeUIBlockingUtility(
-            activity,
+            requireContext(),
             getString(R.string.document_dialog_fragment_loading_message)
         )
         if (arguments != null) {
@@ -191,7 +191,7 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun requestPermission() {
         CheckSelfPermissionAndRequest.requestPermission(
-            activity as MifosBaseActivity?,
+            activity as MifosBaseActivity,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Constants.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE,
             resources.getString(
@@ -266,7 +266,7 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
             FILE_SELECT_CODE -> if (resultCode == Activity.RESULT_OK) {
                 // Get the Uri of the selected file
                 uri = data!!.data
-                filePath = FileUtils.getPathReal(activity, uri)
+                filePath = FileUtils.getPathReal(requireContext(), uri!!)
                 if (filePath != null) {
                     fileChoosen = File(filePath)
                 }

@@ -94,16 +94,16 @@ class ClientDetailsPresenter @Inject constructor(private val mDataManagerDataTab
         }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<ClientAndClientAccounts?>() {
+                .subscribe(object : Subscriber<ClientAndClientAccounts>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         mvpView!!.showProgressbar(false)
                         mvpView!!.showFetchingError("Client not found.")
                     }
 
-                    override fun onNext(clientAndClientAccounts: ClientAndClientAccounts?) {
+                    override fun onNext(clientAndClientAccounts: ClientAndClientAccounts) {
                         mvpView!!.showProgressbar(false)
-                        mvpView!!.showClientAccount(clientAndClientAccounts!!.clientAccounts)
+                        clientAndClientAccounts.clientAccounts?.let { mvpView!!.showClientAccount(it) }
                         mvpView!!.showClientInformation(clientAndClientAccounts.client)
                     }
                 })

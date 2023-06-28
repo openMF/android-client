@@ -377,7 +377,7 @@ class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePic
 
     override fun showFullParameterResponse(response: FullParameterListResponse) {
         for (row in response.data!!) {
-            when (row.row[0]) {
+            when (row.row!![0]) {
                 Constants.LOAN_OFFICER_ID_SELECT -> fetchLoanOfficer = true
                 Constants.LOAN_PRODUCT_ID_SELECT -> fetchLoanProduct = true
                 Constants.START_DATE_SELECT -> addTextView(Constants.START_DATE_SELECT)
@@ -388,7 +388,7 @@ class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePic
                 Constants.OVERDUE_X_SELECT -> addTextView(Constants.OVERDUE_X_SELECT)
                 Constants.OVERDUE_Y_SELECT -> addTextView(Constants.OVERDUE_Y_SELECT)
             }
-            presenter.fetchParameterDetails(row.row[0], true)
+            presenter.fetchParameterDetails(row.row!![0], true)
         }
     }
 
