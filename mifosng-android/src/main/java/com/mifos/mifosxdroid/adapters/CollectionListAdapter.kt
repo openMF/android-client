@@ -9,24 +9,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
-import android.widget.ListView
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
-import com.mifos.mifosxdroid.R
+import com.mifos.mifosxdroid.databinding.RowCollectionListGroupBinding
+import com.mifos.mifosxdroid.databinding.RowCollectionListGroupClientBinding
 import com.mifos.objects.db.Client
 import com.mifos.objects.db.MifosGroup
 
 /**
  * Created by ishankhanna on 17/07/14.
  */
-class CollectionListAdapter(var context: Context, mifosGroups: List<MifosGroup>) :
+class CollectionListAdapter(
+    private val context: Context,
+    private val mifosGroups: List<MifosGroup>
+) :
     BaseExpandableListAdapter() {
-    var layoutInflater: LayoutInflater = LayoutInflater.from(context)
+    private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
     init {
-        sMifosGroups = mifosGroups
-        for (mifosGroup in sMifosGroups) {
+        for (mifosGroup in mifosGroups) {
             for (client in mifosGroup.clients) {
                 for (loan in client.loans) {
                     sRepaymentTransactions[loan.getLoanId()] = loan.getTotalDue()
@@ -36,19 +35,19 @@ class CollectionListAdapter(var context: Context, mifosGroups: List<MifosGroup>)
     }
 
     override fun getGroupCount(): Int {
-        return sMifosGroups.size
+        return mifosGroups.size
     }
 
     override fun getChildrenCount(groupPosition: Int): Int {
-        return sMifosGroups[groupPosition].clients.size
+        return mifosGroups[groupPosition].clients.size
     }
 
     override fun getGroup(groupPosition: Int): MifosGroup {
-        return sMifosGroups[groupPosition]
+        return mifosGroups[groupPosition]
     }
 
     override fun getChild(groupPosition: Int, childPosition: Int): Client {
-        return sMifosGroups[groupPosition].clients[childPosition]
+        return mifosGroups[groupPosition].clients[childPosition]
     }
 
     override fun getGroupId(groupPosition: Int): Long {
@@ -66,107 +65,74 @@ class CollectionListAdapter(var context: Context, mifosGroups: List<MifosGroup>)
     override fun getGroupView(
         groupPosition: Int,
         isExpanded: Boolean,
-        convertView: View,
+        convertView: View?,
         parent: ViewGroup
     ): View {
-        var convertView = convertView
-        val mifosGroupReusableViewHolder: MifosGroupReusableViewHolder
-        if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.row_collection_list_group, null)
-            mifosGroupReusableViewHolder = MifosGroupReusableViewHolder(convertView)
-            convertView.tag = mifosGroupReusableViewHolder
+        val binding: RowCollectionListGroupBinding = if (convertView == null) {
+            RowCollectionListGroupBinding.inflate(layoutInflater, parent, false)
         } else {
-            mifosGroupReusableViewHolder = convertView.tag as MifosGroupReusableViewHolder
+            RowCollectionListGroupBinding.bind(convertView)
         }
-        var groupTotalDue = 0.0
-        for (client in sMifosGroups[groupPosition].clients) {
-            for (loan in client.loans) {
-                groupTotalDue += sRepaymentTransactions[loan.getLoanId()]!!
-            }
-        }
-        mifosGroupReusableViewHolder.tv_groupName!!.text = sMifosGroups[groupPosition]
-            .groupName
-        mifosGroupReusableViewHolder.tv_groupTotal!!.text = groupTotalDue.toString()
-        return convertView
+
+        val groupTotalDue = calculateGroupTotalDue(groupPosition)
+        binding.tvGroupName.text = mifosGroups[groupPosition].groupName
+        binding.tvGroupTotal.text = groupTotalDue.toString()
+
+        return binding.root
     }
 
     override fun getChildView(
         groupPosition: Int,
         childPosition: Int,
         isLastChild: Boolean,
-        convertView: View,
+        convertView: View?,
         parent: ViewGroup
     ): View {
-        var convertView = convertView
-        val clientReusableViewHolder: ClientReusableViewHolder
-        if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.row_collection_list_group_client, null)
-            clientReusableViewHolder = ClientReusableViewHolder(convertView)
-            convertView.tag = clientReusableViewHolder
+        val binding: RowCollectionListGroupClientBinding = if (convertView == null) {
+            RowCollectionListGroupClientBinding.inflate(layoutInflater, parent, false)
         } else {
-            clientReusableViewHolder = convertView.tag as ClientReusableViewHolder
+            RowCollectionListGroupClientBinding.bind(convertView)
         }
-        val client = sMifosGroups[groupPosition].clients[childPosition]
-        var totalDue = 0.0
-        val loans = client.loans
-        for (loan in loans) {
-            totalDue += loan.getTotalDue()
-        }
-        clientReusableViewHolder.tv_clientId!!.text = client.clientId.toString()
-        clientReusableViewHolder.tv_clientName!!.text = client.clientName
-        clientReusableViewHolder.tv_clientTotal!!.text = totalDue.toString()
+
+        val client = mifosGroups[groupPosition].clients[childPosition]
+        val totalDue = calculateClientTotalDue(client)
+        binding.tvClientId.text = client.clientId.toString()
+        binding.tvClientName.text = client.clientName
+        binding.tvClientTotal.text = totalDue.toString()
+
         val collectionSheetLoanAccountListAdapter = CollectionSheetLoanAccountListAdapter(
-            context, loans, groupPosition,
-            childPosition
+            context, client.loans, groupPosition, childPosition
         )
-        clientReusableViewHolder.lv_loans!!.adapter = collectionSheetLoanAccountListAdapter
-        return convertView
+        binding.lvLoans.adapter = collectionSheetLoanAccountListAdapter
+
+        return binding.root
     }
 
     override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
         return true
     }
 
-    class MifosGroupReusableViewHolder(view: View?) {
-        @JvmField
-        @BindView(R.id.tv_groupName)
-        var tv_groupName: TextView? = null
-
-        @JvmField
-        @BindView(R.id.tv_groupTotal)
-        var tv_groupTotal: TextView? = null
-
-        init {
-            ButterKnife.bind(this, view!!)
+    private fun calculateGroupTotalDue(groupPosition: Int): Double {
+        var groupTotalDue = 0.0
+        for (client in mifosGroups[groupPosition].clients) {
+            for (loan in client.loans) {
+                groupTotalDue += sRepaymentTransactions[loan.getLoanId()] ?: 0.0
+            }
         }
+        return groupTotalDue
     }
 
-    class ClientReusableViewHolder(view: View?) {
-        @JvmField
-        @BindView(R.id.tv_clientId)
-        var tv_clientId: TextView? = null
-
-        @JvmField
-        @BindView(R.id.tv_clientName)
-        var tv_clientName: TextView? = null
-
-        @JvmField
-        @BindView(R.id.tv_clientTotal)
-        var tv_clientTotal: TextView? = null
-
-        @JvmField
-        @BindView(R.id.lv_loans)
-        var lv_loans: ListView? = null
-
-        init {
-            ButterKnife.bind(this, view!!)
+    private fun calculateClientTotalDue(client: Client): Double {
+        var totalDue = 0.0
+        for (loan in client.loans) {
+            totalDue += loan.getTotalDue()
         }
+        return totalDue
     }
 
     companion object {
-        //Map for RepaymentTransaction<Loan Id, Transaction Amount>
-        //TODO Check about SparseArray in Android and try to convert Map into SparseArray Implementation
+        // Map for RepaymentTransaction<Loan Id, Transaction Amount>
+        // TODO Check about SparseArray in Android and try to convert Map into SparseArray Implementation
         val sRepaymentTransactions: MutableMap<Int, Double> = HashMap()
-        var sMifosGroups: List<MifosGroup> = ArrayList()
     }
 }

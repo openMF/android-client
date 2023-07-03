@@ -11,34 +11,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.EditText
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
-import com.mifos.mifosxdroid.R
+import com.mifos.mifosxdroid.databinding.RowCollectionSheetLoanBinding
 import com.mifos.objects.db.Loan
 
 /**
  * Created by ishankhanna on 21/07/14.
  */
 class CollectionSheetLoanAccountListAdapter(
-    context: Context?,
-    loans: List<Loan>,
-    groupPosition: Int,
-    childPosition: Int
+    private val context: Context,
+    private val loans: List<Loan>,
+    private val groupPosition: Int,
+    private val childPosition: Int
 ) : BaseAdapter() {
-    var layoutInflater: LayoutInflater
-    var loans: List<Loan> = ArrayList()
-    var groupPosition: Int
-    var childPosition: Int
-    var positionBeingEdited = -1
 
-    init {
-        layoutInflater = LayoutInflater.from(context)
-        this.loans = loans
-        this.groupPosition = groupPosition
-        this.childPosition = childPosition
-    }
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun getCount(): Int {
         return loans.size
@@ -52,61 +38,43 @@ class CollectionSheetLoanAccountListAdapter(
         return 0
     }
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
-        var convertView = convertView
-        val reusableViewHolder: ReusableViewHolder
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val binding: RowCollectionSheetLoanBinding
+        val view: View
+
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.row_collection_sheet_loan, null)
-            reusableViewHolder = ReusableViewHolder(convertView)
-            convertView.tag = reusableViewHolder
+            binding = RowCollectionSheetLoanBinding.inflate(inflater, parent, false)
+            view = binding.root
+            view.tag = binding
         } else {
-            reusableViewHolder = convertView.tag as ReusableViewHolder
+            binding = convertView.tag as RowCollectionSheetLoanBinding
+            view = convertView
         }
+
         val transactionAmount =
             CollectionListAdapter.sRepaymentTransactions[loans[position].getLoanId()]
-        reusableViewHolder.tv_amountDue!!.text = loans[position].getTotalDue().toString()
-        reusableViewHolder.tv_loanShortName!!.text = loans[position].getProductShortName()
-        reusableViewHolder.et_amountPaid!!.setText(transactionAmount.toString())
-        reusableViewHolder.et_amountPaid!!.addTextChangedListener(object : TextWatcher {
+        binding.tvAmountDue.text = loans[position].getTotalDue().toString()
+        binding.tvLoanShortname.text = loans[position].getProductShortName()
+        binding.etAmountPaid.setText(transactionAmount.toString())
+        binding.etAmountPaid.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+
             override fun afterTextChanged(s: Editable) {
                 try {
                     CollectionListAdapter.sRepaymentTransactions[loans[position]
-                        .getLoanId()] = if (s.toString() == "") 0.00 else s
-                        .toString().toDouble()
+                        .getLoanId()] = if (s.toString() == "") 0.00 else s.toString().toDouble()
                 } catch (e: NumberFormatException) {
                     CollectionListAdapter.sRepaymentTransactions[loans[position]
                         .getLoanId()] = 0.00
                 }
                 /* TODO Fix Live update of Amounts
                 CollectionSheetFragment.refreshFragment();
-                reusableViewHolder.et_amountPaid.requestFocus();
+                binding.etAmountPaid.requestFocus();
                 */
             }
         })
-        return convertView
-    }
-
-    class ReusableViewHolder(view: View?) {
-        @JvmField
-        @BindView(R.id.tv_loan_shortname)
-        var tv_loanShortName: TextView? = null
-
-        @JvmField
-        @BindView(R.id.tv_amountDue)
-        var tv_amountDue: TextView? = null
-
-        @JvmField
-        @BindView(R.id.et_amountPaid)
-        var et_amountPaid: EditText? = null
-
-        init {
-            ButterKnife.bind(this, view!!)
-        }
-    }
-
-    companion object {
-        private const val TAG = "LoanAccountListAdapter"
+        return view
     }
 }
