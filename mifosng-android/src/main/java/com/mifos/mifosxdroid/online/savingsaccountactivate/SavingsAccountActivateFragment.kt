@@ -93,9 +93,9 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
     }
 
     private fun onClickActivateSavings() {
-        val hashMap = HashMap<String?, Any?>()
+        val hashMap = HashMap<String, String>()
         hashMap["dateFormat"] = "dd MMMM yyyy"
-        hashMap["activatedOnDate"] = activationDate
+        hashMap["activatedOnDate"] = activationDate.toString()
         hashMap["locale"] = "en"
         mSavingsAccountActivatePresenter.activateSavings(savingsAccountNumber, hashMap)
     }

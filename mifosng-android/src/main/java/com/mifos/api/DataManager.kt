@@ -57,7 +57,7 @@ class DataManager {
         return mBaseApiManager.centerApi.getAllGroupsForCenter(id)
     }
 
-    fun getCentersInOffice(id: Int, params: Map<String?, Any?>?): Observable<List<Center>> {
+    fun getCentersInOffice(id: Int, params: Map<String, String>): Observable<List<Center>> {
         return mBaseApiManager.centerApi.getAllCentersInOffice(id, params)
     }
 
@@ -129,7 +129,7 @@ class DataManager {
 
     fun getGroupsByOffice(
         office: Int,
-        params: Map<String?, Any?>?
+        params: Map<String, String>
     ): Observable<List<Group>> {
         return mBaseApiManager.groupApi.getAllGroupsInOffice(office, params)
     }

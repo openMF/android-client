@@ -35,7 +35,7 @@ interface DataTableService {
     fun createEntryInDataTable(
         @Path("dataTableName") dataTableName: String?,
         @Path("entityId") entityId: Int,
-        @Body requestPayload: Map<String?, Any?>?
+        @Body requestPayload: Map<String, String>
     ): Observable<GenericResponse>
 
     @DELETE(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/{dataTableRowId}")

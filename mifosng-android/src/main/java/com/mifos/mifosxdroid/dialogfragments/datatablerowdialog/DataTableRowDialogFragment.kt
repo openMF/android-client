@@ -157,9 +157,9 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
         )
     }
 
-    private fun addDataTableInput(): HashMap<String, Any> {
+    private fun addDataTableInput(): HashMap<String, String> {
         val formWidgets: List<FormWidget> = listFormWidgets
-        val payload = HashMap<String, Any>()
+        val payload = HashMap<String, String>()
         payload[Constants.DATE_FORMAT] = "dd-mm-YYYY"
         payload[Constants.LOCALE] = "en"
         for (formWidget in formWidgets) {
@@ -167,15 +167,15 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
                 FormWidget.SCHEMA_KEY_INT -> payload[formWidget.propertyName] =
                     (if (formWidget.value
                         == ""
-                    ) "0" else formWidget.value).toInt()
+                    ) "0" else formWidget.value).toInt().toString()
 
                 FormWidget.SCHEMA_KEY_DECIMAL -> payload[formWidget.propertyName] =
-                    (if (formWidget.value == "") "0.0" else formWidget.value).toDouble()
+                    (if (formWidget.value == "") "0.0" else formWidget.value).toDouble().toString()
 
                 FormWidget.SCHEMA_KEY_CODEVALUE -> {
                     val formSpinner = formWidget as FormSpinner
                     payload[formWidget.getPropertyName()] =
-                        formSpinner.getIdOfSelectedItem(formWidget.getValue())
+                        formSpinner.getIdOfSelectedItem(formWidget.getValue()).toString()
                 }
 
                 else -> payload[formWidget.propertyName] = formWidget.value

@@ -13,13 +13,13 @@ import com.mifos.objects.organisation.Staff
  * Created by Rajan Maurya on 06/06/16.
  */
 interface GenerateCollectionSheetMvpView : MvpView {
-    fun showOffices(offices: List<Office?>?)
-    fun showStaffInOffice(staffs: List<Staff?>?, officeId: Int)
-    fun showCentersInOffice(centers: List<Center?>?)
-    fun showGroupsInOffice(groups: List<Group?>?)
-    fun showGroupByCenter(centerWithAssociations: CenterWithAssociations?)
+    fun showOffices(offices: List<Office>)
+    fun showStaffInOffice(staffs: List<Staff>, officeId: Int)
+    fun showCentersInOffice(centers: List<Center>)
+    fun showGroupsInOffice(groups: List<Group>)
+    fun showGroupByCenter(centerWithAssociations: CenterWithAssociations)
     fun showError(s: String?)
-    fun onCenterLoadSuccess(centerDetails: List<CenterDetail?>?)
-    fun showProductive(sheet: CollectionSheetResponse?)
-    fun showCollection(sheet: CollectionSheetResponse?)
+    fun onCenterLoadSuccess(centerDetails: List<CenterDetail>)
+    fun showProductive(sheet: CollectionSheetResponse)
+    fun showCollection(sheet: CollectionSheetResponse)
 }

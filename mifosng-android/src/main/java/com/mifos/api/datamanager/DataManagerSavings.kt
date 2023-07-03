@@ -92,7 +92,7 @@ class DataManagerSavings @Inject constructor(
 
     fun activateSavings(
         savingsAccountId: Int,
-        request: HashMap<String?, Any?>
+        request: HashMap<String, String>
     ): Observable<GenericResponse> {
         return mBaseApiManager.savingsApi.activateSavings(savingsAccountId, request)
     }

@@ -38,7 +38,7 @@ interface GroupService {
     @GET(APIEndPoint.GROUPS)
     fun getAllGroupsInOffice(
         @Query("officeId") officeId: Int,
-        @QueryMap params: Map<String?, Any?>?
+        @QueryMap params: Map<String, String>
     ): Observable<List<Group>>
 
     @POST(APIEndPoint.GROUPS)

@@ -33,7 +33,8 @@ import com.mifos.utils.FragmentConstants
 import java.util.*
 import javax.inject.Inject
 
-class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionSheetMvpView, OnItemSelectedListener, View.OnClickListener, OnDatePickListener {
+class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionSheetMvpView,
+    OnItemSelectedListener, View.OnClickListener, OnDatePickListener {
     private val TYPE_LOAN = "1"
     private val TYPE_SAVING = "2"
     private val TAG_TYPE_PRODUCTIVE = 111
@@ -109,7 +110,11 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         rootView = inflater.inflate(R.layout.fragment_generate_collection_sheet, container, false)
         ButterKnife.bind(this, rootView)
         presenter!!.attachView(this)
@@ -131,23 +136,22 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     }
 
     fun inflateCenterSpinner(officeId: Int, staffId: Int) {
-        val params: MutableMap<String?, Any?> = HashMap()
-        params[LIMIT] = -1
+        val params: MutableMap<String, String> = HashMap()
+        params[LIMIT] = "-1"
         params[ORDER_BY] = ORDER_BY_FIELD_NAME
         params[SORT_ORDER] = ASCENDING
         if (staffId >= 0) {
-            params[STAFF_ID] = staffId
+            params[STAFF_ID] = staffId.toString()
         }
         presenter!!.loadCentersInOffice(officeId, params)
     }
-
-
 
 
     companion object {
         fun newInstance(): GenerateCollectionSheetFragment {
             return GenerateCollectionSheetFragment()
         }
+
         const val LIMIT = "limit"
         const val ORDER_BY = "orderBy"
         const val SORT_ORDER = "sortOrder"
@@ -157,11 +161,11 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     }
 
     fun inflateGroupSpinner(officeId: Int, staffId: Int) {
-        val params: MutableMap<String?, Any?> = HashMap()
-        params[LIMIT] = -1
+        val params: MutableMap<String, String> = HashMap()
+        params[LIMIT] = "-1"
         params[ORDER_BY] = ORDER_BY_FIELD_NAME
         params[SORT_ORDER] = ASCENDING
-        if (staffId >= 0) params[STAFF_ID] = staffId
+        if (staffId >= 0) params[STAFF_ID] = staffId.toString()
         presenter!!.loadGroupsInOffice(officeId, params)
     }
 
@@ -169,24 +173,27 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         presenter!!.loadGroupByCenter(centerId)
     }
 
-    override fun showOffices(offices: List<Office?>?) {
+    override fun showOffices(offices: List<Office>) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (activity == null) return
-        officeNameIdHashMap = presenter!!.createOfficeNameIdMap(offices as List<Office>?, officeNames as MutableList<String?>)
+        officeNameIdHashMap =
+            presenter!!.createOfficeNameIdMap(offices, officeNames as MutableList<String?>)
         setSpinner(spOffices, officeNames)
         spOffices!!.onItemSelectedListener = this
     }
 
-    override fun showStaffInOffice(staffs: List<Staff?>?, officeId: Int) {
+    override fun showStaffInOffice(staffs: List<Staff>, officeId: Int) {
         this.officeId = officeId
-        staffNameIdHashMap = presenter!!.createStaffIdMap(staffs as List<Staff>?, staffNames as MutableList<String?>)
+        staffNameIdHashMap =
+            presenter!!.createStaffIdMap(staffs, staffNames as MutableList<String?>)
         setSpinner(spStaff, staffNames)
         spStaff!!.onItemSelectedListener = this
         staffId = -1 //Reset staff id
     }
 
-    override fun showCentersInOffice(centers: List<Center?>?) {
-        centerNameIdHashMap = presenter!!.createCenterIdMap(centers as List<Center>?, centerNames as MutableList<String?>)
+    override fun showCentersInOffice(centers: List<Center>) {
+        centerNameIdHashMap =
+            presenter!!.createCenterIdMap(centers, centerNames as MutableList<String?>)
         setSpinner(spCenters, centerNames)
         spCenters!!.onItemSelectedListener = this
         centerId = -1 //Reset Center id.
@@ -202,6 +209,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                     Toaster.show(rootView, getString(R.string.error_select_center))
                 }
             }
+
             R.id.sp_staff -> {
                 staffId = staffNameIdHashMap.get(staffNames[i])!!
                 if (staffId != -1) {
@@ -211,6 +219,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                     Toaster.show(rootView, getString(R.string.error_select_staff))
                 }
             }
+
             R.id.sp_branch_offices -> {
                 officeId = officeNameIdHashMap.get(officeNames[i])!!
                 if (officeId != -1) {
@@ -221,6 +230,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                     Toaster.show(rootView, getString(R.string.error_select_office))
                 }
             }
+
             R.id.sp_groups -> {
                 groupId = groupNameIdHashMap.get(groupNames[i])!!
                 if (groupId == -1) {
@@ -271,27 +281,29 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     }
 
     private fun fetchCenterDetails() {
-        presenter!!.loadCenterDetails(Constants.DATE_FORMAT_LONG, Constants.LOCALE_EN,
-                tvMeetingDate!!.text.toString(), officeId, staffId)
+        presenter!!.loadCenterDetails(
+            Constants.DATE_FORMAT_LONG, Constants.LOCALE_EN,
+            tvMeetingDate!!.text.toString(), officeId, staffId
+        )
     }
 
-    override fun onCenterLoadSuccess(centerDetails: List<CenterDetail?>?) {
-        if (centerDetails!!.size == 0) {
+    override fun onCenterLoadSuccess(centerDetails: List<CenterDetail>) {
+        if (centerDetails.isEmpty()) {
             Toaster.show(rootView, getString(R.string.no_collectionsheet_found))
             return
         }
 
         //Set CalendarId and fetch ProductiveCollectionSheet
-        calendarId = centerDetails[0]!!.meetingFallCenters[0].collectionMeetingCalendar.id
-        productiveCenterId = centerDetails[0]!!.meetingFallCenters[0].id
+        calendarId = centerDetails[0].meetingFallCenters[0].collectionMeetingCalendar.id
+        productiveCenterId = centerDetails[0].meetingFallCenters[0].id
         fetchProductiveCollectionSheet()
     }
 
-    override fun showProductive(sheet: CollectionSheetResponse?) {
+    override fun showProductive(sheet: CollectionSheetResponse) {
         inflateProductiveCollectionTable(sheet)
     }
 
-    override fun showCollection(sheet: CollectionSheetResponse?) {
+    override fun showCollection(sheet: CollectionSheetResponse) {
         inflateCollectionTable(sheet)
     }
 
@@ -304,16 +316,21 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         //A List to be used to inflate Attendance Spinners
         val attendanceTypes = ArrayList<String?>()
         attendanceTypeOptions.clear()
-        attendanceTypeOptions = presenter!!.filterAttendanceTypes(collectionSheetResponse
-                ?.attendanceTypeOptions, attendanceTypes)
+        attendanceTypeOptions = presenter!!.filterAttendanceTypes(
+            collectionSheetResponse
+                ?.attendanceTypeOptions, attendanceTypes
+        )
         additionalPaymentTypeMap.clear()
-        additionalPaymentTypeMap = presenter!!.filterPaymentTypes(collectionSheetResponse
-                ?.paymentTypeOptions, paymentTypes as MutableList<String?>)
+        additionalPaymentTypeMap = presenter!!.filterPaymentTypes(
+            collectionSheetResponse
+                ?.paymentTypeOptions, paymentTypes as MutableList<String?>
+        )
 
         //Add the heading Row
         val headingRow = TableRow(context)
         val headingRowParams = TableRow.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         headingRowParams.gravity = Gravity.CENTER
         headingRowParams.setMargins(0, 0, 0, 10)
         headingRow.layoutParams = headingRowParams
@@ -331,8 +348,10 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         }
         for (savingsProduct in collectionSheetResponse.savingsProducts) {
             val tvSavingProduct = TextView(context)
-            tvSavingProduct.text = getString(R.string.collection_saving_product,
-                    savingsProduct.name)
+            tvSavingProduct.text = getString(
+                R.string.collection_saving_product,
+                savingsProduct.name
+            )
             tvSavingProduct.setTypeface(tvSavingProduct.typeface, Typeface.BOLD)
             tvSavingProduct.gravity = Gravity.CENTER
             headingRow.addView(tvSavingProduct)
@@ -344,11 +363,12 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         headingRow.addView(tvAttendance)
         tableProductive!!.addView(headingRow)
         for (clientCollectionSheet in collectionSheetResponse
-                .groups[0].clients) {
+            .groups[0].clients) {
             //Insert rows
             val row = TableRow(context)
             val rowParams = TableRow.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            )
             rowParams.gravity = Gravity.CENTER
             rowParams.setMargins(0, 0, 0, 10)
             row.layoutParams = rowParams
@@ -356,8 +376,12 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
 
             //Column 1: Client Name and Id
             val tvClientName = TextView(context)
-            tvClientName.text = concatIdWithName(clientCollectionSheet.clientName,
-                    clientCollectionSheet.clientId)
+            tvClientName.text = clientCollectionSheet.clientName?.let {
+                concatIdWithName(
+                    it,
+                    clientCollectionSheet.clientId
+                )
+            }
             row.addView(tvClientName)
 
             //Subsequent columns: The Loan products
@@ -367,7 +391,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                 productContainer.orientation = LinearLayout.HORIZONTAL
 
                 //Iterate through all the loans in of this type and add in the container
-                for (loan in clientCollectionSheet.loans) {
+                for (loan in clientCollectionSheet.loans!!) {
                     if (loanProduct.name == loan.productShortName) {
                         //This loan should be shown in this column. So, add it in the container.
                         val editText = EditText(context)
@@ -391,7 +415,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                 productContainer.orientation = LinearLayout.HORIZONTAL
 
                 //Iterate through all the Savings in of this type and add in the container
-                for (saving in clientCollectionSheet.savings) {
+                for (saving in clientCollectionSheet.savings!!) {
                     if (saving.productId == product.id) {
                         //Add the saving in the container
                         val editText = EditText(context)
@@ -487,13 +511,16 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         //A List to be used to inflate Attendance Spinners
         val attendanceTypes = ArrayList<String?>()
         attendanceTypeOptions.clear()
-        attendanceTypeOptions = presenter!!.filterAttendanceTypes(collectionSheetResponse
-                ?.getAttendanceTypeOptions(), attendanceTypes)
+        attendanceTypeOptions = presenter!!.filterAttendanceTypes(
+            collectionSheetResponse
+                ?.attendanceTypeOptions, attendanceTypes
+        )
 
         //Add the heading Row
         val headingRow = TableRow(context)
         val headingRowParams = TableRow.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         headingRowParams.gravity = Gravity.CENTER
         headingRowParams.setMargins(0, 0, 0, 10)
         headingRow.layoutParams = headingRowParams
@@ -504,8 +531,10 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         headingRow.addView(tvGroupName)
         for (loanProduct in collectionSheetResponse.loanProducts) {
             val tvProduct = TextView(context)
-            tvProduct.text = getString(R.string.collection_heading_charges,
-                    loanProduct.name)
+            tvProduct.text = getString(
+                R.string.collection_heading_charges,
+                loanProduct.name
+            )
             tvProduct.setTypeface(tvProduct.typeface, Typeface.BOLD)
             tvProduct.gravity = Gravity.CENTER
             headingRow.addView(tvProduct)
@@ -520,7 +549,8 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
             //Insert rows
             val row = TableRow(context)
             val rowParams = TableRow.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            )
             rowParams.gravity = Gravity.CENTER
             rowParams.setMargins(0, 0, 0, 10)
             row.layoutParams = rowParams
@@ -528,8 +558,12 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
 
             //Column 1: Client Name and Id
             val tvClientName = TextView(context)
-            tvClientName.text = concatIdWithName(clientCollectionSheet.clientName,
-                    clientCollectionSheet.clientId)
+            tvClientName.text = clientCollectionSheet.clientName?.let {
+                concatIdWithName(
+                    it,
+                    clientCollectionSheet.clientId
+                )
+            }
             row.addView(tvClientName)
 
             //Subsequent columns: The Loan products
@@ -539,7 +573,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                 productContainer.orientation = LinearLayout.HORIZONTAL
 
                 //Iterate through all the loans in of this type and add in the container
-                for (loanCollectionSheet in clientCollectionSheet.loans) {
+                for (loanCollectionSheet in clientCollectionSheet.loans!!) {
                     if (loanProduct.name == loanCollectionSheet.productShortName) {
                         //This loan should be shown in this column. So, add it in the container.
                         val editText = EditText(context)
@@ -595,7 +629,8 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                                 val loanId = typeId[1].toInt()
                                 val amount = et.text.toString().toDouble()
                                 payload.bulkRepaymentTransactions.add(
-                                        BulkRepaymentTransactions(loanId, amount))
+                                    BulkRepaymentTransactions(loanId, amount)
+                                )
                             }
                         }
                     }
@@ -633,14 +668,17 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                                 val loanId = typeId[1].toInt()
                                 val amount = et.text.toString().toDouble()
                                 payload.bulkRepaymentTransactions.add(
-                                        BulkRepaymentTransactions(loanId, amount))
+                                    BulkRepaymentTransactions(loanId, amount)
+                                )
                             }
+
                             TYPE_SAVING -> {
                                 //Add to Savings
                                 val savingsId = typeId[1].toInt()
                                 val amountSaving = et.text.toString()
                                 payload.bulkSavingsDueTransactions.add(
-                                        BulkSavingsDueTransaction(savingsId, amountSaving))
+                                    BulkSavingsDueTransaction(savingsId, amountSaving)
+                                )
                             }
                         }
                     }
@@ -650,7 +688,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                     val clientId = spinner.tag as Int
                     val attendanceTypeId = attendanceTypeOptions[spinner.selectedItem.toString()]!!
                     payload.clientsAttendance
-                            .add(ClientsAttendance(clientId, attendanceTypeId))
+                        .add(ClientsAttendance(clientId, attendanceTypeId))
                 }
             }
         }
@@ -690,13 +728,16 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
 
     private fun inflateMeetingDate() {
         datePicker = MFDatePicker.newInsance(this)
-        val date = DateHelper.getDateAsStringUsedForCollectionSheetPayload(MFDatePicker.datePickedAsString)
+        val date =
+            DateHelper.getDateAsStringUsedForCollectionSheetPayload(MFDatePicker.datePickedAsString)
         tvMeetingDate!!.text = date.replace('-', ' ')
     }
 
     private fun setMeetingDate() {
-        datePicker!!.show(requireActivity().supportFragmentManager,
-                FragmentConstants.DFRAG_DATE_PICKER)
+        datePicker!!.show(
+            requireActivity().supportFragmentManager,
+            FragmentConstants.DFRAG_DATE_PICKER
+        )
     }
 
     override fun onDatePicked(date: String?) {
@@ -704,14 +745,16 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         tvMeetingDate!!.text = newDate.replace('-', ' ')
     }
 
-    override fun showGroupsInOffice(groups: List<Group?>?) {
-        groupNameIdHashMap = presenter!!.createGroupIdMap(groups as List<Group>?, groupNames as MutableList<String?>)
+    override fun showGroupsInOffice(groups: List<Group>) {
+        groupNameIdHashMap =
+            presenter!!.createGroupIdMap(groups, groupNames as MutableList<String?>)
         setSpinner(spGroups, groupNames)
     }
 
-    override fun showGroupByCenter(centerWithAssociations: CenterWithAssociations?) {
+    override fun showGroupByCenter(centerWithAssociations: CenterWithAssociations) {
         groupNameIdHashMap = presenter!!.createGroupIdMap(
-                centerWithAssociations!!.groupMembers, groupNames as MutableList<String?>)
+            centerWithAssociations.groupMembers, groupNames as MutableList<String?>
+        )
         setSpinner(spGroups, groupNames)
         calendarId = centerWithAssociations.collectionMeetingCalendar.id
         groupId = -1 //Reset group Id
@@ -719,8 +762,10 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     }
 
     private fun setSpinner(spinner: Spinner?, values: List<String?>) {
-        val adapter = ArrayAdapter(requireActivity(),
-                android.R.layout.simple_spinner_item, values)
+        val adapter = ArrayAdapter(
+            requireActivity(),
+            android.R.layout.simple_spinner_item, values
+        )
         adapter.notifyDataSetChanged()
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner!!.adapter = adapter

@@ -138,7 +138,7 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
     override fun showCollectionSheet(collectionSheet: CollectionSheet) {
         Log.i(COLLECTION_SHEET_ONLINE, "Received")
         val mifosGroups = collectionSheet.groups
-        collectionListAdapter = CollectionListAdapter(activity, mifosGroups)
+        collectionListAdapter = CollectionListAdapter(requireActivity(), mifosGroups)
         expandableListView!!.setAdapter(collectionListAdapter)
     }
 

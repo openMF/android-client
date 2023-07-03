@@ -88,7 +88,7 @@ interface SavingsAccountService {
     @POST(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/{savingsAccountId}/?command=activate")
     fun activateSavings(
         @Path("savingsAccountId") savingsAccountId: Int,
-        @Body genericRequest: HashMap<String?, Any?>?
+        @Body genericRequest: HashMap<String, String>
     ): Observable<GenericResponse>
 
     @POST(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/{savingsAccountId}?command=approve")

@@ -45,7 +45,7 @@ interface CenterService {
     @GET(APIEndPoint.CENTERS)
     fun getAllCentersInOffice(
         @Query("officeId") officeId: Int,
-        @QueryMap additionalParams: Map<String?, Any?>?
+        @QueryMap additionalParams: Map<String, String>
     ): Observable<List<Center>>
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")

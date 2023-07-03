@@ -39,7 +39,7 @@ class DataManagerDataTable @Inject constructor(
     }
 
     fun addDataTableEntry(
-        table: String?, entityId: Int, payload: Map<String?, Any?>?
+        table: String?, entityId: Int, payload: Map<String, String>
     ): Observable<GenericResponse> {
         return mBaseApiManager.dataTableApi
             .createEntryInDataTable(table, entityId, payload)

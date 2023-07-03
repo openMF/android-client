@@ -25,7 +25,7 @@ class SavingsAccountActivatePresenter @Inject constructor(private val mDataManag
         mSubscriptions.clear()
     }
 
-    fun activateSavings(savingsAccountId: Int, request: HashMap<String?, Any?>) {
+    fun activateSavings(savingsAccountId: Int, request: HashMap<String, String>) {
         checkViewAttached()
         mvpView!!.showProgressbar(true)
         mSubscriptions.add(mDataManagerSavings.activateSavings(savingsAccountId, request)

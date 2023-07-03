@@ -76,7 +76,7 @@ class IndividualCollectionSheetDetailsPresenter @Inject internal constructor(pri
         Observable.from(clientCollectionSheets)
                 .subscribe { clientCollectionSheet ->
                     if (clientCollectionSheet.loans != null) {
-                        for (loanCollectionSheet in clientCollectionSheet.loans) {
+                        for (loanCollectionSheet in clientCollectionSheet.loans!!) {
                             loansAndClientNames.add(LoanAndClientName(loanCollectionSheet,
                                     clientCollectionSheet.clientName,
                                     clientCollectionSheet.clientId))
