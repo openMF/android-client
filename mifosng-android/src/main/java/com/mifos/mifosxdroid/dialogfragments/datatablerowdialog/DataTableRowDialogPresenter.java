@@ -39,7 +39,7 @@ public class DataTableRowDialogPresenter extends BasePresenter<DataTableRowDialo
         subscriptions.unsubscribe();
     }
 
-    public void addDataTableEntry(String table, int entityId, Map<String, Object> payload) {
+    public void addDataTableEntry(String table, int entityId, Map<String, String> payload) {
         checkViewAttached();
         getMvpView().showProgressbar(true);
         subscriptions.add(dataManagerDataTable.addDataTableEntry(table, entityId, payload)

@@ -7,10 +7,7 @@ package com.mifos.mifosxdroid.online.collectionsheet
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ExpandableListView
 import android.widget.Toast
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.mifos.api.model.BulkRepaymentTransactions
@@ -20,6 +17,7 @@ import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.CollectionListAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
+import com.mifos.mifosxdroid.databinding.FragmentCollectionSheetBinding
 import com.mifos.objects.db.CollectionSheet
 import com.mifos.objects.response.SaveResponse
 import com.mifos.utils.Constants
@@ -35,22 +33,18 @@ import javax.inject.Inject
 class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
     val LOG_TAG = javaClass.simpleName
 
-    @JvmField
-    @BindView(R.id.exlv_collection_sheet)
-    var expandableListView: ExpandableListView? = null
+    private lateinit var binding: FragmentCollectionSheetBinding
 
-    @JvmField
     @Inject
-    var mCollectionSheetPresenter: CollectionSheetPresenter? = null
+    lateinit var mCollectionSheetPresenter: CollectionSheetPresenter
     var collectionListAdapter: CollectionListAdapter? = null
     private var centerId: Int? = null // Center for which collection sheet is being generated = 0
-    private var dateOfCollection // Date of Meeting on which collection has to be done.
-            : String? = null
+    private var dateOfCollection: String? =
+        null // Date of Meeting on which collection has to be done.
     private var calendarInstanceId = 0
-    private lateinit var rootView: View
 
     //Called from within the Adapters to show changes when payment amounts are updated
-    fun refreshFragment() {
+    private fun refreshFragment() {
         collectionListAdapter!!.notifyDataSetChanged()
     }
 
@@ -65,39 +59,41 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_collection_sheet, container, false)
-        ButterKnife.bind(this, rootView)
-        mCollectionSheetPresenter!!.attachView(this)
+        binding = FragmentCollectionSheetBinding.inflate(inflater, container, false)
+        mCollectionSheetPresenter.attachView(this)
         fetchCollectionSheet()
-        return rootView
+        return binding.root
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         menu.clear()
-        val mItemSearch = menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search))
+        val mItemSearch =
+            menu.add(Menu.NONE, MENU_ITEM_SEARCH, Menu.NONE, getString(R.string.search))
         //        mItemSearch.setIcon(new IconDrawable(getActivity(), MaterialIcons.md_search)
 //                .colorRes(Color.WHITE)
 //                .actionBarSize());
         mItemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-        val mItemRefresh = menu.add(Menu.NONE, MENU_ITEM_REFRESH, Menu.NONE, getString(R.string.refresh))
+        val mItemRefresh =
+            menu.add(Menu.NONE, MENU_ITEM_REFRESH, Menu.NONE, getString(R.string.refresh))
         mItemRefresh.icon = IconDrawable(activity, MaterialIcons.md_refresh)
-                .colorRes(R.color.white)
-                .actionBarSize()
+            .colorRes(R.color.white)
+            .actionBarSize()
         mItemRefresh.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
         val mItemSave = menu.add(Menu.NONE, MENU_ITEM_SAVE, Menu.NONE, getString(R.string.save))
         mItemSave.icon = IconDrawable(activity, MaterialIcons.md_save)
-                .colorRes(R.color.white)
-                .actionBarSize()
+            .colorRes(R.color.white)
+            .actionBarSize()
         mItemSave.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
         super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        when (id) {
+        when (item.itemId) {
             MENU_ITEM_REFRESH -> refreshFragment()
             MENU_ITEM_SAVE -> saveCollectionSheet()
             MENU_ITEM_SEARCH -> {
@@ -106,45 +102,58 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
         return super.onOptionsItemSelected(item)
     }
 
-    fun fetchCollectionSheet() {
+    private fun fetchCollectionSheet() {
         val payload = Payload()
         payload.calendarId = calendarInstanceId.toLong()
         payload.transactionDate = dateOfCollection
         payload.dateFormat = "dd-MM-YYYY"
-        mCollectionSheetPresenter!!.loadCollectionSheet(centerId!!.toLong(), payload)
+        mCollectionSheetPresenter.loadCollectionSheet(centerId!!.toLong(), payload)
     }
 
     @Synchronized
     fun saveCollectionSheet() {
         val collectionSheetPayload = CollectionSheetPayload()
         val bulkRepaymentTransactions: MutableList<BulkRepaymentTransactions> = ArrayList()
-        val iterator: MutableIterator<*> = CollectionListAdapter.sRepaymentTransactions.entries.iterator()
+        val iterator: MutableIterator<*> =
+            CollectionListAdapter.sRepaymentTransactions.entries.iterator()
         while (iterator.hasNext()) {
             val repaymentTransaction = iterator.next() as Map.Entry<*, *>
-            bulkRepaymentTransactions.add(BulkRepaymentTransactions((repaymentTransaction.key as Int?)!!, (repaymentTransaction.value as Double?)!!))
+            bulkRepaymentTransactions.add(
+                BulkRepaymentTransactions(
+                    (repaymentTransaction.key as Int?)!!,
+                    (repaymentTransaction.value as Double?)!!
+                )
+            )
             iterator.remove()
         }
-        collectionSheetPayload.bulkRepaymentTransactions = arrayOfNulls(bulkRepaymentTransactions.size)
+        collectionSheetPayload.bulkRepaymentTransactions = arrayOf()
         bulkRepaymentTransactions.toArray(collectionSheetPayload.bulkRepaymentTransactions)
         collectionSheetPayload.calendarId = calendarInstanceId.toLong()
         collectionSheetPayload.transactionDate = dateOfCollection
         collectionSheetPayload.dateFormat = "dd-MM-YYYY"
 
         //Saving Collection Sheet
-        centerId?.let { mCollectionSheetPresenter!!.saveCollectionSheet(it, collectionSheetPayload) }
+        centerId?.let {
+            mCollectionSheetPresenter.saveCollectionSheet(
+                it,
+                collectionSheetPayload
+            )
+        }
     }
 
     override fun showCollectionSheet(collectionSheet: CollectionSheet) {
         Log.i(COLLECTION_SHEET_ONLINE, "Received")
         val mifosGroups = collectionSheet.groups
-        collectionListAdapter = CollectionListAdapter(activity, mifosGroups)
-        expandableListView!!.setAdapter(collectionListAdapter)
+        collectionListAdapter = CollectionListAdapter(requireActivity(), mifosGroups)
+        binding.exlvCollectionSheet.setAdapter(collectionListAdapter)
     }
 
     override fun showCollectionSheetSuccessfullySaved(saveResponse: SaveResponse?) {
         if (saveResponse != null) {
-            Toast.makeText(activity, "Collection Sheet Saved Successfully",
-                    Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity, "Collection Sheet Saved Successfully",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -154,8 +163,10 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
                 //TODO for now, It is commented
                 //MFErrorParser.parseError(response.response().body());
             }
-            Toast.makeText(activity, "Collection Sheet could not be saved.",
-                    Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity, "Collection Sheet could not be saved.",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -173,7 +184,7 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mCollectionSheetPresenter!!.detachView()
+        mCollectionSheetPresenter.detachView()
     }
 
     companion object {
@@ -181,8 +192,13 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
         private const val MENU_ITEM_SEARCH = 2000
         private const val MENU_ITEM_REFRESH = 2001
         private const val MENU_ITEM_SAVE = 2002
+
         @JvmStatic
-        fun newInstance(centerId: Int, dateOfCollection: String?, calendarInstanceId: Int): CollectionSheetFragment {
+        fun newInstance(
+            centerId: Int,
+            dateOfCollection: String?,
+            calendarInstanceId: Int
+        ): CollectionSheetFragment {
             val fragment = CollectionSheetFragment()
             val args = Bundle()
             args.putInt(Constants.CENTER_ID, centerId)
@@ -194,6 +210,6 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
     }
 }
 
-private fun <E> MutableList<E>.toArray(bulkRepaymentTransactions: Array<E?>) {
+private fun <E> MutableList<E>.toArray(bulkRepaymentTransactions: Array<BulkRepaymentTransactions>) {
 
 }

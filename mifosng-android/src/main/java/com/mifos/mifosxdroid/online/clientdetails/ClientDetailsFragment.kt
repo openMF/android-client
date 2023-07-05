@@ -554,7 +554,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
 
     fun loadClientProfileImage() {
         pb_imageProgressBar!!.visibility = View.VISIBLE
-        ImageLoaderUtils.loadImage(activity, clientId, iv_clientImage)
+        iv_clientImage?.let { ImageLoaderUtils.loadImage(activity, clientId, it) }
         pb_imageProgressBar!!.visibility = View.GONE
     }
 

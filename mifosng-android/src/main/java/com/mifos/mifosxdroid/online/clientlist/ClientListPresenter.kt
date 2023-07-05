@@ -21,7 +21,7 @@ import javax.inject.Inject
 class ClientListPresenter @Inject constructor(private val mDataManagerClient: DataManagerClient) : BasePresenter<ClientListMvpView?>() {
     private var mSubscriptions: CompositeSubscription? = null
     private var mDbClientList: List<Client>
-    private var mSyncClientList: List<Client>?
+    private var mSyncClientList: List<Client>
     private val limit = 100
     private var loadmore = false
     private var mRestApiClientSyncStatus = false
@@ -33,7 +33,7 @@ class ClientListPresenter @Inject constructor(private val mDataManagerClient: Da
 
     override fun detachView() {
         super.detachView()
-        mSubscriptions!!.unsubscribe()
+        mSubscriptions?.unsubscribe()
     }
 
     /**
@@ -51,11 +51,11 @@ class ClientListPresenter @Inject constructor(private val mDataManagerClient: Da
      * Showing Client List in View, If loadmore is true call showLoadMoreClients(...) and else
      * call showClientList(...).
      */
-    fun showClientList(clients: List<Client>?) {
+    private fun showClientList(clients: List<Client>?) {
         if (loadmore) {
-            mvpView!!.showLoadMoreClients(clients)
+            mvpView?.showLoadMoreClients(clients)
         } else {
-            mvpView!!.showClientList(clients)
+            mvpView?.showClientList(clients)
         }
     }
 
@@ -67,13 +67,15 @@ class ClientListPresenter @Inject constructor(private val mDataManagerClient: Da
      * @param clients List<Client></Client>>
      */
     fun showParentClients(clients: List<Client>?) {
-        mvpView!!.unregisterSwipeAndScrollListener()
-        if (clients!!.size == 0) {
-            mvpView!!.showEmptyClientList(R.string.client)
-        } else {
-            mRestApiClientSyncStatus = true
-            mSyncClientList = clients
-            setAlreadyClientSyncStatus()
+        mvpView?.unregisterSwipeAndScrollListener()
+        if (clients != null) {
+            if (clients.isEmpty()) {
+                mvpView?.showEmptyClientList(R.string.client)
+            } else {
+                mRestApiClientSyncStatus = true
+                mSyncClientList = clients
+                setAlreadyClientSyncStatus()
+            }
         }
     }
 
@@ -94,37 +96,37 @@ class ClientListPresenter @Inject constructor(private val mDataManagerClient: Da
      * @param offset Value give from which position Fetch ClientList
      * @param limit  Maximum size of the Center
      */
-    fun loadClients(paged: Boolean, offset: Int, limit: Int) {
+    private fun loadClients(paged: Boolean, offset: Int, limit: Int) {
         EspressoIdlingResource.increment() // App is busy until further notice.
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscriptions!!.add(mDataManagerClient.getAllClients(paged, offset, limit)
+        mvpView?.showProgressbar(true)
+        mSubscriptions?.add(mDataManagerClient.getAllClients(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Client?>?>() {
+                .subscribe(object : Subscriber<Page<Client>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
+                        mvpView?.showProgressbar(false)
                         if (loadmore) {
-                            mvpView!!.showMessage(R.string.failed_to_load_client)
+                            mvpView?.showMessage(R.string.failed_to_load_client)
                         } else {
-                            mvpView!!.showError()
+                            mvpView?.showError()
                         }
                         EspressoIdlingResource.decrement() // App is idle.
                     }
 
-                    override fun onNext(clientPage: Page<Client?>?) {
-                        mSyncClientList = clientPage!!.pageItems as List<Client>?
-                        if ((mSyncClientList as MutableList<Client>?)!!.size == 0 && !loadmore) {
-                            mvpView!!.showEmptyClientList(R.string.client)
-                            mvpView!!.unregisterSwipeAndScrollListener()
-                        } else if ((mSyncClientList as MutableList<Client>?)!!.size == 0 && loadmore) {
-                            mvpView!!.showMessage(R.string.no_more_clients_available)
+                    override fun onNext(clientPage: Page<Client>) {
+                        mSyncClientList = clientPage.pageItems
+                        if (mSyncClientList.isEmpty() && !loadmore) {
+                            mvpView?.showEmptyClientList(R.string.client)
+                            mvpView?.unregisterSwipeAndScrollListener()
+                        } else if (mSyncClientList.isEmpty() && loadmore) {
+                            mvpView?.showMessage(R.string.no_more_clients_available)
                         } else {
                             mRestApiClientSyncStatus = true
                             setAlreadyClientSyncStatus()
                         }
-                        mvpView!!.showProgressbar(false)
+                        mvpView?.showProgressbar(false)
                         EspressoIdlingResource.decrement() // App is idle.
                     }
                 }))
@@ -138,18 +140,18 @@ class ClientListPresenter @Inject constructor(private val mDataManagerClient: Da
      */
     fun loadDatabaseClients() {
         checkViewAttached()
-        mSubscriptions!!.add(mDataManagerClient.allDatabaseClients
+        mSubscriptions?.add(mDataManagerClient.allDatabaseClients
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Client?>?>() {
+                .subscribe(object : Subscriber<Page<Client>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showMessage(R.string.failed_to_load_db_clients)
+                        mvpView?.showMessage(R.string.failed_to_load_db_clients)
                     }
 
-                    override fun onNext(clientPage: Page<Client?>?) {
+                    override fun onNext(clientPage: Page<Client>) {
                         mDatabaseClientSyncStatus = true
-                        mDbClientList = clientPage!!.pageItems as List<Client>
+                        mDbClientList = clientPage.pageItems
                         setAlreadyClientSyncStatus()
                     }
                 })
@@ -163,13 +165,15 @@ class ClientListPresenter @Inject constructor(private val mDataManagerClient: Da
      * @param
      * @return Page<Client>
     </Client> */
-    fun checkClientAlreadySyncedOrNot(clients: List<Client>?): List<Client>? {
-        if (mDbClientList.size != 0) {
+    private fun checkClientAlreadySyncedOrNot(clients: List<Client>): List<Client>? {
+        if (mDbClientList.isNotEmpty()) {
             for (dbClient in mDbClientList) {
-                for (syncClient in clients!!) {
-                    if (dbClient.id == syncClient.id) {
-                        syncClient.isSync = true
-                        break
+                if (clients != null) {
+                    for (syncClient in clients) {
+                        if (dbClient.id == syncClient.id) {
+                            syncClient.isSync = true
+                            break
+                        }
                     }
                 }
             }

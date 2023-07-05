@@ -15,15 +15,15 @@ import javax.inject.Inject
 /**
  * Created by Rajan Maurya on 7/6/16.
  */
-class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: DataManagerGroups) : BasePresenter<GroupsListMvpView?>() {
+class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: DataManagerGroups) : BasePresenter<GroupsListMvpView>() {
     private val mSubscriptions: CompositeSubscription = CompositeSubscription()
     private var mDbGroupList: List<Group>
-    private var mSyncGroupList: List<Group?>
+    private var mSyncGroupList: List<Group>
     private val limit = 100
     private var loadmore = false
     private var mRestApiGroupSyncStatus = false
     private var mDatabaseGroupSyncStatus = false
-    override fun attachView(mvpView: GroupsListMvpView?) {
+    override fun attachView(mvpView: GroupsListMvpView) {
         super.attachView(mvpView)
     }
 
@@ -56,7 +56,7 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
      *
      * @param groups List<Group></Group>>
      */
-    fun showParentClients(groups: List<Group?>) {
+    fun showParentClients(groups: List<Group>) {
         mvpView?.unregisterSwipeAndScrollListener()
         if (groups.isEmpty()) {
             mvpView?.showEmptyGroups(R.string.group)
@@ -83,7 +83,7 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
         mSubscriptions.add(mDataManagerGroups.getGroups(paged, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Group?>>() {
+                .subscribe(object : Subscriber<Page<Group>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         mvpView?.showProgressbar(false)
@@ -94,7 +94,7 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
                         }
                     }
 
-                    override fun onNext(groupPage: Page<Group?>) {
+                    override fun onNext(groupPage: Page<Group>) {
                         mSyncGroupList = groupPage.pageItems
                         if (mSyncGroupList.isEmpty() && !loadmore) {
                             mvpView?.showEmptyGroups(R.string.group)
@@ -115,15 +115,15 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
         mSubscriptions.add(mDataManagerGroups.databaseGroups
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Group?>?>() {
+                .subscribe(object : Subscriber<Page<Group>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         mvpView?.showMessage(R.string.failed_to_load_db_groups)
                     }
 
-                    override fun onNext(groupPage: Page<Group?>?) {
+                    override fun onNext(groupPage: Page<Group>) {
                         mDatabaseGroupSyncStatus = true
-                        mDbGroupList = groupPage?.pageItems as List<Group>
+                        mDbGroupList = groupPage.pageItems
                         setAlreadyClientSyncStatus()
                     }
                 })
@@ -137,11 +137,11 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
      * @param groups
      * @return List<Client>
     </Client> */
-    private fun checkGroupAlreadySyncedOrNot(groups: List<Group?>): List<Group?> {
+    private fun checkGroupAlreadySyncedOrNot(groups: List<Group>): List<Group> {
         if (mDbGroupList.isNotEmpty()) {
             for (dbGroup in mDbGroupList) {
                 for (syncGroup in groups) {
-                    if (dbGroup.id.toInt() == syncGroup?.id?.toInt()) {
+                    if (dbGroup.id.toInt() == syncGroup.id?.toInt()) {
                         syncGroup.isSync = true
                         break
                     }

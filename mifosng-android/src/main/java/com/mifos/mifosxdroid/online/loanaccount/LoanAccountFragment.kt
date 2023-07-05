@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.fragment.app.DialogFragment
-import butterknife.OnClick
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
@@ -149,7 +148,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
 
     private fun submit() {
         val loansPayload = LoansPayload()
-        loansPayload.isAllowPartialPeriodInterestCalcualtion = binding.cbCalculateinterest
+        loansPayload.isAllowPartialPeriodInterestCalculation = binding.cbCalculateinterest
             .isChecked
         loansPayload.amortizationType = amortizationTypeId
         loansPayload.clientId = clientId

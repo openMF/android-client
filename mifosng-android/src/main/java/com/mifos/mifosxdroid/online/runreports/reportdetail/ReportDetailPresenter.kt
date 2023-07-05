@@ -37,15 +37,15 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
 
     fun fetchFullParameterList(reportName: String?, parameterType: Boolean) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        subscription!!.add(
+        mvpView?.showProgressbar(true)
+        subscription?.add(
             dataManager.getReportFullParameterList(reportName, parameterType)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(object : Subscriber<FullParameterListResponse>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
+                        mvpView?.showProgressbar(false)
                         try {
                             if (e is HttpException) {
                                 val errorMessage = e.response().errorBody()
@@ -53,7 +53,7 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
 
                                 // Default User message is null in these queries most of the times.
                                 // Hence, show Developer message.
-                                mvpView!!.showError(
+                                mvpView?.showError(
                                     MFErrorParser.parseError(errorMessage)
                                         .errors[0].developerMessage
                                 )
@@ -64,8 +64,8 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
                     }
 
                     override fun onNext(response: FullParameterListResponse) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showFullParameterResponse(response)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showFullParameterResponse(response)
                     }
                 })
         )
@@ -73,20 +73,20 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
 
     fun fetchParameterDetails(parameterName: String?, parameterType: Boolean) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        subscription!!.add(
+        mvpView?.showProgressbar(true)
+        subscription?.add(
             dataManager.getReportParameterDetails(parameterName, parameterType)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(object : Subscriber<FullParameterListResponse>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
+                        mvpView?.showProgressbar(false)
                         try {
                             if (e is HttpException) {
                                 val errorMessage = e.response().errorBody()
                                     .string()
-                                mvpView!!.showError(
+                                mvpView?.showError(
                                     MFErrorParser.parseError(errorMessage)
                                         .errors[0].developerMessage
                                 )
@@ -97,8 +97,8 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
                     }
 
                     override fun onNext(response: FullParameterListResponse) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showParameterDetails(response, parameterName!!)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showParameterDetails(response, parameterName!!)
                     }
                 })
         )
@@ -106,20 +106,20 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
 
     fun fetchOffices(parameterName: String?, officeId: Int, parameterType: Boolean) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        subscription!!.add(
+        mvpView?.showProgressbar(true)
+        subscription?.add(
             dataManager.getRunReportOffices(parameterName, officeId, parameterType)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(object : Subscriber<FullParameterListResponse>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
+                        mvpView?.showProgressbar(false)
                         try {
                             if (e is HttpException) {
                                 val errorMessage = e.response().errorBody()
                                     .string()
-                                mvpView!!.showError(
+                                mvpView?.showError(
                                     MFErrorParser.parseError(errorMessage)
                                         .errors[0].developerMessage
                                 )
@@ -130,8 +130,8 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
                     }
 
                     override fun onNext(response: FullParameterListResponse) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showOffices(response, parameterName!!)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showOffices(response, parameterName!!)
                     }
                 })
         )
@@ -139,20 +139,20 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
 
     fun fetchProduct(parameterName: String?, currencyId: String?, parameterType: Boolean) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        subscription!!.add(
+        mvpView?.showProgressbar(true)
+        subscription?.add(
             dataManager.getRunReportProduct(parameterName, currencyId, parameterType)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(object : Subscriber<FullParameterListResponse>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
+                        mvpView?.showProgressbar(false)
                         try {
                             if (e is HttpException) {
                                 val errorMessage = e.response().errorBody()
                                     .string()
-                                mvpView!!.showError(
+                                mvpView?.showError(
                                     MFErrorParser.parseError(errorMessage)
                                         .errors[0].developerMessage
                                 )
@@ -163,29 +163,29 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
                     }
 
                     override fun onNext(response: FullParameterListResponse) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showProduct(response, parameterName!!)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showProduct(response, parameterName!!)
                     }
                 })
         )
     }
 
-    fun fetchRunReportWithQuery(reportName: String?, options: MutableMap<String, String?>) {
+    fun fetchRunReportWithQuery(reportName: String?, options: MutableMap<String?, String?>) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        subscription!!.add(
+        mvpView?.showProgressbar(true)
+        subscription?.add(
             dataManager.getRunReportWithQuery(reportName, options)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(object : Subscriber<FullParameterListResponse>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
+                        mvpView?.showProgressbar(false)
                         try {
                             if (e is HttpException) {
                                 val errorMessage = e.response().errorBody()
                                     .string()
-                                mvpView!!.showError(
+                                mvpView?.showError(
                                     JSONObject(errorMessage)
                                         .getString("developerMessage")
                                 )
@@ -196,8 +196,8 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
                     }
 
                     override fun onNext(response: FullParameterListResponse) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showRunReport(response)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showRunReport(response)
                     }
                 })
         )

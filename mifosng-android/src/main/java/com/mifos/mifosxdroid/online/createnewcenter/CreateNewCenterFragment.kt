@@ -196,7 +196,7 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
 
     override fun centerCreatedSuccessfully(saveResponse: SaveResponse?) {
         Toast.makeText(
-            activity, "Center " + MifosResponseHandler.getResponse(),
+            activity, "Center " + MifosResponseHandler.response,
             Toast.LENGTH_LONG
         ).show()
         requireActivity().supportFragmentManager.popBackStack()

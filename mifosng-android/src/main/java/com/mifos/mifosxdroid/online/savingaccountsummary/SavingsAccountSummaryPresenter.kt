@@ -17,7 +17,7 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 07/06/16.
  */
 class SavingsAccountSummaryPresenter @Inject constructor(private val mDataManagerSavings: DataManagerSavings) : BasePresenter<SavingsAccountSummaryMvpView?>() {
-    private val mSubscriptions: CompositeSubscription
+    private val mSubscriptions: CompositeSubscription = CompositeSubscription()
     override fun attachView(mvpView: SavingsAccountSummaryMvpView?) {
         super.attachView(mvpView)
     }
@@ -35,7 +35,7 @@ class SavingsAccountSummaryPresenter @Inject constructor(private val mDataManage
                 .getSavingsAccount(type, accountId, Constants.TRANSACTIONS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<SavingsAccountWithAssociations?>() {
+                .subscribe(object : Subscriber<SavingsAccountWithAssociations>() {
                     override fun onCompleted() {
                         mvpView!!.showProgressbar(false)
                     }
@@ -50,14 +50,11 @@ class SavingsAccountSummaryPresenter @Inject constructor(private val mDataManage
                         mvpView!!.showFetchingError(error)
                     }
 
-                    override fun onNext(savingsAccountWithAssociations: SavingsAccountWithAssociations?) {
+                    override fun onNext(savingsAccountWithAssociations: SavingsAccountWithAssociations) {
                         mvpView!!.showProgressbar(false)
                         mvpView!!.showSavingAccount(savingsAccountWithAssociations)
                     }
                 }))
     }
 
-    init {
-        mSubscriptions = CompositeSubscription()
-    }
 }

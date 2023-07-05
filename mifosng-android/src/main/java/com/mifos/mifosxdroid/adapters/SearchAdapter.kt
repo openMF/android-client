@@ -39,7 +39,7 @@ class SearchAdapter(
         holder.tvName.text = searchedEntity.description
         if (!searchedEntity.entityName.isNullOrBlank()) {
             val drawable = mDrawableBuilder.build(
-                searchedEntity.entityType[0].toString(),
+                searchedEntity.entityType?.get(0).toString(),
                 mColorGenerator.getColor(searchedEntity.entityType)
             )
             holder.ivIcon.setImageDrawable(drawable)

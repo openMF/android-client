@@ -16,12 +16,11 @@ import javax.inject.Inject
 /**
  * Created by Rajan Maurya on 06/06/16.
  */
-class CreateNewGroupPresenter @Inject constructor(private val mDataManagerOffices: DataManagerOffices,
-                                                  private val mDataManagerGroups: DataManagerGroups) : BasePresenter<CreateNewGroupMvpView?>() {
-    private val mSubscriptions: CompositeSubscription
-    override fun attachView(mvpView: CreateNewGroupMvpView?) {
-        super.attachView(mvpView)
-    }
+class CreateNewGroupPresenter @Inject constructor(
+    private val mDataManagerOffices: DataManagerOffices,
+    private val mDataManagerGroups: DataManagerGroups
+) : BasePresenter<CreateNewGroupMvpView?>() {
+    private val mSubscriptions: CompositeSubscription = CompositeSubscription()
 
     override fun detachView() {
         super.detachView()
@@ -32,49 +31,48 @@ class CreateNewGroupPresenter @Inject constructor(private val mDataManagerOffice
         checkViewAttached()
         mvpView!!.showProgressbar(true)
         mSubscriptions.add(mDataManagerOffices.offices
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<List<Office?>?>() {
-                    override fun onCompleted() {
-                        mvpView!!.showProgressbar(false)
-                    }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<List<Office>>() {
+                override fun onCompleted() {
+                    mvpView!!.showProgressbar(false)
+                }
 
-                    override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showFetchingError("Failed to fetch office list")
-                    }
+                override fun onError(e: Throwable) {
+                    mvpView!!.showProgressbar(false)
+                    mvpView!!.showFetchingError("Failed to fetch office list")
+                }
 
-                    override fun onNext(offices: List<Office?>?) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showOffices(offices)
-                    }
-                }))
+                override fun onNext(offices: List<Office>) {
+                    mvpView!!.showProgressbar(false)
+                    mvpView!!.showOffices(offices)
+                }
+            })
+        )
     }
 
-    fun createGroup(groupPayload: GroupPayload?) {
+    fun createGroup(groupPayload: GroupPayload) {
         checkViewAttached()
         mvpView!!.showProgressbar(true)
         mSubscriptions.add(mDataManagerGroups.createGroup(groupPayload)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<SaveResponse?>() {
-                    override fun onCompleted() {
-                        mvpView!!.showProgressbar(false)
-                    }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<SaveResponse>() {
+                override fun onCompleted() {
+                    mvpView!!.showProgressbar(false)
+                }
 
-                    override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showFetchingError(MFErrorParser.errorMessage(e))
-                    }
+                override fun onError(e: Throwable) {
+                    mvpView!!.showProgressbar(false)
+                    mvpView!!.showFetchingError(MFErrorParser.errorMessage(e))
+                }
 
-                    override fun onNext(saveResponse: SaveResponse?) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showGroupCreatedSuccessfully(saveResponse)
-                    }
-                }))
+                override fun onNext(saveResponse: SaveResponse) {
+                    mvpView!!.showProgressbar(false)
+                    mvpView!!.showGroupCreatedSuccessfully(saveResponse)
+                }
+            })
+        )
     }
 
-    init {
-        mSubscriptions = CompositeSubscription()
-    }
 }

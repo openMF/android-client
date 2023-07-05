@@ -220,7 +220,7 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
 
     override fun showGroupCreatedSuccessfully(group: SaveResponse?) {
         Toast.makeText(
-            activity, "Group " + MifosResponseHandler.getResponse(),
+            activity, "Group " + MifosResponseHandler.response,
             Toast.LENGTH_LONG
         ).show()
         requireActivity().supportFragmentManager.popBackStack()

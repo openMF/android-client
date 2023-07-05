@@ -206,7 +206,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
 
     @get:VisibleForTesting
     val countingIdlingResource: IdlingResource
-        get() = EspressoIdlingResource.getIdlingResource()
+        get() = EspressoIdlingResource.idlingResource
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, appBarConfiguration)

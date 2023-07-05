@@ -15,9 +15,9 @@ import javax.inject.Inject
 /**
  * Created by Rajan Maurya on 07/06/16.
  */
-class SavingsAccountTransactionPresenter @Inject constructor(private val mDataManagerSavings: DataManagerSavings) : BasePresenter<SavingsAccountTransactionMvpView?>() {
-    private val mSubscriptions: CompositeSubscription
-    override fun attachView(mvpView: SavingsAccountTransactionMvpView?) {
+class SavingsAccountTransactionPresenter @Inject constructor(private val mDataManagerSavings: DataManagerSavings) : BasePresenter<SavingsAccountTransactionMvpView>() {
+    private val mSubscriptions: CompositeSubscription = CompositeSubscription()
+    override fun attachView(mvpView: SavingsAccountTransactionMvpView) {
         super.attachView(mvpView)
     }
 
@@ -28,29 +28,29 @@ class SavingsAccountTransactionPresenter @Inject constructor(private val mDataMa
 
     fun loadSavingAccountTemplate(type: String?, accountId: Int, transactionType: String?) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
+        mvpView?.showProgressbar(true)
         mSubscriptions.add(mDataManagerSavings
                 .getSavingsAccountTransactionTemplate(type, accountId, transactionType)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<SavingsAccountTransactionTemplate?>() {
+                .subscribe(object : Subscriber<SavingsAccountTransactionTemplate>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showError(R.string.failed_to_fetch_savings_template)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showError(R.string.failed_to_fetch_savings_template)
                     }
 
-                    override fun onNext(savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate?) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showSavingAccountTemplate(savingsAccountTransactionTemplate)
+                    override fun onNext(savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate) {
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showSavingAccountTemplate(savingsAccountTransactionTemplate)
                     }
                 }))
     }
 
     fun processTransaction(type: String?, accountId: Int, transactionType: String?,
-                           request: SavingsAccountTransactionRequest?) {
+                           request: SavingsAccountTransactionRequest) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
+        mvpView?.showProgressbar(true)
         mSubscriptions.add(mDataManagerSavings
                 .processTransaction(type, accountId, transactionType, request)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -58,43 +58,36 @@ class SavingsAccountTransactionPresenter @Inject constructor(private val mDataMa
                 .subscribe(object : Subscriber<SavingsAccountTransactionResponse?>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showError(R.string.transaction_failed)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showError(R.string.transaction_failed)
                     }
 
                     override fun onNext(savingsAccountTransactionResponse: SavingsAccountTransactionResponse?) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showTransactionSuccessfullyDone(savingsAccountTransactionResponse)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showTransactionSuccessfullyDone(savingsAccountTransactionResponse)
                     }
                 }))
     }
 
     fun checkInDatabaseSavingAccountTransaction(savingAccountId: Int) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
+        mvpView?.showProgressbar(true)
         mSubscriptions.add(mDataManagerSavings.getSavingsAccountTransaction(savingAccountId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<SavingsAccountTransactionRequest?>() {
+                .subscribe(object : Subscriber<SavingsAccountTransactionRequest>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showError(R.string.failed_to_load_savingaccounttransaction)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showError(R.string.failed_to_load_savingaccounttransaction)
                     }
 
-                    override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest?) {
-                        mvpView!!.showProgressbar(false)
-                        if (savingsAccountTransactionRequest != null) {
-                            mvpView!!.showSavingAccountTransactionExistInDatabase()
-                        } else {
-                            mvpView!!.showSavingAccountTransactionDoesNotExistInDatabase()
-                        }
+                    override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest) {
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showSavingAccountTransactionExistInDatabase()
                     }
                 })
         )
     }
 
-    init {
-        mSubscriptions = CompositeSubscription()
-    }
 }

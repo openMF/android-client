@@ -23,7 +23,7 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 8/6/16.
  */
 class SavingsAccountPresenter @Inject constructor(private val mDataManagerSavings: DataManagerSavings) : BasePresenter<SavingsAccountMvpView?>() {
-    private val mSubscriptions: CompositeSubscription
+    private val mSubscriptions: CompositeSubscription = CompositeSubscription()
     override fun attachView(mvpView: SavingsAccountMvpView?) {
         super.attachView(mvpView)
     }
@@ -146,7 +146,4 @@ class SavingsAccountPresenter @Inject constructor(private val mDataManagerSaving
         return fieldOfficerNames
     }
 
-    init {
-        mSubscriptions = CompositeSubscription()
-    }
 }

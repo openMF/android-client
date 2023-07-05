@@ -64,7 +64,7 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
         binding = DialogFragmentApproveSavingsBinding.inflate(inflater, container, false)
         mSavingsAccountActivatePresenter.attachView(this)
         safeUIBlockingUtility = SafeUIBlockingUtility(
-            activity,
+            requireContext(),
             getString(R.string.savings_account_loading_message)
         )
         showUserInterface()
@@ -93,9 +93,9 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
     }
 
     private fun onClickActivateSavings() {
-        val hashMap = HashMap<String, Any?>()
+        val hashMap = HashMap<String, String>()
         hashMap["dateFormat"] = "dd MMMM yyyy"
-        hashMap["activatedOnDate"] = activationDate
+        hashMap["activatedOnDate"] = activationDate.toString()
         hashMap["locale"] = "en"
         mSavingsAccountActivatePresenter.activateSavings(savingsAccountNumber, hashMap)
     }

@@ -13,9 +13,9 @@ import javax.inject.Inject
 /**
  * Created by rahul on 4/3/17.
  */
-class NotePresenter @Inject constructor(private val dataManagerNote: DataManagerNote) : BasePresenter<NoteMvpView?>() {
-    private val subscriptions: CompositeSubscription
-    override fun attachView(mvpView: NoteMvpView?) {
+class NotePresenter @Inject constructor(private val dataManagerNote: DataManagerNote) : BasePresenter<NoteMvpView>() {
+    private val subscriptions: CompositeSubscription = CompositeSubscription()
+    override fun attachView(mvpView: NoteMvpView) {
         super.attachView(mvpView)
     }
 
@@ -30,30 +30,27 @@ class NotePresenter @Inject constructor(private val dataManagerNote: DataManager
     </Note> */
     fun loadNote(type: String?, id: Int) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mvpView!!.showResetVisibility()
+        mvpView?.showProgressbar(true)
+        mvpView?.showResetVisibility()
         subscriptions.add(dataManagerNote.getNotes(type, id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<List<Note?>?>() {
+                .subscribe(object : Subscriber<List<Note>>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
-                        mvpView!!.showError(R.string.failed_to_fetch_datatable)
+                        mvpView?.showProgressbar(false)
+                        mvpView?.showError(R.string.failed_to_fetch_datatable)
                     }
 
-                    override fun onNext(note: List<Note?>?) {
-                        mvpView!!.showProgressbar(false)
-                        if (!note!!.isEmpty()) {
-                            mvpView!!.showNote(note as List<Note>?)
+                    override fun onNext(note: List<Note>) {
+                        mvpView?.showProgressbar(false)
+                        if (note.isNotEmpty()) {
+                            mvpView?.showNote(note)
                         } else {
-                            mvpView!!.showEmptyNotes()
+                            mvpView?.showEmptyNotes()
                         }
                     }
                 }))
     }
 
-    init {
-        subscriptions = CompositeSubscription()
-    }
 }

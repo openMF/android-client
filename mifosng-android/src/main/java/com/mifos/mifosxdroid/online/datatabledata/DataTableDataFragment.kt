@@ -30,7 +30,8 @@ import com.mifos.utils.DataTableUIBuilder.DataTableActionListener
 import com.mifos.utils.FragmentConstants
 import javax.inject.Inject
 
-class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, DataTableDataMvpView, OnRefreshListener {
+class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, DataTableDataMvpView,
+    OnRefreshListener {
     @JvmField
     @BindView(R.id.linear_layout_datatables)
     var linearLayout: LinearLayout? = null
@@ -63,14 +64,20 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_datatable, container, false)
         ButterKnife.bind(this, rootView)
         mDataTableDataPresenter!!.attachView(this)
         setToolbarTitle(dataTable!!.registeredTableName)
-        swipeRefreshLayout!!.setColorSchemeColors(*activity
-                ?.getResources()!!.getIntArray(R.array.swipeRefreshColors))
+        swipeRefreshLayout!!.setColorSchemeColors(
+            *activity
+                ?.resources!!.getIntArray(R.array.swipeRefreshColors)
+        )
         swipeRefreshLayout!!.setOnRefreshListener(this)
         mDataTableDataPresenter!!.loadDataTableInfo(dataTable!!.registeredTableName, entityId)
         return rootView
@@ -83,15 +90,15 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
 
     override fun showDataTableOptions(table: String, entity: Int, rowId: Int) {
         MaterialDialog.Builder().init(activity)
-                .setItems(R.array.datatable_options) { dialog, which ->
-                    when (which) {
-                        0 -> mDataTableDataPresenter!!.deleteDataTableEntry(table, entity, rowId)
-                        else -> {
-                        }
+            .setItems(R.array.datatable_options) { dialog, which ->
+                when (which) {
+                    0 -> mDataTableDataPresenter!!.deleteDataTableEntry(table, entity, rowId)
+                    else -> {
                     }
                 }
-                .createMaterialDialog()
-                .show()
+            }
+            .createMaterialDialog()
+            .show()
     }
 
     override fun showDataTableInfo(jsonElements: JsonArray?) {
@@ -101,10 +108,12 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
             linearLayout!!.removeAllViews()
             linearLayout!!.invalidate()
             val mListener = activity
-                    ?.getSupportFragmentManager()
-                    ?.findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE) as DataTableActionListener?
-            linearLayout = DataTableUIBuilder().getDataTableLayout(dataTable,
-                    jsonElements, linearLayout, activity, entityId, mListener)
+                ?.supportFragmentManager
+                ?.findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE) as DataTableActionListener?
+            linearLayout = DataTableUIBuilder().getDataTableLayout(
+                dataTable!!,
+                jsonElements, linearLayout!!, requireContext(), entityId, mListener
+            )
         }
     }
 
@@ -149,10 +158,10 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_add) {
             val dataTableRowDialogFragment = DataTableRowDialogFragment
-                    .newInstance(dataTable, entityId)
+                .newInstance(dataTable, entityId)
             dataTableRowDialogFragment.setTargetFragment(this, Constants.DIALOG_FRAGMENT)
             val fragmentTransaction = requireActivity().supportFragmentManager
-                    .beginTransaction()
+                .beginTransaction()
             fragmentTransaction.addToBackStack(FragmentConstants.DFRAG_DATATABLE_ENTRY_FORM)
             dataTableRowDialogFragment.show(fragmentTransaction, "Document Dialog Fragment")
         }
@@ -163,7 +172,7 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
         when (requestCode) {
             Constants.DIALOG_FRAGMENT -> if (resultCode == Activity.RESULT_OK) {
                 mDataTableDataPresenter
-                        ?.loadDataTableInfo(dataTable!!.registeredTableName, entityId)
+                    ?.loadDataTableInfo(dataTable!!.registeredTableName, entityId)
             }
         }
     }

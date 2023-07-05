@@ -57,7 +57,7 @@ class DataManager {
         return mBaseApiManager.centerApi.getAllGroupsForCenter(id)
     }
 
-    fun getCentersInOffice(id: Int, params: Map<String?, Any?>?): Observable<MutableList<Center>> {
+    fun getCentersInOffice(id: Int, params: Map<String, String>): Observable<List<Center>> {
         return mBaseApiManager.centerApi.getAllCentersInOffice(id, params)
     }
 
@@ -83,7 +83,7 @@ class DataManager {
 
     fun getCenterList(
         dateFormat: String?, locale: String?, meetingDate: String?, officeId: Int, staffId: Int
-    ): Observable<MutableList<OfflineCenter>> {
+    ): Observable<List<OfflineCenter>> {
         return mBaseApiManager.centerApi.getCenterList(
             dateFormat, locale, meetingDate,
             officeId, staffId
@@ -110,7 +110,7 @@ class DataManager {
     }
 
     fun getAllChargesV3(loanId: Int): Observable<ResponseBody> {
-        return mBaseApiManager.chargeApi.getAllChargev3(loanId)
+        return mBaseApiManager.chargeApi.getAllChargeV3(loanId)
     }
 
     fun createLoanCharges(
@@ -129,25 +129,25 @@ class DataManager {
 
     fun getGroupsByOffice(
         office: Int,
-        params: Map<String?, Any?>?
-    ): Observable<MutableList<Group>> {
+        params: Map<String, String>
+    ): Observable<List<Group>> {
         return mBaseApiManager.groupApi.getAllGroupsInOffice(office, params)
     }
 
     /**
      * Offices API
      */
-    val offices: Observable<MutableList<Office>>
+    val offices: Observable<List<Office>>
         get() = mBaseApiManager.officeApi.allOffices
 
     /**
      * Staff API
      */
-    fun getStaffInOffice(officeId: Int): Observable<MutableList<Staff>> {
+    fun getStaffInOffice(officeId: Int): Observable<List<Staff>> {
         return mBaseApiManager.staffApi.getStaffForOffice(officeId)
     }
 
-    val allStaff: Observable<MutableList<Staff>>
+    val allStaff: Observable<List<Staff>>
         get() = mBaseApiManager.staffApi.allStaff
 
     /**
@@ -157,7 +157,7 @@ class DataManager {
         return mBaseApiManager.loanApi.getLoanWithTransactions(loan)
     }
 
-    val allLoans: Observable<MutableList<LoanProducts>>
+    val allLoans: Observable<List<LoanProducts>>
         get() = mBaseApiManager.loanApi.allLoans
 
     fun getGroupLoansAccountTemplate(groupId: Int, productId: Int): Observable<GroupLoanTemplate> {
@@ -176,7 +176,7 @@ class DataManager {
         return mBaseApiManager.loanApi.approveLoanApplication(loanId, loanApproval)
     }
 
-    fun getListOfLoanCharges(loanId: Int): Observable<MutableList<Charges>> {
+    fun getListOfLoanCharges(loanId: Int): Observable<List<Charges>> {
         return mBaseApiManager.loanApi.getListOfLoanCharges(loanId)
     }
 

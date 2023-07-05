@@ -218,11 +218,12 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
         centerWithAssociations: CenterWithAssociations?,
         id: Int
     ) {
+        Toaster.show(binding.root,"Hii")
         val mfDatePicker = MFDatePicker()
         mfDatePicker.setCustomOnDatePickListener(object : MFDatePicker.OnDatePickListener {
             override fun onDatePicked(date: String?) {
                 if (centerWithAssociations?.collectionMeetingCalendar?.id != null) {
-                    (activity as MifosBaseActivity?)?.replaceFragment(
+                    (activity as MifosBaseActivity).replaceFragment(
                         CollectionSheetFragment.newInstance(
                             id, date,
                             centerWithAssociations.collectionMeetingCalendar.id

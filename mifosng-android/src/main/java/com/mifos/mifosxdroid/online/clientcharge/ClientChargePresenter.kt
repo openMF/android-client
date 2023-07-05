@@ -16,35 +16,35 @@ import javax.inject.Inject
 /**
  * Created by Rajan Maurya on 5/6/16.
  */
-class ClientChargePresenter @Inject constructor(private val mDataManagerCharge: DataManagerCharge) : BasePresenter<ClientChargeMvpView?>() {
+class ClientChargePresenter @Inject constructor(private val mDataManagerCharge: DataManagerCharge) : BasePresenter<ClientChargeMvpView>() {
     private var mSubscription: Subscription? = null
-    override fun attachView(mvpView: ClientChargeMvpView?) {
+    override fun attachView(mvpView: ClientChargeMvpView) {
         super.attachView(mvpView)
     }
 
     override fun detachView() {
         super.detachView()
-        if (mSubscription != null) mSubscription!!.unsubscribe()
+        if (mSubscription != null) mSubscription?.unsubscribe()
     }
 
     fun loadCharges(clientId: Int, offset: Int, limit: Int) {
-        mvpView!!.showProgressbar(true)
-        if (mSubscription != null) mSubscription!!.unsubscribe()
+        mvpView?.showProgressbar(true)
+        if (mSubscription != null) mSubscription?.unsubscribe()
         mSubscription = mDataManagerCharge.getClientCharges(clientId, offset, limit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Charges?>?>() {
+                .subscribe(object : Subscriber<Page<Charges>>() {
                     override fun onCompleted() {
-                        mvpView!!.showProgressbar(false)
+                        mvpView?.showProgressbar(false)
                     }
 
                     override fun onError(e: Throwable) {
-                        mvpView!!.showProgressbar(false)
+                        mvpView?.showProgressbar(false)
                         try {
                             if (e is HttpException) {
                                 val errorMessage = e.response().errorBody()
                                         .string()
-                                mvpView!!.showFetchingErrorCharges(MFErrorParser
+                                mvpView?.showFetchingErrorCharges(MFErrorParser
                                         .parseError(errorMessage)
                                         .errors[0].defaultUserMessage)
                             }
@@ -53,12 +53,12 @@ class ClientChargePresenter @Inject constructor(private val mDataManagerCharge: 
                         }
                     }
 
-                    override fun onNext(chargesPage: Page<Charges?>?) {
-                        mvpView!!.showProgressbar(false)
-                        if (chargesPage!!.pageItems.size > 0) {
-                            mvpView!!.showChargesList(chargesPage)
+                    override fun onNext(chargesPage: Page<Charges>) {
+                        mvpView?.showProgressbar(false)
+                        if (chargesPage.pageItems.size > 0) {
+                            mvpView?.showChargesList(chargesPage)
                         } else {
-                            mvpView!!.showEmptyCharges()
+                            mvpView?.showEmptyCharges()
                         }
                     }
                 })

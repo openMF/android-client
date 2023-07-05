@@ -138,7 +138,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
 
     override fun requestPermission() {
         CheckSelfPermissionAndRequest.requestPermission(
-                activity as MifosBaseActivity?,
+                activity as MifosBaseActivity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Constants.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE,
                 resources.getString(
@@ -161,7 +161,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
             Constants.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE -> {
 
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.size > 0
+                if (grantResults.isNotEmpty()
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     // permission was granted, yay! Do the

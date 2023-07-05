@@ -17,7 +17,7 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 06/06/16.
  */
 class CreateNewCenterPresenter @Inject constructor(private val dataManagerCenter: DataManagerCenter) : BasePresenter<CreateNewCenterMvpView?>() {
-    private val subscriptions: CompositeSubscription
+    private val subscriptions: CompositeSubscription = CompositeSubscription()
     override fun attachView(mvpView: CreateNewCenterMvpView?) {
         super.attachView(mvpView)
     }
@@ -47,7 +47,7 @@ class CreateNewCenterPresenter @Inject constructor(private val dataManagerCenter
                 }))
     }
 
-    fun createCenter(centerPayload: CenterPayload?) {
+    fun createCenter(centerPayload: CenterPayload) {
         checkViewAttached()
         mvpView!!.showProgressbar(true)
         subscriptions.add(dataManagerCenter.createCenter(centerPayload)
@@ -70,7 +70,4 @@ class CreateNewCenterPresenter @Inject constructor(private val dataManagerCenter
                 }))
     }
 
-    init {
-        subscriptions = CompositeSubscription()
-    }
 }
