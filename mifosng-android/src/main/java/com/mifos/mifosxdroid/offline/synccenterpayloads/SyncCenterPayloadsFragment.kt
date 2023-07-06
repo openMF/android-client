@@ -9,21 +9,14 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SyncCenterPayloadAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
+import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
 import com.mifos.services.data.CenterPayload
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.userStatus
@@ -31,42 +24,23 @@ import javax.inject.Inject
 
 class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpView,
     DialogInterface.OnClickListener {
+
+    private lateinit var binding: FragmentSyncpayloadBinding
+
     val LOG_TAG = javaClass.simpleName
 
-    @JvmField
-    @BindView(R.id.rv_sync_payload)
-    var rvPayloadCenter: RecyclerView? = null
-
-    @JvmField
-    @BindView(R.id.swipe_container)
-    var swipeRefreshLayout: SwipeRefreshLayout? = null
-
-    @JvmField
-    @BindView(R.id.noPayloadText)
-    var mNoPayloadText: TextView? = null
-
-    @JvmField
-    @BindView(R.id.noPayloadIcon)
-    var mNoPayloadIcon: ImageView? = null
-
-    @JvmField
-    @BindView(R.id.ll_error)
-    var llError: LinearLayout? = null
-
-    @JvmField
     @Inject
-    var mSyncCenterPayloadsPresenter: SyncCenterPayloadsPresenter? = null
+    lateinit var mSyncCenterPayloadsPresenter: SyncCenterPayloadsPresenter
 
     @JvmField
     @Inject
     var mSyncCenterPayloadAdapter: SyncCenterPayloadAdapter? = null
-    lateinit var rootView: View
     var centerPayloads: MutableList<CenterPayload>? = null
     var onCancelListener: DialogInterface.OnCancelListener? = null
     var mCenterSyncIndex = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent!!.inject(this)
+        (activity as MifosBaseActivity).activityComponent!!.inject(this)
         centerPayloads = ArrayList()
         setHasOptionsMenu(true)
     }
@@ -75,40 +49,47 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        rootView = inflater.inflate(R.layout.fragment_syncpayload, container, false)
-        ButterKnife.bind(this, rootView)
-        mSyncCenterPayloadsPresenter!!.attachView(this)
+        binding = FragmentSyncpayloadBinding.inflate(inflater, container, false)
+        mSyncCenterPayloadsPresenter.attachView(this)
         val mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        rvPayloadCenter!!.layoutManager = mLayoutManager
-        rvPayloadCenter!!.setHasFixedSize(true)
-        rvPayloadCenter!!.adapter = mSyncCenterPayloadAdapter
+        binding.rvSyncPayload.layoutManager = mLayoutManager
+        binding.rvSyncPayload.setHasFixedSize(true)
+        binding.rvSyncPayload.adapter = mSyncCenterPayloadAdapter
         /**
          * Loading All Center Payloads from Database
          */
-        swipeRefreshLayout?.setColorSchemeColors(
+        binding.swipeContainer.setColorSchemeColors(
             *activity?.resources?.getIntArray(R.array.swipeRefreshColors) ?: intArrayOf()
         )
-        swipeRefreshLayout!!.setOnRefreshListener {
-            mSyncCenterPayloadsPresenter!!.loadDatabaseCenterPayload()
-            if (swipeRefreshLayout!!.isRefreshing) swipeRefreshLayout!!.isRefreshing = false
+        binding.swipeContainer.setOnRefreshListener {
+            mSyncCenterPayloadsPresenter.loadDatabaseCenterPayload()
+            if (binding.swipeContainer.isRefreshing) binding.swipeContainer.isRefreshing = false
         }
-        mSyncCenterPayloadsPresenter!!.loadDatabaseCenterPayload()
-        return rootView
+        mSyncCenterPayloadsPresenter.loadDatabaseCenterPayload()
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.noPayloadIcon.setOnClickListener {
+            reloadOnError()
+        }
     }
 
     /**
      * Show when Database response is null or failed to fetch the center payload
      * Onclick Send Fresh Request for Center Payload.
      */
-    @OnClick(R.id.noPayloadIcon)
-    fun reloadOnError() {
-        llError!!.visibility = View.GONE
-        mSyncCenterPayloadsPresenter!!.loadDatabaseCenterPayload()
+
+    private fun reloadOnError() {
+        binding.llError.visibility = View.GONE
+        mSyncCenterPayloadsPresenter.loadDatabaseCenterPayload()
     }
 
     override fun showCenterSyncResponse() {
-        mSyncCenterPayloadsPresenter!!.deleteAndUpdateCenterPayload(
+        mSyncCenterPayloadsPresenter.deleteAndUpdateCenterPayload(
             centerPayloads
             !!.get(mCenterSyncIndex).id
         )
@@ -129,12 +110,12 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
             DialogInterface.BUTTON_NEGATIVE -> {}
             DialogInterface.BUTTON_POSITIVE -> {
                 userStatus = Constants.USER_ONLINE
-                if (centerPayloads!!.size != 0) {
+                if (centerPayloads?.size != 0) {
                     mCenterSyncIndex = 0
                     syncCenterPayload()
                 } else {
                     show(
-                        rootView,
+                        binding.root,
                         requireActivity().resources.getString(R.string.nothing_to_sync)
                     )
                 }
@@ -145,10 +126,10 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
     }
 
     override fun showError(stringId: Int) {
-        llError!!.visibility = View.VISIBLE
+        binding.llError.visibility = View.VISIBLE
         val message = stringId.toString() + resources.getString(R.string.click_to_refresh)
-        mNoPayloadText!!.text = message
-        show(rootView, stringId)
+        binding.noPayloadText.text = message
+        show(binding.root, stringId)
     }
 
     /**
@@ -162,49 +143,49 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
     override fun showCenters(centerPayload: MutableList<CenterPayload>) {
         centerPayloads = centerPayload
         if (centerPayload.size == 0) {
-            llError!!.visibility = View.VISIBLE
-            mNoPayloadText!!.text = activity
+            binding.llError.visibility = View.VISIBLE
+            binding.noPayloadText.text = activity
                 ?.resources?.getString(R.string.no_center_payload_to_sync)
-            mNoPayloadIcon!!.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp)
+            binding.noPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp)
         } else {
-            mSyncCenterPayloadAdapter!!.setCenterPayload(centerPayloads!!)
+            mSyncCenterPayloadAdapter?.setCenterPayload(centerPayloads!!)
         }
     }
 
     override fun showCenterSyncFailed(errorMessage: String) {
         val centerPayload = centerPayloads!![mCenterSyncIndex]
         centerPayload.errorMessage = errorMessage
-        mSyncCenterPayloadsPresenter!!.updateCenterPayload(centerPayload)
+        mSyncCenterPayloadsPresenter.updateCenterPayload(centerPayload)
     }
 
     override fun showPayloadDeletedAndUpdatePayloads(centers: MutableList<CenterPayload>) {
         mCenterSyncIndex = 0
         centerPayloads = centers
-        mSyncCenterPayloadAdapter!!.setCenterPayload(centerPayloads!!)
-        if (centerPayloads!!.size != 0) {
+        mSyncCenterPayloadAdapter?.setCenterPayload(centerPayloads!!)
+        if (centerPayloads?.size != 0) {
             syncCenterPayload()
         } else {
-            llError!!.visibility = View.VISIBLE
-            mNoPayloadText!!.text = activity
+            binding.llError.visibility = View.VISIBLE
+            binding.noPayloadText.text = activity
                 ?.resources?.getString(R.string.all_centers_synced)
-            mNoPayloadIcon!!.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp)
+            binding.noPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp)
         }
     }
 
     override fun showCenterPayloadUpdated(centerPayload: CenterPayload) {
         centerPayloads!![mCenterSyncIndex] = centerPayload
-        mSyncCenterPayloadAdapter!!.notifyDataSetChanged()
+        mSyncCenterPayloadAdapter?.notifyDataSetChanged()
         mCenterSyncIndex += 1
-        if (centerPayloads!!.size != mCenterSyncIndex) {
+        if (centerPayloads?.size != mCenterSyncIndex) {
             syncCenterPayload()
         }
     }
 
     override fun showProgressbar(show: Boolean) {
-        swipeRefreshLayout!!.isRefreshing = show
-        if (show && mSyncCenterPayloadAdapter!!.itemCount == 0) {
+        binding.swipeContainer.isRefreshing = show
+        if (show && mSyncCenterPayloadAdapter?.itemCount == 0) {
             showMifosProgressBar()
-            swipeRefreshLayout!!.isRefreshing = false
+            binding.swipeContainer.isRefreshing = false
         } else {
             hideMifosProgressBar()
         }
@@ -218,12 +199,12 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_sync) {
             when (userStatus) {
-                0 -> if (centerPayloads!!.size != 0) {
+                0 -> if (centerPayloads?.size != 0) {
                     mCenterSyncIndex = 0
                     syncCenterPayload()
                 } else {
                     show(
-                        rootView,
+                        binding.root,
                         requireActivity().resources.getString(R.string.nothing_to_sync)
                     )
                 }
@@ -235,10 +216,10 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
         return super.onOptionsItemSelected(item)
     }
 
-    fun syncCenterPayload() {
+    private fun syncCenterPayload() {
         for (i in centerPayloads!!.indices) {
             if (centerPayloads!![i].errorMessage == null) {
-                mSyncCenterPayloadsPresenter!!.syncCenterPayload(centerPayloads!![i])
+                mSyncCenterPayloadsPresenter.syncCenterPayload(centerPayloads!![i])
                 mCenterSyncIndex = i
                 break
             } else {
@@ -253,7 +234,7 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mSyncCenterPayloadsPresenter!!.detachView()
+        mSyncCenterPayloadsPresenter.detachView()
     }
 
     companion object {

@@ -4,8 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.widget.NestedScrollView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.SplashScreenActivity
@@ -17,17 +15,12 @@ import com.mifos.utils.Constants
 
 class PassCodeActivity : MifosPassCodeActivity() {
 
-    @BindView(R.id.cl_rootview)
-    lateinit var clRootView: NestedScrollView
-
     private var currPassCode: String? = null
     private var isToUpdatePassCode: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        ButterKnife.bind(this)
-        clRootView.setBackgroundColor(android.R.attr.colorBackground)
+        findViewById<NestedScrollView>(R.id.cl_rootview).setBackgroundColor(android.R.attr.colorBackground)
 
         intent?.let {
             currPassCode = it.getStringExtra(Constants.CURR_PASSWORD)

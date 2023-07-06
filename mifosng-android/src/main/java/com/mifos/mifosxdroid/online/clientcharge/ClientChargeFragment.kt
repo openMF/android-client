@@ -6,15 +6,8 @@ package com.mifos.mifosxdroid.online.clientcharge
 
 import android.os.Bundle
 import android.view.*
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import butterknife.BindView
-import butterknife.ButterKnife
 import butterknife.OnClick
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter
@@ -22,6 +15,7 @@ import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentChargeListBinding
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.OnChargeCreateListener
 import com.mifos.objects.client.Charges
@@ -35,32 +29,15 @@ import javax.inject.Inject
  * Created by nellyk on 1/22/2016.
  */
 class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeCreateListener {
-    @JvmField
-    @BindView(R.id.rv_charge)
-    var rv_charges: RecyclerView? = null
 
-    @JvmField
-    @BindView(R.id.swipe_container)
-    var swipeRefreshLayout: SwipeRefreshLayout? = null
 
-    @JvmField
-    @BindView(R.id.noChargesText)
-    var mNoChargesText: TextView? = null
+    private lateinit var binding: FragmentChargeListBinding
 
-    @JvmField
-    @BindView(R.id.noChargesIcon)
-    var mNoChargesIcon: ImageView? = null
-
-    @JvmField
-    @BindView(R.id.ll_error)
-    var ll_error: LinearLayout? = null
     private lateinit var chargesList: List<Charges>
 
-    @JvmField
     @Inject
-    var mClientChargePresenter: ClientChargePresenter? = null
+    lateinit var mClientChargePresenter: ClientChargePresenter
     var mChargesNameListAdapter: ChargeNameListAdapter? = null
-    private lateinit var rootView: View
     private var clientId = 0
     private var mApiRestCounter = 0
     private val limit = 10
@@ -70,29 +47,45 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
         if (arguments != null) clientId = requireArguments().getInt(Constants.CLIENT_ID)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_charge_list, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentChargeListBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-        ButterKnife.bind(this, rootView)
-        mClientChargePresenter!!.attachView(this)
+        mClientChargePresenter.attachView(this)
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
-        rv_charges!!.layoutManager = layoutManager
-        rv_charges!!.setHasFixedSize(true)
+        binding.rvCharge.layoutManager = layoutManager
+        binding.rvCharge.setHasFixedSize(true)
         setToolbarTitle(getString(R.string.charges))
         mApiRestCounter = 1
-        mClientChargePresenter!!.loadCharges(clientId, 0, limit)
+        mClientChargePresenter.loadCharges(clientId, 0, limit)
         /**
          * Setting mApiRestCounter to 1 and send Refresh Request to Server
          */
-        swipeRefreshLayout!!.setColorSchemeResources(R.color.blue_light, R.color.green_light, R.color.orange_light, R.color.red_light)
-        swipeRefreshLayout!!.setOnRefreshListener {
+        binding.swipeContainer.setColorSchemeResources(
+            R.color.blue_light,
+            R.color.green_light,
+            R.color.orange_light,
+            R.color.red_light
+        )
+        binding.swipeContainer.setOnRefreshListener {
             mApiRestCounter = 1
-            mClientChargePresenter!!.loadCharges(clientId, 0, limit)
-            if (swipeRefreshLayout!!.isRefreshing) swipeRefreshLayout!!.isRefreshing = false
+            mClientChargePresenter.loadCharges(clientId, 0, limit)
+            if (binding.swipeContainer.isRefreshing) binding.swipeContainer.isRefreshing = false
         }
         loadMore(layoutManager)
-        return rootView
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.noChargesIcon.setOnClickListener {
+            reloadOnError()
+        }
     }
 
     /**
@@ -102,10 +95,11 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
      * and offset(mCenterList.size()) and limit(100).
      */
     private fun loadMore(layoutManager: LinearLayoutManager) {
-        rv_charges!!.addOnScrollListener(object : EndlessRecyclerOnScrollListener(layoutManager) {
+        binding.rvCharge.addOnScrollListener(object :
+            EndlessRecyclerOnScrollListener(layoutManager) {
             override fun onLoadMore(current_page: Int) {
-                mApiRestCounter = mApiRestCounter + 1
-                mClientChargePresenter!!.loadCharges(clientId, chargesList.size, limit)
+                mApiRestCounter += 1
+                mClientChargePresenter.loadCharges(clientId, chargesList.size, limit)
             }
         })
     }
@@ -114,10 +108,10 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
      * Shows When mApiRestValue is 1 and Server Response is Null.
      * Onclick Send Fresh Request for Center list.
      */
-    @OnClick(R.id.noChargesIcon)
-    fun reloadOnError() {
-        ll_error!!.visibility = View.GONE
-        mClientChargePresenter!!.loadCharges(clientId, 0, limit)
+
+    private fun reloadOnError() {
+        binding.llError.visibility = View.GONE
+        mClientChargePresenter.loadCharges(clientId, 0, limit)
     }
 
     fun setChargesList(chargesList: MutableList<Charges>) {
@@ -132,51 +126,53 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
         if (mApiRestCounter == 1) {
             chargesList = chargesPage.pageItems as ArrayList<Charges>
             mChargesNameListAdapter = ChargeNameListAdapter(chargesList, clientId)
-            rv_charges!!.adapter = mChargesNameListAdapter
-            ll_error!!.visibility = View.GONE
+            binding.rvCharge.adapter = mChargesNameListAdapter
+            binding.llError.visibility = View.GONE
         } else {
             chargesList.addAll()
-            mChargesNameListAdapter!!.notifyDataSetChanged()
+            mChargesNameListAdapter?.notifyDataSetChanged()
 
             //checking the response size if size is zero then show toast No More
             // Clients Available for fetch
-            if (chargesPage!!.pageItems.size == 0 &&
-                    chargesPage.totalFilteredRecords == chargesList.size) Toaster.show(rootView, getString(R.string.message_no_more_charge))
+            if (chargesPage.pageItems.size == 0 &&
+                chargesPage.totalFilteredRecords == chargesList.size
+            ) Toaster.show(binding.root, getString(R.string.message_no_more_charge))
         }
     }
 
     override fun onChargeCreatedSuccess(charge: Charges) {
         chargesList.add()
-        Toaster.show(rootView, getString(R.string.message_charge_created_success))
-        if (ll_error!!.visibility == View.VISIBLE) {
-            ll_error!!.visibility = View.GONE
+        Toaster.show(binding.root, getString(R.string.message_charge_created_success))
+        if (binding.llError.visibility == View.VISIBLE) {
+            binding.llError.visibility = View.GONE
         }
         //If the adapter has not been initialized, there were 0 charge items earlier. Initialize it.
         if (mChargesNameListAdapter == null) {
             mChargesNameListAdapter = ChargeNameListAdapter(chargesList, clientId)
-            rv_charges!!.adapter = mChargesNameListAdapter
+            binding.rvCharge.adapter = mChargesNameListAdapter
         }
-        mChargesNameListAdapter!!.notifyItemInserted(chargesList.size - 1)
+        mChargesNameListAdapter?.notifyItemInserted(chargesList.size - 1)
     }
 
     override fun onChargeCreatedFailure(errorMessage: String) {
-        Toaster.show(rootView, errorMessage)
+        Toaster.show(binding.root, errorMessage)
     }
 
     override fun showEmptyCharges() {
-        if (mChargesNameListAdapter == null || mChargesNameListAdapter!!.itemCount == 0) {
-            ll_error!!.visibility = View.VISIBLE
-            mNoChargesText!!.text = resources.getString(R.string.message_no_charges_available)
-            mNoChargesIcon!!.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp)
+        if (mChargesNameListAdapter == null || mChargesNameListAdapter?.itemCount == 0) {
+            binding.llError.visibility = View.VISIBLE
+            binding.noChargesText.text =
+                resources.getString(R.string.message_no_charges_available)
+            binding.noChargesIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp)
         }
     }
 
     override fun showFetchingErrorCharges(s: String) {
         if (mApiRestCounter == 1) {
-            ll_error!!.visibility = View.VISIBLE
-            mNoChargesText!!.text = "$s\n Click to Refresh "
+            binding.llError.visibility = View.VISIBLE
+            binding.noChargesText.text = "$s\n Click to Refresh "
         }
-        Toaster.show(rootView, s)
+        Toaster.show(binding.root, s)
     }
 
     override fun showProgressbar(b: Boolean) {
@@ -187,20 +183,23 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
                 hideMifosProgressBar()
             }
         } else {
-            swipeRefreshLayout!!.isRefreshing = b
+            binding.swipeContainer.isRefreshing = b
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mClientChargePresenter!!.detachView()
+        mClientChargePresenter.detachView()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         menu.clear()
-        val menuItemAddNewDocument = menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_CHARGES, Menu.NONE, getString(R.string.add_new))
-        menuItemAddNewDocument.icon = ResourcesCompat.getDrawable(resources,
-                R.drawable.ic_add_white_24dp, null)
+        val menuItemAddNewDocument =
+            menu.add(Menu.NONE, MENU_ITEM_ADD_NEW_CHARGES, Menu.NONE, getString(R.string.add_new))
+        menuItemAddNewDocument.icon = ResourcesCompat.getDrawable(
+            resources,
+            R.drawable.ic_add_white_24dp, null
+        )
         menuItemAddNewDocument.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
         super.onPrepareOptionsMenu(menu)
     }
@@ -211,7 +210,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
             val chargeDialogFragment = ChargeDialogFragment.newInstance(clientId)
             chargeDialogFragment.setOnChargeCreatedListener(this)
             val fragmentTransaction = requireActivity().supportFragmentManager
-                    .beginTransaction()
+                .beginTransaction()
             fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CHARGE_LIST)
             chargeDialogFragment.show(fragmentTransaction, "Charge Dialog Fragment")
         }
@@ -229,8 +228,10 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
             return fragment
         }
 
-        fun newInstance(clientId: Int, chargesList: MutableList<Charges>,
-                        isParentFragmentAGroupFragment: Boolean): ClientChargeFragment {
+        fun newInstance(
+            clientId: Int, chargesList: MutableList<Charges>,
+            isParentFragmentAGroupFragment: Boolean
+        ): ClientChargeFragment {
             val fragment = ClientChargeFragment()
             val args = Bundle()
             args.putInt(Constants.CLIENT_ID, clientId)

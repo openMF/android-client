@@ -4,64 +4,38 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.NoteAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentNotesBinding
 import com.mifos.objects.noncore.Note
 import com.mifos.utils.Constants
-import java.util.*
+import java.util.ArrayList
 import javax.inject.Inject
 
 /**
  * Created by rahul on 4/3/17.
  */
 class NoteFragment : MifosBaseFragment(), NoteMvpView, OnRefreshListener {
-    @JvmField
-    @BindView(R.id.rv_note)
-    var rvNote: RecyclerView? = null
 
-    @JvmField
-    @BindView(R.id.swipe_container)
-    var swipeRefreshLayout: SwipeRefreshLayout? = null
+    private lateinit var binding: FragmentNotesBinding
 
-    @JvmField
-    @BindView(R.id.tv_error)
-    var tvError: TextView? = null
-
-    @JvmField
-    @BindView(R.id.iv_error)
-    var ivError: ImageView? = null
-
-    @JvmField
-    @BindView(R.id.ll_error)
-    var llError: LinearLayout? = null
-
-    @JvmField
     @Inject
-    var notePresenter: NotePresenter? = null
+    lateinit var notePresenter: NotePresenter
 
     @JvmField
     @Inject
     var noteAdapter: NoteAdapter? = null
-    private lateinit var rootView: View
     private var entityType: String? = null
     private var entityId = 0
-    private var notes: List<Note>? = null
+    private var notes: List<Note> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        notes = ArrayList()
         if (arguments != null) {
             entityType = requireArguments().getString(Constants.ENTITY_TYPE)
             entityId = requireArguments().getInt(Constants.ENTITY_ID)
@@ -70,71 +44,76 @@ class NoteFragment : MifosBaseFragment(), NoteMvpView, OnRefreshListener {
 
     override fun onResume() {
         super.onResume()
-        notePresenter!!.loadNote(entityType, entityId)
+        notePresenter.loadNote(entityType, entityId)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_notes, container, false)
-        ButterKnife.bind(this, rootView)
-        notePresenter!!.attachView(this)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentNotesBinding.inflate(inflater, container, false)
+        notePresenter.attachView(this)
         showUserInterface()
-        notePresenter!!.loadNote(entityType, entityId)
-        return rootView
+        notePresenter.loadNote(entityType, entityId)
+        return binding.root
     }
 
     override fun onRefresh() {
-        notePresenter!!.loadNote(entityType, entityId)
+        notePresenter.loadNote(entityType, entityId)
     }
 
     override fun showUserInterface() {
         setToolbarTitle(resources.getString(R.string.note))
         val mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        rvNote!!.layoutManager = mLayoutManager
-        rvNote!!.setHasFixedSize(true)
-        rvNote!!.adapter = noteAdapter
-        swipeRefreshLayout!!.setColorSchemeColors(*activity
-                ?.getResources()!!.getIntArray(R.array.swipeRefreshColors))
-        swipeRefreshLayout!!.setOnRefreshListener(this)
+        binding.rvNote.layoutManager = mLayoutManager
+        binding.rvNote.setHasFixedSize(true)
+        binding.rvNote.adapter = noteAdapter
+        binding.swipeContainer.setColorSchemeColors(
+            *activity
+                ?.resources!!.getIntArray(R.array.swipeRefreshColors)
+        )
+        binding.swipeContainer.setOnRefreshListener(this)
     }
 
-    override fun showNote(notes: List<Note>?) {
+    override fun showNote(notes: List<Note>) {
         this.notes = notes
-        noteAdapter!!.setNotes(this.notes)
+        noteAdapter?.setNotes(this.notes)
     }
 
     override fun showEmptyNotes() {
-        llError!!.visibility = View.VISIBLE
-        rvNote!!.visibility = View.GONE
-        tvError!!.setText(R.string.empty_notes)
+        binding.llError.visibility = View.VISIBLE
+        binding.rvNote.visibility = View.GONE
+        binding.tvError.setText(R.string.empty_notes)
     }
 
     override fun showResetVisibility() {
-        llError!!.visibility = View.GONE
-        rvNote!!.visibility = View.VISIBLE
+        binding.llError.visibility = View.GONE
+        binding.rvNote.visibility = View.VISIBLE
     }
 
     override fun showError(message: Int) {
-        Toaster.show(rootView, message)
-        llError!!.visibility = View.VISIBLE
-        rvNote!!.visibility = View.GONE
-        tvError!!.text = getString(R.string.failed_to_fetch_notes)
+        Toaster.show(binding.root, message)
+        binding.llError.visibility = View.VISIBLE
+        binding.rvNote.visibility = View.GONE
+        binding.tvError.text = getString(R.string.failed_to_fetch_notes)
     }
 
     override fun showProgressbar(show: Boolean) {
-        if (show && noteAdapter!!.itemCount == 0) {
+        if (show && noteAdapter?.itemCount == 0) {
             showMifosProgressBar()
-            swipeRefreshLayout!!.isRefreshing = false
+            binding.swipeContainer.isRefreshing = false
         } else {
             hideMifosProgressBar()
-            swipeRefreshLayout!!.isRefreshing = show
+            binding.swipeContainer.isRefreshing = show
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         hideMifosProgressBar()
-        notePresenter!!.detachView()
+        notePresenter.detachView()
     }
 
     companion object {

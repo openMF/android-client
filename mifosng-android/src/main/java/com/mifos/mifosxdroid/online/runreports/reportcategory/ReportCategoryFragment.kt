@@ -10,14 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.ClientReportAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
+import com.mifos.mifosxdroid.databinding.FragmentRunreportBinding
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment
 import com.mifos.objects.runreports.client.ClientReportTypeItem
 import com.mifos.utils.Constants
@@ -27,21 +25,18 @@ import javax.inject.Inject
  * Created by Tarun on 02-08-17.
  */
 class ReportCategoryFragment : MifosBaseFragment(), ReportCategoryMvpView {
-    @JvmField
-    @BindView(R.id.recycler_report)
-    var rvReports: RecyclerView? = null
 
-    @JvmField
+    private lateinit var binding: FragmentRunreportBinding
+
     @Inject
-    var presenter: ReportCategoryPresenter? = null
+    lateinit var presenter: ReportCategoryPresenter
     var reportAdapter: ClientReportAdapter? = null
-    private lateinit var rootView: View
     private var reportTypeItems: List<ClientReportTypeItem>? = null
     private var reportCategory: String? = null
     var broadCastNewMessage: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             reportCategory = intent.getStringExtra(Constants.REPORT_CATEGORY)
-            presenter?.fetchCategories(reportCategory, false, true)
+            presenter.fetchCategories(reportCategory, false, true)
         }
     }
 
@@ -66,32 +61,31 @@ class ReportCategoryFragment : MifosBaseFragment(), ReportCategoryMvpView {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        rootView = inflater.inflate(R.layout.fragment_runreport, container, false)
+    ): View {
+        binding = FragmentRunreportBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-        ButterKnife.bind(this, rootView)
-        presenter?.attachView(this)
-        presenter?.fetchCategories(reportCategory, false, true)
-        return rootView
+        presenter.attachView(this)
+        presenter.fetchCategories(reportCategory, genericResultSet = false, parameterType = true)
+        return binding.root
     }
 
     override fun showError(error: String) {
-        show(rootView, error)
+        show(binding.root, error)
     }
 
     override fun showReportCategories(reportTypes: List<ClientReportTypeItem>) {
         reportTypeItems = reportTypes
         val layoutManager = LinearLayoutManager(context)
         val dividerItemDecoration = DividerItemDecoration(
-            rvReports?.context, layoutManager.orientation
+            binding.recyclerReport.context, layoutManager.orientation
         )
-        rvReports?.layoutManager = layoutManager
-        rvReports?.addItemDecoration(dividerItemDecoration)
+        binding.recyclerReport.layoutManager = layoutManager
+        binding.recyclerReport.addItemDecoration(dividerItemDecoration)
         reportAdapter = ClientReportAdapter { position: Int ->
             openDetailFragment(position)
             null
         }
-        rvReports?.adapter = reportAdapter
+        binding.recyclerReport.adapter = reportAdapter
         reportAdapter?.setReportItems(reportTypes)
         reportAdapter?.notifyDataSetChanged()
     }

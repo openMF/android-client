@@ -20,7 +20,7 @@ class SurveyListPresenter @Inject constructor(private val mDataManagerSurveys: D
     BasePresenter<SurveyListMvpView?>() {
     private val mSubscriptions: CompositeSubscription?
     private var mDbSurveyList: List<Survey>? = null
-    private var mSyncSurveyList: List<Survey> ?= null
+    private lateinit var mSyncSurveyList: List<Survey>
 
     override fun detachView() {
         super.detachView()
@@ -58,7 +58,7 @@ class SurveyListPresenter @Inject constructor(private val mDataManagerSurveys: D
                 .subscribeOn(Schedulers.io())
                 .subscribe(object : Subscriber<List<Survey>>() {
                     override fun onCompleted() {
-                        mSyncSurveyList?.let { setAlreadySurveySyncStatus(it) }
+                        setAlreadySurveySyncStatus(mSyncSurveyList)
                         mvpView!!.showAllSurvey(mSyncSurveyList)
                     }
 
@@ -69,8 +69,8 @@ class SurveyListPresenter @Inject constructor(private val mDataManagerSurveys: D
                     override fun onNext(surveyList: List<Survey>) {
                         mDbSurveyList = surveyList
                         if (PrefManager.userStatus == 1) {
-                            for (survey in mSyncSurveyList!!) {
-                                loadDatabaseQuestionData(survey!!.id, survey)
+                            for (survey in mSyncSurveyList) {
+                                loadDatabaseQuestionData(survey.id, survey)
                             }
                         }
                     }

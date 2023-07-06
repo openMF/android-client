@@ -11,11 +11,11 @@
     android:outAnimation="@android:anim/fade_out">
 
     <!-- Comment this out when editing the actual content -->
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+<!--    <ProgressBar-->
+<!--        android:id="@+id/progress_bar"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"

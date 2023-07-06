@@ -7,6 +7,6 @@ import com.mifos.objects.survey.Survey
  * Created by Rajan Maurya on 08/06/16.
  */
 interface SurveyListMvpView : MvpView {
-    fun showAllSurvey(surveys: List<Survey?>?)
+    fun showAllSurvey(surveys: List<Survey>)
     fun showFetchingError(errorMessage: Int)
 }
