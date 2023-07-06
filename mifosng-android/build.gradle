@@ -192,11 +192,6 @@ dependencies {
     compileOnly 'javax.annotation:jsr250-api:1.0'                //Required by Dagger2
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
-    //Butter Knife
-    implementation "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
-    kapt "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
-
     //LifeCycle
     implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'

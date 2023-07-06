@@ -10,8 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -59,7 +57,6 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener,
         // Inflate the layout for this fragment
         activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         binding = DialogFragmentApproveSavingsBinding.inflate(inflater, container, false)
-        ButterKnife.bind(this, binding.root)
         mSavingsAccountApprovalPresenter.attachView(this)
         safeUIBlockingUtility = SafeUIBlockingUtility(
             requireContext(),

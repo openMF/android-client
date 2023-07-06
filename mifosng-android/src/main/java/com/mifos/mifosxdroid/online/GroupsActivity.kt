@@ -1,7 +1,6 @@
 package com.mifos.mifosxdroid.online
 
 import android.os.Bundle
-import butterknife.ButterKnife
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment
@@ -29,7 +28,6 @@ class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_toolbar_container)
-        ButterKnife.bind(this)
         showBackButton()
         val groupId = intent.extras!!.getInt(Constants.GROUP_ID)
         val groupName = intent.extras!!.getString(Constants.GROUP_NAME)

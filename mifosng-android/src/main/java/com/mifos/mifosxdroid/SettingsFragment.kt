@@ -77,10 +77,12 @@ class SettingsFragment : PreferenceFragment(), SharedPreferences.OnSharedPrefere
                 val fragmentTransaction = fragmentManager.beginTransaction()
                 fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SURVEYS_SYNC)
                 syncSurveysDialogFragment.isCancelable = false
-                syncSurveysDialogFragment.show(
-                    fragmentTransaction,
-                    resources.getString(R.string.sync_clients)
-                )
+                fragmentTransaction.let {
+                    syncSurveysDialogFragment.show(
+                        it,
+                        resources.getString(R.string.sync_clients)
+                    )
+                }
             }
             true
         }

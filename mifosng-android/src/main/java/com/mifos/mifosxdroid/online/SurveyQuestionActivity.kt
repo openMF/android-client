@@ -10,8 +10,6 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.google.gson.Gson
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SurveyPagerAdapter
@@ -25,7 +23,8 @@ import com.mifos.objects.survey.ScorecardValues
 import com.mifos.objects.survey.Survey
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager
-import java.util.*
+import java.util.Date
+import java.util.Vector
 
 /**
  * Created by Nasim Banu on 28,January,2016.

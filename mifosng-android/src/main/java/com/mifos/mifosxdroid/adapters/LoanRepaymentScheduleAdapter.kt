@@ -9,10 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.TextView
 import androidx.core.content.ContextCompat
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.databinding.RowLoanRepaymentScheduleBinding
 import com.mifos.objects.accounts.loan.Period
@@ -43,7 +40,11 @@ class LoanRepaymentScheduleAdapter(
         val binding: RowLoanRepaymentScheduleBinding
 
         if (view == null) {
-            binding = RowLoanRepaymentScheduleBinding.inflate(LayoutInflater.from(context), viewGroup, false)
+            binding = RowLoanRepaymentScheduleBinding.inflate(
+                LayoutInflater.from(context),
+                viewGroup,
+                false
+            )
             viewHolder = ReusableViewHolder(binding)
             binding.root.tag = viewHolder
         } else {
@@ -65,6 +66,7 @@ class LoanRepaymentScheduleAdapter(
                     )
                 )
             }
+
             period.totalOverdue != null && period.totalOverdue > 0 -> {
                 viewHolder.binding.viewStatusIndicator.setBackgroundColor(
                     ContextCompat.getColor(
@@ -73,6 +75,7 @@ class LoanRepaymentScheduleAdapter(
                     )
                 )
             }
+
             else -> {
                 viewHolder.binding.viewStatusIndicator.setBackgroundColor(
                     ContextCompat.getColor(

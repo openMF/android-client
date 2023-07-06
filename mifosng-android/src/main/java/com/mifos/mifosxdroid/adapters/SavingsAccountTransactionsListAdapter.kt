@@ -10,12 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.TextView
 import androidx.core.content.ContextCompat
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.databinding.RowAccountItemBinding
 import com.mifos.mifosxdroid.databinding.RowSavingsTransactionItemBinding
 import com.mifos.objects.accounts.savings.Transaction
 import com.mifos.utils.DateHelper.getDateAsString

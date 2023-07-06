@@ -15,7 +15,6 @@ import android.widget.Button
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import butterknife.ButterKnife
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.CentersListAdapter
@@ -72,8 +71,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCentersListBinding.inflate(inflater, container, false)
-        (activity as MifosBaseActivity?)?.activityComponent?.inject(this)
-        ButterKnife.bind(this, binding.root)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         mCenterListPresenter.attachView(this)
 
         //Showing User Interface.
@@ -218,7 +216,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
         centerWithAssociations: CenterWithAssociations?,
         id: Int
     ) {
-        Toaster.show(binding.root,"Hii")
+        Toaster.show(binding.root, "Hii")
         val mfDatePicker = MFDatePicker()
         mfDatePicker.setCustomOnDatePickListener(object : MFDatePicker.OnDatePickListener {
             override fun onDatePicked(date: String?) {
