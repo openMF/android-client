@@ -9,58 +9,44 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.LoanRepaymentScheduleAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
+import com.mifos.mifosxdroid.databinding.FragmentLoanRepaymentScheduleBinding
 import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.objects.accounts.loan.RepaymentSchedule
 import com.mifos.utils.Constants
 import javax.inject.Inject
 
 class LoanRepaymentScheduleFragment : ProgressableFragment(), LoanRepaymentScheduleMvpView {
+
+    private lateinit var binding: FragmentLoanRepaymentScheduleBinding
+
     private val LOG_TAG = javaClass.simpleName
 
-    @kotlin.jvm.JvmField
-    @BindView(R.id.lv_repayment_schedule)
-    var lv_repaymentSchedule: ListView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_total_paid)
-    var tv_totalPaid: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_total_upcoming)
-    var tv_totalUpcoming: TextView? = null
-
-    @kotlin.jvm.JvmField
-    @BindView(R.id.tv_total_overdue)
-    var tv_totalOverdue: TextView? = null
-
-    @kotlin.jvm.JvmField
     @Inject
-    var mLoanRepaymentSchedulePresenter: LoanRepaymentSchedulePresenter? = null
+    lateinit var mLoanRepaymentSchedulePresenter: LoanRepaymentSchedulePresenter
     private var loanAccountNumber = 0
-    private lateinit var rootView: View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) loanAccountNumber = requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
+        if (arguments != null) loanAccountNumber =
+            requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
         setHasOptionsMenu(false)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_loan_repayment_schedule, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentLoanRepaymentScheduleBinding.inflate(inflater, container, false)
         setToolbarTitle(resources.getString(R.string.loan_repayment_schedule))
-        ButterKnife.bind(this, rootView)
-        mLoanRepaymentSchedulePresenter!!.attachView(this)
+        mLoanRepaymentSchedulePresenter.attachView(this)
         inflateRepaymentSchedule()
-        return rootView
+        return binding.root
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -69,7 +55,7 @@ class LoanRepaymentScheduleFragment : ProgressableFragment(), LoanRepaymentSched
     }
 
     fun inflateRepaymentSchedule() {
-        mLoanRepaymentSchedulePresenter!!.loadLoanRepaySchedule(loanAccountNumber)
+        mLoanRepaymentSchedulePresenter.loadLoanRepaySchedule(loanAccountNumber)
     }
 
     override fun showProgressbar(b: Boolean) {
@@ -78,36 +64,37 @@ class LoanRepaymentScheduleFragment : ProgressableFragment(), LoanRepaymentSched
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mLoanRepaymentSchedulePresenter!!.detachView()
+        mLoanRepaymentSchedulePresenter.detachView()
     }
 
     override fun showLoanRepaySchedule(loanWithAssociations: LoanWithAssociations) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (activity == null) return
         val listOfActualPeriods = loanWithAssociations
-                .repaymentSchedule
-                .getlistOfActualPeriods()
-        val loanRepaymentScheduleAdapter = LoanRepaymentScheduleAdapter(activity, listOfActualPeriods)
-        lv_repaymentSchedule!!.adapter = loanRepaymentScheduleAdapter
+            .repaymentSchedule
+            .getlistOfActualPeriods()
+        val loanRepaymentScheduleAdapter =
+            LoanRepaymentScheduleAdapter(requireActivity(), listOfActualPeriods)
+        binding.lvRepaymentSchedule.adapter = loanRepaymentScheduleAdapter
         val totalRepaymentsCompleted = resources.getString(R.string.complete) + "" +
                 " : "
         val totalRepaymentsOverdue = resources.getString(R.string.overdue) + " : "
         val totalRepaymentsPending = resources.getString(R.string.pending) + " : "
         //Implementing the Footer here
-        tv_totalPaid!!.text = totalRepaymentsCompleted + RepaymentSchedule
-                .getNumberOfRepaymentsComplete(listOfActualPeriods)
-        tv_totalOverdue!!.text = totalRepaymentsOverdue + RepaymentSchedule
-                .getNumberOfRepaymentsOverDue(listOfActualPeriods)
-        tv_totalUpcoming!!.text = totalRepaymentsPending + RepaymentSchedule
-                .getNumberOfRepaymentsPending(listOfActualPeriods)
+        binding.flrsFooter.tvTotalPaid.text = totalRepaymentsCompleted + RepaymentSchedule
+            .getNumberOfRepaymentsComplete(listOfActualPeriods)
+        binding.flrsFooter.tvTotalOverdue.text = totalRepaymentsOverdue + RepaymentSchedule
+            .getNumberOfRepaymentsOverDue(listOfActualPeriods)
+        binding.flrsFooter.tvTotalUpcoming.text = totalRepaymentsPending + RepaymentSchedule
+            .getNumberOfRepaymentsPending(listOfActualPeriods)
     }
 
     override fun showFetchingError(s: String?) {
-        Toaster.show(rootView, s)
+        Toaster.show(binding.root, s)
     }
 
     companion object {
-        @kotlin.jvm.JvmStatic
+        @JvmStatic
         fun newInstance(loanAccountNumber: Int): LoanRepaymentScheduleFragment {
             val fragment = LoanRepaymentScheduleFragment()
             val args = Bundle()

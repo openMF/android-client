@@ -15,17 +15,14 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
-import com.mifos.mifosxdroid.views.scrollview.CustomScrollView
+import com.mifos.mifosxdroid.databinding.FragmentClientReportBinding
 import com.mifos.mifosxdroid.views.scrollview.ScrollChangeListener
 import com.mifos.objects.runreports.FullParameterListResponse
 import com.mifos.utils.CheckSelfPermissionAndRequest
@@ -40,18 +37,11 @@ import javax.inject.Inject
  * Created by Tarun on 05-08-17.
  */
 class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener {
-    @JvmField
-    @BindView(R.id.table_report)
-    var tableReport: TableLayout? = null
 
-    @JvmField
-    @BindView(R.id.sv_horizontal)
-    var scrollView: CustomScrollView? = null
+    private lateinit var binding: FragmentClientReportBinding
 
-    @JvmField
     @Inject
-    var presenter: ReportPresenter? = null
-    private lateinit var rootView: View
+    lateinit var presenter: ReportPresenter
     private var report: FullParameterListResponse? = null
     private var page = 0
     private var bottom = 0
@@ -63,26 +53,24 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        rootView = inflater.inflate(R.layout.fragment_client_report, container, false)
+    ): View {
+        binding = FragmentClientReportBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-        ButterKnife.bind(this, rootView)
-        presenter?.attachView(this)
+        presenter.attachView(this)
         val time = Date().time
         report = requireArguments().getParcelable(Constants.REPORT_NAME)
         setUpUi()
-        return rootView
+        return binding.root
     }
 
     private fun setUpUi() {
         showProgressbar(true)
         setUpHeading()
-        scrollView?.setScrollChangeListener(this)
+        binding.svHorizontal.setScrollChangeListener(this)
         report?.data?.let { data ->
             if (data.isNotEmpty()) {
                 setUpValues()
-            }
-            else {
+            } else {
                 Toast.makeText(activity, getString(R.string.msg_report_empty), Toast.LENGTH_SHORT)
                     .show()
             }
@@ -109,7 +97,7 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
                 }
             }
         }
-        tableReport?.addView(row)
+        binding.tableReport.addView(row)
     }
 
     private fun setUpValues() {
@@ -133,7 +121,7 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
                     }
                 }
             }
-            tableReport?.addView(row)
+            binding.tableReport.addView(row)
         }
     }
 
@@ -191,7 +179,7 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
                 exportCsvAsyncTask.execute(report)
             } else {
                 show(
-                    rootView, resources
+                    binding.root, resources
                         .getString(R.string.permission_denied_to_write_external_document)
                 )
             }
@@ -275,8 +263,8 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
     }
 
     override fun onScrollChanged(x: Int, y: Int, oldx: Int, oldy: Int) {
-        val view = scrollView!!.getChildAt(scrollView!!.childCount - 1)
-        val diff = view.bottom - (scrollView!!.height + scrollView!!.scrollY)
+        val view = binding.svHorizontal.getChildAt(binding.svHorizontal.childCount - 1)
+        val diff = view.bottom - (binding.svHorizontal.height + binding.svHorizontal.scrollY)
         if (diff == 0) {
             if (bottom >= 2) {
                 bottom = 0

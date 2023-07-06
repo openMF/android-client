@@ -8,7 +8,7 @@ import com.mifos.objects.noncore.Note
  */
 interface NoteMvpView : MvpView {
     fun showUserInterface()
-    fun showNote(note: List<Note>?)
+    fun showNote(note: List<Note>)
     fun showEmptyNotes()
     fun showResetVisibility()
     fun showError(message: Int)

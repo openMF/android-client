@@ -24,8 +24,6 @@ import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.DialogFragment
-import butterknife.OnCheckedChanged
-import butterknife.OnClick
 import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
@@ -129,6 +127,9 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
 
         binding.btnSubmit.setOnClickListener {
             onClickSubmitButton()
+        }
+        binding.cbClientActiveStatus.setOnCheckedChangeListener { compoundButton, b ->
+            onClickActiveCheckBox()
         }
     }
 
@@ -303,8 +304,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         }
     }
 
-    @OnCheckedChanged(R.id.cb_client_active_status)
-    fun onClickActiveCheckBox() {
+    private fun onClickActiveCheckBox() {
         binding.layoutSubmission.visibility =
             if (binding.cbClientActiveStatus.isChecked) View.VISIBLE else View.GONE
     }

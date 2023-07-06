@@ -16,19 +16,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.mifos.api.GenericResponse
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.util.Toaster.show
+import com.mifos.mifosxdroid.databinding.DialogFragmentDocumentBinding
 import com.mifos.objects.noncore.Document
 import com.mifos.utils.AndroidVersionUtil
 import com.mifos.utils.CheckSelfPermissionAndRequest
@@ -45,32 +40,13 @@ import javax.inject.Inject
  * Use this Dialog Fragment to Create and/or Update Documents
  */
 class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
+
+    private lateinit var binding: DialogFragmentDocumentBinding
+
     private val LOG_TAG = javaClass.simpleName
 
-    @JvmField
-    @BindView(R.id.tv_document_action)
-    var tvDocumentAction: TextView? = null
-
-    @JvmField
-    @BindView(R.id.et_document_name)
-    var etDocumentName: EditText? = null
-
-    @JvmField
-    @BindView(R.id.et_document_description)
-    var etDocumentDescription: EditText? = null
-
-    @JvmField
-    @BindView(R.id.tv_choose_file)
-    var tvChooseFile: TextView? = null
-
-    @JvmField
-    @BindView(R.id.bt_upload)
-    var btUpload: Button? = null
-
-    @JvmField
     @Inject
-    var mDocumentDialogPresenter: DocumentDialogPresenter? = null
-    lateinit var rootView: View
+    lateinit var mDocumentDialogPresenter: DocumentDialogPresenter
     var safeUIBlockingUtility: SafeUIBlockingUtility? = null
     private val mListener: OnDialogFragmentInteractionListener? = null
     private var documentName: String? = null
@@ -84,7 +60,7 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
     private var uri: Uri? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent!!.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         safeUIBlockingUtility = SafeUIBlockingUtility(
             requireContext(),
             getString(R.string.document_dialog_fragment_loading_message)
@@ -97,31 +73,38 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return super.onCreateDialog(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        rootView = inflater.inflate(R.layout.dialog_fragment_document, container, false)
-        ButterKnife.bind(this, rootView)
-        mDocumentDialogPresenter!!.attachView(this)
+    ): View {
+        binding = DialogFragmentDocumentBinding.inflate(inflater, container, false)
+        mDocumentDialogPresenter.attachView(this)
         if (resources.getString(R.string.update_document) == documentAction) {
-            tvDocumentAction!!.setText(R.string.update_document)
-            etDocumentName!!.setText(document!!.name)
-            etDocumentDescription!!.setText(document!!.description)
+            binding.tvDocumentAction.setText(R.string.update_document)
+            binding.etDocumentName.setText(document?.name)
+            binding.etDocumentDescription.setText(document?.description)
         } else if (resources.getString(R.string.upload_document) == documentAction) {
-            tvDocumentAction!!.setText(R.string.upload_document)
+            binding.tvDocumentAction.setText(R.string.upload_document)
         }
-        btUpload!!.isEnabled = false
-        return rootView
+        binding.btUpload.isEnabled = false
+        return binding.root
     }
 
-    @OnClick(R.id.bt_upload)
-    fun beginUpload() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btUpload.setOnClickListener {
+            beginUpload()
+        }
+
+        binding.btnBrowseDocument.setOnClickListener {
+            openFilePicker()
+        }
+    }
+
+
+    private fun beginUpload() {
         try {
             validateInput()
         } catch (e: RequiredFieldException) {
@@ -129,8 +112,7 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
         }
     }
 
-    @OnClick(R.id.btn_browse_document)
-    fun openFilePicker() {
+    private fun openFilePicker() {
         checkPermissionAndRequest()
     }
 
@@ -142,25 +124,25 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
      */
     @Throws(RequiredFieldException::class)
     fun validateInput() {
-        documentName = etDocumentName!!.editableText.toString()
-        if (documentName!!.isEmpty() || documentName == "") throw RequiredFieldException(
+        documentName = binding.etDocumentName.editableText.toString()
+        if (documentName?.isEmpty() == true || documentName == "") throw RequiredFieldException(
             resources.getString(R.string.name),
             getString(R.string.message_field_required)
         )
-        documentDescription = etDocumentDescription!!.editableText.toString()
-        if (documentDescription!!.isEmpty() || documentDescription == "") throw RequiredFieldException(
+        documentDescription = binding.etDocumentDescription.editableText.toString()
+        if (documentDescription?.isEmpty() == true || documentDescription == "") throw RequiredFieldException(
             resources.getString(R.string.description),
             getString(R.string.message_field_required)
         )
 
         //Start Uploading Document
         if (documentAction == resources.getString(R.string.update_document)) {
-            mDocumentDialogPresenter!!.updateDocument(
+            mDocumentDialogPresenter.updateDocument(
                 entityType, entityId, document!!.id,
                 documentName, documentDescription, fileChoosen!!
             )
         } else if (documentAction == resources.getString(R.string.upload_document)) {
-            mDocumentDialogPresenter!!.createDocument(
+            mDocumentDialogPresenter.createDocument(
                 entityType, entityId,
                 documentName, documentDescription, fileChoosen!!
             )
@@ -228,7 +210,7 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
 
                     // permission denied, boo! Disable the
                     show(
-                        rootView, resources
+                        binding.root, resources
                             .getString(R.string.permission_denied_to_read_external_document)
                     )
                 }
@@ -242,8 +224,7 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
      * otherwise with ACTION_GET_CONTENT
      */
     override fun getExternalStorageDocument() {
-        val intentDocument: Intent
-        intentDocument =
+        val intentDocument: Intent =
             if (AndroidVersionUtil.isApiVersionGreaterOrEqual(Build.VERSION_CODES.KITKAT)) {
                 Intent(Intent.ACTION_OPEN_DOCUMENT)
             } else {
@@ -265,17 +246,17 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
         when (requestCode) {
             FILE_SELECT_CODE -> if (resultCode == Activity.RESULT_OK) {
                 // Get the Uri of the selected file
-                uri = data!!.data
+                uri = data?.data
                 filePath = FileUtils.getPathReal(requireContext(), uri!!)
                 if (filePath != null) {
                     fileChoosen = File(filePath)
                 }
                 if (fileChoosen != null) {
-                    tvChooseFile!!.text = fileChoosen!!.name
+                    binding.tvChooseFile.setText(fileChoosen?.name)
                 } else {
                     return
                 }
-                btUpload!!.isEnabled = true
+                binding.btUpload.isEnabled = true
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -283,42 +264,42 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
 
     override fun showDocumentedCreatedSuccessfully(genericResponse: GenericResponse) {
         Toast.makeText(
-            activity, String.format(getString(R.string.uploaded_successfully), fileChoosen!!.name),
+            activity, String.format(getString(R.string.uploaded_successfully), fileChoosen?.name),
             Toast.LENGTH_SHORT
         ).show()
-        dialog!!.dismiss()
+        dialog?.dismiss()
     }
 
     override fun showDocumentUpdatedSuccessfully() {
         Toast.makeText(
             activity,
-            String.format(getString(R.string.document_updated_successfully), fileChoosen!!.name),
+            String.format(getString(R.string.document_updated_successfully), fileChoosen?.name),
             Toast.LENGTH_SHORT
         ).show()
-        dialog!!.dismiss()
+        dialog?.dismiss()
     }
 
     override fun showError(errorMessage: Int) {
         Toast.makeText(activity, getString(errorMessage), Toast.LENGTH_SHORT).show()
-        dialog!!.dismiss()
+        dialog?.dismiss()
     }
 
     override fun showUploadError(errorMessage: String) {
         Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
-        dialog!!.dismiss()
+        dialog?.dismiss()
     }
 
     override fun showProgressbar(b: Boolean) {
         if (b) {
-            safeUIBlockingUtility!!.safelyBlockUI()
+            safeUIBlockingUtility?.safelyBlockUI()
         } else {
-            safeUIBlockingUtility!!.safelyUnBlockUI()
+            safeUIBlockingUtility?.safelyUnBlockUI()
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mDocumentDialogPresenter!!.detachView()
+        mDocumentDialogPresenter.detachView()
     }
 
     interface OnDialogFragmentInteractionListener {

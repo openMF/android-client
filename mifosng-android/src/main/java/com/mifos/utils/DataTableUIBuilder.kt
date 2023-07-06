@@ -37,7 +37,7 @@ class DataTableUIBuilder {
         dataTable: DataTable, jsonElements: JsonArray,
         parentLayout: LinearLayout, context: Context,
         entityId: Int, mListener: DataTableActionListener?
-    ): LinearLayout {
+    ) {
         dataTableActionListener = mListener
 
         /**
@@ -93,22 +93,22 @@ class DataTableUIBuilder {
                 }
 
                 val key = TextView(context)
-                key.setText(dataTable.getColumnHeaderData()[rowIndex].getColumnName())
-                key.setGravity(Gravity.LEFT)
+                key.text = dataTable.columnHeaderData[rowIndex].columnName
+                key.gravity = Gravity.LEFT
                 val value = TextView(context)
-                value.setGravity(Gravity.RIGHT)
-                if (jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData()
-                            [rowIndex].getColumnName()).toString().contains("\"")
+                value.gravity = Gravity.RIGHT
+                if (jsonElement.asJsonObject.get(dataTable.columnHeaderData
+                            [rowIndex].columnName
+                    ).toString().contains("\"")
                 ) {
-                    value.setText(
-                        jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData()
-                                [rowIndex].getColumnName()).toString().replace("\"", "")
-                    )
+                    value.text = jsonElement.asJsonObject.get(dataTable.columnHeaderData
+                            [rowIndex].columnName
+                    ).toString().replace("\"", "")
                 } else {
-                    value.setText(
-                        jsonElement.getAsJsonObject().get(dataTable.getColumnHeaderData()
-                                [rowIndex].getColumnName()).toString()
-                    )
+                    value.
+                    text = jsonElement.asJsonObject.get(dataTable.columnHeaderData
+                            [rowIndex].columnName
+                    ).toString()
                 }
 
                 tableRow.addView(
@@ -137,11 +137,10 @@ class DataTableUIBuilder {
             tableLayout.setOnLongClickListener { v: View ->
                 //show DataTableOptions
                 dataTableActionListener?.showDataTableOptions(
-                    dataTable.getRegisteredTableName(), entityId,
+                    dataTable.registeredTableName, entityId,
                     Integer.parseInt(
-                        jsonElement.getAsJsonObject()
-                            .get(dataTable.getColumnHeaderData()
-                                .get(0).getColumnName()).toString()
+                        jsonElement.asJsonObject
+                            .get(dataTable.columnHeaderData[0].columnName).toString()
                     )
                 )
 
@@ -159,7 +158,6 @@ class DataTableUIBuilder {
             Log.i("TABLE INDEX", "" + tableIndex)
             tableIndex++
         }
-        return parentLayout
     }
 
     interface DataTableActionListener {

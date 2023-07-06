@@ -3,11 +3,17 @@ package com.mifos.mifosxdroid.online.groupdetails
 import android.app.Activity
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.*
-import android.widget.*
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ListAdapter
+import android.widget.ListView
+import android.widget.TextView
+import android.widget.Toast
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.joanzapata.iconify.widget.IconTextView
 import com.mifos.mifosxdroid.R
@@ -15,6 +21,7 @@ import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
+import com.mifos.mifosxdroid.databinding.FragmentGroupDetailsBinding
 import com.mifos.mifosxdroid.online.activate.ActivateFragment
 import com.mifos.mifosxdroid.online.datatable.DataTableFragment
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment
@@ -34,75 +41,11 @@ import javax.inject.Inject
  * Created by nellyk on 2/27/2016.
  */
 class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
-    @JvmField
-    @BindView(R.id.tv_groupsName)
-    var tv_fullName: TextView? = null
 
-    @JvmField
-    @BindView(R.id.tv_groupexternalId)
-    var tv_externalId: TextView? = null
+    private lateinit var binding: FragmentGroupDetailsBinding
 
-    @JvmField
-    @BindView(R.id.tv_groupactivationDate)
-    var tv_activationDate: TextView? = null
-
-    @JvmField
-    @BindView(R.id.tv_groupoffice)
-    var tv_office: TextView? = null
-
-    @JvmField
-    @BindView(R.id.row_account)
-    var rowAccount: TableRow? = null
-
-    @JvmField
-    @BindView(R.id.row_external)
-    var rowExternal: TableRow? = null
-
-    @JvmField
-    @BindView(R.id.row_activation)
-    var rowActivation: TableRow? = null
-
-    @JvmField
-    @BindView(R.id.row_office)
-    var rowOffice: TableRow? = null
-
-    @JvmField
-    @BindView(R.id.row_group)
-    var rowGroup: TableRow? = null
-
-    @JvmField
-    @BindView(R.id.row_staff)
-    var rowStaff: TableRow? = null
-
-    @JvmField
-    @BindView(R.id.row_loan)
-    var rowLoan: TableRow? = null
-
-    @JvmField
-    @BindView(R.id.rl_group)
-    var rlGroup: RelativeLayout? = null
-
-    @JvmField
-    @BindView(R.id.ll_bottom_panel)
-    var llBottomPanel: LinearLayout? = null
-
-    @JvmField
-    @BindView(R.id.account_accordion_section_loans)
-    var accountAccordionLoan: RelativeLayout? = null
-
-    @JvmField
-    @BindView(R.id.account_accordion_section_savings)
-    var accountAccordionSaving: RelativeLayout? = null
-
-    @JvmField
-    @BindView(R.id.account_accordion_section_recurring)
-    var accountAccordionRecurring: RelativeLayout? = null
-
-
-    @JvmField
     @Inject
-    var mGroupDetailsPresenter: GroupDetailsPresenter? = null
-    private lateinit var rootView: View
+    lateinit var mGroupDetailsPresenter: GroupDetailsPresenter
     private var groupId = 0
     private var accountAccordion: AccountAccordion? = null
     private var mListener: OnFragmentInteractionListener? = null
@@ -119,16 +62,22 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        rootView = inflater.inflate(R.layout.fragment_group_details, container, false)
-        ButterKnife.bind(this, rootView)
-        mGroupDetailsPresenter!!.attachView(this)
-        mGroupDetailsPresenter!!.loadGroupDetailsAndAccounts(groupId)
-        return rootView
+    ): View {
+        binding = FragmentGroupDetailsBinding.inflate(inflater, container, false)
+        mGroupDetailsPresenter.attachView(this)
+        mGroupDetailsPresenter.loadGroupDetailsAndAccounts(groupId)
+        return binding.root
     }
 
-    @OnClick(R.id.btn_activate_group)
-    fun onClickActivateGroup() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnActivateGroup.setOnClickListener {
+            onClickActivateGroup()
+        }
+    }
+
+    private fun onClickActivateGroup() {
         val activateFragment = ActivateFragment.newInstance(groupId, Constants.ACTIVATE_GROUP)
         val fragmentTransaction = requireActivity().supportFragmentManager
             .beginTransaction()
@@ -137,7 +86,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         fragmentTransaction.commit()
     }
 
-    fun loadDocuments() {
+    private fun loadDocuments() {
         val documentListFragment =
             DocumentListFragment.newInstance(Constants.ENTITY_TYPE_GROUPS, groupId)
         val fragmentTransaction = requireActivity().supportFragmentManager
@@ -147,7 +96,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         fragmentTransaction.commit()
     }
 
-    fun loadNotes() {
+    private fun loadNotes() {
         val noteFragment = NoteFragment.newInstance(Constants.ENTITY_TYPE_GROUPS, groupId)
         val fragmentTransaction = requireActivity().supportFragmentManager
             .beginTransaction()
@@ -156,7 +105,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         fragmentTransaction.commit()
     }
 
-    fun addGroupSavingsAccount() {
+    private fun addGroupSavingsAccount() {
         val savingsAccountFragment = SavingsAccountFragment.newInstance(groupId, true)
         val fragmentTransaction = requireActivity().supportFragmentManager
             .beginTransaction()
@@ -165,16 +114,16 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         fragmentTransaction.commit()
     }
 
-    fun addGroupLoanAccount() {
-        val grouploanAccountFragment = GroupLoanAccountFragment.newInstance(groupId)
+    private fun addGroupLoanAccount() {
+        val groupLoanAccountFragment = GroupLoanAccountFragment.newInstance(groupId)
         val fragmentTransaction = requireActivity().supportFragmentManager
             .beginTransaction()
         fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS)
-        fragmentTransaction.replace(R.id.container, grouploanAccountFragment)
+        fragmentTransaction.replace(R.id.container, groupLoanAccountFragment)
         fragmentTransaction.commit()
     }
 
-    fun loadGroupDataTables() {
+    private fun loadGroupDataTables() {
         val dataTableFragment =
             DataTableFragment.newInstance(Constants.DATA_TABLE_NAME_GROUP, groupId)
         val fragmentTransaction = requireActivity().supportFragmentManager
@@ -186,10 +135,10 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
 
     override fun showProgressbar(show: Boolean) {
         if (show) {
-            rlGroup!!.visibility = View.GONE
+            binding.rlGroup.visibility = View.GONE
             showMifosProgressBar()
         } else {
-            rlGroup!!.visibility = View.VISIBLE
+            binding.rlGroup.visibility = View.VISIBLE
             hideMifosProgressBar()
         }
     }
@@ -197,33 +146,33 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
     override fun showGroup(group: Group?) {
         if (group != null) {
             if (!group.active) {
-                llBottomPanel!!.visibility = View.VISIBLE
+                binding.llBottomPanel.visibility = View.VISIBLE
             }
             setToolbarTitle(getString(R.string.group) + " - " + group.name)
-            tv_fullName!!.text = group.name
+            binding.tvGroupsName.text = group.name
             if (group.externalId != null) {
-                tv_externalId!!.text = group.externalId
+                binding.tvGroupexternalId.text = group.externalId
             } else {
-                tv_externalId!!.setText(R.string.not_available)
+                binding.tvGroupexternalId.setText(R.string.not_available)
             }
             try {
                 val dateString = Utils.getStringOfDate(group.activationDate)
-                tv_activationDate!!.text = dateString
-                if (TextUtils.isEmpty(dateString)) rowActivation!!.visibility = View.GONE
+                binding.tvGroupactivationDate.text = dateString
+                if (TextUtils.isEmpty(dateString)) binding.rowActivation.visibility = View.GONE
             } catch (e: IndexOutOfBoundsException) {
                 Toast.makeText(
                     activity, getString(R.string.error_group_inactive),
                     Toast.LENGTH_SHORT
                 ).show()
-                tv_activationDate!!.text = ""
+                binding.tvGroupactivationDate.text = ""
             }
-            tv_office!!.text = group.officeName
-            if (TextUtils.isEmpty(group.officeName)) rowOffice!!.visibility = View.GONE
+            binding.tvGroupoffice.text = group.officeName
+            if (TextUtils.isEmpty(group.officeName)) binding.rowOffice.visibility = View.GONE
         }
     }
 
     override fun showGroupClients(clients: List<Client?>?) {
-        mListener!!.loadGroupClients(clients as List<Client>?)
+        mListener?.loadGroupClients(clients as List<Client>?)
     }
 
     override fun showGroupAccounts(groupAccounts: GroupAccounts?) {
@@ -236,16 +185,16 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
             val section = AccountAccordion.Section.LOANS
             val adapter = LoanAccountsListAdapter(
                 requireActivity().applicationContext,
-                groupAccounts?.loanAccounts
+                groupAccounts.loanAccounts
             )
             section.connect(
                 activity,
                 adapter,
                 AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                    mListener!!.loadLoanAccountSummary(adapter.getItem(i).id)
+                    mListener?.loadLoanAccountSummary(adapter.getItem(i).id)
                 })
         } else {
-            accountAccordionLoan?.visibility = View.GONE
+            binding.accountAccordionSectionLoans.root.visibility = View.GONE
         }
         if (groupAccounts.nonRecurringSavingsAccounts.size > 0) {
             val section = AccountAccordion.Section.SAVINGS
@@ -257,13 +206,13 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
                 activity,
                 adapter,
                 AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                    mListener!!.loadSavingsAccountSummary(
+                    mListener?.loadSavingsAccountSummary(
                         adapter.getItem(i).id,
                         adapter.getItem(i).depositType
                     )
                 })
         } else {
-            accountAccordionSaving?.visibility = View.GONE
+            binding.accountAccordionSectionSavings.root.visibility = View.GONE
         }
         if (groupAccounts.recurringSavingsAccounts.size > 0) {
             val section = AccountAccordion.Section.RECURRING
@@ -275,13 +224,13 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
                 activity,
                 adapter,
                 AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                    mListener!!.loadSavingsAccountSummary(
+                    mListener?.loadSavingsAccountSummary(
                         adapter.getItem(i).id,
                         adapter.getItem(i).depositType
                     )
                 })
         } else {
-            accountAccordionRecurring?.visibility = View.GONE
+            binding.accountAccordionSectionRecurring.root.visibility = View.GONE
         }
     }
 
@@ -295,7 +244,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
             activity as OnFragmentInteractionListener
         } catch (e: ClassCastException) {
             throw ClassCastException(
-                activity.javaClass.getSimpleName() + " must " +
+                activity.javaClass.simpleName + " must " +
                         "implement OnFragmentInteractionListener"
             )
         }
@@ -312,7 +261,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
             R.id.documents -> loadDocuments()
             R.id.add_group_savings_account -> addGroupSavingsAccount()
             R.id.add_group_loan -> addGroupLoanAccount()
-            R.id.group_clients -> mGroupDetailsPresenter!!.loadGroupAssociateClients(groupId)
+            R.id.group_clients -> mGroupDetailsPresenter.loadGroupAssociateClients(groupId)
             R.id.group_notes -> loadNotes()
         }
         return super.onOptionsItemSelected(item)
@@ -320,7 +269,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mGroupDetailsPresenter!!.detachView()
+        mGroupDetailsPresenter.detachView()
     }
 
     interface OnFragmentInteractionListener {
@@ -334,13 +283,13 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         fun setCurrentSection(currentSection: Section?) {
             // close previous section
             if (this.currentSection != null) {
-                this.currentSection!!.close(context)
+                this.currentSection?.close(context)
             }
             this.currentSection = currentSection
 
             // open new section
             if (this.currentSection != null) {
-                this.currentSection!!.open(context)
+                this.currentSection?.open(context)
             }
         }
 
@@ -413,16 +362,14 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
                 val onClickListener = View.OnClickListener {
                     if (this@Section == accordion.currentSection) {
                         accordion.setCurrentSection(null)
-                    } else if (listView != null && listView.count > 0) {
+                    } else if (listView.count > 0) {
                         accordion.setCurrentSection(this@Section)
                     }
                 }
-                if (textView != null) {
-                    textView.setOnClickListener(onClickListener)
-                    textView.text = context!!.getString(textViewStringId)
-                }
-                iconView?.setOnClickListener(onClickListener)
-                listView?.setOnTouchListener { view, motionEvent ->
+                textView.setOnClickListener(onClickListener)
+                textView.text = context?.getString(textViewStringId)
+                iconView.setOnClickListener(onClickListener)
+                listView.setOnTouchListener { view, motionEvent ->
                     view.parent.requestDisallowInterceptTouchEvent(true)
                     false
                 }
