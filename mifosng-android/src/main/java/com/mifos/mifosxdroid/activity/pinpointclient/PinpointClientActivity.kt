@@ -65,7 +65,7 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
                         requestPermission(REQUEST_UPDATE_PLACE_PICKER)
                     }
 
-                    1 -> pinPointClientPresenter!!.deleteClientPinpointLocation(
+                    1 -> pinPointClientPresenter?.deleteClientPinpointLocation(
                         apptableId, dataTableId
                     )
 
@@ -78,14 +78,14 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityComponent!!.inject(this)
+        activityComponent?.inject(this)
         binding = ActivityPinpointLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        pinPointClientPresenter!!.attachView(this)
+        pinPointClientPresenter?.attachView(this)
         showBackButton()
         clientId = intent.getIntExtra(Constants.CLIENT_ID, 1)
         showUserInterface()
-        pinPointClientPresenter!!.getClientPinpointLocations(clientId)
+        pinPointClientPresenter?.getClientPinpointLocations(clientId)
     }
 
     override fun showUserInterface() {
@@ -205,7 +205,7 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
 
     override fun onRefresh() {
         binding.llError.visibility = View.GONE
-        pinPointClientPresenter!!.getClientPinpointLocations(clientId)
+        pinPointClientPresenter?.getClientPinpointLocations(clientId)
     }
 
     override fun showClientPinpointLocations(clientAddressResponses: List<ClientAddressResponse>) {
@@ -226,7 +226,7 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
 
     override fun updateClientAddress(message: Int) {
         showMessage(message)
-        pinPointClientPresenter!!.getClientPinpointLocations(clientId)
+        pinPointClientPresenter?.getClientPinpointLocations(clientId)
     }
 
     override fun showProgressbar(show: Boolean) {
@@ -275,9 +275,9 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
                 place.latLng.longitude
             )
             if (requestCode == REQUEST_ADD_PLACE_PICKER) {
-                pinPointClientPresenter!!.addClientPinpointLocation(clientId, clientAddressRequest)
+                pinPointClientPresenter?.addClientPinpointLocation(clientId, clientAddressRequest)
             } else if (requestCode == REQUEST_UPDATE_PLACE_PICKER) {
-                pinPointClientPresenter!!.updateClientPinpointLocation(
+                pinPointClientPresenter?.updateClientPinpointLocation(
                     apptableId, dataTableId,
                     clientAddressRequest
                 )
@@ -289,7 +289,7 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
 
     override fun onDestroy() {
         super.onDestroy()
-        pinPointClientPresenter!!.detachView()
+        pinPointClientPresenter?.detachView()
     }
 
     companion object {

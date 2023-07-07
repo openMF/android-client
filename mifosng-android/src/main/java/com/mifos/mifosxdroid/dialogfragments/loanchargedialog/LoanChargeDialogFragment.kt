@@ -216,7 +216,7 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
         if (onChargeCreateListener != null) {
             createdCharge?.clientId = chargeCreationResponse.clientId
             createdCharge?.id = chargeCreationResponse.resourceId
-            onChargeCreateListener?.onChargeCreatedSuccess(createdCharge)
+            createdCharge?.let { onChargeCreateListener?.onChargeCreatedSuccess(it) }
         } else {
             show(binding.root, getString(R.string.message_charge_created_success))
         }

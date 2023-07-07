@@ -16,11 +16,11 @@ import android.widget.TextView
 class FormNumericEditText(context: Context?, property: String?) : FormWidget(context, property) {
     private var label: TextView
     private var input: EditText
-    private var priority = 0
+//    private var priority = 0
 
     init {
         label = TextView(context)
-        label.text = getDisplayText()
+        label.text = displayText
         input = EditText(context)
         input.inputType = InputType.TYPE_CLASS_PHONE
         input.imeOptions = EditorInfo.IME_ACTION_NEXT
@@ -29,15 +29,13 @@ class FormNumericEditText(context: Context?, property: String?) : FormWidget(con
         layout.addView(input)
     }
 
-    override fun getValue(): String {
-        return input.text.toString()
-    }
+    override var value: String
+        get() = input.text.toString()
+        set(value) {
+            input.setText(value)
+        }
 
-    override fun setValue(value: String) {
-        input.setText(value)
-    }
-
-    override fun setHint(value: String) {
+    override fun setHint(value: String?) {
         input.hint = value
     }
 }

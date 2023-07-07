@@ -26,28 +26,28 @@ class LoanChargeDialogPresenter @Inject constructor(private val mDataManager: Da
 
     override fun detachView() {
         super.detachView()
-        if (mSubscription != null) mSubscription!!.unsubscribe()
+        if (mSubscription != null) mSubscription?.unsubscribe()
     }
 
     fun loanAllChargesV3(loanId: Int) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        if (mSubscription != null) mSubscription!!.unsubscribe()
+        mvpView?.showProgressbar(true)
+        if (mSubscription != null) mSubscription?.unsubscribe()
         mSubscription = mDataManager.getAllChargesV3(loanId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<ResponseBody>() {
                 override fun onCompleted() {
-                    mvpView!!.showProgressbar(false)
+                    mvpView?.showProgressbar(false)
                 }
 
                 override fun onError(e: Throwable) {
-                    mvpView!!.showProgressbar(false)
+                    mvpView?.showProgressbar(false)
                     try {
                         if (e is HttpException) {
                             val errorMessage = e.response().errorBody()
                                 .string()
-                            mvpView!!.showError(
+                            mvpView?.showError(
                                 MFErrorParser
                                     .parseError(errorMessage)
                                     .errors[0].defaultUserMessage
@@ -59,31 +59,31 @@ class LoanChargeDialogPresenter @Inject constructor(private val mDataManager: Da
                 }
 
                 override fun onNext(response: ResponseBody) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showAllChargesV3(response)
+                    mvpView?.showProgressbar(false)
+                    mvpView?.showAllChargesV3(response)
                 }
             })
     }
 
     fun createLoanCharges(loanId: Int, chargesPayload: ChargesPayload?) {
         checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        if (mSubscription != null) mSubscription!!.unsubscribe()
+        mvpView?.showProgressbar(true)
+        if (mSubscription != null) mSubscription?.unsubscribe()
         mSubscription = mDataManager.createLoanCharges(loanId, chargesPayload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<ChargeCreationResponse>() {
                 override fun onCompleted() {
-                    mvpView!!.showProgressbar(false)
+                    mvpView?.showProgressbar(false)
                 }
 
                 override fun onError(e: Throwable) {
-                    mvpView!!.showProgressbar(false)
+                    mvpView?.showProgressbar(false)
                     try {
                         if (e is HttpException) {
                             val errorMessage = e.response().errorBody()
                                 .string()
-                            mvpView!!.showChargeCreatedFailure(
+                            mvpView?.showChargeCreatedFailure(
                                 MFErrorParser
                                     .parseError(errorMessage)
                                     .errors[0].defaultUserMessage
@@ -95,8 +95,8 @@ class LoanChargeDialogPresenter @Inject constructor(private val mDataManager: Da
                 }
 
                 override fun onNext(chargeCreationResponse: ChargeCreationResponse) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showLoanChargesCreatedSuccessfully(chargeCreationResponse)
+                    mvpView?.showProgressbar(false)
+                    mvpView?.showLoanChargesCreatedSuccessfully(chargeCreationResponse)
                 }
             })
     }

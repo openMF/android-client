@@ -210,8 +210,8 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
                     if (formWidget.value == "") "0.0" else formWidget.value.toDouble()
             } else if (formWidget.returnType == FormWidget.SCHEMA_KEY_CODEVALUE) {
                 val formSpinner = formWidget as FormSpinner
-                payload[formWidget.getPropertyName()] =
-                    formSpinner.getIdOfSelectedItem(formWidget.getValue())
+                payload[formWidget.propertyName] =
+                    formSpinner.getIdOfSelectedItem(formWidget.value)
             } else {
                 payload[formWidget.propertyName] = formWidget.value
             }

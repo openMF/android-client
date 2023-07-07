@@ -174,8 +174,8 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
 
                 FormWidget.SCHEMA_KEY_CODEVALUE -> {
                     val formSpinner = formWidget as FormSpinner
-                    payload[formWidget.getPropertyName()] =
-                        formSpinner.getIdOfSelectedItem(formWidget.getValue()).toString()
+                    payload[formWidget.propertyName] =
+                        formSpinner.getIdOfSelectedItem(formWidget.value).toString()
                 }
 
                 else -> payload[formWidget.propertyName] = formWidget.value
