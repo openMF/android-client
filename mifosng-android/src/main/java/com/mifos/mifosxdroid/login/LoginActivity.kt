@@ -16,8 +16,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import butterknife.OnClick
-import butterknife.OnEditorAction
 import com.mifos.api.BaseApiManager
 import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R

@@ -8,10 +8,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import butterknife.OnClick
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
@@ -28,7 +29,6 @@ import com.mifos.services.data.GroupLoanPayload
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -330,7 +330,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     override fun showAllLoans(productLoans: List<LoanProducts?>?) {
         mLoanProducts = loans as List<LoanProducts>
         mGroupLoanAccountPresenter
-            .filterLoanProducts(loans)?.let { mListLoanProductsNames.addAll(it) }
+            .filterLoanProducts(loans).let { mListLoanProductsNames.addAll(it) }
         loanProductAdapter?.notifyDataSetChanged()
     }
 

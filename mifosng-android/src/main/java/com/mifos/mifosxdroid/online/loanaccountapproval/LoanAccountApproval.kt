@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import butterknife.OnClick
 import com.mifos.api.GenericResponse
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R

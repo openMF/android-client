@@ -21,8 +21,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import butterknife.ButterKnife
-import butterknife.OnClick
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.PathTrackingAdapter
@@ -57,7 +55,6 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
         setContentView(binding.root)
         activityComponent?.inject(this)
         pathTrackingPresenter?.attachView(this)
-        ButterKnife.bind(this)
         showBackButton()
         intentLocationService = Intent(this, PathTrackingService::class.java)
         createNotificationReceiver()

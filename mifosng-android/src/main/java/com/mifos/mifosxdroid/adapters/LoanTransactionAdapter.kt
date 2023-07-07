@@ -9,12 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
-import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.MaterialIcons
-import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.databinding.RowLoanTransactionItemBinding
 import com.mifos.mifosxdroid.databinding.RowLoanTransactionItemDetailBinding
 import com.mifos.objects.accounts.loan.Transaction
@@ -122,7 +117,7 @@ class LoanTransactionAdapter(
         parent: ViewGroup
     ): View {
         val binding: RowLoanTransactionItemDetailBinding
-        val view:View
+        val view: View
 
         if (convertView == null) {
             binding = RowLoanTransactionItemDetailBinding.inflate(layoutInflater, parent, false)

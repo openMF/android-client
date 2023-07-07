@@ -9,10 +9,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import butterknife.OnClick
 import com.google.gson.Gson
 import com.jakewharton.fliptables.FlipTable
 import com.mifos.exceptions.RequiredFieldException
@@ -29,7 +30,11 @@ import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate
-import com.mifos.utils.*
+import com.mifos.utils.Constants
+import com.mifos.utils.FragmentConstants
+import com.mifos.utils.Network
+import com.mifos.utils.PrefManager
+import com.mifos.utils.Utils
 import javax.inject.Inject
 
 class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickListener,

@@ -12,7 +12,6 @@ import android.widget.Button
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import butterknife.OnClick
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.GroupNameListAdapter
