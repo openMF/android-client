@@ -24,55 +24,6 @@ class SyncGroupsDialogFragment : DialogFragment(), SyncGroupsDialogMvpView {
 
     private lateinit var binding: DialogFragmentSyncGroupsBinding
 
-    //    @JvmField
-//    @BindView(R.id.tv_sync_title)
-//    var tv_sync_title: TextView? = null
-//
-//    @JvmField
-//    @BindView(R.id.tv_group_name)
-//    var tv_syncing_group_name: TextView? = null
-//
-//    @JvmField
-//    @BindView(R.id.tv_total_groups)
-//    var tv_total_groups: TextView? = null
-//
-//    @JvmField
-//    @BindView(R.id.tv_syncing_group)
-//    var tv_syncing_group: TextView? = null
-//
-//    @JvmField
-//    @BindView(R.id.pb_sync_group)
-//    var pb_syncing_group: ProgressBar? = null
-//
-//    @JvmField
-//    @BindView(R.id.tv_total_progress)
-//    var tv_total_progress: TextView? = null
-//
-//    @JvmField
-//    @BindView(R.id.pb_total_sync_group)
-//    var pb_total_sync_group: ProgressBar? = null
-//
-//    @JvmField
-//    @BindView(R.id.tv_syncing_client)
-//    var tv_syncing_client: TextView? = null
-//
-//    @JvmField
-//    @BindView(R.id.pb_sync_client)
-//    var pb_syncing_client: ProgressBar? = null
-//
-//    @JvmField
-//    @BindView(R.id.tv_sync_failed)
-//    var tv_sync_failed: TextView? = null
-//
-//    @JvmField
-//    @BindView(R.id.btn_hide)
-//    var btn_hide: Button? = null
-//
-//    @JvmField
-//    @BindView(R.id.btn_cancel)
-//    var btn_cancel: Button? = null
-//
-//    @JvmField
     @Inject
     lateinit var syncGroupsDialogPresenter: SyncGroupsDialogPresenter
     private var groups: List<Group>? = null

@@ -20,14 +20,14 @@ import javax.inject.Inject
 class SyncCentersDialogFragment : DialogFragment(), SyncCenterDialogMvpView {
 
     private lateinit var binding: DialogFragmentSyncCentersBinding
-    
+
     @Inject
     lateinit var syncCentersDialogPresenter: SyncCenterDialogPresenter
-    private var mCenterList: List<Center>? = null
+    private lateinit var mCenterList: List<Center>
     override fun onCreate(savedInstanceState: Bundle?) {
         (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
-            mCenterList = requireArguments().getParcelableArrayList(Constants.CENTER)
+            mCenterList = requireArguments().getParcelableArrayList(Constants.CENTER) ?: ArrayList()
         }
         super.onCreate(savedInstanceState)
     }
@@ -42,7 +42,7 @@ class SyncCentersDialogFragment : DialogFragment(), SyncCenterDialogMvpView {
 
         //Start Syncing Centers
         if (isOnline && userStatus == Constants.USER_ONLINE) {
-            syncCentersDialogPresenter.startSyncingCenters(mCenterList!!)
+            syncCentersDialogPresenter.startSyncingCenters(mCenterList)
         } else {
             showNetworkIsNotAvailable()
             requireActivity().supportFragmentManager.popBackStack()
@@ -75,8 +75,8 @@ class SyncCentersDialogFragment : DialogFragment(), SyncCenterDialogMvpView {
     }
 
     override fun showUI() {
-        binding.pbTotalSyncCenter.max = mCenterList!!.size
-        val totalCenters = mCenterList?.size.toString() + resources.getString(R.string.space) +
+        binding.pbTotalSyncCenter.max = mCenterList.size
+        val totalCenters = mCenterList.size.toString() + resources.getString(R.string.space) +
                 resources.getString(R.string.centers)
         binding.tvTotalCenters.text = totalCenters
         binding.tvSyncFailed.text = 0.toString()
@@ -99,7 +99,7 @@ class SyncCentersDialogFragment : DialogFragment(), SyncCenterDialogMvpView {
         binding.pbTotalSyncCenter.progress = count
         val totalSyncCount = resources
             .getString(R.string.space) + count + resources
-            .getString(R.string.slash) + mCenterList!!.size
+            .getString(R.string.slash) + mCenterList.size
         binding.tvTotalProgress.text = totalSyncCount
     }
 

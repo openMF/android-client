@@ -9,8 +9,8 @@ interface SyncClientsDialogMvpView : MvpView {
     fun showUI()
     fun showSyncingClient(clientName: String?)
     fun showSyncedFailedClients(failedCount: Int)
-    fun updateSingleSyncClientProgressBar(i: Int)
-    fun updateTotalSyncClientProgressBarAndCount(i: Int)
+    fun updateSingleSyncClientProgressBar(count: Int)
+    fun updateTotalSyncClientProgressBarAndCount(index: Int)
     var maxSingleSyncClientProgressBar: Int
     fun showNetworkIsNotAvailable()
     fun showClientsSyncSuccessfully()
