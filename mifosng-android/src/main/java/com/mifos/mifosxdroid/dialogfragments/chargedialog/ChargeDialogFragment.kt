@@ -185,7 +185,7 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
         if (chargeCreateListener != null) {
             createdCharge?.clientId = chargeCreationResponse.clientId
             createdCharge?.id = chargeCreationResponse.resourceId
-            chargeCreateListener?.onChargeCreatedSuccess(createdCharge)
+            createdCharge?.let { chargeCreateListener?.onChargeCreatedSuccess(it) }
         } else {
             show(binding.root, getString(R.string.message_charge_created_success))
         }

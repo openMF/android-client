@@ -118,7 +118,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentClientBinding.inflate(inflater, container, false)
-        (activity as MifosBaseActivity?)?.activityComponent?.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         setToolbarTitle(resources.getString(R.string.clients))
         mClientListPresenter.attachView(this)
 
@@ -128,12 +128,14 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
          * This is the LoadMore of the RecyclerView. It called When Last Element of RecyclerView
          * is shown on the Screen.
          */
-        binding.rvClients.addOnScrollListener(object :
-            EndlessRecyclerViewScrollListener(mLayoutManager) {
-            override fun onLoadMore(page: Int, totalItemCount: Int) {
-                mClientListPresenter.loadClients(true, totalItemCount)
-            }
-        })
+        mLayoutManager?.let {
+            binding.rvClients.addOnScrollListener(object :
+                EndlessRecyclerViewScrollListener(it) {
+                override fun onLoadMore(page: Int, totalItemCount: Int) {
+                    mClientListPresenter.loadClients(true, totalItemCount)
+                }
+            })
+        }
         /**
          * First Check the Parent Fragment is true or false. If parent fragment is true then no
          * need to fetch clientList from Rest API, just need to showing parent fragment ClientList

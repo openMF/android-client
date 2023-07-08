@@ -23,7 +23,7 @@ class FormEditText(context: Context?, name: String?) : FormWidget(context, name)
 
     init {
         label = TextView(context)
-        label.text = getDisplayText()
+        label.text = displayText
         label.layoutParams = defaultLayoutParams
         input = EditText(context)
         input.layoutParams = defaultLayoutParams
@@ -33,15 +33,13 @@ class FormEditText(context: Context?, name: String?) : FormWidget(context, name)
         layout.addView(input)
     }
 
-    override fun getValue(): String {
-        return input.text.toString()
-    }
+    override var value: String
+        get() = input.text.toString()
+        set(value) {
+            input.setText(value)
+        }
 
-    override fun setValue(value: String) {
-        input.setText(value)
-    }
-
-    override fun setHint(value: String) {
+    override fun setHint(value: String?) {
         input.hint = value
     }
 
