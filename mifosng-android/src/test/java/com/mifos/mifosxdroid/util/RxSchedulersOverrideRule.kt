@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException
  * Warning, this rule will reset RxAndroidPlugins and RxJavaPlugins before and after each test so
  * if the application code uses RxJava plugins this may affect the behaviour of the testing method.
  */
-public class RxSchedulersOverrideRule : TestRule {
+class RxSchedulersOverrideRule : TestRule {
     private val mRxJavaSchedulersHook: RxJavaSchedulersHook = object : RxJavaSchedulersHook() {
         override fun getIOScheduler(): Scheduler {
             return Schedulers.immediate()
