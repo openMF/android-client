@@ -82,7 +82,7 @@ class ReportCategoryPresenter @Inject constructor(private val dataManager: DataM
     private fun filterUniques(list: List<ClientReportTypeItem>): ArrayList<ClientReportTypeItem> {
         val map: MutableMap<Int, ClientReportTypeItem> = LinkedHashMap()
         for (item in list) {
-            map[item.reportId] = item
+            map[item.report_id] = item
         }
         val uniques = ArrayList<ClientReportTypeItem>()
         uniques.addAll(map.values)

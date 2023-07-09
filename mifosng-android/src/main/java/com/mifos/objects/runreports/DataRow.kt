@@ -7,7 +7,4 @@ import kotlinx.parcelize.Parcelize
  * Created by Tarun on 03-08-17.
  */
 @Parcelize
-class FullParameterListResponse(
-    var columnHeaders: List<ColumnHeader>,
-    var data: List<DataRow>
-) : Parcelable
+data class DataRow(var row: List<String> = listOf()) : Parcelable

@@ -75,7 +75,7 @@ class App : MultiDexApplication() {
 
     companion object {
         @JvmField
-        val typefaceManager: Map<Int, Typeface> = HashMap()
+        val typefaceManager: MutableMap<Int, Typeface?> = HashMap()
         @JvmStatic
         var instance: App? =null
 
