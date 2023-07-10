@@ -32,9 +32,9 @@ class ClientReportAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.tvReportCategory.text = items[position].reportCategory
-        holder.tvReportName.text = items[position].reportName
-        holder.tvReportType.text = items[position].reportType
+        holder.tvReportCategory.text = items[position].report_category
+        holder.tvReportName.text = items[position].report_name
+        holder.tvReportType.text = items[position].report_type
     }
 
     override fun getItemCount() = items.size

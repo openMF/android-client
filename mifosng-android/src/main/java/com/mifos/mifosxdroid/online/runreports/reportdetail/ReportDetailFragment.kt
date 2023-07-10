@@ -76,10 +76,10 @@ class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePic
     }
 
     private fun setUpUi() {
-        binding.itemClient.tvReportName.text = reportItem?.reportName
-        binding.itemClient.tvReportCategory.text = reportItem?.reportCategory
-        binding.itemClient.tvReportType.text = reportItem?.reportType
-        val reportName = "'" + reportItem?.reportName + "'"
+        binding.itemClient.tvReportName.text = reportItem?.report_name
+        binding.itemClient.tvReportCategory.text = reportItem?.report_category
+        binding.itemClient.tvReportType.text = reportItem?.report_type
+        val reportName = "'" + reportItem?.report_name + "'"
         presenter.fetchFullParameterList(reportName, true)
         datePicker = MFDatePicker.newInsance(this)
     }
@@ -295,7 +295,7 @@ class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePic
                     map[et.tag.toString()] = et.text.toString()
                 }
             }
-            presenter.fetchRunReportWithQuery(reportItem?.reportName, map)
+            presenter.fetchRunReportWithQuery(reportItem?.report_name, map)
         }
     }
 

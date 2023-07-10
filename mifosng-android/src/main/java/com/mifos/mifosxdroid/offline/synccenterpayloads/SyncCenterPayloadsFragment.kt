@@ -140,9 +140,9 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
      *
      * @param centerPayload
      */
-    override fun showCenters(centerPayload: MutableList<CenterPayload>) {
-        centerPayloads = centerPayload
-        if (centerPayload.size == 0) {
+    override fun showCenters(centerPayload: List<CenterPayload>) {
+        centerPayloads = centerPayload as MutableList<CenterPayload>
+        if (centerPayload.isEmpty()) {
             binding.llError.visibility = View.VISIBLE
             binding.noPayloadText.text = activity
                 ?.resources?.getString(R.string.no_center_payload_to_sync)
@@ -158,9 +158,9 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
         mSyncCenterPayloadsPresenter.updateCenterPayload(centerPayload)
     }
 
-    override fun showPayloadDeletedAndUpdatePayloads(centers: MutableList<CenterPayload>) {
+    override fun showPayloadDeletedAndUpdatePayloads(centers: List<CenterPayload>) {
         mCenterSyncIndex = 0
-        centerPayloads = centers
+        centerPayloads = centers as MutableList<CenterPayload>
         mSyncCenterPayloadAdapter?.setCenterPayload(centerPayloads!!)
         if (centerPayloads?.size != 0) {
             syncCenterPayload()
