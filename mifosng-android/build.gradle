@@ -220,7 +220,7 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.3.1'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.3.1'
 
-    implementation 'com.github.deano2390:MaterialShowcaseView:1.3.4'
+    implementation 'com.github.deano2390:MaterialShowcaseView:1.3.7'
 
 
     implementation "com.joanzapata.iconify:android-iconify-material:2.1.1" // (v2.0.0)
