@@ -1,0 +1,66 @@
+package com.mifos.objects.templates.loans
+
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+/**
+ * Created by mayankjindal on 02/10/16.
+ */
+@Parcelize
+data class GroupLoanTemplate(
+    var group: Group,
+    var loanProductId: Int,
+    var loanProductName: String,
+    var isLoanProductLinkedToFloatingRate: Boolean,
+    var fundId: Int,
+    var fundName: String,
+    var currency: Currency,
+    var principal: Double,
+    var approvedPrincipal: Double,
+    var proposedPrincipal: Double,
+    var termFrequency: Int,
+    var termPeriodFrequencyType: TermPeriodFrequencyType,
+    var numberOfRepayments: Int,
+    var repaymentEvery: Int,
+    var repaymentFrequencyType: RepaymentFrequencyType,
+    var interestRatePerPeriod: Double,
+    var interestRateFrequencyType: InterestRateFrequencyType,
+    var annualInterestRate: Int,
+    var isFloatingInterestRate: Boolean,
+    var amortizationType: AmortizationType,
+    var interestType: InterestType,
+    var interestCalculationPeriodType: InterestCalculationPeriodType,
+    var allowPartialPeriodInterestCalcualtion: Boolean,
+    var transactionProcessingStrategyId: Int,
+    var timeline: Timeline,
+    var charges: List<Charges>,
+    var productOptions: List<ProductOptions>,
+    var loanOfficerOptions: List<LoanOfficerOptions>,
+    var loanPurposeOptions: List<LoanPurposeOptions>,
+    var fundOptions: List<FundOptions>,
+    var termFrequencyTypeOptions: List<TermFrequencyTypeOptions>,
+    var repaymentFrequencyTypeOptions: List<RepaymentFrequencyTypeOptions>,
+    var repaymentFrequencyNthDayTypeOptions: List<RepaymentFrequencyNthDayTypeOptions>,
+    var repaymentFrequencyDaysOfWeekTypeOptions: List<RepaymentFrequencyDaysOfWeekTypeOptions>,
+    var interestRateFrequencyTypeOptions: List<InterestRateFrequencyTypeOptions>,
+    var amortizationTypeOptions: List<AmortizationTypeOptions>,
+    var interestTypeOptions: List<InterestTypeOptions>,
+    var interestCalculationPeriodTypeOptions: List<InterestCalculationPeriodType>,
+    var transactionProcessingStrategyOptions: List<TransactionProcessingStrategyOptions>,
+    var chargeOptions: List<ChargeOptions>,
+    var calendarOptions: List<CalendarOptions>,
+    var multiDisburseLoan: Boolean,
+    var canDefineInstallmentAmount: Boolean,
+    var canDisburse: Boolean,
+    var canUseForTopup: Boolean,
+    var isTopup: Boolean,
+    var product: Product,
+    var overdueCharges: List<OverdueCharges>,
+    var daysInMonthType: DaysInMonthType,
+    var daysInYearType: DaysInYearType,
+    var isInterestRecalculationEnabled: Boolean,
+    var interestRecalculationData: InterestRecalculationData,
+    var isVariableInstallmentsAllowed: Boolean,
+    var minimumGap: Int,
+    var maximumGap: Int
+) : Parcelable

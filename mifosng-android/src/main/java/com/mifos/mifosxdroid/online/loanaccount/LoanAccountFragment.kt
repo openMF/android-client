@@ -156,7 +156,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         loansPayload.expectedDisbursementDate = disbursementDate
         loansPayload.interestCalculationPeriodType = interestCalculationPeriodTypeId
         loansPayload.loanType = "individual"
-        loansPayload.locale = "en"
+        loansPayload.locale = "fr"
         loansPayload.numberOfRepayments = binding.etNumberofrepayments.editableText
             .toString()
         loansPayload.principal = binding.etPrincipal.editableText.toString()

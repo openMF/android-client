@@ -485,7 +485,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
         }
         if (mGroupLoanTemplate?.fundId != null) {
             fundId = mGroupLoanTemplate!!.fundId
-            binding.spFund.setSelection(mGroupLoanTemplate!!.getFundNameFromId(fundId))
+            binding.spFund.setSelection(mGroupLoanTemplate!!.fundId)
         }
     }
 

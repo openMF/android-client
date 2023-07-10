@@ -331,8 +331,7 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
             }
             binding.etAmount.setText(
                 (loanRepaymentTemplate
-                    .principalPortion
-                        + loanRepaymentTemplate.interestPortion).toString()
+                    .principalPortion?.plus(loanRepaymentTemplate.interestPortion)).toString()
             )
             binding.etAdditionalPayment.setText("0.0")
             binding.etFees.setText(
