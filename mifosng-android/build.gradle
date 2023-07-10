@@ -267,7 +267,7 @@ dependencies {
     implementation "androidx.preference:preference:$preference"
 
     //Splash Screen
-    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
+    implementation 'androidx.core:core-splashscreen:1.0.1'
 
 }
 /*
