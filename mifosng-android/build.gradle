@@ -245,7 +245,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
         exclude group: 'com.android.support', module: 'design'
     }
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
 
     testImplementation "junit:junit:$rootProject.jUnitVersion"
     testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
