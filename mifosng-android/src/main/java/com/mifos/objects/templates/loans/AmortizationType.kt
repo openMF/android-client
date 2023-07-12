@@ -15,8 +15,3 @@ data class AmortizationType(
 
     var value: String? = null
 ) : Parcelable
-
-
-
-
-

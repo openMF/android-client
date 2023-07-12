@@ -9,13 +9,22 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class LoanOfficerOptions(
     var id: Int? = null,
+
     var firstname: String? = null,
+
     var lastname: String? = null,
+
     var displayName: String? = null,
+
     var mobileNo: String? = null,
+
     var officeId: Int? = null,
+
     var officeName: String? = null,
+
     var isLoanOfficer: Boolean? = null,
+
     var isActive: Boolean? = null,
+
     var joiningDate: List<Int>? = null
 ) : Parcelable

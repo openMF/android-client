@@ -9,6 +9,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class TransactionProcessingStrategyOptions(
     var id: Int? = null,
+
     var code: String? = null,
+
     var name: String? = null
 ) : Parcelable

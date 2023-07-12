@@ -9,6 +9,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class DaysInMonthType(
     var id: Int? = null,
+
     var code: String? = null,
+
     var value: String? = null
 ) : Parcelable

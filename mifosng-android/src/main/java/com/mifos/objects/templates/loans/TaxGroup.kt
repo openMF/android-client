@@ -12,5 +12,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class TaxGroup(
     var id: Int? = null,
+
     var name: String? = null
 ) : Parcelable

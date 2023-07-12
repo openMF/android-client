@@ -9,8 +9,12 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class LoanPurposeOptions(
     var id: Int? = null,
+
     var name: String? = null,
+
     var position: Int? = null,
+
     var description: String? = null,
+
     var isActive: Boolean? = null
 ) : Parcelable

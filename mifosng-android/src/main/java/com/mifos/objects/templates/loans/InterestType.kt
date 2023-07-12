@@ -9,6 +9,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class InterestType(
     var id: Int? = null,
+
     var code: String? = null,
+
     var value: String? = null
 ) : Parcelable
