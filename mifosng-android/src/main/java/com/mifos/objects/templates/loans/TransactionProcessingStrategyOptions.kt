@@ -8,15 +8,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class TransactionProcessingStrategyOptions(
-    var id: Int,
-    var code: String,
-    var name: String
-) : Parcelable {
-    override fun toString(): String {
-        return "TransactionProcessingStrategyOptions{" +
-                "id=$id, " +
-                "code='$code', " +
-                "name='$name'" +
-                '}'
-    }
-}
+    var id: Int? = null,
+    var code: String? = null,
+    var name: String? = null
+) : Parcelable

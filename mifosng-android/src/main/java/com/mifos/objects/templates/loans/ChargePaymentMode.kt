@@ -9,18 +9,9 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class ChargePaymentMode(
-    @SerializedName("id")
-    var id: Int,
-    @SerializedName("code")
-    var code: String,
-    @SerializedName("value")
-    var value: String
-) : Parcelable {
-    override fun toString(): String {
-        return "ChargePaymentMode{" +
-                "id=$id" +
-                ", code='$code'" +
-                ", value='$value'" +
-                '}'
-    }
-}
+    var id: Int? = null,
+
+    var code: String? = null,
+
+    var value: String? = null
+) : Parcelable

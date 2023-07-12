@@ -20,11 +20,11 @@ import kotlinx.parcelize.Parcelize
 @Table(database = MifosDatabase::class)
 data class LoanRepaymentTemplate(
     @PrimaryKey(autoincrement = true)
-    var loanId: Int = 0,
+    var loanId: Int? = null,
 
     var type: Type? = null,
 
-    var date: MutableList<Int> = mutableListOf(),
+    var date: MutableList<Int>? = null,
 
     var currency: Currency? = null,
 
@@ -35,7 +35,7 @@ data class LoanRepaymentTemplate(
     var principalPortion: Double? = null,
 
     @Column
-    var interestPortion: Double = 0.0,
+    var interestPortion: Double? = null,
 
     @Column
     var feeChargesPortion: Double? = null,
@@ -43,21 +43,5 @@ data class LoanRepaymentTemplate(
     @Column
     var penaltyChargesPortion: Double? = null,
 
-    var paymentTypeOptions: MutableList<PaymentTypeOption> = mutableListOf()
-) : MifosBaseModel(), Parcelable {
-
-    override fun toString(): String {
-        return "LoanRepaymentTemplate{" +
-                "loanId=" + loanId +
-                ", type=" + type +
-                ", date=" + date +
-                ", currency=" + currency +
-                ", amount=" + amount +
-                ", principalPortion=" + principalPortion +
-                ", interestPortion=" + interestPortion +
-                ", feeChargesPortion=" + feeChargesPortion +
-                ", penaltyChargesPortion=" + penaltyChargesPortion +
-                ", paymentTypeOptions=" + paymentTypeOptions +
-                '}'
-    }
-}
+    var paymentTypeOptions: MutableList<PaymentTypeOption>? = null
+) : MifosBaseModel(), Parcelable

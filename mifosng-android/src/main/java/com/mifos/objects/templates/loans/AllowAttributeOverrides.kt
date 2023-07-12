@@ -9,39 +9,19 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class AllowAttributeOverrides(
-    @SerializedName("amortizationType")
-    var amortizationType: Boolean = false,
+    var amortizationType: Boolean? = null,
 
-    @SerializedName("interestType")
-    var interestType: Boolean = false,
+    var interestType: Boolean? = null,
 
-    @SerializedName("transactionProcessingStrategyId")
-    var transactionProcessingStrategyId: Boolean = false,
+    var transactionProcessingStrategyId: Boolean? = null,
 
-    @SerializedName("interestCalculationPeriodType")
-    var interestCalculationPeriodType: Boolean = false,
+    var interestCalculationPeriodType: Boolean? = null,
 
-    @SerializedName("inArrearsTolerance")
-    var inArrearsTolerance: Boolean = false,
+    var inArrearsTolerance: Boolean? = null,
 
-    @SerializedName("repaymentEvery")
-    var repaymentEvery: Boolean = false,
+    var repaymentEvery: Boolean? = null,
 
-    @SerializedName("graceOnPrincipalAndInterestPayment")
-    var graceOnPrincipalAndInterestPayment: Boolean = false,
+    var graceOnPrincipalAndInterestPayment: Boolean? = null,
 
-    @SerializedName("graceOnArrearsAgeing")
-    var graceOnArrearsAgeing: Boolean = false
-) : Parcelable {
-
-    override fun toString(): String {
-        return "AllowAttributeOverrides(amortizationType=$amortizationType, " +
-                "interestType=$interestType, " +
-                "transactionProcessingStrategyId=$transactionProcessingStrategyId, " +
-                "interestCalculationPeriodType=$interestCalculationPeriodType, " +
-                "inArrearsTolerance=$inArrearsTolerance, " +
-                "repaymentEvery=$repaymentEvery, " +
-                "graceOnPrincipalAndInterestPayment=$graceOnPrincipalAndInterestPayment, " +
-                "graceOnArrearsAgeing=$graceOnArrearsAgeing)"
-    }
-}
+    var graceOnArrearsAgeing: Boolean? = null
+) : Parcelable

@@ -8,29 +8,14 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class LoanOfficerOptions(
-    var id: Int,
-    var firstname: String,
-    var lastname: String,
-    var displayName: String,
-    var mobileNo: String,
-    var officeId: Int,
-    var officeName: String,
-    var isLoanOfficer: Boolean,
-    var isActive: Boolean,
-    var joiningDate: List<Int>
-) : Parcelable {
-    override fun toString(): String {
-        return "LoanOfficerOptions{" +
-                "id=$id, " +
-                "firstname='$firstname', " +
-                "lastname='$lastname', " +
-                "displayName='$displayName', " +
-                "mobileNo=$mobileNo, " +
-                "officeId=$officeId, " +
-                "officeName=$officeName, " +
-                "isLoanOfficer=$isLoanOfficer, " +
-                "isActive=$isActive, " +
-                "joiningDate=$joiningDate" +
-                '}'
-    }
-}
+    var id: Int? = null,
+    var firstname: String? = null,
+    var lastname: String? = null,
+    var displayName: String? = null,
+    var mobileNo: String? = null,
+    var officeId: Int? = null,
+    var officeName: String? = null,
+    var isLoanOfficer: Boolean? = null,
+    var isActive: Boolean? = null,
+    var joiningDate: List<Int>? = null
+) : Parcelable

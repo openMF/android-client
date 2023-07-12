@@ -9,16 +9,9 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class RecalculationRestFrequencyType(
-    @SerializedName("id")
-    var id: Int,
+    var id: Int? = null,
 
-    @SerializedName("code")
-    var code: String,
+    var code: String? = null,
 
-    @SerializedName("value")
-    var value: String
-) : Parcelable {
-    override fun toString(): String {
-        return "RecalculationRestFrequencyType(id=$id, code='$code', value='$value')"
-    }
-}
+    var value: String? = null
+) : Parcelable

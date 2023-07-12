@@ -9,10 +9,10 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class LoanTransactionTemplate(
-    var type: Type,
+    var type: Type? = null,
     var date: List<Int> = ArrayList(),
-    var amount: Double,
-    var manuallyReversed: Boolean,
+    var amount: Double? = null,
+    var manuallyReversed: Boolean? = null,
     var possibleNextRepaymentDate: List<Int> = ArrayList(),
     var paymentTypeOptions: List<PaymentTypeOption> = ArrayList()
 ) : Parcelable

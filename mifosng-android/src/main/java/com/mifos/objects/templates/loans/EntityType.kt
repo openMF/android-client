@@ -8,13 +8,9 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class EntityType(
-    var id: Int,
-    var code: String,
-    var value: String
-) : Parcelable {
+    var id: Int? = null,
 
-    override fun toString(): String {
-        return "EntityType{" +
-                "id=$id, code='$code', value='$value'}"
-    }
-}
+    var code: String? = null,
+
+    var value: String? = null
+) : Parcelable

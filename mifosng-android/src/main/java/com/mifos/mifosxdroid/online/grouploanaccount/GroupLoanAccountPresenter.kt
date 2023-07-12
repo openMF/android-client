@@ -104,7 +104,11 @@ class GroupLoanAccountPresenter @Inject constructor(private val mDataManager: Da
     fun filterAmortizations(amortizationTypeOptions: List<AmortizationTypeOptions>?): List<String> {
         val amortizationNameList = ArrayList<String>()
         Observable.from(amortizationTypeOptions)
-                .subscribe { amortizationTypeOptions -> amortizationNameList.add(amortizationTypeOptions.value) }
+                .subscribe { amortizationTypeOptions -> amortizationTypeOptions.value?.let {
+                    amortizationNameList.add(
+                        it
+                    )
+                } }
         return amortizationNameList
     }
 
@@ -112,8 +116,11 @@ class GroupLoanAccountPresenter @Inject constructor(private val mDataManager: Da
         val interestCalculationPeriodNameList = ArrayList<String>()
         Observable.from(interestCalculationPeriodType)
                 .subscribe { interestCalculationPeriodType ->
-                    interestCalculationPeriodNameList.add(
-                            interestCalculationPeriodType.value)
+                    interestCalculationPeriodType.value?.let {
+                        interestCalculationPeriodNameList.add(
+                            it
+                        )
+                    }
                 }
         return interestCalculationPeriodNameList
     }
@@ -122,8 +129,11 @@ class GroupLoanAccountPresenter @Inject constructor(private val mDataManager: Da
         val transactionProcessingStrategyNameList = ArrayList<String>()
         Observable.from(transactionProcessingStrategyOptions)
                 .subscribe { transactionProcessingStrategyOptions ->
-                    transactionProcessingStrategyNameList.add(
-                            transactionProcessingStrategyOptions.name)
+                    transactionProcessingStrategyOptions.name?.let {
+                        transactionProcessingStrategyNameList.add(
+                            it
+                        )
+                    }
                 }
         return transactionProcessingStrategyNameList
     }
@@ -138,35 +148,51 @@ class GroupLoanAccountPresenter @Inject constructor(private val mDataManager: Da
     fun filterTermFrequencyTypes(termFrequencyTypeOptions: List<TermFrequencyTypeOptions>?): List<String> {
         val termFrequencyNameList = ArrayList<String>()
         Observable.from(termFrequencyTypeOptions)
-                .subscribe { termFrequencyTypeOptions -> termFrequencyNameList.add(termFrequencyTypeOptions.value) }
+                .subscribe { termFrequencyTypeOptions -> termFrequencyTypeOptions.value?.let {
+                    termFrequencyNameList.add(
+                        it
+                    )
+                } }
         return termFrequencyNameList
     }
 
     fun filterLoanPurposeTypes(loanPurposeOptions: List<LoanPurposeOptions>?): List<String> {
         val loanPurposeNameList = ArrayList<String>()
         Observable.from(loanPurposeOptions)
-                .subscribe { loanPurposeOptions -> loanPurposeNameList.add(loanPurposeOptions.name) }
+                .subscribe { loanPurposeOptions -> loanPurposeOptions.name?.let {
+                    loanPurposeNameList.add(
+                        it
+                    )
+                } }
         return loanPurposeNameList
     }
 
     fun filterInterestTypeOptions(interestTypeOptions: List<InterestTypeOptions>?): List<String> {
         val interestTypeNameList = ArrayList<String>()
         Observable.from(interestTypeOptions)
-                .subscribe { interestTypeOptions -> interestTypeNameList.add(interestTypeOptions.value) }
+                .subscribe { interestTypeOptions -> interestTypeOptions.value?.let {
+                    interestTypeNameList.add(
+                        it
+                    )
+                } }
         return interestTypeNameList
     }
 
     fun filterLoanOfficers(loanOfficerOptions: List<LoanOfficerOptions>?): List<String> {
         val loanOfficerNameList = ArrayList<String>()
         Observable.from(loanOfficerOptions)
-                .subscribe { loanOfficerOptions -> loanOfficerNameList.add(loanOfficerOptions.displayName) }
+                .subscribe { loanOfficerOptions -> loanOfficerOptions.displayName?.let {
+                    loanOfficerNameList.add(
+                        it
+                    )
+                } }
         return loanOfficerNameList
     }
 
     fun filterFunds(fundOptions: List<FundOptions>?): List<String> {
         val fundNameList = ArrayList<String>()
         Observable.from(fundOptions)
-                .subscribe { fundOptions -> fundNameList.add(fundOptions.name) }
+                .subscribe { fundOptions -> fundOptions.name?.let { fundNameList.add(it) } }
         return fundNameList
     }
 

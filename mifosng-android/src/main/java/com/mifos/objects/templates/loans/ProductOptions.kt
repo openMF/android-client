@@ -8,25 +8,15 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class ProductOptions(
-    var id: Int,
-    var name: String,
-    var includeInBorrowerCycle: Boolean,
-    var useBorrowerCycle: Boolean,
-    var isLinkedToFloatingInterestRates: Boolean,
-    var isFloatingInterestRateCalculationAllowed: Boolean,
-    var allowVariableInstallments: Boolean,
-    var isInterestRecalculationEnabled: Boolean,
-    var canDefineInstallmentAmount: Boolean,
-    var holdGuaranteeFunds: Boolean,
-    var accountMovesOutOfNPAOnlyOnArrearsCompletion: Boolean
-) : Parcelable {
-    override fun toString(): String {
-        return "ProductOptions(id=$id, name=$name, includeInBorrowerCycle=$includeInBorrowerCycle, " +
-                "useBorrowerCycle=$useBorrowerCycle, isLinkedToFloatingInterestRates=$isLinkedToFloatingInterestRates, " +
-                "isFloatingInterestRateCalculationAllowed=$isFloatingInterestRateCalculationAllowed, " +
-                "allowVariableInstallments=$allowVariableInstallments, " +
-                "isInterestRecalculationEnabled=$isInterestRecalculationEnabled, " +
-                "canDefineInstallmentAmount=$canDefineInstallmentAmount, holdGuaranteeFunds=$holdGuaranteeFunds, " +
-                "accountMovesOutOfNPAOnlyOnArrearsCompletion=$accountMovesOutOfNPAOnlyOnArrearsCompletion)"
-    }
-}
+    var id: Int? = null,
+    var name: String? = null,
+    var includeInBorrowerCycle: Boolean? = null,
+    var useBorrowerCycle: Boolean? = null,
+    var isLinkedToFloatingInterestRates: Boolean? = null,
+    var isFloatingInterestRateCalculationAllowed: Boolean? = null,
+    var allowVariableInstallments: Boolean? = null,
+    var isInterestRecalculationEnabled: Boolean? = null,
+    var canDefineInstallmentAmount: Boolean? = null,
+    var holdGuaranteeFunds: Boolean? = null,
+    var accountMovesOutOfNPAOnlyOnArrearsCompletion: Boolean? = null
+) : Parcelable

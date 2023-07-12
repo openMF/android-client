@@ -9,24 +9,13 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class LoanCollateralOptions(
-    @SerializedName("id")
-    var id: Int,
-    @SerializedName("name")
-    var name: String,
-    @SerializedName("position")
-    var position: Int,
-    @SerializedName("description")
-    var description: String,
-    @SerializedName("isActive")
-    var isActive: Boolean
-) : Parcelable {
-    override fun toString(): String {
-        return "LoanCollateralOptions{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", position=" + position +
-                ", description='" + description + '\'' +
-                ", isActive=" + isActive +
-                '}'
-    }
-}
+    var id: Int? = null,
+
+    var name: String? = null,
+
+    var position: Int? = null,
+
+    var description: String? = null,
+
+    var isActive: Boolean? = null
+) : Parcelable

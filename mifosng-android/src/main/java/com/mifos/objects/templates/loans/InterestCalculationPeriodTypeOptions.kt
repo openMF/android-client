@@ -9,17 +9,9 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class InterestCalculationPeriodTypeOptions(
-    @SerializedName("id")
-    var id: Int,
-    @SerializedName("code")
-    var code: String,
-    @SerializedName("value")
-    var value: String
-) : Parcelable {
+    var id: Int? = null,
 
-    override fun toString(): String {
-        return "InterestCalculationPeriodTypeOptions{" +
-                "id=$id, code='$code', value='$value'" +
-                '}'
-    }
-}
+    var code: String? = null,
+
+    var value: String? = null
+) : Parcelable

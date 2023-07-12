@@ -8,16 +8,16 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class Group(
-    var id: Int,
-    var accountNo: Int,
-    var name: String,
-    var externalId: Int,
-    var status: Status,
-    var active: Boolean,
-    var activationDate: List<Int>,
-    var officeId: Int,
-    var officeName: String,
-    var hierarchy: String,
-    var groupLevel: Int,
-    var timeline: GroupTimeline
+    var id: Int? = null,
+    var accountNo: Int? = null,
+    var name: String? = null,
+    var externalId: Int? = null,
+    var status: Status? = null,
+    var active: Boolean? = null,
+    var activationDate: List<Int>? = null,
+    var officeId: Int? = null,
+    var officeName: String? = null,
+    var hierarchy: String? = null,
+    var groupLevel: Int? = null,
+    var timeline: GroupTimeline? = null
 ) : Parcelable

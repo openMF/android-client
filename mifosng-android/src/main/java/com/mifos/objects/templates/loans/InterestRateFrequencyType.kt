@@ -9,14 +9,9 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class InterestRateFrequencyType(
-    @SerializedName("id")
-    var id: Int = 0,
-    @SerializedName("code")
-    var code: String = "",
-    @SerializedName("value")
-    var value: String = ""
-) : Parcelable {
-    override fun toString(): String {
-        return "InterestRateFrequencyType(id=$id, code='$code', value='$value')"
-    }
-}
+    var id: Int? = null,
+
+    var code: String? = null,
+
+    var value: String? = null
+) : Parcelable

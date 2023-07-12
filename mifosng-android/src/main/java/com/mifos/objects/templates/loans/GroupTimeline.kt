@@ -8,12 +8,12 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class GroupTimeline(
-    var submittedOnDate: List<Int>,
-    var submittedByUsername: String,
-    var submittedByFirstname: String,
-    var submittedByLastname: String,
-    var activatedOnDate: List<Int>,
-    var activatedByUsername: String,
-    var activatedByFirstname: String,
-    var activatedByLastname: String
+    var submittedOnDate: List<Int>? = null,
+    var submittedByUsername: String? = null,
+    var submittedByFirstname: String? = null,
+    var submittedByLastname: String? = null,
+    var activatedOnDate: List<Int>? = null,
+    var activatedByUsername: String? = null,
+    var activatedByFirstname: String? = null,
+    var activatedByLastname: String? = null
 ) : Parcelable

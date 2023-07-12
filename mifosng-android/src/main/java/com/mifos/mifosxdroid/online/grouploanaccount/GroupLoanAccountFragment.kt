@@ -50,19 +50,19 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     var disbursementDate: String? = null
     private val mListener: OnDialogFragmentInteractionListener? = null
     private var mfDatePicker: DialogFragment? = null
-    private var productId = 0
+    private var productId : Int? = 0
     private var groupId = 0
-    private var loanPurposeId = 0
-    private var loanTermFrequency = 0
-    private var loanTermFrequencyType = 0
+    private var loanPurposeId : Int? =null
+    private var loanTermFrequency : Int? = null
+    private var loanTermFrequencyType : Int ? = null
     private var termFrequency: Int? = null
     private var repaymentEvery: Int? = null
-    private var transactionProcessingStrategyId = 0
-    private var amortizationTypeId = 0
-    private var interestCalculationPeriodTypeId = 0
-    private var fundId: Int = 0
-    private var loanOfficerId = 0
-    private var interestTypeMethodId = 0
+    private var transactionProcessingStrategyId : Int? = null
+    private var amortizationTypeId : Int ? = null
+    private var interestCalculationPeriodTypeId : Int? =null
+    private var fundId: Int ? = null
+    private var loanOfficerId : Int ? = null
+    private var interestTypeMethodId : Int ? = null
     private var repaymentFrequencyNthDayType: Int? = null
     private var repaymentFrequencyDayOfWeek: Int? = null
     private var interestRatePerPeriod: Double? = null
@@ -96,10 +96,8 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     private var fundOptionsAdapter: ArrayAdapter<String>? = null
     private var mGroupLoanTemplate: GroupLoanTemplate? = null
     private var mLoanProducts: List<LoanProducts>? = null
-    var mRepaymentFrequencyNthDayTypeOptions: List<RepaymentFrequencyNthDayTypeOptions> =
-        ArrayList()
-    var mRepaymentFrequencyDaysOfWeekTypeOptions: List<RepaymentFrequencyDaysOfWeekTypeOptions> =
-        ArrayList()
+    var mRepaymentFrequencyNthDayTypeOptions: List<RepaymentFrequencyNthDayTypeOptions>? = null
+    var mRepaymentFrequencyDaysOfWeekTypeOptions: List<RepaymentFrequencyDaysOfWeekTypeOptions>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -292,7 +290,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     }
 
     private fun inflateLoanPurposeSpinner() {
-        mGroupLoanAccountPresenter.loadGroupLoansAccountTemplate(groupId, productId)
+        productId?.let { mGroupLoanAccountPresenter.loadGroupLoansAccountTemplate(groupId, it) }
     }
 
     private fun initiateLoanCreation(loansPayload: GroupLoanPayload) {
@@ -379,16 +377,16 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
         fundOptions.addAll(mGroupLoanAccountPresenter.filterFunds(groupLoanTemplate?.fundOptions))
         fundOptionsAdapter?.notifyDataSetChanged()
         mListRepaymentFrequencyNthDayTypeOptions.clear()
-        mRepaymentFrequencyNthDayTypeOptions = mGroupLoanTemplate!!
-            .repaymentFrequencyNthDayTypeOptions
-        for (options in mRepaymentFrequencyNthDayTypeOptions) {
-            mListRepaymentFrequencyNthDayTypeOptions.add(options.value)
+        mRepaymentFrequencyNthDayTypeOptions = mGroupLoanTemplate
+            ?.repaymentFrequencyNthDayTypeOptions
+        for (options in mRepaymentFrequencyNthDayTypeOptions!!) {
+            options.value?.let { mListRepaymentFrequencyNthDayTypeOptions.add(it) }
         }
         mListRepaymentFrequencyDayOfWeekTypeOptions.clear()
         mRepaymentFrequencyDaysOfWeekTypeOptions = mGroupLoanTemplate!!
             .repaymentFrequencyDaysOfWeekTypeOptions
-        for (options in mRepaymentFrequencyDaysOfWeekTypeOptions) {
-            mListRepaymentFrequencyDayOfWeekTypeOptions.add(options.value)
+        for (options in mRepaymentFrequencyDaysOfWeekTypeOptions!!) {
+            options.value?.let { mListRepaymentFrequencyDayOfWeekTypeOptions.add(it) }
         }
         showDefaultValues()
     }
@@ -419,23 +417,22 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         when (parent.id) {
             R.id.sp_lproduct -> {
-                productId = mLoanProducts!![position].id
+                productId = mLoanProducts?.get(position)?.id
                 inflateLoanPurposeSpinner()
             }
 
             R.id.sp_amortization -> amortizationTypeId = mGroupLoanTemplate
-                ?.amortizationTypeOptions!![position].id
+                ?.amortizationTypeOptions?.get(position)?.id
 
             R.id.sp_interestcalculationperiod -> interestCalculationPeriodTypeId =
-                mGroupLoanTemplate
-                    ?.interestCalculationPeriodTypeOptions!![position].id
+                mGroupLoanTemplate?.interestCalculationPeriodTypeOptions?.get(position)?.id
 
             R.id.sp_repaymentstrategy -> transactionProcessingStrategyId = mGroupLoanTemplate
-                ?.transactionProcessingStrategyOptions!![position].id
+                ?.transactionProcessingStrategyOptions?.get(position)?.id
 
             R.id.sp_payment_periods -> {
                 loanTermFrequency = mGroupLoanTemplate
-                    ?.termFrequencyTypeOptions!![position].id
+                    ?.termFrequencyTypeOptions?.get(position)?.id
                 if (loanTermFrequency == 2) {
                     // Show and inflate Nth day and week spinners
                     showHideRepaidMonthSpinners(View.VISIBLE)
@@ -446,21 +443,21 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
             }
 
             R.id.sp_repayment_freq_nth_day -> repaymentFrequencyNthDayType = mGroupLoanTemplate
-                ?.repaymentFrequencyNthDayTypeOptions!![position].id
+                ?.repaymentFrequencyNthDayTypeOptions?.get(position)?.id
 
             R.id.sp_repayment_freq_day_of_week -> repaymentFrequencyDayOfWeek = mGroupLoanTemplate
-                ?.repaymentFrequencyDaysOfWeekTypeOptions!![position].id
+                ?.repaymentFrequencyDaysOfWeekTypeOptions?.get(position)?.id
 
             R.id.sp_loan_purpose -> loanPurposeId =
-                mGroupLoanTemplate!!.loanPurposeOptions[position].id
+                mGroupLoanTemplate?.loanPurposeOptions?.get(position)?.id
 
             R.id.sp_interest_type -> interestTypeMethodId =
-                mGroupLoanTemplate!!.interestTypeOptions[position].id
+                mGroupLoanTemplate?.interestTypeOptions?.get(position)?.id
 
             R.id.sp_loan_officer -> loanOfficerId =
-                mGroupLoanTemplate!!.loanOfficerOptions[position].id
+                mGroupLoanTemplate?.loanOfficerOptions?.get(position)?.id
 
-            R.id.sp_fund -> fundId = mGroupLoanTemplate!!.fundOptions[position].id
+            R.id.sp_fund -> fundId = mGroupLoanTemplate?.fundOptions?.get(position)?.id
         }
     }
 
@@ -472,7 +469,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
 
     private fun showDefaultValues() {
         interestRatePerPeriod = mGroupLoanTemplate?.interestRatePerPeriod
-        loanTermFrequencyType = mGroupLoanTemplate!!.interestRateFrequencyType.id
+        loanTermFrequencyType = mGroupLoanTemplate?.interestRateFrequencyType?.id
         termFrequency = mGroupLoanTemplate?.termFrequency
         binding.etPrincipal.setText(mGroupLoanTemplate?.principal.toString())
         binding.etNumberofrepayments.setText(mGroupLoanTemplate?.numberOfRepayments.toString())
@@ -484,8 +481,8 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
             binding.etRepaidevery.setText(repaymentEvery.toString())
         }
         if (mGroupLoanTemplate?.fundId != null) {
-            fundId = mGroupLoanTemplate!!.fundId
-            binding.spFund.setSelection(mGroupLoanTemplate!!.fundId)
+            fundId = mGroupLoanTemplate?.fundId
+            binding.spFund.setSelection(mGroupLoanTemplate?.fundId?:0)
         }
     }
 

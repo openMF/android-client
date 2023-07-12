@@ -8,20 +8,20 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class Charges(
-    var chargeId: Int,
-    var name: String,
-    var chargeTimeType: ChargeTimeType,
-    var chargeCalculationType: ChargeCalculationType,
-    var currency: Currency,
-    var amount: Double,
-    var amountPaid: Double,
-    var amountWaived: Double,
-    var amountWrittenOff: Double,
-    var amountOutstanding: Double,
-    var amountOrPercentage: Double,
-    var penalty: Boolean,
-    var chargePaymentMode: ChargePaymentMode,
-    var paid: Boolean,
-    var waived: Boolean,
-    var chargePayable: Boolean
+    var chargeId: Int? = null,
+    var name: String? = null,
+    var chargeTimeType: ChargeTimeType? = null,
+    var chargeCalculationType: ChargeCalculationType? = null,
+    var currency: Currency? = null,
+    var amount: Double? = null,
+    var amountPaid: Double? = null,
+    var amountWaived: Double? = null,
+    var amountWrittenOff: Double? = null,
+    var amountOutstanding: Double? = null,
+    var amountOrPercentage: Double? = null,
+    var penalty: Boolean? = null,
+    var chargePaymentMode: ChargePaymentMode? = null,
+    var paid: Boolean? = null,
+    var waived: Boolean? = null,
+    var chargePayable: Boolean? = null
 ) : Parcelable

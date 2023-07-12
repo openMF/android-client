@@ -11,6 +11,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class FundOptions(
-    var id: Int,
-    var name: String
+    var id: Int? = null,
+
+    var name: String? = null
 ) : Parcelable

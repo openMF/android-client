@@ -8,24 +8,11 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class Currency(
-    var code: String = "",
-    var name: String = "",
-    var decimalPlaces: Double = 0.0,
-    var inMultiplesOf: Int = 0,
-    var displaySymbol: String = "",
-    var nameCode: String = "",
-    var displayLabel: String = ""
-) : Parcelable {
-
-    override fun toString(): String {
-        return "Currency{" +
-                "code='$code', " +
-                "name='$name', " +
-                "decimalPlaces=$decimalPlaces, " +
-                "inMultiplesOf=$inMultiplesOf, " +
-                "displaySymbol='$displaySymbol', " +
-                "nameCode='$nameCode', " +
-                "displayLabel='$displayLabel'" +
-                '}'
-    }
-}
+    var code: String? = null,
+    var name: String? = null,
+    var decimalPlaces: Double? = null,
+    var inMultiplesOf: Int? = null,
+    var displaySymbol: String? = null,
+    var nameCode: String? = null,
+    var displayLabel: String? = null
+) : Parcelable

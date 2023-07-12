@@ -8,13 +8,9 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class LoanPurposeOptions(
-    var id: Int,
-    var name: String,
-    var position: Int,
-    var description: String,
-    var isActive: Boolean
-) : Parcelable {
-    override fun toString(): String {
-        return "LoanPurposeOptions(id=$id, name=$name, position=$position, description=$description, isActive=$isActive)"
-    }
-}
+    var id: Int? = null,
+    var name: String? = null,
+    var position: Int? = null,
+    var description: String? = null,
+    var isActive: Boolean? = null
+) : Parcelable

@@ -8,12 +8,5 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class Timeline(
-    val expectedDisbursementDate: List<Int> = ArrayList()
-) : Parcelable {
-
-    override fun toString(): String {
-        return "Timeline{" +
-                "expectedDisbursementDate=" + expectedDisbursementDate +
-                '}'
-    }
-}
+    val expectedDisbursementDate: List<Int>? = null
+) : Parcelable

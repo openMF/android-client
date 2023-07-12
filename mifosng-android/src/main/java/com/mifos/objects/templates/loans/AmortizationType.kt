@@ -9,22 +9,12 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class AmortizationType(
-    @field:SerializedName("id")
-    var id: Int = 0,
-    @field:SerializedName("code")
-    var code: String = "",
-    @field:SerializedName("value")
-    var value: String = ""
-) : Parcelable {
+    var id: Int? = null,
 
-    override fun toString(): String {
-        return "AmortizationType{" +
-                "id=" + id +
-                ", code='" + code + '\'' +
-                ", value='" + value + '\'' +
-                '}'
-    }
-}
+    var code: String? = null,
+
+    var value: String? = null
+) : Parcelable
 
 
 

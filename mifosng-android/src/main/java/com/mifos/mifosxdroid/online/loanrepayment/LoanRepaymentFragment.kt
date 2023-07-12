@@ -51,7 +51,7 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
     private var loanAccountNumber: String? = null
     private var loanProductName: String? = null
     private var amountInArrears: Double? = null
-    private var paymentTypeOptionId = 0
+    private var paymentTypeOptionId : Int ? = null
     private var mfDatePicker: DialogFragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -324,14 +324,16 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
                     id: Long
                 ) {
                     paymentTypeOptionId = loanRepaymentTemplate
-                        .paymentTypeOptions[position].id
+                        .paymentTypeOptions?.get(position)?.id
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
             binding.etAmount.setText(
-                (loanRepaymentTemplate
-                    .principalPortion?.plus(loanRepaymentTemplate.interestPortion)).toString()
+                (loanRepaymentTemplate.interestPortion?.let {
+                    loanRepaymentTemplate
+                        .principalPortion?.plus(it)
+                }).toString()
             )
             binding.etAdditionalPayment.setText("0.0")
             binding.etFees.setText(

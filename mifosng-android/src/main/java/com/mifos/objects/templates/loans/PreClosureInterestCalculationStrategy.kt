@@ -8,13 +8,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class PreClosureInterestCalculationStrategy(
-    var id: Int,
-    var code: String,
-    var value: String
-) : Parcelable {
-    override fun toString(): String {
-        return "PreClosureInterestCalculationStrategy{" +
-                "id=$id, code='$code', value='$value'" +
-                '}'
-    }
-}
+    var id: Int? = null,
+    var code: String? = null,
+    var value: String? = null
+) : Parcelable

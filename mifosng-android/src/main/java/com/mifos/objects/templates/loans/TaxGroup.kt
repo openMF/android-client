@@ -11,10 +11,6 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class TaxGroup(
-    var id: Int,
-    var name: String
-) : Parcelable {
-    override fun toString(): String {
-        return "TaxGroup(id=$id, name=$name)"
-    }
-}
+    var id: Int? = null,
+    var name: String? = null
+) : Parcelable

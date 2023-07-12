@@ -8,8 +8,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -28,9 +30,7 @@ import com.mifos.services.data.LoansPayload
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
-import java.util.*
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -53,17 +53,17 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
     private var mfDatePicker: DialogFragment? = null
     private var productId = 0
     private var clientId = 0
-    private var loanPurposeId = 0
-    private var loanTermFrequency = 0
+    private var loanPurposeId: Int? = null
+    private var loanTermFrequency: Int? = null
     private val loanTermFrequencyType = 0
     private var termFrequency: Int? = null
     private var repaymentEvery: Int? = null
-    private var transactionProcessingStrategyId = 0
-    private var amortizationTypeId = 0
-    private var interestCalculationPeriodTypeId = 0
-    private var fundId by Delegates.notNull<Int>()
-    private var loanOfficerId = 0
-    private var interestTypeId = 0
+    private var transactionProcessingStrategyId: Int? = null
+    private var amortizationTypeId: Int? = null
+    private var interestCalculationPeriodTypeId: Int? = null
+    private var fundId: Int? = null
+    private var loanOfficerId: Int? = null
+    private var interestTypeId: Int? = null
     private var repaymentFrequencyNthDayType: Int? = null
     private var repaymentFrequencyDayOfWeek: Int? = null
     private var interestRatePerPeriod: Double? = null
@@ -148,7 +148,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
 
     private fun submit() {
         val loansPayload = LoansPayload()
-        loansPayload.isAllowPartialPeriodInterestCalculation = binding.cbCalculateinterest
+        loansPayload.allowPartialPeriodInterestCalcualtion = binding.cbCalculateinterest
             .isChecked
         loansPayload.amortizationType = amortizationTypeId
         loansPayload.clientId = clientId
@@ -156,12 +156,12 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         loansPayload.expectedDisbursementDate = disbursementDate
         loansPayload.interestCalculationPeriodType = interestCalculationPeriodTypeId
         loansPayload.loanType = "individual"
-        loansPayload.locale = "fr"
-        loansPayload.numberOfRepayments = binding.etNumberofrepayments.editableText
-            .toString()
-        loansPayload.principal = binding.etPrincipal.editableText.toString()
+        loansPayload.locale = "en"
+        loansPayload.numberOfRepayments =
+            binding.etNumberofrepayments.editableText.toString().toInt()
+        loansPayload.principal = binding.etPrincipal.editableText.toString().toDouble()
         loansPayload.productId = productId
-        loansPayload.repaymentEvery = binding.etRepaidevery.editableText.toString()
+        loansPayload.repaymentEvery = binding.etRepaidevery.editableText.toString().toInt()
         loansPayload.submittedOnDate = submissionDate
         loansPayload.loanPurposeId = loanPurposeId
         loansPayload.loanTermFrequency = binding.etLoanterm.editableText.toString().toInt()
@@ -395,7 +395,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         mRepaymentFrequencyNthDayTypeOptions = mLoanTemplate
             .repaymentFrequencyNthDayTypeOptions
         for (options in mRepaymentFrequencyNthDayTypeOptions) {
-            mListRepaymentFrequencyNthDayTypeOptions.add(options.value)
+            options.value?.let { mListRepaymentFrequencyNthDayTypeOptions.add(it) }
         }
         mListRepaymentFrequencyNthDayTypeOptions.add(
             resources.getString(R.string.select_week_hint)
@@ -404,14 +404,14 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         mRepaymentFrequencyDaysOfWeekTypeOptions = mLoanTemplate
             .repaymentFrequencyDaysOfWeekTypeOptions
         for (options in mRepaymentFrequencyDaysOfWeekTypeOptions) {
-            mListRepaymentFrequencyDayOfWeekTypeOptions.add(options.value)
+            options.value?.let { mListRepaymentFrequencyDayOfWeekTypeOptions.add(it) }
         }
         mListRepaymentFrequencyDayOfWeekTypeOptions.add(
             resources.getString(R.string.select_day_hint)
         )
         mListLoanPurposeOptions.clear()
         for (loanPurposeOptions in mLoanTemplate.loanPurposeOptions) {
-            mListLoanPurposeOptions.add(loanPurposeOptions.name)
+            loanPurposeOptions.name?.let { mListLoanPurposeOptions.add(it) }
         }
         mLoanPurposeOptionsAdapter?.notifyDataSetChanged()
         mListAccountLinkingOptions.clear()
@@ -424,46 +424,52 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         mAccountLinkingOptionsAdapter?.notifyDataSetChanged()
         mListAmortizationTypeOptions.clear()
         for (amortizationTypeOptions in mLoanTemplate.amortizationTypeOptions) {
-            mListAmortizationTypeOptions.add(amortizationTypeOptions.value)
+            amortizationTypeOptions.value?.let { mListAmortizationTypeOptions.add(it) }
         }
         mAmortizationTypeOptionsAdapter?.notifyDataSetChanged()
         mListInterestCalculationPeriodTypeOptions.clear()
         for (interestCalculationPeriodType in mLoanTemplate
             .interestCalculationPeriodTypeOptions) {
-            mListInterestCalculationPeriodTypeOptions.add(interestCalculationPeriodType.value)
+            interestCalculationPeriodType.value?.let {
+                mListInterestCalculationPeriodTypeOptions.add(
+                    it
+                )
+            }
         }
         mInterestCalculationPeriodTypeOptionsAdapter?.notifyDataSetChanged()
         mListTransactionProcessingStrategyOptions.clear()
         for (transactionProcessingStrategyOptions in mLoanTemplate.transactionProcessingStrategyOptions) {
-            mListTransactionProcessingStrategyOptions.add(
-                transactionProcessingStrategyOptions
-                    .name
-            )
+            transactionProcessingStrategyOptions
+                .name?.let {
+                    mListTransactionProcessingStrategyOptions.add(
+                        it
+                    )
+                }
         }
         mTransactionProcessingStrategyOptionsAdapter?.notifyDataSetChanged()
         mListTermFrequencyTypeOptions.clear()
         for (termFrequencyTypeOptions in mLoanTemplate.termFrequencyTypeOptions) {
-            mListTermFrequencyTypeOptions.add(termFrequencyTypeOptions.value)
+            termFrequencyTypeOptions.value?.let { mListTermFrequencyTypeOptions.add(it) }
         }
         mTermFrequencyTypeOptionsAdapter?.notifyDataSetChanged()
         mListLoanTermFrequencyTypeOptions.clear()
         for (termFrequencyTypeOptions in mLoanTemplate.termFrequencyTypeOptions) {
-            mListLoanTermFrequencyTypeOptions.add(termFrequencyTypeOptions.value)
+            termFrequencyTypeOptions.value?.let { mListLoanTermFrequencyTypeOptions.add(it) }
         }
         mLoanTermFrequencyTypeAdapter?.notifyDataSetChanged()
         mListLoanFundOptions.clear()
         for (fundOptions in mLoanTemplate.fundOptions) {
-            mListLoanFundOptions.add(fundOptions.name)
+            fundOptions.name?.let { mListLoanFundOptions.add(it) }
         }
         mLoanFundOptionsAdapter?.notifyDataSetChanged()
         mListLoanOfficerOptions.clear()
         for (loanOfficerOptions in mLoanTemplate.loanOfficerOptions) {
-            mListLoanOfficerOptions.add(loanOfficerOptions.displayName)
+            loanOfficerOptions.displayName?.let { mListLoanOfficerOptions.add(it) }
         }
         mLoanOfficerOptionsAdapter?.notifyDataSetChanged()
         mListInterestTypeOptions.clear()
         for (interestTypeOptions in mLoanTemplate.interestTypeOptions) {
-            mListInterestTypeOptions.add(interestTypeOptions.value)
+            interestTypeOptions.value?.let { mListInterestTypeOptions.add(it) }
         }
         mInterestTypeOptionsAdapter?.notifyDataSetChanged()
         showDefaultValues()
@@ -511,7 +517,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
             R.id.sp_payment_periods -> {
                 loanTermFrequency = mLoanTemplate.termFrequencyTypeOptions[position]
                     .id
-                binding.spLoanTermPeriods.setSelection(loanTermFrequency)
+                loanTermFrequency?.let { binding.spLoanTermPeriods.setSelection(it) }
                 if (loanTermFrequency == 2) {
                     // Show and inflate Nth day and week spinners
                     showHideRepaidMonthSpinners(View.VISIBLE)
@@ -524,7 +530,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
             R.id.sp_loan_term_periods -> {
                 loanTermFrequency = mLoanTemplate.termFrequencyTypeOptions[position]
                     .id
-                binding.spPaymentPeriods.setSelection(loanTermFrequency)
+                loanTermFrequency?.let { binding.spPaymentPeriods.setSelection(it) }
                 if (loanTermFrequency == 2) {
                     // Show and inflate Nth day and week spinners
                     showHideRepaidMonthSpinners(View.VISIBLE)
@@ -576,11 +582,11 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
 
     private fun showDefaultValues() {
         interestRatePerPeriod = mLoanTemplate.interestRatePerPeriod
-        loanTermFrequency = mLoanTemplate.termPeriodFrequencyType.id
+        loanTermFrequency = mLoanTemplate.termPeriodFrequencyType?.id
         termFrequency = mLoanTemplate.termFrequency
         binding.etPrincipal.setText(mLoanTemplate.principal.toString())
         binding.etNumberofrepayments.setText(mLoanTemplate.numberOfRepayments.toString())
-        binding.tvNominalRateYearMonth?.text = mLoanTemplate.interestRateFrequencyType.value
+        binding.tvNominalRateYearMonth.text = mLoanTemplate.interestRateFrequencyType?.value
         binding.etNominalInterestRate.setText(mLoanTemplate.interestRatePerPeriod.toString())
         binding.etLoanterm.setText(termFrequency.toString())
         if (mLoanTemplate.repaymentEvery != null) {
@@ -589,7 +595,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         }
         if (mLoanTemplate.fundId != null) {
             fundId = mLoanTemplate.fundId
-            binding.spFund.setSelection(mLoanTemplate.getFundNameFromId(fundId))
+            binding.spFund.setSelection(mLoanTemplate.fundId!!)
         }
         binding.spLinkingOptions.setSelection(mListAccountLinkingOptions.size)
     }
