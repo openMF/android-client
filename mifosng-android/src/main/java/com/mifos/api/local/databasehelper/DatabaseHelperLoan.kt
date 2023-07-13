@@ -148,8 +148,7 @@ class DatabaseHelperLoan @Inject constructor() {
     ): Observable<LoanRepaymentTemplate> {
         return Observable.defer {
             loanRepaymentTemplate.loanId = loanId
-            for (paymentTypeOption: PaymentTypeOption in loanRepaymentTemplate
-                .paymentTypeOptions) {
+            for (paymentTypeOption: PaymentTypeOption in loanRepaymentTemplate.paymentTypeOptions!!) {
                 paymentTypeOption.save()
             }
             loanRepaymentTemplate.save()
