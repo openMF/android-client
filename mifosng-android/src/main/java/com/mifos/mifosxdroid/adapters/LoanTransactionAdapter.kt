@@ -29,21 +29,41 @@ class LoanTransactionAdapter(
 
     init {
         for (transaction in transactionList) {
-            val parent = Parent(
-                transaction.date,
-                transaction.type,
-                transaction.amount
-            )
-            val child = Child(
-                transaction.id,
-                transaction.officeName,
-                transaction.principalPortion,
-                transaction.interestPortion,
-                transaction.feeChargesPortion,
-                transaction.penaltyChargesPortion
-            )
-            parents.add(parent)
-            children.add(child)
+            val parent = transaction.type?.let {
+                transaction.amount?.let { it1 ->
+                    Parent(
+                        transaction.date,
+                        it,
+                        it1
+                    )
+                }
+            }
+            val child = transaction.id?.let {
+                transaction.officeName?.let { it1 ->
+                    transaction.principalPortion?.let { it2 ->
+                        transaction.interestPortion?.let { it3 ->
+                            transaction.feeChargesPortion?.let { it4 ->
+                                transaction.penaltyChargesPortion?.let { it5 ->
+                                    Child(
+                                        it,
+                                        it1,
+                                        it2,
+                                        it3,
+                                        it4,
+                                        it5
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (parent != null) {
+                parents.add(parent)
+            }
+            if (child != null) {
+                children.add(child)
+            }
         }
     }
 

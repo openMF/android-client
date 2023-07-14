@@ -53,12 +53,12 @@ class LoanRepaymentScheduleAdapter(
         }
 
         val period = periodList[i]
-        viewHolder.binding.tvRepaymentDueDate.text = getDateAsString(period.dueDate)
+        viewHolder.binding.tvRepaymentDueDate.text = period.dueDate?.let { getDateAsString(it) }
         viewHolder.binding.tvRepaymentAmountDue.text = period.totalDueForPeriod.toString()
         viewHolder.binding.tvRepaymentAmountPaid.text = period.totalPaidForPeriod.toString()
 
         when {
-            period.complete != null && period.complete -> {
+            period.complete != null && period.complete!! -> {
                 viewHolder.binding.viewStatusIndicator.setBackgroundColor(
                     ContextCompat.getColor(
                         context,
@@ -67,7 +67,7 @@ class LoanRepaymentScheduleAdapter(
                 )
             }
 
-            period.totalOverdue != null && period.totalOverdue > 0 -> {
+            period.totalOverdue != null && period.totalOverdue!! > 0 -> {
                 viewHolder.binding.viewStatusIndicator.setBackgroundColor(
                     ContextCompat.getColor(
                         context,

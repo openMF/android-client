@@ -90,7 +90,7 @@ class SyncClientsDialogPresenter @Inject constructor(
 
     fun checkNetworkConnectionAndSyncLoanAndLoanRepayment() {
         if (mvpView?.isOnline == true) {
-            syncLoanAndLoanRepayment(mLoanAccountList[mLoanAndRepaymentSyncIndex].id)
+            mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let { syncLoanAndLoanRepayment(it) }
         } else {
             mvpView?.showNetworkIsNotAvailable()
             mvpView?.dismissDialog()

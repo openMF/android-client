@@ -135,10 +135,12 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
         mfDatePicker = MFDatePicker.newInsance(this)
         binding.tvLoanApprovalDates.text = MFDatePicker.datePickedAsString
         approvalDate = binding.tvLoanApprovalDates.text.toString()
-        binding.tvExpectedDisbursementDates.text = DateHelper.getDateAsString(
-            loanWithAssociations
-                ?.timeline!!.expectedDisbursementDate
-        )
+        binding.tvExpectedDisbursementDates.text = loanWithAssociations
+            ?.timeline!!.expectedDisbursementDate?.let {
+                DateHelper.getDateAsString(
+                    it
+            )
+            }
         disbursementDate = binding.tvExpectedDisbursementDates.text.toString()
         showApprovalDate()
         binding.etApprovedAmount.setText(loanWithAssociations?.approvedPrincipal.toString())

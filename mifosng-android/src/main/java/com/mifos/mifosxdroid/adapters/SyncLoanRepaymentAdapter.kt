@@ -35,9 +35,11 @@ class SyncLoanRepaymentAdapter @Inject constructor() :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val loanRepaymentRequest = loanRepaymentRequests[position]
-        val paymentTypeName = getPaymentTypeName(
-            loanRepaymentRequest.paymentTypeId.toInt(), mPaymentTypeOptions
-        )
+        val paymentTypeName = loanRepaymentRequest.paymentTypeId?.let {
+            getPaymentTypeName(
+                it.toInt(), mPaymentTypeOptions
+            )
+        }
         holder.binding.tvLoanId.text = loanRepaymentRequest.loanId.toString()
         holder.binding.tvAccountNumber.text = loanRepaymentRequest.accountNumber
         if (mPaymentTypeOptions.isNotEmpty()) {

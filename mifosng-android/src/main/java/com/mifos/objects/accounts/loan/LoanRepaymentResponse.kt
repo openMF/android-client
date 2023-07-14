@@ -4,22 +4,25 @@
  */
 package com.mifos.objects.accounts.loan
 
+import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.mifos.objects.Changes
+import kotlinx.parcelize.Parcelize
 
-class LoanRepaymentResponse {
+@Parcelize
+data class LoanRepaymentResponse (
     @Expose
-    var officeId: Int? = null
-
-    @Expose
-    var clientId: Int? = null
-
-    @Expose
-    var loanId: Int? = null
+    var officeId: Int? = null,
 
     @Expose
-    var resourceId: Int? = null
+    var clientId: Int? = null,
+
+    @Expose
+    var loanId: Int? = null,
+
+    @Expose
+    var resourceId: Int? = null,
 
     @Expose
     var changes: Changes? = null
-}
+) : Parcelable

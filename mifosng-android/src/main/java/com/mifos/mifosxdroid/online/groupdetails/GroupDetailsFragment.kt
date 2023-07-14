@@ -191,16 +191,16 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
                 activity,
                 adapter,
                 AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                    mListener?.loadLoanAccountSummary(adapter.getItem(i).id)
+                    adapter.getItem(i).id?.let { mListener?.loadLoanAccountSummary(it) }
                 })
         } else {
             binding.accountAccordionSectionLoans.root.visibility = View.GONE
         }
-        if (groupAccounts.nonRecurringSavingsAccounts.size > 0) {
+        if (groupAccounts.getNonRecurringSavingsAccounts().isNotEmpty()) {
             val section = AccountAccordion.Section.SAVINGS
             val adapter = SavingsAccountsListAdapter(
                 requireActivity().applicationContext,
-                groupAccounts.nonRecurringSavingsAccounts
+                groupAccounts.getNonRecurringSavingsAccounts()
             )
             section.connect(
                 activity,
@@ -214,11 +214,11 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         } else {
             binding.accountAccordionSectionSavings.root.visibility = View.GONE
         }
-        if (groupAccounts.recurringSavingsAccounts.size > 0) {
+        if (groupAccounts.getRecurringSavingsAccounts().isNotEmpty()) {
             val section = AccountAccordion.Section.RECURRING
             val adapter = SavingsAccountsListAdapter(
                 requireActivity().applicationContext,
-                groupAccounts.recurringSavingsAccounts
+                groupAccounts.getRecurringSavingsAccounts()
             )
             section.connect(
                 activity,

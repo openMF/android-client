@@ -67,7 +67,7 @@ class IndividualCollectionSheetDetailsPresenter @Inject internal constructor(pri
     fun filterPaymentTypeOptions(paymentTypeOptionsList: List<PaymentTypeOptions>?): List<String> {
         val paymentList: MutableList<String> = ArrayList()
         Observable.from(paymentTypeOptionsList)
-                .subscribe { paymentTypeOption -> paymentList.add(paymentTypeOption.name) }
+                .subscribe { paymentTypeOption -> paymentTypeOption.name?.let { paymentList.add(it) } }
         return paymentList
     }
 

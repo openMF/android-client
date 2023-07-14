@@ -143,11 +143,12 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(),
     }
 
     override fun showPaymentSubmittedSuccessfully() {
-        mSyncLoanRepaymentTransactionPresenter
-            .deleteAndUpdateLoanRepayments(
-                mLoanRepaymentRequests
-                !![mClientSyncIndex].loanId
-            )
+        mLoanRepaymentRequests?.get(mClientSyncIndex)?.loanId?.let {
+            mSyncLoanRepaymentTransactionPresenter
+                .deleteAndUpdateLoanRepayments(
+                    it
+                )
+        }
     }
 
     override fun showPaymentFailed(errorMessage: String) {
@@ -224,11 +225,12 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(),
 
     private fun syncGroupPayload() {
         for (i in mLoanRepaymentRequests!!.indices) {
-            if (mLoanRepaymentRequests!![i].errorMessage == null) {
-                mSyncLoanRepaymentTransactionPresenter.syncLoanRepayment(
-                    mLoanRepaymentRequests!![i]
-                        .loanId, mLoanRepaymentRequests!![i]
-                )
+            if (mLoanRepaymentRequests?.get(i)?.errorMessage == null) {
+                mLoanRepaymentRequests?.get(i)?.loanId?.let {
+                    mSyncLoanRepaymentTransactionPresenter.syncLoanRepayment(
+                        it, mLoanRepaymentRequests?.get(i)
+                    )
+                }
                 mClientSyncIndex = i
                 break
             } else {

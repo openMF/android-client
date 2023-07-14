@@ -232,7 +232,7 @@ class SyncCenterDialogPresenter @Inject constructor(
      */
     private fun checkNetworkConnectionAndSyncLoanAndLoanRepayment() {
         if (mvpView?.isOnline == true) {
-            syncLoanAndLoanRepayment(mLoanAccountList[mLoanAndRepaymentSyncIndex].id)
+            mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let { syncLoanAndLoanRepayment(it) }
         } else {
             mvpView?.showNetworkIsNotAvailable()
             mvpView?.dismissDialog()
@@ -245,7 +245,11 @@ class SyncCenterDialogPresenter @Inject constructor(
      */
     private fun checkNetworkConnectionAndSyncMemberLoanAndMemberLoanRepayment() {
         if (mvpView?.isOnline == true) {
-            syncMemberLoanAndMemberLoanRepayment(mMemberLoanAccountsList[mMemberLoanSyncIndex].id)
+            mMemberLoanAccountsList[mMemberLoanSyncIndex].id?.let {
+                syncMemberLoanAndMemberLoanRepayment(
+                    it
+                )
+            }
         } else {
             mvpView?.showNetworkIsNotAvailable()
             mvpView?.dismissDialog()
@@ -626,9 +630,11 @@ class SyncCenterDialogPresenter @Inject constructor(
     private fun checkAccountsSyncStatusAndSyncGroupAccounts() {
         if (!mLoanAccountList.isEmpty() && !mLoanAccountSyncStatus) {
             //Sync the Active Loan and LoanRepayment
-            syncGroupLoanAndLoanRepayment(
-                mLoanAccountList[mLoanAndRepaymentSyncIndex].id
-            )
+            mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let {
+                syncGroupLoanAndLoanRepayment(
+                    it
+                )
+            }
         } else if (!mSavingsAccountList.isEmpty()) {
             //Sync the Active Savings Account
             syncGroupSavingsAccountAndTemplate(
@@ -649,9 +655,11 @@ class SyncCenterDialogPresenter @Inject constructor(
     private fun checkAccountsSyncStatusAndSyncClientAccounts() {
         if (!mLoanAccountList.isEmpty() && !mLoanAccountSyncStatus) {
             //Sync the Active Loan and LoanRepayment
-            syncClientLoanAndLoanRepayment(
-                mLoanAccountList[mLoanAndRepaymentSyncIndex].id
-            )
+            mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let {
+                syncClientLoanAndLoanRepayment(
+                    it
+                )
+            }
         } else if (!mSavingsAccountList.isEmpty()) {
             //Sync the Active Savings Account
             syncClientSavingsAccountAndTemplate(
@@ -671,7 +679,7 @@ class SyncCenterDialogPresenter @Inject constructor(
      */
     private fun syncGroup(group: Group) {
         checkViewAttached()
-        group.centerId = mCenterList.get(mCenterSyncIndex).id
+        group.centerId = mCenterList[mCenterSyncIndex].id
         group.isSync = true
         mSubscriptions.add(
             mDataManagerGroups.syncGroupInDatabase(group)
@@ -754,9 +762,11 @@ class SyncCenterDialogPresenter @Inject constructor(
                     override fun onNext(loanAndLoanRepayment: LoanAndLoanRepayment) {
                         mLoanAndRepaymentSyncIndex += 1
                         if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
-                            syncGroupLoanAndLoanRepayment(
-                                mLoanAccountList[mLoanAndRepaymentSyncIndex].id
-                            )
+                            mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let {
+                                syncGroupLoanAndLoanRepayment(
+                                    it
+                                )
+                            }
                         } else {
                             setLoanAccountSyncStatusTrue()
                             checkAccountsSyncStatusAndSyncGroupAccounts()
@@ -788,9 +798,11 @@ class SyncCenterDialogPresenter @Inject constructor(
                     override fun onNext(loanAndLoanRepayment: LoanAndLoanRepayment) {
                         mLoanAndRepaymentSyncIndex += 1
                         if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
-                            syncClientLoanAndLoanRepayment(
-                                mLoanAccountList[mLoanAndRepaymentSyncIndex].id
-                            )
+                            mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let {
+                                syncClientLoanAndLoanRepayment(
+                                    it
+                                )
+                            }
                         } else {
                             setLoanAccountSyncStatusTrue()
                             checkAccountsSyncStatusAndSyncClientAccounts()
