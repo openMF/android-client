@@ -12,6 +12,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class DaysInYearType(
     var id : Int? = null,
+
     var code : Int? = null,
+    
     var value : Int? = null
 ) : Parcelable
