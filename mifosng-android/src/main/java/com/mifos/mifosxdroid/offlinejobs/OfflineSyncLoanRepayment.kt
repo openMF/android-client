@@ -63,11 +63,12 @@ class OfflineSyncLoanRepayment : Job() {
     fun syncGroupPayload() {
         for (i in mClientSyncIndex until mLoanRepaymentRequests.size) {
             if (mLoanRepaymentRequests[i].errorMessage == null) {
-                syncLoanRepayment(
-                    mLoanRepaymentRequests
-                        .get(i)
-                        .loanId, mLoanRepaymentRequests[i]
-                )
+                mLoanRepaymentRequests[i]
+                    .loanId?.let {
+                        syncLoanRepayment(
+                            it, mLoanRepaymentRequests[i]
+                        )
+                    }
                 mClientSyncIndex = i
                 break
             }
@@ -122,10 +123,11 @@ class OfflineSyncLoanRepayment : Job() {
     }
 
     fun showPaymentSubmittedSuccessfully() {
-        deleteAndUpdateLoanRepayments(
-            mLoanRepaymentRequests
-                .get(mClientSyncIndex).loanId
-        )
+        mLoanRepaymentRequests[mClientSyncIndex].loanId?.let {
+                deleteAndUpdateLoanRepayments(
+                    it
+            )
+            }
     }
 
     private fun deleteAndUpdateLoanRepayments(loanId: Int) {

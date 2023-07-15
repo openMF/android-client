@@ -142,7 +142,11 @@ class SavingsAccountPresenter @Inject constructor(private val mDataManagerSaving
     fun filterFieldOfficerNames(fieldOfficerOptions: List<FieldOfficerOptions>?): List<String> {
         val fieldOfficerNames = ArrayList<String>()
         Observable.from(fieldOfficerOptions)
-                .subscribe { fieldOfficerOptions -> fieldOfficerNames.add(fieldOfficerOptions.displayName) }
+                .subscribe { fieldOfficerOptions -> fieldOfficerOptions.displayName?.let {
+                    fieldOfficerNames.add(
+                        it
+                    )
+                } }
         return fieldOfficerNames
     }
 

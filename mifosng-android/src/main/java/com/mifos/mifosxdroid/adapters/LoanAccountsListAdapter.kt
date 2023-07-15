@@ -51,22 +51,22 @@ class LoanAccountsListAdapter(
 
         val loanAccount = loanAccountList[i]
 
-        if (loanAccount.status.active) {
+        if (loanAccount.status?.active == true) {
             binding.viewStatusIndicator.setBackgroundColor(
                 ContextCompat.getColor(context, R.color.loan_status_disbursed)
             )
-        } else if (loanAccount.status.waitingForDisbursal) {
+        } else if (loanAccount.status?.waitingForDisbursal == true) {
             binding.viewStatusIndicator.setBackgroundColor(
                 ContextCompat.getColor(context, R.color.status_approved)
             )
-        } else if (loanAccount.status.pendingApproval) {
+        } else if (loanAccount.status?.pendingApproval == true) {
             binding.viewStatusIndicator.setBackgroundColor(
                 ContextCompat.getColor(
                     context,
                     R.color.status_submitted_and_pending_approval
                 )
             )
-        } else if (loanAccount.status.active && loanAccount.inArrears) {
+        } else if (loanAccount.status?.active == true && loanAccount.inArrears == true) {
             binding.viewStatusIndicator.setBackgroundColor(
                 ContextCompat.getColor(context, R.color.red)
             )

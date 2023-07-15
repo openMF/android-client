@@ -119,4 +119,9 @@ data class LoanWithAssociations(
     var inArrears: Boolean = false,
 
     var isNPA: Boolean = false,
-) : MifosBaseModel(), Parcelable
+) : MifosBaseModel(), Parcelable {
+
+    fun isInArrears() : Boolean {
+        return inArrears
+    }
+}

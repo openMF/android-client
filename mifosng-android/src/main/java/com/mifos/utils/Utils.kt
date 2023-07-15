@@ -60,7 +60,7 @@ object Utils {
     fun getActiveLoanAccounts(loanAccountList: List<LoanAccount>?): List<LoanAccount> {
         val loanAccounts: MutableList<LoanAccount> = ArrayList()
         Observable.from(loanAccountList)
-            .filter { loanAccount -> loanAccount.status.active }
+            .filter { loanAccount -> loanAccount.status?.active }
             .subscribe { loanAccount -> loanAccounts.add(loanAccount) }
         return loanAccounts
     }

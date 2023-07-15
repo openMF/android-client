@@ -492,7 +492,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
             return
         }
         accountAccordion = AccountAccordion(activity)
-        if (clientAccounts.loanAccounts.size > 0) {
+        if (clientAccounts.loanAccounts.isNotEmpty()) {
             val section = AccountAccordion.Section.LOANS
             val adapter = LoanAccountsListAdapter(
                 requireActivity().applicationContext,
@@ -502,16 +502,16 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                 activity,
                 adapter,
                 AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                    mListener?.loadLoanAccountSummary(adapter.getItem(i).id)
+                    adapter.getItem(i).id?.let { mListener?.loadLoanAccountSummary(it) }
                 })
         } else {
             binding.accountAccordionSectionLoans.root.visibility = GONE
         }
-        if (clientAccounts.nonRecurringSavingsAccounts.size > 0) {
+        if (clientAccounts.getNonRecurringSavingsAccounts().isNotEmpty()) {
             val section = AccountAccordion.Section.SAVINGS
             val adapter = SavingsAccountsListAdapter(
                 requireActivity().applicationContext,
-                clientAccounts.nonRecurringSavingsAccounts
+                clientAccounts.getNonRecurringSavingsAccounts()
             )
             section.connect(
                 activity,
@@ -525,11 +525,11 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         } else {
             binding.accountAccordionSectionSavings.root.visibility = GONE
         }
-        if (clientAccounts.recurringSavingsAccounts.size > 0) {
+        if (clientAccounts.getRecurringSavingsAccounts().isNotEmpty()) {
             val section = AccountAccordion.Section.RECURRING
             val adapter = SavingsAccountsListAdapter(
                 requireActivity().applicationContext,
-                clientAccounts.recurringSavingsAccounts
+                clientAccounts.getRecurringSavingsAccounts()
             )
             section.connect(
                 activity,

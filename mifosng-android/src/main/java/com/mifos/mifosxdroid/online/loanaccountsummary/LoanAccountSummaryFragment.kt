@@ -165,10 +165,12 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
         binding.tvAmountDisbursed.text = loanWithAssociations.summary
             .principalDisbursed.toString()
         try {
-            binding.tvDisbursementDate.text = DateHelper.getDateAsString(
-                loanWithAssociations
-                    .timeline.actualDisbursementDate
-            )
+            binding.tvDisbursementDate.text = loanWithAssociations
+                .timeline.actualDisbursementDate?.let {
+                    DateHelper.getDateAsString(
+                        it as List<Int>
+                    )
+                }
         } catch (exception: IndexOutOfBoundsException) {
             Toast.makeText(
                 activity,
@@ -268,7 +270,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
         //TODO Implement QuickContactBadge
         //quickContactBadge.setImageToDefault();
         binding.btProcessLoanTransaction.isEnabled = true
-        if (loanWithAssociations.status.active) {
+        if (loanWithAssociations.status.active == true) {
             inflateLoanSummary(loanWithAssociations)
             // if Loan is already active
             // the Transaction Would be Make Repayment
@@ -277,7 +279,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
             )
             binding.btProcessLoanTransaction.text = "Make Repayment"
             processLoanTransactionAction = TRANSACTION_REPAYMENT
-        } else if (loanWithAssociations.status.pendingApproval) {
+        } else if (loanWithAssociations.status.pendingApproval == true) {
             // if Loan is Pending for Approval
             // the Action would be Approve Loan
             binding.viewStatusIndicator.setBackgroundColor(
@@ -285,7 +287,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
             )
             binding.btProcessLoanTransaction.text = "Approve Loan"
             processLoanTransactionAction = ACTION_APPROVE_LOAN
-        } else if (loanWithAssociations.status.waitingForDisbursal) {
+        } else if (loanWithAssociations.status.waitingForDisbursal == true) {
             // if Loan is Waiting for Disbursal
             // the Action would be Disburse Loan
             binding.viewStatusIndicator.setBackgroundColor(
@@ -293,7 +295,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
             )
             binding.btProcessLoanTransaction.text = "Disburse Loan"
             processLoanTransactionAction = ACTION_DISBURSE_LOAN
-        } else if (loanWithAssociations.status.closedObligationsMet) {
+        } else if (loanWithAssociations.status.closedObligationsMet == true) {
             inflateLoanSummary(loanWithAssociations)
             // if Loan is Closed after the obligations are met
             // the make payment will be disabled so that no more payment can be collected

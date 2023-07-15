@@ -2,41 +2,24 @@
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.objects
+package com.mifos.objects.accounts.loan
 
 import android.os.Parcelable
-import com.google.gson.annotations.Expose
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class Changes(
-    @Expose
-    var transactionDate: String? = null,
+data class PaymentDetailData(
+    var id: Int? = null,
 
-    @Expose
-    var transactionAmount: String? = null,
+    var paymentType: PaymentType? = null,
 
-    @Expose
-    var locale: String? = null,
-
-    @Expose
-    var dateFormat: String? = null,
-
-    @Expose
-    var note: String? = null,
-
-    @Expose
     var accountNumber: String? = null,
 
-    @Expose
     var checkNumber: String? = null,
 
-    @Expose
     var routingCode: String? = null,
 
-    @Expose
     var receiptNumber: String? = null,
 
-    @Expose
     var bankNumber: String? = null
 ) : Parcelable

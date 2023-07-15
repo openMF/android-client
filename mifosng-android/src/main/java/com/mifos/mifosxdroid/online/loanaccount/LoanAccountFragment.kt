@@ -416,7 +416,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         mLoanPurposeOptionsAdapter?.notifyDataSetChanged()
         mListAccountLinkingOptions.clear()
         for (options in mLoanTemplate.accountLinkingOptions) {
-            mListAccountLinkingOptions.add(options.productName)
+            options.productName?.let { mListAccountLinkingOptions.add(it) }
         }
         mListAccountLinkingOptions.add(
             resources.getString(R.string.select_linkage_account_hint)

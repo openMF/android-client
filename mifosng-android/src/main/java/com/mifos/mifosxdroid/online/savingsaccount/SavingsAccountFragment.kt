@@ -46,7 +46,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     private var mfDatePicker: DialogFragment? = null
     private var productId = 0
     private var clientId = 0
-    private var fieldOfficerId = 0
+    private var fieldOfficerId : Int? = 0
     private var groupId = 0
     private var submission_date: String? = null
     var mFieldOfficerNames: MutableList<String> = ArrayList()
@@ -206,10 +206,10 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
             )
         )
         mFieldOfficerAdapter?.notifyDataSetChanged()
-        binding.tvInterestCalc.text = savingProductsTemplate.interestCalculationType.value
-        binding.tvInterestComp.text = savingProductsTemplate.interestCompoundingPeriodType.value
-        binding.tvInterestPPeriod.text = savingProductsTemplate.interestPostingPeriodType.value
-        binding.tvDaysInYear.text = savingProductsTemplate.interestCalculationDaysInYearType.value
+        binding.tvInterestCalc.text = savingProductsTemplate.interestCalculationType?.value
+        binding.tvInterestComp.text = savingProductsTemplate.interestCompoundingPeriodType?.value
+        binding.tvInterestPPeriod.text = savingProductsTemplate.interestPostingPeriodType?.value
+        binding.tvDaysInYear.text = savingProductsTemplate.interestCalculationDaysInYearType?.value
     }
 
     override fun showSavingsAccountCreatedSuccessfully(savings: Savings?) {
@@ -241,7 +241,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         when (parent.id) {
             R.id.sp_field_officer -> fieldOfficerId = mSavingProductsTemplateByProductId
-                ?.fieldOfficerOptions!![position].id
+                ?.fieldOfficerOptions?.get(position)?.id
 
             R.id.sp_product -> {
                 productId = mProductSavings!![position].id
