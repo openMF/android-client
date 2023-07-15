@@ -79,7 +79,7 @@ object Utils {
     fun getActiveClients(clients: List<Client>?): List<Client> {
         val accounts: MutableList<Client> = ArrayList()
         Observable.from(clients)
-            .filter { client -> client.isActive }
+            .filter { client -> client.active }
             .subscribe { client -> accounts.add(client) }
         return accounts
     }

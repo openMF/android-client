@@ -63,7 +63,7 @@ class SyncPayloadsAdapter(var context: Context, payloads: List<ClientPayload>) :
                 else -> holder.binding.tvGender.text =
                     "Male"
             }
-            if (clientPayload.isActive) {
+            if (clientPayload.active == true) {
                 holder.binding.tvActiveStatus.text =
                     true.toString()
             } else {

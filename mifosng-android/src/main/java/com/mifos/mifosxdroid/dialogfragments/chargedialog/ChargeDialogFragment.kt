@@ -110,7 +110,7 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
         createdCharge?.chargeId = chargeId
         createdCharge?.amount = binding.amountDueCharge.editableText.toString().toDouble()
         dueDateAsIntegerList = DateHelper.convertDateAsReverseInteger(dueDateString)
-        createdCharge?.dueDate = dueDateAsIntegerList
+        createdCharge?.dueDate = dueDateAsIntegerList as List<Int>
         createdCharge?.name = chargeName
         val chargesPayload = ChargesPayload()
         chargesPayload.amount = binding.amountDueCharge.editableText.toString()

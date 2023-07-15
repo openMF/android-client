@@ -56,7 +56,7 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
     private var mfDatePicker: DialogFragment? = null
     private var chargeId = 0
     private var loanAccountNumber = 0
-    private val chargeNameIdHashMap = HashMap<String, Int>()
+    private val chargeNameIdHashMap = HashMap<String?, Int?>()
     private var chargeName: String? = null
     private var createdCharge: Charges? = null
     private var dueDateAsIntegerList: List<Int>? = null
@@ -116,7 +116,7 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
         createdCharge?.amount = binding.amountDueCharge.editableText.toString().toDouble()
         createdCharge?.name = chargeName
         dueDateAsIntegerList = DateHelper.convertDateAsReverseInteger(dueDateString)
-        createdCharge?.dueDate = dueDateAsIntegerList
+        createdCharge?.dueDate = dueDateAsIntegerList as List<Int>
         val chargesPayload = ChargesPayload()
         chargesPayload.amount = binding.amountDueCharge.editableText.toString()
         chargesPayload.locale = binding.etChargeLocale.editableText.toString()

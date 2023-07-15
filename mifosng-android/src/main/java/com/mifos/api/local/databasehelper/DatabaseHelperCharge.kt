@@ -32,12 +32,14 @@ class DatabaseHelperCharge @Inject constructor() {
         AsyncTask.THREAD_POOL_EXECUTOR.execute(Runnable {
             for (charges: Charges in chargesPage.pageItems) {
                 charges.clientId = clientId
-                val clientDate = ClientDate(
-                    0, charges.id.toLong(),
-                    charges.dueDate[2],
-                    charges.dueDate[1],
-                    charges.dueDate[0]
-                )
+                val clientDate = charges.id?.toLong()?.let {
+                    ClientDate(
+                        0, it,
+                        charges.dueDate[2],
+                        charges.dueDate[1],
+                        charges.dueDate[0]
+                    )
+                }
                 charges.chargeDueDate = clientDate
                 charges.save()
             }
@@ -62,9 +64,9 @@ class DatabaseHelperCharge @Inject constructor() {
             //Setting the Charge Due Date
             for (i in chargesList.indices) {
                 chargesList[i].dueDate = listOf(
-                    chargesList[i].chargeDueDate.year,
-                    chargesList[i].chargeDueDate.month,
-                    chargesList[i].chargeDueDate.day
+                    chargesList[i].chargeDueDate!!.year,
+                    chargesList[i].chargeDueDate!!.month,
+                    chargesList[i].chargeDueDate!!.day
                 )
             }
             val chargePage = Page<Charges>()

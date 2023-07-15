@@ -95,10 +95,14 @@ class OfflineSyncClient : Job() {
     }
 
     fun showSyncResponse() {
-        deleteAndUpdateClientPayload(
-            clientPayloads[mClientSyncIndex].id,
-            clientPayloads[mClientSyncIndex].clientCreationTime
-        )
+        clientPayloads[mClientSyncIndex].id?.let {
+            clientPayloads[mClientSyncIndex].clientCreationTime?.let { it1 ->
+                deleteAndUpdateClientPayload(
+                    it,
+                    it1
+                )
+            }
+        }
     }
 
     private fun deleteAndUpdateClientPayload(id: Int, clientCreationTIme: Long) {

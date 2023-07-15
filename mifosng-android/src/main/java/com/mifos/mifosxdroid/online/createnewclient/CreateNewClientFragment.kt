@@ -254,7 +254,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
 
         //Optional Fields, we do not need to add any check because these fields carry some
         // default values
-        clientPayload.isActive = binding.cbClientActiveStatus.isChecked
+        clientPayload.active = binding.cbClientActiveStatus.isChecked
         clientPayload.activationDate = submissionDateString
         clientPayload.dateOfBirth = dateOfBirthString
 

@@ -346,7 +346,7 @@ class SyncGroupsDialogPresenter @Inject constructor(
     private fun syncClient(client: Client) {
         checkViewAttached()
         client.groupId = mGroupList[mGroupSyncIndex].id
-        client.isSync = true
+        client.sync = true
         mSubscriptions.add(
             mDataManagerClient.syncClientInDatabase(client)
                 .observeOn(AndroidSchedulers.mainThread())

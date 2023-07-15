@@ -299,7 +299,7 @@ class SyncClientsDialogPresenter @Inject constructor(
      */
     fun syncClient(client: Client) {
         checkViewAttached()
-        client.isSync = true
+        client.sync = true
         mSubscriptions.add(
             mDataManagerClient.syncClientInDatabase(client)
                 .observeOn(AndroidSchedulers.mainThread())
