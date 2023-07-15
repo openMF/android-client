@@ -128,7 +128,7 @@ class SavingsAccountPresenter @Inject constructor(private val mDataManagerSaving
     fun filterSpinnerOptions(interestTypes: List<InterestType>?): List<String> {
         val interestNameList = ArrayList<String>()
         Observable.from(interestTypes)
-                .subscribe { interestType -> interestNameList.add(interestType.value) }
+                .subscribe { interestType -> interestType.value?.let { interestNameList.add(it) } }
         return interestNameList
     }
 
