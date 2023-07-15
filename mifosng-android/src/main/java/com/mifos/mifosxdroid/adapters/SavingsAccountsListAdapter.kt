@@ -53,18 +53,18 @@ class SavingsAccountsListAdapter(context: Context, savingsAccountList: List<Savi
             binding = view.tag as RowAccountItemBinding
             convertView = view
         }
-        if (savingsAccountList[i].status.active) {
+        if (savingsAccountList[i].status?.active == true) {
             binding.viewStatusIndicator.setBackgroundColor(
                 ContextCompat.getColor(
                     context,
                     R.color.savings_account_status_active
                 )
             )
-        } else if (savingsAccountList[i].status.approved) {
+        } else if (savingsAccountList[i].status?.approved == true) {
             binding.viewStatusIndicator.setBackgroundColor(
                 ContextCompat.getColor(context, R.color.status_approved)
             )
-        } else if (savingsAccountList[i].status.submittedAndPendingApproval) {
+        } else if (savingsAccountList[i].status?.submittedAndPendingApproval == true) {
             binding.viewStatusIndicator.setBackgroundColor(
                 ContextCompat.getColor(
                     context,

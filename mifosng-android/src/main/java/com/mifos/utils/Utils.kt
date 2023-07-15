@@ -69,8 +69,8 @@ object Utils {
         val accounts: MutableList<SavingsAccount> = ArrayList()
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
-                savingsAccount.status.active &&
-                        !savingsAccount.isRecurring
+                savingsAccount.status?.active == true &&
+                        !savingsAccount.depositType!!.isRecurring
             }
             .subscribe { savingsAccount -> accounts.add(savingsAccount) }
         return accounts
@@ -88,9 +88,9 @@ object Utils {
         val accounts: MutableList<SavingsAccount> = ArrayList()
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
-                savingsAccount.depositType.value == "Savings" &&
-                        savingsAccount.status.active &&
-                        !savingsAccount.isRecurring
+                savingsAccount.depositType?.value == "Savings" &&
+                        savingsAccount.status?.active == true &&
+                        !savingsAccount.depositType!!.isRecurring
             }
             .subscribe { savingsAccount -> accounts.add(savingsAccount) }
         return accounts

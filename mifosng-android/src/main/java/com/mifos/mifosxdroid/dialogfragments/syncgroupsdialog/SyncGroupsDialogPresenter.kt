@@ -121,10 +121,14 @@ class SyncGroupsDialogPresenter @Inject constructor(
      */
     private fun checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate() {
         if (mvpView?.isOnline == true) {
-            syncSavingsAccountAndTemplate(
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType.endpoint,
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
-            )
+            mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint?.let {
+                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
+                    syncSavingsAccountAndTemplate(
+                        it,
+                        it1
+                    )
+                }
+            }
         } else {
             mvpView?.showNetworkIsNotAvailable()
             mvpView?.dismissDialog()
@@ -383,10 +387,14 @@ class SyncGroupsDialogPresenter @Inject constructor(
             }
         } else if (mSavingsAccountList.isNotEmpty()) {
             //Sync the Active Savings Account
-            syncClientSavingsAccountAndTemplate(
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType.endpoint,
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
-            )
+            mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint?.let {
+                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
+                    syncClientSavingsAccountAndTemplate(
+                        it,
+                        it1
+                    )
+                }
+            }
         } else {
             syncClient(mClients[mClientSyncIndex])
         }
@@ -491,11 +499,15 @@ class SyncGroupsDialogPresenter @Inject constructor(
                     override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
                         mSavingsAndTransactionSyncIndex += 1
                         if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
-                            syncClientSavingsAccountAndTemplate(
-                                mSavingsAccountList[mSavingsAndTransactionSyncIndex]
-                                    .depositType.endpoint,
-                                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
-                            )
+                            mSavingsAccountList[mSavingsAndTransactionSyncIndex]
+                                .depositType?.endpoint?.let {
+                                    mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
+                                        syncClientSavingsAccountAndTemplate(
+                                            it,
+                                            it1
+                                        )
+                                    }
+                                }
                         } else {
                             syncClient(mClients[mClientSyncIndex])
                         }

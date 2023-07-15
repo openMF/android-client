@@ -99,10 +99,12 @@ class SyncClientsDialogPresenter @Inject constructor(
 
     fun checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate() {
         if (mvpView?.isOnline == true) {
-            syncSavingsAccountAndTemplate(
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType.endpoint,
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
-            )
+            mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let {
+                syncSavingsAccountAndTemplate(
+                    mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint,
+                    it
+                )
+            }
         } else {
             mvpView?.showNetworkIsNotAvailable()
             mvpView?.dismissDialog()

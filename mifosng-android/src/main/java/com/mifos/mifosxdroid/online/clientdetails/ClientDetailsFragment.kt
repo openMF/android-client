@@ -517,10 +517,12 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                 activity,
                 adapter,
                 AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                    mListener?.loadSavingsAccountSummary(
-                        adapter.getItem(i).id,
-                        adapter.getItem(i).depositType
-                    )
+                    adapter.getItem(i).id?.let {
+                        mListener?.loadSavingsAccountSummary(
+                            it,
+                            adapter.getItem(i).depositType
+                        )
+                    }
                 })
         } else {
             binding.accountAccordionSectionSavings.root.visibility = GONE
@@ -535,10 +537,12 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                 activity,
                 adapter,
                 AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                    mListener?.loadSavingsAccountSummary(
-                        adapter.getItem(i).id,
-                        adapter.getItem(i).depositType
-                    )
+                    adapter.getItem(i).id?.let {
+                        mListener?.loadSavingsAccountSummary(
+                            it,
+                            adapter.getItem(i).depositType
+                        )
+                    }
                 })
         } else {
             binding.accountAccordionSectionRecurring.root.visibility = GONE

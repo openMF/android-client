@@ -283,7 +283,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     }
 
     fun toggleTransactionCapabilityOfAccount(status: Status) {
-        if (!status.active) {
+        if (!status.active!!) {
             binding.btDeposit.visibility = View.GONE
             binding.btWithdrawal.visibility = View.GONE
         }
@@ -298,23 +298,23 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
             binding.tvSavingsProductShortName.text =
                 savingsAccountWithAssociations.savingsProductName
             binding.tvSavingsAccountNumber.text = savingsAccountWithAssociations.accountNo
-            if (savingsAccountWithAssociations.summary.totalInterestEarned != null) {
+            if (savingsAccountWithAssociations.summary?.totalInterestEarned != null) {
                 binding.tvInterestEarned.text = savingsAccountWithAssociations
-                    .summary.totalInterestEarned.toString()
+                    .summary?.totalInterestEarned.toString()
             } else {
                 binding.tvInterestEarned.text = "0.0"
             }
             binding.tvSavingsAccountBalance.text = savingsAccountWithAssociations
-                .summary.accountBalance.toString()
-            if (savingsAccountWithAssociations.summary.totalDeposits != null) {
+                .summary?.accountBalance.toString()
+            if (savingsAccountWithAssociations.summary?.totalDeposits != null) {
                 binding.tvTotalDeposits.text = savingsAccountWithAssociations
-                    .summary.totalDeposits.toString()
+                    .summary?.totalDeposits.toString()
             } else {
                 binding.tvTotalDeposits.text = "0.0"
             }
-            if (savingsAccountWithAssociations.summary.totalWithdrawals != null) {
+            if (savingsAccountWithAssociations.summary?.totalWithdrawals != null) {
                 binding.tvTotalWithdrawals.text = savingsAccountWithAssociations
-                    .summary.totalWithdrawals.toString()
+                    .summary?.totalWithdrawals.toString()
             } else {
                 binding.tvTotalWithdrawals.text = "0.0"
             }
@@ -333,19 +333,19 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
                 AdapterView.OnItemClickListener { adapterView, view, i, l ->
                     showTransaction(i)
                 }
-            if (savingsAccountWithAssociations.status.submittedAndPendingApproval) {
+            if (savingsAccountWithAssociations.status?.submittedAndPendingApproval == true) {
                 binding.btApproveSaving.isEnabled = true
                 binding.btDeposit.visibility = View.GONE
                 binding.btWithdrawal.visibility = View.GONE
                 binding.btApproveSaving.text = resources.getString(R.string.approve_savings)
                 processSavingTransactionAction = ACTION_APPROVE_SAVINGS
-            } else if (!savingsAccountWithAssociations.status.active) {
+            } else if (!savingsAccountWithAssociations.status?.active!!) {
                 binding.btApproveSaving.isEnabled = true
                 binding.btDeposit.visibility = View.GONE
                 binding.btWithdrawal.visibility = View.GONE
                 binding.btApproveSaving.text = resources.getString(R.string.activate_savings)
                 processSavingTransactionAction = ACTION_ACTIVATE_SAVINGS
-            } else if (savingsAccountWithAssociations.status.closed) {
+            } else if (savingsAccountWithAssociations.status?.closed == true) {
                 binding.btApproveSaving.isEnabled = false
                 binding.btDeposit.visibility = View.GONE
                 binding.btWithdrawal.visibility = View.GONE
@@ -378,11 +378,11 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         val dateList = transaction.date
         transactionId.text = transaction.id.toString()
         date.text = String.format("%s-%s-%s", dateList[0], dateList[1], dateList[2])
-        transactionType.text = transaction.transactionType.value
+        transactionType.text = transaction.transactionType?.value
         runningBalance.text = transaction.runningBalance.toString()
         savingAccountId.text = transaction.accountId.toString()
         accountNumber.text = transaction.accountNo
-        currency.text = transaction.currency.name
+        currency.text = transaction.currency?.name
         dialog.show()
     }
 

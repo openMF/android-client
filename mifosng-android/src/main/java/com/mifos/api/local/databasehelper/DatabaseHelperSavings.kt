@@ -41,17 +41,17 @@ class DatabaseHelperSavings @Inject constructor() {
                 Observable.from(transactions)
                     .subscribe(Action1 { transaction ->
                         val savingsTransactionDate = SavingsTransactionDate(
-                            transaction.id,
-                            transaction.date[0],
-                            transaction.date[1],
-                            transaction.date[2]
+                            transaction?.id,
+                            transaction?.date?.get(0),
+                            transaction?.date?.get(1),
+                            transaction?.date?.get(2)
                         )
-                        transaction.savingsAccountId = savingsAccountWithAssociations.id
-                        transaction.savingsTransactionDate = savingsTransactionDate
-                        transaction.save()
+                        transaction?.savingsAccountId = savingsAccountWithAssociations.id
+                        transaction?.savingsTransactionDate = savingsTransactionDate
+                        transaction?.save()
                     })
             }
-            savingsAccountWithAssociations.summary.savingsId = savingsAccountWithAssociations.id
+            savingsAccountWithAssociations.summary?.savingsId = savingsAccountWithAssociations.id
             savingsAccountWithAssociations.save()
             Observable.just(savingsAccountWithAssociations)
         }
@@ -81,9 +81,9 @@ class DatabaseHelperSavings @Inject constructor() {
             Observable.from(transactions)
                 .subscribe { transaction ->
                     transaction.date = listOf(
-                        transaction.savingsTransactionDate.year,
-                        transaction.savingsTransactionDate.month,
-                        transaction.savingsTransactionDate.day
+                        transaction.savingsTransactionDate?.year,
+                        transaction.savingsTransactionDate?.month,
+                        transaction.savingsTransactionDate?.day
                     )
                 }
             if (savingsAccountWithAssociations != null) {

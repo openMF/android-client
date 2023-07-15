@@ -60,10 +60,12 @@ class SyncSavingsAccountTransactionPresenter @Inject constructor(
                 val savingAccountType = mSavingsAccountTransactionRequests[i].savingsAccountType
                 val savingAccountId = mSavingsAccountTransactionRequests[i].savingAccountId
                 val transactionType = mSavingsAccountTransactionRequests[i].transactionType
-                processTransaction(
-                    savingAccountType, savingAccountId, transactionType,
-                    mSavingsAccountTransactionRequests[i]
-                )
+                if (savingAccountId != null) {
+                    processTransaction(
+                        savingAccountType, savingAccountId, transactionType,
+                        mSavingsAccountTransactionRequests[i]
+                    )
+                }
                 break
             } else if (checkTransactionsSyncBeforeOrNot()) {
                 mvpView?.showError(R.string.error_fix_before_sync)
@@ -76,9 +78,11 @@ class SyncSavingsAccountTransactionPresenter @Inject constructor(
      * List<SavingsAccountTransactionRequest> and Update the UI.
     </SavingsAccountTransactionRequest> */
     fun showTransactionSyncSuccessfully() {
-        deleteAndUpdateSavingsAccountTransaction(
-            mSavingsAccountTransactionRequests[mTransactionIndex].savingAccountId
-        )
+        mSavingsAccountTransactionRequests[mTransactionIndex].savingAccountId?.let {
+            deleteAndUpdateSavingsAccountTransaction(
+                it
+            )
+        }
     }
 
     /**
