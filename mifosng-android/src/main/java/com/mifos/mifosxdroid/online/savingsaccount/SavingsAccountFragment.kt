@@ -44,7 +44,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     @Inject
     lateinit var mSavingsAccountPresenter: SavingsAccountPresenter
     private var mfDatePicker: DialogFragment? = null
-    private var productId = 0
+    private var productId :Int? = 0
     private var clientId = 0
     private var fieldOfficerId : Int? = 0
     private var groupId = 0
@@ -246,15 +246,19 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
             R.id.sp_product -> {
                 productId = mProductSavings!![position].id
                 if (isGroupAccount) {
-                    mSavingsAccountPresenter.loadGroupSavingAccountTemplateByProduct(
-                        groupId,
-                        productId
-                    )
+                    productId?.let {
+                        mSavingsAccountPresenter.loadGroupSavingAccountTemplateByProduct(
+                            groupId,
+                            it
+                        )
+                    }
                 } else {
-                    mSavingsAccountPresenter.loadClientSavingAccountTemplateByProduct(
-                        clientId,
-                        productId
-                    )
+                    productId?.let {
+                        mSavingsAccountPresenter.loadClientSavingAccountTemplateByProduct(
+                            clientId,
+                            it
+                        )
+                    }
                 }
             }
         }

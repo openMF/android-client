@@ -302,8 +302,8 @@ class GenerateCollectionSheetPresenter @Inject constructor(
     fun createOfficeNameIdMap(
         offices: List<Office>?,
         officeNames: MutableList<String?>
-    ): HashMap<String, Int> {
-        val officeMap = HashMap<String, Int>()
+    ): HashMap<String?, Int?> {
+        val officeMap = HashMap<String?, Int?>()
         officeMap[c.resources.getString(R.string.spinner_office)] = -1
         officeNames.clear()
         officeNames.add(c.resources.getString(R.string.spinner_office))
@@ -326,8 +326,8 @@ class GenerateCollectionSheetPresenter @Inject constructor(
     fun createStaffIdMap(
         staffs: List<Staff>?,
         staffNames: MutableList<String?>
-    ): HashMap<String, Int> {
-        val staffMap = HashMap<String, Int>()
+    ): HashMap<String?, Int?> {
+        val staffMap = HashMap<String?, Int?>()
         staffMap[c.resources.getString(R.string.spinner_staff)] = -1
         staffNames.clear()
         staffNames.add(c.resources.getString(R.string.spinner_staff))

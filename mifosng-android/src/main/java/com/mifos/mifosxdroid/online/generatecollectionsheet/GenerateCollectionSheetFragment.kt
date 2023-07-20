@@ -60,8 +60,8 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     @Inject
     lateinit var presenter: GenerateCollectionSheetPresenter
     private var datePicker: DialogFragment? = null
-    private var officeNameIdHashMap = HashMap<String, Int>()
-    private var staffNameIdHashMap = HashMap<String, Int>()
+    private var officeNameIdHashMap = HashMap<String?, Int?>()
+    private var staffNameIdHashMap = HashMap<String?, Int?>()
     private var centerNameIdHashMap = HashMap<String, Int>()
     private var groupNameIdHashMap = HashMap<String, Int>()
     private var additionalPaymentTypeMap = HashMap<String, Int>()

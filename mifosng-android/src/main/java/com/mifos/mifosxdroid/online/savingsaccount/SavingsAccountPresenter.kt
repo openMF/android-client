@@ -135,7 +135,7 @@ class SavingsAccountPresenter @Inject constructor(private val mDataManagerSaving
     fun filterSavingProductsNames(productSavings: List<ProductSavings>?): List<String> {
         val productsNames = ArrayList<String>()
         Observable.from(productSavings)
-                .subscribe { product -> productsNames.add(product.name) }
+                .subscribe { product -> product.name?.let { productsNames.add(it) } }
         return productsNames
     }
 

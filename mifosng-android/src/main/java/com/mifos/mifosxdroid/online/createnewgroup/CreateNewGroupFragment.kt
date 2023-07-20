@@ -52,7 +52,7 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
     @Inject
     lateinit var mCreateNewGroupPresenter: CreateNewGroupPresenter
     var activationDateString: String? = null
-    var officeId = 0
+    var officeId : Int? = 0
     var result = true
     var dateofsubmissionstring: String? = null
     private var mfDatePicker: DialogFragment? = null
@@ -108,7 +108,7 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
                 groupPayload.isActive = binding.cbGroupActiveStatus.isChecked
                 groupPayload.activationDate = activationDateString
                 groupPayload.setSubmissionDate(dateofsubmissionstring)
-                groupPayload.officeId = officeId
+                groupPayload.officeId = officeId!!
                 groupPayload.dateFormat = "dd MMMM yyyy"
                 groupPayload.locale = "en"
                 initiateGroupCreation(groupPayload)
@@ -211,7 +211,7 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
         officeList = offices as List<Office>?
         if (offices != null) {
             for (office in offices) {
-                mListOffices.add(office.name)
+                office.name?.let { mListOffices.add(it) }
             }
         }
         mListOffices.sort()

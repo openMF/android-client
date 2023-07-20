@@ -37,9 +37,9 @@ class DatabaseHelperOffices @Inject constructor() {
                 .queryList()
             for (i in offices.indices) {
                 offices[i].openingDate = listOf(
-                    offices[i].officeOpeningDate.year,
-                    offices[i].officeOpeningDate.month,
-                    offices[i].officeOpeningDate.day
+                    offices[i].officeOpeningDate?.year,
+                    offices[i].officeOpeningDate?.month,
+                    offices[i].officeOpeningDate?.day
                 )
             }
             subscriber.onNext(offices)

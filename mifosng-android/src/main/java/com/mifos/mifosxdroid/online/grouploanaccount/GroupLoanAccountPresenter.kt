@@ -141,7 +141,7 @@ class GroupLoanAccountPresenter @Inject constructor(private val mDataManager: Da
     fun filterLoanProducts(loanProducts: List<LoanProducts>?): List<String> {
         val loanProductsNameList = ArrayList<String>()
         Observable.from(loanProducts)
-                .subscribe { loanProducts -> loanProductsNameList.add(loanProducts.name) }
+                .subscribe { loanProducts -> loanProducts.name?.let { loanProductsNameList.add(it) } }
         return loanProductsNameList
     }
 
