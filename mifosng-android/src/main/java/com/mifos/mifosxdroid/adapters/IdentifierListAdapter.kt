@@ -46,7 +46,7 @@ class IdentifierListAdapter @Inject constructor() :
             description = "-"
         }
         holder.binding.tvIdentifierDescription.text = description
-        holder.binding.tvIdentifierType.text = identifier.documentType.name
+        holder.binding.tvIdentifierType.text = identifier.documentType?.name
         val color: Int = if (identifier.status?.contains("inactive") == true) {
             context!!.getColor(R.color.red_light)
         } else {

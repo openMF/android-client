@@ -28,7 +28,7 @@ data class Client(
 
     @Column
     @Transient
-    var groupId: Int = 0,
+    var groupId: Int? = 0,
 
     @Column
     var accountNo: String? = null,

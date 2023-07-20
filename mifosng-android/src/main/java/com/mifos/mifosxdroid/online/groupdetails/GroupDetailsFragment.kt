@@ -145,7 +145,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
 
     override fun showGroup(group: Group?) {
         if (group != null) {
-            if (!group.active) {
+            if (!group.active!!) {
                 binding.llBottomPanel.visibility = View.VISIBLE
             }
             setToolbarTitle(getString(R.string.group) + " - " + group.name)

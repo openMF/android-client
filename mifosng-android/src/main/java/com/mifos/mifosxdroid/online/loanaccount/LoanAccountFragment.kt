@@ -51,7 +51,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
     var disbursementDate: String? = null
     private var hasDataTables = false
     private var mfDatePicker: DialogFragment? = null
-    private var productId = 0
+    private var productId : Int? = 0
     private var clientId = 0
     private var loanPurposeId: Int? = null
     private var loanTermFrequency: Int? = null
@@ -346,7 +346,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
     }
 
     private fun inflateLoanPurposeSpinner() {
-        mLoanAccountPresenter.loadLoanAccountTemplate(clientId, productId)
+        productId?.let { mLoanAccountPresenter.loadLoanAccountTemplate(clientId, it) }
     }
 
     private fun initiateLoanCreation(loansPayload: LoansPayload) {
@@ -383,7 +383,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         mLoanProducts = loans
         mListLoanProducts.clear()
         for (loanProducts in mLoanProducts) {
-            mListLoanProducts.add(loanProducts.name)
+            loanProducts.name?.let { mListLoanProducts.add(it) }
         }
         mLoanProductAdapter?.notifyDataSetChanged()
     }

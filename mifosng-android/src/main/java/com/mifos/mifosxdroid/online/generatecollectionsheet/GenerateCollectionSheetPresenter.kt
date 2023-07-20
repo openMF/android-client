@@ -302,8 +302,8 @@ class GenerateCollectionSheetPresenter @Inject constructor(
     fun createOfficeNameIdMap(
         offices: List<Office>?,
         officeNames: MutableList<String?>
-    ): HashMap<String, Int> {
-        val officeMap = HashMap<String, Int>()
+    ): HashMap<String?, Int?> {
+        val officeMap = HashMap<String?, Int?>()
         officeMap[c.resources.getString(R.string.spinner_office)] = -1
         officeNames.clear()
         officeNames.add(c.resources.getString(R.string.spinner_office))
@@ -326,8 +326,8 @@ class GenerateCollectionSheetPresenter @Inject constructor(
     fun createStaffIdMap(
         staffs: List<Staff>?,
         staffNames: MutableList<String?>
-    ): HashMap<String, Int> {
-        val staffMap = HashMap<String, Int>()
+    ): HashMap<String?, Int?> {
+        val staffMap = HashMap<String?, Int?>()
         staffMap[c.resources.getString(R.string.spinner_staff)] = -1
         staffNames.clear()
         staffNames.add(c.resources.getString(R.string.spinner_staff))
@@ -350,8 +350,8 @@ class GenerateCollectionSheetPresenter @Inject constructor(
     fun createCenterIdMap(
         centers: List<Center>?,
         centerNames: MutableList<String?>
-    ): HashMap<String, Int> {
-        val centerMap = HashMap<String, Int>()
+    ): HashMap<String?, Int?> {
+        val centerMap = HashMap<String?, Int?>()
         centerMap[c.resources.getString(R.string.spinner_center)] = -1
         centerNames.clear()
         centerNames.add(c.resources.getString(R.string.spinner_center))
@@ -374,8 +374,8 @@ class GenerateCollectionSheetPresenter @Inject constructor(
     fun createGroupIdMap(
         groups: List<Group>?,
         groupNames: MutableList<String?>
-    ): HashMap<String, Int> {
-        val groupMap = HashMap<String, Int>()
+    ): HashMap<String?, Int?> {
+        val groupMap = HashMap<String?, Int?>()
         groupMap[c.resources.getString(R.string.spinner_group)] = -1
         groupNames.clear()
         groupNames.add(c.resources.getString(R.string.spinner_group))
@@ -390,8 +390,8 @@ class GenerateCollectionSheetPresenter @Inject constructor(
     fun filterAttendanceTypes(
         attendance: List<AttendanceTypeOption>?,
         attendanceTypeNames: MutableList<String?>
-    ): HashMap<String, Int> {
-        val options = HashMap<String, Int>()
+    ): HashMap<String?, Int> {
+        val options = HashMap<String?, Int>()
         Observable.from(attendance)
             .subscribe { attendanceTypeOption ->
                 options[attendanceTypeOption.value] = attendanceTypeOption.id

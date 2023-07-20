@@ -129,10 +129,12 @@ class SyncSurveysDialogPresenter @Inject constructor(private val mDataManagerSur
      */
     private fun syncResponseDataAndUpdateUI() {
         if (mResponseDataSyncIndex != mResponseDatasList.size) {
-            syncResponseData(
-                mQuestionDatasList[mQuestionDataSyncIndex].id,
-                mResponseDatasList[mResponseDataSyncIndex]
-            )
+            mQuestionDatasList[mQuestionDataSyncIndex].id?.let {
+                syncResponseData(
+                    it,
+                    mResponseDatasList[mResponseDataSyncIndex]
+                )
+            }
         } else {
             mQuestionDataSyncIndex += 1
             mvpView?.updateQuestionSyncProgressBar(mQuestionDataSyncIndex)

@@ -53,7 +53,7 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
         // Inflate the layout for this fragment
         binding = FragmentDatatableBinding.inflate(inflater, container, false)
         mDataTableDataPresenter.attachView(this)
-        setToolbarTitle(dataTable!!.registeredTableName)
+        dataTable!!.registeredTableName?.let { setToolbarTitle(it) }
         binding.swipeContainer.setColorSchemeColors(
             *activity
                 ?.resources!!.getIntArray(R.array.swipeRefreshColors)

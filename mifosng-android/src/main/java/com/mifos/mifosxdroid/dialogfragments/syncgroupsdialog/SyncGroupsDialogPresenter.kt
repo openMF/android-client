@@ -84,7 +84,7 @@ class SyncGroupsDialogPresenter @Inject constructor(
         updateTotalSyncProgressBarAndCount()
         if (mGroupSyncIndex != mGroupList.size) {
             updateGroupName()
-            syncGroupAccounts(mGroupList[mGroupSyncIndex].id)
+            mGroupList[mGroupSyncIndex].id?.let { syncGroupAccounts(it) }
         } else {
             mvpView?.showGroupsSyncSuccessfully()
         }
@@ -151,7 +151,7 @@ class SyncGroupsDialogPresenter @Inject constructor(
         } else {
             // If LoanAccounts and SavingsAccount are null then sync Client to Database
             mvpView?.maxSingleSyncGroupProgressBar = 1
-            loadGroupAssociateClients(mGroupList[mGroupSyncIndex].id)
+            mGroupList[mGroupSyncIndex].id?.let { loadGroupAssociateClients(it) }
         }
     }
 
@@ -297,7 +297,7 @@ class SyncGroupsDialogPresenter @Inject constructor(
                         if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
                             checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
                         } else {
-                            loadGroupAssociateClients(mGroupList[mGroupSyncIndex].id)
+                            mGroupList[mGroupSyncIndex].id?.let { loadGroupAssociateClients(it) }
                         }
                     }
                 })
@@ -523,7 +523,7 @@ class SyncGroupsDialogPresenter @Inject constructor(
      */
     private fun syncGroup(group: Group) {
         checkViewAttached()
-        group.isSync = true
+        group.sync = true
         mSubscriptions.add(mDataManagerGroups.syncGroupInDatabase(group)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())

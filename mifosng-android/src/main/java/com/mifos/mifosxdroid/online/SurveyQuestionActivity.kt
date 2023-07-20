@@ -89,7 +89,7 @@ class SurveyQuestionActivity : MifosBaseActivity(), OnAnswerSelectedListener, Di
 
     private fun loadSurvey(survey: Survey?) {
         if (survey != null) {
-            if (survey.questionDatas != null && survey.questionDatas.size > 0) {
+            if (survey.questionDatas.isNotEmpty()) {
                 for (i in survey.questionDatas.indices) {
                     fragments.add(
                         SurveyQuestionFragment.newInstance(
@@ -124,16 +124,16 @@ class SurveyQuestionActivity : MifosBaseActivity(), OnAnswerSelectedListener, Di
     private fun updateAnswerList() {
         if (mScorecardValue != null) {
             Log.d(
-                LOG_TAG, "" + mScorecardValue!!.questionId + mScorecardValue!!
-                    .responseId + mScorecardValue!!.value
+                LOG_TAG,
+                "" + mScorecardValue?.questionId + mScorecardValue?.responseId + mScorecardValue?.value
             )
-            mMapScores[mScorecardValue!!.questionId] = mScorecardValue!!
+            mMapScores[mScorecardValue?.questionId!!] = mScorecardValue!!
             mScorecardValue = null
         }
         nextButtonState()
         if (fragmentCommunicator != null) {
             setUpScoreCard()
-            fragmentCommunicator!!.passScoreCardData(mScorecard, survey!!.id)
+            fragmentCommunicator?.passScoreCardData(mScorecard, survey!!.id)
         }
     }
 

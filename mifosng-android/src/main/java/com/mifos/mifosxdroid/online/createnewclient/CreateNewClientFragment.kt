@@ -66,9 +66,9 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     private var createClientWithImage = false
     private var hasDataTables = false
     private var returnedClientId: Int? = null
-    private var officeId = 0
+    private var officeId : Int? = 0
     private var clientTypeId = 0
-    private var staffId = 0
+    private var staffId : Int? = 0
     private var genderId = 0
     private var clientClassificationId = 0
     private var result = true
@@ -388,7 +388,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         when (parent.id) {
             R.id.sp_offices -> {
                 officeId = clientOffices!![position].id
-                createNewClientPresenter.loadStaffInOffices(officeId)
+                officeId?.let { createNewClientPresenter.loadStaffInOffices(it) }
             }
 
             R.id.sp_gender -> genderId = clientsTemplate!!.genderOptions[position].id

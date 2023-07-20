@@ -140,14 +140,14 @@ class NewIndividualCollectionSheetPresenter @Inject internal constructor(
     fun filterOffices(offices: List<Office>?): List<String> {
         val officesList: MutableList<String> = ArrayList()
         Observable.from(offices)
-            .subscribe { office -> officesList.add(office.name) }
+            .subscribe { office -> office.name?.let { officesList.add(it) } }
         return officesList
     }
 
     fun filterStaff(staffs: List<Staff>?): List<String> {
         val staffList: MutableList<String> = ArrayList()
         Observable.from(staffs)
-            .subscribe { staff -> staffList.add(staff.displayName) }
+            .subscribe { staff -> staff.displayName?.let { staffList.add(it) } }
         return staffList
     }
 

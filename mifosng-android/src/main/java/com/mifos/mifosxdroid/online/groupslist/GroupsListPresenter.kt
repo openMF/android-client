@@ -141,8 +141,8 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
         if (mDbGroupList.isNotEmpty()) {
             for (dbGroup in mDbGroupList) {
                 for (syncGroup in groups) {
-                    if (dbGroup.id.toInt() == syncGroup.id?.toInt()) {
-                        syncGroup.isSync = true
+                    if (dbGroup.id?.toInt() == syncGroup.id?.toInt()) {
+                        syncGroup.sync = true
                         break
                     }
                 }

@@ -130,20 +130,26 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
         popup.menuInflater.inflate(R.menu.menu_client_identifier, popup.menu)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.menu_remove_identifier -> mClientIdentifiersPresenter.deleteIdentifier(
-                    clientId,
-                    identifiers!![position].id, position
-                )
+                R.id.menu_remove_identifier -> identifiers?.get(position)?.id?.let {
+                    mClientIdentifiersPresenter.deleteIdentifier(
+                        clientId,
+                        it, position
+                    )
+                }
 
                 R.id.menu_identifier_documents -> {
-                    val documentListFragment = DocumentListFragment.newInstance(
-                        Constants.ENTITY_TYPE_CLIENT_IDENTIFIERS,
-                        identifiers!![position].id
-                    )
+                    val documentListFragment = identifiers?.get(position)?.id?.let {
+                        DocumentListFragment.newInstance(
+                            Constants.ENTITY_TYPE_CLIENT_IDENTIFIERS,
+                            it
+                        )
+                    }
                     val fragmentTransaction =
                         requireActivity().supportFragmentManager.beginTransaction()
                     fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_IDENTIFIER)
-                    fragmentTransaction.replace(R.id.container, documentListFragment)
+                    if (documentListFragment != null) {
+                        fragmentTransaction.replace(R.id.container, documentListFragment)
+                    }
                     fragmentTransaction.commit()
                 }
 

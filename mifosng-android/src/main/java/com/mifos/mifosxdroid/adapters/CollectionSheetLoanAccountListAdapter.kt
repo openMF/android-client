@@ -52,9 +52,9 @@ class CollectionSheetLoanAccountListAdapter(
         }
 
         val transactionAmount =
-            CollectionListAdapter.sRepaymentTransactions[loans[position].getLoanId()]
-        binding.tvAmountDue.text = loans[position].getTotalDue().toString()
-        binding.tvLoanShortname.text = loans[position].getProductShortName()
+            CollectionListAdapter.sRepaymentTransactions[loans[position].loanId]
+        binding.tvAmountDue.text = loans[position].totalDue.toString()
+        binding.tvLoanShortname.text = loans[position].productShortName
         binding.etAmountPaid.setText(transactionAmount.toString())
         binding.etAmountPaid.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -64,10 +64,10 @@ class CollectionSheetLoanAccountListAdapter(
             override fun afterTextChanged(s: Editable) {
                 try {
                     CollectionListAdapter.sRepaymentTransactions[loans[position]
-                        .getLoanId()] = if (s.toString() == "") 0.00 else s.toString().toDouble()
+                        .loanId] = if (s.toString() == "") 0.00 else s.toString().toDouble()
                 } catch (e: NumberFormatException) {
                     CollectionListAdapter.sRepaymentTransactions[loans[position]
-                        .getLoanId()] = 0.00
+                        .loanId] = 0.00
                 }
                 /* TODO Fix Live update of Amounts
                 CollectionSheetFragment.refreshFragment();

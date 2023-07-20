@@ -161,10 +161,10 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
         if (offices != null) {
             for (office in offices) {
                 if (office != null) {
-                    officeList.add(office.name)
+                    office.name?.let { officeList.add(it) }
                 }
                 if (office != null) {
-                    officeNameIdHashMap[office.name] = office.id
+                    officeNameIdHashMap[office.name!!] = office.id!!
                 }
             }
         }

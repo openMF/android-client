@@ -49,8 +49,8 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     private var staffAdapter: ArrayAdapter<String>? = null
     private lateinit var staffNameList: ArrayList<String>
     private var staffList: List<Staff> = ArrayList()
-    private var officeId = 0
-    private var staffId = 0
+    private var officeId  : Int? = 0
+    private var staffId : Int? = 0
     private val requestCode = 1
     private var success = true
     private var actualDisbursementDate: String? = null
@@ -212,7 +212,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
             } else {
                 Toaster.show(binding.root, officeNameList[i])
                 officeId = officeList[i - 1].id
-                presenter.fetchStaff(officeId)
+                officeId?.let { presenter.fetchStaff(it) }
             }
 
             R.id.sp_staff_list -> if (i == staffList.size || i == 0) {

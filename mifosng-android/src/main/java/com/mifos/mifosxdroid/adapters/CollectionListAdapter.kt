@@ -28,7 +28,7 @@ class CollectionListAdapter(
         for (mifosGroup in mifosGroups) {
             for (client in mifosGroup.clients) {
                 for (loan in client.loans) {
-                    sRepaymentTransactions[loan.getLoanId()] = loan.getTotalDue()
+                    sRepaymentTransactions[loan.loanId] = loan.totalDue
                 }
             }
         }
@@ -94,15 +94,17 @@ class CollectionListAdapter(
             RowCollectionListGroupClientBinding.bind(convertView)
         }
 
-        val client = mifosGroups[groupPosition].clients[childPosition]
-        val totalDue = calculateClientTotalDue(client)
-        binding.tvClientId.text = client.clientId.toString()
-        binding.tvClientName.text = client.clientName
+        val client = mifosGroups[groupPosition].clients?.get(childPosition)
+        val totalDue = client?.let { calculateClientTotalDue(it) }
+        binding.tvClientId.text = client?.clientId.toString()
+        binding.tvClientName.text = client?.clientName
         binding.tvClientTotal.text = totalDue.toString()
 
-        val collectionSheetLoanAccountListAdapter = CollectionSheetLoanAccountListAdapter(
-            context, client.loans, groupPosition, childPosition
-        )
+        val collectionSheetLoanAccountListAdapter = client?.loans?.let {
+            CollectionSheetLoanAccountListAdapter(
+                context, it, groupPosition, childPosition
+            )
+        }
         binding.lvLoans.adapter = collectionSheetLoanAccountListAdapter
 
         return binding.root
@@ -116,7 +118,7 @@ class CollectionListAdapter(
         var groupTotalDue = 0.0
         for (client in mifosGroups[groupPosition].clients) {
             for (loan in client.loans) {
-                groupTotalDue += sRepaymentTransactions[loan.getLoanId()] ?: 0.0
+                groupTotalDue += sRepaymentTransactions[loan.loanId] ?: 0.0
             }
         }
         return groupTotalDue
@@ -125,7 +127,7 @@ class CollectionListAdapter(
     private fun calculateClientTotalDue(client: Client): Double {
         var totalDue = 0.0
         for (loan in client.loans) {
-            totalDue += loan.getTotalDue()
+            totalDue += loan.totalDue
         }
         return totalDue
     }

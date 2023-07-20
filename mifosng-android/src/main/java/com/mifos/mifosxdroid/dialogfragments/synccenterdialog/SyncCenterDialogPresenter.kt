@@ -97,7 +97,7 @@ class SyncCenterDialogPresenter @Inject constructor(
         updateTotalSyncProgressBarAndCount()
         if (mCenterSyncIndex != mCenterList.size) {
             updateCenterName()
-            syncCenterAccounts(mCenterList[mCenterSyncIndex].id)
+            mCenterList[mCenterSyncIndex].id?.let { syncCenterAccounts(it) }
         } else {
             mvpView?.showCentersSyncSuccessfully()
         }
@@ -222,7 +222,7 @@ class SyncCenterDialogPresenter @Inject constructor(
             checkNetworkConnectionAndSyncMemberLoanAndMemberLoanRepayment()
         } else {
             mvpView?.maxSingleSyncCenterProgressBar = 1
-            loadCenterAssociateGroups(mCenterList[mCenterSyncIndex].id)
+            mCenterList[mCenterSyncIndex].id?.let { loadCenterAssociateGroups(it) }
         }
     }
 
@@ -357,7 +357,7 @@ class SyncCenterDialogPresenter @Inject constructor(
                         if (mMemberLoanSyncIndex != mMemberLoanAccountsList.size) {
                             checkNetworkConnectionAndSyncMemberLoanAndMemberLoanRepayment()
                         } else {
-                            loadCenterAssociateGroups(mCenterList[mCenterSyncIndex].id)
+                            mCenterList[mCenterSyncIndex].id?.let { loadCenterAssociateGroups(it) }
                         }
                     }
                 })
@@ -404,7 +404,7 @@ class SyncCenterDialogPresenter @Inject constructor(
      */
     private fun syncCenter(center: Center) {
         checkViewAttached()
-        center.isSync = true
+        center.sync = true
         mSubscriptions.add(
             mDataManagerCenter.syncCenterInDatabase(center)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -503,7 +503,7 @@ class SyncCenterDialogPresenter @Inject constructor(
                         resetIndexes()
                         if (mGroups.isNotEmpty()) {
                             mvpView?.setGroupSyncProgressBarMax(mGroups.size)
-                            syncGroupAccounts(mGroups[mGroupSyncIndex].id)
+                            mGroups[mGroupSyncIndex].id?.let { syncGroupAccounts(it) }
                         } else {
                             syncCenter(mCenterList[mCenterSyncIndex])
                         }
@@ -650,7 +650,7 @@ class SyncCenterDialogPresenter @Inject constructor(
                 }
             }
         } else {
-            loadGroupAssociateClients(mGroups[mGroupSyncIndex].id)
+            mGroups[mGroupSyncIndex].id?.let { loadGroupAssociateClients(it) }
         }
     }
 
@@ -692,7 +692,7 @@ class SyncCenterDialogPresenter @Inject constructor(
     private fun syncGroup(group: Group) {
         checkViewAttached()
         group.centerId = mCenterList[mCenterSyncIndex].id
-        group.isSync = true
+        group.sync = true
         mSubscriptions.add(
             mDataManagerGroups.syncGroupInDatabase(group)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -711,7 +711,7 @@ class SyncCenterDialogPresenter @Inject constructor(
                         if (mGroups.size == mGroupSyncIndex) {
                             syncCenter(mCenterList[mCenterSyncIndex])
                         } else {
-                            syncGroupAccounts(mGroups[mGroupSyncIndex].id)
+                            mGroups[mGroupSyncIndex].id?.let { syncGroupAccounts(it) }
                         }
                     }
                 })
@@ -857,7 +857,7 @@ class SyncCenterDialogPresenter @Inject constructor(
                                     }
                                 }
                         } else {
-                            loadGroupAssociateClients(mGroups[mGroupSyncIndex].id)
+                            mGroups[mGroupSyncIndex].id?.let { loadGroupAssociateClients(it) }
                         }
                     }
                 })
@@ -910,6 +910,8 @@ class SyncCenterDialogPresenter @Inject constructor(
 
     private fun updateCenterName() {
         val centerName = mCenterList[mCenterSyncIndex].name
-        mvpView?.showSyncingCenter(centerName)
+        if (centerName != null) {
+            mvpView?.showSyncingCenter(centerName)
+        }
     }
 }

@@ -82,8 +82,8 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
     }
 
     override fun showCenterDetails(centerWithAssociations: CenterWithAssociations?) {
-        setToolbarTitle(centerWithAssociations!!.name)
-        if (centerWithAssociations.activationDate.isNotEmpty()) {
+        centerWithAssociations?.name?.let { setToolbarTitle(it) }
+        if (centerWithAssociations?.activationDate?.isNotEmpty() == true) {
             if (centerWithAssociations.staffName != null) {
                 binding.tvStaffName.text = centerWithAssociations.staffName
             } else {
@@ -95,11 +95,11 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
     }
 
     override fun showMeetingDetails(centerWithAssociations: CenterWithAssociations?) {
-        if (!centerWithAssociations!!.active) {
+        if (!centerWithAssociations!!.active!!) {
             binding.llBottomPanel.visibility = View.VISIBLE
             showErrorMessage(R.string.error_center_inactive)
         }
-        if (centerWithAssociations.collectionMeetingCalendar.calendarInstanceId == null) {
+        if (centerWithAssociations.collectionMeetingCalendar?.calendarInstanceId == null) {
             binding.tvMeetingDate.text = getString(R.string.unassigned)
             if (view != null) {
                 requireView().findViewById<View>(R.id.row_meeting_frequency).visibility = View.GONE
@@ -107,7 +107,7 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
         } else {
             binding.tvMeetingDate.text = Utils.getStringOfDate(
                 centerWithAssociations
-                    .collectionMeetingCalendar.nextTenRecurringDates[0]
+                    .collectionMeetingCalendar!!.nextTenRecurringDates[0]
             )
             if (view != null) {
                 requireView().findViewById<View>(R.id.row_meeting_frequency).visibility =

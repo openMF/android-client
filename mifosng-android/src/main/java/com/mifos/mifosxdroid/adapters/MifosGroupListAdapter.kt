@@ -46,8 +46,8 @@ class MifosGroupListAdapter(context: Context?, groups: List<MifosGroup>) : BaseA
         }
         val mifosGroup = groups[i]
         binding.tvGroupName.text = mifosGroup.groupName
-        binding.tvStaffName.text = mifosGroup.getStaffName()
-        binding.tvLevelName.text = mifosGroup.getLevelName()
+        binding.tvStaffName.text = mifosGroup.staffName
+        binding.tvLevelName.text = mifosGroup.levelName
         return convertView
     }
 }
