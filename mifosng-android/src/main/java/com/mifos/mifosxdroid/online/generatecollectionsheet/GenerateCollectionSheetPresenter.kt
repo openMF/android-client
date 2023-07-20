@@ -390,8 +390,8 @@ class GenerateCollectionSheetPresenter @Inject constructor(
     fun filterAttendanceTypes(
         attendance: List<AttendanceTypeOption>?,
         attendanceTypeNames: MutableList<String?>
-    ): HashMap<String, Int> {
-        val options = HashMap<String, Int>()
+    ): HashMap<String?, Int> {
+        val options = HashMap<String?, Int>()
         Observable.from(attendance)
             .subscribe { attendanceTypeOption ->
                 options[attendanceTypeOption.value] = attendanceTypeOption.id

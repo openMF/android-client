@@ -65,7 +65,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private var centerNameIdHashMap = HashMap<String?, Int?>()
     private var groupNameIdHashMap = HashMap<String?, Int?>()
     private var additionalPaymentTypeMap = HashMap<String, Int>()
-    private var attendanceTypeOptions = HashMap<String, Int>()
+    private var attendanceTypeOptions = HashMap<String?, Int>()
     private val centerNames: List<String?> = ArrayList()
     private val staffNames: List<String?> = ArrayList()
     private val officeNames: List<String?> = ArrayList()
@@ -77,8 +77,8 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private var staffId = -1
 
     //id of the center whose Productive CollectionSheet has to be retrieved.
-    private var productiveCenterId = -1
-    private var calendarId = -1
+    private var productiveCenterId : Int? = -1
+    private var calendarId : Int? = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
@@ -251,7 +251,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         val requestPayload = CollectionSheetRequestPayload()
         requestPayload.transactionDate = binding.tvMeetingDate.text.toString()
         requestPayload.calendarId = calendarId
-        presenter.loadProductiveCollectionSheet(productiveCenterId, requestPayload)
+        productiveCenterId?.let { presenter.loadProductiveCollectionSheet(it, requestPayload) }
     }
 
     private fun fetchCenterDetails() {
@@ -268,8 +268,8 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         }
 
         //Set CalendarId and fetch ProductiveCollectionSheet
-        calendarId = centerDetails[0].meetingFallCenters[0].collectionMeetingCalendar.id
-        productiveCenterId = centerDetails[0].meetingFallCenters[0].id
+        calendarId = centerDetails[0].meetingFallCenters?.get(0)?.collectionMeetingCalendar?.id
+        productiveCenterId = centerDetails[0].meetingFallCenters?.get(0)?.id
         fetchProductiveCollectionSheet()
     }
 
@@ -613,7 +613,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         }
 
         //Payload with all the items is ready. Now, hit the endpoint and submit it.
-        presenter.submitProductiveSheet(productiveCenterId, payload)
+        productiveCenterId?.let { presenter.submitProductiveSheet(it, payload) }
     }
 
     private fun submitCollectionSheet() {
