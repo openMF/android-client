@@ -350,8 +350,8 @@ class GenerateCollectionSheetPresenter @Inject constructor(
     fun createCenterIdMap(
         centers: List<Center>?,
         centerNames: MutableList<String?>
-    ): HashMap<String, Int> {
-        val centerMap = HashMap<String, Int>()
+    ): HashMap<String?, Int?> {
+        val centerMap = HashMap<String?, Int?>()
         centerMap[c.resources.getString(R.string.spinner_center)] = -1
         centerNames.clear()
         centerNames.add(c.resources.getString(R.string.spinner_center))
@@ -374,8 +374,8 @@ class GenerateCollectionSheetPresenter @Inject constructor(
     fun createGroupIdMap(
         groups: List<Group>?,
         groupNames: MutableList<String?>
-    ): HashMap<String, Int> {
-        val groupMap = HashMap<String, Int>()
+    ): HashMap<String?, Int?> {
+        val groupMap = HashMap<String?, Int?>()
         groupMap[c.resources.getString(R.string.spinner_group)] = -1
         groupNames.clear()
         groupNames.add(c.resources.getString(R.string.spinner_group))

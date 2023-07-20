@@ -165,7 +165,7 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
             for (dbCenter in mDbCenterList) {
                 for (syncCenter in centers) {
                     if (dbCenter.id == syncCenter?.id) {
-                        syncCenter?.isSync = true
+                        syncCenter?.sync = true
                         break
                     }
                 }

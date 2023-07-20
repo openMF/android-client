@@ -6,14 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.SelectableAdapter
 import com.mifos.objects.group.Group
-import javax.inject.Inject
 
 class GroupNameListAdapter(
     val onGroupClick: (Int) -> Unit,
@@ -55,7 +53,7 @@ class GroupNameListAdapter(
                 }
                 else Color.WHITE
             )
-            iv_sync_status.visibility = if (group.isSync) View.VISIBLE else View.INVISIBLE
+            iv_sync_status.visibility = if (group.sync) View.VISIBLE else View.INVISIBLE
         }
     }
 

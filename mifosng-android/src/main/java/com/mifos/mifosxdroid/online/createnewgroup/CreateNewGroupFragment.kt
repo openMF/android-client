@@ -107,7 +107,7 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
                 groupPayload.externalId = binding.etGroupExternalId.editableText.toString()
                 groupPayload.isActive = binding.cbGroupActiveStatus.isChecked
                 groupPayload.activationDate = activationDateString
-                groupPayload.setSubmissionDate(dateofsubmissionstring)
+                groupPayload.submittedOnDate = dateofsubmissionstring
                 groupPayload.officeId = officeId!!
                 groupPayload.dateFormat = "dd MMMM yyyy"
                 groupPayload.locale = "en"

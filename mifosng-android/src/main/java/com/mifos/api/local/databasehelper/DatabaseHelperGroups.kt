@@ -36,13 +36,21 @@ class DatabaseHelperGroups @Inject constructor() {
      */
     fun saveGroup(group: Group): Observable<Group> {
         return Observable.defer(Func0 {
-            if (group.activationDate.size != 0) {
-                val groupDate = GroupDate(
-                    group.id.toLong(), 0,
-                    group.activationDate[0],
-                    group.activationDate[1],
-                    group.activationDate[2]
-                )
+            if (group.activationDate.isNotEmpty()) {
+                val groupDate = group.id?.toLong()?.let {
+                    group.activationDate[0]?.let { it1 ->
+                        group.activationDate[1]?.let { it2 ->
+                            group.activationDate[2]?.let { it3 ->
+                                GroupDate(
+                                    it, 0,
+                                    it1,
+                                    it2,
+                                    it3
+                                )
+                            }
+                        }
+                    }
+                }
                 group.groupDate = groupDate
             }
             group.save()
@@ -79,9 +87,9 @@ class DatabaseHelperGroups @Inject constructor() {
                 .querySingle()
             if (group != null) {
                 group.activationDate = listOf(
-                    group.groupDate.day,
-                    group.groupDate.month, group.groupDate.year
-                )
+                    group.groupDate?.day,
+                    group.groupDate?.month, group.groupDate?.year
+                ) as List<Int>
             }
             Observable.just(group)
         }

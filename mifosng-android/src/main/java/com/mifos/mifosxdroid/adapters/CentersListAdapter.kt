@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -60,7 +59,7 @@ class CentersListAdapter(
             tvOfficeName.text = center.officeName
             ivStatusIndicator.setImageDrawable(
                 Utils.setCircularBackground(
-                    if(center.active) R.color.light_green else R.color.light_red,
+                    if(center.active == true) R.color.light_green else R.color.light_red,
                     itemView.context
                 )
             )
@@ -76,7 +75,7 @@ class CentersListAdapter(
                 }
                 else Color.WHITE
             )
-            ivSyncStatus.visibility = if (center.isSync) View.VISIBLE else View.INVISIBLE
+            ivSyncStatus.visibility = if (center.sync) View.VISIBLE else View.INVISIBLE
         }
     }
 

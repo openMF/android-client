@@ -98,13 +98,21 @@ class DatabaseHelperCenter @Inject constructor() {
      */
     fun saveCenter(center: Center): Observable<Center> {
         return Observable.defer {
-            if (center.activationDate.size != 0) {
-                val centerDate = CenterDate(
-                    center.id.toLong(), 0,
-                    center.activationDate[0],
-                    center.activationDate[1],
-                    center.activationDate[2]
-                )
+            if (center.activationDate.isNotEmpty()) {
+                val centerDate = center.id?.let {
+                    center.activationDate[0]?.let { it1 ->
+                        center.activationDate[1]?.let { it2 ->
+                            center.activationDate[2]?.let { it3 ->
+                                CenterDate(
+                                    it.toLong(), 0,
+                                    it1,
+                                    it2,
+                                    it3
+                                )
+                            }
+                        }
+                    }
+                }
                 center.centerDate = centerDate
             }
             center.save()

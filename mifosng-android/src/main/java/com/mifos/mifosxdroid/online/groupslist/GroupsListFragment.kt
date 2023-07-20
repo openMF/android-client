@@ -212,7 +212,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      */
     override fun showGroups(groups: List<Group?>?) {
         mGroupList = groups as List<Group>?
-        Collections.sort(mGroupList) { grp1, grp2 -> grp1.name.compareTo(grp2.name) }
+        Collections.sort(mGroupList) { grp1, grp2 -> grp2.name?.let { grp1.name?.compareTo(it) }!! }
         mGroupListAdapter.setGroups(mGroupList ?: emptyList())
     }
 

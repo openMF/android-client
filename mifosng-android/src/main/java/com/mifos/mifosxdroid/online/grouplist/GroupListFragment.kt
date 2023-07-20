@@ -34,9 +34,11 @@ class GroupListFragment : ProgressableFragment(), GroupListMvpView,
     private var mListener: OnFragmentInteractionListener? = null
     private var centerId = 0
     override fun onItemClick(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
-        mGroupListPresenter.loadGroups(
-            mCenterWithAssociations!!.groupMembers[position].id
-        )
+        mCenterWithAssociations!!.groupMembers[position].id?.let {
+            mGroupListPresenter.loadGroups(
+                it
+            )
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +66,7 @@ class GroupListFragment : ProgressableFragment(), GroupListMvpView,
 
     override fun showGroupList(centerWithAssociations: CenterWithAssociations?) {
         if (centerWithAssociations != null) {
-            if (centerWithAssociations.groupMembers.size == 0) {
+            if (centerWithAssociations.groupMembers.isEmpty()) {
                 showEmptyGroups(R.string.empty_groups)
             } else {
                 mCenterWithAssociations = centerWithAssociations

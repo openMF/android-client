@@ -62,8 +62,8 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private var datePicker: DialogFragment? = null
     private var officeNameIdHashMap = HashMap<String?, Int?>()
     private var staffNameIdHashMap = HashMap<String?, Int?>()
-    private var centerNameIdHashMap = HashMap<String, Int>()
-    private var groupNameIdHashMap = HashMap<String, Int>()
+    private var centerNameIdHashMap = HashMap<String?, Int?>()
+    private var groupNameIdHashMap = HashMap<String?, Int?>()
     private var additionalPaymentTypeMap = HashMap<String, Int>()
     private var attendanceTypeOptions = HashMap<String, Int>()
     private val centerNames: List<String?> = ArrayList()
