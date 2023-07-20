@@ -44,8 +44,8 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
     @Inject
     var pinPointClientPresenter: PinPointClientPresenter? = null
     private var clientId = 0
-    private var apptableId = 0
-    private var dataTableId = 0
+    private var apptableId : Int? = 0
+    private var dataTableId : Int? = 0
     private var addresses: List<ClientAddressResponse> = ArrayList()
     override fun onItemLongClick(position: Int) {
         apptableId = addresses[position].clientId
@@ -65,9 +65,13 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
                         requestPermission(REQUEST_UPDATE_PLACE_PICKER)
                     }
 
-                    1 -> pinPointClientPresenter?.deleteClientPinpointLocation(
-                        apptableId, dataTableId
-                    )
+                    1 -> apptableId?.let {
+                        dataTableId?.let { it1 ->
+                            pinPointClientPresenter?.deleteClientPinpointLocation(
+                                it, it1
+                            )
+                        }
+                    }
 
                     else -> {}
                 }
@@ -277,10 +281,14 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
             if (requestCode == REQUEST_ADD_PLACE_PICKER) {
                 pinPointClientPresenter?.addClientPinpointLocation(clientId, clientAddressRequest)
             } else if (requestCode == REQUEST_UPDATE_PLACE_PICKER) {
-                pinPointClientPresenter?.updateClientPinpointLocation(
-                    apptableId, dataTableId,
-                    clientAddressRequest
-                )
+                apptableId?.let {
+                    dataTableId?.let { it1 ->
+                        pinPointClientPresenter?.updateClientPinpointLocation(
+                            it, it1,
+                            clientAddressRequest
+                        )
+                    }
+                }
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)

@@ -19,7 +19,7 @@ data class ClientAccounts(
 
         val result: MutableList<SavingsAccount> = ArrayList()
         for (account in savingsAccounts) {
-            if (account.isRecurring == wantRecurring) {
+            if (account.depositType?.isRecurring == wantRecurring) {
                 result.add(account)
             }
         }

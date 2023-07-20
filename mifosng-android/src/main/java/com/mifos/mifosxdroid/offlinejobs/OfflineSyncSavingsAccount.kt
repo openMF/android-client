@@ -77,10 +77,12 @@ class OfflineSyncSavingsAccount : Job() {
                 val savingAccountId = mSavingsAccountTransactionRequests[i].savingAccountId
                 val transactionType = mSavingsAccountTransactionRequests
                     .get(i).transactionType
-                processTransaction(
-                    savingAccountType, savingAccountId, transactionType,
-                    mSavingsAccountTransactionRequests[i]
-                )
+                if (savingAccountId != null) {
+                    processTransaction(
+                        savingAccountType, savingAccountId, transactionType,
+                        mSavingsAccountTransactionRequests[i]
+                    )
+                }
                 break
             }
         }
@@ -139,9 +141,11 @@ class OfflineSyncSavingsAccount : Job() {
     }
 
     fun showTransactionSyncSuccessfully() {
-        deleteAndUpdateSavingsAccountTransaction(
-            mSavingsAccountTransactionRequests[mTransactionIndex].savingAccountId
-        )
+        mSavingsAccountTransactionRequests[mTransactionIndex].savingAccountId?.let {
+            deleteAndUpdateSavingsAccountTransaction(
+                it
+            )
+        }
     }
 
     private fun deleteAndUpdateSavingsAccountTransaction(savingsAccountId: Int) {

@@ -129,11 +129,14 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
      * and update the recyclerView
      */
     override fun showSyncResponse() {
-        mSyncPayloadsPresenter.deleteAndUpdateClientPayload(
-            clientPayloads
-            !![mClientSyncIndex].id,
-            clientPayloads!![mClientSyncIndex].clientCreationTime
-        )
+        clientPayloads?.get(mClientSyncIndex)?.id?.let {
+            clientPayloads?.get(mClientSyncIndex)?.clientCreationTime?.let { it1 ->
+                mSyncPayloadsPresenter.deleteAndUpdateClientPayload(
+                    it,
+                    it1
+                )
+            }
+        }
     }
 
     /**

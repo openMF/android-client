@@ -171,7 +171,7 @@ class ClientListPresenter @Inject constructor(private val mDataManagerClient: Da
                 if (clients != null) {
                     for (syncClient in clients) {
                         if (dbClient.id == syncClient.id) {
-                            syncClient.isSync = true
+                            syncClient.sync = true
                             break
                         }
                     }

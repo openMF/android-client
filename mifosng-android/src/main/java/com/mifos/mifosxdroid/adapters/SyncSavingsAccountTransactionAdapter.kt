@@ -47,10 +47,12 @@ class SyncSavingsAccountTransactionAdapter @Inject constructor() :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val transaction = mSavingsAccountTransactionRequests[position]
-        val paymentTypeName = getPaymentTypeName(
-            transaction.paymentTypeId.toInt(),
-            mPaymentTypeOptions
-        )
+        val paymentTypeName = transaction.paymentTypeId?.toInt()?.let {
+            getPaymentTypeName(
+                it,
+                mPaymentTypeOptions
+            )
+        }
         holder.binding.tvSavingsAccountId.text = transaction.savingAccountId.toString()
         holder.binding.tvPaymentType.text = paymentTypeName
         holder.binding.tvTransactionType.text = transaction.transactionType

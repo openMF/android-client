@@ -58,18 +58,18 @@ class SavingsAccountTransactionsListAdapter(
             convertView = view
         }
         binding.tvTransactionDate.text =
-            getDateAsString(listOfTransactions[i].date)
+            getDateAsString(listOfTransactions[i].date as List<Int>)
         binding.tvTransactionType.text = listOfTransactions[i]
-            .transactionType.value
-        val transactionAmount = listOfTransactions[i].currency.displaySymbol +
+            .transactionType?.value
+        val transactionAmount = listOfTransactions[i].currency?.displaySymbol +
                 mContext.resources.getString(R.string.space) +
                 listOfTransactions[i].amount
         binding.tvTransactionAmount.text = transactionAmount
-        if (listOfTransactions[i].transactionType.deposit) {
+        if (listOfTransactions[i].transactionType?.deposit == true) {
             binding.tvTransactionAmount.setTextColor(
                 ContextCompat.getColor(mContext, R.color.savings_account_status_active)
             )
-        } else if (listOfTransactions[i].transactionType.withdrawal) {
+        } else if (listOfTransactions[i].transactionType?.withdrawal == true) {
             binding.tvTransactionAmount.setTextColor(Color.RED)
         } else {
             binding.tvTransactionAmount.setTextColor(Color.BLACK)

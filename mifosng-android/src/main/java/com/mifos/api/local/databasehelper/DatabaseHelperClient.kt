@@ -74,12 +74,18 @@ class DatabaseHelperClient @Inject constructor() {
      */
     fun saveClient(client: Client): Observable<Client> {
         return Observable.defer(Func0 { //Saving Client in Database
-            val clientDate = ClientDate(
-                client.id.toLong(), 0,
-                client.activationDate[0],
-                client.activationDate[1],
-                client.activationDate[2]
-            )
+            val clientDate = client.activationDate[0]?.let {
+                client.activationDate[1]?.let { it1 ->
+                    client.activationDate[2]?.let { it2 ->
+                        ClientDate(
+                            client.id.toLong(), 0,
+                            it,
+                            it1,
+                            it2
+                        )
+                    }
+                }
+            }
             client.clientDate = clientDate
             client.save()
             Observable.just(client)
@@ -129,8 +135,9 @@ class DatabaseHelperClient @Inject constructor() {
                 .querySingle()
             if (client != null) {
                 client.activationDate = listOf(
-                    client.clientDate.day,
-                    client.clientDate.month, client.clientDate.year
+                    client.clientDate?.day,
+                    client.clientDate?.month,
+                    client.clientDate?.year
                 )
             }
             subscriber.onNext(client)
@@ -330,7 +337,7 @@ class DatabaseHelperClient @Inject constructor() {
         return Observable.defer {
             val currentTime = System.currentTimeMillis()
             clientPayload.clientCreationTime = currentTime
-            if (clientPayload.datatables.isNotEmpty()) {
+            if (clientPayload.datatables?.isNotEmpty() == true) {
                 Observable.from<DataTablePayload>(clientPayload.datatables)
                     .subscribe { dataTablePayload ->
                         dataTablePayload.clientCreationTime = currentTime

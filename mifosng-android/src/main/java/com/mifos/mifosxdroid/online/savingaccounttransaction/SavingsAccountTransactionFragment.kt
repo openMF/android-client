@@ -333,7 +333,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
                 Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountWithAssociations
                     .accountNo
             )
-            args.putInt(Constants.SAVINGS_ACCOUNT_ID, savingsAccountWithAssociations.id)
+            savingsAccountWithAssociations.id?.let { args.putInt(Constants.SAVINGS_ACCOUNT_ID, it) }
             args.putString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE, transactionType)
             args.putString(Constants.CLIENT_NAME, savingsAccountWithAssociations.clientName)
             args.putParcelable(Constants.SAVINGS_ACCOUNT_TYPE, accountType)

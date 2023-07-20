@@ -51,7 +51,7 @@ class GroupListAdapter(context: Context, groups: List<Group>) : BaseAdapter() {
          * Status Class that compares String Value to a Static String and returns
          * if Status is Active or not
          */
-        if (Status.isActive(group.status.value)) {
+        if (group.status.value?.let { Status.isActive(it) } == true) {
             binding.viewStatusIndicator.setBackgroundColor(
                 ContextCompat.getColor(context, R.color.deposit_green)
             )

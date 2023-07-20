@@ -50,7 +50,7 @@ class ClientNameListAdapter(
         holder.tv_clientAccountNumber.text = client.accountNo
 
         // lazy the  load profile picture
-        if (client.isImagePresent) {
+        if (client.imagePresent) {
             // make the image url
             ImageLoaderUtils.loadImage(holder.itemView.context, client.id, holder.iv_userPicture)
         } else {
@@ -68,7 +68,7 @@ class ClientNameListAdapter(
             }
             else Color.WHITE
         )
-        holder.iv_sync_status.visibility = if (client.isSync) View.VISIBLE else View.INVISIBLE
+        holder.iv_sync_status.visibility = if (client.sync) View.VISIBLE else View.INVISIBLE
     }
 
     override fun getItemId(i: Int) = 0L

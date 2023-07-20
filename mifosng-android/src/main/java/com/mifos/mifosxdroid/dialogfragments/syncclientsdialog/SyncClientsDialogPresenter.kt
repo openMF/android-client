@@ -99,10 +99,12 @@ class SyncClientsDialogPresenter @Inject constructor(
 
     fun checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate() {
         if (mvpView?.isOnline == true) {
-            syncSavingsAccountAndTemplate(
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType.endpoint,
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
-            )
+            mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let {
+                syncSavingsAccountAndTemplate(
+                    mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint,
+                    it
+                )
+            }
         } else {
             mvpView?.showNetworkIsNotAvailable()
             mvpView?.dismissDialog()
@@ -297,7 +299,7 @@ class SyncClientsDialogPresenter @Inject constructor(
      */
     fun syncClient(client: Client) {
         checkViewAttached()
-        client.isSync = true
+        client.sync = true
         mSubscriptions.add(
             mDataManagerClient.syncClientInDatabase(client)
                 .observeOn(AndroidSchedulers.mainThread())

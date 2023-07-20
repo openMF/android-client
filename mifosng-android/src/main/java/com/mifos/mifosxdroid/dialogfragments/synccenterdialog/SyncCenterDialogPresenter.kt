@@ -262,10 +262,14 @@ class SyncCenterDialogPresenter @Inject constructor(
      */
     private fun checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate() {
         if (mvpView?.isOnline == true) {
-            syncSavingsAccountAndTemplate(
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType.endpoint,
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
-            )
+            mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint?.let {
+                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
+                    syncSavingsAccountAndTemplate(
+                        it,
+                        it1
+                    )
+                }
+            }
         } else {
             mvpView?.showNetworkIsNotAvailable()
             mvpView?.dismissDialog()
@@ -637,10 +641,14 @@ class SyncCenterDialogPresenter @Inject constructor(
             }
         } else if (!mSavingsAccountList.isEmpty()) {
             //Sync the Active Savings Account
-            syncGroupSavingsAccountAndTemplate(
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType.endpoint,
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
-            )
+            mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let {
+                mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint?.let { it1 ->
+                    syncGroupSavingsAccountAndTemplate(
+                        it1,
+                        it
+                    )
+                }
+            }
         } else {
             loadGroupAssociateClients(mGroups[mGroupSyncIndex].id)
         }
@@ -662,10 +670,14 @@ class SyncCenterDialogPresenter @Inject constructor(
             }
         } else if (!mSavingsAccountList.isEmpty()) {
             //Sync the Active Savings Account
-            syncClientSavingsAccountAndTemplate(
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType.endpoint,
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
-            )
+            mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let {
+                mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint?.let { it1 ->
+                    syncClientSavingsAccountAndTemplate(
+                        it1,
+                        it
+                    )
+                }
+            }
         } else {
             syncClient(mClients[mClientSyncIndex])
         }
@@ -715,7 +727,7 @@ class SyncCenterDialogPresenter @Inject constructor(
     private fun syncClient(client: Client) {
         checkViewAttached()
         client.groupId = mGroups.get(mGroupSyncIndex).id
-        client.isSync = true
+        client.sync = true
         mSubscriptions.add(
             mDataManagerClient.syncClientInDatabase(client)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -835,11 +847,15 @@ class SyncCenterDialogPresenter @Inject constructor(
                     override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
                         mSavingsAndTransactionSyncIndex += 1
                         if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
-                            syncGroupSavingsAccountAndTemplate(
-                                mSavingsAccountList[mSavingsAndTransactionSyncIndex]
-                                    .depositType.endpoint,
-                                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
-                            )
+                            mSavingsAccountList[mSavingsAndTransactionSyncIndex]
+                                .depositType?.endpoint?.let {
+                                    mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
+                                        syncGroupSavingsAccountAndTemplate(
+                                            it,
+                                            it1
+                                        )
+                                    }
+                                }
                         } else {
                             loadGroupAssociateClients(mGroups[mGroupSyncIndex].id)
                         }
@@ -871,11 +887,15 @@ class SyncCenterDialogPresenter @Inject constructor(
                     override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
                         mSavingsAndTransactionSyncIndex += 1
                         if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
-                            syncClientSavingsAccountAndTemplate(
+                            mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let {
                                 mSavingsAccountList[mSavingsAndTransactionSyncIndex]
-                                    .depositType.endpoint,
-                                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
-                            )
+                                    .depositType?.endpoint?.let { it1 ->
+                                        syncClientSavingsAccountAndTemplate(
+                                            it1,
+                                            it
+                                        )
+                                    }
+                            }
                         } else {
                             syncClient(mClients[mClientSyncIndex])
                         }

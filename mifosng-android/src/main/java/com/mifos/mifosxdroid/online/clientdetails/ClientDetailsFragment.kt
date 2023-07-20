@@ -383,9 +383,9 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     override fun showClientInformation(client: Client?) {
         if (client != null) {
             setToolbarTitle(getString(R.string.client) + " - " + client.displayName)
-            isClientActive = client.isActive
+            isClientActive = client.active
             requireActivity().invalidateOptionsMenu()
-            if (!client.isActive) {
+            if (!client.active) {
                 binding.llBottomPanel.visibility = View.VISIBLE
             }
             binding.tvFullName.text = client.displayName
@@ -400,7 +400,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
             if (TextUtils.isEmpty(client.groupNames)) binding.rowGroup.visibility = GONE
             try {
                 val dateString = Utils.getStringOfDate(
-                    client.activationDate
+                    client.activationDate as List<Int>
                 )
                 binding.tvActivationDate.text = dateString
                 if (TextUtils.isEmpty(dateString)) binding.rowActivation.visibility = GONE
@@ -413,7 +413,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
             }
             binding.tvOffice.text = client.officeName
             if (TextUtils.isEmpty(client.officeName)) binding.rowOffice.visibility = GONE
-            if (client.isImagePresent) {
+            if (client.imagePresent) {
                 loadClientProfileImage()
             } else {
                 binding.ivClientImage.setImageDrawable(
@@ -427,7 +427,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                     R.menu.client_image_popup, menu
                         .menu
                 )
-                if (!client.isImagePresent) {
+                if (!client.imagePresent) {
                     menu.menu.findItem(R.id.client_image_remove).isVisible = false
                 }
                 menu.setOnMenuItemClickListener { menuItem ->
@@ -517,10 +517,12 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                 activity,
                 adapter,
                 AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                    mListener?.loadSavingsAccountSummary(
-                        adapter.getItem(i).id,
-                        adapter.getItem(i).depositType
-                    )
+                    adapter.getItem(i).id?.let {
+                        mListener?.loadSavingsAccountSummary(
+                            it,
+                            adapter.getItem(i).depositType
+                        )
+                    }
                 })
         } else {
             binding.accountAccordionSectionSavings.root.visibility = GONE
@@ -535,10 +537,12 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                 activity,
                 adapter,
                 AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                    mListener?.loadSavingsAccountSummary(
-                        adapter.getItem(i).id,
-                        adapter.getItem(i).depositType
-                    )
+                    adapter.getItem(i).id?.let {
+                        mListener?.loadSavingsAccountSummary(
+                            it,
+                            adapter.getItem(i).depositType
+                        )
+                    }
                 })
         } else {
             binding.accountAccordionSectionRecurring.root.visibility = GONE

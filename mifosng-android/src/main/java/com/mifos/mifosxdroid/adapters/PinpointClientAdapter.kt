@@ -85,9 +85,9 @@ class PinpointClientAdapter @Inject constructor() :
 
     private fun setMapLocation(map: GoogleMap?, location: ClientAddressResponse) {
         // Add a marker for this item and set the camera
-        val latLng = LatLng(location.latitude, location.longitude)
+        val latLng = location.latitude?.let { location.longitude?.let { it1 -> LatLng(it, it1) } }
         map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13f))
-        map.addMarker(MarkerOptions().position(latLng))
+        map.addMarker(latLng?.let { MarkerOptions().position(it) })
         // Set the map type back to normal.
         map.mapType = GoogleMap.MAP_TYPE_NORMAL
     }
