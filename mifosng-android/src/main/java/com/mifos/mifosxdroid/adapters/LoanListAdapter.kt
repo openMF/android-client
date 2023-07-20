@@ -47,7 +47,7 @@ class LoanListAdapter(context: Context?, listLoans: List<Loan>) : BaseAdapter() 
             convertView = view
         }
         val loan = listLoans[i]
-        binding.tvLoanAccountId.text = loan.getLoanId().toString()
+        binding.tvLoanAccountId.text = loan.loanId.toString()
         return convertView
     }
 }
