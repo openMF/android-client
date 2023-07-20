@@ -66,7 +66,7 @@ class SurveySubmitFragment : MifosBaseFragment(), Communicator, SurveySubmitMvpV
     }
 
     private fun submitScore() {
-        if (mScorecard!!.scorecardValues.size >= 1) {
+        if ((mScorecard?.scorecardValues?.size ?: 0) >= 1) {
             mDetachFragment?.disableSwipe()
             binding.btnSubmit.text = resources.getString(R.string.submitting_surveys)
             binding.btnSubmit.isEnabled = false
