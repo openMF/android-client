@@ -402,7 +402,6 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                 val dateString = Utils.getStringOfDate(
                     client.activationDate as List<Int>
                 )
-                Log.e("@@@",dateString)
                 binding.tvActivationDate.text = dateString
                 if (TextUtils.isEmpty(dateString)) binding.rowActivation.visibility = GONE
             } catch (e: IndexOutOfBoundsException) {
