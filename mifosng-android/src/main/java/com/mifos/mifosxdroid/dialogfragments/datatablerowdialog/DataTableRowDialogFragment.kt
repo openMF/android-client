@@ -76,37 +76,37 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
         val formWidgets: MutableList<FormWidget> = ArrayList()
         if (table != null) {
             for (columnHeader in table.columnHeaderData) {
-                if (!columnHeader.columnPrimaryKey) {
+                if (!columnHeader.columnPrimaryKey!!) {
                     if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_STRING || columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_TEXT) {
                         val formEditText = FormEditText(
                             activity, columnHeader
-                                .columnName
+                                .dataTableColumnName
                         )
                         formWidgets.add(formEditText)
                         binding.llDataTableEntryForm.addView(formEditText.view)
                     } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_INT) {
                         val formNumericEditText =
-                            FormNumericEditText(activity, columnHeader.columnName)
+                            FormNumericEditText(activity, columnHeader.dataTableColumnName)
                         formNumericEditText.returnType = FormWidget.SCHEMA_KEY_INT
                         formWidgets.add(formNumericEditText)
                         binding.llDataTableEntryForm.addView(formNumericEditText.view)
                     } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_DECIMAL) {
                         val formNumericEditText =
-                            FormNumericEditText(activity, columnHeader.columnName)
+                            FormNumericEditText(activity, columnHeader.dataTableColumnName)
                         formNumericEditText.returnType = FormWidget.SCHEMA_KEY_DECIMAL
                         formWidgets.add(formNumericEditText)
                         binding.llDataTableEntryForm.addView(formNumericEditText.view)
                     } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_CODELOOKUP || columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_CODEVALUE) {
-                        if (columnHeader.columnValues.size > 0) {
+                        if (columnHeader.columnValues.isNotEmpty()) {
                             val columnValueStrings: MutableList<String> = ArrayList()
                             val columnValueIds: MutableList<Int> = ArrayList()
                             for (columnValue in columnHeader.columnValues) {
-                                columnValueStrings.add(columnValue.value)
-                                columnValueIds.add(columnValue.id)
+                                columnValue.value?.let { columnValueStrings.add(it) }
+                                columnValue.id?.let { columnValueIds.add(it) }
                             }
                             val formSpinner = FormSpinner(
                                 activity, columnHeader
-                                    .columnName, columnValueStrings, columnValueIds
+                                    .dataTableColumnName, columnValueStrings, columnValueIds
                             )
                             formSpinner.returnType = FormWidget.SCHEMA_KEY_CODEVALUE
                             formWidgets.add(formSpinner)
@@ -115,7 +115,7 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
                     } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_DATE) {
                         val formEditText = FormEditText(
                             activity, columnHeader
-                                .columnName
+                                .dataTableColumnName
                         )
                         formEditText.setIsDateField(true, requireActivity().supportFragmentManager)
                         formWidgets.add(formEditText)
@@ -123,7 +123,7 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
                     } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_BOOL) {
                         val formToggleButton = FormToggleButton(
                             activity,
-                            columnHeader.columnName
+                            columnHeader.dataTableColumnName
                         )
                         formWidgets.add(formToggleButton)
                         binding.llDataTableEntryForm.addView(formToggleButton.view)

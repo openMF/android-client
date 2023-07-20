@@ -91,7 +91,7 @@ class IdentifierDialogPresenter @Inject constructor(private val mDataManagerClie
     fun getIdentifierDocumentTypeNames(documentTypes: List<DocumentType>): List<String> {
         val documentTypeList = ArrayList<String>()
         Observable.from(documentTypes)
-            .subscribe { documentType -> documentTypeList.add(documentType.name) }
+            .subscribe { documentType -> documentType.name?.let { documentTypeList.add(it) } }
         return documentTypeList
     }
 
@@ -103,7 +103,7 @@ class IdentifierDialogPresenter @Inject constructor(private val mDataManagerClie
     fun mapDocumentTypesWithName(documentTypeList: List<DocumentType>): HashMap<String, DocumentType> {
         val hashMap = HashMap<String, DocumentType>()
         Observable.from(documentTypeList)
-            .subscribe { documentType -> hashMap[documentType.name] = documentType }
+            .subscribe { documentType -> hashMap[documentType.name!!] = documentType }
         return hashMap
     }
 }

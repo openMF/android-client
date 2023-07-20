@@ -19,7 +19,6 @@ import android.widget.TextView
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.mifos.objects.noncore.DataTable
-import java.util.*
 
 /**
  * Created by ishankhanna on 17/06/14.
@@ -93,21 +92,21 @@ class DataTableUIBuilder {
                 }
 
                 val key = TextView(context)
-                key.text = dataTable.columnHeaderData[rowIndex].columnName
+                key.text = dataTable.columnHeaderData[rowIndex].dataTableColumnName
                 key.gravity = Gravity.LEFT
                 val value = TextView(context)
                 value.gravity = Gravity.RIGHT
                 if (jsonElement.asJsonObject.get(dataTable.columnHeaderData
-                            [rowIndex].columnName
+                            [rowIndex].dataTableColumnName
                     ).toString().contains("\"")
                 ) {
                     value.text = jsonElement.asJsonObject.get(dataTable.columnHeaderData
-                            [rowIndex].columnName
+                            [rowIndex].dataTableColumnName
                     ).toString().replace("\"", "")
                 } else {
                     value.
                     text = jsonElement.asJsonObject.get(dataTable.columnHeaderData
-                            [rowIndex].columnName
+                            [rowIndex].dataTableColumnName
                     ).toString()
                 }
 
@@ -136,13 +135,15 @@ class DataTableUIBuilder {
 
             tableLayout.setOnLongClickListener { v: View ->
                 //show DataTableOptions
-                dataTableActionListener?.showDataTableOptions(
-                    dataTable.registeredTableName, entityId,
-                    Integer.parseInt(
-                        jsonElement.asJsonObject
-                            .get(dataTable.columnHeaderData[0].columnName).toString()
+                dataTable.registeredTableName?.let {
+                    dataTableActionListener?.showDataTableOptions(
+                        it, entityId,
+                        Integer.parseInt(
+                            jsonElement.asJsonObject
+                                .get(dataTable.columnHeaderData[0].dataTableColumnName).toString()
+                        )
                     )
-                )
+                }
 
                 true
             }

@@ -36,7 +36,7 @@ class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogM
     private var clientIdentifierCreationListener: ClientIdentifierCreationListener? = null
     private var clientId = 0
     private var identifierTemplate: IdentifierTemplate? = null
-    private var identifierDocumentTypeId = 0
+    private var identifierDocumentTypeId : Int? = 0
     private var status: String? = null
     private var identifier: Identifier? = null
     private var documentTypeHashMap: HashMap<String, DocumentType>? = null
@@ -116,13 +116,19 @@ class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogM
 
     override fun showClientIdentifierTemplate(identifierTemplate: IdentifierTemplate) {
         this.identifierTemplate = identifierTemplate
-        mListIdentifierType.addAll(
+        identifierTemplate.allowedDocumentTypes?.let {
             mIdentifierDialogPresenter.getIdentifierDocumentTypeNames(
-                identifierTemplate.allowedDocumentTypes
+                it
             )
-        )
-        documentTypeHashMap = mIdentifierDialogPresenter
-            .mapDocumentTypesWithName(identifierTemplate.allowedDocumentTypes)
+        }?.let {
+            mListIdentifierType.addAll(
+                it
+            )
+        }
+        documentTypeHashMap = identifierTemplate.allowedDocumentTypes?.let {
+            mIdentifierDialogPresenter
+                .mapDocumentTypesWithName(it)
+        }
         mIdentifierTypeAdapter!!.notifyDataSetChanged()
     }
 
@@ -165,7 +171,7 @@ class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogM
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         when (parent.id) {
             R.id.sp_identifier_type -> identifierDocumentTypeId =
-                identifierTemplate!!.allowedDocumentTypes[position].id
+                identifierTemplate?.allowedDocumentTypes?.get(position)?.id
 
             R.id.sp_identifier_status -> status = identifierStatus[position]
         }
