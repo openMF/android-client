@@ -344,7 +344,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
             return when (item.itemId) {
                 R.id.action_sync -> {
                     selectedClients?.clear()
-                    for (position in mClientNameListAdapter.selectedItems) {
+                    for (position in mClientNameListAdapter.getSelectedItems()) {
                         selectedClients?.let { list ->
                             clientList?.get(position)?.let { client ->
                                 list.add(client)

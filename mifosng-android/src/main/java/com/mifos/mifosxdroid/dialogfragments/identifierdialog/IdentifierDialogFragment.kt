@@ -36,9 +36,9 @@ class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogM
     private var clientIdentifierCreationListener: ClientIdentifierCreationListener? = null
     private var clientId = 0
     private var identifierTemplate: IdentifierTemplate? = null
-    private var identifierDocumentTypeId : Int? = 0
+    private var identifierDocumentTypeId: Int? = 0
     private var status: String? = null
-    private var identifier: Identifier? = null
+    private lateinit var identifier: Identifier
     private var documentTypeHashMap: HashMap<String, DocumentType>? = null
     private val mListIdentifierType: MutableList<String> = ArrayList()
     private var mIdentifierTypeAdapter: ArrayAdapter<String>? = null
@@ -106,9 +106,9 @@ class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogM
             // Add the values in the identifier. It'll be sent to the calling Fragment
             // if the request is successful.
             identifier = Identifier()
-            identifier!!.description = binding.etDescription.text.toString()
-            identifier!!.documentKey = binding.etUniqueId.text.toString()
-            identifier!!.documentType = documentTypeHashMap
+            identifier.description = binding.etDescription.text.toString()
+            identifier.documentKey = binding.etUniqueId.text.toString()
+            identifier.documentType = documentTypeHashMap
                 ?.get(binding.spIdentifierType.selectedItem.toString())
             mIdentifierDialogPresenter.createClientIdentifier(clientId, identifierPayload)
         }
@@ -139,8 +139,8 @@ class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogM
             activity, R.string.identifier_created_successfully,
             Toast.LENGTH_SHORT
         ).show()
-        identifier!!.clientId = identifierCreationResponse.clientId
-        identifier!!.id = identifierCreationResponse.resourceId
+        identifier.clientId = identifierCreationResponse.clientId
+        identifier.id = identifierCreationResponse.resourceId
         if (clientIdentifierCreationListener != null) {
             clientIdentifierCreationListener!!.onClientIdentifierCreationSuccess(identifier)
         }

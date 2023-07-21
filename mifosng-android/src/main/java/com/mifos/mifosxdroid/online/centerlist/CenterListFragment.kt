@@ -322,7 +322,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
             return when (item.itemId) {
                 R.id.action_sync -> {
                     selectedCenters?.clear()
-                    for (position in centersListAdapter.selectedItems) {
+                    for (position in centersListAdapter.getSelectedItems()) {
                         val center = centers?.get(position)
                         if (center != null) {
                             selectedCenters?.add(center)
