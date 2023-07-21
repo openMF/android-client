@@ -329,7 +329,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
             return when (item.itemId) {
                 R.id.action_sync -> {
                     selectedGroups?.clear()
-                    for (position in mGroupListAdapter.selectedItems) {
+                    for (position in mGroupListAdapter.getSelectedItems()) {
                         selectedGroups?.add(mGroupList?.get(position) ?: continue)
                     }
                     val syncGroupsDialogFragment =
