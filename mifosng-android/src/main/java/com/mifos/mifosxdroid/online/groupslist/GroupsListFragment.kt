@@ -13,6 +13,7 @@ import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
+import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.GroupNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
@@ -164,7 +165,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      * This method Initializing the UI.
      */
     override fun showUserInterface() {
-        setToolbarTitle(resources.getString(R.string.groups))
+        (activity as HomeActivity).supportActionBar?.title = getString(R.string.groups)
         mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvGroups.layoutManager = mLayoutManager

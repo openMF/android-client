@@ -16,6 +16,7 @@ import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
+import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.CentersListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
@@ -109,7 +110,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
      * This Method is setting the UI
      */
     override fun showUserInterface() {
-        setToolbarTitle(resources.getString(R.string.title_activity_centers))
+        (activity as HomeActivity).supportActionBar?.title = getString(R.string.centers)
         layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvCenterList.layoutManager = layoutManager

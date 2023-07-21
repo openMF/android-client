@@ -27,7 +27,7 @@ class FormToggleButton(context: Context?, name: String?) : FormWidget(context, n
         label.text = displayText
         label.layoutParams = weightedLayoutParams
         linearLayout.addView(label)
-        switchButton = SwitchCompat(context)
+        switchButton = SwitchCompat(context!!)
         switchButton.layoutParams = weightedLayoutParams
         switchButton.gravity = Gravity.CENTER_HORIZONTAL
         switchButton.switchMinWidth = 50

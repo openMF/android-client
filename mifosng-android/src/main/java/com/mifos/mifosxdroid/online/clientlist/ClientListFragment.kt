@@ -17,6 +17,7 @@ import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
+import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
@@ -119,7 +120,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
     ): View {
         binding = FragmentClientBinding.inflate(inflater, container, false)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        setToolbarTitle(resources.getString(R.string.clients))
+        (activity as HomeActivity).supportActionBar?.title = getString(R.string.clients)
         mClientListPresenter.attachView(this)
 
         //setting all the UI content to the view

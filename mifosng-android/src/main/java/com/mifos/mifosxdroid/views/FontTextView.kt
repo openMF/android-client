@@ -26,7 +26,7 @@ class FontTextView : AppCompatTextView {
         parseAttributes(context, attrs)
     }
 
-    constructor(context: Context?) : super(context) {}
+    constructor(context: Context) : super(context) {}
 
     private fun parseAttributes(context: Context, attrs: AttributeSet) {
         if (!isInEditMode) {

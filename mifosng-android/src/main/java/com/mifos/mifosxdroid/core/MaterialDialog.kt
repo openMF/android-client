@@ -17,13 +17,13 @@ class MaterialDialog {
         //This is the Default Builder Initialization with Material Style
         fun init(context: Context?): Builder {
             mMaterialDialogBuilder =
-                MaterialAlertDialogBuilder(context, R.style.MaterialAlertDialogStyle)
+                context?.let { MaterialAlertDialogBuilder(it, R.style.MaterialAlertDialogStyle) }
             return this
         }
 
         //This method set the custom Material Style
         fun init(context: Context?, theme: Int): Builder {
-            mMaterialDialogBuilder = MaterialAlertDialogBuilder(context, theme)
+            mMaterialDialogBuilder = context?.let { MaterialAlertDialogBuilder(it, theme) }
             return this
         }
 

@@ -13,7 +13,7 @@ class CheckerInboxViewModelFactory @Inject constructor(
         ViewModelProvider.NewInstanceFactory() {
     val subscription = CompositeSubscription()
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if (modelClass.isAssignableFrom(CheckerInboxTasksViewModel::class.java)) {
             return CheckerInboxTasksViewModel(dataManagerCheckerInbox, subscription) as T

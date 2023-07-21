@@ -17,7 +17,9 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SearchAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -61,7 +63,7 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListene
     private lateinit var layoutManager: LinearLayoutManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)?.activityComponent?.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         searchedEntities = ArrayList()
         fabOpen = AnimationUtils.loadAnimation(context, R.anim.fab_open)
         fabClose = AnimationUtils.loadAnimation(context, R.anim.fab_close)
@@ -75,7 +77,7 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListene
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentClientSearchBinding.inflate(inflater, container, false)
-        setToolbarTitle(getResources().getString(R.string.dashboard))
+        (activity as HomeActivity).supportActionBar?.title = getString(R.string.dashboard)
         searchPresenter.attachView(this)
         searchOptionsValues =
             requireActivity().resources.getStringArray(R.array.search_options_values)
@@ -87,10 +89,7 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListene
         super.onViewCreated(view, savedInstanceState)
 
         binding.fabClient.setOnClickListener {
-            (activity as MifosBaseActivity?)?.replaceFragment(
-                CreateNewClientFragment.newInstance(),
-                true, R.id.container_a
-            )
+            findNavController().navigate(R.id.action_navigation_dashboard_to_createNewClientFragment)
         }
 
         binding.fabCenter.setOnClickListener {
@@ -200,7 +199,9 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListene
                     )
                 }
             }
-            startActivity(activity)
+            if (activity != null) {
+                startActivity(activity)
+            }
         }
         binding.rvSearch.adapter = searchAdapter
         binding.cbExactMatch.setOnCheckedChangeListener { _, _ -> onClickSearch() }
@@ -276,8 +277,8 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListene
         super.onPause()
     }
 
-    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        if (parent.id == R.id.sp_search) {
+    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        if (view != null && parent.id == R.id.sp_search) {
             resources = if (position == 0) {
                 (searchOptionsValues[0] + "," + searchOptionsValues[1] + "," +
                         searchOptionsValues[2] + "," + searchOptionsValues[3] + "," +

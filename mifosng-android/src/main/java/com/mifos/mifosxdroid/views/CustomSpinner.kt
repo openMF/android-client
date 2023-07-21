@@ -70,17 +70,17 @@ class CustomSpinner : AppCompatSpinner {
         return mOpenInitiated
     }
 
-    constructor(context: Context?) : super(context) {}
-    constructor(context: Context?, mode: Int) : super(context, mode) {}
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {}
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
+    constructor(context: Context) : super(context) {}
+    constructor(context: Context, mode: Int) : super(context, mode) {}
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {}
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
         defStyleAttr
     ) {
     }
 
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, mode: Int) : super(
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, mode: Int) : super(
         context,
         attrs,
         defStyleAttr,
@@ -89,7 +89,7 @@ class CustomSpinner : AppCompatSpinner {
     }
 
     constructor(
-        context: Context?, attrs: AttributeSet?,
+        context: Context, attrs: AttributeSet?,
         defStyleAttr: Int, mode: Int, popupTheme: Theme?
     ) : super(context, attrs, defStyleAttr, mode, popupTheme) {
     }

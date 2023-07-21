@@ -9,7 +9,6 @@
     android:id="@+id/cv_client"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5sp"
     android:clickable="true"
     android:focusable="true"
     app:cardUseCompatPadding="true">
@@ -22,6 +21,8 @@
         android:backgroundTint="@color/white"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
         android:id="@+id/linearLayout">
 
 

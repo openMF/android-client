@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home_nav_graph"
+    app:startDestination="@id/navigation_dashboard">
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.mifos.mifosxdroid.online.search.SearchFragment"
+        android:label="SearchFragment">
+        <action
+            android:id="@+id/action_searchFragment_to_clientListFragment"
+            app:destination="@id/navigation_client_list" />
+        <action
+            android:id="@+id/action_searchFragment_to_centerListFragment"
+            app:destination="@id/navigation_center_list" />
+        <action
+            android:id="@+id/action_searchFragment_to_groupsListFragment"
+            app:destination="@id/navigation_group_list" />
+        <action
+            android:id="@+id/action_navigation_dashboard_to_createNewClientFragment"
+            app:destination="@id/createNewClientFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_client_list"
+        android:name="com.mifos.mifosxdroid.online.clientlist.ClientListFragment"
+        android:label="ClientListFragment" />
+    <fragment
+        android:id="@+id/navigation_center_list"
+        android:name="com.mifos.mifosxdroid.online.centerlist.CenterListFragment"
+        android:label="CenterListFragment" />
+    <fragment
+        android:id="@+id/navigation_group_list"
+        android:name="com.mifos.mifosxdroid.online.groupslist.GroupsListFragment"
+        android:label="GroupsListFragment" />
+    <fragment
+        android:id="@+id/createNewClientFragment"
+        android:name="com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment"
+        android:label="CreateNewClientFragment" />
+
+</navigation>
