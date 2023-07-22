@@ -26,7 +26,6 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 17
-          distribution: temurin
 
         # Build with Gradle
       - name: Build with Gradle
@@ -62,7 +61,6 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 17
-          distribution: temurin
 
       # Run test, lint, PMD, or checkstyle based on the matrix value
       - name: Run ${{ matrix.check }}
