@@ -1,5 +1,4 @@
 name: Android Client CI
-
 on:
   push:
   pull_request:
@@ -12,18 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # Cache Gradle dependencies to speed up builds
-      - name: Cache Gradle Dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      # Set up JDK 17
+        # Set up JDK 17
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v2
         with:
           java-version: 17
 
@@ -35,40 +25,106 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v2.2.0
         with:
+          # Artifact name
           name: android-client-app
+          # File path describing what artifact to upload
           path: mifosng-android/build/outputs/apk/debug/mifosng-android-debug.apk
 
-  tests-lint-pmd-checkstyle:
+  test:
     needs: build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        check: [test, lint, pmd, checkstyle]
     steps:
       - uses: actions/checkout@v2
 
-      # Cache Gradle dependencies to speed up builds
-      - name: Cache Gradle Dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      # Set up JDK 17
+      # Set up JDK 1.8
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v2
         with:
           java-version: 17
 
-      # Run test, lint, PMD, or checkstyle based on the matrix value
-      - name: Run ${{ matrix.check }}
-        run: ./gradlew ${{ matrix.check }}
+        # Test with Gradle
+      - name: Test App
+        run: ./gradlew test
 
-        # Upload reports
-      - name: Upload ${{ matrix.check }} Reports
+        # Upload test reports
+      - name: Upload Test Reports
         uses: actions/upload-artifact@v2.2.0
         with:
-          name: ${{ matrix.check }}-reports
-          path: mifosng-android/build/reports/${{ matrix.check }}/**
+          # Artifact name
+          name: test-reports
+          # File path describing what artifact to upload
+          path: mifosng-android/build/reports/tests/**
+
+  lintCheck:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Set up JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+
+        # Perform Lint Check
+      - name: Lint Check
+        run: ./gradlew lint
+
+        # Upload reports
+      - name: Upload Lint Reports
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          # Artifact name
+          name: lint-reports
+          # File path describing what artifact to upload
+          path: mifosng-android/build/reports/lint-results**
+
+  pmd:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Set up JDK 17
+      - name: Set up JDK 7
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+
+        # Perform PMD Check
+      - name: PMD Check
+        run: ./gradlew pmd
+
+        # Upload reports
+      - name: Upload PMD Reports
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          # Artifact name
+          name: pmd-reports
+          # File path describing what artifact to upload
+          path: mifosng-android/build/reports/pmd/**
+
+  checkstyle:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Set up JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+        # Perform Checkstyle Check
+      - name: Checkstyle
+        run: ./gradlew checkstyle
+
+        # Upload reports
+      - name: Upload Checkstyle Reports
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          # Artifact name
+          name: checkstyle-reports
+          # File path describing what artifact to upload
+          path: mifosng-android/build/reports/checkstyle/**
