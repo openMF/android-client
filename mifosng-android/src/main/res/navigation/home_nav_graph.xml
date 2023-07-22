@@ -1,41 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--    Created by Aditya Gupta on 22/7/23.-->
+
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_nav_graph"
     app:startDestination="@id/navigation_dashboard">
 
+    <!--    SearchFragment-->
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.mifos.mifosxdroid.online.search.SearchFragment"
         android:label="SearchFragment">
         <action
-            android:id="@+id/action_searchFragment_to_clientListFragment"
-            app:destination="@id/navigation_client_list" />
-        <action
-            android:id="@+id/action_searchFragment_to_centerListFragment"
-            app:destination="@id/navigation_center_list" />
-        <action
-            android:id="@+id/action_searchFragment_to_groupsListFragment"
-            app:destination="@id/navigation_group_list" />
-        <action
             android:id="@+id/action_navigation_dashboard_to_createNewClientFragment"
             app:destination="@id/createNewClientFragment" />
+        <action
+            android:id="@+id/action_navigation_dashboard_to_createNewCenterFragment"
+            app:destination="@id/createNewCenterFragment" />
+        <action
+            android:id="@+id/action_navigation_dashboard_to_createNewGroupFragment"
+            app:destination="@id/createNewGroupFragment" />
+        <action
+            android:id="@+id/action_navigation_dashboard_to_groupsActivity"
+            app:destination="@id/groupsActivity" />
+        <action
+            android:id="@+id/action_navigation_dashboard_to_centersActivity"
+            app:destination="@id/centersActivity" />
+        <action
+            android:id="@+id/action_navigation_dashboard_to_clientActivity"
+            app:destination="@id/clientActivity" />
     </fragment>
+
+    <!--    ClientsListFragment-->
     <fragment
         android:id="@+id/navigation_client_list"
         android:name="com.mifos.mifosxdroid.online.clientlist.ClientListFragment"
-        android:label="ClientListFragment" />
+        android:label="ClientListFragment">
+        <action
+            android:id="@+id/action_navigation_client_list_to_createNewClientFragment"
+            app:destination="@id/createNewClientFragment" />
+        <action
+            android:id="@+id/action_navigation_client_list_to_clientActivity"
+            app:destination="@id/clientActivity" />
+    </fragment>
+
+    <!--    CentersListFragment-->
     <fragment
         android:id="@+id/navigation_center_list"
         android:name="com.mifos.mifosxdroid.online.centerlist.CenterListFragment"
-        android:label="CenterListFragment" />
+        android:label="CenterListFragment">
+        <action
+            android:id="@+id/action_navigation_center_list_to_createNewCenterFragment"
+            app:destination="@id/createNewCenterFragment" />
+        <action
+            android:id="@+id/action_navigation_center_list_to_centersActivity"
+            app:destination="@id/centersActivity" />
+    </fragment>
+
+    <!--    GroupsListFragment-->
     <fragment
         android:id="@+id/navigation_group_list"
         android:name="com.mifos.mifosxdroid.online.groupslist.GroupsListFragment"
-        android:label="GroupsListFragment" />
+        android:label="GroupsListFragment">
+        <action
+            android:id="@+id/action_navigation_group_list_to_createNewGroupFragment"
+            app:destination="@id/createNewGroupFragment" />
+        <action
+            android:id="@+id/action_navigation_group_list_to_groupsActivity"
+            app:destination="@id/groupsActivity" />
+    </fragment>
+
+    <!--    CreateNewClientFragment-->
     <fragment
         android:id="@+id/createNewClientFragment"
         android:name="com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment"
         android:label="CreateNewClientFragment" />
+
+    <!--    CreateNewCenterFragment-->
+    <fragment
+        android:id="@+id/createNewCenterFragment"
+        android:name="com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment"
+        android:label="CreateNewCenterFragment" />
+
+    <!--    CreateNewGroupFragment-->
+    <fragment
+        android:id="@+id/createNewGroupFragment"
+        android:name="com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment"
+        android:label="CreateNewGroupFragment" />
+
+    <!--    ClientActivity-->
+    <activity
+        android:id="@+id/clientActivity"
+        android:name="com.mifos.mifosxdroid.online.ClientActivity"
+        android:label="ClientActivity">
+        <argument
+            android:name="client"
+            app:argType="com.mifos.objects.navigation.ClientArgs" />
+    </activity>
+
+    <!--    CenterActivity-->
+    <activity
+        android:id="@+id/centersActivity"
+        android:name="com.mifos.mifosxdroid.online.CentersActivity"
+        android:label="activity_centers"
+        tools:layout="@layout/activity_centers">
+        <argument
+            android:name="centerId"
+            app:argType="integer" />
+    </activity>
+
+    <!--    GroupsActivity-->
+    <activity
+        android:id="@+id/groupsActivity"
+        android:name="com.mifos.mifosxdroid.online.GroupsActivity"
+        android:label="GroupsActivity">
+        <argument
+            android:name="groupId"
+            app:argType="integer" />
+        <argument
+            android:name="groupName"
+            app:argType="string" />
+    </activity>
 
 </navigation>

@@ -36,7 +36,7 @@ class SyncGroupPayloadAdapter @Inject constructor() :
         holder.binding.tvOfficeId.text = groupPayload.officeId.toString()
         holder.binding.tvSubmitDate.text = groupPayload.submittedOnDate
         holder.binding.tvActivationDate.text = groupPayload.activationDate
-        if (groupPayload.isActive) {
+        if (groupPayload.active) {
             holder.binding.tvActiveStatus.text = true.toString()
         } else {
             holder.binding.tvActiveStatus.text = false.toString()

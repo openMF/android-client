@@ -4,7 +4,6 @@
  */
 package com.mifos.mifosxdroid.online.centerlist
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -13,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.view.ActionMode
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
@@ -25,13 +25,10 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentCentersListBinding
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogFragment
-import com.mifos.mifosxdroid.online.CentersActivity
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment
-import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.objects.group.Center
 import com.mifos.objects.group.CenterWithAssociations
-import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
 import javax.inject.Inject
 
@@ -51,7 +48,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
 
 
     lateinit var centersListAdapter: CentersListAdapter
-    private var centers: List<Center>? = null
+    private lateinit var centers: List<Center>
     private var selectedCenters: MutableList<Center>? = null
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var actionModeCallback: ActionModeCallback
@@ -119,9 +116,12 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
                 if (actionMode != null) {
                     toggleSelection(position)
                 } else {
-                    val centerIntent = Intent(activity, CentersActivity::class.java)
-                    centerIntent.putExtra(Constants.CENTER_ID, centers?.get(position)?.id)
-                    startActivity(centerIntent)
+                    val action = centers[position].id?.let {
+                        CenterListFragmentDirections.actionNavigationCenterListToCentersActivity(
+                            it
+                        )
+                    }
+                    action?.let { findNavController().navigate(it) }
                 }
             },
             onCenterLongClick = { position ->
@@ -141,10 +141,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
     }
 
     private fun onClickCreateNewCenter() {
-        (activity as MifosBaseActivity?)?.replaceFragment(
-            CreateNewCenterFragment.newInstance(),
-            false, R.id.container_a
-        )
+        findNavController().navigate(R.id.action_navigation_center_list_to_createNewCenterFragment)
     }
 
     /**
@@ -170,9 +167,9 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
      *
      * @param centers List<Center>
     </Center> */
-    override fun showCenters(centers: List<Center?>?) {
-        this.centers = centers as List<Center>?
-        centersListAdapter.setCenters(this.centers ?: emptyList())
+    override fun showCenters(centers: List<Center>) {
+        this.centers = centers
+        centersListAdapter.setCenters(this.centers)
         centersListAdapter.notifyDataSetChanged()
     }
 
@@ -181,7 +178,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
      *
      * @param centers List<Center>
     </Center> */
-    override fun showMoreCenters(centers: List<Center?>?) {
+    override fun showMoreCenters(centers: List<Center>) {
         this.centers.addAll()
         centersListAdapter.notifyDataSetChanged()
     }
@@ -324,7 +321,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
                 R.id.action_sync -> {
                     selectedCenters?.clear()
                     for (position in centersListAdapter.getSelectedItems()) {
-                        val center = centers?.get(position)
+                        val center = centers.get(position)
                         if (center != null) {
                             selectedCenters?.add(center)
                         }

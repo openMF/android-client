@@ -51,7 +51,7 @@ class ClientListPresenter @Inject constructor(private val mDataManagerClient: Da
      * Showing Client List in View, If loadmore is true call showLoadMoreClients(...) and else
      * call showClientList(...).
      */
-    private fun showClientList(clients: List<Client>?) {
+    private fun showClientList(clients: List<Client>) {
         if (loadmore) {
             mvpView?.showLoadMoreClients(clients)
         } else {
@@ -165,15 +165,13 @@ class ClientListPresenter @Inject constructor(private val mDataManagerClient: Da
      * @param
      * @return Page<Client>
     </Client> */
-    private fun checkClientAlreadySyncedOrNot(clients: List<Client>): List<Client>? {
+    private fun checkClientAlreadySyncedOrNot(clients: List<Client>): List<Client> {
         if (mDbClientList.isNotEmpty()) {
             for (dbClient in mDbClientList) {
-                if (clients != null) {
-                    for (syncClient in clients) {
-                        if (dbClient.id == syncClient.id) {
-                            syncClient.sync = true
-                            break
-                        }
+                for (syncClient in clients) {
+                    if (dbClient.id == syncClient.id) {
+                        syncClient.sync = true
+                        break
                     }
                 }
             }

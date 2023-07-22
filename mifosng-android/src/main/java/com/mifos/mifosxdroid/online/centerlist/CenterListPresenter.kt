@@ -10,23 +10,20 @@ import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
-import java.util.*
 import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 5/6/16.
  */
-class CenterListPresenter @Inject constructor(private val mDataManagerCenter: DataManagerCenter) : BasePresenter<CenterListMvpView?>() {
+class CenterListPresenter @Inject constructor(private val mDataManagerCenter: DataManagerCenter) :
+    BasePresenter<CenterListMvpView?>() {
     private val mSubscriptions: CompositeSubscription = CompositeSubscription()
     private var mDbCenterList: List<Center>
-    private var mSyncCenterList: List<Center?>
+    private var mSyncCenterList: List<Center>
     private val limit = 100
     private var loadmore = false
     private var mRestApiCenterSyncStatus = false
     private var mDatabaseCenterSyncStatus = false
-    override fun attachView(mvpView: CenterListMvpView?) {
-        super.attachView(mvpView)
-    }
 
     override fun detachView() {
         super.detachView()
@@ -49,7 +46,7 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
      *
      * @param centers
      */
-    fun showCenters(centers: List<Center?>?) {
+    fun showCenters(centers: List<Center>) {
         if (loadmore) {
             mvpView?.showMoreCenters(centers)
         } else {
@@ -76,53 +73,55 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
         checkViewAttached()
         mvpView?.showProgressbar(true)
         mSubscriptions.add(mDataManagerCenter.getCenters(paged, offset, limit)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Center>>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        mvpView?.showProgressbar(false)
-                        if (loadmore) {
-                            mvpView?.showMessage(R.string.failed_to_fetch_centers)
-                        } else {
-                            mvpView?.showFetchingError()
-                        }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<Page<Center>>() {
+                override fun onCompleted() {}
+                override fun onError(e: Throwable) {
+                    mvpView?.showProgressbar(false)
+                    if (loadmore) {
+                        mvpView?.showMessage(R.string.failed_to_fetch_centers)
+                    } else {
+                        mvpView?.showFetchingError()
                     }
+                }
 
-                    override fun onNext(centerPage: Page<Center>) {
-                        mSyncCenterList = centerPage.pageItems
-                        if (mSyncCenterList.isEmpty() && !loadmore) {
-                            mvpView?.showEmptyCenters(R.string.center)
-                            mvpView?.unregisterSwipeAndScrollListener()
-                        } else if (mSyncCenterList.isEmpty() && loadmore) {
-                            mvpView?.showMessage(R.string.no_more_centers_available)
-                        } else {
-                            showCenters(mSyncCenterList)
-                            mRestApiCenterSyncStatus = true
-                            setAlreadyCenterSyncStatus()
-                        }
-                        mvpView?.showProgressbar(false)
+                override fun onNext(centerPage: Page<Center>) {
+                    mSyncCenterList = centerPage.pageItems
+                    if (mSyncCenterList.isEmpty() && !loadmore) {
+                        mvpView?.showEmptyCenters(R.string.center)
+                        mvpView?.unregisterSwipeAndScrollListener()
+                    } else if (mSyncCenterList.isEmpty() && loadmore) {
+                        mvpView?.showMessage(R.string.no_more_centers_available)
+                    } else {
+                        showCenters(mSyncCenterList)
+                        mRestApiCenterSyncStatus = true
+                        setAlreadyCenterSyncStatus()
                     }
-                }))
+                    mvpView?.showProgressbar(false)
+                }
+            })
+        )
     }
 
     fun loadCentersGroupAndMeeting(id: Int) {
         mvpView?.showProgressbar(true)
         mSubscriptions.add(mDataManagerCenter.getCentersGroupAndMeeting(id)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<CenterWithAssociations?>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        mvpView?.showProgressbar(false)
-                        mvpView?.showMessage(R.string.failed_to_fetch_Group_and_meeting)
-                    }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<CenterWithAssociations?>() {
+                override fun onCompleted() {}
+                override fun onError(e: Throwable) {
+                    mvpView?.showProgressbar(false)
+                    mvpView?.showMessage(R.string.failed_to_fetch_Group_and_meeting)
+                }
 
-                    override fun onNext(centerWithAssociations: CenterWithAssociations?) {
-                        mvpView?.showProgressbar(false)
-                        mvpView?.showCentersGroupAndMeeting(centerWithAssociations, id)
-                    }
-                }))
+                override fun onNext(centerWithAssociations: CenterWithAssociations?) {
+                    mvpView?.showProgressbar(false)
+                    mvpView?.showCentersGroupAndMeeting(centerWithAssociations, id)
+                }
+            })
+        )
     }
 
     /**
@@ -133,7 +132,8 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
      */
     fun loadDatabaseCenters() {
         checkViewAttached()
-        mSubscriptions.add(mDataManagerCenter.allDatabaseCenters
+        mSubscriptions.add(
+            mDataManagerCenter.allDatabaseCenters
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(object : Subscriber<Page<Center>>() {
@@ -145,7 +145,7 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
                     override fun onNext(centerPage: Page<Center>) {
                         mDatabaseCenterSyncStatus = true
                         if (centerPage != null) {
-                            mDbCenterList = centerPage.pageItems as List<Center>
+                            mDbCenterList = centerPage.pageItems
                         }
                         setAlreadyCenterSyncStatus()
                     }
@@ -160,12 +160,12 @@ class CenterListPresenter @Inject constructor(private val mDataManagerCenter: Da
      * @param
      * @return Page<Center>
     </Center> */
-    private fun checkCenterAlreadySyncedOrNot(centers: List<Center?>): List<Center?> {
+    private fun checkCenterAlreadySyncedOrNot(centers: List<Center>): List<Center> {
         if (mDbCenterList.isNotEmpty()) {
             for (dbCenter in mDbCenterList) {
                 for (syncCenter in centers) {
-                    if (dbCenter.id == syncCenter?.id) {
-                        syncCenter?.sync = true
+                    if (dbCenter.id == syncCenter.id) {
+                        syncCenter.sync = true
                         break
                     }
                 }

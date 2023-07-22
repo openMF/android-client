@@ -44,7 +44,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_margin="26dp"
         app:srcCompat="@drawable/ic_add_white_24dp" />
 
     <include

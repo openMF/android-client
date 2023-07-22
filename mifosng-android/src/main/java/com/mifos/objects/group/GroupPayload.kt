@@ -17,7 +17,7 @@ import kotlinx.parcelize.Parcelize
  * Created by nellyk on 1/22/2016.
  */
 @Parcelize
-@Table(database = MifosDatabase::class)
+@Table(database = MifosDatabase::class, useBooleanGetterSetters = false)
 @ModelContainer
 data class GroupPayload(
     @PrimaryKey(autoincrement = true)
@@ -32,7 +32,7 @@ data class GroupPayload(
     var officeId: Int = 0,
 
     @Column
-    var isActive: Boolean = false,
+    var active: Boolean = false,
 
     @Column
     var activationDate: String? = null,

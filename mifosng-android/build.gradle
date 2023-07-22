@@ -20,6 +20,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
         classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:5.0.14"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.6.0"
     }
 }
 
@@ -39,6 +40,7 @@ apply plugin: 'com.github.triplet.play'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion

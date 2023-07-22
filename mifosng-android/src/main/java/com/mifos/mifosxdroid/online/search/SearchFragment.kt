@@ -4,7 +4,6 @@
  */
 package com.mifos.mifosxdroid.online.search
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -26,13 +25,8 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentClientSearchBinding
-import com.mifos.mifosxdroid.online.CentersActivity
-import com.mifos.mifosxdroid.online.ClientActivity
-import com.mifos.mifosxdroid.online.GroupsActivity
-import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment
-import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment
-import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment
 import com.mifos.objects.SearchedEntity
+import com.mifos.objects.navigation.ClientArgs
 import com.mifos.utils.Constants
 import com.mifos.utils.EspressoIdlingResource
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
@@ -93,17 +87,11 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListene
         }
 
         binding.fabCenter.setOnClickListener {
-            (activity as MifosBaseActivity?)?.replaceFragment(
-                CreateNewCenterFragment.newInstance(),
-                true, R.id.container_a
-            )
+            findNavController().navigate(R.id.action_navigation_dashboard_to_createNewCenterFragment)
         }
 
         binding.fabGroup.setOnClickListener {
-            (activity as MifosBaseActivity?)?.replaceFragment(
-                CreateNewGroupFragment.newInstance(),
-                true, R.id.container_a
-            )
+            findNavController().navigate(R.id.action_navigation_dashboard_to_createNewGroupFragment)
         }
 
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
@@ -157,50 +145,45 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListene
         binding.rvSearch.layoutManager = layoutManager
         binding.rvSearch.setHasFixedSize(true)
         searchAdapter = SearchAdapter { searchedEntity: SearchedEntity ->
-            var activity: Intent? = null
             when (searchedEntity.entityType) {
                 Constants.SEARCH_ENTITY_LOAN -> {
-                    activity = Intent(getActivity(), ClientActivity::class.java)
-                    activity.putExtra(
-                        Constants.LOAN_ACCOUNT_NUMBER,
-                        searchedEntity.entityId
+                    val action = SearchFragmentDirections.actionNavigationDashboardToClientActivity(
+                        ClientArgs(clientId = searchedEntity.entityId)
                     )
+                    findNavController().navigate(action)
                 }
 
                 Constants.SEARCH_ENTITY_CLIENT -> {
-                    activity = Intent(getActivity(), ClientActivity::class.java)
-                    activity.putExtra(
-                        Constants.CLIENT_ID,
-                        searchedEntity.entityId
+                    val action = SearchFragmentDirections.actionNavigationDashboardToClientActivity(
+                        ClientArgs(clientId = searchedEntity.entityId)
                     )
+                    findNavController().navigate(action)
                 }
 
                 Constants.SEARCH_ENTITY_GROUP -> {
-                    activity = Intent(getActivity(), GroupsActivity::class.java)
-                    activity.putExtra(
-                        Constants.GROUP_ID,
-                        searchedEntity.entityId
-                    )
+                    val action = searchedEntity.entityName?.let {
+                        SearchFragmentDirections.actionNavigationDashboardToGroupsActivity(
+                            searchedEntity.entityId,
+                            it
+                        )
+                    }
+                    action?.let { findNavController().navigate(it) }
                 }
 
                 Constants.SEARCH_ENTITY_SAVING -> {
-                    activity = Intent(getActivity(), ClientActivity::class.java)
-                    activity.putExtra(
-                        Constants.SAVINGS_ACCOUNT_NUMBER,
-                        searchedEntity.entityId
+                    val action = SearchFragmentDirections.actionNavigationDashboardToClientActivity(
+                        ClientArgs(savingsAccountNumber = searchedEntity.entityId)
                     )
+                    findNavController().navigate(action)
                 }
 
                 Constants.SEARCH_ENTITY_CENTER -> {
-                    activity = Intent(getActivity(), CentersActivity::class.java)
-                    activity.putExtra(
-                        Constants.CENTER_ID,
-                        searchedEntity.entityId
-                    )
+                    val action =
+                        SearchFragmentDirections.actionNavigationDashboardToCentersActivity(
+                            searchedEntity.entityId
+                        )
+                    findNavController().navigate(action)
                 }
-            }
-            if (activity != null) {
-                startActivity(activity)
             }
         }
         binding.rvSearch.adapter = searchAdapter
