@@ -15,8 +15,8 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          java-version: 17
+          distribution: temurin
 
         # Build with Gradle
       - name: Build with Gradle
@@ -37,6 +37,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      # Set up JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+
         # Test with Gradle
       - name: Test App
         run: ./gradlew test
@@ -55,6 +62,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      # Set up JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
 
         # Perform Lint Check
       - name: Lint Check
@@ -75,6 +89,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      # Set up JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+
         # Perform PMD Check
       - name: PMD Check
         run: ./gradlew pmd
@@ -94,6 +115,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      # Set up JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+        
         # Perform Checkstyle Check
       - name: Checkstyle
         run: ./gradlew checkstyle
