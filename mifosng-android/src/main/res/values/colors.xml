@@ -77,6 +77,10 @@
         <item>@color/orange_light</item>
     </array>
 
+    <!--Material design Colors-->
+    <color name="baby_blue">#d7e2fc</color>
+    <color name="powder_blue">#f4f7ff</color>
+
     <color name="cardview_login_hints">#BCBCBC</color>
 
 </resources>

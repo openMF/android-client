@@ -4,15 +4,11 @@
   ~ This project is licensed under the open source MPL V2.
   ~ See https://github.com/openMF/android-client/blob/master/LICENSE.md
   -->
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="2dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginRight="2dp"
-    android:layout_marginBottom="5dp"
     android:background="@color/white"
     android:clickable="true"
     app:cardUseCompatPadding="true">
@@ -26,7 +22,9 @@
         android:minHeight="?attr/listPreferredItemHeight"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
 
         <com.mifos.mifosxdroid.views.CircularImageView
             android:id="@+id/iv_status_indicator"
@@ -149,4 +147,4 @@
             android:gravity="center"
             app:srcCompat="@drawable/ic_done_all_black_24dp" />
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

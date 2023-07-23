@@ -41,7 +41,7 @@ class GroupsListPresenter @Inject constructor(private val mDataManagerGroups: Da
      * Showing Groups List in View, If loadmore is true call showLoadMoreGroups(...) and else
      * call showGroupsList(...).
      */
-    private fun showClientList(clients: List<Group?>?) {
+    private fun showClientList(clients: List<Group>) {
         if (loadmore) {
             mvpView?.showLoadMoreGroups(clients)
         } else {

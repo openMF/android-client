@@ -10,9 +10,11 @@ import android.os.Parcelable
 import android.view.*
 import android.widget.Button
 import androidx.appcompat.view.ActionMode
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
+import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.GroupNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
@@ -21,8 +23,6 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentGroupsBinding
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFragment
-import com.mifos.mifosxdroid.online.GroupsActivity
-import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment
 import com.mifos.objects.group.Group
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
@@ -58,9 +58,8 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
 
     private lateinit var binding: FragmentGroupsBinding
 
-    @JvmField
     @Inject
-    var mGroupsListPresenter: GroupsListPresenter? = null
+    lateinit var mGroupsListPresenter: GroupsListPresenter
 
     val mGroupListAdapter by lazy {
         GroupNameListAdapter(
@@ -68,13 +67,14 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
                 if (actionMode != null) {
                     toggleSelection(position)
                 } else {
-                    val groupActivityIntent = Intent(activity, GroupsActivity::class.java)
-                    groupActivityIntent.putExtra(Constants.GROUP_ID, mGroupList?.get(position)?.id)
-                    groupActivityIntent.putExtra(
-                        Constants.GROUP_NAME,
-                        mGroupList?.get(position)?.name
-                    )
-                    startActivity(groupActivityIntent)
+                    val action = mGroupList[position].id?.let {
+                        mGroupList[position].name?.let { it1 ->
+                            GroupsListFragmentDirections.actionNavigationGroupListToGroupsActivity(
+                                it, it1
+                            )
+                        }
+                    }
+                    action?.let { findNavController().navigate(it) }
                 }
             },
             onGroupLongClick = { position ->
@@ -91,7 +91,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
         )
     }
     private lateinit var mLayoutManager: LinearLayoutManager
-    private var mGroupList: List<Group>? = null
+    private lateinit var mGroupList: List<Group>
     private var selectedGroups: MutableList<Group>? = null
     private var isParentFragment = false
     private var actionModeCallback: ActionModeCallback? = null
@@ -100,12 +100,12 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)?.activityComponent?.inject(this)
+        (activity as MifosBaseActivity).activityComponent?.inject(this)
         mGroupList = ArrayList()
         selectedGroups = ArrayList()
         actionModeCallback = ActionModeCallback()
         if (arguments != null) {
-            mGroupList = requireArguments().getParcelableArrayList(Constants.GROUPS)
+            mGroupList = requireArguments().getParcelableArrayList(Constants.GROUPS)!!
             isParentFragment = requireArguments()
                 .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
@@ -118,7 +118,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentGroupsBinding.inflate(inflater, container, false)
-        mGroupsListPresenter?.attachView(this)
+        mGroupsListPresenter.attachView(this)
 
         //setting all the UI content to the view
         showUserInterface()
@@ -129,7 +129,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
         binding.rvGroups.addOnScrollListener(object :
             EndlessRecyclerViewScrollListener(mLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int) {
-                mGroupsListPresenter?.loadGroups(true, totalItemsCount)
+                mGroupsListPresenter.loadGroups(true, totalItemsCount)
             }
         })
         /**
@@ -140,11 +140,11 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
          * To show user that is there already any group is synced already or not.
          */
         if (isParentFragment) {
-            mGroupList?.let { mGroupsListPresenter?.showParentClients(it) }
+            mGroupList.let { mGroupsListPresenter.showParentClients(it) }
         } else {
-            mGroupsListPresenter?.loadGroups(false, 0)
+            mGroupsListPresenter.loadGroups(false, 0)
         }
-        mGroupsListPresenter?.loadDatabaseGroups()
+        mGroupsListPresenter.loadDatabaseGroups()
         return binding.root
     }
 
@@ -164,7 +164,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      * This method Initializing the UI.
      */
     override fun showUserInterface() {
-        setToolbarTitle(resources.getString(R.string.groups))
+        (activity as HomeActivity).supportActionBar?.title = getString(R.string.groups)
         mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvGroups.layoutManager = mLayoutManager
@@ -179,18 +179,15 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
 
 
     private fun onClickCreateNewGroup() {
-        (activity as MifosBaseActivity?)?.replaceFragment(
-            CreateNewGroupFragment.newInstance(),
-            true, R.id.container_a
-        )
+        findNavController().navigate(R.id.action_navigation_group_list_to_createNewGroupFragment)
     }
 
     /**
      * This Method will be called. Whenever user will swipe down to refresh the group list.
      */
     override fun onRefresh() {
-        mGroupsListPresenter?.loadGroups(false, 0)
-        mGroupsListPresenter?.loadDatabaseGroups()
+        mGroupsListPresenter.loadGroups(false, 0)
+        mGroupsListPresenter.loadDatabaseGroups()
         if (actionMode != null) actionMode?.finish()
     }
 
@@ -203,17 +200,17 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
 
     private fun reloadOnError() {
         sweetUIErrorHandler?.hideSweetErrorLayoutUI(binding.rvGroups, binding.layoutError)
-        mGroupsListPresenter?.loadGroups(false, 0)
-        mGroupsListPresenter?.loadDatabaseGroups()
+        mGroupsListPresenter.loadGroups(false, 0)
+        mGroupsListPresenter.loadDatabaseGroups()
     }
 
     /**
      * Setting GroupList to the Adapter and updating the Adapter.
      */
-    override fun showGroups(groups: List<Group?>?) {
-        mGroupList = groups as List<Group>?
+    override fun showGroups(groups: List<Group>) {
+        mGroupList = groups
         Collections.sort(mGroupList) { grp1, grp2 -> grp2.name?.let { grp1.name?.compareTo(it) }!! }
-        mGroupListAdapter.setGroups(mGroupList ?: emptyList())
+        mGroupListAdapter.setGroups(mGroupList)
     }
 
     /**
@@ -221,7 +218,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      *
      * @param groups
      */
-    override fun showLoadMoreGroups(clients: List<Group?>?) {
+    override fun showLoadMoreGroups(clients: List<Group>) {
         mGroupList.addAll()
         mGroupListAdapter.notifyDataSetChanged()
     }
@@ -285,7 +282,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mGroupsListPresenter?.detachView()
+        mGroupsListPresenter.detachView()
         //As the Fragment Detach Finish the ActionMode
         if (actionMode != null) actionMode?.finish()
     }
@@ -330,7 +327,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
                 R.id.action_sync -> {
                     selectedGroups?.clear()
                     for (position in mGroupListAdapter.getSelectedItems()) {
-                        selectedGroups?.add(mGroupList?.get(position) ?: continue)
+                        selectedGroups?.add(mGroupList.get(position))
                     }
                     val syncGroupsDialogFragment =
                         SyncGroupsDialogFragment.newInstance(selectedGroups)

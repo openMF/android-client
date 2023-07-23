@@ -9,8 +9,8 @@ import com.mifos.objects.group.CenterWithAssociations
  */
 interface CenterListMvpView : MvpView {
     fun showUserInterface()
-    fun showCenters(centers: List<Center?>?)
-    fun showMoreCenters(centers: List<Center?>?)
+    fun showCenters(centers: List<Center>)
+    fun showMoreCenters(centers: List<Center>)
     fun showEmptyCenters(message: Int)
     fun showMessage(message: Int)
     fun unregisterSwipeAndScrollListener()

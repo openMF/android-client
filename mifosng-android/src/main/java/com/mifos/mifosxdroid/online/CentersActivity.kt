@@ -5,6 +5,7 @@
 package com.mifos.mifosxdroid.online
 
 import android.os.Bundle
+import androidx.navigation.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment
@@ -13,19 +14,19 @@ import com.mifos.mifosxdroid.online.clientlist.ClientListFragment
 import com.mifos.mifosxdroid.online.grouplist.GroupListFragment
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment
 import com.mifos.objects.client.Client
-import com.mifos.utils.Constants
 
-class CentersActivity : MifosBaseActivity(), GroupListFragment.OnFragmentInteractionListener, CenterDetailsFragment.OnFragmentInteractionListener {
-    private val LOG_TAG = this.javaClass.simpleName
+class CentersActivity : MifosBaseActivity(), GroupListFragment.OnFragmentInteractionListener,
+    CenterDetailsFragment.OnFragmentInteractionListener {
+
+    private val args: CentersActivityArgs by navArgs()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_toolbar_container)
         showBackButton()
-        val bundle = intent.extras
-        if (bundle != null) {
-            val centerId = bundle.getInt(Constants.CENTER_ID)
-            replaceFragment(newInstance(centerId), false, R.id.container)
-        }
+
+        val centerId = args.centerId
+        replaceFragment(newInstance(centerId), false, R.id.container)
     }
 
     override fun loadGroupsOfCenter(centerId: Int) {

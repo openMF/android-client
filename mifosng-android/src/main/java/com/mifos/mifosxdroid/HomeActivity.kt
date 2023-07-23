@@ -7,15 +7,14 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import androidx.test.espresso.IdlingResource
 import com.google.android.material.navigation.NavigationView
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity
@@ -25,11 +24,7 @@ import com.mifos.mifosxdroid.databinding.ViewNavDrawerHeaderBinding
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment
 import com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity
 import com.mifos.mifosxdroid.online.RunReportsActivity
-import com.mifos.mifosxdroid.online.centerlist.CenterListFragment
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxPendingTasksActivity
-import com.mifos.mifosxdroid.online.clientlist.ClientListFragment
-import com.mifos.mifosxdroid.online.groupslist.GroupsListFragment
-import com.mifos.mifosxdroid.online.search.SearchFragment
 import com.mifos.utils.Constants
 import com.mifos.utils.EspressoIdlingResource
 import com.mifos.utils.PrefManager
@@ -43,58 +38,36 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
     private lateinit var navHeaderBinding: ViewNavDrawerHeaderBinding
 
     private lateinit var menu: Menu
-    private var onSearchFragment = true
-    private lateinit var navController: NavController
     private lateinit var userStatusToggle: SwitchCompat
     private var doubleBackToExitPressedOnce = false
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_home)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(toolbar)
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration.Builder()
             .setDrawerLayout(binding.drawer)
             .build()
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
-        NavigationUI.setupWithNavController(binding.navigationView, navController)
-        if (savedInstanceState == null) {
-            val fragment: Fragment = SearchFragment()
-            supportFragmentManager.beginTransaction().replace(R.id.container_a, fragment).commit()
-            supportActionBar?.setTitle(R.string.dashboard)
-        }
-        binding.navView.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_dashboard -> {
-                    onSearchFragment = true
-                    openFragment(SearchFragment())
-                    supportActionBar?.setTitle(R.string.dashboard)
-                }
 
-                R.id.navigation_client_list -> {
-                    onSearchFragment = false
-                    openFragment(ClientListFragment())
-                    supportActionBar?.setTitle(R.string.clients)
-                }
-
-                R.id.navigation_center_list -> {
-                    onSearchFragment = false
-                    openFragment(CenterListFragment())
-                    supportActionBar?.setTitle(R.string.title_activity_centers)
-                }
-
-                R.id.navigation_group_list -> {
-                    onSearchFragment = false
-                    openFragment(GroupsListFragment())
-                    supportActionBar?.setTitle(R.string.title_center_list)
-                }
-            }
-            true
-        }
         setupNavigationBar()
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.drawer.isDrawerOpen(GravityCompat.START)) {
+                    binding.drawer.closeDrawer(GravityCompat.START)
+                } else if (binding.navView.selectedItemId == R.id.navigation_dashboard) {
+                    doubleBackToExit()
+                }
+                supportFragmentManager.popBackStackImmediate()
+            }
+        })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.navView.setupWithNavController(binding.navHostFragment.findNavController())
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -163,7 +136,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         if (PrefManager.userStatus == Constants.USER_OFFLINE) {
             userStatusToggle.isChecked = true
         }
-        userStatusToggle.setOnClickListener(View.OnClickListener {
+        userStatusToggle.setOnClickListener {
             if (PrefManager.userStatus == Constants.USER_OFFLINE) {
                 PrefManager.userStatus = Constants.USER_ONLINE
                 userStatusToggle.isChecked = false
@@ -171,7 +144,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
                 PrefManager.userStatus = Constants.USER_OFFLINE
                 userStatusToggle.isChecked = true
             }
-        })
+        }
     }
 
     private fun startNavigationClickActivity(intent: Intent?) {
@@ -190,27 +163,9 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         navHeaderBinding.ivUserPicture.setImageResource(R.drawable.ic_dp_placeholder)
     }
 
-    override fun onBackPressed() {
-        // check if the nav mDrawer is open
-        if (binding.drawer.isDrawerOpen(GravityCompat.START)) {
-            binding.drawer.closeDrawer(GravityCompat.START)
-        } else {
-            if (!onSearchFragment) {
-                goHomeFragment()
-            } else {
-                doubleBackToExit()
-            }
-            onSearchFragment = true
-        }
-    }
-
     @get:VisibleForTesting
     val countingIdlingResource: IdlingResource
         get() = EspressoIdlingResource.idlingResource
-
-    override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-    }
 
     private fun setupNavigationBar() {
 //        mNavigationHeader = binding.navigationView.getHeaderView(0)
@@ -255,38 +210,19 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         return super.onOptionsItemSelected(item)
     }
 
-    private fun openFragment(fragment: Fragment?) {
-        val transaction = supportFragmentManager.beginTransaction()
-        if (fragment != null) {
-            transaction.replace(R.id.container_a, fragment)
-        }
-        transaction.commit()
-    }
-
     private fun doubleBackToExit() {
 
         if (doubleBackToExitPressedOnce) {
-            super.onBackPressed()
-            return
-        }
-
-        this.doubleBackToExitPressedOnce = true
-
-        Toast.makeText(
-            this,
-            R.string.back_again,
-            Toast.LENGTH_SHORT
-        ).show()
-
-        Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
-    }
-
-    private fun goHomeFragment() {
-        val fragmentSearch = SearchFragment()
-        binding.navView.selectedItemId = R.id.navigation_dashboard
-        supportFragmentManager.beginTransaction().apply {
-            add(R.id.container_a, fragmentSearch)
-            commit()
+            finish()
+        } else {
+            doubleBackToExitPressedOnce = true
+            Toast.makeText(
+                this@HomeActivity,
+                R.string.back_again,
+                Toast.LENGTH_SHORT
+            ).show()
+            // Reset the flag after a short delay
+            window.decorView.postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
         }
     }
 }

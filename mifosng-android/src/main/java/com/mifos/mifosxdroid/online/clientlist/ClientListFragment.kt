@@ -4,7 +4,6 @@
  */
 package com.mifos.mifosxdroid.online.clientlist
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -14,9 +13,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.view.ActionMode
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
+import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
@@ -25,9 +26,9 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentClientBinding
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment
-import com.mifos.mifosxdroid.online.ClientActivity
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment
 import com.mifos.objects.client.Client
+import com.mifos.objects.navigation.ClientArgs
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
 import javax.inject.Inject
@@ -66,12 +67,11 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
                 if (actionMode != null) {
                     toggleSelection(position)
                 } else {
-                    val clientActivityIntent = Intent(activity, ClientActivity::class.java)
-                    clientActivityIntent.putExtra(
-                        Constants.CLIENT_ID,
-                        clientList?.get(position)?.id
-                    )
-                    startActivity(clientActivityIntent)
+                    val action =
+                        ClientListFragmentDirections.actionNavigationClientListToClientActivity(
+                            ClientArgs(clientId = clientList[position].id)
+                        )
+                    findNavController().navigate(action)
                     clickedPosition = position
                 }
             },
@@ -90,7 +90,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
 
     @Inject
     lateinit var mClientListPresenter: ClientListPresenter
-    private var clientList: List<Client>? = null
+    private lateinit var clientList: List<Client>
     private var selectedClients: MutableList<Client>? = null
     private var actionModeCallback: ActionModeCallback? = null
     private var actionMode: ActionMode? = null
@@ -105,7 +105,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
         selectedClients = ArrayList()
         actionModeCallback = ActionModeCallback()
         if (arguments != null) {
-            clientList = requireArguments().getParcelableArrayList(Constants.CLIENTS)
+            clientList = requireArguments().getParcelableArrayList(Constants.CLIENTS)!!
             isParentFragment = requireArguments()
                 .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
@@ -119,7 +119,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
     ): View {
         binding = FragmentClientBinding.inflate(inflater, container, false)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        setToolbarTitle(resources.getString(R.string.clients))
+        (activity as HomeActivity).supportActionBar?.title = getString(R.string.clients)
         mClientListPresenter.attachView(this)
 
         //setting all the UI content to the view
@@ -157,10 +157,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
 
         binding.fabCreateClient.setOnClickListener {
             if (arguments == null) {
-                (activity as MifosBaseActivity?)?.replaceFragment(
-                    CreateNewClientFragment.newInstance(),
-                    true, R.id.container_a
-                )
+                findNavController().navigate(R.id.action_navigation_client_list_to_createNewClientFragment)
             } else {
                 (activity as MifosBaseActivity?)?.replaceFragment(
                     CreateNewClientFragment.newInstance(),
@@ -240,9 +237,9 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
     /**
      * Setting ClientList to the Adapter and updating the Adapter.
      */
-    override fun showClientList(clients: List<Client>?) {
+    override fun showClientList(clients: List<Client>) {
         clientList = clients
-        mClientNameListAdapter.setClients(clients ?: emptyList())
+        mClientNameListAdapter.setClients(clients)
         mClientNameListAdapter.notifyDataSetChanged()
     }
 
@@ -346,7 +343,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
                     selectedClients?.clear()
                     for (position in mClientNameListAdapter.getSelectedItems()) {
                         selectedClients?.let { list ->
-                            clientList?.get(position)?.let { client ->
+                            clientList[position].let { client ->
                                 list.add(client)
                             }
                         }

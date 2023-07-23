@@ -5,7 +5,6 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     style="@style/LinearLayout.Base"
     android:orientation="vertical"
     android:padding="10dp">
@@ -30,50 +29,19 @@
             android:gravity="end" />
     </LinearLayout>
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="4dp">
+        android:hint="@string/search_hint"
+        app:startIconDrawable="@drawable/ic_search_black_24dp">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <ImageView
-                android:id="@+id/iv_search_icon"
-                android:layout_width="@dimen/dimension_32_dp"
-                android:layout_height="@dimen/dimension_32_dp"
-                android:layout_centerVertical="true"
-                android:scaleType="centerInside"
-                app:srcCompat="@drawable/ic_search_black_24dp" />
-
-            <EditText
-                android:id="@+id/et_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginRight="4dp"
-                android:layout_toStartOf="@id/iv_filter_search_icon"
-                android:layout_toLeftOf="@id/iv_filter_search_icon"
-                android:layout_toEndOf="@id/iv_search_icon"
-                android:layout_toRightOf="@id/iv_search_icon"
-                android:background="@android:color/transparent"
-                android:hint="@string/search_hint"
-                android:imeOptions="actionDone"
-                android:singleLine="true"
-                android:textSize="15sp"
-                tools:ignore="NotSibling" />
-
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btn_search"

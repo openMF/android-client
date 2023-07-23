@@ -6,6 +6,7 @@ package com.mifos.mifosxdroid.online
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.navigation.navArgs
 import com.google.gson.Gson
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -27,36 +28,38 @@ class ClientActivity : MifosBaseActivity(), ClientDetailsFragment.OnFragmentInte
     LoanAccountSummaryFragment.OnFragmentInteractionListener,
     SavingsAccountSummaryFragment.OnFragmentInteractionListener,
     SurveyListFragment.OnFragmentInteractionListener {
-    private var clientId = 0
-    private var loanAccountNumber = 0
-    private var savingsAccountNumber = 0
+
+    private var clientId : Int? = null
+    private var loanAccountNumber : Int? = null
+    private var savingsAccountNumber : Int? = null
+
+    private val args : ClientActivityArgs by navArgs()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_toolbar_container)
         showBackButton()
-        intent.extras?.let { extras ->
-            clientId = extras.getInt(Constants.CLIENT_ID)
-            loanAccountNumber = extras.getInt(Constants.LOAN_ACCOUNT_NUMBER)
-            savingsAccountNumber = extras.getInt(Constants.SAVINGS_ACCOUNT_NUMBER)
-        }
+        clientId = args.client.clientId
+        loanAccountNumber = args.client.loanAccountNumber
+        savingsAccountNumber = args.client.savingsAccountNumber
         val depositType = DepositType()
         depositType.id = 100
         depositType.value = Constants.ENTITY_TYPE_SAVINGS
         if (clientId != 0) {
             replaceFragment(
-                ClientDetailsFragment.Companion.newInstance(clientId),
+                ClientDetailsFragment.Companion.newInstance(clientId!!),
                 false,
                 R.id.container
             )
         } else if (loanAccountNumber != 0) {
             replaceFragment(
-                LoanAccountSummaryFragment.newInstance(loanAccountNumber, false), true,
+                LoanAccountSummaryFragment.newInstance(loanAccountNumber!!, false), true,
                 R.id.container
             )
         } else if (savingsAccountNumber != 0) {
             replaceFragment(
                 SavingsAccountSummaryFragment.newInstance(
-                    savingsAccountNumber,
+                    savingsAccountNumber!!,
                     depositType, false
                 ), true, R.id.container
             )

@@ -8,7 +8,7 @@ import com.mifos.objects.client.Client
  */
 interface ClientListMvpView : MvpView {
     fun showUserInterface()
-    fun showClientList(clients: List<Client>?)
+    fun showClientList(clients: List<Client>)
     fun showLoadMoreClients(clients: List<Client>?)
     fun showEmptyClientList(message: Int)
     fun unregisterSwipeAndScrollListener()

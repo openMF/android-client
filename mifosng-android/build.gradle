@@ -20,6 +20,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
         classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:5.0.14"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.6.0"
     }
 }
 
@@ -39,6 +40,7 @@ apply plugin: 'com.github.triplet.play'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -134,6 +136,14 @@ android {
     buildFeatures {
         viewBinding true
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
 }
 
 task buildAndEMailAPK(type: Exec, description: 'Builds and Generates a Signed APK and emails it') {
@@ -175,7 +185,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation "com.google.android.gms:play-services-places:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:$rootProject.playServicesVersion"
@@ -268,6 +278,10 @@ dependencies {
 
     //Splash Screen
     implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
+
+    // Navigation Components
+    implementation "androidx.navigation:navigation-fragment-ktx:2.6.0"
+    implementation "androidx.navigation:navigation-ui-ktx:2.6.0"
 
 }
 /*

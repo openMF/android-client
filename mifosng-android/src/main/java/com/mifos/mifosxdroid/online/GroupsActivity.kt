@@ -1,6 +1,7 @@
 package com.mifos.mifosxdroid.online
 
 import android.os.Bundle
+import androidx.navigation.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.online.clientlist.ClientListFragment
@@ -25,15 +26,17 @@ class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInter
     LoanAccountSummaryFragment.OnFragmentInteractionListener,
     LoanRepaymentFragment.OnFragmentInteractionListener,
     SavingsAccountSummaryFragment.OnFragmentInteractionListener {
+
+    private val args : GroupsActivityArgs by navArgs()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_toolbar_container)
         showBackButton()
-        val groupId = intent.extras!!.getInt(Constants.GROUP_ID)
-        val groupName = intent.extras!!.getString(Constants.GROUP_NAME)
-        if (groupName != null) {
-            setToolbarTitle(getString(R.string.group) + " - " + groupName)
-        }
+
+        val groupId = args.groupId
+        val groupName = args.groupName
+        setToolbarTitle(getString(R.string.group) + " - " + groupName)
         replaceFragment(newInstance(groupId), false, R.id.container)
     }
 

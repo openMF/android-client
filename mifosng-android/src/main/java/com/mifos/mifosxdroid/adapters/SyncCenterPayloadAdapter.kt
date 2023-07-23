@@ -34,7 +34,7 @@ class SyncCenterPayloadAdapter @Inject constructor() :
         holder.binding.tvName.text = centerPayload.name
         holder.binding.tvOfficeId.text = centerPayload.officeId.toString()
         holder.binding.tvActivationDate.text = centerPayload.activationDate
-        if (centerPayload.isActive) {
+        if (centerPayload.active) {
             holder.binding.tvActiveStatus.text = true.toString()
         } else {
             holder.binding.tvActiveStatus.text = false.toString()

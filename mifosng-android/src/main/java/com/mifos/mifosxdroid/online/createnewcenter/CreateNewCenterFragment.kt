@@ -85,7 +85,7 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
         binding.btnSubmit.setOnClickListener {
             val centerPayload = CenterPayload()
             centerPayload.name = binding.etCenterName.editableText.toString()
-            centerPayload.isActive = binding.cbCenterActiveStatus.isChecked
+            centerPayload.active = binding.cbCenterActiveStatus.isChecked
             centerPayload.activationDate = activationDateString
             centerPayload.officeId = officeId
             centerPayload.dateFormat = "dd MMMM yyyy"
@@ -223,14 +223,5 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
     override fun onDestroyView() {
         super.onDestroyView()
         mCreateNewCenterPresenter.detachView()
-    }
-
-    companion object {
-        private const val TAG = "CreateNewCenter"
-
-        @JvmStatic
-        fun newInstance(): CreateNewCenterFragment {
-            return CreateNewCenterFragment()
-        }
     }
 }

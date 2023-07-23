@@ -105,7 +105,7 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
                 val groupPayload = GroupPayload()
                 groupPayload.name = binding.etGroupName.editableText.toString()
                 groupPayload.externalId = binding.etGroupExternalId.editableText.toString()
-                groupPayload.isActive = binding.cbGroupActiveStatus.isChecked
+                groupPayload.active = binding.cbGroupActiveStatus.isChecked
                 groupPayload.activationDate = activationDateString
                 groupPayload.submittedOnDate = dateofsubmissionstring
                 groupPayload.officeId = officeId!!
@@ -242,12 +242,5 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
     override fun onDestroyView() {
         super.onDestroyView()
         mCreateNewGroupPresenter.detachView()
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(): CreateNewGroupFragment {
-            return CreateNewGroupFragment()
-        }
     }
 }
