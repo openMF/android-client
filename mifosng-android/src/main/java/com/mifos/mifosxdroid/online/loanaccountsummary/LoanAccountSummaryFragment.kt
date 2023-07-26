@@ -355,18 +355,5 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
         private const val ACTION_APPROVE_LOAN = 0
         private const val ACTION_DISBURSE_LOAN = 1
         private const val TRANSACTION_REPAYMENT = 2
-
-        @JvmStatic
-        fun newInstance(
-            loanAccountNumber: Int,
-            parentFragment: Boolean
-        ): LoanAccountSummaryFragment {
-            val fragment = LoanAccountSummaryFragment()
-            val args = Bundle()
-            args.putInt(Constants.LOAN_ACCOUNT_NUMBER, loanAccountNumber)
-            args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, parentFragment)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

@@ -14,6 +14,7 @@ import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.joanzapata.iconify.widget.IconTextView
 import com.mifos.mifosxdroid.R
@@ -22,18 +23,11 @@ import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentGroupDetailsBinding
-import com.mifos.mifosxdroid.online.activate.ActivateFragment
-import com.mifos.mifosxdroid.online.datatable.DataTableFragment
-import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment
-import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountFragment
-import com.mifos.mifosxdroid.online.note.NoteFragment
-import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment
 import com.mifos.objects.accounts.GroupAccounts
 import com.mifos.objects.accounts.savings.DepositType
 import com.mifos.objects.client.Client
 import com.mifos.objects.group.Group
 import com.mifos.utils.Constants
-import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Utils
 import javax.inject.Inject
 
@@ -48,7 +42,6 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
     lateinit var mGroupDetailsPresenter: GroupDetailsPresenter
     private var groupId = 0
     private var accountAccordion: AccountAccordion? = null
-    private var mListener: OnFragmentInteractionListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
@@ -78,59 +71,53 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
     }
 
     private fun onClickActivateGroup() {
-        val activateFragment = ActivateFragment.newInstance(groupId, Constants.ACTIVATE_GROUP)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-        fragmentTransaction.replace(R.id.container, activateFragment)
-        fragmentTransaction.commit()
+        val action = GroupDetailsFragmentDirections.actionGroupDetailsFragmentToActivateFragment(
+            groupId,
+            Constants.ACTIVATE_GROUP
+        )
+        findNavController().navigate(action)
     }
 
     private fun loadDocuments() {
-        val documentListFragment =
-            DocumentListFragment.newInstance(Constants.ENTITY_TYPE_GROUPS, groupId)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS)
-        fragmentTransaction.replace(R.id.container, documentListFragment)
-        fragmentTransaction.commit()
+        val action =
+            GroupDetailsFragmentDirections.actionGroupDetailsFragmentToDocumentListFragment(
+                groupId,
+                Constants.ENTITY_TYPE_GROUPS
+            )
+        findNavController().navigate(action)
     }
 
     private fun loadNotes() {
-        val noteFragment = NoteFragment.newInstance(Constants.ENTITY_TYPE_GROUPS, groupId)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-        fragmentTransaction.replace(R.id.container, noteFragment)
-        fragmentTransaction.commit()
+        val action = GroupDetailsFragmentDirections.actionGroupDetailsFragmentToNoteFragment(
+            groupId,
+            Constants.ENTITY_TYPE_GROUPS
+        )
+        findNavController().navigate(action)
     }
 
     private fun addGroupSavingsAccount() {
-        val savingsAccountFragment = SavingsAccountFragment.newInstance(groupId, true)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS)
-        fragmentTransaction.replace(R.id.container, savingsAccountFragment)
-        fragmentTransaction.commit()
+        val action =
+            GroupDetailsFragmentDirections.actionGroupDetailsFragmentToSavingsAccountFragment(
+                groupId,
+                true
+            )
+        findNavController().navigate(action)
     }
 
     private fun addGroupLoanAccount() {
-        val groupLoanAccountFragment = GroupLoanAccountFragment.newInstance(groupId)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS)
-        fragmentTransaction.replace(R.id.container, groupLoanAccountFragment)
-        fragmentTransaction.commit()
+        val action =
+            GroupDetailsFragmentDirections.actionGroupDetailsFragmentToGroupLoanAccountFragment(
+                groupId
+            )
+        findNavController().navigate(action)
     }
 
     private fun loadGroupDataTables() {
-        val dataTableFragment =
-            DataTableFragment.newInstance(Constants.DATA_TABLE_NAME_GROUP, groupId)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_GROUP_DETAILS)
-        fragmentTransaction.replace(R.id.container, dataTableFragment)
-        fragmentTransaction.commit()
+        val action = GroupDetailsFragmentDirections.actionGroupDetailsFragmentToDataTableFragment(
+            Constants.DATA_TABLE_NAME_GROUP,
+            groupId
+        )
+        findNavController().navigate(action)
     }
 
     override fun showProgressbar(show: Boolean) {
@@ -171,8 +158,8 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         }
     }
 
-    override fun showGroupClients(clients: List<Client?>?) {
-        mListener?.loadGroupClients(clients as List<Client>?)
+    override fun showGroupClients(clients: List<Client>) {
+        loadGroupClients(clients)
     }
 
     override fun showGroupAccounts(groupAccounts: GroupAccounts?) {
@@ -191,7 +178,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
                 activity,
                 adapter,
                 AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                    adapter.getItem(i).id?.let { mListener?.loadLoanAccountSummary(it) }
+                    adapter.getItem(i).id?.let { loadLoanAccountSummary(it) }
                 })
         } else {
             binding.accountAccordionSectionLoans.root.visibility = View.GONE
@@ -207,7 +194,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
                 adapter,
                 AdapterView.OnItemClickListener { adapterView, view, i, l ->
                     adapter.getItem(i).id?.let {
-                        mListener?.loadSavingsAccountSummary(
+                        loadSavingsAccountSummary(
                             it,
                             adapter.getItem(i).depositType
                         )
@@ -227,7 +214,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
                 adapter,
                 AdapterView.OnItemClickListener { adapterView, view, i, l ->
                     adapter.getItem(i).id?.let {
-                        mListener?.loadSavingsAccountSummary(
+                        loadSavingsAccountSummary(
                             it,
                             adapter.getItem(i).depositType
                         )
@@ -241,18 +228,18 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
     override fun showFetchingError(errorMessage: Int) {
         Toast.makeText(activity, getStringMessage(errorMessage), Toast.LENGTH_SHORT).show()
     }
-
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        mListener = try {
-            activity as OnFragmentInteractionListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException(
-                activity.javaClass.simpleName + " must " +
-                        "implement OnFragmentInteractionListener"
-            )
-        }
-    }
+//
+//    override fun onAttach(activity: Activity) {
+//        super.onAttach(activity)
+//        mListener = try {
+//            activity as OnFragmentInteractionListener
+//        } catch (e: ClassCastException) {
+//            throw ClassCastException(
+//                activity.javaClass.simpleName + " must " +
+//                        "implement OnFragmentInteractionListener"
+//            )
+//        }
+//    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_group, menu)
@@ -275,12 +262,39 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         super.onDestroyView()
         mGroupDetailsPresenter.detachView()
     }
+//
+//    interface OnFragmentInteractionListener {
+//        fun loadLoanAccountSummary(loanAccountNumber: Int)
+//        fun loadSavingsAccountSummary(savingsAccountNumber: Int, accountType: DepositType?)
+//        fun loadGroupClients(clients: List<Client>?)
+//    }
 
-    interface OnFragmentInteractionListener {
-        fun loadLoanAccountSummary(loanAccountNumber: Int)
-        fun loadSavingsAccountSummary(savingsAccountNumber: Int, accountType: DepositType?)
-        fun loadGroupClients(clients: List<Client>?)
+    private fun loadGroupClients(clients: List<Client>) {
+        val action = GroupDetailsFragmentDirections.actionGroupDetailsFragmentToClientListFragment(
+            clients.toTypedArray(),
+            true
+        )
+        findNavController().navigate(action)
     }
+
+    private fun loadLoanAccountSummary(loanAccountNumber: Int) {
+        val action =
+            GroupDetailsFragmentDirections.actionGroupDetailsFragmentToLoanAccountSummaryFragment(
+                loanAccountNumber,
+                true
+            )
+        findNavController().navigate(action)
+    }
+
+    private fun loadSavingsAccountSummary(savingsAccountNumber: Int, accountType: DepositType?){
+        val action = accountType?.let {
+            GroupDetailsFragmentDirections.actionGroupDetailsFragmentToSavingsAccountSummaryFragment(savingsAccountNumber,
+                it,true)
+        }
+        action?.let { findNavController().navigate(it) }
+    }
+
+
 
     private class AccountAccordion(private val context: Activity?) {
         private var currentSection: Section? = null
@@ -410,19 +424,6 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
 
         init {
             Section.configure(context, this)
-        }
-    }
-
-    companion object {
-        val LOG_TAG = GroupDetailsFragment::class.java.simpleName
-
-        @JvmStatic
-        fun newInstance(groupId: Int): GroupDetailsFragment {
-            val fragment = GroupDetailsFragment()
-            val args = Bundle()
-            args.putInt(Constants.GROUP_ID, groupId)
-            fragment.arguments = args
-            return fragment
         }
     }
 }
