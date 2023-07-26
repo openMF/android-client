@@ -10,7 +10,7 @@ import com.mifos.objects.group.Group
  */
 interface GroupDetailsMvpView : MvpView {
     fun showGroup(group: Group?)
-    fun showGroupClients(clients: List<Client?>?)
+    fun showGroupClients(clients: List<Client>)
     fun showGroupAccounts(groupAccounts: GroupAccounts?)
     fun showFetchingError(errorMessage: Int)
 }

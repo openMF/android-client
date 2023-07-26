@@ -451,5 +451,66 @@
         android:id="@+id/settingsFragment"
         android:name="com.mifos.mifosxdroid.SettingsFragment"
         android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/groupDetailsFragment"
+        android:name="com.mifos.mifosxdroid.online.groupdetails.GroupDetailsFragment"
+        android:label="GroupDetailsFragment" >
+        <action
+            android:id="@+id/action_groupDetailsFragment_to_documentListFragment"
+            app:destination="@id/documentListFragment" />
+        <action
+            android:id="@+id/action_groupDetailsFragment_to_noteFragment"
+            app:destination="@id/noteFragment" />
+        <action
+            android:id="@+id/action_groupDetailsFragment_to_savingsAccountFragment"
+            app:destination="@id/savingsAccountFragment" />
+        <action
+            android:id="@+id/action_groupDetailsFragment_to_groupLoanAccountFragment"
+            app:destination="@id/groupLoanAccountFragment" />
+        <action
+            android:id="@+id/action_groupDetailsFragment_to_dataTableFragment"
+            app:destination="@id/dataTableFragment" />
+        <action
+            android:id="@+id/action_groupDetailsFragment_to_savingsAccountActivateFragment"
+            app:destination="@id/savingsAccountActivateFragment" />
+        <action
+            android:id="@+id/action_groupDetailsFragment_to_activateFragment"
+            app:destination="@id/activateFragment" />
+        <action
+            android:id="@+id/action_groupDetailsFragment_to_clientListFragment"
+            app:destination="@id/clientListFragment" />
+        <action
+            android:id="@+id/action_groupDetailsFragment_to_loanAccountSummaryFragment"
+            app:destination="@id/loanAccountSummaryFragment" />
+        <action
+            android:id="@+id/action_groupDetailsFragment_to_savingsAccountSummaryFragment"
+            app:destination="@id/savingsAccountSummaryFragment" />
+        <action
+            android:id="@+id/action_groupDetailsFragment_to_createNewClientFragment2"
+            app:destination="@id/createNewClientFragment2" />
+    </fragment>
+    <dialog
+        android:id="@+id/groupLoanAccountFragment"
+        android:name="com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountFragment"
+        android:label="GroupLoanAccountFragment" >
+        <argument
+            android:name="groupId"
+            app:argType="integer" />
+    </dialog>
+    <fragment
+        android:id="@+id/clientListFragment"
+        android:name="com.mifos.mifosxdroid.online.clientlist.ClientListFragment"
+        android:label="ClientListFragment" >
+        <argument
+            android:name="clientList"
+            app:argType="com.mifos.objects.client.Client[]" />
+        <argument
+            android:name="isParentFragment"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/createNewClientFragment2"
+        android:name="com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment"
+        android:label="CreateNewClientFragment" />
 
 </navigation>

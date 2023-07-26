@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
@@ -41,8 +42,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     GroupLoanAccountMvpView, OnItemSelectedListener {
 
     private lateinit var binding: FragmentAddLoanBinding
-
-    val LOG_TAG = javaClass.simpleName
+    private val arg : GroupLoanAccountFragmentArgs by navArgs()
 
     @Inject
     lateinit var mGroupLoanAccountPresenter: GroupLoanAccountPresenter
@@ -102,7 +102,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) groupId = requireArguments().getInt(Constants.GROUP_ID)
+        groupId = arg.groupId
     }
 
     override fun onCreateView(
@@ -488,13 +488,4 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
 
     override fun onNothingSelected(parent: AdapterView<*>?) {}
 
-    companion object {
-        fun newInstance(groupId: Int): GroupLoanAccountFragment {
-            val grouploanAccountFragment = GroupLoanAccountFragment()
-            val args = Bundle()
-            args.putInt(Constants.GROUP_ID, groupId)
-            grouploanAccountFragment.arguments = args
-            return grouploanAccountFragment
-        }
-    }
 }
