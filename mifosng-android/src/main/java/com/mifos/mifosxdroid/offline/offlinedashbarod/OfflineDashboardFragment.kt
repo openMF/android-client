@@ -268,12 +268,5 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
             R.string.sync_loanrepayments,
             R.string.sync_savingsaccounttransactions
         )
-
-        fun newInstance(): OfflineDashboardFragment {
-            val fragment = OfflineDashboardFragment()
-            val args = Bundle()
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

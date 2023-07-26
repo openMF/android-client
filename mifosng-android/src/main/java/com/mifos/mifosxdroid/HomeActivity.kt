@@ -17,14 +17,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.test.espresso.IdlingResource
 import com.google.android.material.navigation.NavigationView
-import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.databinding.ActivityHomeBinding
 import com.mifos.mifosxdroid.databinding.ViewNavDrawerHeaderBinding
-import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment
-import com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity
-import com.mifos.mifosxdroid.online.RunReportsActivity
-import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxPendingTasksActivity
 import com.mifos.utils.Constants
 import com.mifos.utils.EspressoIdlingResource
 import com.mifos.utils.PrefManager
@@ -77,48 +72,47 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
             return false;
         }*/
         clearFragmentBackStack()
-        val intent = Intent()
         when (item.itemId) {
             R.id.item_checker_inbox -> {
-                intent.setClass(this, CheckerInboxPendingTasksActivity::class.java)
-                startActivity(intent)
+                findNavController(R.id.nav_host_fragment).navigate(R.id.checkerInboxPendingTasksActivity)
             }
 
             R.id.item_path_tracker -> {
-                intent.setClass(applicationContext, PathTrackingActivity::class.java)
-                startNavigationClickActivity(intent)
+                findNavController(R.id.nav_host_fragment).navigate(R.id.pathTrackingActivity)
             }
 
             R.id.item_offline -> {
-                replaceFragment(OfflineDashboardFragment.newInstance(), false, R.id.container_a)
-                supportActionBar?.setTitle(R.string.offline)
+                findNavController(R.id.nav_host_fragment).navigate(R.id.offlineDashboardFragment)
             }
 
             R.id.individual_collection_sheet -> {
-                intent.setClass(this, GenerateCollectionSheetActivity::class.java)
-                intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_INDIVIDUAL)
-                startActivity(intent)
+                val bundle = Bundle()
+                bundle.putString(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_INDIVIDUAL)
+                findNavController(R.id.nav_host_fragment).navigate(
+                    R.id.generateCollectionSheetActivity,
+                    bundle
+                )
             }
 
             R.id.collection_sheet -> {
-                intent.setClass(this, GenerateCollectionSheetActivity::class.java)
-                intent.putExtra(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_COLLECTION)
-                startActivity(intent)
+                val bundle = Bundle()
+                bundle.putString(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_COLLECTION)
+                findNavController(R.id.nav_host_fragment).navigate(
+                    R.id.generateCollectionSheetActivity,
+                    bundle
+                )
             }
 
             R.id.item_settings -> {
-                intent.setClass(this, SettingsActivity::class.java)
-                startActivity(intent)
+                findNavController(R.id.nav_host_fragment).navigate(R.id.settingsActivity)
             }
 
             R.id.runreport -> {
-                intent.setClass(this, RunReportsActivity::class.java)
-                startActivity(intent)
+                findNavController(R.id.nav_host_fragment).navigate(R.id.runReportsActivity)
             }
 
             R.id.about -> {
-                intent.setClass(this, AboutActivity::class.java)
-                startActivity(intent)
+                findNavController(R.id.nav_host_fragment).navigate(R.id.aboutActivity)
             }
         }
         binding.drawer.closeDrawer(GravityCompat.START)
@@ -145,11 +139,6 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
                 userStatusToggle.isChecked = true
             }
         }
-    }
-
-    private fun startNavigationClickActivity(intent: Intent?) {
-        val handler = Handler()
-        handler.postDelayed({ startActivity(intent) }, 500)
     }
 
     /**

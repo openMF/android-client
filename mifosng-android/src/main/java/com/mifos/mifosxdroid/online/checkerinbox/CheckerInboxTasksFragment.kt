@@ -1,13 +1,13 @@
 package com.mifos.mifosxdroid.online.checkerinbox
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
@@ -60,12 +60,12 @@ class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefr
 
         viewModel.getCheckerTasks().observe(viewLifecycleOwner,
             Observer<List<CheckerTask>> {
-                binding.badgeCheckerInbox.text = it?.size.toString()
+                binding.badgeCheckerInbox.text = it.size.toString()
             })
 
         viewModel.getRescheduleLoanTasks().observe(viewLifecycleOwner,
             Observer<List<RescheduleLoansTask>> {
-                binding.badgeRescheduleLoan.text = it?.size.toString()
+                binding.badgeRescheduleLoan.text = it.size.toString()
             })
 
         viewModel.status.observe(viewLifecycleOwner,
@@ -82,13 +82,7 @@ class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefr
             })
 
         binding.rlCheckerInbox.setOnClickListener {
-            val fragmentTransaction = requireActivity()
-                .supportFragmentManager.beginTransaction()
-            fragmentTransaction.addToBackStack("Checker Inbox")
-            fragmentTransaction.replace(
-                R.id.container,
-                CheckerInboxFragment.newInstance()
-            ).commit()
+            findNavController().navigate(R.id.action_checkerInboxTasksFragment_to_checkerInboxFragment)
         }
     }
 }

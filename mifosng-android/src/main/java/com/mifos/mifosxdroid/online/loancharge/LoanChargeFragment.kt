@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter
@@ -31,6 +32,7 @@ import javax.inject.Inject
 class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, OnChargeCreateListener {
 
     private lateinit var binding: FragmentChargeListBinding
+    private val arg : LoanChargeFragmentArgs by navArgs()
 
     @Inject
     lateinit var mLoanChargePresenter: LoanChargePresenter
@@ -40,8 +42,8 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, OnChargeCreat
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) loanAccountNumber =
-            requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
+        loanAccountNumber = arg.loanAccountNumber
+        setChargesList(arg.chargesList.toMutableList())
     }
 
     override fun onCreateView(
@@ -179,29 +181,5 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, OnChargeCreat
 
     companion object {
         const val MENU_ITEM_ADD_NEW_LOAN_CHARGES = 3000
-        fun newInstance(
-            loanAccountNumber: Int,
-            chargesList: MutableList<Charges>?
-        ): LoanChargeFragment {
-            val fragment = LoanChargeFragment()
-            val args = Bundle()
-            args.putInt(Constants.LOAN_ACCOUNT_NUMBER, loanAccountNumber)
-            fragment.arguments = args
-            if (chargesList != null) fragment.setChargesList(chargesList)
-            return fragment
-        }
-
-        fun newInstance(
-            loanAccountNumber: Int,
-            chargesList: MutableList<Charges>,
-            isParentFragmentAGroupFragment: Boolean
-        ): LoanChargeFragment {
-            val fragment = LoanChargeFragment()
-            val args = Bundle()
-            args.putInt(Constants.LOAN_ACCOUNT_NUMBER, loanAccountNumber)
-            fragment.arguments = args
-            fragment.setChargesList(chargesList)
-            return fragment
-        }
     }
 }

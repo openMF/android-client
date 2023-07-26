@@ -3,6 +3,8 @@ package com.mifos.mifosxdroid
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.utils.Constants
 
@@ -17,9 +19,12 @@ class SettingsActivity : MifosBaseActivity() {
         setContentView(R.layout.activity_toolbar_container)
         setToolbarTitle(getString(R.string.settings))
         showBackButton()
-        fragmentManager.beginTransaction()
-            .replace(R.id.container, SettingsFragment())
-            .commit()
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
+        navHostFragment.navController.apply {
+            popBackStack()
+            navigate(R.id.settingsFragment)
+        }
+
         if (intent.hasExtra(Constants.HAS_SETTING_CHANGED)) {
             hasLanguageSettingsChanged = intent.getBooleanExtra(
                 Constants.HAS_SETTING_CHANGED,

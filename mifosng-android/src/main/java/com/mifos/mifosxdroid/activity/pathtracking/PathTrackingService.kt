@@ -226,7 +226,7 @@ class PathTrackingService : Service(), ConnectionCallbacks, OnConnectionFailedLi
         resultIntent.action = Constants.STOP_TRACKING
         val intentBroadCast = PendingIntent.getBroadcast(
             this, 0, resultIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE
         )
         notification?.addAction(
             R.drawable.ic_assignment_turned_in_black_24dp,

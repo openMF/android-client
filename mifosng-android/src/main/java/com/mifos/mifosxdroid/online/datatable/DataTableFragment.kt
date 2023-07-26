@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.mifos.mifosxdroid.R
@@ -24,6 +26,7 @@ import javax.inject.Inject
 class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListener {
 
     private lateinit var binding: FragmentDatatablesBinding
+    private val arg : DataTableFragmentArgs by navArgs()
 
     @Inject
     lateinit var dataTablePresenter: DataTablePresenter
@@ -31,17 +34,8 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
     private val dataTableAdapter by lazy {
         DataTableAdapter(
             onDateTableClick = { dataTable ->
-                val dataTableDataFragment: DataTableDataFragment =
-                    DataTableDataFragment.Companion.newInstance(dataTable, entityId)
-                val fragmentTransaction = requireActivity().supportFragmentManager
-                    .beginTransaction()
-                fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-                fragmentTransaction.replace(
-                    R.id.container,
-                    dataTableDataFragment,
-                    FragmentConstants.FRAG_DATA_TABLE
-                )
-                fragmentTransaction.commit()
+                val action = DataTableFragmentDirections.actionDataTableFragmentToDataTableDataFragment(dataTable,entityId)
+                findNavController().navigate(action)
             }
         )
     }
@@ -51,10 +45,8 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            tableName = requireArguments().getString(Constants.DATA_TABLE_NAME)
-            entityId = requireArguments().getInt(Constants.ENTITY_ID)
-        }
+        tableName = arg.tableName
+        entityId = arg.entityId
         dataTables = ArrayList()
     }
 

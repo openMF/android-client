@@ -22,7 +22,7 @@ data class SavingsAccountWithAssociations(
     var id: Int? = null,
 
     @Column
-    var accountNo: String? = null,
+    var accountNo: Int ? =null,
 
     var clientId: Int? = null,
 

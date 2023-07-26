@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
@@ -31,8 +32,7 @@ import javax.inject.Inject
 class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccountApprovalMvpView {
 
     private lateinit var binding: DialogFragmentApproveLoanBinding
-
-    val LOG_TAG = javaClass.simpleName
+    private val arg : LoanAccountApprovalArgs by navArgs()
 
     @Inject
     lateinit var mLoanAccountApprovalPresenter: LoanAccountApprovalPresenter
@@ -46,10 +46,8 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) {
-            loanAccountNumber = requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
-            loanWithAssociations = requireArguments().getParcelable(Constants.LOAN_SUMMARY)
-        }
+        loanAccountNumber = arg.loanAccountNumber
+        loanWithAssociations = arg.loanWithAssociations
         setHasOptionsMenu(true)
     }
 
@@ -185,19 +183,5 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
     override fun onDestroyView() {
         super.onDestroyView()
         mLoanAccountApprovalPresenter.detachView()
-    }
-
-    companion object {
-        fun newInstance(
-            loanAccountNumber: Int,
-            loanWithAssociations: LoanWithAssociations?
-        ): LoanAccountApproval {
-            val loanAccountApproval = LoanAccountApproval()
-            val args = Bundle()
-            args.putInt(Constants.LOAN_ACCOUNT_NUMBER, loanAccountNumber)
-            args.putParcelable(Constants.LOAN_SUMMARY, loanWithAssociations)
-            loanAccountApproval.arguments = args
-            return loanAccountApproval
-        }
     }
 }

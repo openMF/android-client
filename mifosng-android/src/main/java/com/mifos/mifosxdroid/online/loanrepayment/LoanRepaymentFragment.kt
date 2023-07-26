@@ -16,6 +16,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.jakewharton.fliptables.FlipTable
 import com.mifos.mifosxdroid.R
@@ -39,8 +40,8 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
     DialogInterface.OnClickListener {
 
     private lateinit var binding: FragmentLoanRepaymentBinding
-
     val LOG_TAG = javaClass.simpleName
+    private val arg : LoanRepaymentFragmentArgs by navArgs()
 
     @Inject
     lateinit var mLoanRepaymentPresenter: LoanRepaymentPresenter
@@ -56,14 +57,11 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        arguments?.getParcelable<LoanWithAssociations>(Constants.LOAN_SUMMARY)
-            ?.let { loanWithAssociations ->
-                clientName = loanWithAssociations.clientName
-                loanAccountNumber = loanWithAssociations.accountNo
-                loanId = loanWithAssociations.id.toString()
-                loanProductName = loanWithAssociations.loanProductName
-                amountInArrears = loanWithAssociations.summary.totalOverdue
-            }
+        clientName = arg.loanWithAssociations.clientName
+        loanAccountNumber = arg.loanWithAssociations.accountNo
+        loanId = arg.loanWithAssociations.id.toString()
+        loanProductName = arg.loanWithAssociations.loanProductName
+        amountInArrears = arg.loanWithAssociations.summary.totalOverdue
     }
 
     override fun onCreateView(

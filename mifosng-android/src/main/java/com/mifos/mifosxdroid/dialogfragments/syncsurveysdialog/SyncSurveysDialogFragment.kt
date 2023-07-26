@@ -1,11 +1,11 @@
 package com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog
 
-import android.app.DialogFragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.util.Toaster.show
@@ -140,7 +140,7 @@ class SyncSurveysDialogFragment : DialogFragment(), SyncSurveysDialogMvpView {
     }
 
     override val isOnline: Boolean
-        get() = isOnline(activity)
+        get() = activity?.let { isOnline(it) } == true
 
     override fun dismissDialog() {
         dialog?.dismiss()

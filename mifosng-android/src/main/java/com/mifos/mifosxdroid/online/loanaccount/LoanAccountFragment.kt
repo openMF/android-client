@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
@@ -42,8 +43,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
     OnItemSelectedListener {
 
     private lateinit var binding: FragmentAddLoanBinding
-
-    val LOG_TAG = javaClass.simpleName
+    private val arg : LoanAccountFragmentArgs by navArgs()
 
     @Inject
     lateinit var mLoanAccountPresenter: LoanAccountPresenter
@@ -104,7 +104,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
     var mInterestTypeOptionsAdapter: ArrayAdapter<String>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null) clientId = requireArguments().getInt(Constants.CLIENT_ID)
+        clientId = arg.clientId
     }
 
     override fun onCreateView(
@@ -598,16 +598,5 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
             binding.spFund.setSelection(mLoanTemplate.fundId!!)
         }
         binding.spLinkingOptions.setSelection(mListAccountLinkingOptions.size)
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(clientId: Int): LoanAccountFragment {
-            val loanAccountFragment = LoanAccountFragment()
-            val args = Bundle()
-            args.putInt(Constants.CLIENT_ID, clientId)
-            loanAccountFragment.arguments = args
-            return loanAccountFragment
-        }
     }
 }

@@ -4,7 +4,6 @@
  */
 package com.mifos.mifosxdroid.online.savingaccountsummary
 
-import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
@@ -17,23 +16,20 @@ import android.widget.AbsListView
 import android.widget.AdapterView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.databinding.FragmentSavingsAccountSummaryBinding
-import com.mifos.mifosxdroid.online.datatable.DataTableFragment
-import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment
-import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateFragment
-import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalFragment
 import com.mifos.objects.accounts.savings.DepositType
 import com.mifos.objects.accounts.savings.DepositType.ServerTypes
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.objects.accounts.savings.Status
 import com.mifos.objects.accounts.savings.Transaction
 import com.mifos.utils.Constants
-import com.mifos.utils.FragmentConstants
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -43,6 +39,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
 
     var savingsAccountNumber = 0
     var savingsAccountType: DepositType? = null
+    private val arg: SavingsAccountSummaryFragmentArgs by navArgs()
 
     @Inject
     lateinit var mSavingAccountSummaryPresenter: SavingsAccountSummaryPresenter
@@ -51,7 +48,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     // that are used for inflation of rows in
     // Infinite Scroll View
     var listOfAllTransactions: MutableList<Transaction> = ArrayList()
-    var savingsAccountTransactionsListAdapter: SavingsAccountTransactionsListAdapter? = null
+    private var savingsAccountTransactionsListAdapter: SavingsAccountTransactionsListAdapter? = null
     private var processSavingTransactionAction = -1
     private var savingsAccountWithAssociations: SavingsAccountWithAssociations? = null
     private var parentFragment = true
@@ -65,14 +62,11 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     // variables to control amount of data loading on each load
     private val initial = 0
     private var last = 5
-    private var mListener: OnFragmentInteractionListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            savingsAccountNumber = requireArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER)
-            savingsAccountType = requireArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE)
-            parentFragment = requireArguments().getBoolean(Constants.IS_A_PARENT_FRAGMENT)
-        }
+        savingsAccountNumber = arg.savingsAccountNumber
+        savingsAccountType = arg.accountType
+        parentFragment = arg.parentFragment
         inflateSavingsAccountSummary()
         setHasOptionsMenu(true)
     }
@@ -117,26 +111,6 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         }
     }
 
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        mListener = try {
-            activity as OnFragmentInteractionListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException(
-                activity.toString()
-                        + " must implement OnFragmentInteractionListener"
-            )
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        mListener = null
-        if (!parentFragment) {
-            requireActivity().finish()
-        }
-    }
-
     override fun onPrepareOptionsMenu(menu: Menu) {
         menu.clear()
         menu.add(
@@ -163,14 +137,14 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     }
 
     private fun onDepositButtonClicked() {
-        mListener?.doTransaction(
+        doTransaction(
             savingsAccountWithAssociations,
             Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT, savingsAccountType
         )
     }
 
     private fun onWithdrawalButtonClicked() {
-        mListener?.doTransaction(
+        doTransaction(
             savingsAccountWithAssociations,
             Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL, savingsAccountType
         )
@@ -243,43 +217,41 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     }
 
     private fun loadDocuments() {
-        val documentListFragment =
-            DocumentListFragment.newInstance(Constants.ENTITY_TYPE_SAVINGS, savingsAccountNumber)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY)
-        fragmentTransaction.replace(R.id.container, documentListFragment)
-        fragmentTransaction.commit()
+        val action =
+            SavingsAccountSummaryFragmentDirections.actionSavingsAccountSummaryFragmentToDocumentListFragment(
+                savingsAccountNumber,
+                Constants.ENTITY_TYPE_SAVINGS
+            )
+        findNavController().navigate(action)
     }
 
     private fun approveSavings() {
-        val savingsAccountApproval = SavingsAccountApprovalFragment
-            .newInstance(savingsAccountNumber, savingsAccountType)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY)
-        fragmentTransaction.replace(R.id.container, savingsAccountApproval)
-        fragmentTransaction.commit()
+        val action = savingsAccountType?.let {
+            SavingsAccountSummaryFragmentDirections.actionSavingsAccountSummaryFragmentToSavingsAccountApprovalFragment(
+                savingsAccountNumber,
+                it
+            )
+        }
+        action?.let { findNavController().navigate(it) }
     }
 
     private fun activateSavings() {
-        val savingsAccountApproval = SavingsAccountActivateFragment
-            .newInstance(savingsAccountNumber, savingsAccountType)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY)
-        fragmentTransaction.replace(R.id.container, savingsAccountApproval)
-        fragmentTransaction.commit()
+        val action = savingsAccountType?.let {
+            SavingsAccountSummaryFragmentDirections.actionSavingsAccountSummaryFragmentToSavingsAccountActivateFragment(
+                savingsAccountNumber,
+                it
+            )
+        }
+        action?.let { findNavController().navigate(it) }
     }
 
     private fun loadSavingsDataTables() {
-        val loanAccountFragment =
-            DataTableFragment.newInstance(Constants.DATA_TABLE_NAME_SAVINGS, savingsAccountNumber)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SAVINGS_ACCOUNT_SUMMARY)
-        fragmentTransaction.replace(R.id.container, loanAccountFragment)
-        fragmentTransaction.commit()
+        val action =
+            SavingsAccountSummaryFragmentDirections.actionSavingsAccountSummaryFragmentToDataTableFragment(
+                Constants.DATA_TABLE_NAME_SAVINGS,
+                savingsAccountNumber
+            )
+        findNavController().navigate(action)
     }
 
     fun toggleTransactionCapabilityOfAccount(status: Status) {
@@ -297,7 +269,8 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
             binding.tvClientName.text = savingsAccountWithAssociations.clientName
             binding.tvSavingsProductShortName.text =
                 savingsAccountWithAssociations.savingsProductName
-            binding.tvSavingsAccountNumber.text = savingsAccountWithAssociations.accountNo
+            binding.tvSavingsAccountNumber.text =
+                savingsAccountWithAssociations.accountNo.toString()
             if (savingsAccountWithAssociations.summary?.totalInterestEarned != null) {
                 binding.tvInterestEarned.text = savingsAccountWithAssociations
                     .summary?.totalInterestEarned.toString()
@@ -363,7 +336,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         }
     }
 
-    fun showTransaction(i: Int) {
+    private fun showTransaction(i: Int) {
         val transaction = listOfAllTransactions[i]
         val dialog = Dialog(requireContext())
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -411,12 +384,21 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         mSavingAccountSummaryPresenter.detachView()
     }
 
-    interface OnFragmentInteractionListener {
-        fun doTransaction(
-            savingsAccountWithAssociations: SavingsAccountWithAssociations?,
-            transactionType: String?,
-            accountType: DepositType?
-        )
+    private fun doTransaction(
+        savingsAccountWithAssociations: SavingsAccountWithAssociations?,
+        transactionType: String?,
+        accountType: DepositType?
+    ) {
+        val action = savingsAccountWithAssociations?.let {
+            transactionType?.let { it1 ->
+                accountType?.let { it2 ->
+                    SavingsAccountSummaryFragmentDirections.actionSavingsAccountSummaryFragmentToSavingsAccountTransactionFragment(
+                        it, it1, it2
+                    )
+                }
+            }
+        }
+        action?.let { findNavController().navigate(it) }
     }
 
     companion object {

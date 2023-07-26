@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.LoanRepaymentScheduleAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -23,8 +24,7 @@ import javax.inject.Inject
 class LoanRepaymentScheduleFragment : ProgressableFragment(), LoanRepaymentScheduleMvpView {
 
     private lateinit var binding: FragmentLoanRepaymentScheduleBinding
-
-    private val LOG_TAG = javaClass.simpleName
+    private val arg : LoanRepaymentScheduleFragmentArgs by navArgs()
 
     @Inject
     lateinit var mLoanRepaymentSchedulePresenter: LoanRepaymentSchedulePresenter
@@ -32,8 +32,7 @@ class LoanRepaymentScheduleFragment : ProgressableFragment(), LoanRepaymentSched
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) loanAccountNumber =
-            requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
+        loanAccountNumber = arg.loanId
         setHasOptionsMenu(false)
     }
 

@@ -10,12 +10,14 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.mifos.mifosxdroid.R
@@ -38,6 +40,7 @@ import javax.inject.Inject
 class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefreshListener {
 
     private lateinit var binding: FragmentDocumentListBinding
+    private val arg : DocumentListFragmentArgs by navArgs()
 
     @Inject
     lateinit var mDocumentListPresenter: DocumentListPresenter
@@ -60,10 +63,8 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
         mDocumentList = ArrayList()
-        if (arguments != null) {
-            entityType = requireArguments().getString(Constants.ENTITY_TYPE)
-            entityId = requireArguments().getInt(Constants.ENTITY_ID)
-        }
+        entityId = arg.entiyId
+        entityType = arg.entityType
         setHasOptionsMenu(true)
     }
 

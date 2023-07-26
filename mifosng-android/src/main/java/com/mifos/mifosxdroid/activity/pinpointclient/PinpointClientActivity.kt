@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
@@ -36,6 +37,7 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
     PinpointClientAdapter.OnItemClick {
 
     private lateinit var binding: ActivityPinpointLocationBinding
+    private val arg : PinpointClientActivityArgs by navArgs()
 
     @Inject
     lateinit var pinpointClientAdapter: PinpointClientAdapter
@@ -87,7 +89,7 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
         setContentView(binding.root)
         pinPointClientPresenter?.attachView(this)
         showBackButton()
-        clientId = intent.getIntExtra(Constants.CLIENT_ID, 1)
+        clientId = arg.clientId
         showUserInterface()
         pinPointClientPresenter?.getClientPinpointLocations(clientId)
     }

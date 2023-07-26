@@ -124,4 +124,47 @@
             app:argType="string" />
     </activity>
 
+    <activity
+        android:id="@+id/checkerInboxPendingTasksActivity"
+        android:name="com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxPendingTasksActivity"
+        android:label="CheckerInboxPendingTasksActivity" />
+
+
+    <activity
+        android:id="@+id/pathTrackingActivity"
+        android:name="com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity"
+        android:label="PathTrackingActivity" />
+
+
+    <fragment
+        android:id="@+id/offlineDashboardFragment"
+        android:name="com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment"
+        android:label="OfflineDashboardFragment" />
+
+
+    <activity
+        android:id="@+id/settingsActivity"
+        android:name="com.mifos.mifosxdroid.SettingsActivity"
+        android:label="SettingsActivity" />
+
+
+    <activity
+        android:id="@+id/runReportsActivity"
+        android:name="com.mifos.mifosxdroid.online.RunReportsActivity"
+        android:label="RunReportsActivity" />
+
+
+    <activity
+        android:id="@+id/aboutActivity"
+        android:name="com.mifos.mifosxdroid.AboutActivity"
+        android:label="AboutActivity" />
+
+
+    <activity
+        android:id="@+id/generateCollectionSheetActivity"
+        android:name="com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity"
+        android:label="activity_generate_collection_sheet"
+        tools:layout="@layout/activity_generate_collection_sheet" />
+
+
 </navigation>

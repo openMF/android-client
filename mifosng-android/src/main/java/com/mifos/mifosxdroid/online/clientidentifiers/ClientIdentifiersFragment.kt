@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.mifos.mifosxdroid.R
@@ -34,6 +35,7 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
     IdentifierOptionsListener, OnRefreshListener, ClientIdentifierCreationListener {
 
     private lateinit var binding: FragmentClientIdentifiersBinding
+    private val arg : ClientIdentifiersFragmentArgs by navArgs()
 
     @Inject
     lateinit var mClientIdentifiersPresenter: ClientIdentifiersPresenter
@@ -47,9 +49,7 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) {
-            clientId = requireArguments().getInt(Constants.CLIENT_ID)
-        }
+        clientId = arg.clientId
         setHasOptionsMenu(true)
     }
 
@@ -206,13 +206,4 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
         hideMifosProgressBar()
     }
 
-    companion object {
-        fun newInstance(clientId: Int): ClientIdentifiersFragment {
-            val fragment = ClientIdentifiersFragment()
-            val args = Bundle()
-            args.putInt(Constants.CLIENT_ID, clientId)
-            fragment.arguments = args
-            return fragment
-        }
-    }
 }

@@ -13,6 +13,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.R
@@ -36,6 +37,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView,
     BottomNavigationView.OnNavigationItemSelectedListener, OnSignatureSaveListener {
 
     private lateinit var binding: FragmentSignBinding
+    private val arg : SignatureFragmentArgs by navArgs()
     
     @Inject
     lateinit var mSignaturePresenter: SignaturePresenter
@@ -49,9 +51,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView,
             requireContext(),
             getString(R.string.signature_fragment_loading_message)
         )
-        if (arguments != null) {
-            mClientId = requireArguments().getInt(Constants.CLIENT_ID)
-        }
+        mClientId = arg.clientId
         setHasOptionsMenu(true)
     }
 

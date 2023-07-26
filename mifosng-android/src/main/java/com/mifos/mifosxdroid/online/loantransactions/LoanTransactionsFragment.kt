@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.adapters.LoanTransactionAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
@@ -22,6 +23,7 @@ import javax.inject.Inject
 class LoanTransactionsFragment : MifosBaseFragment(), LoanTransactionsMvpView {
 
     private lateinit var binding: FragmentLoanTransactionsBinding
+    private val arg : LoanTransactionsFragmentArgs by navArgs()
 
     @Inject
     lateinit var mLoanTransactionsPresenter: LoanTransactionsPresenter
@@ -30,8 +32,7 @@ class LoanTransactionsFragment : MifosBaseFragment(), LoanTransactionsMvpView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) loanAccountNumber =
-            requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
+        loanAccountNumber = arg.loanId
         setHasOptionsMenu(false)
     }
 

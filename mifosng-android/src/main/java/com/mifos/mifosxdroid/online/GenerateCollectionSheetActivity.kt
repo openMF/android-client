@@ -6,33 +6,39 @@ package com.mifos.mifosxdroid.online
 
 import android.os.Bundle
 import android.view.Menu
+import androidx.navigation.fragment.NavHostFragment
 import com.mifos.api.model.IndividualCollectionSheetPayload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
-import com.mifos.mifosxdroid.databinding.ActivityGenerateCollectionSheetBinding
 import com.mifos.mifosxdroid.databinding.ActivityToolbarContainerBinding
-import com.mifos.mifosxdroid.online.collectionsheetindividual.IndividualCollectionSheetFragment
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment.OnPayloadSelectedListener
-import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetFragment
 import com.mifos.utils.Constants
 
 class GenerateCollectionSheetActivity : MifosBaseActivity(), OnPayloadSelectedListener {
 
-    private lateinit var bindingToolbar : ActivityToolbarContainerBinding
-    private lateinit var binding : ActivityGenerateCollectionSheetBinding
+    private lateinit var binding: ActivityToolbarContainerBinding
+
 
     var payload: IndividualCollectionSheetPayload? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bindingToolbar = ActivityToolbarContainerBinding.inflate(layoutInflater)
-        binding = ActivityGenerateCollectionSheetBinding.inflate(layoutInflater)
-        setContentView(bindingToolbar.root)
+        binding = ActivityToolbarContainerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
         showBackButton()
         intent?.getStringExtra(Constants.COLLECTION_TYPE)?.let { collectionType ->
-            if(collectionType == Constants.EXTRA_COLLECTION_INDIVIDUAL)
-                replaceFragment(IndividualCollectionSheetFragment.newInstance(),false, binding.container.id)
-            else if(collectionType == Constants.EXTRA_COLLECTION_COLLECTION)
-                replaceFragment(GenerateCollectionSheetFragment.newInstance(),false, binding.container.id)
+            if (collectionType == Constants.EXTRA_COLLECTION_INDIVIDUAL) {
+                navHostFragment.navController.apply {
+                    popBackStack()
+                    navigate(R.id.individualCollectionSheetFragment)
+                }
+            } else {
+                navHostFragment.navController.apply {
+                    popBackStack()
+                    navigate(R.id.generateCollectionSheetFragment)
+                }
+            }
         }
     }
 

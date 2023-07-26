@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SurveyListAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -32,6 +33,7 @@ import javax.inject.Inject
 class SurveyListFragment : ProgressableFragment(), SurveyListMvpView {
 
     private lateinit var binding: FragmentSurveyListBinding
+    private val arg : SurveyListFragmentArgs by navArgs()
 
     @Inject
     lateinit var mSurveyListPresenter: SurveyListPresenter
@@ -40,9 +42,7 @@ class SurveyListFragment : ProgressableFragment(), SurveyListMvpView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) {
-            clientId = requireArguments().getInt(Constants.CLIENT_ID)
-        }
+        clientId = arg.clientId
     }
 
     override fun onCreateView(
@@ -107,16 +107,5 @@ class SurveyListFragment : ProgressableFragment(), SurveyListMvpView {
 
     interface OnFragmentInteractionListener {
         fun loadSurveyQuestion(survey: Survey?, clientId: Int)
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(clientId: Int): SurveyListFragment {
-            val fragment = SurveyListFragment()
-            val bundle = Bundle()
-            bundle.putInt(Constants.CLIENT_ID, clientId)
-            fragment.arguments = bundle
-            return fragment
-        }
     }
 }

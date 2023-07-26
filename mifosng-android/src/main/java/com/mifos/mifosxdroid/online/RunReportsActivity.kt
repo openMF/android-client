@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.fragment.NavHostFragment
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.online.runreports.report.ReportFragment
@@ -27,47 +28,50 @@ class RunReportsActivity : MifosBaseActivity(), OnItemSelectedListener {
         setContentView(R.layout.activity_toolbar_container)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayShowTitleEnabled(false)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        spinner = Spinner(supportActionBar!!.themedContext)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        spinner = Spinner(supportActionBar?.themedContext)
         val adapter = ArrayAdapter.createFromResource(
             this,
             R.array.array_runreport, R.layout.simple_spinner_item
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner!!.adapter = adapter
-        spinner!!.onItemSelectedListener = this
+        spinner?.adapter = adapter
+        spinner?.onItemSelectedListener = this
         toolbar.addView(spinner)
         intent = Intent(Constants.ACTION_REPORT)
-        val fragment = ReportCategoryFragment()
-        replaceFragment(fragment, false, R.id.container)
-        addOnBackStackChangedListener()
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
+        navHostFragment.navController.apply {
+            popBackStack()
+            navigate(R.id.reportCategoryFragment)
+        }
     }
 
     override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
         when (i) {
             0 -> {
-                intent!!.putExtra(Constants.REPORT_CATEGORY, Constants.CLIENT)
+                intent?.putExtra(Constants.REPORT_CATEGORY, Constants.CLIENT)
                 sendBroadcast(intent)
             }
 
             1 -> {
-                intent!!.putExtra(Constants.REPORT_CATEGORY, Constants.LOAN)
+                intent?.putExtra(Constants.REPORT_CATEGORY, Constants.LOAN)
                 sendBroadcast(intent)
             }
 
             2 -> {
-                intent!!.putExtra(Constants.REPORT_CATEGORY, Constants.SAVINGS)
+                intent?.putExtra(Constants.REPORT_CATEGORY, Constants.SAVINGS)
                 sendBroadcast(intent)
             }
 
             3 -> {
-                intent!!.putExtra(Constants.REPORT_CATEGORY, Constants.FUND)
+                intent?.putExtra(Constants.REPORT_CATEGORY, Constants.FUND)
                 sendBroadcast(intent)
             }
 
             4 -> {
-                intent!!.putExtra(Constants.REPORT_CATEGORY, Constants.ACCOUNTING)
+                intent?.putExtra(Constants.REPORT_CATEGORY, Constants.ACCOUNTING)
                 sendBroadcast(intent)
             }
 
@@ -77,17 +81,14 @@ class RunReportsActivity : MifosBaseActivity(), OnItemSelectedListener {
 
     override fun onNothingSelected(adapterView: AdapterView<*>?) {}
     private fun addOnBackStackChangedListener() {
-        if (supportFragmentManager == null) {
-            return
-        }
         supportFragmentManager.addOnBackStackChangedListener {
             val fragmentManager = supportFragmentManager
             val fragment = fragmentManager.findFragmentById(R.id.container)
             if (fragment is ReportDetailFragment) {
-                spinner!!.visibility = View.INVISIBLE
+                spinner?.visibility = View.INVISIBLE
             } else if (fragment is ReportFragment) {
-                spinner!!.visibility = View.INVISIBLE
-                spinner!!.onItemSelectedListener = object : OnItemSelectedListener {
+                spinner?.visibility = View.INVISIBLE
+                spinner?.onItemSelectedListener = object : OnItemSelectedListener {
                     override fun onItemSelected(
                         adapterView: AdapterView<*>?,
                         view: View, i: Int, l: Long
@@ -120,7 +121,7 @@ class RunReportsActivity : MifosBaseActivity(), OnItemSelectedListener {
                     override fun onNothingSelected(adapterView: AdapterView<*>?) {}
                 }
             } else if (fragment is ReportCategoryFragment) {
-                spinner!!.visibility = View.INVISIBLE
+                spinner?.visibility = View.INVISIBLE
             }
         }
     }
@@ -132,17 +133,7 @@ class RunReportsActivity : MifosBaseActivity(), OnItemSelectedListener {
         fragmentManager.popBackStack()
         fragmentManager.popBackStack()
         fragmentManager.executePendingTransactions()
-        intent!!.putExtra(Constants.REPORT_CATEGORY, reportCategory)
-        sendBroadcast(intent)
-    }
-
-    private fun sendBroadcastFromReportDetailsFragment(
-        fragmentManager: FragmentManager,
-        reportCategory: String
-    ) {
-        fragmentManager.popBackStack()
-        fragmentManager.executePendingTransactions()
-        intent!!.putExtra(Constants.REPORT_CATEGORY, reportCategory)
+        intent?.putExtra(Constants.REPORT_CATEGORY, reportCategory)
         sendBroadcast(intent)
     }
 }
