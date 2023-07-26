@@ -18,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
@@ -39,6 +40,7 @@ import javax.inject.Inject
 class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener {
 
     private lateinit var binding: FragmentClientReportBinding
+    private val arg : ReportFragmentArgs by navArgs()
 
     @Inject
     lateinit var presenter: ReportPresenter
@@ -58,7 +60,7 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
         setHasOptionsMenu(true)
         presenter.attachView(this)
         val time = Date().time
-        report = requireArguments().getParcelable(Constants.REPORT_NAME)
+        report = arg.respose
         setUpUi()
         return binding.root
     }
@@ -274,14 +276,6 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
             } else {
                 bottom++
             }
-        }
-    }
-
-    companion object {
-        fun newInstance(args: Bundle?): ReportFragment {
-            val fragment = ReportFragment()
-            fragment.arguments = args
-            return fragment
         }
     }
 }

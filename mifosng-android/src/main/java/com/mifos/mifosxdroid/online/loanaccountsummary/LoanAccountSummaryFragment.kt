@@ -4,7 +4,6 @@
  */
 package com.mifos.mifosxdroid.online.loanaccountsummary
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,20 +13,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.databinding.FragmentLoanAccountSummaryBinding
-import com.mifos.mifosxdroid.online.datatable.DataTableFragment
-import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment
-import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApproval
-import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementFragment
-import com.mifos.mifosxdroid.online.loancharge.LoanChargeFragment
 import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.objects.client.Charges
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
-import com.mifos.utils.FragmentConstants
 import javax.inject.Inject
 
 /**
@@ -36,6 +31,7 @@ import javax.inject.Inject
 class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvpView {
 
     private lateinit var binding: FragmentLoanAccountSummaryBinding
+    private val arg: LoanAccountSummaryFragmentArgs by navArgs()
 
     var loanAccountNumber = 0
 
@@ -46,14 +42,11 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
     // Action Identifier in the onProcessTransactionClicked Method
     private var processLoanTransactionAction = -1
     private var parentFragment = true
-    private var mListener: OnFragmentInteractionListener? = null
     private var clientLoanWithAssociations: LoanWithAssociations? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            loanAccountNumber = requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
-            parentFragment = requireArguments().getBoolean(Constants.IS_A_PARENT_FRAGMENT)
-        }
+        loanAccountNumber = arg.loanAccountNumber
+        parentFragment = arg.parentFragment
         //Necessary Call to add and update the Menu in a Fragment
         setHasOptionsMenu(true)
     }
@@ -91,7 +84,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
     private fun onProcessTransactionClicked() {
         when (processLoanTransactionAction) {
             TRANSACTION_REPAYMENT -> {
-                mListener?.makeRepayment(clientLoanWithAssociations)
+                makeRepayment(clientLoanWithAssociations)
             }
 
             ACTION_APPROVE_LOAN -> {
@@ -105,18 +98,6 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
             else -> {
                 Log.i(requireActivity().localClassName, "TRANSACTION ACTION NOT SET")
             }
-        }
-    }
-
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        mListener = try {
-            activity as OnFragmentInteractionListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException(
-                activity.toString() + " must implement " +
-                        "OnFragmentInteractionListener"
-            )
         }
     }
 
@@ -150,8 +131,8 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         when (id) {
-            MENU_ITEM_REPAYMENT_SCHEDULE -> mListener?.loadRepaymentSchedule(loanAccountNumber)
-            MENU_ITEM_LOAN_TRANSACTIONS -> mListener?.loadLoanTransactions(loanAccountNumber)
+            MENU_ITEM_REPAYMENT_SCHEDULE -> loadRepaymentSchedule(loanAccountNumber)
+            MENU_ITEM_LOAN_TRANSACTIONS -> loadLoanTransactions(loanAccountNumber)
             MENU_ITEM_DOCUMENTS -> loadDocuments()
             MENU_ITEM_CHARGES -> loadLoanCharges()
             MENU_ITEM_DATA_TABLES -> loadLoanDataTables()
@@ -208,55 +189,48 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
     }
 
     private fun loadDocuments() {
-        val documentListFragment =
-            DocumentListFragment.newInstance(Constants.ENTITY_TYPE_LOANS, loanAccountNumber)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY)
-        fragmentTransaction.replace(R.id.container, documentListFragment)
-        fragmentTransaction.commit()
+        val action =
+            LoanAccountSummaryFragmentDirections.actionLoanAccountSummaryFragmentToDocumentListFragment(
+                loanAccountNumber,
+                Constants.ENTITY_TYPE_LOANS
+            )
+        findNavController().navigate(action)
     }
 
     private fun loadLoanCharges() {
-        val loanChargeFragment: LoanChargeFragment = LoanChargeFragment.Companion.newInstance(
-            loanAccountNumber,
-            chargesList
-        )
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY)
-        fragmentTransaction.replace(R.id.container, loanChargeFragment)
-        fragmentTransaction.commit()
+        val action =
+            LoanAccountSummaryFragmentDirections.actionLoanAccountSummaryFragmentToLoanChargeFragment(
+                loanAccountNumber,
+                chargesList.toTypedArray()
+            )
+        findNavController().navigate(action)
     }
 
     private fun approveLoan() {
-        val loanAccountApproval: LoanAccountApproval =
-            LoanAccountApproval.Companion.newInstance(loanAccountNumber, clientLoanWithAssociations)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY)
-        fragmentTransaction.replace(R.id.container, loanAccountApproval)
-        fragmentTransaction.commit()
+        val action = clientLoanWithAssociations?.let {
+            LoanAccountSummaryFragmentDirections.actionLoanAccountSummaryFragmentToLoanAccountApproval(
+                loanAccountNumber,
+                it
+            )
+        }
+        action?.let { findNavController().navigate(it) }
     }
 
     private fun disburseLoan() {
-        val loanAccountDisbursement: LoanAccountDisbursementFragment =
-            LoanAccountDisbursementFragment.Companion.newInstance(loanAccountNumber)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY)
-        fragmentTransaction.replace(R.id.container, loanAccountDisbursement)
-        fragmentTransaction.commit()
+        val action =
+            LoanAccountSummaryFragmentDirections.actionLoanAccountSummaryFragmentToLoanAccountDisbursementFragment(
+                loanAccountNumber
+            )
+        findNavController().navigate(action)
     }
 
     private fun loadLoanDataTables() {
-        val loanAccountFragment =
-            DataTableFragment.newInstance(Constants.DATA_TABLE_NAME_LOANS, loanAccountNumber)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_LOAN_ACCOUNT_SUMMARY)
-        fragmentTransaction.replace(R.id.container, loanAccountFragment)
-        fragmentTransaction.commit()
+        val action =
+            LoanAccountSummaryFragmentDirections.actionLoanAccountSummaryFragmentToDataTableFragment(
+                Constants.DATA_TABLE_NAME_LOANS,
+                loanAccountNumber
+            )
+        findNavController().navigate(action)
     }
 
     override fun showLoanById(loanWithAssociations: LoanWithAssociations) {
@@ -340,10 +314,29 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
         }
     }
 
-    interface OnFragmentInteractionListener {
-        fun makeRepayment(loan: LoanWithAssociations?)
-        fun loadRepaymentSchedule(loanId: Int)
-        fun loadLoanTransactions(loanId: Int)
+    private fun makeRepayment(loan: LoanWithAssociations?) {
+        val action = loan?.let {
+            LoanAccountSummaryFragmentDirections.actionLoanAccountSummaryFragmentToLoanRepaymentFragment(
+                it
+            )
+        }
+        action?.let { findNavController().navigate(it) }
+    }
+
+    private fun loadRepaymentSchedule(loanId: Int) {
+        val action =
+            LoanAccountSummaryFragmentDirections.actionLoanAccountSummaryFragmentToLoanRepaymentScheduleFragment(
+                loanId
+            )
+        findNavController().navigate(action)
+    }
+
+    private fun loadLoanTransactions(loanId: Int) {
+        val action =
+            LoanAccountSummaryFragmentDirections.actionLoanAccountSummaryFragmentToLoanTransactionsFragment(
+                loanId
+            )
+        findNavController().navigate(action)
     }
 
     companion object {

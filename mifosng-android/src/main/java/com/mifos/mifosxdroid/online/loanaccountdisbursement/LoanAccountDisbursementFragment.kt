@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
@@ -37,8 +38,7 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
     LoanAccountDisbursementMvpView, OnItemSelectedListener {
 
     private lateinit var binding: DialogFragmentDisburseLoanBinding
-
-    val LOG_TAG = javaClass.simpleName
+    private val arg : LoanAccountDisbursementFragmentArgs by navArgs()
 
     @Inject
     lateinit var loanAccountDisbursementPresenter: LoanAccountDisbursementPresenter
@@ -52,9 +52,7 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) {
-            loanAccountNumber = requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
-        }
+        loanAccountNumber = arg.loanAccountNumber
         paymentTypeOptions = ArrayList()
         setHasOptionsMenu(true)
     }
@@ -184,16 +182,6 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {}
-
-    companion object {
-        fun newInstance(loanAccountNumber: Int): LoanAccountDisbursementFragment {
-            val loanAccountDisbursement = LoanAccountDisbursementFragment()
-            val args = Bundle()
-            args.putInt(Constants.LOAN_ACCOUNT_NUMBER, loanAccountNumber)
-            loanAccountDisbursement.arguments = args
-            return loanAccountDisbursement
-        }
-    }
 }
 
 private fun <E> List<E>?.addAll() {

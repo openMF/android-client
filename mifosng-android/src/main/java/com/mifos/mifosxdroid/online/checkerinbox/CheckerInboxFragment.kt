@@ -47,10 +47,6 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
         return inBadgeProcessingMode
     }
 
-    companion object {
-        fun newInstance() = CheckerInboxFragment()
-    }
-
     @Inject
     lateinit var factory: CheckerInboxViewModelFactory
     private lateinit var viewModel: CheckerInboxViewModel

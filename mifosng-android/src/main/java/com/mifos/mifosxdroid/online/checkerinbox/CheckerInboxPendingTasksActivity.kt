@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.checkerinbox
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.fragment.NavHostFragment
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 
@@ -14,7 +14,11 @@ class CheckerInboxPendingTasksActivity : MifosBaseActivity() {
         showBackButton()
         setToolbarTitle(resources.getString(R.string.checker_inbox_and_pending_tasks))
 
-        val fragment = CheckerInboxTasksFragment()
-        replaceFragment(fragment, false, R.id.container)
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
+        navHostFragment.navController.apply {
+            popBackStack()
+            navigate(R.id.checkerInboxTasksFragment)
+        }
     }
 }

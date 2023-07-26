@@ -9,7 +9,10 @@
 
     <ScrollView style="@style/ScrollView.Base">
 
-        <LinearLayout style="@style/LinearLayout.Base">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 style="@style/LinearLayout.Width"

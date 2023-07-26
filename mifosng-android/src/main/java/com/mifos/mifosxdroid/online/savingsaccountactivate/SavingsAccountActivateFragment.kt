@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -34,8 +35,7 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
     SavingsAccountActivateMvpView {
 
     private lateinit var binding: DialogFragmentApproveSavingsBinding
-
-    val LOG_TAG = javaClass.simpleName
+    private val arg : SavingsAccountActivateFragmentArgs by navArgs()
 
     @Inject
     lateinit var mSavingsAccountActivatePresenter: SavingsAccountActivatePresenter
@@ -47,10 +47,8 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) {
-            savingsAccountNumber = requireArguments().getInt(Constants.SAVINGS_ACCOUNT_NUMBER)
-            savingsAccountType = requireArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE)
-        }
+        savingsAccountNumber = arg.savingsAccountNumber
+        savingsAccountType = arg.type
         setHasOptionsMenu(true)
     }
 
@@ -142,19 +140,5 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
     override fun onDestroyView() {
         super.onDestroyView()
         mSavingsAccountActivatePresenter.detachView()
-    }
-
-    companion object {
-        fun newInstance(
-            savingsAccountNumber: Int,
-            type: DepositType?
-        ): SavingsAccountActivateFragment {
-            val savingsAccountApproval = SavingsAccountActivateFragment()
-            val args = Bundle()
-            args.putInt(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountNumber)
-            args.putParcelable(Constants.SAVINGS_ACCOUNT_TYPE, type)
-            savingsAccountApproval.arguments = args
-            return savingsAccountApproval
-        }
     }
 }

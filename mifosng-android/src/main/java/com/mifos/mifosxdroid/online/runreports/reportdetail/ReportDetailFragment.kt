@@ -16,12 +16,13 @@ import android.widget.Spinner
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentClientReportDetailsBinding
-import com.mifos.mifosxdroid.online.runreports.report.ReportFragment
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.runreports.FullParameterListResponse
@@ -39,6 +40,7 @@ import javax.inject.Inject
 class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePickListener {
 
     private lateinit var binding: FragmentClientReportDetailsBinding
+    private val arg: ReportDetailFragmentArgs by navArgs()
 
     @Inject
     lateinit var presenter: ReportDetailPresenter
@@ -70,7 +72,7 @@ class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePic
         binding = FragmentClientReportDetailsBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
         presenter.attachView(this)
-        reportItem = requireArguments().getParcelable(Constants.CLIENT_REPORT_ITEM)
+        reportItem = arg.clientReportTypeItem
         setUpUi()
         return binding.root
     }
@@ -300,13 +302,9 @@ class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePic
     }
 
     override fun showRunReport(response: FullParameterListResponse) {
-        val bundle = Bundle()
-        bundle.putParcelable(Constants.REPORT_NAME, response)
-        val fragmentTransaction = requireActivity()
-            .supportFragmentManager.beginTransaction()
-        fragmentTransaction.addToBackStack("ClientDetails")
-        fragmentTransaction.replace(R.id.container, ReportFragment.newInstance(bundle))
-            .commit()
+        val action =
+            ReportDetailFragmentDirections.actionReportDetailFragmentToReportFragment(response)
+        findNavController().navigate(action)
     }
 
     override fun showOffices(response: FullParameterListResponse, identifier: String) {
@@ -376,8 +374,8 @@ class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePic
     }
 
     override fun showFullParameterResponse(response: FullParameterListResponse) {
-        for (row in response.data!!) {
-            when (row.row!![0]) {
+        for (row in response.data) {
+            when (row.row[0]) {
                 Constants.LOAN_OFFICER_ID_SELECT -> fetchLoanOfficer = true
                 Constants.LOAN_PRODUCT_ID_SELECT -> fetchLoanProduct = true
                 Constants.START_DATE_SELECT -> addTextView(Constants.START_DATE_SELECT)
@@ -388,7 +386,7 @@ class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePic
                 Constants.OVERDUE_X_SELECT -> addTextView(Constants.OVERDUE_X_SELECT)
                 Constants.OVERDUE_Y_SELECT -> addTextView(Constants.OVERDUE_Y_SELECT)
             }
-            presenter.fetchParameterDetails(row.row!![0], true)
+            presenter.fetchParameterDetails(row.row[0], true)
         }
     }
 
@@ -483,14 +481,6 @@ class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePic
                 et.setText(simpleDateFormat1.format(dateModified))
                 break
             }
-        }
-    }
-
-    companion object {
-        fun newInstance(args: Bundle?): ReportDetailFragment {
-            val fragment = ReportDetailFragment()
-            fragment.arguments = args
-            return fragment
         }
     }
 }

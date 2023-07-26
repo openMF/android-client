@@ -31,32 +31,21 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.navigation.fragment.findNavController
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.joanzapata.iconify.widget.IconTextView
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentClientDetailsBinding
-import com.mifos.mifosxdroid.online.activate.ActivateFragment
-import com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment
-import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment
-import com.mifos.mifosxdroid.online.datatable.DataTableFragment
-import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment
-import com.mifos.mifosxdroid.online.loanaccount.LoanAccountFragment
-import com.mifos.mifosxdroid.online.note.NoteFragment
-import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment
-import com.mifos.mifosxdroid.online.sign.SignatureFragment
-import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment
 import com.mifos.objects.accounts.ClientAccounts
 import com.mifos.objects.accounts.savings.DepositType
 import com.mifos.objects.client.Charges
 import com.mifos.objects.client.Client
 import com.mifos.utils.Constants
-import com.mifos.utils.FragmentConstants
 import com.mifos.utils.ImageLoaderUtils
 import com.mifos.utils.Utils
 import okhttp3.ResponseBody
@@ -64,18 +53,18 @@ import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
 
+
 class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
 
     private lateinit var binding: FragmentClientDetailsBinding
 
     private var imgDecodableString: String? = null
-    private val TAG = ClientDetailsFragment::class.java.simpleName
     var clientId = 0
     var chargesList: MutableList<Charges> = ArrayList()
 
     @Inject
     lateinit var mClientDetailsPresenter: ClientDetailsPresenter
-    private var mListener: OnFragmentInteractionListener? = null
+
     private val clientImageFile = File(
         Environment.getExternalStorageDirectory().toString() +
                 "/client_image.png"
@@ -117,18 +106,6 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
 
     private fun inflateClientInformation() {
         mClientDetailsPresenter.loadClientDetailsAndClientAccounts(clientId)
-    }
-
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        mListener = try {
-            activity as OnFragmentInteractionListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException(
-                requireActivity().javaClass.simpleName + " must " +
-                        "implement OnFragmentInteractionListener"
-            )
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -216,9 +193,11 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
             MENU_ITEM_ADD_LOAN_ACCOUNT -> addLoanAccount()
             MENU_ITEM_IDENTIFIERS -> loadIdentifiers()
             MENU_ITEM_PIN_POINT -> {
-                val i = Intent(activity, PinpointClientActivity::class.java)
-                i.putExtra(Constants.CLIENT_ID, clientId)
-                startActivity(i)
+                val action =
+                    ClientDetailsFragmentDirections.actionClientDetailsFragmentToPinpointClientActivity(
+                        clientId
+                    )
+                findNavController().navigate(action)
             }
 
             MENU_ITEM_SURVEYS -> loadSurveys()
@@ -227,7 +206,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         return super.onOptionsItemSelected(item)
     }
 
-    fun captureClientImage() {
+    private fun captureClientImage() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(clientImageFile))
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE)
@@ -247,7 +226,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         }
     }
 
-    fun uploadClientImage() {
+    private fun uploadClientImage() {
         // Create intent to Open Image applications like Gallery, Google Photos
         val galleryIntent = Intent(
             Intent.ACTION_PICK,
@@ -273,101 +252,82 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     }
 
     private fun loadDocuments() {
-        val documentListFragment =
-            DocumentListFragment.newInstance(Constants.ENTITY_TYPE_CLIENTS, clientId)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-        fragmentTransaction.replace(R.id.container, documentListFragment)
-        fragmentTransaction.commit()
+        val action =
+            ClientDetailsFragmentDirections.actionClientDetailsFragmentToDocumentListFragment(
+                clientId,
+                Constants.ENTITY_TYPE_CLIENTS
+            )
+        findNavController().navigate(action)
     }
 
     private fun loadNotes() {
-        val noteFragment = NoteFragment.newInstance(Constants.ENTITY_TYPE_CLIENTS, clientId)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-        fragmentTransaction.replace(R.id.container, noteFragment)
-        fragmentTransaction.commit()
+        val action = ClientDetailsFragmentDirections.actionClientDetailsFragmentToNoteFragment(
+            clientId,
+            Constants.ENTITY_TYPE_CLIENTS
+        )
+        findNavController().navigate(action)
     }
 
     private fun loadClientCharges() {
-        val clientChargeFragment: ClientChargeFragment = ClientChargeFragment.Companion.newInstance(
-            clientId,
-            chargesList
-        )
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-        fragmentTransaction.replace(R.id.container, clientChargeFragment)
-        fragmentTransaction.commit()
+        val action =
+            ClientDetailsFragmentDirections.actionClientDetailsFragmentToClientChargeFragment(
+                clientId,
+                chargesList.toTypedArray()
+            )
+        findNavController().navigate(action)
     }
 
     private fun loadIdentifiers() {
-        val clientIdentifiersFragment: ClientIdentifiersFragment =
-            ClientIdentifiersFragment.Companion.newInstance(clientId)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-        fragmentTransaction.replace(R.id.container, clientIdentifiersFragment)
-        fragmentTransaction.commit()
+        val action =
+            ClientDetailsFragmentDirections.actionClientDetailsFragmentToClientIdentifiersFragment(
+                clientId
+            )
+        findNavController().navigate(action)
     }
 
     private fun loadSurveys() {
-        val surveyListFragment = SurveyListFragment.newInstance(clientId)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-        fragmentTransaction.replace(R.id.container, surveyListFragment)
-        fragmentTransaction.commit()
+        val action =
+            ClientDetailsFragmentDirections.actionClientDetailsFragmentToSurveyListFragment(clientId)
+        findNavController().navigate(action)
     }
 
     private fun addSavingsAccount() {
-        val savingsAccountFragment = SavingsAccountFragment.newInstance(clientId, false)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-        fragmentTransaction.replace(R.id.container, savingsAccountFragment)
-        fragmentTransaction.commit()
+        val action =
+            ClientDetailsFragmentDirections.actionClientDetailsFragmentToSavingsAccountFragment(
+                clientId,
+                false
+            )
+        findNavController().navigate(action)
     }
 
     private fun addLoanAccount() {
-        val loanAccountFragment = LoanAccountFragment.newInstance(clientId)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-        fragmentTransaction.replace(R.id.container, loanAccountFragment)
-        fragmentTransaction.commit()
+        val action =
+            ClientDetailsFragmentDirections.actionClientDetailsFragmentToLoanAccountFragment(
+                clientId
+            )
+        findNavController().navigate(action)
     }
 
     private fun activateClient() {
-        val activateFragment = ActivateFragment.newInstance(clientId, Constants.ACTIVATE_CLIENT)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-        fragmentTransaction.replace(R.id.container, activateFragment)
-        fragmentTransaction.commit()
+        val action = ClientDetailsFragmentDirections.actionClientDetailsFragmentToActivateFragment(
+            clientId,
+            Constants.ACTIVATE_CLIENT
+        )
+        findNavController().navigate(action)
     }
 
     private fun loadClientDataTables() {
-        val loanAccountFragment =
-            DataTableFragment.newInstance(Constants.DATA_TABLE_NAME_CLIENT, clientId)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-        fragmentTransaction.replace(R.id.container, loanAccountFragment)
-        fragmentTransaction.commit()
+        val action = ClientDetailsFragmentDirections.actionClientDetailsFragmentToDataTableFragment(
+            Constants.DATA_TABLE_NAME_CLIENT,
+            clientId
+        )
+        findNavController().navigate(action)
     }
 
     private fun loadSignUpload() {
-        val fragment = SignatureFragment()
-        val bundle = Bundle()
-        bundle.putInt(Constants.CLIENT_ID, clientId)
-        fragment.arguments = bundle
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CLIENT_DETAILS)
-        fragmentTransaction.replace(R.id.container, fragment).commit()
+        val action =
+            ClientDetailsFragmentDirections.actionClientDetailsFragmentToSignatureFragment(clientId)
+        findNavController().navigate(action)
     }
 
     override fun showProgressbar(show: Boolean) {
@@ -448,7 +408,6 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                 }
                 menu.show()
             }
-            //inflateClientsAccounts();
         }
     }
 
@@ -500,10 +459,10 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
             )
             section.connect(
                 activity,
-                adapter,
-                AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                    adapter.getItem(i).id?.let { mListener?.loadLoanAccountSummary(it) }
-                })
+                adapter
+            ) { adapterView, view, i, l ->
+                adapter.getItem(i).id?.let { loadLoanAccountSummary(it) }
+            }
         } else {
             binding.accountAccordionSectionLoans.root.visibility = GONE
         }
@@ -515,15 +474,17 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
             )
             section.connect(
                 activity,
-                adapter,
-                AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                    adapter.getItem(i).id?.let {
-                        mListener?.loadSavingsAccountSummary(
+                adapter
+            ) { adapterView, view, i, l ->
+                adapter.getItem(i).id?.let {
+                    adapter.getItem(i).depositType?.let { it1 ->
+                        loadSavingsAccountSummary(
                             it,
-                            adapter.getItem(i).depositType
+                            it1
                         )
                     }
-                })
+                }
+            }
         } else {
             binding.accountAccordionSectionSavings.root.visibility = GONE
         }
@@ -535,15 +496,17 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
             )
             section.connect(
                 activity,
-                adapter,
-                AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                    adapter.getItem(i).id?.let {
-                        mListener?.loadSavingsAccountSummary(
+                adapter
+            ) { adapterView, view, i, l ->
+                adapter.getItem(i).id?.let {
+                    adapter.getItem(i).depositType?.let { it1 ->
+                        loadSavingsAccountSummary(
                             it,
-                            adapter.getItem(i).depositType
+                            it1
                         )
                     }
-                })
+                }
+            }
         } else {
             binding.accountAccordionSectionRecurring.root.visibility = GONE
         }
@@ -551,11 +514,6 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
 
     override fun showFetchingError(s: String?) {
         Toast.makeText(activity, s, Toast.LENGTH_SHORT).show()
-    }
-
-    interface OnFragmentInteractionListener {
-        fun loadLoanAccountSummary(loanAccountNumber: Int)
-        fun loadSavingsAccountSummary(savingsAccountNumber: Int, accountType: DepositType?)
     }
 
     private class AccountAccordion(private val context: Activity?) {
@@ -689,6 +647,25 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         }
     }
 
+    private fun loadLoanAccountSummary(loanAccountNumber: Int) {
+        val action =
+            ClientDetailsFragmentDirections.actionClientDetailsFragmentToLoanAccountSummaryFragment(
+                loanAccountNumber,
+                true
+            )
+        findNavController().navigate(action)
+    }
+
+    private fun loadSavingsAccountSummary(savingsAccountNumber: Int, accountType: DepositType) {
+        val action =
+            ClientDetailsFragmentDirections.actionClientDetailsFragmentToSavingsAccountSummaryFragment(
+                savingsAccountNumber,
+                accountType,
+                true
+            )
+        findNavController().navigate(action)
+    }
+
     companion object {
         // Intent response codes. Each response code must be a unique integer.
         private const val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 2
@@ -704,19 +681,5 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         const val MENU_ITEM_IDENTIFIERS = 1007
         const val MENU_ITEM_SURVEYS = 1008
         const val MENU_ITEM_NOTE = 1009
-
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param clientId Client's Id
-         */
-        fun newInstance(clientId: Int): ClientDetailsFragment {
-            val fragment = ClientDetailsFragment()
-            val args = Bundle()
-            args.putInt(Constants.CLIENT_ID, clientId)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

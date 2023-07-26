@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
@@ -40,6 +41,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     SavingsAccountMvpView, OnItemSelectedListener {
 
     private lateinit var binding: FragmentAddSavingsAccountBinding
+    private val arg : SavingsAccountFragmentArgs by navArgs()
 
     @Inject
     lateinit var mSavingsAccountPresenter: SavingsAccountPresenter
@@ -59,12 +61,9 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        val arguments = arguments
-        if (arguments != null) {
-            isGroupAccount = arguments.getBoolean(Constants.GROUP_ACCOUNT)
-            clientId = arguments.getInt(Constants.CLIENT_ID)
-            groupId = arguments.getInt(Constants.GROUP_ID)
-        }
+        isGroupAccount = arg.isGroupAccount
+        clientId = arg.id
+        groupId = arg.id
     }
 
     override fun onCreateView(

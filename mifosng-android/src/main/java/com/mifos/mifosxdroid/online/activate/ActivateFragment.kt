@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
@@ -26,6 +27,7 @@ import javax.inject.Inject
 class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListener {
 
     private lateinit var binding: FragmentActivateClientBinding
+    private val arg : ActivateFragmentArgs by navArgs()
 
     @JvmField
     @Inject
@@ -37,10 +39,8 @@ class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) {
-            id = requireArguments().getInt(Constants.ID)
-            activateType = requireArguments().getString(Constants.ACTIVATE_TYPE)
-        }
+        id = arg.clientId
+        activateType = arg.activationType
     }
 
     override fun onCreateView(

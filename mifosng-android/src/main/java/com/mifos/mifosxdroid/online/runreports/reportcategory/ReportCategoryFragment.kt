@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
@@ -91,15 +92,10 @@ class ReportCategoryFragment : MifosBaseFragment(), ReportCategoryMvpView {
     }
 
     private fun openDetailFragment(pos: Int) {
-        val bundle = Bundle()
-        bundle.putParcelable(Constants.CLIENT_REPORT_ITEM, reportTypeItems?.getOrNull(pos))
-        val fragmentTransaction = requireActivity()
-            .supportFragmentManager.beginTransaction()
-        fragmentTransaction.addToBackStack("ClientCategory")
-        fragmentTransaction.replace(
-            R.id.container,
-            ReportDetailFragment.newInstance(bundle)
-        ).commit()
+        val action = reportTypeItems?.getOrNull(pos)?.let {
+            ReportCategoryFragmentDirections.actionReportCategoryFragmentToReportDetailFragment(it)
+        }
+        action?.let { findNavController().navigate(it) }
     }
 
     override fun showProgressbar(b: Boolean) {
@@ -107,15 +103,6 @@ class ReportCategoryFragment : MifosBaseFragment(), ReportCategoryMvpView {
             showMifosProgressDialog()
         } else {
             hideMifosProgressDialog()
-        }
-    }
-
-    companion object {
-        fun newInstance(): ReportCategoryFragment {
-            val fragment = ReportCategoryFragment()
-            val bundle = Bundle()
-            fragment.arguments = bundle
-            return fragment
         }
     }
 }

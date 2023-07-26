@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter
@@ -34,6 +35,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
 
 
     private lateinit var binding: FragmentChargeListBinding
+    private val arg : ClientChargeFragmentArgs by navArgs()
 
     private lateinit var chargesList: List<Charges>
 
@@ -46,7 +48,8 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) clientId = requireArguments().getInt(Constants.CLIENT_ID)
+        clientId = arg.clientId
+        setChargesList(arg.chargesList.toMutableList())
     }
 
     override fun onCreateView(
@@ -221,26 +224,6 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
 
     companion object {
         const val MENU_ITEM_ADD_NEW_CHARGES = 2000
-        fun newInstance(clientId: Int, chargesList: MutableList<Charges>?): ClientChargeFragment {
-            val fragment = ClientChargeFragment()
-            val args = Bundle()
-            args.putInt(Constants.CLIENT_ID, clientId)
-            fragment.arguments = args
-            if (chargesList != null) fragment.setChargesList(chargesList)
-            return fragment
-        }
-
-        fun newInstance(
-            clientId: Int, chargesList: MutableList<Charges>,
-            isParentFragmentAGroupFragment: Boolean
-        ): ClientChargeFragment {
-            val fragment = ClientChargeFragment()
-            val args = Bundle()
-            args.putInt(Constants.CLIENT_ID, clientId)
-            fragment.arguments = args
-            fragment.setChargesList(chargesList)
-            return fragment
-        }
     }
 }
 

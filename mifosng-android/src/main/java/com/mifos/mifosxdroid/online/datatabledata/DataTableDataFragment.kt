@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.navArgs
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.google.gson.JsonArray
 import com.mifos.mifosxdroid.R
@@ -34,6 +35,7 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
     OnRefreshListener {
 
     private lateinit var binding: FragmentDatatableBinding
+    private val arg : DataTableDataFragmentArgs by navArgs()
 
     @Inject
     lateinit var mDataTableDataPresenter: DataTableDataPresenter
@@ -42,6 +44,8 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
+        dataTable = arg.dataTable
+        entityId = arg.entityId
         setHasOptionsMenu(true)
     }
 
@@ -161,14 +165,5 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
     override fun onDestroyView() {
         super.onDestroyView()
         mDataTableDataPresenter.detachView()
-    }
-
-    companion object {
-        fun newInstance(dataTable: DataTable?, entityId: Int): DataTableDataFragment {
-            val fragment = DataTableDataFragment()
-            fragment.dataTable = dataTable
-            fragment.entityId = entityId
-            return fragment
-        }
     }
 }

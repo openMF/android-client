@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.mifos.mifosxdroid.R
@@ -23,6 +24,7 @@ import javax.inject.Inject
 class NoteFragment : MifosBaseFragment(), NoteMvpView, OnRefreshListener {
 
     private lateinit var binding: FragmentNotesBinding
+    private val arg : NoteFragmentArgs by navArgs()
 
     @Inject
     lateinit var notePresenter: NotePresenter
@@ -36,10 +38,8 @@ class NoteFragment : MifosBaseFragment(), NoteMvpView, OnRefreshListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) {
-            entityType = requireArguments().getString(Constants.ENTITY_TYPE)
-            entityId = requireArguments().getInt(Constants.ENTITY_ID)
-        }
+        entityId = arg.entiyId
+        entityType = arg.entityType
     }
 
     override fun onResume() {

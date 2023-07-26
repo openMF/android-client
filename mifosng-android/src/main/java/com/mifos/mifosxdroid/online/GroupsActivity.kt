@@ -23,9 +23,8 @@ import com.mifos.utils.Constants
  * Created by nellyk on 2/27/2016.
  */
 class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInteractionListener,
-    LoanAccountSummaryFragment.OnFragmentInteractionListener,
-    LoanRepaymentFragment.OnFragmentInteractionListener,
-    SavingsAccountSummaryFragment.OnFragmentInteractionListener {
+//    LoanAccountSummaryFragment.OnFragmentInteractionListener,
+    LoanRepaymentFragment.OnFragmentInteractionListener {
 
     private val args : GroupsActivityArgs by navArgs()
 
@@ -76,9 +75,9 @@ class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInter
      * It will display the Loan Repayment Fragment where
      * the Information of the repayment has to be filled in.
      */
-    override fun makeRepayment(loan: LoanWithAssociations?) {
-        replaceFragment(LoanRepaymentFragment.newInstance(loan), true, R.id.container)
-    }
+//    override fun makeRepayment(loan: LoanWithAssociations?) {
+//        replaceFragment(LoanRepaymentFragment.newInstance(loan), true, R.id.container)
+//    }
 
     /**
      * Called when the Repayment Schedule option from the Menu is
@@ -87,9 +86,9 @@ class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInter
      *
      * It will display the Complete Loan Repayment Schedule.
      */
-    override fun loadRepaymentSchedule(loanId: Int) {
-        replaceFragment(LoanRepaymentScheduleFragment.newInstance(loanId), true, R.id.container)
-    }
+//    override fun loadRepaymentSchedule(loanId: Int) {
+//        replaceFragment(LoanRepaymentScheduleFragment.newInstance(loanId), true, R.id.container)
+//    }
 
     /**
      * Called when the Transactions option from the Menu is clicked
@@ -98,9 +97,9 @@ class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInter
      * It will display all the Transactions associated with the Loan
      * and also their details
      */
-    override fun loadLoanTransactions(loanId: Int) {
-        replaceFragment(LoanTransactionsFragment.newInstance(loanId), true, R.id.container)
-    }
+//    override fun loadLoanTransactions(loanId: Int) {
+//        replaceFragment(LoanTransactionsFragment.newInstance(loanId), true, R.id.container)
+//    }
 
     /**
      * Called when the make the make deposit button is clicked
@@ -113,19 +112,19 @@ class GroupsActivity : MifosBaseActivity(), GroupDetailsFragment.OnFragmentInter
      *
      * The transactionType defines if the transaction is a Deposit or a Withdrawal
      */
-    override fun doTransaction(
-        savingsAccountWithAssociations: SavingsAccountWithAssociations?,
-        transactionType: String?,
-        accountType: DepositType?
-    ) {
-        replaceFragment(
-            SavingsAccountTransactionFragment.newInstance(
-                savingsAccountWithAssociations!!,
-                transactionType,
-                accountType
-            ), true, R.id.container
-        )
-    }
+//    override fun doTransaction(
+//        savingsAccountWithAssociations: SavingsAccountWithAssociations?,
+//        transactionType: String?,
+//        accountType: DepositType?
+//    ) {
+//        replaceFragment(
+//            SavingsAccountTransactionFragment.newInstance(
+//                savingsAccountWithAssociations!!,
+//                transactionType,
+//                accountType
+//            ), true, R.id.container
+//        )
+//    }
 
     override fun loadGroupClients(clients: List<Client>?) {
         replaceFragment(ClientListFragment.newInstance(clients, true), true, R.id.container)

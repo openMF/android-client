@@ -14,6 +14,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.jakewharton.fliptables.FlipTable
 import com.mifos.exceptions.RequiredFieldException
@@ -42,13 +43,13 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
 
 
     private lateinit var binding: FragmentSavingsAccountTransactionBinding
-
+    private val arg : SavingsAccountTransactionFragmentArgs by navArgs()
     val LOG_TAG = javaClass.simpleName
 
     @Inject
     lateinit var mSavingAccountTransactionPresenter: SavingsAccountTransactionPresenter
     private var savingsAccountNumber: String? = null
-    private var savingsAccountId = 0
+    private var savingsAccountId : Int? = null
     private var savingsAccountType: DepositType? = null
     private var transactionType //Defines if the Transaction is a Deposit to an Account
             : String? = null
@@ -62,14 +63,11 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) {
-            savingsAccountNumber = requireArguments().getString(Constants.SAVINGS_ACCOUNT_NUMBER)
-            savingsAccountId = requireArguments().getInt(Constants.SAVINGS_ACCOUNT_ID)
-            transactionType =
-                requireArguments().getString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE)
-            clientName = requireArguments().getString(Constants.CLIENT_NAME)
-            savingsAccountType = requireArguments().getParcelable(Constants.SAVINGS_ACCOUNT_TYPE)
-        }
+        savingsAccountId = arg.savingsAccountWithAssociations.accountNo
+        savingsAccountId = arg.savingsAccountWithAssociations.id
+        transactionType = arg.transactionType
+        clientName = arg.savingsAccountWithAssociations.clientName
+        savingsAccountType = arg.accountType
     }
 
     override fun onCreateView(
@@ -113,8 +111,10 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
 
     override fun checkSavingAccountTransactionStatusInDatabase() {
         // Checking SavingAccountTransaction Already made in Offline mode or Not.
-        mSavingAccountTransactionPresenter
-            .checkInDatabaseSavingAccountTransaction(savingsAccountId)
+        savingsAccountId?.let {
+            mSavingAccountTransactionPresenter
+                .checkInDatabaseSavingAccountTransaction(it)
+        }
     }
 
     override fun showSavingAccountTransactionExistInDatabase() {
@@ -146,9 +146,11 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
     }
 
     private fun inflateSavingsAccountTemplate() {
-        mSavingAccountTransactionPresenter.loadSavingAccountTemplate(
-            savingsAccountType?.endpoint, savingsAccountId, transactionType
-        )
+        savingsAccountId?.let {
+            mSavingAccountTransactionPresenter.loadSavingAccountTemplate(
+                savingsAccountType?.endpoint, it, transactionType
+            )
+        }
     }
 
     private fun onReviewTransactionButtonClicked() {
@@ -225,10 +227,12 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
         val builtTransactionRequestAsJson = Gson().toJson(savingsAccountTransactionRequest)
         Log.i(resources.getString(R.string.transaction_body), builtTransactionRequestAsJson)
         if (!Network.isOnline(requireActivity())) PrefManager.userStatus = Constants.USER_OFFLINE
-        mSavingAccountTransactionPresenter.processTransaction(
-            savingsAccountType?.endpoint,
-            savingsAccountId, transactionType, savingsAccountTransactionRequest
-        )
+        savingsAccountId?.let {
+            mSavingAccountTransactionPresenter.processTransaction(
+                savingsAccountType?.endpoint,
+                it, transactionType, savingsAccountTransactionRequest
+            )
+        }
     }
 
     private fun onCancelTransactionButtonClicked() {
@@ -331,7 +335,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
             val args = Bundle()
             args.putString(
                 Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountWithAssociations
-                    .accountNo
+                    .accountNo.toString()
             )
             savingsAccountWithAssociations.id?.let { args.putInt(Constants.SAVINGS_ACCOUNT_ID, it) }
             args.putString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE, transactionType)
