@@ -61,12 +61,4 @@ class IndividualCollectionSheetFragment : MifosBaseFragment() {
         }
     }
 
-    companion object {
-        fun newInstance(): IndividualCollectionSheetFragment {
-            val args = Bundle()
-            val fragment = IndividualCollectionSheetFragment()
-            fragment.arguments = args
-            return fragment
-        }
-    }
 }

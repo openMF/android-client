@@ -80,7 +80,7 @@ class ReportCategoryPresenter @Inject constructor(private val dataManager: DataM
      * @return List of ClientReportTypeItems with unique items based on their Id.
      */
     private fun filterUniques(list: List<ClientReportTypeItem>): ArrayList<ClientReportTypeItem> {
-        val map: MutableMap<Int, ClientReportTypeItem> = LinkedHashMap()
+        val map: MutableMap<Int?, ClientReportTypeItem> = LinkedHashMap()
         for (item in list) {
             map[item.report_id] = item
         }

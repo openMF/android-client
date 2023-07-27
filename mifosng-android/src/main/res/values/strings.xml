@@ -917,5 +917,6 @@
     <string name="et_search_intro">Enter keyword to search among</string>
 
     <string name="instance_url">Instance Url</string>
+    <string name="no_check_inbox">Checker Inbox is empty</string>
 
 </resources>

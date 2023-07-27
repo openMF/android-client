@@ -41,11 +41,18 @@ class GroupListAdapter(context: Context, groups: List<Group>) : BaseAdapter() {
         return 0
     }
 
-    override fun getView(i: Int, view: View, viewGroup: ViewGroup): View {
-        val binding: RowGroupListBinding = view.tag as RowGroupListBinding
-        val group = groups[i]
-        binding.tvGroupName.text = group.name
-        binding.tvOfficeName.text = group.officeName
+    override fun getView(index: Int, view: View?, viewGroup: ViewGroup): View {
+        val binding: RowGroupListBinding
+        val convertView : View
+        if(view == null){
+            binding = RowGroupListBinding.inflate(layoutInflater,viewGroup,false)
+            convertView = binding.root
+            convertView.tag = binding
+        }else{
+            binding = view.tag as RowGroupListBinding
+            convertView = view
+        }
+        val group = groups[index]
         /**
          * Passing the String value of Status to Helper Method of
          * Status Class that compares String Value to a Static String and returns
@@ -64,6 +71,6 @@ class GroupListAdapter(context: Context, groups: List<Group>) : BaseAdapter() {
             binding.tvStatusText.text =
                 context.resources.getString(R.string.inactive)
         }
-        return view
+        return convertView
     }
 }

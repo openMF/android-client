@@ -7,6 +7,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.api.model.BulkRepaymentTransactions
 import com.mifos.api.model.IndividualCollectionSheetPayload
@@ -30,6 +32,7 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
     IndividualCollectionSheetDetailsMvpView, OnRetrieveSheetItemData, ListAdapterListener {
 
     private lateinit var binding: IndividualCollectionsSheetDetailsBinding
+    private val arg : IndividualCollectionSheetDetailsFragmentArgs by navArgs()
 
     @Inject
     lateinit var presenter: IndividualCollectionSheetDetailsPresenter
@@ -49,9 +52,9 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
                 savedInstanceState[Constants.EXTRA_COLLECTION_INDIVIDUAL] as IndividualCollectionSheet
             showCollectionSheetViews(sheet)
         }
-        sheet = requireArguments().getParcelable(Constants.INDIVIDUAL_SHEET)
-        actualDisbursementDate = requireArguments().getString(Constants.DISBURSEMENT_DATE)
-        transactionDate = requireArguments().getString(Constants.TRANSACTION_DATE)
+        sheet = arg.sheet
+        actualDisbursementDate = arg.actualDisbursementDate
+        transactionDate = arg.transactionDate
         setHasOptionsMenu(true)
     }
 
@@ -138,15 +141,25 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
     }
 
     override fun listItemPosition(position: Int) {
-        val paymentTypeOptionList = ArrayList(paymentTypeList)
-        val paymentTypeOptions = ArrayList(sheet?.paymentTypeOptions)
+        val paymentTypeOptionList: Array<String>? = paymentTypeList?.toTypedArray()
+        val paymentTypeOptions = sheet?.paymentTypeOptions?.toTypedArray()
         val current = loansAndClientNames[position]
         val clientId = current.id
-        val fragment: PaymentDetailsFragment = PaymentDetailsFragment().newInstance(
-            position, payload, paymentTypeOptionList, current, paymentTypeOptions, clientId
-        )
-        fragment.setTargetFragment(this, requestCode)
-        (context as MifosBaseActivity).replaceFragment(fragment, true, R.id.container)
+        val action = payload?.let {
+            paymentTypeOptionList?.let { it1 ->
+                paymentTypeOptions?.let { it2 ->
+                    IndividualCollectionSheetDetailsFragmentDirections.actionIndividualCollectionSheetDetailsFragmentToPaymentDetailsFragment(
+                        position,
+                        it,
+                        it1,
+                        current,
+                        it2,
+                        clientId
+                        )
+                }
+            }
+        }
+        action?.let { findNavController().navigate(it) }
     }
 
     private fun submitSheet() {
@@ -158,19 +171,4 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
             presenter.submitIndividualCollectionSheet(payload)
         }
     }
-
-    fun newInstance(
-        sheet: IndividualCollectionSheet?,
-        actualDisbursementDate: String?, transactionDate: String?
-    ): IndividualCollectionSheetDetailsFragment {
-        val args = Bundle()
-        args.putParcelable(Constants.INDIVIDUAL_SHEET, sheet)
-        args.putString(Constants.DISBURSEMENT_DATE, actualDisbursementDate)
-        args.putString(Constants.TRANSACTION_DATE, transactionDate)
-        val fragment = IndividualCollectionSheetDetailsFragment()
-        fragment.arguments = args
-        return fragment
-    }
-
-    companion object
 }

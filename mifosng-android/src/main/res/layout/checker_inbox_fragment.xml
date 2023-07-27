@@ -8,6 +8,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/tvEmptyCheckerInbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_check_inbox"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:layout_margin="20dp"
+            android:textSize="26sp"
+            android:visibility="gone"
+            />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_checker_inbox"
             android:layout_width="match_parent"
@@ -24,6 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
+            app:contentScrim="@android:color/transparent"
             app:layout_scrollFlags="scroll|enterAlways|snap">
 
                 <ViewFlipper

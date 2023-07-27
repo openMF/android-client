@@ -29,6 +29,7 @@ import com.mifos.mifosxdroid.databinding.FragmentClientBinding
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment
 import com.mifos.objects.client.Client
 import com.mifos.objects.navigation.ClientArgs
+import com.mifos.objects.navigation.ClientListArgs
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
 import javax.inject.Inject
@@ -61,12 +62,6 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
 
     private lateinit var binding: FragmentClientBinding
     private val arg: ClientListFragmentArgs by navArgs()
-    private val argClientList by lazy {
-        arg.clientList.toList()
-    }
-    private val argParent by lazy {
-        arg.isParentFragment
-    }
 
     val mClientNameListAdapter by lazy {
         ClientNameListAdapter(
@@ -74,12 +69,21 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
                 if (actionMode != null) {
                     toggleSelection(position)
                 } else {
-                    val action =
-                        ClientListFragmentDirections.actionNavigationClientListToClientActivity(
-                            ClientArgs(clientId = clientList[position].id)
-                        )
-                    findNavController().navigate(action)
-                    clickedPosition = position
+                    if(!isParentFragment){
+                        val action =
+                            ClientListFragmentDirections.actionClientListFragmentToClientActivity(
+                                ClientArgs(clientId = clientList[position].id)
+                            )
+                        findNavController().navigate(action)
+                        clickedPosition = position
+                    } else{
+                        val action =
+                            ClientListFragmentDirections.actionClientListFragmentToClientActivity(
+                                ClientArgs(clientId = clientList[position].id)
+                            )
+                        findNavController().navigate(action)
+                        clickedPosition = position
+                    }
                 }
             },
             onClientNameLongClick = { position ->
@@ -111,9 +115,9 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
         clientList = ArrayList()
         selectedClients = ArrayList()
         actionModeCallback = ActionModeCallback()
-        if(isParentFragment){
-            clientList = argClientList
-            isParentFragment = argParent
+        if(arguments != null){
+            clientList = arg.clientListArgs.clientsList
+            isParentFragment = arg.clientListArgs.isParentFragment
         }
         setHasOptionsMenu(true)
     }
@@ -163,10 +167,10 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
         super.onViewCreated(view, savedInstanceState)
 
         binding.fabCreateClient.setOnClickListener {
-            if (arguments == null) {
+            if (!isParentFragment) {
                 findNavController().navigate(R.id.action_navigation_client_list_to_createNewClientFragment)
             } else {
-                findNavController().navigate(R.id.action_groupDetailsFragment_to_createNewClientFragment2)
+                findNavController().navigate(R.id.action_clientListFragment_to_createNewClientFragment)
             }
         }
 
@@ -388,13 +392,13 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
          * @return ClientListFragment
          */
 
-        @JvmStatic
-        fun newInstance(): ClientListFragment {
-            val arguments = Bundle()
-            val clientListFragment = ClientListFragment()
-            clientListFragment.arguments = arguments
-            return clientListFragment
-        }
+//        @JvmStatic
+//        fun newInstance(): ClientListFragment {
+//            val arguments = Bundle()
+//            val clientListFragment = ClientListFragment()
+//            clientListFragment.arguments = arguments
+//            return clientListFragment
+//        }
 
         /**
          * This Method will be called, whenever Parent (Fragment or Activity) will be true and Presenter
@@ -408,23 +412,23 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
          * @param isParentFragment true
          * @return ClientListFragment
         </Client> */
-        @JvmStatic
-        fun newInstance(
-            clientList: List<Client?>?,
-            isParentFragment: Boolean
-        ): ClientListFragment {
-            val clientListFragment = ClientListFragment()
-            val args = Bundle()
-            if (isParentFragment && clientList != null) {
-                args.putParcelableArrayList(
-                    Constants.CLIENTS,
-                    clientList as ArrayList<out Parcelable?>?
-                )
-                args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, true)
-                clientListFragment.arguments = args
-            }
-            return clientListFragment
-        }
+//        @JvmStatic
+//        fun newInstance(
+//            clientList: List<Client?>?,
+//            isParentFragment: Boolean
+//        ): ClientListFragment {
+//            val clientListFragment = ClientListFragment()
+//            val args = Bundle()
+//            if (isParentFragment && clientList != null) {
+//                args.putParcelableArrayList(
+//                    Constants.CLIENTS,
+//                    clientList as ArrayList<out Parcelable?>?
+//                )
+//                args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, true)
+//                clientListFragment.arguments = args
+//            }
+//            return clientListFragment
+//        }
 
     }
 }
