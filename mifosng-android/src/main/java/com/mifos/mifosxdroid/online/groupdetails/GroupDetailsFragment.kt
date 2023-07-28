@@ -27,6 +27,7 @@ import com.mifos.objects.accounts.GroupAccounts
 import com.mifos.objects.accounts.savings.DepositType
 import com.mifos.objects.client.Client
 import com.mifos.objects.group.Group
+import com.mifos.objects.navigation.ClientListArgs
 import com.mifos.utils.Constants
 import com.mifos.utils.Utils
 import javax.inject.Inject
@@ -228,18 +229,6 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
     override fun showFetchingError(errorMessage: Int) {
         Toast.makeText(activity, getStringMessage(errorMessage), Toast.LENGTH_SHORT).show()
     }
-//
-//    override fun onAttach(activity: Activity) {
-//        super.onAttach(activity)
-//        mListener = try {
-//            activity as OnFragmentInteractionListener
-//        } catch (e: ClassCastException) {
-//            throw ClassCastException(
-//                activity.javaClass.simpleName + " must " +
-//                        "implement OnFragmentInteractionListener"
-//            )
-//        }
-//    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_group, menu)
@@ -262,17 +251,10 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         super.onDestroyView()
         mGroupDetailsPresenter.detachView()
     }
-//
-//    interface OnFragmentInteractionListener {
-//        fun loadLoanAccountSummary(loanAccountNumber: Int)
-//        fun loadSavingsAccountSummary(savingsAccountNumber: Int, accountType: DepositType?)
-//        fun loadGroupClients(clients: List<Client>?)
-//    }
 
     private fun loadGroupClients(clients: List<Client>) {
         val action = GroupDetailsFragmentDirections.actionGroupDetailsFragmentToClientListFragment(
-            clients.toTypedArray(),
-            true
+            ClientListArgs(clients, true)
         )
         findNavController().navigate(action)
     }
@@ -286,14 +268,15 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         findNavController().navigate(action)
     }
 
-    private fun loadSavingsAccountSummary(savingsAccountNumber: Int, accountType: DepositType?){
+    private fun loadSavingsAccountSummary(savingsAccountNumber: Int, accountType: DepositType?) {
         val action = accountType?.let {
-            GroupDetailsFragmentDirections.actionGroupDetailsFragmentToSavingsAccountSummaryFragment(savingsAccountNumber,
-                it,true)
+            GroupDetailsFragmentDirections.actionGroupDetailsFragmentToSavingsAccountSummaryFragment(
+                savingsAccountNumber,
+                it, true
+            )
         }
         action?.let { findNavController().navigate(it) }
     }
-
 
 
     private class AccountAccordion(private val context: Activity?) {

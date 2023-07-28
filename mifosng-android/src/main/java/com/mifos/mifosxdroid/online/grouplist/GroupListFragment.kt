@@ -6,32 +6,39 @@ package com.mifos.mifosxdroid.online.grouplist
 
 import android.app.Activity
 import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.GroupListAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.databinding.FragmentGroupListBinding
+import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsFragmentDirections
 import com.mifos.objects.client.Client
 import com.mifos.objects.group.CenterWithAssociations
 import com.mifos.objects.group.GroupWithAssociations
+import com.mifos.objects.navigation.ClientListArgs
 import com.mifos.utils.Constants
+import java.util.ArrayList
 import javax.inject.Inject
 
 class GroupListFragment : ProgressableFragment(), GroupListMvpView,
     AdapterView.OnItemClickListener {
 
     private lateinit var binding: FragmentGroupListBinding
+    private val arg : GroupListFragmentArgs by navArgs()
 
     @Inject
     lateinit var mGroupListPresenter: GroupListPresenter
     private var mGroupListAdapter: GroupListAdapter? = null
     private var mCenterWithAssociations: CenterWithAssociations? = null
-    private var mListener: OnFragmentInteractionListener? = null
     private var centerId = 0
     override fun onItemClick(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
         mCenterWithAssociations!!.groupMembers[position].id?.let {
@@ -44,7 +51,7 @@ class GroupListFragment : ProgressableFragment(), GroupListMvpView,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        if (arguments != null) centerId = requireArguments().getInt(Constants.CENTER_ID)
+        centerId = arg.centerId
     }
 
     override fun onCreateView(
@@ -60,7 +67,7 @@ class GroupListFragment : ProgressableFragment(), GroupListMvpView,
         return binding.root
     }
 
-    fun inflateGroupList() {
+    private fun inflateGroupList() {
         mGroupListPresenter.loadGroupByCenter(centerId)
     }
 
@@ -80,7 +87,7 @@ class GroupListFragment : ProgressableFragment(), GroupListMvpView,
     }
 
     override fun showGroups(groupWithAssociations: GroupWithAssociations?) {
-        if (groupWithAssociations != null) mListener?.loadClientsOfGroup(
+        if (groupWithAssociations != null) loadClientsOfGroup(
             groupWithAssociations
                 .clientMembers
         )
@@ -100,40 +107,15 @@ class GroupListFragment : ProgressableFragment(), GroupListMvpView,
         showProgress(b)
     }
 
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        mListener = try {
-            activity as OnFragmentInteractionListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException(
-                activity.toString() + " must implement " +
-                        "OnFragmentInteractionListener"
-            )
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         mGroupListPresenter.detachView()
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        mListener = null
-    }
-
-    interface OnFragmentInteractionListener {
-        fun loadClientsOfGroup(clientList: List<Client?>?)
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(centerId: Int): GroupListFragment {
-            val fragment = GroupListFragment()
-            val args = Bundle()
-            args.putInt(Constants.CENTER_ID, centerId)
-            fragment.arguments = args
-            return fragment
-        }
+    private fun loadClientsOfGroup(clientList: List<Client>){
+        val action = GroupListFragmentDirections.actionGroupListFragmentToClientListFragment(
+            ClientListArgs(clientList, true)
+        )
+        findNavController().navigate(action)
     }
 }

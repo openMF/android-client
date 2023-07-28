@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import androidx.navigation.fragment.navArgs
 import com.mifos.api.model.BulkRepaymentTransactions
 import com.mifos.api.model.IndividualCollectionSheetPayload
 import com.mifos.mifosxdroid.R
@@ -26,6 +27,7 @@ import java.util.Locale
 class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItemSelectedListener {
 
     private lateinit var binding: AddPaymentDetailBinding
+    private val arg : PaymentDetailsFragmentArgs by navArgs()
 
     var paymentTypeList: List<String>? = null
     var paymentTypeOptionsList: List<PaymentTypeOptions>? = null
@@ -50,13 +52,12 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
-        position = requireArguments().getInt(Constants.ADAPTER_POSITION)
-        loanAndClientNameItem = requireArguments().getParcelable(Constants.LOAN_AND_CLIENT)
-        paymentTypeList = requireArguments().getStringArrayList(Constants.PAYMENT_LIST)
-        payload = requireArguments().getParcelable(Constants.PAYLOAD)
-        paymentTypeOptionsList =
-            requireArguments().getParcelableArrayList(Constants.PAYMENT_OPTIONS)
-        clientId = requireArguments().getInt(Constants.CLIENT_ID)
+        position = arg.position
+        loanAndClientNameItem = arg.loanAndClientName
+        paymentTypeList = arg.paymentTypeList.toList()
+        payload = arg.payload
+        paymentTypeOptionsList = arg.paymentTypeOptions.toList()
+        clientId = arg.clientId
         bulkRepaymentTransaction = BulkRepaymentTransactions()
     }
 
@@ -225,25 +226,4 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     interface OnPayloadSelectedListener {
         fun onPayloadSelected(payload: IndividualCollectionSheetPayload?)
     }
-
-    fun newInstance(
-        position: Int,
-        payload: IndividualCollectionSheetPayload?,
-        paymentTypeList: ArrayList<String?>?,
-        loanAndClientNameItem: LoanAndClientName?,
-        paymentTypeOptions: ArrayList<PaymentTypeOptions?>?, clientId: Int
-    ): PaymentDetailsFragment {
-        val args = Bundle()
-        args.putInt(Constants.ADAPTER_POSITION, position)
-        args.putParcelable(Constants.PAYLOAD, payload)
-        args.putStringArrayList(Constants.PAYMENT_LIST, paymentTypeList)
-        args.putParcelable(Constants.LOAN_AND_CLIENT, loanAndClientNameItem)
-        args.putParcelableArrayList(Constants.PAYMENT_OPTIONS, paymentTypeOptions)
-        args.putInt(Constants.CLIENT_ID, clientId)
-        val fragment = PaymentDetailsFragment()
-        fragment.arguments = args
-        return fragment
-    }
-
-    companion object
 }

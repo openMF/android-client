@@ -1,7 +1,5 @@
 package com.mifos.mifosxdroid.online.checkerinbox
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
@@ -9,7 +7,10 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.CheckerTaskListAdapter
@@ -19,6 +20,7 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.CheckerInboxFragmentBinding
 import com.mifos.mifosxdroid.dialogfragments.checkertaskfilterdialog.CheckerTaskFilterDialogFragment
 import com.mifos.objects.CheckerTask
+import com.mifos.utils.Constants
 import java.sql.Timestamp
 import java.util.Locale
 import javax.inject.Inject
@@ -110,6 +112,8 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
             hideMifosProgressBar()
             checkerTaskList.clear()
             fetchedCheckerTaskList.addAll(it!!)
+            if (fetchedCheckerTaskList.isEmpty()) binding.tvEmptyCheckerInbox.visibility =
+                View.VISIBLE
             checkerTaskList.addAll(fetchedCheckerTaskList)
             checkerTaskListAdapter.submitList(checkerTaskList)
         })
@@ -352,8 +356,8 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
 
         binding.ivFilterSearchIcon.setOnClickListener {
             val dialogSearchFilter = CheckerTaskFilterDialogFragment()
-            dialogSearchFilter.setTargetFragment(this@CheckerInboxFragment, 1)
-            dialogSearchFilter.show(requireActivity().supportFragmentManager, "DialogSearchFilter")
+            dialogSearchFilter.setTargetFragment(this, Constants.DIALOG_FRAGMENT)
+            dialogSearchFilter.show(parentFragmentManager, "DialogSearchFilter")
         }
 
         binding.ivBatchApproveIcon.setOnClickListener {

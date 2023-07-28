@@ -1,6 +1,5 @@
 package com.mifos.mifosxdroid.online.centerdetails
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -8,16 +7,15 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentCenterDetailsBinding
-import com.mifos.mifosxdroid.online.activate.ActivateFragment
 import com.mifos.objects.group.CenterInfo
 import com.mifos.objects.group.CenterWithAssociations
 import com.mifos.utils.Constants
-import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Utils
 import javax.inject.Inject
 
@@ -31,7 +29,8 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
     @Inject
     lateinit var centerDetailsPresenter: CenterDetailsPresenter
     private var centerId = 0
-    private var listener: OnFragmentInteractionListener? = null
+
+    //    private var listener: OnFragmentInteractionListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
@@ -63,12 +62,11 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
 
 
     private fun onClickActivateCenter() {
-        val activateFragment = ActivateFragment.newInstance(centerId, Constants.ACTIVATE_CENTER)
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_CENTER_DETAIL)
-        fragmentTransaction.replace(R.id.container, activateFragment)
-        fragmentTransaction.commit()
+        val action = CenterDetailsFragmentDirections.actionCenterDetailsFragmentToActivateFragment(
+            centerId,
+            Constants.ACTIVATE_CENTER
+        )
+        findNavController().navigate(action)
     }
 
     override fun showProgressbar(show: Boolean) {
@@ -99,7 +97,7 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
             binding.llBottomPanel.visibility = View.VISIBLE
             showErrorMessage(R.string.error_center_inactive)
         }
-        if (centerWithAssociations.collectionMeetingCalendar?.calendarInstanceId == null) {
+        if (centerWithAssociations.collectionMeetingCalendar.calendarInstanceId == null) {
             binding.tvMeetingDate.text = getString(R.string.unassigned)
             if (view != null) {
                 requireView().findViewById<View>(R.id.row_meeting_frequency).visibility = View.GONE
@@ -107,7 +105,7 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
         } else {
             binding.tvMeetingDate.text = Utils.getStringOfDate(
                 centerWithAssociations
-                    .collectionMeetingCalendar!!.nextTenRecurringDates[0]
+                    .collectionMeetingCalendar.nextTenRecurringDates[0]
             )
             if (view != null) {
                 requireView().findViewById<View>(R.id.row_meeting_frequency).visibility =
@@ -139,23 +137,23 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.add_savings_account -> listener?.addCenterSavingAccount(centerId)
-            R.id.view_group_list -> listener?.loadGroupsOfCenter(centerId)
+            R.id.add_savings_account -> addCenterSavingAccount(centerId)
+            R.id.view_group_list -> loadGroupsOfCenter(centerId)
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-        listener = try {
-            activity as OnFragmentInteractionListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException(
-                activity.toString() + " must implement " +
-                        "OnFragmentInteractionListener"
-            )
-        }
-    }
+//    override fun onAttach(activity: Activity) {
+//        super.onAttach(activity)
+//        listener = try {
+//            activity as OnFragmentInteractionListener
+//        } catch (e: ClassCastException) {
+//            throw ClassCastException(
+//                activity.toString() + " must implement " +
+//                        "OnFragmentInteractionListener"
+//            )
+//        }
+//    }
 
     interface OnFragmentInteractionListener {
         fun addCenterSavingAccount(centerId: Int)
@@ -167,14 +165,18 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
         centerDetailsPresenter.detachView()
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(centerId: Int): CenterDetailsFragment {
-            val fragment = CenterDetailsFragment()
-            val args = Bundle()
-            args.putInt(Constants.CENTER_ID, centerId)
-            fragment.arguments = args
-            return fragment
-        }
+    private fun addCenterSavingAccount(centerId: Int) {
+        val action =
+            CenterDetailsFragmentDirections.actionCenterDetailsFragmentToSavingsAccountFragment(
+                centerId,
+                true
+            )
+        findNavController().navigate(action)
     }
+
+    private fun loadGroupsOfCenter(centerId: Int){
+        val action = CenterDetailsFragmentDirections.actionCenterDetailsFragmentToGroupListFragment(centerId)
+        findNavController().navigate(action)
+    }
+
 }

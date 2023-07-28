@@ -486,8 +486,8 @@
             android:id="@+id/action_groupDetailsFragment_to_savingsAccountSummaryFragment"
             app:destination="@id/savingsAccountSummaryFragment" />
         <action
-            android:id="@+id/action_groupDetailsFragment_to_createNewClientFragment2"
-            app:destination="@id/createNewClientFragment2" />
+            android:id="@+id/action_groupDetailsFragment_to_createNewClientFragment"
+            app:destination="@id/createNewClientFragment" />
     </fragment>
     <dialog
         android:id="@+id/groupLoanAccountFragment"
@@ -502,15 +502,104 @@
         android:name="com.mifos.mifosxdroid.online.clientlist.ClientListFragment"
         android:label="ClientListFragment" >
         <argument
-            android:name="clientList"
-            app:argType="com.mifos.objects.client.Client[]" />
-        <argument
-            android:name="isParentFragment"
-            app:argType="boolean" />
+            android:name="clientListArgs"
+            app:argType="com.mifos.objects.navigation.ClientListArgs" />
+        <action
+            android:id="@+id/action_clientListFragment_to_createNewClientFragment"
+            app:destination="@id/createNewClientFragment" />
+        <action
+            android:id="@+id/action_clientListFragment_to_clientActivity"
+            app:destination="@id/clientActivity" />
     </fragment>
     <fragment
-        android:id="@+id/createNewClientFragment2"
+        android:id="@+id/createNewClientFragment"
         android:name="com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment"
-        android:label="CreateNewClientFragment" />
+        android:label="CreateNewClientFragment" >
+        <argument
+            android:name="client"
+            app:argType="com.mifos.objects.navigation.ClientArgs" />
+    </fragment>
+    <fragment
+        android:id="@+id/centerDetailsFragment"
+        android:name="com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment"
+        android:label="CenterDetailsFragment" >
+        <action
+            android:id="@+id/action_centerDetailsFragment_to_activateFragment"
+            app:destination="@id/activateFragment" />
+        <action
+            android:id="@+id/action_centerDetailsFragment_to_savingsAccountFragment"
+            app:destination="@id/savingsAccountFragment" />
+        <action
+            android:id="@+id/action_centerDetailsFragment_to_groupListFragment"
+            app:destination="@id/groupListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/groupListFragment"
+        android:name="com.mifos.mifosxdroid.online.grouplist.GroupListFragment"
+        android:label="fragment_group_list"
+        tools:layout="@layout/fragment_group_list" >
+        <argument
+            android:name="centerId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_groupListFragment_to_clientListFragment"
+            app:destination="@id/clientListFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/clientActivity"
+        android:name="com.mifos.mifosxdroid.online.ClientActivity"
+        android:label="ClientActivity" >
+        <argument
+            android:name="client"
+            app:argType="com.mifos.objects.navigation.ClientArgs" />
+    </activity>
+    <fragment
+        android:id="@+id/individualCollectionSheetDetailsFragment"
+        android:name="com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsFragment"
+        android:label="IndividualCollectionSheetDetailsFragment" >
+        <argument
+            android:name="sheet"
+            app:argType="com.mifos.objects.collectionsheet.IndividualCollectionSheet" />
+        <argument
+            android:name="actualDisbursementDate"
+            app:argType="string" />
+        <argument
+            android:name="transactionDate"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_individualCollectionSheetDetailsFragment_to_paymentDetailsFragment"
+            app:destination="@id/paymentDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newIndividualCollectionSheetFragment"
+        android:name="com.mifos.mifosxdroid.online.collectionsheetindividual.NewIndividualCollectionSheetFragment"
+        android:label="NewIndividualCollectionSheetFragment" >
+        <action
+            android:id="@+id/action_newIndividualCollectionSheetFragment_to_individualCollectionSheetDetailsFragment"
+            app:destination="@id/individualCollectionSheetDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentDetailsFragment"
+        android:name="com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment"
+        android:label="PaymentDetailsFragment" >
+        <argument
+            android:name="position"
+            app:argType="integer" />
+        <argument
+            android:name="payload"
+            app:argType="com.mifos.api.model.IndividualCollectionSheetPayload" />
+        <argument
+            android:name="paymentTypeList"
+            app:argType="string[]" />
+        <argument
+            android:name="loanAndClientName"
+            app:argType="com.mifos.objects.collectionsheet.LoanAndClientName" />
+        <argument
+            android:name="paymentTypeOptions"
+            app:argType="com.mifos.objects.accounts.loan.PaymentTypeOptions[]" />
+        <argument
+            android:name="clientId"
+            app:argType="integer" />
+    </fragment>
 
 </navigation>

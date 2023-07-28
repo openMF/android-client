@@ -42,7 +42,7 @@
             android:id="@+id/action_navigation_client_list_to_createNewClientFragment"
             app:destination="@id/createNewClientFragment" />
         <action
-            android:id="@+id/action_navigation_client_list_to_clientActivity"
+            android:id="@+id/action_clientListFragment_to_clientActivity"
             app:destination="@id/clientActivity" />
     </fragment>
 

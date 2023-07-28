@@ -9,6 +9,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.findNavController
 import com.mifos.api.model.RequestCollectionSheetPayload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -49,8 +50,8 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     private var staffAdapter: ArrayAdapter<String>? = null
     private lateinit var staffNameList: ArrayList<String>
     private var staffList: List<Staff> = ArrayList()
-    private var officeId  : Int? = 0
-    private var staffId : Int? = 0
+    private var officeId: Int? = 0
+    private var staffId: Int? = 0
     private val requestCode = 1
     private var success = true
     private var actualDisbursementDate: String? = null
@@ -241,15 +242,16 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
                 val fm = activity
                     ?.supportFragmentManager
                 fm?.popBackStack()
-                val fragment: IndividualCollectionSheetDetailsFragment =
-                    IndividualCollectionSheetDetailsFragment().newInstance(
-                        sheet,
-                        actualDisbursementDate, transactionDate
-                    )
-                (activity as MifosBaseActivity).replaceFragment(
-                    fragment,
-                    true, R.id.container
-                )
+                val action = sheet?.let {
+                    actualDisbursementDate?.let { it1 ->
+                        transactionDate?.let { it2 ->
+                            NewIndividualCollectionSheetFragmentDirections.actionNewIndividualCollectionSheetFragmentToIndividualCollectionSheetDetailsFragment(
+                                it, it1, it2
+                            )
+                        }
+                    }
+                }
+                action?.let { findNavController().navigate(it) }
             }
         }
     }
@@ -301,12 +303,4 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         setUpUi()
     }
 
-    companion object {
-        fun newInstance(): NewIndividualCollectionSheetFragment {
-            val args = Bundle()
-            val fragment = NewIndividualCollectionSheetFragment()
-            fragment.arguments = args
-            return fragment
-        }
-    }
 }
