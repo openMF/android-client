@@ -92,7 +92,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             requireActivity().finish()
             preferenceScreen = null
             setPreferencesFromResource(R.xml.preferences,mRootKey)
-            preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+            preferenceScreen.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             true
         }
     }
@@ -110,7 +110,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onPause() {
         super.onPause()
-        preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        preferenceScreen.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     fun setLanguageCallback(languageCallback: LanguageCallback?) {

@@ -86,10 +86,10 @@ class PinpointClientAdapter @Inject constructor() :
     private fun setMapLocation(map: GoogleMap?, location: ClientAddressResponse) {
         // Add a marker for this item and set the camera
         val latLng = location.latitude?.let { location.longitude?.let { it1 -> LatLng(it, it1) } }
-        map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13f))
-        map.addMarker(latLng?.let { MarkerOptions().position(it) })
+        latLng?.let { CameraUpdateFactory.newLatLngZoom(it, 13f) }?.let { map!!.moveCamera(it) }
+        latLng?.let { MarkerOptions().position(it) }?.let { map?.addMarker(it) }
         // Set the map type back to normal.
-        map.mapType = GoogleMap.MAP_TYPE_NORMAL
+        map?.mapType = GoogleMap.MAP_TYPE_NORMAL
     }
 
     inner class ViewHolder(val binding: ItemPinpointLocationBinding) :
@@ -101,7 +101,7 @@ class PinpointClientAdapter @Inject constructor() :
         }
 
         override fun onMapReady(googleMap: GoogleMap) {
-            MapsInitializer.initialize(context)
+            context?.let { MapsInitializer.initialize(it) }
             map = googleMap
             val data = binding.mvClientLocation.tag as ClientAddressResponse
             setMapLocation(map, data)

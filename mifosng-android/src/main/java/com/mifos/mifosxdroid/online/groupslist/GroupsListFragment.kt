@@ -155,7 +155,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
             onClickCreateNewGroup()
         }
 
-        binding.layoutError.findViewById<Button>(R.id.btn_try_again).setOnClickListener {
+        binding.layoutError.findViewById<Button>(R.id.btnTryAgain).setOnClickListener {
             reloadOnError()
         }
     }
@@ -174,7 +174,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
             *activity?.resources?.getIntArray(R.array.swipeRefreshColors) ?: IntArray(0)
         )
         binding.swipeContainer.setOnRefreshListener(this)
-        sweetUIErrorHandler = SweetUIErrorHandler(activity, binding.root)
+        sweetUIErrorHandler = SweetUIErrorHandler(requireActivity(), binding.root)
     }
 
 

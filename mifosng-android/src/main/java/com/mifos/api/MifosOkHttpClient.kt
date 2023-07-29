@@ -67,7 +67,8 @@ class MifosOkHttpClient {
                 logger.level = HttpLoggingInterceptor.Level.BODY
 
                 //Set SSL certificate to OkHttpClient Builder
-                builder.sslSocketFactory(sslSocketFactory)
+//                builder.sslSocketFactory(sslSocketFactory)
+                builder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
                 builder.hostnameVerifier { hostname, session -> true }
             } catch (e: Exception) {
                 throw RuntimeException(e)
