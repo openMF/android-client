@@ -5,28 +5,36 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/LinearLayout.Base"
     android:orientation="vertical"
     android:padding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/tv_search"
             style="@style/TextView.Search"
             android:paddingHorizontal="4dp" />
 
-        <Spinner
-            android:id="@+id/sp_search"
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/filterSelectionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="end" />
+            android:layout_gravity="end"
+            app:iconGravity="textEnd"
+            app:icon="@drawable/baseline_arrow_drop_down_24"
+            style="@style/Widget.Material3.Button.IconButton"
+            tools:text="All" />
+
     </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
