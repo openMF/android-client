@@ -19,7 +19,7 @@ ext {
     mapUtilsServicesVersion = '0.4.2'
 
     // dagger version
-    daggerVersion = '2.46.1'
+    daggerVersion = '2.47'
     daggerCompilerVersion = '2.2'
 
     //DBFlow version
