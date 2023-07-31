@@ -58,7 +58,7 @@ ext {
     mockitoVersion = '5.4.0'
 
     //jsr version
-    jsrVersion = '1.0'
+    jsrVersion = '1.0-20050927.133100'
 
     // Multidex version
     multidexVersion = '2.0.1'
