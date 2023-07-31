@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rl_group"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,107 +15,126 @@
 
                 <TextView
                     android:id="@+id/tv_groupsName"
-                    style="@style/TextView.Client" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp"
+                    android:layout_marginVertical="10dp" />
 
             </LinearLayout>
 
 
             <TableLayout
                 android:id="@+id/tbl_clientDetails"
-                style="@style/Table">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <TableRow
                     android:id="@+id/row_account"
-                    style="@style/TableRow">
+                    android:layout_margin="12dp">
 
                     <TextView
                         android:id="@+id/tv_groupNumber"
-                        style="@style/TextView.Row.Value" />
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        tools:text="3242343232" />
                 </TableRow>
 
                 <TableRow
                     android:id="@+id/row_external"
-                    style="@style/TableRow">
+                    android:layout_margin="12dp">
 
                     <TextView
-                        style="@style/TextView.Row"
+                        android:layout_weight="1"
                         android:text="@string/external_id" />
 
                     <TextView
                         android:id="@+id/tv_groupexternalId"
-                        style="@style/TextView.Row.Value" />
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        tools:text="r3f3w3d" />
                 </TableRow>
 
                 <TableRow
                     android:id="@+id/row_activation"
-                    style="@style/TableRow">
+                    android:layout_margin="12dp">
 
                     <TextView
-                        style="@style/TextView.Row"
+                        android:layout_weight="1"
                         android:text="@string/activation_date" />
 
                     <TextView
                         android:id="@+id/tv_groupactivationDate"
-                        style="@style/TextView.Row.Value" />
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        tools:text="12 July 2022" />
                 </TableRow>
 
                 <TableRow
                     android:id="@+id/row_office"
-                    style="@style/TableRow">
+                    android:layout_margin="12dp">
 
                     <TextView
-                        style="@style/TextView.Row"
+                        android:layout_weight="1"
                         android:text="@string/office" />
 
                     <TextView
                         android:id="@+id/tv_groupoffice"
-                        style="@style/TextView.Row.Value" />
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        tools:text="Top office" />
                 </TableRow>
 
                 <TableRow
                     android:id="@+id/row_group"
-                    style="@style/TableRow"
-                    android:visibility="gone">
+                    android:layout_margin="12dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <TextView
-                        style="@style/TextView.Row"
+                        android:layout_weight="1"
                         android:text="@string/group" />
 
                     <TextView
                         android:id="@+id/tv_group"
-                        style="@style/TextView.Row.Value" />
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        tools:text="My group" />
                 </TableRow>
 
                 <TableRow
                     android:id="@+id/row_staff"
-                    style="@style/TableRow"
-                    android:visibility="gone">
+                    android:layout_margin="12dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <TextView
-                        style="@style/TextView.Row"
+                        android:layout_weight="1"
                         android:text="@string/staff" />
 
                     <TextView
                         android:id="@+id/tv_loanOfficer"
-                        style="@style/TextView.Row"
+                        android:layout_weight="1"
                         android:gravity="end"
-                        android:text="" />
+                        android:text=""
+                        tools:text="My Staff" />
                 </TableRow>
 
                 <TableRow
                     android:id="@+id/row_loan"
-                    style="@style/TableRow"
-                    android:visibility="gone">
+                    android:layout_margin="12dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <TextView
-                        style="@style/TextView.Row"
+                        android:layout_weight="1"
                         android:text="@string/loan_cycle" />
 
                     <TextView
                         android:id="@+id/tv_loanCycle"
-                        style="@style/TextView.Row"
+                        android:layout_weight="1"
                         android:gravity="end"
-                        android:text="" />
+                        android:text=""
+                        tools:text="Recurring" />
                 </TableRow>
 
             </TableLayout>

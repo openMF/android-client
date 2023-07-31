@@ -15,7 +15,7 @@
 
     <style name="TableRow">
 
-        <item name="android:layout_margin">3dp</item>
+        <item name="android:layout_margin">5dp</item>
         <item name="android:paddingLeft">12dp</item>
         <item name="android:paddingStart">12dp</item>
         <item name="android:paddingRight">12dp</item>

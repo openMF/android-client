@@ -45,8 +45,11 @@
 
     <Button
         android:id="@+id/btn_search"
-        style="@style/Button.Base"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:layout_marginTop="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="@dimen/marginItemsInSectionSmall"
         android:background="@drawable/login_button_rounded"
         android:text="@string/search" />

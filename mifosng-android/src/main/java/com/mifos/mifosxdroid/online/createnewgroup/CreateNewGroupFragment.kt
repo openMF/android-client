@@ -31,42 +31,55 @@ import com.mifos.objects.organisation.Office
 import com.mifos.objects.response.SaveResponse
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
+import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.MifosResponseHandler
 import com.mifos.utils.Network
 import com.mifos.utils.PrefManager
 import com.mifos.utils.ValidationUtil
+import com.mifos.utils.getDatePickerDialog
+import com.mifos.utils.getTodayFormatted
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.Locale
 import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
  */ //TODO Show Image and Text after successful or Failed during creation of Group and
 //TODO A button to Continue or Finish the GroupCreation.
-class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, CreateNewGroupMvpView,
-    OnItemSelectedListener {
+class CreateNewGroupFragment : ProgressableFragment(), CreateNewGroupMvpView {
 
     private lateinit var binding: FragmentCreateNewGroupBinding
 
-    private val LOG_TAG = javaClass.simpleName
-
     @Inject
     lateinit var mCreateNewGroupPresenter: CreateNewGroupPresenter
-    var activationDateString: String? = null
+    private var activationDateString: String? = null
     var officeId : Int? = 0
     var result = true
-    var dateofsubmissionstring: String? = null
-    private var mfDatePicker: DialogFragment? = null
-    private var newDatePicker: DialogFragment? = null
+    private var dateofsubmissionstring: String? = null
     private val mListOffices: MutableList<String> = ArrayList()
-    private var officeList: List<Office>? = null
-    private var mOfficesAdapter: ArrayAdapter<String>? = null
-    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        if (parent.id == R.id.sp_group_offices) {
-            officeId = officeList!![position].id
+    private var officeList: List<Office> = ArrayList()
+
+    private var submissionDate: Instant = Instant.now()
+    private val submissionDatePickerDialog by lazy {
+        getDatePickerDialog(submissionDate, DatePickerConstrainType.ONLY_FUTURE_DAYS) {
+            val formattedDate = SimpleDateFormat("dd MM yyyy", Locale.getDefault()).format(it)
+            submissionDate = Instant.ofEpochMilli(it)
+            binding.submittedDateFieldContainer.editText?.setText(formattedDate)
+            dateofsubmissionstring = binding.submittedDateFieldContainer.editText.toString()
+        }
+    }
+    private var activationDate: Instant = Instant.now()
+    private val activationDatePickerDialog by lazy {
+        getDatePickerDialog(activationDate, DatePickerConstrainType.ONLY_FUTURE_DAYS) {
+            val formattedDate = SimpleDateFormat("dd MM yyyy", Locale.getDefault()).format(it)
+            activationDate = Instant.ofEpochMilli(it)
+            binding.activateDateFieldContainer.editText?.setText(formattedDate)
+            activationDateString = binding.activateDateFieldContainer.editText.toString()
         }
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>?) {}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
@@ -79,20 +92,16 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
     ): View {
         binding = FragmentCreateNewGroupBinding.inflate(inflater, container, false)
         mCreateNewGroupPresenter.attachView(this)
-        inflateOfficesSpinner()
         inflateSubmissionDate()
         inflateActivationDate()
         mCreateNewGroupPresenter.loadOffices()
 
         //client active checkbox onCheckedListener
+        dateofsubmissionstring = getTodayFormatted()
+        binding.submittedDateFieldContainer.editText?.setText(getTodayFormatted())
 
-        activationDateString = binding.tvGroupActivationDate.text.toString()
-        activationDateString =
-            DateHelper.getDateAsStringUsedForCollectionSheetPayload(activationDateString)
-                .replace("-", " ")
-        dateofsubmissionstring = binding.tvGroupSubmissionDate.text.toString()
-        dateofsubmissionstring =
-            DateHelper.getDateAsStringUsedForDateofBirth(dateofsubmissionstring).replace("-", " ")
+        activationDateString = getTodayFormatted()
+        binding.activateDateFieldContainer.editText?.setText(getTodayFormatted())
 
         return binding.root
     }
@@ -119,10 +128,15 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
 
         binding.cbGroupActiveStatus.setOnCheckedChangeListener { compoundButton, isChecked ->
             if (isChecked) {
-                binding.layoutSubmission.visibility = View.VISIBLE
+                binding.activateDateFieldContainer.visibility = View.VISIBLE
             } else {
-                binding.layoutSubmission.visibility = View.GONE
+                binding.activateDateFieldContainer.visibility = View.GONE
             }
+        }
+
+        binding.officeListField.setOnItemClickListener { adapterView, view, relativePosition, l ->
+            val index = mListOffices.indexOf(adapterView.getItemAtPosition(relativePosition))
+            officeId = officeList[index].id
         }
     }
 
@@ -134,21 +148,9 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
         mCreateNewGroupPresenter.createGroup(groupPayload)
     }
 
-    private fun inflateOfficesSpinner() {
-        mOfficesAdapter = ArrayAdapter(
-            requireActivity(), android.R.layout.simple_spinner_item,
-            mListOffices
-        )
-        mOfficesAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spGroupOffices.adapter = mOfficesAdapter
-        binding.spGroupOffices.onItemSelectedListener = this
-    }
-
     private fun inflateSubmissionDate() {
-        mfDatePicker = MFDatePicker.newInsance(this)
-        binding.tvGroupSubmissionDate.text = MFDatePicker.datePickedAsString
-        binding.tvGroupSubmissionDate.setOnClickListener {
-            (mfDatePicker as MFDatePicker?)?.show(
+        binding.submittedDateFieldContainer.setEndIconOnClickListener {
+            submissionDatePickerDialog.show(
                 requireActivity().supportFragmentManager,
                 FragmentConstants.DFRAG_DATE_PICKER
             )
@@ -156,19 +158,12 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
     }
 
     private fun inflateActivationDate() {
-        newDatePicker = MFDatePicker.newInsance(this)
-        binding.tvGroupActivationDate.text = MFDatePicker.datePickedAsString
-        binding.tvGroupActivationDate.setOnClickListener {
-            (newDatePicker as MFDatePicker?)?.show(
+        binding.activateDateFieldContainer.setEndIconOnClickListener {
+            activationDatePickerDialog.show(
                 requireActivity().supportFragmentManager,
                 FragmentConstants.DFRAG_DATE_PICKER
             )
         }
-    }
-
-    override fun onDatePicked(date: String?) {
-        binding.tvGroupSubmissionDate.text = date
-        binding.tvGroupActivationDate.text = date
     }
 
     private val isGroupNameValid: Boolean
@@ -208,14 +203,12 @@ class CreateNewGroupFragment : ProgressableFragment(), OnDatePickListener, Creat
         }
 
     override fun showOffices(offices: List<Office?>?) {
-        officeList = offices as List<Office>?
-        if (offices != null) {
-            for (office in offices) {
-                office.name?.let { mListOffices.add(it) }
-            }
+        officeList = offices as List<Office>
+        for (office in offices) {
+            office.name?.let { mListOffices.add(it) }
         }
         mListOffices.sort()
-        mOfficesAdapter?.notifyDataSetChanged()
+        binding.officeListField.setSimpleItems(mListOffices.toTypedArray())
     }
 
     override fun showGroupCreatedSuccessfully(group: SaveResponse?) {

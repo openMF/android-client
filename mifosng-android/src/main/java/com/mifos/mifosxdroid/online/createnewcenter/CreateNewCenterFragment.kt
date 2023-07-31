@@ -6,15 +6,10 @@ package com.mifos.mifosxdroid.online.createnewcenter
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.fragment.app.DialogFragment
 import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.exceptions.ShortOfLengthException
@@ -22,33 +17,44 @@ import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentCreateNewCenterBinding
-import com.mifos.mifosxdroid.uihelpers.MFDatePicker
-import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.response.SaveResponse
 import com.mifos.services.data.CenterPayload
-import com.mifos.utils.DateHelper
+import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.MifosResponseHandler
 import com.mifos.utils.ValidationUtil
-import java.util.Collections
+import com.mifos.utils.getDatePickerDialog
+import com.mifos.utils.getTodayFormatted
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.Locale
 import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
  */
-class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateNewCenterMvpView {
+class CreateNewCenterFragment : MifosBaseFragment(), CreateNewCenterMvpView {
 
     private lateinit var binding: FragmentCreateNewCenterBinding
 
-    var officeId = 0
+    var officeId: Int? = 0
     var result = true
 
     @Inject
     lateinit var mCreateNewCenterPresenter: CreateNewCenterPresenter
     private var activationDateString: String? = null
-    private var newDatePicker: DialogFragment? = null
     private val officeNameIdHashMap = HashMap<String, Int>()
+
+    private var activationDate: Instant = Instant.now()
+    private val submissionDatePickerDialog by lazy {
+        getDatePickerDialog(activationDate, DatePickerConstrainType.ONLY_FUTURE_DAYS) {
+            val formattedDate = SimpleDateFormat("dd MM yyyy", Locale.getDefault()).format(it)
+            activationDate = Instant.ofEpochMilli(it)
+            binding.activateDateFieldContainer.editText?.setText(formattedDate)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
@@ -73,13 +79,10 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
 
         binding.cbCenterActiveStatus.setOnCheckedChangeListener { compoundButton, isChecked ->
             if (isChecked) {
-                binding.layoutSubmission.visibility = View.VISIBLE
-                activationDateString = binding.tvCenterActivationDate.text.toString()
-                activationDateString =
-                    DateHelper.getDateAsStringUsedForCollectionSheetPayload(activationDateString)
-                        .replace("-", " ")
+                binding.activateDateFieldContainer.visibility = View.VISIBLE
+                activationDateString = binding.activateDateFieldContainer.editText?.text.toString()
             } else {
-                binding.layoutSubmission.visibility = View.GONE
+                binding.activateDateFieldContainer.visibility = View.GONE
             }
         }
         binding.btnSubmit.setOnClickListener {
@@ -91,6 +94,13 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
             centerPayload.dateFormat = "dd MMMM yyyy"
             centerPayload.locale = "en"
             initiateCenterCreation(centerPayload)
+        }
+
+        binding.activateDateFieldContainer.setEndIconOnClickListener {
+            submissionDatePickerDialog.show(
+                requireActivity().supportFragmentManager,
+                FragmentConstants.DFRAG_DATE_PICKER
+            )
         }
     }
 
@@ -105,22 +115,11 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
         }
     }
 
-    fun inflateActivationDate() {
-        newDatePicker = MFDatePicker.newInsance(this)
-        binding.tvCenterActivationDate.text = MFDatePicker.datePickedAsString
-        binding.tvCenterActivationDate.setOnClickListener {
-            (newDatePicker as MFDatePicker).show(
-                requireActivity().supportFragmentManager,
-                FragmentConstants.DFRAG_DATE_PICKER
-            )
-        }
+    private fun inflateActivationDate() {
+        binding.activateDateFieldContainer.editText?.setText(getTodayFormatted())
     }
 
-    override fun onDatePicked(date: String?) {
-        binding.tvCenterActivationDate.text = date
-    }
-
-    val isCenterNameValid: Boolean
+    private val isCenterNameValid: Boolean
         get() {
             result = true
             try {
@@ -168,29 +167,19 @@ class CreateNewCenterFragment : MifosBaseFragment(), OnDatePickListener, CreateN
                 }
             }
         }
-        Collections.sort(officeList)
-        val officeAdapter = ArrayAdapter(
-            requireActivity(),
-            android.R.layout.simple_spinner_item, officeList
-        )
-        officeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spCenterOffices.adapter = officeAdapter
-        binding.spCenterOffices.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(
-                adapterView: AdapterView<*>?,
-                view: View, i: Int, l: Long
-            ) {
-                officeId = officeNameIdHashMap[officeList[i]]!!
-                Log.d("officeId " + officeList[i], officeId.toString())
-                if (officeId != -1) {
-                } else {
-                    Toast.makeText(
-                        activity, getString(R.string.error_select_office), Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
+        officeList.sort()
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        binding.officeListField.setSimpleItems(officeList.toTypedArray())
+
+        binding.officeListField.setOnItemClickListener { adapterView, view, relativePosition, l ->
+            val index = officeList.indexOf(adapterView.getItemAtPosition(relativePosition))
+            officeId = officeNameIdHashMap[officeList[index]]
+            if (officeId != -1) {
+            } else {
+                Toast.makeText(
+                    activity, getString(R.string.error_select_office), Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 

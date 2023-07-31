@@ -9,15 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.ClientReportAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentRunreportBinding
-import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment
 import com.mifos.objects.runreports.client.ClientReportTypeItem
 import com.mifos.utils.Constants
 import javax.inject.Inject
@@ -77,11 +74,7 @@ class ReportCategoryFragment : MifosBaseFragment(), ReportCategoryMvpView {
     override fun showReportCategories(reportTypes: List<ClientReportTypeItem>) {
         reportTypeItems = reportTypes
         val layoutManager = LinearLayoutManager(context)
-        val dividerItemDecoration = DividerItemDecoration(
-            binding.recyclerReport.context, layoutManager.orientation
-        )
         binding.recyclerReport.layoutManager = layoutManager
-        binding.recyclerReport.addItemDecoration(dividerItemDecoration)
         reportAdapter = ClientReportAdapter { position: Int ->
             openDetailFragment(position)
             null

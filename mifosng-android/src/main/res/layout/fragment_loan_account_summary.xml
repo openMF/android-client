@@ -210,7 +210,7 @@
                 <TableRow
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:background="#ffd1d1d1">
+                    android:background="@color/baby_blue">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -308,7 +308,7 @@
                 <TableRow
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:background="#DEDEDE"
+                    android:background="@color/powder_blue"
                     android:padding="4dp">
 
                     <LinearLayout
@@ -398,7 +398,7 @@
                 <TableRow
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:background="#DEDEDE"
+                    android:background="@color/powder_blue"
                     android:padding="4dp">
 
                     <LinearLayout
@@ -492,8 +492,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tbl_loanSummary"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:background="@drawable/login_button_rounded"
+                android:layout_margin="8dp"
                 android:text="@string/process_loan_transaction" />
 
 

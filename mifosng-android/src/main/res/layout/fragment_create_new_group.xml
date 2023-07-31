@@ -8,11 +8,11 @@
     android:padding="10dp">
 
     <!-- Comment this out when editing the actual content -->
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
     <!-- Actual content -->
     <ScrollView
@@ -38,81 +38,36 @@
                 <requestFocus />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="8dp"
+                android:hint="@string/office_name_mandatory">
 
-                <TextView
-                    android:id="@+id/tv_office"
-                    style="@style/Base.TextAppearance.AppCompat.Small"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:text="@string/office_name_mandatory"
-                    android:textSize="12sp" />
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/sp_group_offices"
-                    style="@style/Widget.AppCompat.Spinner.Underlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/gray_dark"
-                    android:paddingTop="10dp"
-                    android:spinnerMode="dropdown" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_address"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingTop="16dp">
-
-                <LinearLayout
-                    android:id="@+id/ll_payment_cycle"
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/officeListField"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:focusable="false" />
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:baselineAlignBottom="true"
-                        app:srcCompat="@drawable/ic_event_black_24dp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:orientation="vertical">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/submittedDateFieldContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:hint="@string/center_submission_date"
+                app:endIconDrawable="@drawable/baseline_calendar_today_black_24"
+                app:endIconMode="custom">
 
-                        <TextView
-                            style="@style/Base.TextAppearance.AppCompat.Small"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="@string/center_submission_date"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/tv_group_submission_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <View
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="0.2dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/gray_dark" />
-
-            </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:focusable="false"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/TextInput.Base"
@@ -133,67 +88,34 @@
                 android:id="@+id/cb_group_active_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_margin="8dp"
                 android:checked="false"
                 android:paddingTop="10dp"
                 android:text="@string/center_active" />
 
-            <LinearLayout
-                android:id="@+id/layout_submission"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/activateDateFieldContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingTop="16dp"
-                android:visibility="gone">
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:hint="@string/center_activation_date"
+                android:visibility="gone"
+                app:endIconDrawable="@drawable/baseline_calendar_today_black_24"
+                app:endIconMode="custom">
 
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:baselineAlignBottom="true"
-                        app:srcCompat="@drawable/ic_event_black_24dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/Base.TextAppearance.AppCompat.Small"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="@string/center_activation_date"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/tv_group_activationDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.2dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/gray_dark" />
-
-            </LinearLayout>
+                    android:focusable="false"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btn_submit"
-                style="@style/Button.Base"
-                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:background="@drawable/login_button_rounded"
+                android:layout_margin="8dp"
                 android:text="@string/submit" />
 
 
