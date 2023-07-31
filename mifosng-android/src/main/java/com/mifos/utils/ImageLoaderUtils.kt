@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.target.BitmapImageViewTarget
-import com.bumptech.glide.signature.StringSignature
+import com.bumptech.glide.signature.ObjectKey
 import com.mifos.api.MifosInterceptor
 import com.mifos.mifosxdroid.R
 import com.mifos.utils.PrefManager.instanceUrl
@@ -35,17 +35,17 @@ object ImageLoaderUtils {
         )
     }
 
-    fun loadImage(context: Context?, clientId: Int, imageView: ImageView) {
+    fun loadImage(context: Context, clientId: Int, imageView: ImageView) {
         Glide.with(context)
-            .load(buildGlideUrl(clientId))
             .asBitmap()
+            .load(buildGlideUrl(clientId))
             .placeholder(R.drawable.ic_dp_placeholder)
             .error(R.drawable.ic_dp_placeholder)
-            .signature(StringSignature(System.currentTimeMillis().toString()))
+            .signature(ObjectKey(System.currentTimeMillis()))
             .into(object : BitmapImageViewTarget(imageView) {
-                override fun setResource(result: Bitmap) {
+                override fun setResource(result: Bitmap?) {
                     // check a valid bitmap is downloaded
-                    if (result.width == 0) return
+                    if (result?.width == 0) return
                     // set to image view
                     imageView.setImageBitmap(result)
                 }

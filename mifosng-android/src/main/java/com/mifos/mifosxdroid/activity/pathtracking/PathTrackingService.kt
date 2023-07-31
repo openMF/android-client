@@ -129,13 +129,17 @@ class PathTrackingService : Service(), ConnectionCallbacks, OnConnectionFailedLi
             // for ActivityCompat#requestPermissions for more details.
             return
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-            googleApiClient, locationRequest, this
-        )
+        googleApiClient?.let {
+            locationRequest?.let { it1 ->
+                LocationServices.FusedLocationApi.requestLocationUpdates(
+                    it, it1, this
+                )
+            }
+        }
     }
 
     private fun stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
+        googleApiClient?.let { LocationServices.FusedLocationApi.removeLocationUpdates(it, this) }
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -186,7 +190,11 @@ class PathTrackingService : Service(), ConnectionCallbacks, OnConnectionFailedLi
                 // for ActivityCompat#requestPermissions for more details.
                 return
             }
-            currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient)
+            currentLocation = googleApiClient?.let {
+                LocationServices.FusedLocationApi.getLastLocation(
+                    it
+                )
+            }!!
             latLngs?.add(
                 UserLatLng(
                     currentLocation.latitude,

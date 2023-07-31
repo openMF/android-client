@@ -46,12 +46,10 @@ class App : MultiDexApplication() {
         //Initializing the DBFlow and SQL Cipher Encryption
         FlowManager.init(FlowConfig.Builder(this).build())
         Stetho.initializeWithDefaults(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            val policy = VmPolicy.Builder()
-                .detectFileUriExposure()
-                .build()
-            StrictMode.setVmPolicy(policy)
-        }
+        val policy = VmPolicy.Builder()
+            .detectFileUriExposure()
+            .build()
+        StrictMode.setVmPolicy(policy)
         ForegroundChecker.init(this)
     }
 

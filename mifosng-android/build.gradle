@@ -51,12 +51,14 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 6
         versionName "1.0.1"
-
+        compileSdkPreview = "UpsideDownCake"
         // A test runner provided by https://code.google.com/p/android-test-kit/
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
-        ndk { abiFilters "armeabi-v7a", "x86" }
+        ndk {
+            abiFilters "armeabi-v7a", "x86", "x86_64", "arm64-v8a"
+        }
     }
 
     dexOptions {
@@ -160,55 +162,44 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    implementation 'androidx.multidex:multidex:2.0.0'
-    implementation 'com.github.amulyakhare:TextDrawable:558677ea31'
+    // Multidex dependency
+    implementation "androidx.multidex:multidex:$rootProject.multidexVersion"
+
+    // Text drawable dependency
+    implementation "com.github.amulyakhare:TextDrawable:$rootProject.amulyakhareVersion"
 
     // You must install or update the Support Repository through the SDK manager to use this dependency.
-
     implementation fileTree(dir: 'src/main/libs', include: ['*.jar'])
 
+    // Kotlin standard library
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     //DBFlow dependencies
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    annotationProcessor "com.github.raizlabs.dbflow.dbflow:dbflow-processor:3.1.1"
-    annotationProcessor "com.github.raizlabs.dbflow:dbflow-processor:3.1.1"
-    //annotationProcessor "com.github.Raizlabs.DBFlow.dbflow-core:dbflow-processor:$rootProject.raizLabsDBFlow"
-    //implementation "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.raizLabsDBFlow"
-    implementation "com.github.raizlabs.dbflow.dbflow:dbflow:$rootProject.raizLabsDBFlow"
-    kapt "com.github.raizlabs.dbflow:dbflow-processor:3.1.1"
-
-    //implementation "com.github.Raizlabs.DBFlow:dbflow:$rootProject.raizLabsDBFlow"
+    kapt "com.github.raizlabs.dbflow.dbflow:dbflow-processor:$rootProject.raizLabsDBFlowVersion"
+    implementation "com.github.raizlabs.dbflow.dbflow:dbflow:$rootProject.raizLabsDBFlowVersion"
+    kapt "com.github.raizlabs.dbflow:dbflow-processor:$rootProject.raizLabsDBFlowProcessorVersion"
 
     // App's Support dependencies, including test
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation "com.google.android.gms:play-services-places:$rootProject.playServicesVersion"
-    implementation "com.google.android.gms:play-services-location:$rootProject.playServicesVersion"
-    implementation "com.google.android.gms:play-services-maps:$rootProject.playServicesVersion"
-    implementation "com.google.maps.android:android-maps-utils:$rootProject.mapUtilsServices"
-    implementation 'androidx.test.espresso:espresso-idling-resource:3.1.0'
-
-    //Bottom navigation
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.navigation:navigation-fragment:2.2.2'
-    implementation 'androidx.navigation:navigation-ui:2.2.2'
+    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation "androidx.legacy:legacy-support-v4:$rootProject.legacySupportVersion"
+    implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerViewVersion"
+    implementation "com.google.android.material:material:$rootProject.designLibraryVersion"
+    implementation "com.google.android.gms:play-services-places:$rootProject.playServicesPlacesVersion"
+    implementation "com.google.android.gms:play-services-location:$rootProject.playServicesLocationsVersion"
+    implementation "com.google.android.gms:play-services-maps:$rootProject.playServicesMapsVersion"
+    implementation "com.google.maps.android:android-maps-utils:$rootProject.mapUtilsServicesVersion"
+    implementation "androidx.test.espresso:espresso-idling-resource:$rootProject.espressoidlingVersion"
 
     //Dagger dependencies
-    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
     implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
-    compileOnly 'javax.annotation:jsr250-api:1.0'                //Required by Dagger2
+    compileOnly "javax.annotation:jsr250-api:$rootProject.jsrVersion"    //Required by Dagger2
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
     //LifeCycle
-    implementation 'androidx.lifecycle:lifecycle-runtime:2.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0'
-    implementation 'androidx.lifecycle:lifecycle-reactivestreams:2.0.0'
-    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycleExtensionsVersion"
+    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:$rootProject.lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycleVersion"
 
     //Square dependencies
     implementation("com.squareup.retrofit2:retrofit:$rootProject.retrofitVersionLatest") {
@@ -218,70 +209,75 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersionLatest"
     implementation "com.squareup.retrofit2:converter-scalars:$rootProject.retrofitVersionLatest"
     implementation "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersionLatest"
-    implementation "com.squareup.okhttp3:okhttp:$rootProject.okHttp3Version"
+    implementation "com.squareup.okhttp3:okhttp:$rootProject.okHttp3MainVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttp3Version"
     implementation "com.jakewharton.fliptables:fliptables:$rootProject.flipTableVersion"
-    implementation 'com.github.therajanmaurya:Sweet-Error:1.0.0'
-    implementation 'javax.annotation:jsr250-api:1.0@jar'
 
-    implementation 'io.reactivex:rxandroid:1.1.0'
-    implementation 'io.reactivex:rxjava:1.1.4'
+    //sweet error dependency
+    implementation "com.github.therajanmaurya:sweet-error:$rootProject.sweeterrorVersion"
 
-    implementation 'com.facebook.stetho:stetho:1.3.1'
-    implementation 'com.facebook.stetho:stetho-okhttp3:1.3.1'
+    //rxjava dependencies
+    implementation "io.reactivex:rxandroid:$rootProject.rxandroidVersion"
+    implementation "io.reactivex:rxjava:$rootProject.rxjavaVersion"
 
-    implementation 'com.github.deano2390:MaterialShowcaseView:1.3.4'
+    //stetho dependencies
+    implementation "com.facebook.stetho:stetho:$rootProject.stethoVersion"
+    implementation "com.facebook.stetho:stetho-okhttp3:$rootProject.stethoVersion"
 
+    //showcase View dependency
+    implementation "com.github.deano2390:MaterialShowcaseView:$rootProject.ShowcaseViewVersion"
 
-    implementation "com.joanzapata.iconify:android-iconify-material:2.1.1" // (v2.0.0)
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
+    //Iconify dependency
+    implementation "com.joanzapata.iconify:android-iconify-material:$rootProject.iconifyVersion"
+
+    //crashlytics dependency
+    implementation("com.crashlytics.sdk.android:crashlytics:$rootProject.crashlyticsVersion") {
         transitive = true
     }
 
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    //glide dependency
+    implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
 
-    //mifos passcode
-    implementation "com.mifos.mobile:mifos-passcode:$mifosPasscodeVersion"
+    //mifos passcode dependency
+    implementation "com.mifos.mobile:mifos-passcode:$rootProject.mifosPasscodeVersion"
 
-    // Android Testing Support Library's runner and rules
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test:rules:1.1.0'
+    // Android Testing Support Library's runner and rules dependencies
+    androidTestImplementation "androidx.test:runner:$rootProject.androidTestRunnerVersion"
+    androidTestImplementation "androidx.test:rules:$rootProject.androidTestRuleVersion"
 
     // Espresso UI Testing dependencies.
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    androidTestImplementation('androidx.test.espresso:espresso-contrib:3.1.0') {
+    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoVersion"
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:$rootProject.espressoVersion") {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude group: 'com.android.support', module: 'recyclerview-v7'
         exclude group: 'com.android.support', module: 'design'
     }
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$rootProject.espressoVersion"
 
+    // Mockito and jUnit dependencies
     testImplementation "junit:junit:$rootProject.jUnitVersion"
     testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
-
     androidTestImplementation "junit:junit:$rootProject.jUnitVersion"
     androidTestImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
     androidTestImplementation "org.mockito:mockito-android:$rootProject.mockitoVersion"
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+    testImplementation "org.junit.jupiter:junit-jupiter:$rootProject.junitJupiterVersion"
 
     //Android-Jobs
-    implementation 'com.evernote:android-job:1.2.6'
+    implementation "com.evernote:android-job:$rootProject.androidJobVersion"
 
     // androidx annotations
-    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation "androidx.annotation:annotation:$rootProject.annotationLibraryVersion"
 
-    //card view
-    implementation 'androidx.cardview:cardview:1.0.0'
     //preferences
-    implementation "androidx.preference:preference:$preference"
+    implementation "androidx.preference:preference-ktx:$rootProject.preferenceVersion"
 
     //Splash Screen
-    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
+    implementation "androidx.core:core-splashscreen:$rootProject.splashscreenVersion"
 
     // Navigation Components
-    implementation "androidx.navigation:navigation-fragment-ktx:2.6.0"
-    implementation "androidx.navigation:navigation-ui-ktx:2.6.0"
+    implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navigationComponentsVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navigationComponentsVersion"
 
 }
 /*

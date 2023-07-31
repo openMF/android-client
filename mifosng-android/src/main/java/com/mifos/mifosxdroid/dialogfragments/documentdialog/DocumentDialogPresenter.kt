@@ -6,6 +6,7 @@ import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.utils.MFErrorParser
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.adapter.rxjava.HttpException
@@ -103,7 +104,7 @@ class DocumentDialogPresenter @Inject constructor(private val mDataManagerDocume
 
     private fun getRequestFileBody(file: File): MultipartBody.Part {
         // create RequestBody instance from file
-        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+        val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
 
         // MultipartBody.Part is used to send also the actual file name
         return MultipartBody.Part.createFormData("file", file.name, requestFile)

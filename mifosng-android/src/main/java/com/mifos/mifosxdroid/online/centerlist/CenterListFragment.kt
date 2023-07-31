@@ -98,7 +98,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
         binding.fabCreateCenter.setOnClickListener {
             onClickCreateNewCenter()
         }
-        binding.layoutError.findViewById<Button>(R.id.btn_try_again).setOnClickListener {
+        binding.layoutError.findViewById<Button>(R.id.btnTryAgain).setOnClickListener {
             reloadOnError()
         }
     }
@@ -137,7 +137,7 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
             *activity?.resources?.getIntArray(R.array.swipeRefreshColors) ?: IntArray(0)
         )
         binding.swipeContainer.setOnRefreshListener(this)
-        sweetUIErrorHandler = SweetUIErrorHandler(activity, binding.root)
+        sweetUIErrorHandler = SweetUIErrorHandler(requireActivity(), binding.root)
     }
 
     private fun onClickCreateNewCenter() {

@@ -5,6 +5,7 @@ import com.mifos.api.datamanager.DataManagerDocument
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.base.BasePresenter
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import rx.Subscriber
@@ -18,7 +19,7 @@ import javax.inject.Inject
  * Created by Tarun on 29-06-2017.
  */
 class SignaturePresenter @Inject constructor(private val mDataManagerDocument: DataManagerDocument) : BasePresenter<SignatureMvpView?>() {
-    private val mSubscriptions: CompositeSubscription
+    private val mSubscriptions: CompositeSubscription = CompositeSubscription()
     override fun attachView(mvpView: SignatureMvpView?) {
         super.attachView(mvpView)
     }
@@ -52,15 +53,13 @@ class SignaturePresenter @Inject constructor(private val mDataManagerDocument: D
                 }))
     }
 
-    private fun getRequestFileBody(file: File?): MultipartBody.Part {
+    private fun getRequestFileBody(file: File?): MultipartBody.Part? {
         // create RequestBody instance from file
-        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+        val requestFile =
+            file?.let { RequestBody.create("multipart/form-data".toMediaTypeOrNull(), it) }
 
         // MultipartBody.Part is used to send also the actual file name
-        return MultipartBody.Part.createFormData("file", file!!.name, requestFile)
+        return requestFile?.let { MultipartBody.Part.createFormData("file", file.name, it) }
     }
 
-    init {
-        mSubscriptions = CompositeSubscription()
-    }
 }

@@ -87,7 +87,7 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
             }
         )
         ImageLoaderUtils.loadImage(
-            context, clientId,
+            requireContext(), clientId,
             binding.ivUserPicture
         )
         val defaultBulkRepaymentTransaction = BulkRepaymentTransactions()

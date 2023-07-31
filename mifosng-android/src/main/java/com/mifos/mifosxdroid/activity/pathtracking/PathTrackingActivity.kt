@@ -60,7 +60,7 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
         createNotificationReceiver()
         showUserInterface()
         pathTrackingPresenter?.loadPathTracking(userId)
-        binding.layoutError.findViewById<Button>(R.id.btn_try_again).setOnClickListener {
+        binding.layoutError.findViewById<Button>(R.id.btnTryAgain).setOnClickListener {
             reloadOnError()
         }
     }
