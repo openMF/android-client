@@ -46,7 +46,7 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
 
 
     @Inject
-    var mLoginPresenter: LoginPresenter? = null
+    lateinit var mLoginPresenter: LoginPresenter
     private lateinit var username: String
     private lateinit var instanceURL: String
     private lateinit var password: String
@@ -82,7 +82,7 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         title = null
         setContentView(binding.root)
-        mLoginPresenter?.attachView(this)
+        mLoginPresenter.attachView(this)
         binding.etInstancePort.inputType = InputType.TYPE_CLASS_NUMBER
         if (port != "80") binding.etInstancePort.setText(port)
         binding.etInstanceURL.setText(instanceDomain)
@@ -203,7 +203,7 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
         // Updating Services
         BaseApiManager.createService()
         if (Network.isOnline(this)) {
-            mLoginPresenter?.login(username, password)
+            mLoginPresenter.login(username, password)
         } else {
             showToastMessage(getString(R.string.error_not_connected_internet))
         }
@@ -211,6 +211,6 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
 
     override fun onDestroy() {
         super.onDestroy()
-        mLoginPresenter?.detachView()
+        mLoginPresenter.detachView()
     }
 }
