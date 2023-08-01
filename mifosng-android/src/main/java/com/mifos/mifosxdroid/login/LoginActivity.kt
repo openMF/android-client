@@ -45,7 +45,6 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
     private lateinit var binding: ActivityLoginBinding
 
 
-    @JvmField
     @Inject
     var mLoginPresenter: LoginPresenter? = null
     private lateinit var username: String
@@ -64,7 +63,7 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
             isValidUrl = ValidationUtil.isValidUrl(instanceURL)
             binding.tvConstructedInstanceUrl.text = instanceURL
             domain = binding.etInstanceURL.editableText.toString()
-            if (domain.isEmpty() == true || domain.contains(" ") == true) {
+            if (domain.isEmpty() || domain.contains(" ")) {
                 isValidUrl = false
             }
             binding.tvConstructedInstanceUrl.setTextColor(
@@ -80,8 +79,8 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityComponent?.inject(this)
-//        ButterKnife.bind(this)
         binding = ActivityLoginBinding.inflate(layoutInflater)
+        title = null
         setContentView(binding.root)
         mLoginPresenter?.attachView(this)
         binding.etInstancePort.inputType = InputType.TYPE_CLASS_NUMBER
