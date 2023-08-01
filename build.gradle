@@ -103,7 +103,7 @@ ext {
     crashlyticsVersion = '2.10.1@aar'
 
     // android test runner version
-    androidTestRunnerVersion = '1.1.0'
+    androidTestRunnerVersion = '1.5.2'
     androidTestRuleVersion = '1.5.0'
 
     //jUnit jupiter
