@@ -20,10 +20,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
-import androidx.fragment.app.DialogFragment
 import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
@@ -32,32 +30,25 @@ import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentCreateNewClientBinding
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment
-import com.mifos.mifosxdroid.uihelpers.MFDatePicker
-import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.client.ClientPayload
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.organisation.Staff
 import com.mifos.objects.templates.clients.ClientsTemplate
 import com.mifos.utils.Constants
-import com.mifos.utils.DateHelper
+import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.ValidationUtil
+import com.mifos.utils.getDatePickerDialog
+import com.mifos.utils.getTodayFormatted
 import java.io.File
-import java.util.*
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.Locale
 import javax.inject.Inject
 
-class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, CreateNewClientMvpView,
-    OnItemSelectedListener {
+class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
 
     private lateinit var binding: FragmentCreateNewClientBinding
-
-    private val LOG_TAG = javaClass.simpleName
-
-    @JvmField
-    var datePickerSubmissionDate: DialogFragment? = null
-
-    @JvmField
-    var datePickerDateOfBirth: DialogFragment? = null
 
     @Inject
     lateinit var createNewClientPresenter: CreateNewClientPresenter
@@ -66,39 +57,42 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     private var createClientWithImage = false
     private var hasDataTables = false
     private var returnedClientId: Int? = null
-    private var officeId : Int? = 0
-    private var clientTypeId = 0
-    private var staffId : Int? = 0
-    private var genderId = 0
-    private var clientClassificationId = 0
+    private var officeId: Int? = 0
+    private var clientTypeId: Int? = 0
+    private var staffId: Int? = 0
+    private var genderId: Int? = 0
+    private var clientClassificationId: Int? = 0
     private var result = true
     private var submissionDateString: String? = null
     private var dateOfBirthString: String? = null
     private var clientsTemplate: ClientsTemplate? = null
     private var clientOffices: List<Office>? = null
     private var clientStaff: List<Staff>? = null
-    private var mCurrentDateView // the view whose click opened the date picker
-            : View? = null
     private var ClientImageFile: File? = null
     private var pickedImageUri: Uri? = null
-    private var genderOptionsList: MutableList<String>? = null
-    private var clientClassificationList: MutableList<String>? = null
-    private var clientTypeList: MutableList<String>? = null
-    private var officeList: MutableList<String>? = null
-    private var staffList: MutableList<String>? = null
-    private var genderOptionsAdapter: ArrayAdapter<String>? = null
-    private var clientClassificationAdapter: ArrayAdapter<String>? = null
-    private var clientTypeAdapter: ArrayAdapter<String>? = null
-    private var officeAdapter: ArrayAdapter<String>? = null
-    private var staffAdapter: ArrayAdapter<String>? = null
+    private var genderOptionsList: MutableList<String> = ArrayList()
+    private var clientClassificationList: MutableList<String> = ArrayList()
+    private var clientTypeList: MutableList<String> = ArrayList()
+    private var officeList: MutableList<String> = ArrayList()
+    private var staffList: MutableList<String> = ArrayList()
     private var progress: ProgressDialog? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        genderOptionsList = ArrayList()
-        clientClassificationList = ArrayList()
-        clientTypeList = ArrayList()
-        officeList = ArrayList()
-        staffList = ArrayList()
+
+    private var submissionDate: Instant = Instant.now()
+    private val submissionDatePickerDialog by lazy {
+        getDatePickerDialog(dayOfBirthDate, DatePickerConstrainType.ONLY_FUTURE_DAYS) {
+            val formattedDate = SimpleDateFormat("dd MM yyyy", Locale.getDefault()).format(it)
+            submissionDate = Instant.ofEpochMilli(it)
+            binding.submissionDateFieldContainer.editText?.setText(formattedDate)
+        }
+    }
+
+    private var dayOfBirthDate: Instant = Instant.now()
+    private val datePickerDialog by lazy {
+        getDatePickerDialog(dayOfBirthDate, DatePickerConstrainType.ONLY_PAST_DAYS) {
+            val formattedDate = SimpleDateFormat("dd MM yyyy", Locale.getDefault()).format(it)
+            dayOfBirthDate = Instant.ofEpochMilli(it)
+            binding.dateOfBirthFieldContainer.editText?.setText(formattedDate)
+        }
     }
 
     override fun onCreateView(
@@ -117,62 +111,63 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvSubmissionDate.setOnClickListener {
-            onClickTextViewSubmissionDate()
-        }
-
-        binding.tvDateofbirth.setOnClickListener {
-            onClickTextViewDateOfBirth()
-        }
-
         binding.btnSubmit.setOnClickListener {
             onClickSubmitButton()
         }
+
         binding.cbClientActiveStatus.setOnCheckedChangeListener { compoundButton, b ->
             onClickActiveCheckBox()
         }
+
+        binding.genderListField.setOnItemClickListener { adapterView, view, relativePosition, l ->
+            val index = genderOptionsList.indexOf(adapterView.getItemAtPosition(relativePosition))
+            genderId = clientsTemplate?.genderOptions?.get(index)?.id
+        }
+
+        binding.dateOfBirthFieldContainer.setEndIconOnClickListener {
+            datePickerDialog.show(
+                requireActivity().supportFragmentManager,
+                FragmentConstants.DFRAG_DATE_PICKER
+            )
+        }
+
+        binding.clientTypeListField.setOnItemClickListener { adapterView, view, relativePosition, l ->
+            val index = clientTypeList.indexOf(adapterView.getItemAtPosition(relativePosition))
+            clientTypeId = clientsTemplate?.clientTypeOptions?.get(index)?.id
+        }
+
+        binding.clientClassificationListField.setOnItemClickListener { adapterView, view, relativePosition, l ->
+            val index =
+                clientClassificationList.indexOf(adapterView.getItemAtPosition(relativePosition))
+            clientClassificationId = clientsTemplate?.clientClassificationOptions?.get(index)?.id
+        }
+
+        binding.officeListField.setOnItemClickListener { adapterView, view, relativePosition, l ->
+            val index = officeList.indexOf(adapterView.getItemAtPosition(relativePosition))
+            officeId = clientOffices?.get(index)?.id
+            officeId?.let { createNewClientPresenter.loadStaffInOffices(it) }
+        }
+
+        binding.staffListField.setOnItemClickListener { adapterView, view, relativePosition, l ->
+            val index = staffList.indexOf(adapterView.getItemAtPosition(relativePosition))
+            staffId = clientStaff?.get(index)?.id
+        }
+
+        binding.submissionDateFieldContainer.setEndIconOnClickListener {
+            submissionDatePickerDialog.show(
+                requireActivity().supportFragmentManager,
+                FragmentConstants.DFRAG_DATE_PICKER
+            )
+        }
+
     }
 
     override fun showUserInterface() {
-        genderOptionsAdapter = ArrayAdapter(
-            requireActivity(),
-            android.R.layout.simple_spinner_item, genderOptionsList ?: emptyList()
-        )
-        genderOptionsAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spGender.adapter = genderOptionsAdapter
-        binding.spGender.onItemSelectedListener = this
-        clientClassificationAdapter = ArrayAdapter(
-            requireActivity(),
-            android.R.layout.simple_spinner_item, clientClassificationList ?: emptyList()
-        )
-        clientClassificationAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spClientClassification.adapter = clientClassificationAdapter
-        binding.spClientClassification.onItemSelectedListener = this
-        clientTypeAdapter = ArrayAdapter(
-            requireActivity(),
-            android.R.layout.simple_spinner_item, clientTypeList ?: emptyList()
-        )
-        clientTypeAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spClientType.adapter = clientTypeAdapter
-        binding.spClientType.onItemSelectedListener = this
-        officeAdapter = ArrayAdapter(
-            requireActivity(),
-            android.R.layout.simple_spinner_item, officeList ?: emptyList()
-        )
-        officeAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spOffices.adapter = officeAdapter
-        binding.spOffices.onItemSelectedListener = this
-        staffAdapter = ArrayAdapter(
-            requireActivity(),
-            android.R.layout.simple_spinner_item, staffList ?: emptyList()
-        )
-        staffAdapter?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spStaff.adapter = staffAdapter
-        binding.spStaff.onItemSelectedListener = this
-        datePickerSubmissionDate = MFDatePicker.newInsance(this)
-        datePickerDateOfBirth = MFDatePicker.newInsance(this)
-        binding.tvSubmissionDate.text = MFDatePicker.datePickedAsString
-        binding.tvDateofbirth.text = MFDatePicker.datePickedAsString
+
+        binding.submissionDateFieldContainer.editText?.setText(getTodayFormatted())
+
+        binding.dateOfBirthFieldContainer.editText?.setText(getTodayFormatted())
+
         binding.ivClientImage.setOnClickListener { view ->
             val menu = PopupMenu(requireActivity(), view)
             menu.menuInflater.inflate(
@@ -220,31 +215,12 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         createClientWithImage = false
     }
 
-    private fun onClickTextViewSubmissionDate() {
-        datePickerSubmissionDate?.show(
-            requireActivity().supportFragmentManager,
-            FragmentConstants.DFRAG_DATE_PICKER
-        )
-        mCurrentDateView = binding.tvSubmissionDate
-    }
-
-    private fun onClickTextViewDateOfBirth() {
-        datePickerDateOfBirth?.show(
-            requireActivity().supportFragmentManager,
-            FragmentConstants.DFRAG_DATE_PICKER
-        )
-        mCurrentDateView = binding.tvDateofbirth
-    }
-
 
     private fun onClickSubmitButton() {
-        submissionDateString = binding.tvSubmissionDate.text.toString()
-        submissionDateString = DateHelper
-            .getDateAsStringUsedForCollectionSheetPayload(submissionDateString)
-            .replace("-", " ")
-        dateOfBirthString = binding.tvDateofbirth.text.toString()
-        dateOfBirthString = DateHelper.getDateAsStringUsedForDateofBirth(dateOfBirthString)
-            .replace("-", " ")
+        submissionDateString = binding.dateOfBirthFieldContainer.editText?.text.toString()
+
+        dateOfBirthString = binding.dateOfBirthFieldContainer.editText?.text.toString()
+
         val clientPayload = ClientPayload()
 
         //Mandatory Fields
@@ -268,16 +244,16 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         if (!TextUtils.isEmpty(binding.etClientExternalId.editableText.toString())) {
             clientPayload.externalId = binding.etClientExternalId.editableText.toString()
         }
-        if (clientStaff!!.isNotEmpty()) {
+        if (clientStaff?.isNotEmpty() == true) {
             clientPayload.staffId = staffId
         }
-        if (genderOptionsList!!.isNotEmpty()) {
+        if (genderOptionsList.isNotEmpty()) {
             clientPayload.genderId = genderId
         }
-        if (clientTypeList!!.isNotEmpty()) {
+        if (clientTypeList.isNotEmpty()) {
             clientPayload.clientTypeId = clientTypeId
         }
-        if (clientClassificationList!!.isNotEmpty()) {
+        if (clientClassificationList.isNotEmpty()) {
             clientPayload.clientClassificationId = clientClassificationId
         }
         if (!isFirstNameValid) {
@@ -305,16 +281,8 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
     }
 
     private fun onClickActiveCheckBox() {
-        binding.layoutSubmission.visibility =
+        binding.submissionDateFieldContainer.visibility =
             if (binding.cbClientActiveStatus.isChecked) View.VISIBLE else View.GONE
-    }
-
-    override fun onDatePicked(date: String?) {
-        if (mCurrentDateView != null && mCurrentDateView === binding.tvSubmissionDate) {
-            binding.tvSubmissionDate.text = date
-        } else if (mCurrentDateView != null && mCurrentDateView === binding.tvDateofbirth) {
-            binding.tvDateofbirth.text = date
-        }
     }
 
     override fun showClientTemplate(clientsTemplate: ClientsTemplate?) {
@@ -324,26 +292,28 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
                 hasDataTables = true
             }
         }
-        genderOptionsList?.addAll(
+        genderOptionsList.addAll(
             createNewClientPresenter.filterOptions(clientsTemplate?.genderOptions)
         )
-        genderOptionsAdapter?.notifyDataSetChanged()
-        clientTypeList?.addAll(
+        binding.genderListField.setSimpleItems(genderOptionsList.toTypedArray())
+
+        clientTypeList.addAll(
             createNewClientPresenter.filterOptions(clientsTemplate?.clientTypeOptions)
         )
-        clientTypeAdapter?.notifyDataSetChanged()
-        clientClassificationList?.addAll(
+        binding.clientTypeListField.setSimpleItems(clientTypeList.toTypedArray())
+
+        clientClassificationList.addAll(
             createNewClientPresenter
                 .filterOptions(clientsTemplate?.clientClassificationOptions)
         )
-        clientClassificationAdapter?.notifyDataSetChanged()
+        binding.clientTypeListField.setSimpleItems(clientTypeList.toTypedArray())
     }
 
     override fun showOffices(offices: List<Office?>?) {
         clientOffices = offices as List<Office>?
-        officeList?.addAll(createNewClientPresenter.filterOffices(offices))
-        Collections.sort(officeList)
-        officeAdapter?.notifyDataSetChanged()
+        officeList.addAll(createNewClientPresenter.filterOffices(offices))
+        officeList.sort()
+        binding.officeListField.setSimpleItems(officeList.toTypedArray())
     }
 
     override fun showStaffInOffices(staffs: List<Staff?>?) {
@@ -353,9 +323,9 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
             }
         }
         clientStaff = staffs as List<Staff>?
-        staffList?.clear()
-        staffList?.addAll(createNewClientPresenter.filterStaff(staffs))
-        staffAdapter?.notifyDataSetChanged()
+        staffList.clear()
+        staffList.addAll(createNewClientPresenter.filterStaff(staffs))
+        binding.staffListField.setSimpleItems(staffList.toTypedArray())
     }
 
     override fun showClientCreatedSuccessfully(message: Int) {
@@ -384,23 +354,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         createNewClientPresenter.detachView()
     }
 
-    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        when (parent.id) {
-            R.id.sp_offices -> {
-                officeId = clientOffices!![position].id
-                officeId?.let { createNewClientPresenter.loadStaffInOffices(it) }
-            }
-
-            R.id.sp_gender -> genderId = clientsTemplate!!.genderOptions[position].id
-            R.id.sp_client_type -> clientTypeId = clientsTemplate!!.clientTypeOptions[position].id
-            R.id.sp_staff -> staffId = clientStaff!![position].id
-            R.id.sp_client_classification -> clientClassificationId =
-                clientsTemplate!!.clientClassificationOptions[position].id
-        }
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {}
-    val isFirstNameValid: Boolean
+    private val isFirstNameValid: Boolean
         get() {
             result = true
             try {
@@ -427,7 +381,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
             return result
         }
 
-    val isMiddleNameValid: Boolean
+    private val isMiddleNameValid: Boolean
         get() {
             result = true
             try {
@@ -450,7 +404,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
             return result
         }
 
-    val isLastNameValid: Boolean
+    private val isLastNameValid: Boolean
         get() {
             result = true
             try {
@@ -545,7 +499,7 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         requestCode: Int, permissions: Array<String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && requestCode == READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE) {
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED && requestCode == READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE) {
             uploadClientImageFromDevice()
         }
     }
@@ -554,13 +508,5 @@ class CreateNewClientFragment : ProgressableFragment(), OnDatePickListener, Crea
         private const val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1
         private const val PICK_IMAGE_ACTIVITY_REQUEST_CODE = 2
         private const val READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 3
-
-        @JvmStatic
-        fun newInstance(): CreateNewClientFragment {
-            val createNewClientFragment = CreateNewClientFragment()
-            val args = Bundle()
-            createNewClientFragment.arguments = args
-            return createNewClientFragment
-        }
     }
 }

@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -13,29 +12,38 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentActivateClientBinding
-import com.mifos.mifosxdroid.uihelpers.MFDatePicker
-import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.client.ActivatePayload
 import com.mifos.utils.Constants
-import com.mifos.utils.DateHelper
+import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
+import com.mifos.utils.getDatePickerDialog
+import com.mifos.utils.getTodayFormatted
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.Locale
 import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 09/02/17.
  */
-class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListener {
+class ActivateFragment : MifosBaseFragment(), ActivateMvpView {
 
     private lateinit var binding: FragmentActivateClientBinding
-    private val arg : ActivateFragmentArgs by navArgs()
+    private val arg: ActivateFragmentArgs by navArgs()
 
-    @JvmField
     @Inject
-    var activatePresenter: ActivatePresenter? = null
-    private var mfDatePicker: DialogFragment? = null
-    private var activationDate: String? = null
+    lateinit var activatePresenter: ActivatePresenter
     private var id = 0
     private var activateType: String? = null
+    private var activationDate: Instant = Instant.now()
+    private val submissionDatePickerDialog by lazy {
+        getDatePickerDialog(activationDate, DatePickerConstrainType.ONLY_FUTURE_DAYS) {
+            val formattedDate = SimpleDateFormat("dd MM yyyy", Locale.getDefault()).format(it)
+            activationDate = Instant.ofEpochMilli(it)
+            binding.activateDateFieldContainer.editText?.setText(formattedDate)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
@@ -47,7 +55,7 @@ class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListene
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentActivateClientBinding.inflate(inflater, container, false)
-        activatePresenter?.attachView(this)
+        activatePresenter.attachView(this)
         showUserInterface()
         return binding.root
     }
@@ -59,42 +67,29 @@ class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListene
             onClickActivationButton()
         }
 
-        binding.tvActivationDate.setOnClickListener {
-            onClickTextViewActivationDate()
+        binding.activateDateFieldContainer.setEndIconOnClickListener {
+            submissionDatePickerDialog.show(
+                requireActivity().supportFragmentManager,
+                FragmentConstants.DFRAG_DATE_PICKER
+            )
         }
     }
 
     override fun showUserInterface() {
         setToolbarTitle(getString(R.string.activate))
-        mfDatePicker = MFDatePicker.newInsance(this)
-        binding.tvActivationDate.text = MFDatePicker.datePickedAsString
-        activationDate = binding.tvActivationDate.text.toString()
-        activationDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(activationDate)
-            .replace("-", " ")
+        binding.activateDateFieldContainer.editText?.setText(getTodayFormatted())
     }
 
     private fun onClickActivationButton() {
-        val clientActivate = ActivatePayload(activationDate)
+        val clientActivate = ActivatePayload(activationDate.toString())
         activate(clientActivate)
-    }
-
-    private fun onClickTextViewActivationDate() {
-        mfDatePicker?.show(
-            requireActivity().supportFragmentManager, FragmentConstants.DFRAG_DATE_PICKER
-        )
-    }
-
-    override fun onDatePicked(date: String?) {
-        binding.tvActivationDate.text = date
-        activationDate =
-            DateHelper.getDateAsStringUsedForCollectionSheetPayload(date).replace("-", " ")
     }
 
     fun activate(clientActivate: ActivatePayload?) {
         when (activateType) {
-            Constants.ACTIVATE_CLIENT -> activatePresenter?.activateClient(id, clientActivate)
-            Constants.ACTIVATE_CENTER -> activatePresenter?.activateCenter(id, clientActivate)
-            Constants.ACTIVATE_GROUP -> activatePresenter?.activateGroup(id, clientActivate)
+            Constants.ACTIVATE_CLIENT -> activatePresenter.activateClient(id, clientActivate)
+            Constants.ACTIVATE_CENTER -> activatePresenter.activateCenter(id, clientActivate)
+            Constants.ACTIVATE_GROUP -> activatePresenter.activateGroup(id, clientActivate)
             else -> {}
         }
     }
@@ -120,18 +115,6 @@ class ActivateFragment : MifosBaseFragment(), ActivateMvpView, OnDatePickListene
 
     override fun onDestroyView() {
         super.onDestroyView()
-        activatePresenter?.detachView()
-    }
-
-    companion object {
-        val LOG_TAG = ActivateFragment::class.java.simpleName
-        fun newInstance(id: Int, activationType: String?): ActivateFragment {
-            val activateFragment = ActivateFragment()
-            val args = Bundle()
-            args.putInt(Constants.ID, id)
-            args.putString(Constants.ACTIVATE_TYPE, activationType)
-            activateFragment.arguments = args
-            return activateFragment
-        }
+        activatePresenter.detachView()
     }
 }

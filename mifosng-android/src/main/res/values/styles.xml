@@ -17,6 +17,7 @@
         <item name="colorPrimaryContainer">@color/baby_blue</item>
         <item name="colorOnPrimaryContainer">@color/black</item>
         <item name="colorSurface">@color/powder_blue</item>
+        <item name="colorPrimaryInverse">@color/baby_blue</item>
         <item name="colorOnSurfaceVariant">@color/black</item>
         <item name="colorSecondaryContainer">@color/baby_blue</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/white</item>

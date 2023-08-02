@@ -107,7 +107,7 @@
     <string name="savings_account_balance">Account Balance</string>
     <string name="savings_total_deposits">Total Deposits</string>
     <string name="savings_total_withdrawals">Total Withdrawals</string>
-    <string name="savings_make_withdrawal">Make Withdrawal</string>
+    <string name="savings_make_withdrawal">Withdrawal</string>
     <string name="savings_make_deposit">Make Deposit</string>
     <string name="savingAccounts">Savings Accounts</string>
     <string name="savingsAccount">Savings Account</string>

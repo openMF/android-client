@@ -17,7 +17,8 @@
     <!-- Actual content -->
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:scrollbars="none">
 
         <LinearLayout style="@style/LinearLayout.Base">
 
@@ -27,7 +28,9 @@
                 android:id="@+id/iv_clientImage"
                 style="@style/ClientImage"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_dp_placeholder" />
+                android:src="@drawable/ic_dp_placeholder"
+                app:border_color="@color/divider"
+                app:border_width="2dp" />
 
             <com.google.android.material.textfield.TextInputLayout style="@style/TextInput.Base">
 
@@ -97,243 +100,129 @@
                     android:paddingBottom="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="8dp"
+                android:hint="@string/gender">
 
-                <TextView
-                    android:id="@+id/tv_client_gender"
-                    style="@style/Base.TextAppearance.AppCompat.Small"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
-                    android:text="@string/gender"
-                    android:textSize="12sp" />
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/sp_gender"
-                    style="@style/Widget.AppCompat.Spinner.Underlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/gray_dark"
-                    android:paddingTop="10dp"
-                    android:spinnerMode="dropdown" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingTop="16dp">
-
-                <LinearLayout
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/genderListField"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:focusable="false" />
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:baselineAlignBottom="true"
-                        app:srcCompat="@drawable/ic_event_black_24dp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/Base.TextAppearance.AppCompat.Small"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="@string/dob"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/tv_dateofbirth"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.2dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/gray_dark" />
-
-            </LinearLayout>
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dateOfBirthFieldContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="6dp"
+                android:hint="@string/dob"
+                app:endIconDrawable="@drawable/baseline_calendar_today_black_24"
+                app:endIconMode="custom">
 
-                <TextView
-                    android:id="@+id/tv_client_type"
-                    style="@style/Base.TextAppearance.AppCompat.Small"
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
-                    android:text="@string/client_type"
-                    android:textSize="12sp" />
+                    android:layout_height="match_parent"
+                    android:focusable="false"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/sp_client_type"
-                    style="@style/Widget.AppCompat.Spinner.Underlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/gray_dark"
-                    android:paddingTop="10dp"
-                    android:spinnerMode="dropdown" />
-            </LinearLayout>
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="8dp"
+                android:hint="@string/client_type">
 
-                <TextView
-                    android:id="@+id/tv_client_classification"
-                    style="@style/Base.TextAppearance.AppCompat.Small"
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/clientTypeListField"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:text="@string/client_classification"
-                    android:textSize="12sp" />
+                    android:layout_height="match_parent"
+                    android:focusable="false" />
 
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/sp_client_classification"
-                    style="@style/Widget.AppCompat.Spinner.Underlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/gray_dark"
-                    android:paddingTop="10dp"
-                    android:spinnerMode="dropdown" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="8dp"
+                android:hint="@string/client_classification">
 
-                <TextView
-                    android:id="@+id/tv_office"
-                    style="@style/Base.TextAppearance.AppCompat.Small"
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/clientClassificationListField"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:text="@string/office_name_mandatory"
-                    android:textSize="12sp" />
+                    android:layout_height="match_parent"
+                    android:focusable="false" />
 
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/sp_offices"
-                    style="@style/Widget.AppCompat.Spinner.Underlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/gray_dark"
-                    android:paddingTop="10dp"
-                    android:spinnerMode="dropdown" />
-            </LinearLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="8dp"
+                android:hint="@string/office_name_mandatory">
 
-                <TextView
-                    android:id="@+id/tv_staff"
-                    style="@style/Base.TextAppearance.AppCompat.Small"
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/officeListField"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:text="@string/staff_names"
-                    android:textSize="12sp" />
+                    android:layout_height="match_parent"
+                    android:focusable="false" />
 
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/sp_staff"
-                    style="@style/Widget.AppCompat.Spinner.Underlined"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:hint="@string/staff_names">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/staffListField"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/gray_dark"
-                    android:paddingTop="10dp"
-                    android:spinnerMode="dropdown" />
-            </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:focusable="false" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
                 android:id="@+id/cb_client_active_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_margin="8dp"
                 android:checked="false"
                 android:paddingTop="10dp"
                 android:text="@string/client_active" />
 
-            <LinearLayout
-                android:id="@+id/layout_submission"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/submissionDateFieldContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingTop="16dp"
-                android:visibility="gone">
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:hint="@string/loan_submission_date"
+                android:visibility="gone"
+                app:endIconDrawable="@drawable/baseline_calendar_today_black_24"
+                app:endIconMode="custom">
 
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="4dp"
-                        android:baselineAlignBottom="true"
-                        app:srcCompat="@drawable/ic_event_black_24dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/Base.TextAppearance.AppCompat.Small"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="@string/loan_submission_date"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/tv_submission_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.2dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/gray_dark" />
-
-            </LinearLayout>
+                    android:focusable="false"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btn_submit"
-                style="@style/Button.Base"
-                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/login_button_rounded"
                 android:text="@string/submit" />
 
         </LinearLayout>

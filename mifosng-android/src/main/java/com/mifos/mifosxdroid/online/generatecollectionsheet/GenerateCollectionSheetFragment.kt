@@ -12,15 +12,11 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TableRow
 import android.widget.TextView
-import androidx.fragment.app.DialogFragment
 import com.mifos.api.model.BulkRepaymentTransactions
 import com.mifos.api.model.ClientsAttendance
 import com.mifos.mifosxdroid.R
@@ -28,8 +24,6 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentGenerateCollectionSheetBinding
-import com.mifos.mifosxdroid.uihelpers.MFDatePicker
-import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.collectionsheet.BulkSavingsDueTransaction
 import com.mifos.objects.collectionsheet.CenterDetail
 import com.mifos.objects.collectionsheet.CollectionSheetPayload
@@ -42,13 +36,17 @@ import com.mifos.objects.group.Group
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.organisation.Staff
 import com.mifos.utils.Constants
-import com.mifos.utils.DateHelper
+import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
+import com.mifos.utils.getDatePickerDialog
+import com.mifos.utils.getTodayFormatted
+import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.Locale
 import javax.inject.Inject
 
 class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionSheetMvpView,
-    OnItemSelectedListener, View.OnClickListener, OnDatePickListener {
+    View.OnClickListener {
 
     private lateinit var binding: FragmentGenerateCollectionSheetBinding
 
@@ -59,7 +57,6 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
 
     @Inject
     lateinit var presenter: GenerateCollectionSheetPresenter
-    private var datePicker: DialogFragment? = null
     private var officeNameIdHashMap = HashMap<String?, Int?>()
     private var staffNameIdHashMap = HashMap<String?, Int?>()
     private var centerNameIdHashMap = HashMap<String?, Int?>()
@@ -76,9 +73,18 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private var groupId = -1
     private var staffId = -1
 
+    private var selectedRepaymentDate: Instant = Instant.now()
+    private val datePickerDialog by lazy {
+        getDatePickerDialog(selectedRepaymentDate, DatePickerConstrainType.ONLY_FUTURE_DAYS) {
+            val formattedDate = SimpleDateFormat("dd MM yyyy", Locale.getDefault()).format(it)
+            selectedRepaymentDate = Instant.ofEpochMilli(it)
+            binding.meetingDateFieldContainer.editText?.setText(formattedDate)
+        }
+    }
+
     //id of the center whose Productive CollectionSheet has to be retrieved.
-    private var productiveCenterId : Int? = -1
-    private var calendarId : Int? = -1
+    private var productiveCenterId: Int? = -1
+    private var calendarId: Int? = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
@@ -122,10 +128,6 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
 
 
     companion object {
-        fun newInstance(): GenerateCollectionSheetFragment {
-            return GenerateCollectionSheetFragment()
-        }
-
         const val LIMIT = "limit"
         const val ORDER_BY = "orderBy"
         const val SORT_ORDER = "sortOrder"
@@ -152,72 +154,52 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         if (activity == null) return
         officeNameIdHashMap =
             presenter.createOfficeNameIdMap(offices, officeNames as MutableList<String?>)
-        setSpinner(binding.spBranchOffices, officeNames)
-        binding.spBranchOffices.onItemSelectedListener = this
+        binding.officeField.setSimpleItems(officeNames.toTypedArray())
+        binding.officeField.setOnItemClickListener { _, _, i, _ ->
+            officeId = officeNameIdHashMap[officeNames[i]]!!
+            if (officeId != -1) {
+                inflateStaffSpinner(officeId)
+                inflateCenterSpinner(officeId, -1)
+                inflateGroupSpinner(officeId, -1)
+            } else {
+                Toaster.show(binding.root, getString(R.string.error_select_office))
+            }
+        }
     }
 
     override fun showStaffInOffice(staffs: List<Staff>, officeId: Int) {
         this.officeId = officeId
-        staffNameIdHashMap =
-            presenter.createStaffIdMap(staffs, staffNames as MutableList<String?>)
-        setSpinner(binding.spStaff, staffNames)
-        binding.spStaff.onItemSelectedListener = this
+        staffNameIdHashMap = presenter.createStaffIdMap(staffs, staffNames as MutableList<String?>)
+        binding.staffField.setSimpleItems(staffNames.toTypedArray())
+        binding.staffField.setOnItemClickListener { _, _, i, _ ->
+            staffId = staffNameIdHashMap[staffNames[i]]!!
+            if (staffId != -1) {
+                inflateCenterSpinner(officeId, staffId)
+                inflateGroupSpinner(officeId, staffId)
+            } else {
+                Toaster.show(binding.root, getString(R.string.error_select_staff))
+            }
+        }
         staffId = -1 //Reset staff id
     }
 
     override fun showCentersInOffice(centers: List<Center>) {
         centerNameIdHashMap =
             presenter.createCenterIdMap(centers, centerNames as MutableList<String?>)
-        setSpinner(binding.spCenters, centerNames)
-        binding.spCenters.onItemSelectedListener = this
+        binding.centerField.setSimpleItems(centerNames.toTypedArray())
+        binding.centerField.setOnItemClickListener { _, _, i, _ ->
+            centerId = centerNameIdHashMap[centerNames[i]]!!
+            if (centerId != -1) {
+                inflateGroupSpinner(centerId)
+            } else {
+                Toaster.show(binding.root, getString(R.string.error_select_center))
+            }
+        }
         centerId = -1 //Reset Center id.
     }
 
-    override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-        when (adapterView.id) {
-            R.id.sp_centers -> {
-                centerId = centerNameIdHashMap.get(centerNames[i])!!
-                if (centerId != -1) {
-                    inflateGroupSpinner(centerId)
-                } else {
-                    Toaster.show(binding.root, getString(R.string.error_select_center))
-                }
-            }
-
-            R.id.sp_staff -> {
-                staffId = staffNameIdHashMap.get(staffNames[i])!!
-                if (staffId != -1) {
-                    inflateCenterSpinner(officeId, staffId)
-                    inflateGroupSpinner(officeId, staffId)
-                } else {
-                    Toaster.show(binding.root, getString(R.string.error_select_staff))
-                }
-            }
-
-            R.id.sp_branch_offices -> {
-                officeId = officeNameIdHashMap.get(officeNames[i])!!
-                if (officeId != -1) {
-                    inflateStaffSpinner(officeId)
-                    inflateCenterSpinner(officeId, -1)
-                    inflateGroupSpinner(officeId, -1)
-                } else {
-                    Toaster.show(binding.root, getString(R.string.error_select_office))
-                }
-            }
-
-            R.id.sp_groups -> {
-                groupId = groupNameIdHashMap.get(groupNames[i])!!
-                if (groupId == -1) {
-                    Toaster.show(binding.root, getString(R.string.error_select_group))
-                }
-            }
-        }
-    }
-
-    override fun onNothingSelected(adapterView: AdapterView<*>?) {}
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.tv_meeting_date -> setMeetingDate()
             R.id.btn_generate_collection_sheet -> fetchCollectionSheet()
             R.id.btn_generate_productive_collection_sheet -> fetchCenterDetails()
             R.id.btn_submit_productive -> when (view.tag as Int) {
@@ -230,7 +212,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private fun setUpUi() {
         inflateOfficeSpinner()
         inflateMeetingDate()
-        binding.tvMeetingDate.setOnClickListener(this)
+        binding.meetingDateFieldContainer.setOnClickListener(this)
         binding.btnGenerateProductiveCollectionSheet.setOnClickListener(this)
         binding.btnGenerateCollectionSheet.setOnClickListener(this)
     }
@@ -241,7 +223,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
             return
         }
         val requestPayload = CollectionSheetRequestPayload()
-        requestPayload.transactionDate = binding.tvMeetingDate.text.toString()
+        requestPayload.transactionDate = binding.meetingDateFieldContainer.editText?.text.toString()
         requestPayload.calendarId = calendarId
         presenter.loadCollectionSheet(groupId, requestPayload)
     }
@@ -249,7 +231,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private fun fetchProductiveCollectionSheet() {
         //Make RequestPayload and retrieve Productive CollectionSheet.
         val requestPayload = CollectionSheetRequestPayload()
-        requestPayload.transactionDate = binding.tvMeetingDate.text.toString()
+        requestPayload.transactionDate = binding.meetingDateFieldContainer.editText?.text.toString()
         requestPayload.calendarId = calendarId
         productiveCenterId?.let { presenter.loadProductiveCollectionSheet(it, requestPayload) }
     }
@@ -257,7 +239,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private fun fetchCenterDetails() {
         presenter.loadCenterDetails(
             Constants.DATE_FORMAT_LONG, Constants.LOCALE_EN,
-            binding.tvMeetingDate.text.toString(), officeId, staffId
+            binding.meetingDateFieldContainer.editText?.text.toString(), officeId, staffId
         )
     }
 
@@ -389,7 +371,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                 productContainer.orientation = LinearLayout.HORIZONTAL
 
                 //Iterate through all the Savings in of this type and add in the container
-                for (saving in clientCollectionSheet.savings!!) {
+                for (saving in clientCollectionSheet.savings) {
                     if (saving.productId == product.id) {
                         //Add the saving in the container
                         val editText = EditText(context)
@@ -405,11 +387,6 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                 }
                 row.addView(productContainer)
             }
-            val spAttendance = Spinner(context)
-            //Set the clientId as its tag which will be used as identifier later.
-            spAttendance.tag = clientCollectionSheet.clientId
-            setSpinner(spAttendance, attendanceTypes)
-            row.addView(spAttendance)
             binding.tableSheet.addView(row)
         }
         if (binding.btnSubmitProductive.visibility != View.VISIBLE) {
@@ -429,9 +406,6 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         val tvLabelPayment = TextView(context)
         tvLabelPayment.text = getString(R.string.payment_type)
         rowPayment.addView(tvLabelPayment)
-        val spPayment = Spinner(context)
-        setSpinner(spPayment, paymentTypes)
-        rowPayment.addView(spPayment)
         binding.tableAdditional.addView(rowPayment)
         val rowAccount = TableRow(context)
         val tvLabelAccount = TextView(context)
@@ -562,9 +536,6 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
                 }
                 row.addView(productContainer)
             }
-            val spAttendance = Spinner(context)
-            setSpinner(spAttendance, attendanceTypes)
-            row.addView(spAttendance)
             binding.tableSheet.addView(row)
         }
         if (binding.btnSubmitProductive.visibility != View.VISIBLE) {
@@ -581,7 +552,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private fun submitProductiveSheet() {
         val payload = ProductiveCollectionSheetPayload()
         payload.calendarId = calendarId
-        payload.transactionDate = binding.tvMeetingDate.text.toString()
+        payload.transactionDate = binding.meetingDateFieldContainer.editText?.text.toString()
         for (i in 0 until binding.tableSheet.childCount) {
             //In the tableRows which depicts the details of that client.
             //Loop through all the view of this TableRows.
@@ -619,8 +590,8 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private fun submitCollectionSheet() {
         val payload = CollectionSheetPayload()
         payload.calendarId = calendarId
-        payload.transactionDate = binding.tvMeetingDate.text.toString()
-        payload.actualDisbursementDate = binding.tvMeetingDate.text.toString()
+        payload.transactionDate = binding.meetingDateFieldContainer.editText?.text.toString()
+        payload.actualDisbursementDate = binding.meetingDateFieldContainer.editText?.text.toString()
         for (i in 0 until binding.tableSheet.childCount) {
             //In the tableRows which depicts the details of that client.
             //Loop through all the view of this TableRows.
@@ -700,48 +671,31 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     }
 
     private fun inflateMeetingDate() {
-        datePicker = MFDatePicker.newInsance(this)
-        val date =
-            DateHelper.getDateAsStringUsedForCollectionSheetPayload(MFDatePicker.datePickedAsString)
-        binding.tvMeetingDate.text = date.replace('-', ' ')
-    }
-
-    private fun setMeetingDate() {
-        datePicker?.show(
-            requireActivity().supportFragmentManager,
-            FragmentConstants.DFRAG_DATE_PICKER
-        )
-    }
-
-    override fun onDatePicked(date: String?) {
-        val newDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date)
-        binding.tvMeetingDate.text = newDate.replace('-', ' ')
+        binding.meetingDateFieldContainer.editText?.setText(getTodayFormatted())
+        binding.meetingDateFieldContainer.setEndIconOnClickListener {
+            datePickerDialog.show(
+                requireActivity().supportFragmentManager,
+                FragmentConstants.DFRAG_DATE_PICKER
+            )
+        }
     }
 
     override fun showGroupsInOffice(groups: List<Group>) {
-        groupNameIdHashMap =
-            presenter.createGroupIdMap(groups, groupNames as MutableList<String?>)
-        setSpinner(binding.spGroups, groupNames)
+        groupNameIdHashMap = presenter.createGroupIdMap(groups, groupNames as MutableList<String?>)
+        binding.groupField.setSimpleItems(groupNames.toTypedArray())
     }
 
     override fun showGroupByCenter(centerWithAssociations: CenterWithAssociations) {
         groupNameIdHashMap = presenter.createGroupIdMap(
             centerWithAssociations.groupMembers, groupNames as MutableList<String?>
         )
-        setSpinner(binding.spGroups, groupNames)
-        calendarId = centerWithAssociations.collectionMeetingCalendar.id
-        groupId = -1 //Reset group Id
-        binding.spGroups.onItemSelectedListener = this
-    }
-
-    private fun setSpinner(spinner: Spinner?, values: List<String?>) {
-        val adapter = ArrayAdapter(
-            requireActivity(),
-            android.R.layout.simple_spinner_item, values
-        )
-        adapter.notifyDataSetChanged()
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner?.adapter = adapter
+        binding.groupField.setSimpleItems(groupNames.toTypedArray())
+        binding.groupField.setOnItemClickListener { _, _, i, _ ->
+            groupId = groupNameIdHashMap[groupNames[i]]!!
+            if (groupId == -1) {
+                Toaster.show(binding.root, getString(R.string.error_select_group))
+            }
+        }
     }
 
     override fun showError(s: String?) {

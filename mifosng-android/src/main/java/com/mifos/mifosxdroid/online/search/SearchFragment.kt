@@ -12,12 +12,11 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SearchAdapter
@@ -33,7 +32,8 @@ import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 import javax.inject.Inject
 
-class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListener {
+
+class SearchFragment : MifosBaseFragment(), SearchMvpView {
 
     private lateinit var binding: FragmentClientSearchBinding
 
@@ -48,13 +48,14 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListene
     private var autoTriggerSearch = false
     private lateinit var searchedEntities: MutableList<SearchedEntity>
     private lateinit var searchOptionsAdapter: ArrayAdapter<CharSequence>
-    private lateinit var resources: String
+    private var resources: String? = null
     private var isFabOpen = false
     private lateinit var fabOpen: Animation
     private lateinit var fabClose: Animation
     private lateinit var rotateForward: Animation
     private lateinit var rotateBackward: Animation
     private lateinit var layoutManager: LinearLayoutManager
+    private var checkedFilter = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as MifosBaseActivity).activityComponent?.inject(this)
@@ -131,14 +132,32 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListene
         }
     }
 
+    private fun showFilterDialog() {
+        val dialogBuilder = MaterialAlertDialogBuilder(requireContext())
+        dialogBuilder.setSingleChoiceItems(
+            R.array.search_options,
+            checkedFilter
+        ) { dialog, index ->
+            checkedFilter = index
+            resources = if (checkedFilter == 0) null else searchOptionsValues[checkedFilter - 1]
+            autoTriggerSearch = true
+            onClickSearch()
+            binding.filterSelectionButton.text =
+                getResources().getStringArray(R.array.search_options)[index]
+            dialog.dismiss()
+        }
+        dialogBuilder.show()
+    }
+
     override fun showUserInterface() {
         searchOptionsAdapter = ArrayAdapter.createFromResource(
             (requireActivity()),
             R.array.search_options, android.R.layout.simple_spinner_item
         )
         searchOptionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spSearch.adapter = searchOptionsAdapter
-        binding.spSearch.onItemSelectedListener = this
+        binding.filterSelectionButton.setOnClickListener { showFilterDialog() }
+        binding.filterSelectionButton.text =
+            getResources().getStringArray(R.array.search_options)[0]
         binding.etSearch.requestFocus()
         layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -210,7 +229,7 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListene
             etSearchIntro, getString(R.string.got_it)
         )
         sequence.addSequenceItem(
-            binding.spSearch,
+            binding.filterSelectionButton,
             spSearchIntro, getString(R.string.next)
         )
         sequence.addSequenceItem(
@@ -259,22 +278,6 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView, OnItemSelectedListene
         hideKeyboard(binding.etSearch)
         super.onPause()
     }
-
-    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-        if (view != null && parent.id == R.id.sp_search) {
-            resources = if (position == 0) {
-                (searchOptionsValues[0] + "," + searchOptionsValues[1] + "," +
-                        searchOptionsValues[2] + "," + searchOptionsValues[3] + "," +
-                        searchOptionsValues[4])
-            } else {
-                searchOptionsValues[position - 1]
-            }
-            autoTriggerSearch = true
-            onClickSearch()
-        }
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {}
 
     /**
      * There is a need for this method in the following cases :

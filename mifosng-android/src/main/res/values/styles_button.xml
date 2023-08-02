@@ -16,6 +16,7 @@
 
     <style name="Button.Base.Weight">
         <item name="android:layout_width">0dp</item>
+        <item name="android:layout_margin">4dp</item>
     </style>
 
     <style name="Button.ConnectionSettings">

@@ -58,7 +58,7 @@
 
     <!-- Material design colors -->
 
-    <color name="primary">#2196F3</color>
+    <color name="primary">#2d5ba8</color>
     <color name="primary_dark">#1976D2</color>
     <color name="primary_light">#BBDEFB</color>
     <color name="accent">#03A9F4</color>

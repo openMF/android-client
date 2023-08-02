@@ -38,7 +38,7 @@ data class CenterPayload(
     var name: String? = null,
 
     @Column
-    var officeId: Int = 0,
+    var officeId: Int? = null,
 
     @Column
     var active: Boolean = false,

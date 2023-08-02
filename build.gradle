@@ -6,7 +6,7 @@ task clean(type: Delete) {
 // Define versions in a single place
 ext {
     // Sdk and tools
-    minSdkVersion = 19
+    minSdkVersion = 26
     targetSdkVersion = 33
     compileSdkVersion = 33
     buildToolsVersion = '28.0.3'
@@ -103,8 +103,8 @@ ext {
     crashlyticsVersion = '2.10.1@aar'
 
     // android test runner version
-    androidTestRunnerVersion = '1.1.0'
-    androidTestRuleVersion = '1.1.0'
+    androidTestRunnerVersion = '1.5.2'
+    androidTestRuleVersion = '1.5.0'
 
     //jUnit jupiter
     junitJupiterVersion = '5.7.2'

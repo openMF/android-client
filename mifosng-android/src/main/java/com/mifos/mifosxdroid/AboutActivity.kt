@@ -10,10 +10,11 @@ class AboutActivity : MifosBaseActivity() {
 
     private lateinit var binding: ActivityAboutBinding
 
-    var contributors = "https://github.com/openMF/android-client/graphs/contributors"
-    var gitHub = "https://github.com/openMF/android-client"
-    var twitter = "https://twitter.com/mifos"
-    var license = "https://github.com/openMF/android-client/blob/master/LICENSE.md"
+    private val websiteLink = "https://openmf.github.io/mobileapps.github.io/"
+    private val contributors = "https://github.com/openMF/android-client/graphs/contributors"
+    private val gitHub = "https://github.com/openMF/android-client"
+    private val twitter = "https://twitter.com/mifos"
+    private val license = "https://github.com/openMF/android-client/blob/master/LICENSE.md"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,21 +22,26 @@ class AboutActivity : MifosBaseActivity() {
         setContentView(binding.root)
         showBackButton()
 
+        binding.appVersion.text = BuildConfig.VERSION_NAME
+
         binding.contributor.setOnClickListener {
             link(contributors)
         }
-        binding.GitHub.setOnClickListener {
+        binding.sourcesText.setOnClickListener {
             link(gitHub)
         }
-        binding.twitter.setOnClickListener {
+        binding.twitterLinkContainer.setOnClickListener {
             link(twitter)
         }
-        binding.llAboutLicense.setOnClickListener {
+        binding.selfLicenseContainer.setOnClickListener {
             link(license)
+        }
+        binding.aboutWebsiteContainer.setOnClickListener {
+            link(websiteLink)
         }
     }
 
-    fun link(url: String?) {
+    private fun link(url: String) {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(url)
         startActivity(intent)
