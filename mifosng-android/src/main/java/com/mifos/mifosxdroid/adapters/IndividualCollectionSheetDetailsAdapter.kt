@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mifos.api.model.BulkRepaymentTransactions
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.databinding.ItemIndividualCollectionSheetBinding
-import com.mifos.mifosxdroid.injection.ActivityContext
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.OnRetrieveSheetItemData
 import com.mifos.objects.accounts.loan.PaymentTypeOptions
 import com.mifos.objects.collectionsheet.LoanAndClientName
 import com.mifos.utils.ImageLoaderUtils
+import dagger.hilt.android.qualifiers.ActivityContext
 import java.util.Locale
 import javax.inject.Inject
 

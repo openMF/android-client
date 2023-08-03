@@ -13,7 +13,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SyncSavingsAccountTransactionAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
@@ -22,11 +21,13 @@ import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.Network.isOnline
 import com.mifos.utils.PrefManager.userStatus
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 19/08/16.
  */
+@AndroidEntryPoint
 class SyncSavingsAccountTransactionFragment : MifosBaseFragment(),
     SyncSavingsAccountTransactionMvpView, OnRefreshListener, DialogInterface.OnClickListener {
 
@@ -42,7 +43,6 @@ class SyncSavingsAccountTransactionFragment : MifosBaseFragment(),
     var mSyncSavingsAccountTransactionAdapter: SyncSavingsAccountTransactionAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         setHasOptionsMenu(true)
     }
 

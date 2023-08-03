@@ -15,24 +15,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentChargeListBinding
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.OnChargeCreateListener
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment
 import com.mifos.objects.client.Charges
-import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
  */
+@AndroidEntryPoint
 class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, OnChargeCreateListener {
 
     private lateinit var binding: FragmentChargeListBinding
-    private val arg : LoanChargeFragmentArgs by navArgs()
+    private val arg: LoanChargeFragmentArgs by navArgs()
 
     @Inject
     lateinit var mLoanChargePresenter: LoanChargePresenter
@@ -41,7 +41,6 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, OnChargeCreat
     private var loanAccountNumber = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         loanAccountNumber = arg.loanAccountNumber
         setChargesList(arg.chargesList.toMutableList())
     }

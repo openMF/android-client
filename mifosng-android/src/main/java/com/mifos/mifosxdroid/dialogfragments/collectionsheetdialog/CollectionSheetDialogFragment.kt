@@ -5,14 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.databinding.FragmentCollectionSheetDialogBinding
 import com.mifos.mifosxdroid.online.collectionsheetindividual.NewIndividualCollectionSheetFragment
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Created by aksh on 2/7/18.
  */
+@AndroidEntryPoint
 class CollectionSheetDialogFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentCollectionSheetDialogBinding
@@ -20,7 +21,6 @@ class CollectionSheetDialogFragment : BottomSheetDialogFragment() {
     private var date: String? = null
     private var members = 0
     override fun onCreate(savedInstanceState: Bundle?) {
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         date = requireArguments().getString(Constants.REPAYMENT_DATE)
         members = requireArguments().getInt(Constants.MEMBERS)
         super.onCreate(savedInstanceState)

@@ -13,13 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SyncPayloadsAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
 import com.mifos.objects.client.ClientPayload
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.userStatus
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -29,6 +29,7 @@ import javax.inject.Inject
  *
  * Created by Rajan Maurya on 08/07/16.
  */
+@AndroidEntryPoint
 class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpView,
     DialogInterface.OnClickListener {
     val LOG_TAG = javaClass.simpleName
@@ -42,7 +43,6 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
     var mClientSyncIndex = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         clientPayloads = ArrayList()
         setHasOptionsMenu(true)
     }

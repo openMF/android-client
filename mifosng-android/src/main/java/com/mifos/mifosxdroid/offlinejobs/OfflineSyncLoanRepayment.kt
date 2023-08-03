@@ -2,7 +2,6 @@ package com.mifos.mifosxdroid.offlinejobs
 
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobRequest
-import com.mifos.App
 import com.mifos.api.datamanager.DataManagerLoan
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse
@@ -28,7 +27,6 @@ class OfflineSyncLoanRepayment : Job() {
     private var mClientSyncIndex = 0
     override fun onRunJob(params: Params): Result {
         mSubscriptions = CompositeSubscription()
-        App[context].component?.inject(this)
         return if (userStatus == 0) {
             loadDatabaseLoanRepaymentTransactions()
             Result.SUCCESS
@@ -124,10 +122,10 @@ class OfflineSyncLoanRepayment : Job() {
 
     fun showPaymentSubmittedSuccessfully() {
         mLoanRepaymentRequests[mClientSyncIndex].loanId?.let {
-                deleteAndUpdateLoanRepayments(
-                    it
+            deleteAndUpdateLoanRepayments(
+                it
             )
-            }
+        }
     }
 
     private fun deleteAndUpdateLoanRepayments(loanId: Int) {

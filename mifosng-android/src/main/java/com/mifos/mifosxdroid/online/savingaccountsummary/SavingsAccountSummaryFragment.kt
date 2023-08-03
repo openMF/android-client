@@ -21,7 +21,6 @@ import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.databinding.FragmentSavingsAccountSummaryBinding
 import com.mifos.objects.accounts.savings.DepositType
@@ -30,9 +29,11 @@ import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.objects.accounts.savings.Status
 import com.mifos.objects.accounts.savings.Transaction
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
+@AndroidEntryPoint
 class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSummaryMvpView {
 
     private lateinit var binding: FragmentSavingsAccountSummaryBinding
@@ -77,7 +78,6 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSavingsAccountSummaryBinding.inflate(inflater, container, false)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         mSavingAccountSummaryPresenter.attachView(this)
         mSavingAccountSummaryPresenter
             .loadSavingAccount(savingsAccountType?.endpoint, savingsAccountNumber)

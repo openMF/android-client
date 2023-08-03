@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.DialogFragmentChargeBinding
@@ -30,6 +29,7 @@ import com.mifos.services.data.ChargesPayload
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -42,6 +42,7 @@ import javax.inject.Inject
  *
  * Use this Dialog Fragment to Create and/or Update charges
  */
+@AndroidEntryPoint
 class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener,
     LoanChargeDialogMvpView {
 
@@ -63,7 +64,6 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
     private var onChargeCreateListener: OnChargeCreateListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) loanAccountNumber =
             requireArguments().getInt(Constants.LOAN_ACCOUNT_NUMBER)
     }

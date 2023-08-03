@@ -12,18 +12,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.adapters.LoanTransactionAdapter
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentLoanTransactionsBinding
 import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoanTransactionsFragment : MifosBaseFragment(), LoanTransactionsMvpView {
 
     private lateinit var binding: FragmentLoanTransactionsBinding
-    private val arg : LoanTransactionsFragmentArgs by navArgs()
+    private val arg: LoanTransactionsFragmentArgs by navArgs()
 
     @Inject
     lateinit var mLoanTransactionsPresenter: LoanTransactionsPresenter
@@ -31,7 +32,6 @@ class LoanTransactionsFragment : MifosBaseFragment(), LoanTransactionsMvpView {
     private var loanAccountNumber = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         loanAccountNumber = arg.loanId
         setHasOptionsMenu(false)
     }

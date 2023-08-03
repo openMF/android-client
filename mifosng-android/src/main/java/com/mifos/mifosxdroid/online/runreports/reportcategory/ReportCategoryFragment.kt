@@ -11,17 +11,18 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.adapters.ClientReportAdapter
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentRunreportBinding
 import com.mifos.objects.runreports.client.ClientReportTypeItem
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by Tarun on 02-08-17.
  */
+@AndroidEntryPoint
 class ReportCategoryFragment : MifosBaseFragment(), ReportCategoryMvpView {
 
     private lateinit var binding: FragmentRunreportBinding
@@ -49,11 +50,6 @@ class ReportCategoryFragment : MifosBaseFragment(), ReportCategoryMvpView {
     override fun onPause() {
         super.onPause()
         requireActivity().unregisterReceiver(broadCastNewMessage)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
     override fun onCreateView(

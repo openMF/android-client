@@ -21,6 +21,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
         classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:5.0.14"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.6.0"
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.44'
     }
 }
 
@@ -41,6 +42,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
+apply plugin: 'com.google.dagger.hilt.android'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -190,11 +192,6 @@ dependencies {
     implementation "com.google.maps.android:android-maps-utils:$rootProject.mapUtilsServicesVersion"
     implementation "androidx.test.espresso:espresso-idling-resource:$rootProject.espressoidlingVersion"
 
-    //Dagger dependencies
-    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
-    compileOnly "javax.annotation:jsr250-api:$rootProject.jsrVersion"    //Required by Dagger2
-    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
-
     //LifeCycle
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycleExtensionsVersion"
@@ -278,6 +275,10 @@ dependencies {
     // Navigation Components
     implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navigationComponentsVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navigationComponentsVersion"
+
+    // Hilt dependency
+    implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
+    kapt "com.google.dagger:hilt-android-compiler:$rootProject.hiltVersion"
 
 }
 /*

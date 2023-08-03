@@ -2,7 +2,6 @@ package com.mifos.mifosxdroid.offlinejobs
 
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobRequest
-import com.mifos.App
 import com.mifos.api.datamanager.DataManagerCenter
 import com.mifos.objects.response.SaveResponse
 import com.mifos.services.data.CenterPayload
@@ -30,7 +29,6 @@ class OfflineSyncCenter : Job() {
     override fun onRunJob(params: Params): Result {
         mSubscriptions = CompositeSubscription()
         centerPayloads = ArrayList()
-        App[context].component!!.inject(this)
         return if (userStatus == 0) {
             loadDatabaseCenterPayload()
             Result.SUCCESS

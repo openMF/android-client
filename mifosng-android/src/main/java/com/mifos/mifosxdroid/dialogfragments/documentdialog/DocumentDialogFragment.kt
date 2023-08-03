@@ -7,7 +7,6 @@ package com.mifos.mifosxdroid.dialogfragments.documentdialog
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
-import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -30,6 +29,7 @@ import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.FileUtils
 import com.mifos.utils.SafeUIBlockingUtility
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import javax.inject.Inject
 
@@ -39,6 +39,7 @@ import javax.inject.Inject
  *
  * Use this Dialog Fragment to Create and/or Update Documents
  */
+@AndroidEntryPoint
 class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
 
     private lateinit var binding: DialogFragmentDocumentBinding
@@ -60,7 +61,6 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
     private var uri: Uri? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         safeUIBlockingUtility = SafeUIBlockingUtility(
             requireContext(),
             getString(R.string.document_dialog_fragment_loading_message)

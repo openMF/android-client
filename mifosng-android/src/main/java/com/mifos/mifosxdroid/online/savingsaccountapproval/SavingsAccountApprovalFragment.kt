@@ -13,24 +13,29 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.DialogFragmentApproveSavingsBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.loan.SavingsApproval
 import com.mifos.objects.accounts.savings.DepositType
-import com.mifos.utils.*
+import com.mifos.utils.Constants
+import com.mifos.utils.DateHelper
+import com.mifos.utils.FragmentConstants
+import com.mifos.utils.Network
+import com.mifos.utils.SafeUIBlockingUtility
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * @author nellyk
  */
+@AndroidEntryPoint
 class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener,
     SavingsAccountApprovalMvpView {
 
     private lateinit var binding: DialogFragmentApproveSavingsBinding
-    private val arg : SavingsAccountApprovalFragmentArgs by navArgs()
+    private val arg: SavingsAccountApprovalFragmentArgs by navArgs()
 
     @Inject
     lateinit var mSavingsAccountApprovalPresenter: SavingsAccountApprovalPresenter
@@ -41,7 +46,6 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener,
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         savingsAccountNumber = arg.savingsAccountNumber
         savingsAccountType = arg.type
         setHasOptionsMenu(true)

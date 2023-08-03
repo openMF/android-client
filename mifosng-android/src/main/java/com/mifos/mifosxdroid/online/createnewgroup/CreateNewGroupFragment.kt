@@ -10,27 +10,19 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.fragment.app.DialogFragment
 import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.exceptions.ShortOfLengthException
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentCreateNewGroupBinding
 import com.mifos.mifosxdroid.online.GroupsActivity
-import com.mifos.mifosxdroid.uihelpers.MFDatePicker
-import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.group.GroupPayload
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.response.SaveResponse
 import com.mifos.utils.Constants
-import com.mifos.utils.DateHelper
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.MifosResponseHandler
@@ -39,6 +31,7 @@ import com.mifos.utils.PrefManager
 import com.mifos.utils.ValidationUtil
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Locale
@@ -48,6 +41,7 @@ import javax.inject.Inject
  * Created by nellyk on 1/22/2016.
  */ //TODO Show Image and Text after successful or Failed during creation of Group and
 //TODO A button to Continue or Finish the GroupCreation.
+@AndroidEntryPoint
 class CreateNewGroupFragment : ProgressableFragment(), CreateNewGroupMvpView {
 
     private lateinit var binding: FragmentCreateNewGroupBinding
@@ -55,7 +49,7 @@ class CreateNewGroupFragment : ProgressableFragment(), CreateNewGroupMvpView {
     @Inject
     lateinit var mCreateNewGroupPresenter: CreateNewGroupPresenter
     private var activationDateString: String? = null
-    var officeId : Int? = 0
+    var officeId: Int? = 0
     var result = true
     private var dateofsubmissionstring: String? = null
     private val mListOffices: MutableList<String> = ArrayList()
@@ -78,11 +72,6 @@ class CreateNewGroupFragment : ProgressableFragment(), CreateNewGroupMvpView {
             binding.activateDateFieldContainer.editText?.setText(formattedDate)
             activationDateString = binding.activateDateFieldContainer.editText.toString()
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
     override fun onCreateView(

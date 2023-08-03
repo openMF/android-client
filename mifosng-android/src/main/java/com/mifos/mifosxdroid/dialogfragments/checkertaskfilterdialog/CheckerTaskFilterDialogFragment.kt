@@ -1,27 +1,28 @@
 package com.mifos.mifosxdroid.dialogfragments.checkertaskfilterdialog
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.databinding.DialogFragmentCheckerTaskFilterBinding
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxViewModel
 import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxViewModelFactory
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.utils.FragmentConstants
-import java.lang.ClassCastException
+import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePickListener,
     AdapterView.OnItemSelectedListener {
 
@@ -61,14 +62,12 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
         selectedEntity = ALL
         datePickerFromDate = MFDatePicker.newInsance(this)
         datePickerToDate = MFDatePicker.newInsance(this)
-
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = DialogFragmentCheckerTaskFilterBinding.inflate(inflater,container,false)
+        binding = DialogFragmentCheckerTaskFilterBinding.inflate(inflater, container, false)
         return binding.root
     }
 

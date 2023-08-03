@@ -30,11 +30,13 @@ import com.mifos.objects.group.Group
 import com.mifos.objects.navigation.ClientListArgs
 import com.mifos.utils.Constants
 import com.mifos.utils.Utils
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by nellyk on 2/27/2016.
  */
+@AndroidEntryPoint
 class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
 
     private lateinit var binding: FragmentGroupDetailsBinding
@@ -45,7 +47,6 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
     private var accountAccordion: AccountAccordion? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             groupId = requireArguments().getInt(Constants.GROUP_ID)
         }

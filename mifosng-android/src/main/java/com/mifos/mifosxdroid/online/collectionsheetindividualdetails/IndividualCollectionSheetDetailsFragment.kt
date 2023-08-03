@@ -15,7 +15,6 @@ import com.mifos.api.model.IndividualCollectionSheetPayload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.IndividualCollectionSheetDetailsAdapter
 import com.mifos.mifosxdroid.adapters.IndividualCollectionSheetDetailsAdapter.ListAdapterListener
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.IndividualCollectionsSheetDetailsBinding
@@ -23,16 +22,18 @@ import com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity
 import com.mifos.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.objects.collectionsheet.LoanAndClientName
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by aksh on 20/6/18.
  */
+@AndroidEntryPoint
 class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
     IndividualCollectionSheetDetailsMvpView, OnRetrieveSheetItemData, ListAdapterListener {
 
     private lateinit var binding: IndividualCollectionsSheetDetailsBinding
-    private val arg : IndividualCollectionSheetDetailsFragmentArgs by navArgs()
+    private val arg: IndividualCollectionSheetDetailsFragmentArgs by navArgs()
 
     @Inject
     lateinit var presenter: IndividualCollectionSheetDetailsPresenter
@@ -46,7 +47,6 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
     private var transactionDate: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (savedInstanceState != null) {
             sheet =
                 savedInstanceState[Constants.EXTRA_COLLECTION_INDIVIDUAL] as IndividualCollectionSheet
@@ -155,7 +155,7 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
                         current,
                         it2,
                         clientId
-                        )
+                    )
                 }
             }
         }

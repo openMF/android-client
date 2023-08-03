@@ -15,7 +15,6 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentAddSavingsAccountBinding
@@ -29,6 +28,7 @@ import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Network
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -37,18 +37,19 @@ import javax.inject.Inject
  *
  * Use this Dialog Fragment to Create and/or Update charges
  */
+@AndroidEntryPoint
 class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     SavingsAccountMvpView, OnItemSelectedListener {
 
     private lateinit var binding: FragmentAddSavingsAccountBinding
-    private val arg : SavingsAccountFragmentArgs by navArgs()
+    private val arg: SavingsAccountFragmentArgs by navArgs()
 
     @Inject
     lateinit var mSavingsAccountPresenter: SavingsAccountPresenter
     private var mfDatePicker: DialogFragment? = null
-    private var productId :Int? = 0
+    private var productId: Int? = 0
     private var clientId = 0
-    private var fieldOfficerId : Int? = 0
+    private var fieldOfficerId: Int? = 0
     private var groupId = 0
     private var submission_date: String? = null
     var mFieldOfficerNames: MutableList<String> = ArrayList()
@@ -60,7 +61,6 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     private var isGroupAccount = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         isGroupAccount = arg.isGroupAccount
         clientId = arg.id
         groupId = arg.id

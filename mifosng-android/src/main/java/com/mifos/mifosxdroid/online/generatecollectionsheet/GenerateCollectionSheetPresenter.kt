@@ -6,7 +6,6 @@ import com.mifos.api.GenericResponse
 import com.mifos.api.datamanager.DataManagerCollectionSheet
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.base.BasePresenter
-import com.mifos.mifosxdroid.injection.ActivityContext
 import com.mifos.objects.PaymentTypeOption
 import com.mifos.objects.collectionsheet.AttendanceTypeOption
 import com.mifos.objects.collectionsheet.CenterDetail
@@ -20,6 +19,7 @@ import com.mifos.objects.group.Group
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.organisation.Staff
 import com.mifos.utils.MFErrorParser
+import dagger.hilt.android.qualifiers.ActivityContext
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

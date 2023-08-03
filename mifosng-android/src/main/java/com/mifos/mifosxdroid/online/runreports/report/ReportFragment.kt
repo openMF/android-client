@@ -28,6 +28,7 @@ import com.mifos.mifosxdroid.views.scrollview.ScrollChangeListener
 import com.mifos.objects.runreports.FullParameterListResponse
 import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
@@ -37,20 +38,17 @@ import javax.inject.Inject
 /**
  * Created by Tarun on 05-08-17.
  */
+@AndroidEntryPoint
 class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener {
 
     private lateinit var binding: FragmentClientReportBinding
-    private val arg : ReportFragmentArgs by navArgs()
+    private val arg: ReportFragmentArgs by navArgs()
 
     @Inject
     lateinit var presenter: ReportPresenter
     private var report: FullParameterListResponse? = null
     private var page = 0
     private var bottom = 0
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

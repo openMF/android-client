@@ -28,16 +28,18 @@ import com.mifos.objects.client.ClientAddressResponse
 import com.mifos.utils.CheckSelfPermissionAndRequest.checkSelfPermission
 import com.mifos.utils.CheckSelfPermissionAndRequest.requestPermission
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * @author fomenkoo
  */
+@AndroidEntryPoint
 class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRefreshListener,
     PinpointClientAdapter.OnItemClick {
 
     private lateinit var binding: ActivityPinpointLocationBinding
-    private val arg : PinpointClientActivityArgs by navArgs()
+    private val arg: PinpointClientActivityArgs by navArgs()
 
     @Inject
     lateinit var pinpointClientAdapter: PinpointClientAdapter
@@ -46,8 +48,8 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
     @Inject
     var pinPointClientPresenter: PinPointClientPresenter? = null
     private var clientId = 0
-    private var apptableId : Int? = 0
-    private var dataTableId : Int? = 0
+    private var apptableId: Int? = 0
+    private var dataTableId: Int? = 0
     private var addresses: List<ClientAddressResponse> = ArrayList()
     override fun onItemLongClick(position: Int) {
         apptableId = addresses[position].clientId
@@ -84,7 +86,6 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityComponent?.inject(this)
         binding = ActivityPinpointLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         pinPointClientPresenter?.attachView(this)

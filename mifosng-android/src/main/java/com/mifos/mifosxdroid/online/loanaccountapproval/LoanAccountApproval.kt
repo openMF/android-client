@@ -14,25 +14,25 @@ import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.DialogFragmentApproveLoanBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.loan.LoanApproval
 import com.mifos.objects.accounts.loan.LoanWithAssociations
-import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * @author nellyk
  */
+@AndroidEntryPoint
 class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccountApprovalMvpView {
 
     private lateinit var binding: DialogFragmentApproveLoanBinding
-    private val arg : LoanAccountApprovalArgs by navArgs()
+    private val arg: LoanAccountApprovalArgs by navArgs()
 
     @Inject
     lateinit var mLoanAccountApprovalPresenter: LoanAccountApprovalPresenter
@@ -45,7 +45,6 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
     private var loanWithAssociations: LoanWithAssociations? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         loanAccountNumber = arg.loanAccountNumber
         loanWithAssociations = arg.loanWithAssociations
         setHasOptionsMenu(true)
@@ -137,7 +136,7 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
             ?.timeline!!.expectedDisbursementDate?.let {
                 DateHelper.getDateAsString(
                     it
-            )
+                )
             }
         disbursementDate = binding.tvExpectedDisbursementDates.text.toString()
         showApprovalDate()

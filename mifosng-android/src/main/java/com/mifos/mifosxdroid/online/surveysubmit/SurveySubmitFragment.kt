@@ -12,17 +12,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentSurveyLastBinding
 import com.mifos.mifosxdroid.online.Communicator
 import com.mifos.mifosxdroid.online.SurveyQuestionActivity
 import com.mifos.objects.survey.Scorecard
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
+@AndroidEntryPoint
 class SurveySubmitFragment : MifosBaseFragment(), Communicator, SurveySubmitMvpView {
 
     private lateinit var binding: FragmentSurveyLastBinding
@@ -32,10 +33,6 @@ class SurveySubmitFragment : MifosBaseFragment(), Communicator, SurveySubmitMvpV
     private var mDetachFragment: DisableSwipe? = null
     private var mScorecard: Scorecard? = null
     private var mSurveyId = 0
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -9,7 +9,6 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.databinding.DialogFragmentIdentifierBinding
 import com.mifos.objects.noncore.DocumentType
@@ -18,11 +17,13 @@ import com.mifos.objects.noncore.IdentifierCreationResponse
 import com.mifos.objects.noncore.IdentifierPayload
 import com.mifos.objects.noncore.IdentifierTemplate
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 01/10/16.
  */
+@AndroidEntryPoint
 class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogMvpView,
     OnItemSelectedListener {
 
@@ -45,7 +46,6 @@ class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogM
     private var mIdentifierStatusAdapter: ArrayAdapter<String>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity?)!!.activityComponent!!.inject(this)
         if (arguments != null) {
             clientId = requireArguments().getInt(Constants.CLIENT_ID)
         }

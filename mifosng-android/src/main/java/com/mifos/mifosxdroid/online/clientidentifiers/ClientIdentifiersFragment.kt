@@ -19,7 +19,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.IdentifierListAdapter
 import com.mifos.mifosxdroid.adapters.IdentifierListAdapter.IdentifierOptionsListener
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentClientIdentifiersBinding
@@ -29,13 +28,15 @@ import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment
 import com.mifos.objects.noncore.Identifier
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
     IdentifierOptionsListener, OnRefreshListener, ClientIdentifierCreationListener {
 
     private lateinit var binding: FragmentClientIdentifiersBinding
-    private val arg : ClientIdentifiersFragmentArgs by navArgs()
+    private val arg: ClientIdentifiersFragmentArgs by navArgs()
 
     @Inject
     lateinit var mClientIdentifiersPresenter: ClientIdentifiersPresenter
@@ -48,7 +49,6 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
     private var mLayoutManager: LinearLayoutManager? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         clientId = arg.clientId
         setHasOptionsMenu(true)
     }

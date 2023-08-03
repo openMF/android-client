@@ -25,7 +25,6 @@ import androidx.appcompat.widget.PopupMenu
 import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentCreateNewClientBinding
@@ -40,12 +39,14 @@ import com.mifos.utils.FragmentConstants
 import com.mifos.utils.ValidationUtil
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Locale
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
 
     private lateinit var binding: FragmentCreateNewClientBinding
@@ -101,7 +102,6 @@ class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCreateNewClientBinding.inflate(inflater, container, false)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         createNewClientPresenter.attachView(this)
         showUserInterface()
         createNewClientPresenter.loadClientTemplate()

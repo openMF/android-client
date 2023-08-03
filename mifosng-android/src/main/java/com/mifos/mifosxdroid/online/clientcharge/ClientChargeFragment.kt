@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentChargeListBinding
@@ -24,18 +23,19 @@ import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.OnChargeCreateListener
 import com.mifos.objects.client.Charges
 import com.mifos.objects.client.Page
-import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
  */
+@AndroidEntryPoint
 class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeCreateListener {
 
 
     private lateinit var binding: FragmentChargeListBinding
-    private val arg : ClientChargeFragmentArgs by navArgs()
+    private val arg: ClientChargeFragmentArgs by navArgs()
 
     private lateinit var chargesList: List<Charges>
 
@@ -47,7 +47,6 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
     private val limit = 10
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         clientId = arg.clientId
         setChargesList(arg.chargesList.toMutableList())
     }

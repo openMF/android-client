@@ -4,10 +4,7 @@
  */
 package com.mifos.mifosxdroid.online.grouplist
 
-import android.app.Activity
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,23 +14,21 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.GroupListAdapter
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.databinding.FragmentGroupListBinding
-import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsFragmentDirections
 import com.mifos.objects.client.Client
 import com.mifos.objects.group.CenterWithAssociations
 import com.mifos.objects.group.GroupWithAssociations
 import com.mifos.objects.navigation.ClientListArgs
-import com.mifos.utils.Constants
-import java.util.ArrayList
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class GroupListFragment : ProgressableFragment(), GroupListMvpView,
     AdapterView.OnItemClickListener {
 
     private lateinit var binding: FragmentGroupListBinding
-    private val arg : GroupListFragmentArgs by navArgs()
+    private val arg: GroupListFragmentArgs by navArgs()
 
     @Inject
     lateinit var mGroupListPresenter: GroupListPresenter
@@ -50,7 +45,6 @@ class GroupListFragment : ProgressableFragment(), GroupListMvpView,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         centerId = arg.centerId
     }
 
@@ -112,7 +106,7 @@ class GroupListFragment : ProgressableFragment(), GroupListMvpView,
         mGroupListPresenter.detachView()
     }
 
-    private fun loadClientsOfGroup(clientList: List<Client>){
+    private fun loadClientsOfGroup(clientList: List<Client>) {
         val action = GroupListFragmentDirections.actionGroupListFragmentToClientListFragment(
             ClientListArgs(clientList, true)
         )

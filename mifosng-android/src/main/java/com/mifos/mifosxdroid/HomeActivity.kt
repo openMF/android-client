@@ -23,10 +23,12 @@ import com.mifos.mifosxdroid.databinding.ViewNavDrawerHeaderBinding
 import com.mifos.utils.Constants
 import com.mifos.utils.EspressoIdlingResource
 import com.mifos.utils.PrefManager
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Created by shashankpriyadarshi on 19/06/20.
  */
+@AndroidEntryPoint
 open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityHomeBinding

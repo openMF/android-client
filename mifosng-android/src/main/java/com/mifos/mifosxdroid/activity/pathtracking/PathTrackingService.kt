@@ -27,7 +27,6 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.location.LocationListener
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import com.mifos.App
 import com.mifos.api.GenericResponse
 import com.mifos.api.datamanager.DataManagerDataTable
 import com.mifos.mifosxdroid.R
@@ -67,7 +66,6 @@ class PathTrackingService : Service(), ConnectionCallbacks, OnConnectionFailedLi
     private var subscription: Subscription? = null
     override fun onCreate() {
         super.onCreate()
-        App[this].component!!.inject(this)
         buildGoogleApiClient()
     }
 
@@ -211,7 +209,7 @@ class PathTrackingService : Service(), ConnectionCallbacks, OnConnectionFailedLi
 
     override fun onLocationChanged(location: Location) {
         currentLocation = location
-        latLngs!!.add(UserLatLng(currentLocation!!.latitude, currentLocation!!.longitude))
+        latLngs!!.add(UserLatLng(currentLocation.latitude, currentLocation.longitude))
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {

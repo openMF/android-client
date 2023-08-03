@@ -120,4 +120,7 @@ ext {
 
     //navigation components version
     navigationComponentsVersion = '2.6.0'
+
+    // hiltVersion
+    hiltVersion = '2.44'
 }

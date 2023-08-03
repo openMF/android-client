@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -33,14 +32,16 @@ import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.FileUtils
 import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.ResponseBody
 import java.io.File
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefreshListener {
 
     private lateinit var binding: FragmentDocumentListBinding
-    private val arg : DocumentListFragmentArgs by navArgs()
+    private val arg: DocumentListFragmentArgs by navArgs()
 
     @Inject
     lateinit var mDocumentListPresenter: DocumentListPresenter
@@ -61,7 +62,6 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         mDocumentList = ArrayList()
         entityId = arg.entiyId
         entityType = arg.entityType

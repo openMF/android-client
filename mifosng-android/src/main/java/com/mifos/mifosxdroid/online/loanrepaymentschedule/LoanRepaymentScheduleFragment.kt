@@ -19,8 +19,10 @@ import com.mifos.mifosxdroid.databinding.FragmentLoanRepaymentScheduleBinding
 import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.objects.accounts.loan.RepaymentSchedule
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoanRepaymentScheduleFragment : ProgressableFragment(), LoanRepaymentScheduleMvpView {
 
     private lateinit var binding: FragmentLoanRepaymentScheduleBinding
@@ -31,7 +33,6 @@ class LoanRepaymentScheduleFragment : ProgressableFragment(), LoanRepaymentSched
     private var loanAccountNumber = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         loanAccountNumber = arg.loanId
         setHasOptionsMenu(false)
     }

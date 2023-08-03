@@ -8,18 +8,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.DialogFragmentSyncClientsBinding
 import com.mifos.objects.client.Client
 import com.mifos.utils.Constants
 import com.mifos.utils.Network.isOnline
 import com.mifos.utils.PrefManager.userStatus
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 08/08/16.
  */
+@AndroidEntryPoint
 class SyncClientsDialogFragment : DialogFragment(), SyncClientsDialogMvpView {
 
     private lateinit var binding: DialogFragmentSyncClientsBinding
@@ -28,7 +29,6 @@ class SyncClientsDialogFragment : DialogFragment(), SyncClientsDialogMvpView {
     lateinit var mSyncClientsDialogPresenter: SyncClientsDialogPresenter
     private var mClientList: List<Client>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             mClientList = requireArguments().getParcelableArrayList(Constants.CLIENT)
         }

@@ -16,18 +16,19 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.databinding.FragmentLoanAccountSummaryBinding
 import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.objects.client.Charges
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by ishankhanna on 09/05/14.
  */
+@AndroidEntryPoint
 class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvpView {
 
     private lateinit var binding: FragmentLoanAccountSummaryBinding
@@ -58,8 +59,6 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
     ): View {
         binding = FragmentLoanAccountSummaryBinding.inflate(inflater, container, false)
 
-        //Injecting Presenter
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         mLoanAccountSummaryPresenter.attachView(this)
         inflateLoanAccountSummary()
         return binding.root

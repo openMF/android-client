@@ -2,7 +2,6 @@ package com.mifos.mifosxdroid.offlinejobs
 
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobRequest
-import com.mifos.App
 import com.mifos.api.datamanager.DataManagerGroups
 import com.mifos.objects.group.GroupPayload
 import com.mifos.objects.response.SaveResponse
@@ -28,7 +27,6 @@ class OfflineSyncGroup : Job() {
     private var mClientSyncIndex = 0
     override fun onRunJob(params: Params): Result {
         mSubscriptions = CompositeSubscription()
-        App[context].component?.inject(this)
         return if (userStatus == 0) {
             loadDatabaseGroupPayload()
             Result.SUCCESS

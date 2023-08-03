@@ -14,7 +14,6 @@ import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.exceptions.ShortOfLengthException
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentCreateNewCenterBinding
 import com.mifos.objects.organisation.Office
@@ -26,6 +25,7 @@ import com.mifos.utils.MifosResponseHandler
 import com.mifos.utils.ValidationUtil
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Locale
@@ -34,6 +34,7 @@ import javax.inject.Inject
 /**
  * Created by nellyk on 1/22/2016.
  */
+@AndroidEntryPoint
 class CreateNewCenterFragment : MifosBaseFragment(), CreateNewCenterMvpView {
 
     private lateinit var binding: FragmentCreateNewCenterBinding
@@ -53,11 +54,6 @@ class CreateNewCenterFragment : MifosBaseFragment(), CreateNewCenterMvpView {
             activationDate = Instant.ofEpochMilli(it)
             binding.activateDateFieldContainer.editText?.setText(formattedDate)
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
     }
 
     override fun onCreateView(
