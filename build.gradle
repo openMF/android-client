@@ -16,7 +16,7 @@ ext {
     playServicesPlacesVersion = '17.0.0'
     playServicesLocationsVersion = '21.0.1'
     playServicesMapsVersion = '18.1.0'
-    mapUtilsServicesVersion = '0.4.2'
+    mapUtilsServicesVersion = '0.6.2'
 
     // dagger version
     daggerVersion = '2.46.1'
