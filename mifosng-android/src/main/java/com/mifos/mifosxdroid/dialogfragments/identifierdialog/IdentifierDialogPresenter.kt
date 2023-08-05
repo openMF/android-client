@@ -8,7 +8,7 @@ import com.mifos.objects.noncore.IdentifierCreationResponse
 import com.mifos.objects.noncore.IdentifierPayload
 import com.mifos.objects.noncore.IdentifierTemplate
 import com.mifos.utils.MFErrorParser.parseError
-import retrofit2.adapter.rxjava.HttpException
+import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -68,8 +68,8 @@ class IdentifierDialogPresenter @Inject constructor(private val mDataManagerClie
                         mvpView?.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
-                                    .string()
+                                val errorMessage = e.response()?.errorBody()
+                                    ?.string()
                                 mvpView?.showErrorMessage(
                                     parseError(errorMessage)
                                         .errors[0].defaultUserMessage

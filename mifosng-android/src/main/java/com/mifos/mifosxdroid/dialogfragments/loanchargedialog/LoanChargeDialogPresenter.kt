@@ -6,7 +6,7 @@ import com.mifos.objects.client.ChargeCreationResponse
 import com.mifos.services.data.ChargesPayload
 import com.mifos.utils.MFErrorParser
 import okhttp3.ResponseBody
-import retrofit2.adapter.rxjava.HttpException
+import retrofit2.HttpException
 import rx.Subscriber
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -45,8 +45,8 @@ class LoanChargeDialogPresenter @Inject constructor(private val mDataManager: Da
                     mvpView?.showProgressbar(false)
                     try {
                         if (e is HttpException) {
-                            val errorMessage = e.response().errorBody()
-                                .string()
+                            val errorMessage = e.response()?.errorBody()
+                                ?.string()
                             mvpView?.showError(
                                 MFErrorParser
                                     .parseError(errorMessage)
@@ -81,8 +81,8 @@ class LoanChargeDialogPresenter @Inject constructor(private val mDataManager: Da
                     mvpView?.showProgressbar(false)
                     try {
                         if (e is HttpException) {
-                            val errorMessage = e.response().errorBody()
-                                .string()
+                            val errorMessage = e.response()?.errorBody()
+                                ?.string()
                             mvpView?.showChargeCreatedFailure(
                                 MFErrorParser
                                     .parseError(errorMessage)

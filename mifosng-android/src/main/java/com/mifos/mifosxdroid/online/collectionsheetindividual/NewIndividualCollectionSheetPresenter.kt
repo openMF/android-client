@@ -8,7 +8,7 @@ import com.mifos.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.organisation.Staff
 import com.mifos.utils.MFErrorParser
-import retrofit2.adapter.rxjava.HttpException
+import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -47,8 +47,8 @@ class NewIndividualCollectionSheetPresenter @Inject internal constructor(
                     mvpView?.showProgressbar(false)
                     if (e is HttpException) {
                         try {
-                            val errorMessage = e.response().errorBody()
-                                .string()
+                            val errorMessage = e.response()?.errorBody()
+                                ?.string()
                             mvpView?.showError(
                                 MFErrorParser.parseError(errorMessage)
                                     .errors[0].defaultUserMessage
@@ -85,8 +85,8 @@ class NewIndividualCollectionSheetPresenter @Inject internal constructor(
                     mvpView?.showProgressbar(false)
                     try {
                         if (e is HttpException) {
-                            val errorMessage = e.response().errorBody()
-                                .string()
+                            val errorMessage = e.response()?.errorBody()
+                                ?.string()
                             mvpView?.showError(
                                 MFErrorParser.parseError(errorMessage)
                                     .errors[0].defaultUserMessage
@@ -117,8 +117,8 @@ class NewIndividualCollectionSheetPresenter @Inject internal constructor(
                     mvpView?.showProgressbar(false)
                     try {
                         if (e is HttpException) {
-                            val errorMessage = e.response().errorBody()
-                                .string()
+                            val errorMessage = e.response()?.errorBody()
+                                ?.string()
                             mvpView?.showError(
                                 MFErrorParser.parseError(errorMessage)
                                     .errors[0].defaultUserMessage

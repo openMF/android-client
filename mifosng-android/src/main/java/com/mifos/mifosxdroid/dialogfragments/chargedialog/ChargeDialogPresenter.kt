@@ -7,7 +7,7 @@ import com.mifos.objects.templates.clients.ChargeOptions
 import com.mifos.objects.templates.clients.ChargeTemplate
 import com.mifos.services.data.ChargesPayload
 import com.mifos.utils.MFErrorParser.parseError
-import retrofit2.adapter.rxjava.HttpException
+import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
 import rx.Subscription
@@ -48,8 +48,8 @@ class ChargeDialogPresenter @Inject constructor(private val mDataManager: DataMa
                     mvpView?.showProgressbar(false)
                     try {
                         if (e is HttpException) {
-                            val errorMessage = e.response().errorBody()
-                                .string()
+                            val errorMessage = e.response()?.errorBody()
+                                ?.string()
                             mvpView?.showFetchingError(
                                 parseError(errorMessage)
                                     .errors[0].defaultUserMessage
@@ -83,8 +83,8 @@ class ChargeDialogPresenter @Inject constructor(private val mDataManager: DataMa
                     mvpView?.showProgressbar(false)
                     try {
                         if (e is HttpException) {
-                            val errorMessage = e.response().errorBody()
-                                .string()
+                            val errorMessage = e.response()?.errorBody()
+                                ?.string()
                             mvpView?.showChargeCreatedFailure(
                                 parseError(errorMessage)
                                     .errors[0].defaultUserMessage
