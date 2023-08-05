@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentCenterDetailsBinding
@@ -17,11 +16,13 @@ import com.mifos.objects.group.CenterInfo
 import com.mifos.objects.group.CenterWithAssociations
 import com.mifos.utils.Constants
 import com.mifos.utils.Utils
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 05/02/17.
  */
+@AndroidEntryPoint
 class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
 
     private lateinit var binding: FragmentCenterDetailsBinding
@@ -33,7 +34,6 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
     //    private var listener: OnFragmentInteractionListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             centerId = requireArguments().getInt(Constants.CENTER_ID)
         }
@@ -174,8 +174,9 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
         findNavController().navigate(action)
     }
 
-    private fun loadGroupsOfCenter(centerId: Int){
-        val action = CenterDetailsFragmentDirections.actionCenterDetailsFragmentToGroupListFragment(centerId)
+    private fun loadGroupsOfCenter(centerId: Int) {
+        val action =
+            CenterDetailsFragmentDirections.actionCenterDetailsFragmentToGroupListFragment(centerId)
         findNavController().navigate(action)
     }
 

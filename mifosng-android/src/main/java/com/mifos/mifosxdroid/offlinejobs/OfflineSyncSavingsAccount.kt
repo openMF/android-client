@@ -2,7 +2,6 @@ package com.mifos.mifosxdroid.offlinejobs
 
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobRequest
-import com.mifos.App
 import com.mifos.api.datamanager.DataManagerLoan
 import com.mifos.api.datamanager.DataManagerSavings
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
@@ -33,7 +32,6 @@ class OfflineSyncSavingsAccount : Job() {
     override fun onRunJob(params: Params): Result {
         mSubscriptions = CompositeSubscription()
         mSavingsAccountTransactionRequests = ArrayList()
-        App[context].component!!.inject(this)
         return if (userStatus == 0) {
             loadDatabaseSavingsAccountTransactions()
             Result.SUCCESS

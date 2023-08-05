@@ -20,7 +20,6 @@ import com.jakewharton.fliptables.FlipTable
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MaterialDialog
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentSavingsAccountTransactionBinding
@@ -36,20 +35,22 @@ import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Network
 import com.mifos.utils.PrefManager
 import com.mifos.utils.Utils
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickListener,
     SavingsAccountTransactionMvpView {
 
 
     private lateinit var binding: FragmentSavingsAccountTransactionBinding
-    private val arg : SavingsAccountTransactionFragmentArgs by navArgs()
+    private val arg: SavingsAccountTransactionFragmentArgs by navArgs()
     val LOG_TAG = javaClass.simpleName
 
     @Inject
     lateinit var mSavingAccountTransactionPresenter: SavingsAccountTransactionPresenter
     private var savingsAccountNumber: String? = null
-    private var savingsAccountId : Int? = null
+    private var savingsAccountId: Int? = null
     private var savingsAccountType: DepositType? = null
     private var transactionType //Defines if the Transaction is a Deposit to an Account
             : String? = null
@@ -62,7 +63,6 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
     private var mfDatePicker: DialogFragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         savingsAccountId = arg.savingsAccountWithAssociations.accountNo
         savingsAccountId = arg.savingsAccountWithAssociations.id
         transactionType = arg.transactionType

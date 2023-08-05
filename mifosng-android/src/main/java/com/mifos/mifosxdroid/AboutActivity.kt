@@ -5,7 +5,9 @@ import android.net.Uri
 import android.os.Bundle
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.databinding.ActivityAboutBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AboutActivity : MifosBaseActivity() {
 
     private lateinit var binding: ActivityAboutBinding

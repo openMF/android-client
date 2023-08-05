@@ -13,17 +13,16 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.DialogFragmentApproveSavingsBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.savings.DepositType
-import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.SafeUIBlockingUtility
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -31,11 +30,12 @@ import javax.inject.Inject
  * Fragment to allow user to select a date for account approval.
  * It uses the same layout as Savings Account Approve Fragment.
  */
+@AndroidEntryPoint
 class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
     SavingsAccountActivateMvpView {
 
     private lateinit var binding: DialogFragmentApproveSavingsBinding
-    private val arg : SavingsAccountActivateFragmentArgs by navArgs()
+    private val arg: SavingsAccountActivateFragmentArgs by navArgs()
 
     @Inject
     lateinit var mSavingsAccountActivatePresenter: SavingsAccountActivatePresenter
@@ -46,7 +46,6 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         savingsAccountNumber = arg.savingsAccountNumber
         savingsAccountType = arg.type
         setHasOptionsMenu(true)

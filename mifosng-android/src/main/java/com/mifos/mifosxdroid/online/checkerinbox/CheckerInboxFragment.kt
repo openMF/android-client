@@ -15,16 +15,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.CheckerTaskListAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.CheckerInboxFragmentBinding
 import com.mifos.mifosxdroid.dialogfragments.checkertaskfilterdialog.CheckerTaskFilterDialogFragment
 import com.mifos.objects.CheckerTask
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
 import java.util.Locale
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
     CheckerTaskFilterDialogFragment.OnInputSelected,
     CheckerTaskListAdapter.OnItemClickListener,
@@ -71,11 +72,6 @@ class CheckerInboxFragment : MifosBaseFragment(), TextWatcher,
 
     private var adapterPosition: Int = -1
     var inBadgeProcessingMode = false
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

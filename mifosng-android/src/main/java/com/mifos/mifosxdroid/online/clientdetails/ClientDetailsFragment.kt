@@ -37,7 +37,6 @@ import com.joanzapata.iconify.widget.IconTextView
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentClientDetailsBinding
@@ -48,12 +47,13 @@ import com.mifos.objects.client.Client
 import com.mifos.utils.Constants
 import com.mifos.utils.ImageLoaderUtils
 import com.mifos.utils.Utils
+import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
 
     private lateinit var binding: FragmentClientDetailsBinding
@@ -73,7 +73,6 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     private var isClientActive = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             clientId = requireArguments().getInt(Constants.CLIENT_ID)
         }

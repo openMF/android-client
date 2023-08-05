@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.DialogFragmentSyncCentersBinding
 import com.mifos.objects.group.Center
@@ -25,7 +24,6 @@ class SyncCentersDialogFragment : DialogFragment(), SyncCenterDialogMvpView {
     lateinit var syncCentersDialogPresenter: SyncCenterDialogPresenter
     private lateinit var mCenterList: List<Center>
     override fun onCreate(savedInstanceState: Bundle?) {
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             mCenterList = requireArguments().getParcelableArrayList(Constants.CENTER) ?: ArrayList()
         }

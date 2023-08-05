@@ -104,14 +104,6 @@
                 android:value=".HomeActivity" />
         </activity>
         <activity
-            android:name=".ClientListActivity"
-            android:label="@string/clients"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".GroupListActivity"
-            android:label="@string/groups"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.pinpointclient.PinpointClientActivity"
             android:label="@string/pinpoint"
             android:exported="true"

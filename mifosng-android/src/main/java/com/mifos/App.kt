@@ -16,8 +16,6 @@ import com.evernote.android.job.JobManager
 import com.facebook.stetho.Stetho
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.MaterialModule
-import com.mifos.mifosxdroid.injection.component.ApplicationComponent
-import com.mifos.mifosxdroid.injection.component.DaggerApplicationComponent
 import com.mifos.mifosxdroid.injection.module.ApplicationModule
 import com.mifos.mifosxdroid.offlinejobs.OfflineJobCreator
 import com.mifos.mobile.passcode.utils.ForegroundChecker
@@ -25,13 +23,14 @@ import com.mifos.utils.LanguageHelper.onAttach
 import com.mifos.utils.ThemeHelper
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
+import dagger.hilt.android.HiltAndroidApp
 import io.fabric.sdk.android.Fabric
 
 /**
  * Created by ishankhanna on 13/03/15.
  */
+@HiltAndroidApp
 class App : MultiDexApplication() {
-    var mApplicationComponent: ApplicationComponent? = null
     override fun onCreate() {
         super.onCreate()
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -53,19 +52,6 @@ class App : MultiDexApplication() {
         ForegroundChecker.init(this)
     }
 
-    // Needed to replace the component with a test specific one
-    var component: ApplicationComponent?
-        get() {
-            if (mApplicationComponent == null) {
-                mApplicationComponent = DaggerApplicationComponent.builder()
-                    .applicationModule(ApplicationModule(this))
-                    .build()
-            }
-            return mApplicationComponent
-        }
-        set(applicationComponent) {
-            mApplicationComponent = applicationComponent
-        }
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(onAttach(base))

@@ -13,24 +13,18 @@ import com.google.gson.Gson
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.databinding.ActivityToolbarContainerBinding
-import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryFragment
-import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentFragment
-import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleFragment
-import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsFragment
-import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryFragment
-import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionFragment
 import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment
-import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.objects.accounts.savings.DepositType
-import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.objects.survey.Survey
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ClientActivity : MifosBaseActivity(),
     SurveyListFragment.OnFragmentInteractionListener {
 
     private lateinit var binding: ActivityToolbarContainerBinding
-    private lateinit var navHostFragment : NavHostFragment
+    private lateinit var navHostFragment: NavHostFragment
     private var clientId: Int? = null
     private var loanAccountNumber: Int? = null
     private var savingsAccountNumber: Int? = null
@@ -42,7 +36,8 @@ class ClientActivity : MifosBaseActivity(),
         binding = ActivityToolbarContainerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         showBackButton()
-        navHostFragment = supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
+        navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
         clientId = args.client.clientId
         loanAccountNumber = args.client.loanAccountNumber
         savingsAccountNumber = args.client.savingsAccountNumber

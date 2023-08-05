@@ -19,7 +19,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.google.gson.JsonArray
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MaterialDialog
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentDatatableBinding
@@ -29,13 +28,15 @@ import com.mifos.utils.Constants
 import com.mifos.utils.DataTableUIBuilder
 import com.mifos.utils.DataTableUIBuilder.DataTableActionListener
 import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, DataTableDataMvpView,
     OnRefreshListener {
 
     private lateinit var binding: FragmentDatatableBinding
-    private val arg : DataTableDataFragmentArgs by navArgs()
+    private val arg: DataTableDataFragmentArgs by navArgs()
 
     @Inject
     lateinit var mDataTableDataPresenter: DataTableDataPresenter
@@ -43,7 +44,6 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
     private var entityId = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         dataTable = arg.dataTable
         entityId = arg.entityId
         setHasOptionsMenu(true)

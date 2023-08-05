@@ -13,15 +13,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SyncCenterPayloadAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
 import com.mifos.services.data.CenterPayload
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.userStatus
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpView,
     DialogInterface.OnClickListener {
 
@@ -40,7 +41,6 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
     var mCenterSyncIndex = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent!!.inject(this)
         centerPayloads = ArrayList()
         setHasOptionsMenu(true)
     }

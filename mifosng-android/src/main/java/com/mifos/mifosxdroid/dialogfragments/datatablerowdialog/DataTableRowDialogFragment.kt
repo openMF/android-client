@@ -17,7 +17,6 @@ import androidx.fragment.app.DialogFragment
 import com.mifos.api.GenericResponse
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.databinding.DialogFragmentAddEntryToDatatableBinding
 import com.mifos.mifosxdroid.formwidgets.FormEditText
 import com.mifos.mifosxdroid.formwidgets.FormNumericEditText
@@ -27,11 +26,13 @@ import com.mifos.mifosxdroid.formwidgets.FormWidget
 import com.mifos.objects.noncore.DataTable
 import com.mifos.utils.Constants
 import com.mifos.utils.SafeUIBlockingUtility
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by ishankhanna on 01/08/14.
  */
+@AndroidEntryPoint
 class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
 
     private lateinit var binding: DialogFragmentAddEntryToDatatableBinding
@@ -45,10 +46,6 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
     private var entityId = 0
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
     private val listFormWidgets: MutableList<FormWidget> = ArrayList()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

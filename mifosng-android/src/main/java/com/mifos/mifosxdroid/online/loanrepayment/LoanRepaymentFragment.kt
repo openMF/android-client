@@ -21,7 +21,6 @@ import com.google.gson.Gson
 import com.jakewharton.fliptables.FlipTable
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MaterialDialog
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentLoanRepaymentBinding
@@ -34,14 +33,16 @@ import com.mifos.objects.templates.loans.LoanRepaymentTemplate
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Utils
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepaymentMvpView,
     DialogInterface.OnClickListener {
 
     private lateinit var binding: FragmentLoanRepaymentBinding
     val LOG_TAG = javaClass.simpleName
-    private val arg : LoanRepaymentFragmentArgs by navArgs()
+    private val arg: LoanRepaymentFragmentArgs by navArgs()
 
     @Inject
     lateinit var mLoanRepaymentPresenter: LoanRepaymentPresenter
@@ -52,11 +53,10 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
     private var loanAccountNumber: String? = null
     private var loanProductName: String? = null
     private var amountInArrears: Double? = null
-    private var paymentTypeOptionId : Int ? = null
+    private var paymentTypeOptionId: Int? = null
     private var mfDatePicker: DialogFragment? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         clientName = arg.loanWithAssociations.clientName
         loanAccountNumber = arg.loanWithAssociations.accountNo
         loanId = arg.loanWithAssociations.id.toString()

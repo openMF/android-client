@@ -30,6 +30,7 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.objects.group.Center
 import com.mifos.objects.group.CenterWithAssociations
 import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -39,6 +40,7 @@ import javax.inject.Inject
  * CenterListFragment Fetching and Showing CenterList in RecyclerView from
  * >demo.openmf.org/fineract-provider/api/v1/centers?paged=true&offset=0&limit=100>
  */
+@AndroidEntryPoint
 class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshListener {
 
     private lateinit var binding: FragmentCentersListBinding
@@ -69,7 +71,6 @@ class CenterListFragment : MifosBaseFragment(), CenterListMvpView, OnRefreshList
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCentersListBinding.inflate(inflater, container, false)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         mCenterListPresenter.attachView(this)
 
         //Showing User Interface.

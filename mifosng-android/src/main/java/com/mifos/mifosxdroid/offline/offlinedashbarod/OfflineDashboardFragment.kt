@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.OfflineDashboardAdapter
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentOfflineDashboardBinding
@@ -25,6 +24,7 @@ import com.mifos.objects.client.ClientPayload
 import com.mifos.objects.group.GroupPayload
 import com.mifos.services.data.CenterPayload
 import com.mifos.utils.ItemOffsetDecoration
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -48,6 +48,7 @@ import javax.inject.Inject
  *
  * Created by Rajan Maurya on 20/07/16.
 </Class> */
+@AndroidEntryPoint
 class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
 
     private lateinit var binding: FragmentOfflineDashboardBinding
@@ -74,7 +75,6 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
     ): View {
         binding = FragmentOfflineDashboardBinding.inflate(inflater, container, false)
         setToolbarTitle(requireActivity().resources.getString(R.string.offline))
-        (activity as MifosBaseActivity?)?.activityComponent?.inject(this)
         mOfflineDashboardPresenter?.attachView(this)
         val mLayoutManager: LinearLayoutManager = GridLayoutManager(activity, GRID_COUNT)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL

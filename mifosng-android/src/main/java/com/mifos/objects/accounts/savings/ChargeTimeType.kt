@@ -6,7 +6,7 @@ package com.mifos.objects.accounts.savings
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import javax.annotation.Generated
+import javax.annotation.processing.Generated
 
 @Parcelize
 @Generated("org.jsonschema2pojo")

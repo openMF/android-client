@@ -35,11 +35,13 @@ import com.mifos.utils.PrefManager.saveUser
 import com.mifos.utils.PrefManager.tenant
 import com.mifos.utils.PrefManager.userId
 import com.mifos.utils.ValidationUtil
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by ishankhanna on 08/02/14.
  */
+@AndroidEntryPoint
 class LoginActivity : MifosBaseActivity(), LoginMvpView {
 
     private lateinit var binding: ActivityLoginBinding
@@ -78,7 +80,6 @@ class LoginActivity : MifosBaseActivity(), LoginMvpView {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityComponent?.inject(this)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         title = null
         setContentView(binding.root)

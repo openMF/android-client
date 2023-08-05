@@ -17,7 +17,6 @@ import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.DialogFragmentDisburseLoanBinding
@@ -25,20 +24,21 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.loan.LoanDisbursement
 import com.mifos.objects.templates.loans.LoanTransactionTemplate
-import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Network
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
  */
+@AndroidEntryPoint
 class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
     LoanAccountDisbursementMvpView, OnItemSelectedListener {
 
     private lateinit var binding: DialogFragmentDisburseLoanBinding
-    private val arg : LoanAccountDisbursementFragmentArgs by navArgs()
+    private val arg: LoanAccountDisbursementFragmentArgs by navArgs()
 
     @Inject
     lateinit var loanAccountDisbursementPresenter: LoanAccountDisbursementPresenter
@@ -51,7 +51,6 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
     private var loanTransactionTemplate: LoanTransactionTemplate? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         loanAccountNumber = arg.loanAccountNumber
         paymentTypeOptions = ArrayList()
         setHasOptionsMenu(true)

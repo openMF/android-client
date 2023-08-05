@@ -32,11 +32,13 @@ import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.getBoolean
 import com.mifos.utils.PrefManager.putBoolean
 import com.mifos.utils.PrefManager.userId
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * @author fomenkoo
  */
+@AndroidEntryPoint
 class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefreshListener {
 
     private lateinit var binding: ActivityPathTrackerBinding
@@ -53,7 +55,6 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
         super.onCreate(savedInstanceState)
         binding = ActivityPathTrackerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        activityComponent?.inject(this)
         pathTrackingPresenter?.attachView(this)
         showBackButton()
         intentLocationService = Intent(this, PathTrackingService::class.java)

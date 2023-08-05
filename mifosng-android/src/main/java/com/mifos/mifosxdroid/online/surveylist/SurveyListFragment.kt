@@ -15,12 +15,11 @@ import android.widget.AdapterView
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SurveyListAdapter
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentSurveyListBinding
 import com.mifos.objects.survey.Survey
-import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -30,10 +29,11 @@ import javax.inject.Inject
  *
  * Created by Nasim Banu on 27,January,2016.
  */
+@AndroidEntryPoint
 class SurveyListFragment : ProgressableFragment(), SurveyListMvpView {
 
     private lateinit var binding: FragmentSurveyListBinding
-    private val arg : SurveyListFragmentArgs by navArgs()
+    private val arg: SurveyListFragmentArgs by navArgs()
 
     @Inject
     lateinit var mSurveyListPresenter: SurveyListPresenter
@@ -41,7 +41,6 @@ class SurveyListFragment : ProgressableFragment(), SurveyListMvpView {
     private var clientId = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         clientId = arg.clientId
     }
 

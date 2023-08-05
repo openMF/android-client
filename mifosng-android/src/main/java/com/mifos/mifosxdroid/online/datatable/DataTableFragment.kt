@@ -10,23 +10,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.DataTableAdapter
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentDatatablesBinding
-import com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment
 import com.mifos.objects.noncore.DataTable
 import com.mifos.utils.Constants
-import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 12/02/17.
  */
+@AndroidEntryPoint
 class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListener {
 
     private lateinit var binding: FragmentDatatablesBinding
-    private val arg : DataTableFragmentArgs by navArgs()
+    private val arg: DataTableFragmentArgs by navArgs()
 
     @Inject
     lateinit var dataTablePresenter: DataTablePresenter
@@ -34,7 +33,11 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
     private val dataTableAdapter by lazy {
         DataTableAdapter(
             onDateTableClick = { dataTable ->
-                val action = DataTableFragmentDirections.actionDataTableFragmentToDataTableDataFragment(dataTable,entityId)
+                val action =
+                    DataTableFragmentDirections.actionDataTableFragmentToDataTableDataFragment(
+                        dataTable,
+                        entityId
+                    )
                 findNavController().navigate(action)
             }
         )
@@ -55,7 +58,6 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         binding = FragmentDatatablesBinding.inflate(inflater, container, false)
         dataTablePresenter.attachView(this)
         showUserInterface()

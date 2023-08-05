@@ -20,7 +20,6 @@ import android.widget.TextView
 import com.mifos.api.model.BulkRepaymentTransactions
 import com.mifos.api.model.ClientsAttendance
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentGenerateCollectionSheetBinding
@@ -40,11 +39,13 @@ import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Locale
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionSheetMvpView,
     View.OnClickListener {
 
@@ -87,7 +88,6 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private var calendarId: Int? = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         setHasOptionsMenu(true)
     }
 

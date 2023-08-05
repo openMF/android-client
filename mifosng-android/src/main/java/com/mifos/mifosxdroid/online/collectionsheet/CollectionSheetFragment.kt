@@ -15,12 +15,12 @@ import com.mifos.api.model.CollectionSheetPayload
 import com.mifos.api.model.Payload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.CollectionListAdapter
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentCollectionSheetBinding
 import com.mifos.objects.db.CollectionSheet
 import com.mifos.objects.response.SaveResponse
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.adapter.rxjava.HttpException
 import java.util.*
 import javax.inject.Inject
@@ -30,6 +30,7 @@ import javax.inject.Inject
  * Use the [CollectionSheetFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
     val LOG_TAG = javaClass.simpleName
 
@@ -50,7 +51,6 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             centerId = requireArguments().getInt(Constants.CENTER_ID)
             dateOfCollection = requireArguments().getString(Constants.DATE_OF_COLLECTION)

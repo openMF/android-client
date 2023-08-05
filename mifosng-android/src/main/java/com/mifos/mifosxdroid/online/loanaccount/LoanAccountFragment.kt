@@ -15,7 +15,6 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentAddLoanBinding
@@ -31,6 +30,7 @@ import com.mifos.services.data.LoansPayload
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -39,11 +39,12 @@ import javax.inject.Inject
  *
  * Use this  Fragment to Create and/or Update loan
  */
+@AndroidEntryPoint
 class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, LoanAccountMvpView,
     OnItemSelectedListener {
 
     private lateinit var binding: FragmentAddLoanBinding
-    private val arg : LoanAccountFragmentArgs by navArgs()
+    private val arg: LoanAccountFragmentArgs by navArgs()
 
     @Inject
     lateinit var mLoanAccountPresenter: LoanAccountPresenter
@@ -51,7 +52,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
     var disbursementDate: String? = null
     private var hasDataTables = false
     private var mfDatePicker: DialogFragment? = null
-    private var productId : Int? = 0
+    private var productId: Int? = 0
     private var clientId = 0
     private var loanPurposeId: Int? = null
     private var loanTermFrequency: Int? = null
@@ -114,7 +115,6 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
     ): View {
         activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         binding = FragmentAddLoanBinding.inflate(inflater, container, false)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         mLoanAccountPresenter.attachView(this)
         inflateSubmissionDate()
         inflateDisbursementDate()

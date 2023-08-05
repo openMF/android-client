@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.core.util.Toaster.show
@@ -18,6 +17,7 @@ import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Locale
@@ -26,6 +26,7 @@ import javax.inject.Inject
 /**
  * Created by Rajan Maurya on 09/02/17.
  */
+@AndroidEntryPoint
 class ActivateFragment : MifosBaseFragment(), ActivateMvpView {
 
     private lateinit var binding: FragmentActivateClientBinding
@@ -46,7 +47,6 @@ class ActivateFragment : MifosBaseFragment(), ActivateMvpView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         id = arg.clientId
         activateType = arg.activationType
     }

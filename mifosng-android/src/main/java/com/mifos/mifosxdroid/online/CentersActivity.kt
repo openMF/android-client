@@ -15,7 +15,9 @@ import com.mifos.mifosxdroid.online.grouplist.GroupListFragment
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment
 import com.mifos.objects.client.Client
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CentersActivity : MifosBaseActivity(){
 
     private val args: CentersActivityArgs by navArgs()

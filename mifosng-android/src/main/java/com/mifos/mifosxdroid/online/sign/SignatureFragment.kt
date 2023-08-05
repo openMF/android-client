@@ -27,18 +27,20 @@ import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.FileUtils
 import com.mifos.utils.SafeUIBlockingUtility
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import javax.inject.Inject
 
 /**
  * Created by Tarun on 28-06-2017.
  */
+@AndroidEntryPoint
 class SignatureFragment : MifosBaseFragment(), SignatureMvpView,
     BottomNavigationView.OnNavigationItemSelectedListener, OnSignatureSaveListener {
 
     private lateinit var binding: FragmentSignBinding
-    private val arg : SignatureFragmentArgs by navArgs()
-    
+    private val arg: SignatureFragmentArgs by navArgs()
+
     @Inject
     lateinit var mSignaturePresenter: SignaturePresenter
     private var mClientId: Int? = null
@@ -46,7 +48,6 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView,
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         safeUIBlockingUtility = SafeUIBlockingUtility(
             requireContext(),
             getString(R.string.signature_fragment_loading_message)

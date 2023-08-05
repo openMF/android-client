@@ -6,10 +6,12 @@ import androidx.navigation.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Created by nellyk on 2/27/2016.
  */
+@AndroidEntryPoint
 class GroupsActivity : MifosBaseActivity() {
 
     private val args: GroupsActivityArgs by navArgs()

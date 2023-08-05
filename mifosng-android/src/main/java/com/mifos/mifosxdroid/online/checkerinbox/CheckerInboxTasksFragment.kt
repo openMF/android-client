@@ -9,14 +9,15 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.CheckerInboxTasksFragmentBinding
 import com.mifos.objects.CheckerTask
 import com.mifos.objects.checkerinboxandtasks.RescheduleLoansTask
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var binding: CheckerInboxTasksFragmentBinding
@@ -34,11 +35,6 @@ class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefr
     lateinit var factory: CheckerInboxViewModelFactory
     private lateinit var viewModel: CheckerInboxTasksViewModel
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

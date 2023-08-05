@@ -16,10 +16,12 @@ import com.mifos.mifosxdroid.online.runreports.report.ReportFragment
 import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryFragment
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Created by Tarun on 02-08-17.
  */
+@AndroidEntryPoint
 class RunReportsActivity : MifosBaseActivity(), OnItemSelectedListener {
     private var intent: Intent? = null
     private var spinner: Spinner? = null

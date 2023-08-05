@@ -9,22 +9,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.NoteAdapter
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentNotesBinding
 import com.mifos.objects.noncore.Note
 import com.mifos.utils.Constants
-import java.util.ArrayList
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by rahul on 4/3/17.
  */
+@AndroidEntryPoint
 class NoteFragment : MifosBaseFragment(), NoteMvpView, OnRefreshListener {
 
     private lateinit var binding: FragmentNotesBinding
-    private val arg : NoteFragmentArgs by navArgs()
+    private val arg: NoteFragmentArgs by navArgs()
 
     @Inject
     lateinit var notePresenter: NotePresenter
@@ -37,7 +37,6 @@ class NoteFragment : MifosBaseFragment(), NoteMvpView, OnRefreshListener {
     private var notes: List<Note> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         entityId = arg.entiyId
         entityType = arg.entityType
     }

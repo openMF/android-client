@@ -8,18 +8,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.DialogFragmentSyncGroupsBinding
 import com.mifos.objects.group.Group
 import com.mifos.utils.Constants
 import com.mifos.utils.Network.isOnline
 import com.mifos.utils.PrefManager.userStatus
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 11/09/16.
  */
+@AndroidEntryPoint
 class SyncGroupsDialogFragment : DialogFragment(), SyncGroupsDialogMvpView {
 
     private lateinit var binding: DialogFragmentSyncGroupsBinding
@@ -28,7 +29,6 @@ class SyncGroupsDialogFragment : DialogFragment(), SyncGroupsDialogMvpView {
     lateinit var syncGroupsDialogPresenter: SyncGroupsDialogPresenter
     private var groups: List<Group>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) {
             groups = requireArguments().getParcelableArrayList(Constants.GROUPS)
         }

@@ -13,18 +13,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SyncGroupPayloadAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
 import com.mifos.objects.group.GroupPayload
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.userStatus
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 19/07/16.
  */
+@AndroidEntryPoint
 class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
     DialogInterface.OnClickListener {
 
@@ -43,7 +44,6 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
     var mClientSyncIndex = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         groupPayloads = ArrayList()
         setHasOptionsMenu(true)
     }
@@ -145,7 +145,7 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
      *
      * @param groupPayload
      */
-    override fun showGroups(groupPayload:List<GroupPayload>) {
+    override fun showGroups(groupPayload: List<GroupPayload>) {
         groupPayloads = groupPayload as MutableList<GroupPayload>
         if (groupPayload.isEmpty()) {
             binding.llError.visibility = View.VISIBLE

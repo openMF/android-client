@@ -4,7 +4,6 @@
  */
 package com.mifos.mifosxdroid.online.groupslist
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.*
@@ -26,6 +25,7 @@ import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFr
 import com.mifos.objects.group.Group
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
 
@@ -54,6 +54,7 @@ import javax.inject.Inject
  * boolean isParentFragment) {...}
  * and unregister the ScrollListener and SwipeLayout.
 </Group> */
+@AndroidEntryPoint
 class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshListener {
 
     private lateinit var binding: FragmentGroupsBinding
@@ -100,7 +101,6 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         mGroupList = ArrayList()
         selectedGroups = ArrayList()
         actionModeCallback = ActionModeCallback()

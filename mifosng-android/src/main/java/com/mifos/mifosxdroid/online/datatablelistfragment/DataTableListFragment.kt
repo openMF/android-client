@@ -16,7 +16,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.DialogFragmentAddEntryToDatatableBinding
 import com.mifos.mifosxdroid.formwidgets.*
@@ -31,6 +30,7 @@ import com.mifos.utils.Constants
 import com.mifos.utils.MifosResponseHandler
 import com.mifos.utils.PrefManager
 import com.mifos.utils.SafeUIBlockingUtility
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
 
@@ -45,6 +45,7 @@ import javax.inject.Inject
  * 2. it shows all the datatables (from datatable array) unlike in the other fragments which show
  * a single datatable.
  */
+@AndroidEntryPoint
 class DataTableListFragment : Fragment(), DataTableListMvpView {
 
     private lateinit var binding: DialogFragmentAddEntryToDatatableBinding
@@ -61,10 +62,6 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
     private var requestType = 0
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
     private val listFormWidgets: MutableList<List<FormWidget>> = ArrayList()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -109,12 +106,14 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
                     formWidgets.add(formEditText)
                     binding.llDataTableEntryForm.addView(formEditText.view)
                 } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_INT) {
-                    val formNumericEditText = FormNumericEditText(activity, columnHeader.dataTableColumnName)
+                    val formNumericEditText =
+                        FormNumericEditText(activity, columnHeader.dataTableColumnName)
                     formNumericEditText.returnType = FormWidget.SCHEMA_KEY_INT
                     formWidgets.add(formNumericEditText)
                     binding.llDataTableEntryForm.addView(formNumericEditText.view)
                 } else if (columnHeader.columnDisplayType == FormWidget.SCHEMA_KEY_DECIMAL) {
-                    val formNumericEditText = FormNumericEditText(activity, columnHeader.dataTableColumnName)
+                    val formNumericEditText =
+                        FormNumericEditText(activity, columnHeader.dataTableColumnName)
                     formNumericEditText.returnType = FormWidget.SCHEMA_KEY_DECIMAL
                     formWidgets.add(formNumericEditText)
                     binding.llDataTableEntryForm.addView(formNumericEditText.view)

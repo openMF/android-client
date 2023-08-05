@@ -19,7 +19,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentClientReportDetailsBinding
@@ -29,6 +28,7 @@ import com.mifos.objects.runreports.FullParameterListResponse
 import com.mifos.objects.runreports.client.ClientReportTypeItem
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -37,6 +37,7 @@ import javax.inject.Inject
 /**
  * Created by Tarun on 04-08-17.
  */
+@AndroidEntryPoint
 class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePickListener {
 
     private lateinit var binding: FragmentClientReportDetailsBinding
@@ -60,10 +61,6 @@ class ReportDetailFragment : MifosBaseFragment(), ReportDetailMvpView, OnDatePic
     private var dateField: String? = null
     var datePicker: DialogFragment? = null
     private var tvField: EditText? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

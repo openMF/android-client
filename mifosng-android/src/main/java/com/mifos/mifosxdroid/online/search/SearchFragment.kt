@@ -20,7 +20,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mifos.mifosxdroid.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SearchAdapter
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentClientSearchBinding
@@ -28,11 +27,13 @@ import com.mifos.objects.SearchedEntity
 import com.mifos.objects.navigation.ClientArgs
 import com.mifos.utils.Constants
 import com.mifos.utils.EspressoIdlingResource
+import dagger.hilt.android.AndroidEntryPoint
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
 import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class SearchFragment : MifosBaseFragment(), SearchMvpView {
 
     private lateinit var binding: FragmentClientSearchBinding
@@ -58,7 +59,6 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView {
     private var checkedFilter = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         searchedEntities = ArrayList()
         fabOpen = AnimationUtils.loadAnimation(context, R.anim.fab_open)
         fabClose = AnimationUtils.loadAnimation(context, R.anim.fab_close)

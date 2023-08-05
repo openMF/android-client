@@ -14,7 +14,6 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.DialogFragmentChargeBinding
@@ -28,6 +27,7 @@ import com.mifos.services.data.ChargesPayload
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -36,6 +36,7 @@ import javax.inject.Inject
  *
  * Use this Dialog Fragment to Create and/or Update charges
  */
+@AndroidEntryPoint
 class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, ChargeDialogMvpView,
     OnItemSelectedListener {
     val LOG_TAG = javaClass.simpleName
@@ -58,7 +59,6 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
     private var createdCharge: Charges? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         if (arguments != null) clientId = requireArguments().getInt(Constants.CLIENT_ID)
     }
 

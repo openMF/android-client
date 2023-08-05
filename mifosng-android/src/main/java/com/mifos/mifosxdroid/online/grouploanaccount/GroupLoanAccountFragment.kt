@@ -15,7 +15,6 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentAddLoanBinding
@@ -27,9 +26,9 @@ import com.mifos.objects.templates.loans.GroupLoanTemplate
 import com.mifos.objects.templates.loans.RepaymentFrequencyDaysOfWeekTypeOptions
 import com.mifos.objects.templates.loans.RepaymentFrequencyNthDayTypeOptions
 import com.mifos.services.data.GroupLoanPayload
-import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 /**
@@ -38,11 +37,12 @@ import javax.inject.Inject
  *
  * Use this  Fragment to Create and/or Update loan
  */
+@AndroidEntryPoint
 class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     GroupLoanAccountMvpView, OnItemSelectedListener {
 
     private lateinit var binding: FragmentAddLoanBinding
-    private val arg : GroupLoanAccountFragmentArgs by navArgs()
+    private val arg: GroupLoanAccountFragmentArgs by navArgs()
 
     @Inject
     lateinit var mGroupLoanAccountPresenter: GroupLoanAccountPresenter
@@ -50,19 +50,19 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     var disbursementDate: String? = null
     private val mListener: OnDialogFragmentInteractionListener? = null
     private var mfDatePicker: DialogFragment? = null
-    private var productId : Int? = 0
+    private var productId: Int? = 0
     private var groupId = 0
-    private var loanPurposeId : Int? =null
-    private var loanTermFrequency : Int? = null
-    private var loanTermFrequencyType : Int ? = null
+    private var loanPurposeId: Int? = null
+    private var loanTermFrequency: Int? = null
+    private var loanTermFrequencyType: Int? = null
     private var termFrequency: Int? = null
     private var repaymentEvery: Int? = null
-    private var transactionProcessingStrategyId : Int? = null
-    private var amortizationTypeId : Int ? = null
-    private var interestCalculationPeriodTypeId : Int? =null
-    private var fundId: Int ? = null
-    private var loanOfficerId : Int ? = null
-    private var interestTypeMethodId : Int ? = null
+    private var transactionProcessingStrategyId: Int? = null
+    private var amortizationTypeId: Int? = null
+    private var interestCalculationPeriodTypeId: Int? = null
+    private var fundId: Int? = null
+    private var loanOfficerId: Int? = null
+    private var interestTypeMethodId: Int? = null
     private var repaymentFrequencyNthDayType: Int? = null
     private var repaymentFrequencyDayOfWeek: Int? = null
     private var interestRatePerPeriod: Double? = null
@@ -97,11 +97,11 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     private var mGroupLoanTemplate: GroupLoanTemplate? = null
     private var mLoanProducts: List<LoanProducts>? = null
     var mRepaymentFrequencyNthDayTypeOptions: List<RepaymentFrequencyNthDayTypeOptions>? = null
-    var mRepaymentFrequencyDaysOfWeekTypeOptions: List<RepaymentFrequencyDaysOfWeekTypeOptions>? = null
+    var mRepaymentFrequencyDaysOfWeekTypeOptions: List<RepaymentFrequencyDaysOfWeekTypeOptions>? =
+        null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         groupId = arg.groupId
     }
 
@@ -482,7 +482,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
         }
         if (mGroupLoanTemplate?.fundId != null) {
             fundId = mGroupLoanTemplate?.fundId
-            binding.spFund.setSelection(mGroupLoanTemplate?.fundId?:0)
+            binding.spFund.setSelection(mGroupLoanTemplate?.fundId ?: 0)
         }
     }
 

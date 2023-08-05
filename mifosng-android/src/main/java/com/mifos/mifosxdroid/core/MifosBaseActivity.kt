@@ -18,9 +18,6 @@ import androidx.fragment.app.FragmentManager
 import com.mifos.App
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.SplashScreenActivity
-import com.mifos.mifosxdroid.injection.component.ActivityComponent
-import com.mifos.mifosxdroid.injection.component.DaggerActivityComponent
-import com.mifos.mifosxdroid.injection.module.ActivityModule
 import com.mifos.mifosxdroid.passcode.PassCodeActivity
 import com.mifos.mobile.passcode.BasePassCodeActivity
 import com.mifos.utils.Constants
@@ -33,7 +30,6 @@ import com.mifos.utils.PrefManager.clearPrefs
  */
 open class MifosBaseActivity : BasePassCodeActivity(), BaseActivityCallback {
     var toolbar: Toolbar? = null
-    private var mActivityComponent: ActivityComponent? = null
     private var progress: ProgressDialog? = null
     override fun setContentView(layoutResID: Int) {
         super.setContentView(layoutResID)
@@ -50,17 +46,6 @@ open class MifosBaseActivity : BasePassCodeActivity(), BaseActivityCallback {
             setSupportActionBar(toolbar)
         }
     }
-
-    val activityComponent: ActivityComponent?
-        get() {
-            if (mActivityComponent == null) {
-                mActivityComponent = DaggerActivityComponent.builder()
-                    .activityModule(ActivityModule(this))
-                    .applicationComponent(App.get(this).component)
-                    .build()
-            }
-            return mActivityComponent
-        }
 
     private fun setActionBarTitle(title: String?) {
         if (supportActionBar != null && getTitle() != null) {

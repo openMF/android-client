@@ -13,7 +13,9 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.databinding.ActivityToolbarContainerBinding
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment.OnPayloadSelectedListener
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class GenerateCollectionSheetActivity : MifosBaseActivity(), OnPayloadSelectedListener {
 
     private lateinit var binding: ActivityToolbarContainerBinding

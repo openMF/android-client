@@ -12,22 +12,22 @@ import androidx.navigation.fragment.navArgs
 import com.mifos.api.model.BulkRepaymentTransactions
 import com.mifos.api.model.IndividualCollectionSheetPayload
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.AddPaymentDetailBinding
 import com.mifos.objects.accounts.loan.PaymentTypeOptions
 import com.mifos.objects.collectionsheet.LoanAndClientName
-import com.mifos.utils.Constants
 import com.mifos.utils.ImageLoaderUtils
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
 /**
  * Created by aksh on 21/6/18.
  */
+@AndroidEntryPoint
 class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItemSelectedListener {
 
     private lateinit var binding: AddPaymentDetailBinding
-    private val arg : PaymentDetailsFragmentArgs by navArgs()
+    private val arg: PaymentDetailsFragmentArgs by navArgs()
 
     var paymentTypeList: List<String>? = null
     var paymentTypeOptionsList: List<PaymentTypeOptions>? = null
@@ -51,7 +51,6 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity as MifosBaseActivity).activityComponent?.inject(this)
         position = arg.position
         loanAndClientNameItem = arg.loanAndClientName
         paymentTypeList = arg.paymentTypeList.toList()
