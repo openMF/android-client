@@ -40,7 +40,7 @@ ext {
 
     //okHttp version
     okHttp3Version = '4.11.0'
-    okHttp3MainVersion = '4.9.2'
+    okHttp3MainVersion = '4.11.0'
 
     // flipTable version
     flipTableVersion = '1.0.1'
