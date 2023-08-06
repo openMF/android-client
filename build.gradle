@@ -107,7 +107,7 @@ ext {
     androidTestRuleVersion = '1.5.0'
 
     //jUnit jupiter
-    junitJupiterVersion = '5.7.2'
+    junitJupiterVersion = '5.10.0'
 
     // annotation version
     annotationLibraryVersion = '1.6.0'
