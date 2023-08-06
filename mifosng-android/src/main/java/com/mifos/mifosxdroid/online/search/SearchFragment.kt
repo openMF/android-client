@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -25,8 +26,10 @@ import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentClientSearchBinding
 import com.mifos.objects.SearchedEntity
 import com.mifos.objects.navigation.ClientArgs
+import com.mifos.states.SearchUiState
 import com.mifos.utils.Constants
-import com.mifos.utils.EspressoIdlingResource
+import com.mifos.utils.Network
+import com.mifos.viewmodels.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
@@ -34,16 +37,14 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class SearchFragment : MifosBaseFragment(), SearchMvpView {
+class SearchFragment : MifosBaseFragment() {
 
     private lateinit var binding: FragmentClientSearchBinding
 
+    private lateinit var viewModel: SearchViewModel
+
     private lateinit var searchOptionsValues: Array<String>
     private lateinit var searchAdapter: SearchAdapter
-
-    @Inject
-    lateinit var searchPresenter: SearchPresenter
-
 
     // determines weather search is triggered by user or system
     private var autoTriggerSearch = false
@@ -73,10 +74,31 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView {
     ): View {
         binding = FragmentClientSearchBinding.inflate(inflater, container, false)
         (activity as HomeActivity).supportActionBar?.title = getString(R.string.dashboard)
-        searchPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
         searchOptionsValues =
             requireActivity().resources.getStringArray(R.array.search_options_values)
         showUserInterface()
+
+
+        viewModel.searchUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SearchUiState.ShowProgress -> showProgressbar(it.state)
+                is SearchUiState.ShowSearchedResources -> {
+                    showProgressbar(false)
+                    showSearchedResources(it.searchedEntities)
+                }
+
+                is SearchUiState.ShowError -> {
+                    showProgressbar(false)
+                    showMessage(it.message)
+                }
+
+                is SearchUiState.ShowNoResultFound -> {
+                    showProgressbar(false)
+                    showNoResultFound()
+                }
+            }
+        }
         return binding.root
     }
 
@@ -149,7 +171,7 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView {
         dialogBuilder.show()
     }
 
-    override fun showUserInterface() {
+    private fun showUserInterface() {
         searchOptionsAdapter = ArrayAdapter.createFromResource(
             (requireActivity()),
             R.array.search_options, android.R.layout.simple_spinner_item
@@ -243,34 +265,27 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView {
         sequence.start()
     }
 
-    override fun showSearchedResources(searchedEntities: List<SearchedEntity>) {
+    private fun showSearchedResources(searchedEntities: List<SearchedEntity>) {
         searchAdapter.setSearchResults(searchedEntities)
         this.searchedEntities = searchedEntities.toMutableList()
-        EspressoIdlingResource.decrement() // App is idle.
     }
 
-    override fun showNoResultFound() {
+    private fun showNoResultFound() {
         searchedEntities.clear()
         searchAdapter.notifyDataSetChanged()
         show(binding.etSearch, getString(R.string.no_search_result_found))
     }
 
-    override fun showMessage(message: Int) {
-        Toast.makeText(activity, getString(message), Toast.LENGTH_SHORT).show()
-        EspressoIdlingResource.decrement() // App is idle.
+    private fun showMessage(message: String) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             showMifosProgressDialog()
         } else {
             hideMifosProgressDialog()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        searchPresenter.detachView()
     }
 
     override fun onPause() {
@@ -312,10 +327,13 @@ class SearchFragment : MifosBaseFragment(), SearchMvpView {
 
     private fun onClickSearch() {
         hideKeyboard(binding.etSearch)
+        if (!Network.isOnline(requireContext())) {
+            showMessage(getStringMessage(R.string.no_internet_connection))
+            return
+        }
         val query = binding.etSearch.editableText.toString().trim { it <= ' ' }
         if (query.isNotEmpty()) {
-            EspressoIdlingResource.increment() // App is busy until further notice.
-            searchPresenter.searchResources(query, resources, binding.cbExactMatch.isChecked)
+            viewModel.searchResources(query, resources, binding.cbExactMatch.isChecked)
         } else {
             if (!autoTriggerSearch) {
                 show(binding.etSearch, getString(R.string.no_search_query_entered))

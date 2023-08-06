@@ -19,6 +19,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
@@ -27,11 +28,13 @@ import com.mifos.mifosxdroid.adapters.PathTrackingAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.databinding.ActivityPathTrackerBinding
 import com.mifos.objects.user.UserLocation
+import com.mifos.states.PathTrackingUiState
 import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.getBoolean
 import com.mifos.utils.PrefManager.putBoolean
 import com.mifos.utils.PrefManager.userId
+import com.mifos.viewmodels.PathTrackingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -39,14 +42,13 @@ import javax.inject.Inject
  * @author fomenkoo
  */
 @AndroidEntryPoint
-class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefreshListener {
+class PathTrackingActivity : MifosBaseActivity(), OnRefreshListener {
 
     private lateinit var binding: ActivityPathTrackerBinding
 
-    @JvmField
-    @Inject
-    var pathTrackingPresenter: PathTrackingPresenter? = null
-    var pathTrackingAdapter: PathTrackingAdapter? = null
+    private lateinit var viewModel : PathTrackingViewModel
+
+    private var pathTrackingAdapter: PathTrackingAdapter? = null
     private var intentLocationService: Intent? = null
     private var notificationReceiver: BroadcastReceiver? = null
     private var userLocations: List<UserLocation>? = null
@@ -55,18 +57,35 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
         super.onCreate(savedInstanceState)
         binding = ActivityPathTrackerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        pathTrackingPresenter?.attachView(this)
+        viewModel = ViewModelProvider(this)[PathTrackingViewModel::class.java]
         showBackButton()
         intentLocationService = Intent(this, PathTrackingService::class.java)
         createNotificationReceiver()
         showUserInterface()
-        pathTrackingPresenter?.loadPathTracking(userId)
+        viewModel.loadPathTracking(userId)
         binding.layoutError.findViewById<Button>(R.id.btnTryAgain).setOnClickListener {
             reloadOnError()
         }
+        viewModel.pathTrackingUiState.observe(this){
+            when(it){
+                is PathTrackingUiState.ShowProgress -> showProgressbar(it.state)
+                is PathTrackingUiState.ShowEmptyPathTracking -> {
+                    hideProgress()
+                    showEmptyPathTracking()
+                }
+                is PathTrackingUiState.ShowError -> {
+                    hideProgress()
+                    showError()
+                }
+                is PathTrackingUiState.ShowPathTracking -> {
+                    hideProgress()
+                    showPathTracking(it.userLocations)
+                }
+            }
+        }
     }
 
-    override fun showUserInterface() {
+    private fun showUserInterface() {
         userLocations = ArrayList()
         val mLayoutManager = LinearLayoutManager(this)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -103,10 +122,10 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
     }
 
     override fun onRefresh() {
-        pathTrackingPresenter?.loadPathTracking(userId)
+        viewModel.loadPathTracking(userId)
     }
 
-    override fun showPathTracking(userLocations: List<UserLocation>) {
+    private fun showPathTracking(userLocations: List<UserLocation>) {
         this.userLocations = userLocations
         pathTrackingAdapter?.setPathTracker(userLocations)
     }
@@ -114,10 +133,10 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
 
     private fun reloadOnError() {
         sweetUIErrorHandler?.hideSweetErrorLayoutUI(binding.rvPathTracker, binding.layoutError)
-        pathTrackingPresenter?.loadPathTracking(userId)
+        viewModel.loadPathTracking(userId)
     }
 
-    override fun showEmptyPathTracking() {
+    private fun showEmptyPathTracking() {
         sweetUIErrorHandler?.showSweetEmptyUI(
             getString(R.string.path_tracker),
             R.drawable.ic_error_black_24dp,
@@ -126,7 +145,7 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
         )
     }
 
-    override fun showError() {
+    private fun showError() {
         sweetUIErrorHandler?.showSweetErrorUI(
             getString(R.string.failed_to_fetch_path_tracking_details),
             R.drawable.ic_error_black_24dp,
@@ -243,7 +262,7 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
                 val action = intent.action
                 if (Constants.STOP_TRACKING == action) {
                     invalidateOptionsMenu()
-                    pathTrackingPresenter?.loadPathTracking(userId)
+                    viewModel.loadPathTracking(userId)
                 }
             }
         }
@@ -252,11 +271,10 @@ class PathTrackingActivity : MifosBaseActivity(), PathTrackingMvpView, OnRefresh
 
     override fun onDestroy() {
         super.onDestroy()
-        pathTrackingPresenter?.detachView()
         unregisterReceiver(notificationReceiver)
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         binding.swipeContainer.isRefreshing = show
         if (show && userLocations?.isEmpty() == true) {
             binding.pbPathTracking.visibility = View.VISIBLE

@@ -14,6 +14,7 @@ import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.joanzapata.iconify.widget.IconTextView
@@ -28,8 +29,10 @@ import com.mifos.objects.accounts.savings.DepositType
 import com.mifos.objects.client.Client
 import com.mifos.objects.group.Group
 import com.mifos.objects.navigation.ClientListArgs
+import com.mifos.states.GroupDetailsUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.Utils
+import com.mifos.viewmodels.GroupDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -37,12 +40,12 @@ import javax.inject.Inject
  * Created by nellyk on 2/27/2016.
  */
 @AndroidEntryPoint
-class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
+class GroupDetailsFragment : MifosBaseFragment() {
 
     private lateinit var binding: FragmentGroupDetailsBinding
 
-    @Inject
-    lateinit var mGroupDetailsPresenter: GroupDetailsPresenter
+    private lateinit var viewModel: GroupDetailsViewModel
+
     private var groupId = 0
     private var accountAccordion: AccountAccordion? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,8 +62,35 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentGroupDetailsBinding.inflate(inflater, container, false)
-        mGroupDetailsPresenter.attachView(this)
-        mGroupDetailsPresenter.loadGroupDetailsAndAccounts(groupId)
+        viewModel = ViewModelProvider(this)[GroupDetailsViewModel::class.java]
+        viewModel.loadGroupDetailsAndAccounts(groupId)
+
+        viewModel.groupDetailsUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is GroupDetailsUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is GroupDetailsUiState.ShowGroup -> {
+                    showProgressbar(false)
+                    showGroup(it.group)
+                }
+
+                is GroupDetailsUiState.ShowGroupAccounts -> {
+                    showProgressbar(false)
+                    showGroupAccounts(it.groupAccounts)
+                }
+
+                is GroupDetailsUiState.ShowGroupClients -> {
+                    showProgressbar(false)
+                    showGroupClients(it.clientMembers)
+                }
+
+                is GroupDetailsUiState.ShowProgressbar -> showProgressbar(it.state)
+            }
+        }
+
         return binding.root
     }
 
@@ -122,7 +152,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         findNavController().navigate(action)
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         if (show) {
             binding.rlGroup.visibility = View.GONE
             showMifosProgressBar()
@@ -132,7 +162,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         }
     }
 
-    override fun showGroup(group: Group?) {
+    private fun showGroup(group: Group?) {
         if (group != null) {
             if (!group.active!!) {
                 binding.llBottomPanel.visibility = View.VISIBLE
@@ -160,11 +190,11 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         }
     }
 
-    override fun showGroupClients(clients: List<Client>) {
+    private fun showGroupClients(clients: List<Client>) {
         loadGroupClients(clients)
     }
 
-    override fun showGroupAccounts(groupAccounts: GroupAccounts?) {
+    private fun showGroupAccounts(groupAccounts: GroupAccounts?) {
         // Proceed only when the fragment is added to the activity.
         if (!isAdded) {
             return
@@ -227,7 +257,7 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
         }
     }
 
-    override fun showFetchingError(errorMessage: Int) {
+    private fun showFetchingError(errorMessage: Int) {
         Toast.makeText(activity, getStringMessage(errorMessage), Toast.LENGTH_SHORT).show()
     }
 
@@ -242,15 +272,10 @@ class GroupDetailsFragment : MifosBaseFragment(), GroupDetailsMvpView {
             R.id.documents -> loadDocuments()
             R.id.add_group_savings_account -> addGroupSavingsAccount()
             R.id.add_group_loan -> addGroupLoanAccount()
-            R.id.group_clients -> mGroupDetailsPresenter.loadGroupAssociateClients(groupId)
+            R.id.group_clients -> viewModel.loadGroupAssociateClients(groupId)
             R.id.group_notes -> loadNotes()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mGroupDetailsPresenter.detachView()
     }
 
     private fun loadGroupClients(clients: List<Client>) {

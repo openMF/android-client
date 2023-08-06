@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
@@ -14,8 +15,10 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentCenterDetailsBinding
 import com.mifos.objects.group.CenterInfo
 import com.mifos.objects.group.CenterWithAssociations
+import com.mifos.states.CenterDetailsUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.Utils
+import com.mifos.viewmodels.CenterDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -23,15 +26,14 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 05/02/17.
  */
 @AndroidEntryPoint
-class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
+class CenterDetailsFragment : MifosBaseFragment() {
 
     private lateinit var binding: FragmentCenterDetailsBinding
 
-    @Inject
-    lateinit var centerDetailsPresenter: CenterDetailsPresenter
+    private lateinit var viewModel: CenterDetailsViewModel
+
     private var centerId = 0
 
-    //    private var listener: OnFragmentInteractionListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
@@ -46,9 +48,35 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCenterDetailsBinding.inflate(inflater, container, false)
-        centerDetailsPresenter.attachView(this)
-        centerDetailsPresenter.loadCentersGroupAndMeeting(centerId)
-        centerDetailsPresenter.loadSummaryInfo(centerId)
+        viewModel = ViewModelProvider(this)[CenterDetailsViewModel::class.java]
+        viewModel.loadCentersGroupAndMeeting(centerId)
+        viewModel.loadSummaryInfo(centerId)
+
+        viewModel.centerDetailsUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is CenterDetailsUiState.ShowCenterDetails -> {
+                    showProgressbar(false)
+                    showCenterDetails(it.centerWithAssociations)
+                }
+
+                is CenterDetailsUiState.ShowErrorMessage -> {
+                    showProgressbar(false)
+                    showErrorMessage(it.message)
+                }
+
+                is CenterDetailsUiState.ShowMeetingDetails -> {
+                    showProgressbar(false)
+                    showMeetingDetails(it.centerWithAssociations)
+                }
+
+                is CenterDetailsUiState.ShowProgressbar -> showProgressbar(it.state)
+                is CenterDetailsUiState.ShowSummaryInfo -> {
+                    showProgressbar(false)
+                    showSummaryInfo(it.centerInfo)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -69,7 +97,7 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
         findNavController().navigate(action)
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         if (show) {
             binding.rlCenter.visibility = View.GONE
             showMifosProgressBar()
@@ -79,7 +107,7 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
         }
     }
 
-    override fun showCenterDetails(centerWithAssociations: CenterWithAssociations?) {
+    private fun showCenterDetails(centerWithAssociations: CenterWithAssociations?) {
         centerWithAssociations?.name?.let { setToolbarTitle(it) }
         if (centerWithAssociations?.activationDate?.isNotEmpty() == true) {
             if (centerWithAssociations.staffName != null) {
@@ -92,7 +120,7 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
         }
     }
 
-    override fun showMeetingDetails(centerWithAssociations: CenterWithAssociations?) {
+    private fun showMeetingDetails(centerWithAssociations: CenterWithAssociations?) {
         if (!centerWithAssociations!!.active!!) {
             binding.llBottomPanel.visibility = View.VISIBLE
             showErrorMessage(R.string.error_center_inactive)
@@ -116,18 +144,18 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
         }
     }
 
-    override fun showSummaryInfo(centerInfos: List<CenterInfo?>?) {
-        val centerInfo = centerInfos?.get(0)
-        binding.tvActiveClients.text = centerInfo?.activeClients.toString()
-        binding.tvActiveGroupLoans.text = centerInfo?.activeGroupLoans.toString()
-        binding.tvActiveClientLoans.text = centerInfo?.activeClientLoans.toString()
-        binding.tvActiveClientBorrowers.text = centerInfo?.activeClientBorrowers.toString()
-        binding.tvActiveGroupBorrowers.text = centerInfo?.activeGroupBorrowers.toString()
-        binding.tvActiveOverdueClientLoans.text = centerInfo?.overdueClientLoans.toString()
-        binding.tvActiveOverdueGroupLoans.text = centerInfo?.overdueGroupLoans.toString()
+    private fun showSummaryInfo(centerInfos: List<CenterInfo>) {
+        val centerInfo = centerInfos[0]
+        binding.tvActiveClients.text = centerInfo.activeClients.toString()
+        binding.tvActiveGroupLoans.text = centerInfo.activeGroupLoans.toString()
+        binding.tvActiveClientLoans.text = centerInfo.activeClientLoans.toString()
+        binding.tvActiveClientBorrowers.text = centerInfo.activeClientBorrowers.toString()
+        binding.tvActiveGroupBorrowers.text = centerInfo.activeGroupBorrowers.toString()
+        binding.tvActiveOverdueClientLoans.text = centerInfo.overdueClientLoans.toString()
+        binding.tvActiveOverdueGroupLoans.text = centerInfo.overdueGroupLoans.toString()
     }
 
-    override fun showErrorMessage(message: Int) {
+    private fun showErrorMessage(message: Int) {
         Toaster.show(binding.root, message)
     }
 
@@ -142,29 +170,6 @@ class CenterDetailsFragment : MifosBaseFragment(), CenterDetailsMvpView {
         }
         return super.onOptionsItemSelected(item)
     }
-
-//    override fun onAttach(activity: Activity) {
-//        super.onAttach(activity)
-//        listener = try {
-//            activity as OnFragmentInteractionListener
-//        } catch (e: ClassCastException) {
-//            throw ClassCastException(
-//                activity.toString() + " must implement " +
-//                        "OnFragmentInteractionListener"
-//            )
-//        }
-//    }
-
-    interface OnFragmentInteractionListener {
-        fun addCenterSavingAccount(centerId: Int)
-        fun loadGroupsOfCenter(centerId: Int)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        centerDetailsPresenter.detachView()
-    }
-
     private fun addCenterSavingAccount(centerId: Int) {
         val action =
             CenterDetailsFragmentDirections.actionCenterDetailsFragmentToSavingsAccountFragment(

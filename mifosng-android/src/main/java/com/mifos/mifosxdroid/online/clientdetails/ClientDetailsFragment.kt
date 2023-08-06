@@ -31,6 +31,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.joanzapata.iconify.widget.IconTextView
@@ -44,9 +45,11 @@ import com.mifos.objects.accounts.ClientAccounts
 import com.mifos.objects.accounts.savings.DepositType
 import com.mifos.objects.client.Charges
 import com.mifos.objects.client.Client
+import com.mifos.states.ClientDetailsUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.ImageLoaderUtils
 import com.mifos.utils.Utils
+import com.mifos.viewmodels.ClientDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.ResponseBody
 import java.io.File
@@ -54,7 +57,7 @@ import java.io.FileOutputStream
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
+class ClientDetailsFragment : MifosBaseFragment() {
 
     private lateinit var binding: FragmentClientDetailsBinding
 
@@ -62,8 +65,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     var clientId = 0
     var chargesList: MutableList<Charges> = ArrayList()
 
-    @Inject
-    lateinit var mClientDetailsPresenter: ClientDetailsPresenter
+    private lateinit var viewModel: ClientDetailsViewModel
 
     private val clientImageFile = File(
         Environment.getExternalStorageDirectory().toString() +
@@ -86,8 +88,40 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentClientDetailsBinding.inflate(inflater, container, false)
-        mClientDetailsPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[ClientDetailsViewModel::class.java]
         inflateClientInformation()
+
+        viewModel.clientDetailsUiState.observe(viewLifecycleOwner){
+            when(it) {
+                is ClientDetailsUiState.ShowClientAccount -> {
+                    showProgressbar(false)
+                    showClientAccount(it.clientAccounts)
+                }
+                is ClientDetailsUiState.ShowClientImageDeletedSuccessfully -> {
+                    showProgressbar(false)
+                    showClientImageDeletedSuccessfully()
+                }
+                is ClientDetailsUiState.ShowClientInformation -> {
+                    showProgressbar(false)
+                    showClientInformation(it.client)
+                }
+                is ClientDetailsUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+                is ClientDetailsUiState.ShowProgressbar -> showProgressbar(it.boolean)
+                is ClientDetailsUiState.ShowUploadImageFailed -> {
+                    showProgressbar(false)
+                    showUploadImageFailed(it.message)
+                }
+                is ClientDetailsUiState.ShowUploadImageProgressbar -> showUploadImageProgressbar(it.state)
+                is ClientDetailsUiState.ShowUploadImageSuccessfully -> {
+                    showProgressbar(false)
+                    showUploadImageSuccessfully(it.response,it.imagePath)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -104,7 +138,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
     }
 
     private fun inflateClientInformation() {
-        mClientDetailsPresenter.loadClientDetailsAndClientAccounts(clientId)
+        viewModel.loadClientDetailsAndClientAccounts(clientId)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -242,12 +276,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
      * @param pngFile - PNG images supported at the moment
      */
     private fun uploadImage(pngFile: File) {
-        mClientDetailsPresenter.uploadImage(clientId, pngFile)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mClientDetailsPresenter.detachView()
+        viewModel.uploadImage(clientId, pngFile)
     }
 
     private fun loadDocuments() {
@@ -329,7 +358,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         findNavController().navigate(action)
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         if (show) {
             binding.rlClient.visibility = GONE
             showMifosProgressBar()
@@ -339,7 +368,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         }
     }
 
-    override fun showClientInformation(client: Client?) {
+    private fun showClientInformation(client: Client?) {
         if (client != null) {
             setToolbarTitle(getString(R.string.client) + " - " + client.displayName)
             isClientActive = client.active
@@ -393,7 +422,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
                     when (menuItem.itemId) {
                         R.id.client_image_upload -> uploadClientImage()
                         R.id.client_image_capture -> captureClientImage()
-                        R.id.client_image_remove -> mClientDetailsPresenter.deleteClientImage(
+                        R.id.client_image_remove -> viewModel.deleteClientImage(
                             clientId
                         )
 
@@ -410,17 +439,17 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         }
     }
 
-    override fun showUploadImageSuccessfully(response: ResponseBody?, imagePath: String?) {
+    private fun showUploadImageSuccessfully(response: ResponseBody?, imagePath: String?) {
         Toaster.show(binding.root, R.string.client_image_updated)
         binding.ivClientImage.setImageBitmap(BitmapFactory.decodeFile(imagePath))
     }
 
-    override fun showUploadImageFailed(s: String?) {
+    private fun showUploadImageFailed(s: String) {
         Toaster.show(binding.root, s)
         loadClientProfileImage()
     }
 
-    override fun showUploadImageProgressbar(b: Boolean) {
+    private fun showUploadImageProgressbar(b: Boolean) {
         if (b) {
             binding.pbImageProgressBar.visibility = View.VISIBLE
         } else {
@@ -434,7 +463,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         binding.pbImageProgressBar.visibility = GONE
     }
 
-    override fun showClientImageDeletedSuccessfully() {
+    private fun showClientImageDeletedSuccessfully() {
         Toaster.show(binding.root, "Image deleted")
         binding.ivClientImage.setImageDrawable(
             ContextCompat.getDrawable(
@@ -444,7 +473,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         )
     }
 
-    override fun showClientAccount(clientAccounts: ClientAccounts) {
+    private fun showClientAccount(clientAccounts: ClientAccounts) {
         // Proceed only when the fragment is added to the activity.
         if (!isAdded) {
             return
@@ -511,7 +540,7 @@ class ClientDetailsFragment : MifosBaseFragment(), ClientDetailsMvpView {
         }
     }
 
-    override fun showFetchingError(s: String?) {
+    private fun showFetchingError(s: String) {
         Toast.makeText(activity, s, Toast.LENGTH_SHORT).show()
     }
 
