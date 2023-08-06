@@ -6,7 +6,7 @@ package com.mifos.utils
 
 import com.google.gson.Gson
 import com.mifos.objects.mifoserror.MifosError
-import retrofit2.adapter.rxjava.HttpException
+import retrofit2.HttpException
 import rx.plugins.RxJavaPlugins
 
 object MFErrorParser {
@@ -22,7 +22,7 @@ object MFErrorParser {
         var errorMessage: String? = ""
         try {
             if (throwableError is HttpException) {
-                errorMessage = throwableError.response().errorBody().string()
+                errorMessage = throwableError.response()?.errorBody()?.string()
                 errorMessage = parseError(errorMessage).errors[0].defaultUserMessage
             } else {
                 errorMessage = throwableError.toString()

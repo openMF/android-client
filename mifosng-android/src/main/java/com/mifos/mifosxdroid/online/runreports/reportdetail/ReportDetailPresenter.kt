@@ -6,7 +6,7 @@ import com.mifos.objects.runreports.DataRow
 import com.mifos.objects.runreports.FullParameterListResponse
 import com.mifos.utils.MFErrorParser
 import org.json.JSONObject
-import retrofit2.adapter.rxjava.HttpException
+import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -48,8 +48,8 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
                         mvpView?.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
-                                    .string()
+                                val errorMessage = e.response()?.errorBody()
+                                    ?.string()
 
                                 // Default User message is null in these queries most of the times.
                                 // Hence, show Developer message.
@@ -84,8 +84,8 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
                         mvpView?.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
-                                    .string()
+                                val errorMessage = e.response()?.errorBody()
+                                    ?.string()
                                 mvpView?.showError(
                                     MFErrorParser.parseError(errorMessage)
                                         .errors[0].developerMessage
@@ -117,8 +117,8 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
                         mvpView?.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
-                                    .string()
+                                val errorMessage = e.response()?.errorBody()
+                                    ?.string()
                                 mvpView?.showError(
                                     MFErrorParser.parseError(errorMessage)
                                         .errors[0].developerMessage
@@ -150,8 +150,8 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
                         mvpView?.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
-                                    .string()
+                                val errorMessage = e.response()?.errorBody()
+                                    ?.string()
                                 mvpView?.showError(
                                     MFErrorParser.parseError(errorMessage)
                                         .errors[0].developerMessage
@@ -183,8 +183,8 @@ class ReportDetailPresenter @Inject constructor(private val dataManager: DataMan
                         mvpView?.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
-                                    .string()
+                                val errorMessage = e.response()?.errorBody()
+                                    ?.string()
                                 mvpView?.showError(
                                     JSONObject(errorMessage)
                                         .getString("developerMessage")

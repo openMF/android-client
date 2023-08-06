@@ -5,11 +5,10 @@ import com.mifos.api.datamanager.DataManagerDocument
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.utils.MFErrorParser
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.adapter.rxjava.HttpException
+import retrofit2.HttpException
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
@@ -48,10 +47,10 @@ class DocumentDialogPresenter @Inject constructor(private val mDataManagerDocume
 
                 override fun onError(e: Throwable) {
                     mvpView?.showProgressbar(false)
-                    val errorMessage: String
+                    val errorMessage: String?
                     try {
                         if (e is HttpException) {
-                            errorMessage = e.response().errorBody().string()
+                            errorMessage = e.response()?.errorBody()?.string()
                             mvpView?.showUploadError(
                                 MFErrorParser.parseError(errorMessage)
                                     .developerMessage

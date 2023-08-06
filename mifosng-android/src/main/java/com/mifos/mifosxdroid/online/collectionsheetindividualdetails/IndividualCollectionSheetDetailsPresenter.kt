@@ -9,7 +9,7 @@ import com.mifos.objects.accounts.loan.PaymentTypeOptions
 import com.mifos.objects.collectionsheet.ClientCollectionSheet
 import com.mifos.objects.collectionsheet.LoanAndClientName
 import com.mifos.utils.MFErrorParser
-import retrofit2.adapter.rxjava.HttpException
+import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -47,8 +47,8 @@ class IndividualCollectionSheetDetailsPresenter @Inject internal constructor(pri
                         mvpView!!.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
-                                        .string()
+                                val errorMessage = e.response()?.errorBody()
+                                        ?.string()
                                 mvpView!!.showError(MFErrorParser.parseError(errorMessage)
                                         .errors[0].defaultUserMessage)
                             }

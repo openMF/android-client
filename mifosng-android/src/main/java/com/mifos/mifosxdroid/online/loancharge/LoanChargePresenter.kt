@@ -4,7 +4,7 @@ import com.mifos.api.DataManager
 import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.objects.client.Charges
 import com.mifos.utils.MFErrorParser
-import retrofit2.adapter.rxjava.HttpException
+import retrofit2.HttpException
 import rx.Subscriber
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -39,8 +39,8 @@ class LoanChargePresenter @Inject constructor(private val mDataManager: DataMana
                         mvpView!!.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
-                                        .string()
+                                val errorMessage = e.response()?.errorBody()
+                                        ?.string()
                                 mvpView!!.showFetchingError(MFErrorParser
                                         .parseError(errorMessage)
                                         .errors[0].defaultUserMessage)

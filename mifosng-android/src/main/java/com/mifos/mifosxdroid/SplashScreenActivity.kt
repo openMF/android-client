@@ -9,7 +9,7 @@ import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.mifos.api.BaseUrl
 import com.mifos.mifosxdroid.core.MifosBaseActivity
-import com.mifos.mifosxdroid.login.LoginActivity
+import com.mifos.ui.activities.LoginActivity
 import com.mifos.mifosxdroid.passcode.PassCodeActivity
 import com.mifos.mobile.passcode.utils.PassCodeConstants
 import com.mifos.utils.PrefManager

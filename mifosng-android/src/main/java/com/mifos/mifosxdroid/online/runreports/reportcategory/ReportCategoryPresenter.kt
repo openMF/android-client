@@ -4,7 +4,7 @@ import com.mifos.api.datamanager.DataManagerRunReport
 import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.objects.runreports.client.ClientReportTypeItem
 import com.mifos.utils.MFErrorParser
-import retrofit2.adapter.rxjava.HttpException
+import retrofit2.HttpException
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
@@ -51,8 +51,8 @@ class ReportCategoryPresenter @Inject constructor(private val dataManager: DataM
                     mvpView?.showProgressbar(false)
                     try {
                         if (e is HttpException) {
-                            val errorMessage = e.response().errorBody()
-                                .string()
+                            val errorMessage = e.response()?.errorBody()
+                                ?.string()
                             // Default User message is null in these queries most of the times.
                             // Hence, show Developer message.
                             mvpView?.showError(

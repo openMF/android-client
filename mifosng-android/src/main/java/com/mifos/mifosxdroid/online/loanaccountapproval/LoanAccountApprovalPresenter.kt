@@ -5,7 +5,7 @@ import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.objects.accounts.loan.LoanApproval
 import com.mifos.utils.MFErrorParser
-import retrofit2.adapter.rxjava.HttpException
+import retrofit2.HttpException
 import rx.Subscriber
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -40,8 +40,8 @@ class LoanAccountApprovalPresenter @Inject constructor(private val mDataManager:
                         mvpView!!.showProgressbar(false)
                         try {
                             if (e is HttpException) {
-                                val errorMessage = e.response().errorBody()
-                                        .string()
+                                val errorMessage = e.response()?.errorBody()
+                                        ?.string()
                                 mvpView!!.showLoanApproveFailed(
                                         MFErrorParser.parseError(errorMessage)
                                                 .errors[0].defaultUserMessage)

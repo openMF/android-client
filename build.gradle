@@ -36,10 +36,10 @@ ext {
     rulesVersion = '0.4.1'
 
     //retrofit version
-    retrofitVersionLatest = '2.2.0'
+    retrofitVersionLatest = '2.9.0'
 
     //okHttp version
-    okHttp3Version = '4.8.1'
+    okHttp3Version = '4.11.0'
     okHttp3MainVersion = '4.9.2'
 
     // flipTable version
