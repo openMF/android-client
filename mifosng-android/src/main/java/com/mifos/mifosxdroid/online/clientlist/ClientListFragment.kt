@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.view.ActionMode
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,9 +29,10 @@ import com.mifos.mifosxdroid.databinding.FragmentClientBinding
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment
 import com.mifos.objects.client.Client
 import com.mifos.objects.navigation.ClientArgs
+import com.mifos.states.ClientListUiState
 import com.mifos.utils.FragmentConstants
+import com.mifos.viewmodels.ClientListViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by ishankhanna on 09/02/14.
@@ -57,10 +59,12 @@ import javax.inject.Inject
  * and unregister the ScrollListener and SwipeLayout.
 </Client> */
 @AndroidEntryPoint
-class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshListener {
+class ClientListFragment : MifosBaseFragment(), OnRefreshListener {
 
     private lateinit var binding: FragmentClientBinding
     private val arg: ClientListFragmentArgs by navArgs()
+
+    private lateinit var viewModel: ClientListViewModel
 
     val mClientNameListAdapter by lazy {
         ClientNameListAdapter(
@@ -98,8 +102,6 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
         )
     }
 
-    @Inject
-    lateinit var mClientListPresenter: ClientListPresenter
     private lateinit var clientList: List<Client>
     private var selectedClients: MutableList<Client>? = null
     private var actionModeCallback: ActionModeCallback? = null
@@ -129,7 +131,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
         binding = FragmentClientBinding.inflate(inflater, container, false)
         if (!isParentFragment) (activity as HomeActivity).supportActionBar?.title =
             getString(R.string.clients)
-        mClientListPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[ClientListViewModel::class.java]
 
         //setting all the UI content to the view
         showUserInterface()
@@ -141,7 +143,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
             binding.rvClients.addOnScrollListener(object :
                 EndlessRecyclerViewScrollListener(it) {
                 override fun onLoadMore(page: Int, totalItemCount: Int) {
-                    mClientListPresenter.loadClients(true, totalItemCount)
+                    viewModel.loadClients(true, totalItemCount)
                 }
             })
         }
@@ -152,12 +154,48 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
          * Client Lis to show. and Presenter make transaction to Database to load saved clients.
          */
         if (isParentFragment) {
-            mClientListPresenter.showParentClients(clientList)
+            viewModel.showParentClients(clientList)
             binding.pbClient.visibility = View.GONE
         } else {
-            mClientListPresenter.loadClients(false, 0)
+            viewModel.loadClients(false, 0)
         }
-        mClientListPresenter.loadDatabaseClients()
+        viewModel.loadDatabaseClients()
+
+        viewModel.clientListUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is ClientListUiState.ShowClientList -> {
+                    showProgressbar(false)
+                    showClientList(it.clients)
+                }
+
+                is ClientListUiState.ShowEmptyClientList -> {
+                    showProgressbar(false)
+                    showEmptyClientList(it.message)
+                }
+
+                is ClientListUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError()
+                }
+
+                is ClientListUiState.ShowLoadMoreClients -> {
+                    showProgressbar(false)
+                    showLoadMoreClients(it.clients)
+                }
+
+                is ClientListUiState.ShowMessage -> {
+                    showProgressbar(false)
+                    showMessage(it.message)
+                }
+
+                is ClientListUiState.ShowProgressbar -> showProgressbar(it.state)
+                is ClientListUiState.UnregisterSwipeAndScrollListener -> {
+                    showProgressbar(false)
+                    unregisterSwipeAndScrollListener()
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -188,7 +226,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
     /**
      * This method initializes the all Views.
      */
-    override fun showUserInterface() {
+    private fun showUserInterface() {
         mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager?.orientation = LinearLayoutManager.VERTICAL
         binding.rvClients.layoutManager = mLayoutManager
@@ -208,8 +246,8 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      */
     override fun onRefresh() {
         showUserInterface()
-        mClientListPresenter.loadClients(false, 0)
-        mClientListPresenter.loadDatabaseClients()
+        viewModel.loadClients(false, 0)
+        viewModel.loadDatabaseClients()
         if (actionMode != null) actionMode?.finish()
     }
 
@@ -217,7 +255,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      * This Method unregister the RecyclerView OnScrollListener and SwipeRefreshLayout
      * and NoClientIcon click event.
      */
-    override fun unregisterSwipeAndScrollListener() {
+    private fun unregisterSwipeAndScrollListener() {
         binding.rvClients.clearOnScrollListeners()
         binding.swipeContainer.isEnabled = false
     }
@@ -227,7 +265,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      *
      * @param message String Message to show.
      */
-    override fun showMessage(message: Int) {
+    private fun showMessage(message: Int) {
         Toaster.show(binding.root, getStringMessage(message))
     }
 
@@ -236,14 +274,14 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      */
     fun reloadOnError() {
         sweetUIErrorHandler?.hideSweetErrorLayoutUI(binding.rvClients, binding.layoutError)
-        mClientListPresenter.loadClients(false, 0)
-        mClientListPresenter.loadDatabaseClients()
+        viewModel.loadClients(false, 0)
+        viewModel.loadDatabaseClients()
     }
 
     /**
      * Setting ClientList to the Adapter and updating the Adapter.
      */
-    override fun showClientList(clients: List<Client>) {
+    private fun showClientList(clients: List<Client>) {
         clientList = clients
         mClientNameListAdapter.setClients(clients)
         mClientNameListAdapter.notifyDataSetChanged()
@@ -254,7 +292,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      *
      * @param clients List<Client></Client>>
      */
-    override fun showLoadMoreClients(clients: List<Client>?) {
+    private fun showLoadMoreClients(clients: List<Client>?) {
         clientList.addAll()
         mClientNameListAdapter.notifyDataSetChanged()
     }
@@ -264,7 +302,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      *
      * @param message String Message to show user.
      */
-    override fun showEmptyClientList(message: Int) {
+    private fun showEmptyClientList(message: Int) {
         sweetUIErrorHandler?.showSweetEmptyUI(
             getString(R.string.client),
             getString(message),
@@ -278,7 +316,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      * This Method Will be called. When Presenter failed to First page of ClientList from Rest API.
      * Then user look the Message that failed to fetch clientList.
      */
-    override fun showError() {
+    private fun showError() {
         val errorMessage = getStringMessage(R.string.failed_to_load_client)
         sweetUIErrorHandler?.showSweetErrorUI(
             errorMessage, R.drawable.ic_error_black_24dp,
@@ -290,7 +328,7 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
      * show MifosBaseActivity ProgressBar, if mClientNameListAdapter.getItemCount() == 0
      * otherwise show SwipeRefreshLayout.
      */
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         binding.swipeContainer.isRefreshing = show
         if (show && mClientNameListAdapter.itemCount == 0) {
             binding.pbClient.visibility = View.VISIBLE
@@ -303,7 +341,6 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
     override fun onDestroyView() {
         super.onDestroyView()
         hideMifosProgressBar()
-        mClientListPresenter.detachView()
         //As the Fragment Detach Finish the ActionMode
         if (actionMode != null) actionMode?.finish()
     }
@@ -382,52 +419,6 @@ class ClientListFragment : MifosBaseFragment(), ClientListMvpView, OnRefreshList
 
     companion object {
         val LOG_TAG = ClientListFragment::class.java.simpleName
-
-        /**
-         * This method will be called, whenever ClientListFragment will not have Parent Fragment.
-         * So, Presenter make the call to Rest API and fetch the Client List and show in UI
-         *
-         * @return ClientListFragment
-         */
-
-//        @JvmStatic
-//        fun newInstance(): ClientListFragment {
-//            val arguments = Bundle()
-//            val clientListFragment = ClientListFragment()
-//            clientListFragment.arguments = arguments
-//            return clientListFragment
-//        }
-
-        /**
-         * This Method will be called, whenever Parent (Fragment or Activity) will be true and Presenter
-         * do not need to make Rest API call to server. Parent (Fragment or Activity) already fetched
-         * the clients and for showing, they call ClientListFragment.
-         *
-         *
-         * Example : Showing Group Clients.
-         *
-         * @param clientList       List<Client>
-         * @param isParentFragment true
-         * @return ClientListFragment
-        </Client> */
-//        @JvmStatic
-//        fun newInstance(
-//            clientList: List<Client?>?,
-//            isParentFragment: Boolean
-//        ): ClientListFragment {
-//            val clientListFragment = ClientListFragment()
-//            val args = Bundle()
-//            if (isParentFragment && clientList != null) {
-//                args.putParcelableArrayList(
-//                    Constants.CLIENTS,
-//                    clientList as ArrayList<out Parcelable?>?
-//                )
-//                args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, true)
-//                clientListFragment.arguments = args
-//            }
-//            return clientListFragment
-//        }
-
     }
 }
 

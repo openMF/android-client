@@ -3,6 +3,7 @@ package com.mifos.mifosxdroid.injection.module
 import com.mifos.api.DataManager
 import com.mifos.api.datamanager.DataManagerAuth
 import com.mifos.api.datamanager.DataManagerCenter
+import com.mifos.api.datamanager.DataManagerCharge
 import com.mifos.api.datamanager.DataManagerClient
 import com.mifos.api.datamanager.DataManagerDataTable
 import com.mifos.api.datamanager.DataManagerGroups
@@ -14,12 +15,18 @@ import com.mifos.repositories.CenterDetailsRepository
 import com.mifos.repositories.CenterDetailsRepositoryImp
 import com.mifos.repositories.CenterListRepository
 import com.mifos.repositories.CenterListRepositoryImp
+import com.mifos.repositories.ClientChargeRepository
+import com.mifos.repositories.ClientChargeRepositoryImp
 import com.mifos.repositories.ClientDetailsRepository
 import com.mifos.repositories.ClientDetailsRepositoryImp
+import com.mifos.repositories.ClientListRepository
+import com.mifos.repositories.ClientListRepositoryImp
 import com.mifos.repositories.GroupDetailsRepository
 import com.mifos.repositories.GroupDetailsRepositoryImp
 import com.mifos.repositories.GroupListRepository
 import com.mifos.repositories.GroupListRepositoryImp
+import com.mifos.repositories.GroupsListRepository
+import com.mifos.repositories.GroupsListRepositoryImp
 import com.mifos.repositories.LoginRepository
 import com.mifos.repositories.LoginRepositoryImp
 import com.mifos.repositories.PathTrackingRepository
@@ -89,5 +96,20 @@ class RepositoryModule {
         dataManagerGroups: DataManagerGroups
     ): ActivateRepository {
         return ActivateRepositoryImp(dataManagerClient, dataManagerCenter, dataManagerGroups)
+    }
+
+    @Provides
+    fun providesClientListRepository(dataManagerClient: DataManagerClient) : ClientListRepository {
+        return ClientListRepositoryImp(dataManagerClient)
+    }
+
+    @Provides
+    fun providesGroupsListRepository(dataManagerGroups: DataManagerGroups) : GroupsListRepository {
+        return GroupsListRepositoryImp(dataManagerGroups)
+    }
+
+    @Provides
+    fun providesClientChargeRepository(dataManagerCharge: DataManagerCharge) : ClientChargeRepository {
+        return ClientChargeRepositoryImp(dataManagerCharge)
     }
 }
