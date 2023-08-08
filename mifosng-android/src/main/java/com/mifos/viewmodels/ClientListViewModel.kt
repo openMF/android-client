@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.online.clientlist.ClientListPresenter
 import com.mifos.objects.client.Client
 import com.mifos.objects.client.Page
 import com.mifos.repositories.ClientListRepository
@@ -15,6 +14,9 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 
+/**
+ * Created by Aditya Gupta on 08/08/23.
+ */
 @HiltViewModel
 class ClientListViewModel @Inject constructor(private val repository: ClientListRepository) :
     ViewModel() {
@@ -93,24 +95,17 @@ class ClientListViewModel @Inject constructor(private val repository: ClientList
      * @param limit  Maximum size of the Center
      */
     private fun loadClients(paged: Boolean, offset: Int, limit: Int) {
-//        EspressoIdlingResource.increment() // App is busy until further notice.
-//        checkViewAttached()
-//        mvpView?.showProgressbar(true)
-
         repository.getAllClients(paged, offset, limit)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<Page<Client>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-//                    mvpView?.showProgressbar(false)
                     _clientListUiState.value = ClientListUiState.ShowProgressbar(true)
                     if (loadmore) {
-//                        mvpView?.showMessage(R.string.failed_to_load_client)
                         _clientListUiState.value =
                             ClientListUiState.ShowMessage(R.string.failed_to_load_client)
                     } else {
-//                        mvpView?.showError()
                         _clientListUiState.value = ClientListUiState.ShowError
                     }
                 }
@@ -118,22 +113,17 @@ class ClientListViewModel @Inject constructor(private val repository: ClientList
                 override fun onNext(clientPage: Page<Client>) {
                     mSyncClientList = clientPage.pageItems
                     if (mSyncClientList.isEmpty() && !loadmore) {
-//                        mvpView?.showEmptyClientList(R.string.client)
-//                        mvpView?.unregisterSwipeAndScrollListener()
                         _clientListUiState.value =
                             ClientListUiState.ShowEmptyClientList(R.string.client)
                         _clientListUiState.value =
                             ClientListUiState.UnregisterSwipeAndScrollListener
                     } else if (mSyncClientList.isEmpty() && loadmore) {
-//                        mvpView?.showMessage(R.string.no_more_clients_available)
                         _clientListUiState.value =
                             ClientListUiState.ShowMessage(R.string.no_more_clients_available)
                     } else {
                         mRestApiClientSyncStatus = true
                         setAlreadyClientSyncStatus()
                     }
-//                    mvpView?.showProgressbar(false)
-//                    EspressoIdlingResource.decrement() // App is idle.
                 }
             })
     }
@@ -151,7 +141,6 @@ class ClientListViewModel @Inject constructor(private val repository: ClientList
             .subscribe(object : Subscriber<Page<Client>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-//                    mvpView?.showMessage(R.string.failed_to_load_db_clients)
                     _clientListUiState.value =
                         ClientListUiState.ShowMessage(R.string.failed_to_load_db_clients)
                 }
@@ -183,9 +172,5 @@ class ClientListViewModel @Inject constructor(private val repository: ClientList
             }
         }
         return clients
-    }
-
-    companion object {
-        private val LOG_TAG = ClientListPresenter::class.java.simpleName
     }
 }

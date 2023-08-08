@@ -1,15 +1,14 @@
 package com.mifos.mifosxdroid.activity.pinpointclient
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
@@ -25,9 +24,11 @@ import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.ActivityPinpointLocationBinding
 import com.mifos.objects.client.ClientAddressRequest
 import com.mifos.objects.client.ClientAddressResponse
+import com.mifos.states.PinPointClientUiState
 import com.mifos.utils.CheckSelfPermissionAndRequest.checkSelfPermission
 import com.mifos.utils.CheckSelfPermissionAndRequest.requestPermission
 import com.mifos.utils.Constants
+import com.mifos.viewmodels.PinPointClientViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -35,18 +36,17 @@ import javax.inject.Inject
  * @author fomenkoo
  */
 @AndroidEntryPoint
-class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRefreshListener,
+class PinpointClientActivity : MifosBaseActivity(), OnRefreshListener,
     PinpointClientAdapter.OnItemClick {
 
     private lateinit var binding: ActivityPinpointLocationBinding
     private val arg: PinpointClientActivityArgs by navArgs()
 
+    private lateinit var viewModel: PinPointClientViewModel
+
     @Inject
     lateinit var pinpointClientAdapter: PinpointClientAdapter
 
-    @JvmField
-    @Inject
-    var pinPointClientPresenter: PinPointClientPresenter? = null
     private var clientId = 0
     private var apptableId: Int? = 0
     private var dataTableId: Int? = 0
@@ -71,7 +71,7 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
 
                     1 -> apptableId?.let {
                         dataTableId?.let { it1 ->
-                            pinPointClientPresenter?.deleteClientPinpointLocation(
+                            viewModel.deleteClientPinpointLocation(
                                 it, it1
                             )
                         }
@@ -88,14 +88,49 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
         super.onCreate(savedInstanceState)
         binding = ActivityPinpointLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        pinPointClientPresenter?.attachView(this)
+        viewModel = ViewModelProvider(this)[PinPointClientViewModel::class.java]
         showBackButton()
         clientId = arg.clientId
         showUserInterface()
-        pinPointClientPresenter?.getClientPinpointLocations(clientId)
+        viewModel.getClientPinpointLocations(clientId)
+
+        viewModel.pinPointClientUiState.observe(this) {
+            when (it) {
+                is PinPointClientUiState.ShowClientPinpointLocations -> {
+                    showProgressbar(false)
+                    showClientPinpointLocations(it.clientAddressResponses)
+                }
+
+                is PinPointClientUiState.ShowEmptyAddress -> {
+                    showProgressbar(false)
+                    showEmptyAddress()
+                }
+
+                is PinPointClientUiState.ShowFailedToFetchAddress -> {
+                    showProgressbar(false)
+                    showFailedToFetchAddress()
+                }
+
+                is PinPointClientUiState.ShowMessage -> {
+                    showProgressDialog(false, null)
+                    showMessage(it.message)
+                }
+
+                is PinPointClientUiState.ShowProgressDialog -> showProgressDialog(
+                    it.show,
+                    it.message
+                )
+
+                is PinPointClientUiState.ShowProgressbar -> showProgressbar(true)
+                is PinPointClientUiState.UpdateClientAddress -> {
+                    showProgressDialog(false, null)
+                    updateClientAddress(it.genericResponse)
+                }
+            }
+        }
     }
 
-    override fun showUserInterface() {
+    private fun showUserInterface() {
         val mLayoutManager = LinearLayoutManager(this)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
         pinpointClientAdapter.setContext(this)
@@ -110,7 +145,7 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
         binding.swipeContainer.setOnRefreshListener(this)
     }
 
-    override fun showPlacePiker(requestCode: Int) {
+    private fun showPlacePiker(requestCode: Int) {
         try {
             val intentBuilder = PlacePicker.IntentBuilder()
             val intent = intentBuilder.build(this)
@@ -129,8 +164,7 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
     /**
      * This Method is Requesting the Permission
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    override fun requestPermission(requestCode: Int) {
+    private fun requestPermission(requestCode: Int) {
         requestPermission(
             this@PinpointClientActivity,
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -157,6 +191,7 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
         permissions: Array<String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             REQUEST_ADD_PLACE_PICKER -> {
                 run {
@@ -212,35 +247,35 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
 
     override fun onRefresh() {
         binding.llError.visibility = View.GONE
-        pinPointClientPresenter?.getClientPinpointLocations(clientId)
+        viewModel.getClientPinpointLocations(clientId)
     }
 
-    override fun showClientPinpointLocations(clientAddressResponses: List<ClientAddressResponse>) {
+    private fun showClientPinpointLocations(clientAddressResponses: List<ClientAddressResponse>) {
         binding.llError.visibility = View.GONE
         addresses = clientAddressResponses
         pinpointClientAdapter.setAddress(clientAddressResponses)
     }
 
-    override fun showFailedToFetchAddress() {
+    private fun showFailedToFetchAddress() {
         binding.llError.visibility = View.VISIBLE
         binding.tvNoLocation.text = getString(R.string.failed_to_fetch_pinpoint_location)
     }
 
-    override fun showEmptyAddress() {
+    private fun showEmptyAddress() {
         binding.llError.visibility = View.VISIBLE
         binding.tvNoLocation.text = getString(R.string.empty_client_address)
     }
 
-    override fun updateClientAddress(message: Int) {
+    private fun updateClientAddress(message: Int) {
         showMessage(message)
-        pinPointClientPresenter?.getClientPinpointLocations(clientId)
+        viewModel.getClientPinpointLocations(clientId)
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         binding.swipeContainer.isRefreshing = show
     }
 
-    override fun showProgressDialog(show: Boolean, message: Int?) {
+    private fun showProgressDialog(show: Boolean, message: Int?) {
         if (show) {
             showProgress(getString(message!!))
         } else {
@@ -248,7 +283,7 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
         }
     }
 
-    override fun showMessage(message: Int) {
+    private fun showMessage(message: Int) {
         show(findViewById(android.R.id.content), getString(message))
     }
 
@@ -282,11 +317,11 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
                 place.latLng.longitude
             )
             if (requestCode == REQUEST_ADD_PLACE_PICKER) {
-                pinPointClientPresenter?.addClientPinpointLocation(clientId, clientAddressRequest)
+                viewModel.addClientPinpointLocation(clientId, clientAddressRequest)
             } else if (requestCode == REQUEST_UPDATE_PLACE_PICKER) {
                 apptableId?.let {
                     dataTableId?.let { it1 ->
-                        pinPointClientPresenter?.updateClientPinpointLocation(
+                        viewModel.updateClientPinpointLocation(
                             it, it1,
                             clientAddressRequest
                         )
@@ -296,11 +331,6 @@ class PinpointClientActivity : MifosBaseActivity(), PinPointClientMvpView, OnRef
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        pinPointClientPresenter?.detachView()
     }
 
     companion object {

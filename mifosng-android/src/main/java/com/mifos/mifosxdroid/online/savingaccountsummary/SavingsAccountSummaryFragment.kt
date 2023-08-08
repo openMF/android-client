@@ -16,6 +16,7 @@ import android.widget.AbsListView
 import android.widget.AdapterView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
@@ -28,13 +29,15 @@ import com.mifos.objects.accounts.savings.DepositType.ServerTypes
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.objects.accounts.savings.Status
 import com.mifos.objects.accounts.savings.Transaction
+import com.mifos.states.SavingsAccountSummaryUiState
 import com.mifos.utils.Constants
+import com.mifos.viewmodels.SavingsAccountSummaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
 @AndroidEntryPoint
-class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSummaryMvpView {
+class SavingsAccountSummaryFragment : ProgressableFragment() {
 
     private lateinit var binding: FragmentSavingsAccountSummaryBinding
 
@@ -42,13 +45,12 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
     var savingsAccountType: DepositType? = null
     private val arg: SavingsAccountSummaryFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mSavingAccountSummaryPresenter: SavingsAccountSummaryPresenter
+    private lateinit var viewModel : SavingsAccountSummaryViewModel
 
     // Cached List of all savings account transactions
     // that are used for inflation of rows in
     // Infinite Scroll View
-    var listOfAllTransactions: MutableList<Transaction> = ArrayList()
+    private var listOfAllTransactions: MutableList<Transaction> = ArrayList()
     private var savingsAccountTransactionsListAdapter: SavingsAccountTransactionsListAdapter? = null
     private var processSavingTransactionAction = -1
     private var savingsAccountWithAssociations: SavingsAccountWithAssociations? = null
@@ -78,9 +80,22 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSavingsAccountSummaryBinding.inflate(inflater, container, false)
-        mSavingAccountSummaryPresenter.attachView(this)
-        mSavingAccountSummaryPresenter
-            .loadSavingAccount(savingsAccountType?.endpoint, savingsAccountNumber)
+        viewModel = ViewModelProvider(this)[SavingsAccountSummaryViewModel::class.java]
+        viewModel.loadSavingAccount(savingsAccountType?.endpoint, savingsAccountNumber)
+
+        viewModel.savingsAccountSummaryUiState.observe(viewLifecycleOwner) {
+            when(it) {
+                is SavingsAccountSummaryUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+                is SavingsAccountSummaryUiState.ShowProgressbar -> showProgressbar(true)
+                is SavingsAccountSummaryUiState.ShowSavingAccount -> {
+                    showProgressbar(false)
+                    showSavingAccount(it.savingsAccountWithAssociations)
+                }
+            }
+        }
         return binding.root
     }
 
@@ -261,7 +276,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         }
     }
 
-    override fun showSavingAccount(savingsAccountWithAssociations: SavingsAccountWithAssociations?) {
+    private fun showSavingAccount(savingsAccountWithAssociations: SavingsAccountWithAssociations?) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (activity == null) return
         if (savingsAccountWithAssociations != null) {
@@ -359,7 +374,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         dialog.show()
     }
 
-    override fun showSavingsActivatedSuccessfully(genericResponse: GenericResponse?) {
+    private fun showSavingsActivatedSuccessfully(genericResponse: GenericResponse?) {
         Toast.makeText(
             activity, resources.getString(R.string.savings_account_activated),
             Toast.LENGTH_LONG
@@ -367,21 +382,16 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         requireActivity().supportFragmentManager.popBackStack()
     }
 
-    override fun showFetchingError(s: Int) {
+    private fun showFetchingError(s: Int) {
         Toast.makeText(activity, s, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showFetchingError(errorMessage: String?) {
+    private fun showFetchingError(errorMessage: String?) {
         Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         showProgress(b)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mSavingAccountSummaryPresenter.detachView()
     }
 
     private fun doTransaction(
@@ -406,20 +416,5 @@ class SavingsAccountSummaryFragment : ProgressableFragment(), SavingsAccountSumm
         const val MENU_ITEM_DOCUMENTS = 1004
         private const val ACTION_APPROVE_SAVINGS = 4
         private const val ACTION_ACTIVATE_SAVINGS = 5
-
-        @JvmStatic
-        fun newInstance(
-            savingsAccountNumber: Int,
-            type: DepositType?,
-            parentFragment: Boolean
-        ): SavingsAccountSummaryFragment {
-            val fragment = SavingsAccountSummaryFragment()
-            val args = Bundle()
-            args.putInt(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountNumber)
-            args.putParcelable(Constants.SAVINGS_ACCOUNT_TYPE, type)
-            args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, parentFragment)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

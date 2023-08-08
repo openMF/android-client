@@ -6,6 +6,9 @@ import com.mifos.objects.client.Page
 import rx.Observable
 import javax.inject.Inject
 
+/**
+ * Created by Aditya Gupta on 08/08/23.
+ */
 class ClientChargeRepositoryImp @Inject constructor(private val dataManagerCharge: DataManagerCharge) :
     ClientChargeRepository {
     override fun getClientCharges(

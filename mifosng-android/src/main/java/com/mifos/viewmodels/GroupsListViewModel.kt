@@ -14,6 +14,9 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 
+/**
+ * Created by Aditya Gupta on 08/08/23.
+ */
 @HiltViewModel
 class GroupsListViewModel @Inject constructor(private val repository: GroupsListRepository) :
     ViewModel() {
@@ -82,34 +85,27 @@ class GroupsListViewModel @Inject constructor(private val repository: GroupsList
             .subscribe(object : Subscriber<Page<Group>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-//                    mvpView?.showProgressbar(false)
                     if (loadmore) {
-//                        mvpView?.showMessage(R.string.failed_to_fetch_groups)
                         _groupsListUiState.value =
                             GroupsListUiState.ShowMessage(R.string.failed_to_fetch_groups)
                     } else {
                         _groupsListUiState.value = GroupsListUiState.ShowFetchingError
-//                        mvpView?.showFetchingError()
                     }
                 }
 
                 override fun onNext(groupPage: Page<Group>) {
                     mSyncGroupList = groupPage.pageItems
                     if (mSyncGroupList.isEmpty() && !loadmore) {
-//                        mvpView?.showEmptyGroups(R.string.group)
                         _groupsListUiState.value = GroupsListUiState.ShowEmptyGroups(R.string.group)
-//                        mvpView?.unregisterSwipeAndScrollListener()
                         _groupsListUiState.value =
                             GroupsListUiState.UnregisterSwipeAndScrollListener
                     } else if (mSyncGroupList.isEmpty() && loadmore) {
-//                        mvpView?.showMessage(R.string.no_more_groups_available)
                         _groupsListUiState.value =
                             GroupsListUiState.ShowMessage(R.string.no_more_groups_available)
                     } else {
                         mRestApiGroupSyncStatus = true
                         setAlreadyClientSyncStatus()
                     }
-//                    mvpView?.showProgressbar(false)
                 }
             })
     }
@@ -122,7 +118,6 @@ class GroupsListViewModel @Inject constructor(private val repository: GroupsList
             .subscribe(object : Subscriber<Page<Group>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-//                    mvpView?.showMessage(R.string.failed_to_load_db_groups)
                     _groupsListUiState.value =
                         GroupsListUiState.ShowMessage(R.string.failed_to_load_db_groups)
                 }

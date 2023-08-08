@@ -7,7 +7,9 @@ import com.mifos.api.datamanager.DataManagerCharge
 import com.mifos.api.datamanager.DataManagerClient
 import com.mifos.api.datamanager.DataManagerDataTable
 import com.mifos.api.datamanager.DataManagerGroups
+import com.mifos.api.datamanager.DataManagerLoan
 import com.mifos.api.datamanager.DataManagerRunReport
+import com.mifos.api.datamanager.DataManagerSavings
 import com.mifos.api.datamanager.DataManagerSearch
 import com.mifos.repositories.ActivateRepository
 import com.mifos.repositories.ActivateRepositoryImp
@@ -21,16 +23,24 @@ import com.mifos.repositories.ClientDetailsRepository
 import com.mifos.repositories.ClientDetailsRepositoryImp
 import com.mifos.repositories.ClientListRepository
 import com.mifos.repositories.ClientListRepositoryImp
+import com.mifos.repositories.DataTableRepository
+import com.mifos.repositories.DataTableRepositoryImp
 import com.mifos.repositories.GroupDetailsRepository
 import com.mifos.repositories.GroupDetailsRepositoryImp
 import com.mifos.repositories.GroupListRepository
 import com.mifos.repositories.GroupListRepositoryImp
 import com.mifos.repositories.GroupsListRepository
 import com.mifos.repositories.GroupsListRepositoryImp
+import com.mifos.repositories.LoanAccountSummaryRepository
+import com.mifos.repositories.LoanAccountSummaryRepositoryImp
 import com.mifos.repositories.LoginRepository
 import com.mifos.repositories.LoginRepositoryImp
 import com.mifos.repositories.PathTrackingRepository
 import com.mifos.repositories.PathTrackingRepositoryImp
+import com.mifos.repositories.PinPointClientRepository
+import com.mifos.repositories.PinPointClientRepositoryImp
+import com.mifos.repositories.SavingsAccountSummaryRepository
+import com.mifos.repositories.SavingsAccountSummaryRepositoryImp
 import com.mifos.repositories.SearchRepository
 import com.mifos.repositories.SearchRepositoryImp
 import dagger.Module
@@ -111,5 +121,25 @@ class RepositoryModule {
     @Provides
     fun providesClientChargeRepository(dataManagerCharge: DataManagerCharge) : ClientChargeRepository {
         return ClientChargeRepositoryImp(dataManagerCharge)
+    }
+
+    @Provides
+    fun providesLoanAccountSummary(dataManagerLoan: DataManagerLoan) : LoanAccountSummaryRepository {
+        return LoanAccountSummaryRepositoryImp(dataManagerLoan)
+    }
+
+    @Provides
+    fun providesSavingsAccountSummaryRepository(dataManagerSavings: DataManagerSavings) : SavingsAccountSummaryRepository {
+        return SavingsAccountSummaryRepositoryImp(dataManagerSavings)
+    }
+
+    @Provides
+    fun providesDataTableRepository(dataManagerDataTable: DataManagerDataTable) : DataTableRepository {
+        return DataTableRepositoryImp(dataManagerDataTable)
+    }
+
+    @Provides
+    fun providesPinPointClientRepository(dataManagerClient: DataManagerClient) : PinPointClientRepository {
+        return PinPointClientRepositoryImp(dataManagerClient)
     }
 }

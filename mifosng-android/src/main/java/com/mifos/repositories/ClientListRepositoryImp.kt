@@ -6,6 +6,9 @@ import com.mifos.objects.client.Page
 import rx.Observable
 import javax.inject.Inject
 
+/**
+ * Created by Aditya Gupta on 08/08/23.
+ */
 class ClientListRepositoryImp @Inject constructor(private val dataManagerClient: DataManagerClient) : ClientListRepository {
 
     override fun getAllClients(paged: Boolean, offset: Int, limit: Int): Observable<Page<Client>> {

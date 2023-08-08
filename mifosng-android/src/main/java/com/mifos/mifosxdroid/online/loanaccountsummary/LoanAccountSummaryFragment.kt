@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
@@ -20,8 +21,10 @@ import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.databinding.FragmentLoanAccountSummaryBinding
 import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.objects.client.Charges
+import com.mifos.states.LoanAccountSummaryUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
+import com.mifos.viewmodels.LoanAccountSummaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -29,15 +32,15 @@ import javax.inject.Inject
  * Created by ishankhanna on 09/05/14.
  */
 @AndroidEntryPoint
-class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvpView {
+class LoanAccountSummaryFragment : ProgressableFragment() {
 
     private lateinit var binding: FragmentLoanAccountSummaryBinding
     private val arg: LoanAccountSummaryFragmentArgs by navArgs()
 
     var loanAccountNumber = 0
 
-    @Inject
-    lateinit var mLoanAccountSummaryPresenter: LoanAccountSummaryPresenter
+    private lateinit var viewModel : LoanAccountSummaryViewModel
+
     var chargesList: MutableList<Charges> = ArrayList()
 
     // Action Identifier in the onProcessTransactionClicked Method
@@ -58,9 +61,23 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLoanAccountSummaryBinding.inflate(inflater, container, false)
-
-        mLoanAccountSummaryPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[LoanAccountSummaryViewModel::class.java]
         inflateLoanAccountSummary()
+
+        viewModel.loanAccountSummaryUiState.observe(viewLifecycleOwner){
+            when(it) {
+                is LoanAccountSummaryUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+                is LoanAccountSummaryUiState.ShowLoanById -> {
+                    showProgressbar(false)
+                    showLoanById(it.loanWithAssociations)
+                }
+                is LoanAccountSummaryUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -77,7 +94,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
         setToolbarTitle(resources.getString(R.string.loanAccountSummary))
         //TODO Implement cases to enable/disable repayment button
         binding.btProcessLoanTransaction.isEnabled = false
-        mLoanAccountSummaryPresenter.loadLoanById(loanAccountNumber)
+        viewModel.loadLoanById(loanAccountNumber)
     }
 
     private fun onProcessTransactionClicked() {
@@ -232,7 +249,7 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
         findNavController().navigate(action)
     }
 
-    override fun showLoanById(loanWithAssociations: LoanWithAssociations) {
+    private fun showLoanById(loanWithAssociations: LoanWithAssociations) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (activity == null) return
         clientLoanWithAssociations = loanWithAssociations
@@ -287,17 +304,12 @@ class LoanAccountSummaryFragment : ProgressableFragment(), LoanAccountSummaryMvp
         }
     }
 
-    override fun showFetchingError(s: String?) {
+    private fun showFetchingError(s: String?) {
         Toast.makeText(activity, s, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         showProgress(b)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mLoanAccountSummaryPresenter.detachView()
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
