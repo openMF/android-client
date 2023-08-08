@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
@@ -26,20 +27,21 @@ import com.mifos.mifosxdroid.dialogfragments.identifierdialog.ClientIdentifierCr
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogFragment
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment
 import com.mifos.objects.noncore.Identifier
+import com.mifos.states.ClientIdentifiersUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
+import com.mifos.viewmodels.ClientIdentifiersViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
+class ClientIdentifiersFragment : MifosBaseFragment(),
     IdentifierOptionsListener, OnRefreshListener, ClientIdentifierCreationListener {
 
     private lateinit var binding: FragmentClientIdentifiersBinding
     private val arg: ClientIdentifiersFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mClientIdentifiersPresenter: ClientIdentifiersPresenter
+    private lateinit var viewModel: ClientIdentifiersViewModel
 
     @JvmField
     @Inject
@@ -59,22 +61,44 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentClientIdentifiersBinding.inflate(inflater, container, false)
-        mClientIdentifiersPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[ClientIdentifiersViewModel::class.java]
         showUserInterface()
         R.layout.fragment_client_identifiers
         loadIdentifiers()
+
+        viewModel.clientIdentifiersUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is ClientIdentifiersUiState.IdentifierDeletedSuccessfully -> {
+                    showProgressbar(false)
+                    identifierDeletedSuccessfully(it.genericResponse)
+                }
+
+                is ClientIdentifiersUiState.ShowClientIdentifiers -> {
+                    showProgressbar(false)
+                    showClientIdentifiers(it.identifiers)
+                }
+
+                is ClientIdentifiersUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is ClientIdentifiersUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
     private fun loadIdentifiers() {
-        mClientIdentifiersPresenter.loadIdentifiers(clientId)
+        viewModel.loadIdentifiers(clientId)
     }
 
     override fun onRefresh() {
         loadIdentifiers()
     }
 
-    override fun showUserInterface() {
+    private fun showUserInterface() {
         setToolbarTitle(getString(R.string.identifiers))
         mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager?.orientation = LinearLayoutManager.VERTICAL
@@ -89,8 +113,8 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
         binding.swipeContainer.setOnRefreshListener(this)
     }
 
-    override fun showClientIdentifiers(identifiers: MutableList<Identifier>) {
-        this.identifiers = identifiers
+    private fun showClientIdentifiers(identifiers: List<Identifier>) {
+        this.identifiers = identifiers as MutableList<Identifier>
         identifierListAdapter?.setIdentifiers(identifiers)
         identifierListAdapter?.notifyDataSetChanged()
         if (identifiers.isEmpty()) {
@@ -121,7 +145,7 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
         Toaster.show(binding.root, errorMessage)
     }
 
-    override fun showFetchingError(errorMessage: Int) {
+    private fun showFetchingError(errorMessage: Int) {
         Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
@@ -131,7 +155,7 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.menu_remove_identifier -> identifiers?.get(position)?.id?.let {
-                    mClientIdentifiersPresenter.deleteIdentifier(
+                    viewModel.deleteIdentifier(
                         clientId,
                         it, position
                     )
@@ -161,7 +185,7 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
         popup.show()
     }
 
-    override fun identifierDeletedSuccessfully(position: Int) {
+    private fun identifierDeletedSuccessfully(position: Int) {
         Toast.makeText(
             activity, R.string.identifier_deleted_successfully,
             Toast.LENGTH_SHORT
@@ -170,7 +194,7 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
         identifierListAdapter?.notifyItemRemoved(position)
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         binding.swipeContainer.isRefreshing = show
         if (show && identifierListAdapter?.itemCount == 0) {
             showMifosProgressBar()
@@ -197,13 +221,6 @@ class ClientIdentifiersFragment : MifosBaseFragment(), ClientIdentifiersMvpView,
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroyView() {
-
-        super.onDestroyView()
-        mClientIdentifiersPresenter.detachView()
-        hideMifosProgressBar()
     }
 
 }

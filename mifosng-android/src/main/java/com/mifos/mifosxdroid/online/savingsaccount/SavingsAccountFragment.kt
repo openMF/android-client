@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
@@ -24,12 +25,12 @@ import com.mifos.objects.client.Savings
 import com.mifos.objects.organisation.ProductSavings
 import com.mifos.objects.templates.savings.SavingProductsTemplate
 import com.mifos.services.data.SavingsPayload
-import com.mifos.utils.Constants
+import com.mifos.states.SavingAccountUiState
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Network
+import com.mifos.viewmodels.SavingAccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -39,23 +40,23 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
-    SavingsAccountMvpView, OnItemSelectedListener {
+    OnItemSelectedListener {
 
     private lateinit var binding: FragmentAddSavingsAccountBinding
     private val arg: SavingsAccountFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mSavingsAccountPresenter: SavingsAccountPresenter
+    private lateinit var viewModel: SavingAccountViewModel
+
     private var mfDatePicker: DialogFragment? = null
     private var productId: Int? = 0
     private var clientId = 0
     private var fieldOfficerId: Int? = 0
     private var groupId = 0
     private var submission_date: String? = null
-    var mFieldOfficerNames: MutableList<String> = ArrayList()
-    var mListSavingProductsNames: MutableList<String> = ArrayList()
-    var mFieldOfficerAdapter: ArrayAdapter<String>? = null
-    var mSavingProductsAdapter: ArrayAdapter<String>? = null
+    private var mFieldOfficerNames: MutableList<String> = ArrayList()
+    private var mListSavingProductsNames: MutableList<String> = ArrayList()
+    private var mFieldOfficerAdapter: ArrayAdapter<String>? = null
+    private var mSavingProductsAdapter: ArrayAdapter<String>? = null
     private var mSavingProductsTemplateByProductId: SavingProductsTemplate? = null
     private var mProductSavings: List<ProductSavings>? = null
     private var isGroupAccount = false
@@ -72,10 +73,40 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAddSavingsAccountBinding.inflate(inflater, container, false)
-        mSavingsAccountPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SavingAccountViewModel::class.java]
         inflateSubmissionDate()
         inflateSavingsSpinners()
-        mSavingsAccountPresenter.loadSavingsAccountsAndTemplate()
+        viewModel.loadSavingsAccountsAndTemplate()
+
+        viewModel.savingAccountUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SavingAccountUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is SavingAccountUiState.ShowFetchingErrorString -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is SavingAccountUiState.ShowProgress -> showProgressbar(true)
+                is SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully -> {
+                    showProgressbar(false)
+                    showSavingsAccountCreatedSuccessfully(it.savings)
+                }
+
+                is SavingAccountUiState.ShowSavingsAccountTemplateByProduct -> {
+                    showProgressbar(false)
+                    showSavingsAccountTemplateByProduct(it.savingProductsTemplate)
+                }
+
+                is SavingAccountUiState.ShowSavingsAccounts -> {
+                    showProgressbar(false)
+                    showSavingsAccounts(it.getProductSaving)
+                }
+            }
+        }
         return binding.root
     }
 
@@ -159,7 +190,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
             savingsPayload.enforceMinRequiredBalance = binding.cbEnforceRequiredBalance.isChecked
             savingsPayload.minRequiredOpeningBalance = binding.etMinRequiredBalance.editableText
                 .toString()
-            mSavingsAccountPresenter.createSavingsAccount(savingsPayload)
+            viewModel.createSavingsAccount(savingsPayload)
         } else {
             Toaster.show(binding.root, R.string.error_network_not_available)
         }
@@ -190,17 +221,17 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
             .replace("-", " ")
     }
 
-    override fun showSavingsAccounts(productSavings: List<ProductSavings>?) {
+    private fun showSavingsAccounts(productSavings: List<ProductSavings>?) {
         mProductSavings = productSavings
-        mSavingsAccountPresenter
+        viewModel
             .filterSavingProductsNames(productSavings).let { mListSavingProductsNames.addAll(it) }
         mSavingProductsAdapter?.notifyDataSetChanged()
     }
 
-    override fun showSavingsAccountTemplateByProduct(savingProductsTemplate: SavingProductsTemplate) {
+    private fun showSavingsAccountTemplateByProduct(savingProductsTemplate: SavingProductsTemplate) {
         mSavingProductsTemplateByProductId = savingProductsTemplate
         mFieldOfficerNames.addAll(
-            mSavingsAccountPresenter.filterFieldOfficerNames(
+            viewModel.filterFieldOfficerNames(
                 savingProductsTemplate.fieldOfficerOptions
             )
         )
@@ -211,7 +242,7 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
         binding.tvDaysInYear.text = savingProductsTemplate.interestCalculationDaysInYearType?.value
     }
 
-    override fun showSavingsAccountCreatedSuccessfully(savings: Savings?) {
+    private fun showSavingsAccountCreatedSuccessfully(savings: Savings?) {
         Toast.makeText(
             activity,
             resources.getString(R.string.savings_account_submitted_for_approval),
@@ -220,21 +251,16 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
         requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
-    override fun showFetchingError(errorMessage: Int) {
+    private fun showFetchingError(errorMessage: Int) {
         Toaster.show(binding.root, resources.getString(errorMessage))
     }
 
-    override fun showFetchingError(errorMessage: String?) {
+    private fun showFetchingError(errorMessage: String?) {
         Toaster.show(binding.root, errorMessage)
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         showProgress(b)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mSavingsAccountPresenter.detachView()
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -246,14 +272,14 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
                 productId = mProductSavings!![position].id
                 if (isGroupAccount) {
                     productId?.let {
-                        mSavingsAccountPresenter.loadGroupSavingAccountTemplateByProduct(
+                        viewModel.loadGroupSavingAccountTemplateByProduct(
                             groupId,
                             it
                         )
                     }
                 } else {
                     productId?.let {
-                        mSavingsAccountPresenter.loadClientSavingAccountTemplateByProduct(
+                        viewModel.loadClientSavingAccountTemplateByProduct(
                             clientId,
                             it
                         )
@@ -264,18 +290,4 @@ class SavingsAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {}
-
-    companion object {
-        val LOG_TAG = SavingsAccountFragment::class.java.simpleName
-
-        @JvmStatic
-        fun newInstance(id: Int, isGroupAccount: Boolean): SavingsAccountFragment {
-            val savingsAccountFragment = SavingsAccountFragment()
-            val args = Bundle()
-            args.putInt(if (isGroupAccount) Constants.GROUP_ID else Constants.CLIENT_ID, id)
-            args.putBoolean(Constants.GROUP_ACCOUNT, isGroupAccount)
-            savingsAccountFragment.arguments = args
-            return savingsAccountFragment
-        }
-    }
 }

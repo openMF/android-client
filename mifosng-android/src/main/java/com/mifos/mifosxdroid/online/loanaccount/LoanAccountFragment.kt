@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
@@ -27,11 +28,12 @@ import com.mifos.objects.templates.loans.LoanTemplate
 import com.mifos.objects.templates.loans.RepaymentFrequencyDaysOfWeekTypeOptions
 import com.mifos.objects.templates.loans.RepaymentFrequencyNthDayTypeOptions
 import com.mifos.services.data.LoansPayload
+import com.mifos.states.LoanAccountUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
+import com.mifos.viewmodels.LoanAccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -40,16 +42,16 @@ import javax.inject.Inject
  * Use this  Fragment to Create and/or Update loan
  */
 @AndroidEntryPoint
-class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, LoanAccountMvpView,
+class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
     OnItemSelectedListener {
 
     private lateinit var binding: FragmentAddLoanBinding
     private val arg: LoanAccountFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mLoanAccountPresenter: LoanAccountPresenter
-    var submissionDate: String? = null
-    var disbursementDate: String? = null
+    private lateinit var viewModel: LoanAccountViewModel
+
+    private var submissionDate: String? = null
+    private var disbursementDate: String? = null
     private var hasDataTables = false
     private var mfDatePicker: DialogFragment? = null
     private var productId: Int? = 0
@@ -71,38 +73,38 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
     private var linkAccountId: Int? = null
     private var isDisbursebemntDate = false
     private var isSubmissionDate = false
-    var mLoanProducts: List<LoanProducts> = ArrayList()
-    var mRepaymentFrequencyNthDayTypeOptions: List<RepaymentFrequencyNthDayTypeOptions> =
+    private var mLoanProducts: List<LoanProducts> = ArrayList()
+    private var mRepaymentFrequencyNthDayTypeOptions: List<RepaymentFrequencyNthDayTypeOptions> =
         ArrayList()
-    var mRepaymentFrequencyDaysOfWeekTypeOptions: List<RepaymentFrequencyDaysOfWeekTypeOptions> =
+    private var mRepaymentFrequencyDaysOfWeekTypeOptions: List<RepaymentFrequencyDaysOfWeekTypeOptions> =
         ArrayList()
-    var mLoanTemplate = LoanTemplate()
-    var mListLoanProducts: MutableList<String> = ArrayList()
-    var mListLoanPurposeOptions: MutableList<String> = ArrayList()
-    var mListAccountLinkingOptions: MutableList<String> = ArrayList()
-    var mListAmortizationTypeOptions: MutableList<String> = ArrayList()
-    var mListInterestCalculationPeriodTypeOptions: MutableList<String> = ArrayList()
-    var mListTransactionProcessingStrategyOptions: MutableList<String> = ArrayList()
-    var mListTermFrequencyTypeOptions: MutableList<String> = ArrayList()
-    var mListLoanTermFrequencyTypeOptions: MutableList<String> = ArrayList()
-    var mListRepaymentFrequencyNthDayTypeOptions: MutableList<String> = ArrayList()
-    var mListRepaymentFrequencyDayOfWeekTypeOptions: MutableList<String> = ArrayList()
-    var mListLoanFundOptions: MutableList<String> = ArrayList()
-    var mListLoanOfficerOptions: MutableList<String> = ArrayList()
-    var mListInterestTypeOptions: MutableList<String> = ArrayList()
-    var mLoanProductAdapter: ArrayAdapter<String>? = null
-    var mLoanPurposeOptionsAdapter: ArrayAdapter<String>? = null
-    var mAccountLinkingOptionsAdapter: ArrayAdapter<String>? = null
-    var mAmortizationTypeOptionsAdapter: ArrayAdapter<String>? = null
-    var mInterestCalculationPeriodTypeOptionsAdapter: ArrayAdapter<String>? = null
-    var mTransactionProcessingStrategyOptionsAdapter: ArrayAdapter<String>? = null
-    var mTermFrequencyTypeOptionsAdapter: ArrayAdapter<String>? = null
-    var mLoanTermFrequencyTypeAdapter: ArrayAdapter<String>? = null
-    var mRepaymentFrequencyNthDayTypeOptionsAdapter: ArrayAdapter<String>? = null
-    var mRepaymentFrequencyDayOfWeekTypeOptionsAdapter: ArrayAdapter<String>? = null
-    var mLoanFundOptionsAdapter: ArrayAdapter<String>? = null
-    var mLoanOfficerOptionsAdapter: ArrayAdapter<String>? = null
-    var mInterestTypeOptionsAdapter: ArrayAdapter<String>? = null
+    private var mLoanTemplate = LoanTemplate()
+    private var mListLoanProducts: MutableList<String> = ArrayList()
+    private var mListLoanPurposeOptions: MutableList<String> = ArrayList()
+    private var mListAccountLinkingOptions: MutableList<String> = ArrayList()
+    private var mListAmortizationTypeOptions: MutableList<String> = ArrayList()
+    private var mListInterestCalculationPeriodTypeOptions: MutableList<String> = ArrayList()
+    private var mListTransactionProcessingStrategyOptions: MutableList<String> = ArrayList()
+    private var mListTermFrequencyTypeOptions: MutableList<String> = ArrayList()
+    private var mListLoanTermFrequencyTypeOptions: MutableList<String> = ArrayList()
+    private var mListRepaymentFrequencyNthDayTypeOptions: MutableList<String> = ArrayList()
+    private var mListRepaymentFrequencyDayOfWeekTypeOptions: MutableList<String> = ArrayList()
+    private var mListLoanFundOptions: MutableList<String> = ArrayList()
+    private var mListLoanOfficerOptions: MutableList<String> = ArrayList()
+    private var mListInterestTypeOptions: MutableList<String> = ArrayList()
+    private var mLoanProductAdapter: ArrayAdapter<String>? = null
+    private var mLoanPurposeOptionsAdapter: ArrayAdapter<String>? = null
+    private var mAccountLinkingOptionsAdapter: ArrayAdapter<String>? = null
+    private var mAmortizationTypeOptionsAdapter: ArrayAdapter<String>? = null
+    private var mInterestCalculationPeriodTypeOptionsAdapter: ArrayAdapter<String>? = null
+    private var mTransactionProcessingStrategyOptionsAdapter: ArrayAdapter<String>? = null
+    private var mTermFrequencyTypeOptionsAdapter: ArrayAdapter<String>? = null
+    private var mLoanTermFrequencyTypeAdapter: ArrayAdapter<String>? = null
+    private var mRepaymentFrequencyNthDayTypeOptionsAdapter: ArrayAdapter<String>? = null
+    private var mRepaymentFrequencyDayOfWeekTypeOptionsAdapter: ArrayAdapter<String>? = null
+    private var mLoanFundOptionsAdapter: ArrayAdapter<String>? = null
+    private var mLoanOfficerOptionsAdapter: ArrayAdapter<String>? = null
+    private var mInterestTypeOptionsAdapter: ArrayAdapter<String>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         clientId = arg.clientId
@@ -115,7 +117,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
     ): View {
         activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         binding = FragmentAddLoanBinding.inflate(inflater, container, false)
-        mLoanAccountPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[LoanAccountViewModel::class.java]
         inflateSubmissionDate()
         inflateDisbursementDate()
         inflateLoansProductSpinner()
@@ -126,6 +128,38 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         disbursementDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(disbursementDate)
             .replace("-", " ")
         inflateSpinners()
+
+        viewModel.loanAccountUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is LoanAccountUiState.ShowAllLoan -> {
+                    showProgressbar(false)
+                    showAllLoan(it.productLoans)
+                }
+
+                is LoanAccountUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is LoanAccountUiState.ShowLoanAccountCreatedSuccessfully -> {
+                    showProgressbar(false)
+                    showLoanAccountCreatedSuccessfully(it.loans)
+                }
+
+                is LoanAccountUiState.ShowLoanAccountTemplate -> {
+                    showProgressbar(false)
+                    showLoanAccountTemplate(it.loanTemplate)
+                }
+
+                is LoanAccountUiState.ShowMessage -> {
+                    showProgressbar(false)
+                    showMessage(it.message)
+                }
+
+                is LoanAccountUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -342,15 +376,15 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
     }
 
     private fun inflateLoansProductSpinner() {
-        mLoanAccountPresenter.loadAllLoans()
+        viewModel.loadAllLoans()
     }
 
     private fun inflateLoanPurposeSpinner() {
-        productId?.let { mLoanAccountPresenter.loadLoanAccountTemplate(clientId, it) }
+        productId?.let { viewModel.loadLoanAccountTemplate(clientId, it) }
     }
 
     private fun initiateLoanCreation(loansPayload: LoansPayload) {
-        mLoanAccountPresenter.createLoansAccount(loansPayload)
+        viewModel.createLoansAccount(loansPayload)
     }
 
     private fun inflateSubmissionDate() {
@@ -379,7 +413,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         )
     }
 
-    override fun showAllLoan(loans: List<LoanProducts>) {
+    private fun showAllLoan(loans: List<LoanProducts>) {
         mLoanProducts = loans
         mListLoanProducts.clear()
         for (loanProducts in mLoanProducts) {
@@ -388,7 +422,7 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         mLoanProductAdapter?.notifyDataSetChanged()
     }
 
-    override fun showLoanAccountTemplate(loanTemplate: LoanTemplate) {
+    private fun showLoanAccountTemplate(loanTemplate: LoanTemplate) {
         mLoanTemplate = loanTemplate
         hasDataTables = mLoanTemplate.dataTables.size > 0
         mListRepaymentFrequencyNthDayTypeOptions.clear()
@@ -475,26 +509,21 @@ class LoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener, Lo
         showDefaultValues()
     }
 
-    override fun showLoanAccountCreatedSuccessfully(loans: Loans?) {
+    private fun showLoanAccountCreatedSuccessfully(loans: Loans?) {
         Toast.makeText(activity, R.string.loan_creation_success, Toast.LENGTH_LONG).show()
         requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
-    override fun showMessage(messageId: Int) {
+    private fun showMessage(messageId: Int) {
         Toaster.show(binding.root, messageId)
     }
 
-    override fun showFetchingError(s: String?) {
+    private fun showFetchingError(s: String?) {
         Toaster.show(binding.root, s)
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         showProgress(show)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mLoanAccountPresenter.detachView()
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {

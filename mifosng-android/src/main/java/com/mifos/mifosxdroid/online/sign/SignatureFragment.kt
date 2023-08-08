@@ -13,6 +13,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mifos.api.GenericResponse
@@ -22,27 +23,28 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentSignBinding
 import com.mifos.mifosxdroid.views.SignatureView.OnSignatureSaveListener
+import com.mifos.states.SignatureUiState
 import com.mifos.utils.AndroidVersionUtil
 import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.FileUtils
 import com.mifos.utils.SafeUIBlockingUtility
+import com.mifos.viewmodels.SignatureViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-import javax.inject.Inject
 
 /**
  * Created by Tarun on 28-06-2017.
  */
 @AndroidEntryPoint
-class SignatureFragment : MifosBaseFragment(), SignatureMvpView,
+class SignatureFragment : MifosBaseFragment(),
     BottomNavigationView.OnNavigationItemSelectedListener, OnSignatureSaveListener {
 
     private lateinit var binding: FragmentSignBinding
     private val arg: SignatureFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mSignaturePresenter: SignaturePresenter
+    private lateinit var viewModel: SignatureViewModel
+
     private var mClientId: Int? = null
     private var signatureFile: File? = null
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
@@ -61,8 +63,24 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSignBinding.inflate(inflater, container, false)
-        mSignaturePresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SignatureViewModel::class.java]
         showInterface()
+
+        viewModel.signatureUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SignatureUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is SignatureUiState.ShowProgressbar -> showProgressbar(true)
+                is SignatureUiState.ShowSignatureUploadedSuccessfully -> {
+                    showProgressbar(false)
+                    showSignatureUploadedSuccessfully(it.genericResponse)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -102,7 +120,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView,
      * If not, it prompts the user a dialog to grant the WRITE_EXTERNAL_STORAGE permission.
      * If the permission is granted already then save the signature in external storage;
      */
-    override fun checkPermissionAndRequest() {
+    private fun checkPermissionAndRequest() {
         if (CheckSelfPermissionAndRequest.checkSelfPermission(
                 activity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -114,7 +132,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView,
         }
     }
 
-    override fun requestPermission() {
+    private fun requestPermission() {
         CheckSelfPermissionAndRequest.requestPermission(
             activity as MifosBaseActivity,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -155,7 +173,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView,
         }
     }
 
-    override val documentFromGallery: Unit
+    private val documentFromGallery: Unit
         get() {
             val intentDocument: Intent =
                 if (AndroidVersionUtil.isApiVersionGreaterOrEqual(Build.VERSION_CODES.KITKAT)) {
@@ -186,7 +204,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView,
 
     private fun uploadSignImage() {
         showProgressbar(true)
-        mSignaturePresenter.createDocument(
+        viewModel.createDocument(
             Constants.ENTITY_TYPE_CLIENTS,
             mClientId!!, signatureFile?.name, "Signature", signatureFile
         )
@@ -206,17 +224,17 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView,
         uploadSignImage()
     }
 
-    override fun showSignatureUploadedSuccessfully(response: GenericResponse?) {
+    private fun showSignatureUploadedSuccessfully(response: GenericResponse?) {
         showProgressbar(false)
         Toaster.show(binding.root, R.string.sign_uploaded_success_msg)
     }
 
-    override fun showError(errorId: Int) {
+    private fun showError(errorId: Int) {
         showProgressbar(false)
         Toaster.show(binding.root, getStringMessage(errorId))
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             safeUIBlockingUtility?.safelyBlockUI()
         } else {
@@ -224,7 +242,7 @@ class SignatureFragment : MifosBaseFragment(), SignatureMvpView,
         }
     }
 
-    override fun saveAndUploadSignature() {
+    private fun saveAndUploadSignature() {
         if (binding.signView.xCoordinateSize > 0 && binding.signView.yCoordinateSize > 0) {
             binding.signView.saveSignature(mClientId!!)
         } else {
