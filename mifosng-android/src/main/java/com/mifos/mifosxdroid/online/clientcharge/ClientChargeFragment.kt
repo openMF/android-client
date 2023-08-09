@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
@@ -23,15 +24,16 @@ import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.OnChargeCreateListener
 import com.mifos.objects.client.Charges
 import com.mifos.objects.client.Page
+import com.mifos.states.ClientChargeUiState
 import com.mifos.utils.FragmentConstants
+import com.mifos.viewmodels.ClientChargeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
  */
 @AndroidEntryPoint
-class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeCreateListener {
+class ClientChargeFragment : MifosBaseFragment(), OnChargeCreateListener {
 
 
     private lateinit var binding: FragmentChargeListBinding
@@ -39,9 +41,9 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
 
     private lateinit var chargesList: List<Charges>
 
-    @Inject
-    lateinit var mClientChargePresenter: ClientChargePresenter
-    var mChargesNameListAdapter: ChargeNameListAdapter? = null
+    private lateinit var viewModel: ClientChargeViewModel
+
+    private var mChargesNameListAdapter: ChargeNameListAdapter? = null
     private var clientId = 0
     private var mApiRestCounter = 0
     private val limit = 10
@@ -58,14 +60,14 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
     ): View {
         binding = FragmentChargeListBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-        mClientChargePresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[ClientChargeViewModel::class.java]
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvCharge.layoutManager = layoutManager
         binding.rvCharge.setHasFixedSize(true)
         setToolbarTitle(getString(R.string.charges))
         mApiRestCounter = 1
-        mClientChargePresenter.loadCharges(clientId, 0, limit)
+        viewModel.loadCharges(clientId, 0, limit)
         /**
          * Setting mApiRestCounter to 1 and send Refresh Request to Server
          */
@@ -77,10 +79,32 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
         )
         binding.swipeContainer.setOnRefreshListener {
             mApiRestCounter = 1
-            mClientChargePresenter.loadCharges(clientId, 0, limit)
+            viewModel.loadCharges(clientId, 0, limit)
             if (binding.swipeContainer.isRefreshing) binding.swipeContainer.isRefreshing = false
         }
         loadMore(layoutManager)
+
+        viewModel.clientChargeUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is ClientChargeUiState.ShowChargesList -> {
+                    showProgressbar(false)
+                    showChargesList(it.chargesPage)
+                }
+
+                is ClientChargeUiState.ShowEmptyCharges -> {
+                    showProgressbar(false)
+                    showEmptyCharges()
+                }
+
+                is ClientChargeUiState.ShowFetchingErrorCharges -> {
+                    showProgressbar(false)
+                    showFetchingErrorCharges(it.message)
+                }
+
+                is ClientChargeUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -103,7 +127,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
             EndlessRecyclerOnScrollListener(layoutManager) {
             override fun onLoadMore(current_page: Int) {
                 mApiRestCounter += 1
-                mClientChargePresenter.loadCharges(clientId, chargesList.size, limit)
+                viewModel.loadCharges(clientId, chargesList.size, limit)
             }
         })
     }
@@ -115,14 +139,14 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
 
     private fun reloadOnError() {
         binding.llError.visibility = View.GONE
-        mClientChargePresenter.loadCharges(clientId, 0, limit)
+        viewModel.loadCharges(clientId, 0, limit)
     }
 
     fun setChargesList(chargesList: MutableList<Charges>) {
         this.chargesList = chargesList as ArrayList<Charges>
     }
 
-    override fun showChargesList(chargesPage: Page<Charges>) {
+    private fun showChargesList(chargesPage: Page<Charges>) {
         /**
          * if mApiRestCounter is 1, So this is the first Api Request.
          * else if mApiRestCounter is greater than 1, SO this is for loadmore request.
@@ -162,7 +186,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
         Toaster.show(binding.root, errorMessage)
     }
 
-    override fun showEmptyCharges() {
+    private fun showEmptyCharges() {
         if (mChargesNameListAdapter == null || mChargesNameListAdapter?.itemCount == 0) {
             binding.llError.visibility = View.VISIBLE
             binding.noChargesText.text =
@@ -171,7 +195,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
         }
     }
 
-    override fun showFetchingErrorCharges(s: String) {
+    private fun showFetchingErrorCharges(s: String) {
         if (mApiRestCounter == 1) {
             binding.llError.visibility = View.VISIBLE
             binding.noChargesText.text = "$s\n Click to Refresh "
@@ -179,7 +203,7 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
         Toaster.show(binding.root, s)
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (mApiRestCounter == 1) {
             if (b) {
                 showMifosProgressBar()
@@ -189,11 +213,6 @@ class ClientChargeFragment : MifosBaseFragment(), ClientChargeMvpView, OnChargeC
         } else {
             binding.swipeContainer.isRefreshing = b
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mClientChargePresenter.detachView()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {

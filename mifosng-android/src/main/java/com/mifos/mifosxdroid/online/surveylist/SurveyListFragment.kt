@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SurveyListAdapter
@@ -19,8 +20,9 @@ import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentSurveyListBinding
 import com.mifos.objects.survey.Survey
+import com.mifos.states.SurveyListUiState
+import com.mifos.viewmodels.SurveyListViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * This Class shows the List of Surveys after fetching the surveys list from the REST API :
@@ -30,13 +32,13 @@ import javax.inject.Inject
  * Created by Nasim Banu on 27,January,2016.
  */
 @AndroidEntryPoint
-class SurveyListFragment : ProgressableFragment(), SurveyListMvpView {
+class SurveyListFragment : ProgressableFragment() {
 
     private lateinit var binding: FragmentSurveyListBinding
     private val arg: SurveyListFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mSurveyListPresenter: SurveyListPresenter
+    private lateinit var viewModel: SurveyListViewModel
+
     private var mListener: OnFragmentInteractionListener? = null
     private var clientId = 0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,13 +52,30 @@ class SurveyListFragment : ProgressableFragment(), SurveyListMvpView {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSurveyListBinding.inflate(inflater, container, false)
-        mSurveyListPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SurveyListViewModel::class.java]
         setToolbarTitle(getString(R.string.surveys))
-        mSurveyListPresenter.loadSurveyList()
+        viewModel.loadSurveyList()
+
+        viewModel.surveyListUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SurveyListUiState.ShowAllSurvey -> {
+                    showProgressbar(false)
+                    showAllSurvey(it.syncSurvey)
+                }
+
+                is SurveyListUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is SurveyListUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
-    override fun showAllSurvey(surveys: List<Survey>) {
+    private fun showAllSurvey(surveys: List<Survey>) {
         if (surveys.isEmpty()) {
             binding.tvSurveyName.text =
                 resources.getString(R.string.no_survey_available_for_client)
@@ -73,11 +92,11 @@ class SurveyListFragment : ProgressableFragment(), SurveyListMvpView {
         }
     }
 
-    override fun showFetchingError(errorMessage: Int) {
+    private fun showFetchingError(errorMessage: Int) {
         Toaster.show(binding.root, resources.getString(errorMessage))
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         showProgress(b)
     }
 
@@ -97,11 +116,6 @@ class SurveyListFragment : ProgressableFragment(), SurveyListMvpView {
                         "OnFragmentInteractionListener"
             )
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mSurveyListPresenter.detachView()
     }
 
     interface OnFragmentInteractionListener {

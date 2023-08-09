@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,21 +15,21 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentDatatablesBinding
 import com.mifos.objects.noncore.DataTable
-import com.mifos.utils.Constants
+import com.mifos.states.DataTableUiState
+import com.mifos.viewmodels.DataTableViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 12/02/17.
  */
 @AndroidEntryPoint
-class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListener {
+class DataTableFragment : MifosBaseFragment(), OnRefreshListener {
 
     private lateinit var binding: FragmentDatatablesBinding
     private val arg: DataTableFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var dataTablePresenter: DataTablePresenter
+    private lateinit var viewModel: DataTableViewModel
+
 
     private val dataTableAdapter by lazy {
         DataTableAdapter(
@@ -59,17 +60,43 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDatatablesBinding.inflate(inflater, container, false)
-        dataTablePresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[DataTableViewModel::class.java]
         showUserInterface()
-        dataTablePresenter.loadDataTable(tableName)
+        viewModel.loadDataTable(tableName)
+
+        viewModel.dataTableUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is DataTableUiState.ShowDataTables -> {
+                    showProgressbar(false)
+                    showDataTables(it.dataTables)
+                }
+
+                is DataTableUiState.ShowEmptyDataTables -> {
+                    showProgressbar(false)
+                    showEmptyDataTables()
+                }
+
+                is DataTableUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is DataTableUiState.ShowProgressbar -> showProgressbar(true)
+                is DataTableUiState.ShowResetVisibility -> {
+                    showProgressbar(false)
+                    showResetVisibility()
+                }
+            }
+        }
+
         return binding.root
     }
 
     override fun onRefresh() {
-        dataTablePresenter.loadDataTable(tableName)
+        viewModel.loadDataTable(tableName)
     }
 
-    override fun showUserInterface() {
+    private fun showUserInterface() {
         setToolbarTitle(resources.getString(R.string.datatables))
         val mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -83,53 +110,36 @@ class DataTableFragment : MifosBaseFragment(), DataTableMvpView, OnRefreshListen
         binding.swipeContainer.setOnRefreshListener(this)
     }
 
-    override fun showDataTables(dataTables: List<DataTable>?) {
+    private fun showDataTables(dataTables: List<DataTable>?) {
         this.dataTables = dataTables
         dataTableAdapter.dataTables = dataTables ?: emptyList()
     }
 
-    override fun showEmptyDataTables() {
+    private fun showEmptyDataTables() {
         binding.llError.visibility = View.VISIBLE
         binding.rvDataTable.visibility = View.GONE
         binding.tvError.setText(R.string.empty_data_table)
     }
 
-    override fun showResetVisibility() {
+    private fun showResetVisibility() {
         binding.llError.visibility = View.GONE
         binding.rvDataTable.visibility = View.VISIBLE
     }
 
-    override fun showError(message: Int) {
+    private fun showError(message: Int) {
         Toaster.show(binding.root, message)
         binding.llError.visibility = View.VISIBLE
         binding.rvDataTable.visibility = View.GONE
         binding.tvError.text = getString(R.string.failed_to_fetch_datatable)
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         if (show && dataTableAdapter.itemCount == 0) {
             binding.progressbarDataTable.visibility = View.VISIBLE
             binding.swipeContainer.isRefreshing = false
         } else {
             binding.progressbarDataTable.visibility = View.GONE
             binding.swipeContainer.isRefreshing = show
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        dataTablePresenter.detachView()
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(tableName: String?, entityId: Int): DataTableFragment {
-            val arguments = Bundle()
-            val dataTableFragment = DataTableFragment()
-            arguments.putString(Constants.DATA_TABLE_NAME, tableName)
-            arguments.putInt(Constants.ENTITY_ID, entityId)
-            dataTableFragment.arguments = arguments
-            return dataTableFragment
         }
     }
 }

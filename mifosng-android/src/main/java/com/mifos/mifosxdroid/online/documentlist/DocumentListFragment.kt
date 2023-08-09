@@ -16,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
@@ -28,23 +29,23 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentDocumentListBinding
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment
 import com.mifos.objects.noncore.Document
+import com.mifos.states.DocumentListUiState
 import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.FileUtils
 import com.mifos.utils.FragmentConstants
+import com.mifos.viewmodels.DocumentListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.ResponseBody
 import java.io.File
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefreshListener {
+class DocumentListFragment : MifosBaseFragment(), OnRefreshListener {
 
     private lateinit var binding: FragmentDocumentListBinding
     private val arg: DocumentListFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mDocumentListPresenter: DocumentListPresenter
+    private lateinit var viewModel: DocumentListViewModel
 
     private val mDocumentListAdapter by lazy {
         DocumentListAdapter(
@@ -75,7 +76,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentDocumentListBinding.inflate(inflater, container, false)
-        mDocumentListPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[DocumentListViewModel::class.java]
         setToolbarTitle(getString(R.string.documents))
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -87,7 +88,32 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
                 ?.resources!!.getIntArray(R.array.swipeRefreshColors)
         )
         binding.swipeContainer.setOnRefreshListener(this)
-        mDocumentListPresenter.loadDocumentList(entityType, entityId)
+        viewModel.loadDocumentList(entityType, entityId)
+        viewModel.documentListUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is DocumentListUiState.ShowDocumentFetchSuccessfully -> {
+                    showProgressbar(false)
+                    showDocumentFetchSuccessfully(it.responseBody)
+                }
+
+                is DocumentListUiState.ShowDocumentList -> {
+                    showProgressbar(false)
+                    showDocumentList(it.documents)
+                }
+
+                is DocumentListUiState.ShowDocumentRemovedSuccessfully -> {
+                    showProgressbar(false)
+                    showDocumentRemovedSuccessfully()
+                }
+
+                is DocumentListUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is DocumentListUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
         return binding.root
     }
 
@@ -100,17 +126,17 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
     }
 
     override fun onRefresh() {
-        mDocumentListPresenter.loadDocumentList(entityType, entityId)
+        viewModel.loadDocumentList(entityType, entityId)
     }
 
     override fun onResume() {
         super.onResume()
-        mDocumentListPresenter.loadDocumentList(entityType, entityId)
+        viewModel.loadDocumentList(entityType, entityId)
     }
 
     private fun reloadOnError() {
         binding.llError.visibility = View.GONE
-        mDocumentListPresenter.loadDocumentList(entityType, entityId)
+        viewModel.loadDocumentList(entityType, entityId)
     }
 
     /**
@@ -118,7 +144,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
      * If not then prompt user a dialog to grant the WRITE_EXTERNAL_STORAGE permission.
      * and If Permission is granted already then Save the documentBody in external storage;
      */
-    override fun checkPermissionAndRequest() {
+    private fun checkPermissionAndRequest() {
         if (CheckSelfPermissionAndRequest.checkSelfPermission(
                 activity,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -130,7 +156,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
         }
     }
 
-    override fun requestPermission() {
+    private fun requestPermission() {
         CheckSelfPermissionAndRequest.requestPermission(
             activity as MifosBaseActivity,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -177,7 +203,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
         }
     }
 
-    override fun showDocumentList(documents: List<Document>) {
+    private fun showDocumentList(documents: List<Document>) {
         mDocumentList = documents
         mDocumentListAdapter.documents = documents
         if (documents.isEmpty()) {
@@ -189,22 +215,22 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
         }
     }
 
-    override fun showDocumentFetchSuccessfully(responseBody: ResponseBody?) {
+    private fun showDocumentFetchSuccessfully(responseBody: ResponseBody?) {
         documentBody = responseBody
         checkPermissionAndRequest()
     }
 
-    override fun showDocumentActions(documentId: Int) {
+    private fun showDocumentActions(documentId: Int) {
         MaterialDialog.Builder().init(activity)
             .setItems(R.array.document_options) { dialog, which ->
                 when (which) {
-                    0 -> mDocumentListPresenter.downloadDocument(
+                    0 -> viewModel.downloadDocument(
                         entityType, entityId,
                         documentId
                     )
 
                     1 -> showDocumentDialog(getString(R.string.update_document))
-                    2 -> mDocumentListPresenter.removeDocument(
+                    2 -> viewModel.removeDocument(
                         entityType, entityId,
                         documentId
                     )
@@ -217,7 +243,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
             .show()
     }
 
-    override fun checkExternalStorageAndCreateDocument() {
+    private fun checkExternalStorageAndCreateDocument() {
         // Create a path where we will place our documents in the user's
         // public directory and check if the file exists.
         val mifosDirectory = File(
@@ -242,12 +268,12 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
         startActivity(intent)
     }
 
-    override fun showDocumentRemovedSuccessfully() {
+    private fun showDocumentRemovedSuccessfully() {
         Toaster.show(binding.root, resources.getString(R.string.document_remove_successfully))
-        mDocumentListPresenter.loadDocumentList(entityType, entityId)
+        viewModel.loadDocumentList(entityType, entityId)
     }
 
-    override fun showDocumentDialog(documentAction: String?) {
+    private fun showDocumentDialog(documentAction: String?) {
         val documentDialogFragment =
             DocumentDialogFragment.newInstance(entityType, entityId, documentAction, document)
         val fragmentTransaction = requireActivity().supportFragmentManager
@@ -256,13 +282,13 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
         documentDialogFragment.show(fragmentTransaction, "Document Dialog Fragment")
     }
 
-    override fun showEmptyDocuments() {
+    private fun showEmptyDocuments() {
         binding.llError.visibility = View.VISIBLE
         binding.noDocumentText.text = resources.getString(R.string.no_document_to_show)
         binding.noDocumentIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp)
     }
 
-    override fun showFetchingError(message: Int) {
+    private fun showFetchingError(message: Int) {
         if (mDocumentListAdapter.itemCount == 0) {
             binding.llError.visibility = View.VISIBLE
             val errorMessage = getStringMessage(message) + getStringMessage(R.string.new_line) +
@@ -273,7 +299,7 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
         }
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         binding.swipeContainer.isRefreshing = show
         if (show && mDocumentListAdapter.itemCount == 0) {
             showMifosProgressBar()
@@ -281,12 +307,6 @@ class DocumentListFragment : MifosBaseFragment(), DocumentListMvpView, OnRefresh
         } else {
             hideMifosProgressBar()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mDocumentListPresenter.detachView()
-        hideMifosProgressBar()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {

@@ -5,10 +5,10 @@
 package com.mifos.mifosxdroid.online.groupslist
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.*
 import android.widget.Button
 import androidx.appcompat.view.ActionMode
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
@@ -23,11 +23,12 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentGroupsBinding
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFragment
 import com.mifos.objects.group.Group
+import com.mifos.states.GroupsListUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
+import com.mifos.viewmodels.GroupsListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
-import javax.inject.Inject
 
 /**
  * Created by nellyk on 2/27/2016.
@@ -55,12 +56,11 @@ import javax.inject.Inject
  * and unregister the ScrollListener and SwipeLayout.
 </Group> */
 @AndroidEntryPoint
-class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshListener {
+class GroupsListFragment : MifosBaseFragment(), OnRefreshListener {
 
     private lateinit var binding: FragmentGroupsBinding
 
-    @Inject
-    lateinit var mGroupsListPresenter: GroupsListPresenter
+    private lateinit var viewModel: GroupsListViewModel
 
     val mGroupListAdapter by lazy {
         GroupNameListAdapter(
@@ -118,7 +118,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentGroupsBinding.inflate(inflater, container, false)
-        mGroupsListPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[GroupsListViewModel::class.java]
 
         //setting all the UI content to the view
         showUserInterface()
@@ -129,7 +129,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
         binding.rvGroups.addOnScrollListener(object :
             EndlessRecyclerViewScrollListener(mLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int) {
-                mGroupsListPresenter.loadGroups(true, totalItemsCount)
+                viewModel.loadGroups(true, totalItemsCount)
             }
         })
         /**
@@ -140,11 +140,47 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
          * To show user that is there already any group is synced already or not.
          */
         if (isParentFragment) {
-            mGroupList.let { mGroupsListPresenter.showParentClients(it) }
+            mGroupList.let { viewModel.showParentClients(it) }
         } else {
-            mGroupsListPresenter.loadGroups(false, 0)
+            viewModel.loadGroups(false, 0)
         }
-        mGroupsListPresenter.loadDatabaseGroups()
+        viewModel.loadDatabaseGroups()
+
+        viewModel.groupsListUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is GroupsListUiState.ShowEmptyGroups -> {
+                    showProgressbar(false)
+                    showEmptyGroups(it.image)
+                }
+
+                is GroupsListUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError()
+                }
+
+                is GroupsListUiState.ShowGroups -> {
+                    showProgressbar(false)
+                    showGroups(it.clients)
+                }
+
+                is GroupsListUiState.ShowLoadMoreGroups -> {
+                    showProgressbar(false)
+                    showLoadMoreGroups(it.clients)
+                }
+
+                is GroupsListUiState.ShowMessage -> {
+                    showProgressbar(false)
+                    showMessage(it.message)
+                }
+
+                is GroupsListUiState.ShowProgressbar -> showProgressbar(true)
+                is GroupsListUiState.UnregisterSwipeAndScrollListener -> {
+                    showProgressbar(false)
+                    unregisterSwipeAndScrollListener()
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -163,7 +199,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
     /**
      * This method Initializing the UI.
      */
-    override fun showUserInterface() {
+    private fun showUserInterface() {
         (activity as HomeActivity).supportActionBar?.title = getString(R.string.groups)
         mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -186,8 +222,8 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      * This Method will be called. Whenever user will swipe down to refresh the group list.
      */
     override fun onRefresh() {
-        mGroupsListPresenter.loadGroups(false, 0)
-        mGroupsListPresenter.loadDatabaseGroups()
+        viewModel.loadGroups(false, 0)
+        viewModel.loadDatabaseGroups()
         if (actionMode != null) actionMode?.finish()
     }
 
@@ -200,14 +236,14 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
 
     private fun reloadOnError() {
         sweetUIErrorHandler?.hideSweetErrorLayoutUI(binding.rvGroups, binding.layoutError)
-        mGroupsListPresenter.loadGroups(false, 0)
-        mGroupsListPresenter.loadDatabaseGroups()
+        viewModel.loadGroups(false, 0)
+        viewModel.loadDatabaseGroups()
     }
 
     /**
      * Setting GroupList to the Adapter and updating the Adapter.
      */
-    override fun showGroups(groups: List<Group>) {
+    private fun showGroups(groups: List<Group>) {
         mGroupList = groups
         Collections.sort(mGroupList) { grp1, grp2 -> grp2.name?.let { grp1.name?.compareTo(it) }!! }
         mGroupListAdapter.setGroups(mGroupList)
@@ -218,7 +254,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      *
      * @param groups
      */
-    override fun showLoadMoreGroups(clients: List<Group>) {
+    private fun showLoadMoreGroups(clients: List<Group>) {
         mGroupList.addAll()
         mGroupListAdapter.notifyDataSetChanged()
     }
@@ -228,7 +264,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      *
      * @param message String Message.
      */
-    override fun showEmptyGroups(message: Int) {
+    private fun showEmptyGroups(message: Int) {
         sweetUIErrorHandler?.showSweetEmptyUI(
             getString(R.string.group), getString(message),
             R.drawable.ic_error_black_24dp, binding.rvGroups, binding.layoutError
@@ -238,7 +274,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
     /**
      * This Method unregistered the SwipeLayout and OnScrollListener
      */
-    override fun unregisterSwipeAndScrollListener() {
+    private fun unregisterSwipeAndScrollListener() {
         binding.rvGroups.clearOnScrollListeners()
         binding.swipeContainer.isEnabled = false
     }
@@ -248,7 +284,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      *
      * @param message String Message to show.
      */
-    override fun showMessage(message: Int) {
+    private fun showMessage(message: Int) {
         Toaster.show(binding.root, getStringMessage(message))
     }
 
@@ -256,7 +292,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      * If Any any exception occurred during fetching the Groups. like No Internet or etc.
      * then this method show the error message to user and give the ability to refresh groups.
      */
-    override fun showFetchingError() {
+    private fun showFetchingError() {
         val errorMessage = getStringMessage(R.string.failed_to_fetch_groups)
         sweetUIErrorHandler?.showSweetErrorUI(
             errorMessage,
@@ -270,7 +306,7 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
      *
      * @param show Status of Progressbar or SwipeRefreshLayout
      */
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         binding.swipeContainer.isRefreshing = show
         if (show && mGroupListAdapter.itemCount == 0) {
             binding.progressbarGroup.visibility = View.VISIBLE
@@ -282,7 +318,6 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mGroupsListPresenter.detachView()
         //As the Fragment Detach Finish the ActionMode
         if (actionMode != null) actionMode?.finish()
     }
@@ -352,53 +387,6 @@ class GroupsListFragment : MifosBaseFragment(), GroupsListMvpView, OnRefreshList
         override fun onDestroyActionMode(mode: ActionMode) {
             mGroupListAdapter.clearSelection()
             actionMode = null
-        }
-    }
-
-    companion object {
-        /**
-         * This Method will be called, whenever isParentFragment will be true
-         * and Presenter do not need to make Rest API call to server. Parent (Fragment or Activity)
-         * already fetched the groups and for showing, they call GroupsListFragment.
-         *
-         *
-         * Example : Showing Parent Groups.
-         *
-         * @param groupList        List<Group>
-         * @param isParentFragment true
-         * @return GroupsListFragment
-        </Group> */
-        @JvmStatic
-        fun newInstance(
-            groupList: List<Group?>?,
-            isParentFragment: Boolean
-        ): GroupsListFragment {
-            val groupListFragment = GroupsListFragment()
-            val args = Bundle()
-            if (isParentFragment && groupList != null) {
-                args.putParcelableArrayList(
-                    Constants.GROUPS,
-                    groupList as ArrayList<out Parcelable?>?
-                )
-                args.putBoolean(Constants.IS_A_PARENT_FRAGMENT, true)
-                groupListFragment.arguments = args
-            }
-            return groupListFragment
-        }
-
-        /**
-         * This method will be called, whenever GroupsListFragment will not have Parent Fragment.
-         * So, Presenter make the call to Rest API and fetch the Client List and show in UI
-         *
-         * @return GroupsListFragment
-         */
-
-        @JvmStatic
-        fun newInstance(): GroupsListFragment {
-            val arguments = Bundle()
-            val groupListFragment = GroupsListFragment()
-            groupListFragment.arguments = arguments
-            return groupListFragment
         }
     }
 }

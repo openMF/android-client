@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
@@ -13,7 +14,8 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentNotesBinding
 import com.mifos.objects.noncore.Note
-import com.mifos.utils.Constants
+import com.mifos.states.NoteUiState
+import com.mifos.viewmodels.NoteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -21,13 +23,12 @@ import javax.inject.Inject
  * Created by rahul on 4/3/17.
  */
 @AndroidEntryPoint
-class NoteFragment : MifosBaseFragment(), NoteMvpView, OnRefreshListener {
+class NoteFragment : MifosBaseFragment(), OnRefreshListener {
 
     private lateinit var binding: FragmentNotesBinding
     private val arg: NoteFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var notePresenter: NotePresenter
+    private lateinit var viewModel: NoteViewModel
 
     @JvmField
     @Inject
@@ -43,7 +44,7 @@ class NoteFragment : MifosBaseFragment(), NoteMvpView, OnRefreshListener {
 
     override fun onResume() {
         super.onResume()
-        notePresenter.loadNote(entityType, entityId)
+        viewModel.loadNote(entityType, entityId)
     }
 
     override fun onCreateView(
@@ -52,17 +53,39 @@ class NoteFragment : MifosBaseFragment(), NoteMvpView, OnRefreshListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNotesBinding.inflate(inflater, container, false)
-        notePresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[NoteViewModel::class.java]
         showUserInterface()
-        notePresenter.loadNote(entityType, entityId)
+        viewModel.loadNote(entityType, entityId)
+        viewModel.noteUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is NoteUiState.ShowEmptyNotes -> {
+                    showProgressbar(false)
+                    showEmptyNotes()
+                }
+                is NoteUiState.ShowError -> {
+                    showProgressbar(false)
+                    showEmptyNotes()
+                }
+                is NoteUiState.ShowNote -> {
+                    showProgressbar(false)
+                    showNote(it.note)
+                }
+                is NoteUiState.ShowProgressbar -> showProgressbar(true)
+                is NoteUiState.ShowResetVisibility -> {
+                    showProgressbar(false)
+                    showResetVisibility()
+                }
+            }
+        }
+
         return binding.root
     }
 
     override fun onRefresh() {
-        notePresenter.loadNote(entityType, entityId)
+        viewModel.loadNote(entityType, entityId)
     }
 
-    override fun showUserInterface() {
+    private fun showUserInterface() {
         setToolbarTitle(resources.getString(R.string.note))
         val mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -76,54 +99,36 @@ class NoteFragment : MifosBaseFragment(), NoteMvpView, OnRefreshListener {
         binding.swipeContainer.setOnRefreshListener(this)
     }
 
-    override fun showNote(notes: List<Note>) {
+    private fun showNote(notes: List<Note>) {
         this.notes = notes
         noteAdapter?.setNotes(this.notes)
     }
 
-    override fun showEmptyNotes() {
+    private fun showEmptyNotes() {
         binding.llError.visibility = View.VISIBLE
         binding.rvNote.visibility = View.GONE
         binding.tvError.setText(R.string.empty_notes)
     }
 
-    override fun showResetVisibility() {
+    private fun showResetVisibility() {
         binding.llError.visibility = View.GONE
         binding.rvNote.visibility = View.VISIBLE
     }
 
-    override fun showError(message: Int) {
+    private fun showError(message: Int) {
         Toaster.show(binding.root, message)
         binding.llError.visibility = View.VISIBLE
         binding.rvNote.visibility = View.GONE
         binding.tvError.text = getString(R.string.failed_to_fetch_notes)
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         if (show && noteAdapter?.itemCount == 0) {
             showMifosProgressBar()
             binding.swipeContainer.isRefreshing = false
         } else {
             hideMifosProgressBar()
             binding.swipeContainer.isRefreshing = show
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        hideMifosProgressBar()
-        notePresenter.detachView()
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(entityType: String?, entityId: Int): NoteFragment {
-            val noteFragment = NoteFragment()
-            val args = Bundle()
-            args.putString(Constants.ENTITY_TYPE, entityType)
-            args.putInt(Constants.ENTITY_ID, entityId)
-            noteFragment.arguments = args
-            return noteFragment
         }
     }
 }
