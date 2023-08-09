@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
 import com.mifos.exceptions.RequiredFieldException
@@ -20,22 +21,23 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.loan.LoanApproval
 import com.mifos.objects.accounts.loan.LoanWithAssociations
+import com.mifos.states.LoanAccountApprovalUiState
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
+import com.mifos.viewmodels.LoanAccountApprovalViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * @author nellyk
  */
 @AndroidEntryPoint
-class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccountApprovalMvpView {
+class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener {
 
     private lateinit var binding: DialogFragmentApproveLoanBinding
     private val arg: LoanAccountApprovalArgs by navArgs()
 
-    @Inject
-    lateinit var mLoanAccountApprovalPresenter: LoanAccountApprovalPresenter
+    private lateinit var viewModel: LoanAccountApprovalViewModel
+
     private var approvalDate: String? = null
     private var disbursementDate: String? = null
     var loanAccountNumber = 0
@@ -59,8 +61,25 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
         // Inflate the layout for this fragment
         activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         binding = DialogFragmentApproveLoanBinding.inflate(inflater, container, false)
-        mLoanAccountApprovalPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[LoanAccountApprovalViewModel::class.java]
         showUserInterface()
+
+        viewModel.loanAccountApprovalUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is LoanAccountApprovalUiState.ShowLoanApproveFailed -> {
+                    showProgressbar(false)
+                    showLoanApproveFailed(it.message)
+                }
+
+                is LoanAccountApprovalUiState.ShowLoanApproveSuccessfully -> {
+                    showProgressbar(false)
+                    showLoanApproveSuccessfully(it.genericResponse)
+                }
+
+                is LoanAccountApprovalUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -128,7 +147,7 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
             .replace("-", " ")
     }
 
-    override fun showUserInterface() {
+    private fun showUserInterface() {
         mfDatePicker = MFDatePicker.newInsance(this)
         binding.tvLoanApprovalDates.text = MFDatePicker.datePickedAsString
         approvalDate = binding.tvLoanApprovalDates.text.toString()
@@ -159,28 +178,23 @@ class LoanAccountApproval : MifosBaseFragment(), OnDatePickListener, LoanAccount
     }
 
     private fun initiateLoanApproval(loanApproval: LoanApproval) {
-        mLoanAccountApprovalPresenter.approveLoan(loanAccountNumber, loanApproval)
+        viewModel.approveLoan(loanAccountNumber, loanApproval)
     }
 
-    override fun showLoanApproveSuccessfully(genericResponse: GenericResponse?) {
+    private fun showLoanApproveSuccessfully(genericResponse: GenericResponse?) {
         Toast.makeText(activity, "Loan Approved", Toast.LENGTH_LONG).show()
         requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
-    override fun showLoanApproveFailed(s: String?) {
+    private fun showLoanApproveFailed(s: String?) {
         Toast.makeText(activity, s, Toast.LENGTH_LONG).show()
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         if (show) {
             showMifosProgressDialog()
         } else {
             hideMifosProgressDialog()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mLoanAccountApprovalPresenter.detachView()
     }
 }

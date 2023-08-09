@@ -16,6 +16,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.jakewharton.fliptables.FlipTable
@@ -28,24 +29,22 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse
-import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate
-import com.mifos.utils.Constants
+import com.mifos.states.LoanRepaymentUiState
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Utils
+import com.mifos.viewmodels.LoanRepaymentViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepaymentMvpView,
+class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener,
     DialogInterface.OnClickListener {
 
     private lateinit var binding: FragmentLoanRepaymentBinding
     val LOG_TAG = javaClass.simpleName
     private val arg: LoanRepaymentFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mLoanRepaymentPresenter: LoanRepaymentPresenter
+    private lateinit var viewModel: LoanRepaymentViewModel
 
     // Arguments Passed From the Loan Account Summary Fragment
     private var clientName: String? = null
@@ -71,12 +70,44 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
     ): View {
         binding = FragmentLoanRepaymentBinding.inflate(inflater, container, false)
         setToolbarTitle("Loan Repayment")
-        mLoanRepaymentPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[LoanRepaymentViewModel::class.java]
 
         //This Method Checking LoanRepayment made before in Offline mode or not.
         //If yes then User have to sync this first then he can able to make transaction.
         //If not then User able to make LoanRepayment in Online or Offline.
         checkLoanRepaymentStatusInDatabase()
+
+        viewModel.loanRepaymentUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is LoanRepaymentUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is LoanRepaymentUiState.ShowLoanRepayTemplate -> {
+                    showProgressbar(false)
+                    showLoanRepayTemplate(it.loanRepaymentTemplate)
+                }
+
+                is LoanRepaymentUiState.ShowLoanRepaymentDoesNotExistInDatabase -> {
+                    showProgressbar(false)
+                    showLoanRepaymentDoesNotExistInDatabase()
+                }
+
+                is LoanRepaymentUiState.ShowLoanRepaymentExistInDatabase -> {
+                    showProgressbar(false)
+                    showLoanRepaymentExistInDatabase()
+                }
+
+                is LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully -> {
+                    showProgressbar(false)
+                    showPaymentSubmittedSuccessfully(it.loanRepaymentResponse)
+                }
+
+                is LoanRepaymentUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -92,12 +123,12 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
         }
     }
 
-    override fun checkLoanRepaymentStatusInDatabase() {
+    private fun checkLoanRepaymentStatusInDatabase() {
         // Checking LoanRepayment Already made in Offline mode or Not.
-        mLoanRepaymentPresenter.checkDatabaseLoanRepaymentByLoanId(loanId!!.toInt())
+        viewModel.checkDatabaseLoanRepaymentByLoanId(loanId!!.toInt())
     }
 
-    override fun showLoanRepaymentExistInDatabase() {
+    private fun showLoanRepaymentExistInDatabase() {
         //Visibility of ParentLayout GONE, If Repayment Already made in Offline Mode
         binding.rlLoanRepayment.visibility = View.GONE
         MaterialDialog.Builder().init(activity)
@@ -115,13 +146,13 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
         }
     }
 
-    override fun showLoanRepaymentDoesNotExistInDatabase() {
+    private fun showLoanRepaymentDoesNotExistInDatabase() {
         // This Method Inflating UI and Initializing the Loading LoadRepayment
         // Template for transaction
         inflateUI()
 
         // Loading PaymentOptions.
-        mLoanRepaymentPresenter.loanLoanRepaymentTemplate(loanId!!.toInt())
+        viewModel.loanLoanRepaymentTemplate(loanId!!.toInt())
     }
 
     /**
@@ -295,10 +326,10 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
         request.transactionDate = dateString
         val builtRequest = Gson().toJson(request)
         Log.i("LOG_TAG", builtRequest)
-        mLoanRepaymentPresenter.submitPayment(loanId!!.toInt(), request)
+        viewModel.submitPayment(loanId!!.toInt(), request)
     }
 
-    override fun showLoanRepayTemplate(loanRepaymentTemplate: LoanRepaymentTemplate?) {
+    private fun showLoanRepayTemplate(loanRepaymentTemplate: LoanRepaymentTemplate?) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (activity == null) return
         if (loanRepaymentTemplate != null) {
@@ -341,7 +372,7 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
         }
     }
 
-    override fun showPaymentSubmittedSuccessfully(loanRepaymentResponse: LoanRepaymentResponse?) {
+    private fun showPaymentSubmittedSuccessfully(loanRepaymentResponse: LoanRepaymentResponse?) {
         if (loanRepaymentResponse != null) {
             Toaster.show(
                 binding.root, "Payment Successful, Transaction ID = " +
@@ -351,36 +382,17 @@ class LoanRepaymentFragment : MifosBaseFragment(), OnDatePickListener, LoanRepay
         requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
-    override fun showError(errorMessage: Int) {
+    private fun showError(errorMessage: Int) {
         Toaster.show(binding.root, errorMessage)
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             binding.rlLoanRepayment.visibility = View.GONE
             showMifosProgressBar()
         } else {
             binding.rlLoanRepayment.visibility = View.VISIBLE
             hideMifosProgressBar()
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mLoanRepaymentPresenter.detachView()
-    }
-
-    interface OnFragmentInteractionListener
-    companion object {
-        @JvmStatic
-        fun newInstance(loanWithAssociations: LoanWithAssociations?): LoanRepaymentFragment {
-            val fragment = LoanRepaymentFragment()
-            val args = Bundle()
-            if (loanWithAssociations != null) {
-                args.putParcelable(Constants.LOAN_SUMMARY, loanWithAssociations)
-                fragment.arguments = args
-            }
-            return fragment
         }
     }
 }
