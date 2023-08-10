@@ -14,6 +14,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.util.Toaster
@@ -26,13 +27,14 @@ import com.mifos.objects.noncore.DataTable
 import com.mifos.objects.noncore.DataTablePayload
 import com.mifos.services.data.GroupLoanPayload
 import com.mifos.services.data.LoansPayload
+import com.mifos.states.DataTableListUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.MifosResponseHandler
 import com.mifos.utils.PrefManager
 import com.mifos.utils.SafeUIBlockingUtility
+import com.mifos.viewmodels.DataTableListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
-import javax.inject.Inject
 
 /**
  * A generic fragment to show the DataTables at the runtime.
@@ -46,14 +48,14 @@ import javax.inject.Inject
  * a single datatable.
  */
 @AndroidEntryPoint
-class DataTableListFragment : Fragment(), DataTableListMvpView {
+class DataTableListFragment : Fragment() {
 
     private lateinit var binding: DialogFragmentAddEntryToDatatableBinding
 
     private val LOG_TAG = javaClass.simpleName
 
-    @Inject
-    lateinit var mDataTableListPresenter: DataTableListPresenter
+    private lateinit var viewModel: DataTableListViewModel
+
     private var dataTables: List<DataTable>? = null
     private var dataTablePayloadElements: ArrayList<DataTablePayload>? = null
     private var clientLoansPayload: LoansPayload? = null
@@ -70,7 +72,7 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
     ): View {
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         binding = DialogFragmentAddEntryToDatatableBinding.inflate(inflater, container, false)
-        mDataTableListPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[DataTableListViewModel::class.java]
         requireActivity().title = requireActivity().resources.getString(
             R.string.associated_datatables
         )
@@ -81,6 +83,32 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
             createForm(datatable)
         }
         addSaveButton()
+
+        viewModel.dataTableListUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is DataTableListUiState.ShowClientCreatedSuccessfully -> {
+                    showProgressbar(false)
+                    showClientCreatedSuccessfully(it.client)
+                }
+
+                is DataTableListUiState.ShowMessage -> {
+                    showProgressbar(false)
+                    showMessage(it.message)
+                }
+
+                is DataTableListUiState.ShowMessageString -> {
+                    showProgressbar(false)
+                    showMessage(it.message)
+                }
+
+                is DataTableListUiState.ShowProgressBar -> showProgressbar(true)
+                is DataTableListUiState.ShowWaitingForCheckerApproval -> {
+                    showProgressbar(false)
+                    showWaitingForCheckerApproval(it.message)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -181,15 +209,15 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
         when (requestType) {
             Constants.CLIENT_LOAN -> {
                 clientLoansPayload?.dataTables = dataTablePayloadElements
-                mDataTableListPresenter.createLoansAccount(clientLoansPayload)
+                viewModel.createLoansAccount(clientLoansPayload)
             }
 
             Constants.GROUP_LOAN ->                 //Add Datatables in GroupLoan Payload and then add them here.
-                mDataTableListPresenter.createGroupLoanAccount(groupLoanPayload)
+                viewModel.createGroupLoanAccount(groupLoanPayload)
 
             Constants.CREATE_CLIENT -> {
                 clientPayload.datatables = dataTablePayloadElements
-                mDataTableListPresenter.createClient(clientPayload)
+                viewModel.createClient(clientPayload)
             }
         }
     }
@@ -218,17 +246,17 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
         return payload
     }
 
-    override fun showMessage(messageId: Int) {
+    private fun showMessage(messageId: Int) {
         Toaster.show(binding.root, getString(messageId))
         requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
-    override fun showMessage(message: String?) {
+    private fun showMessage(message: String?) {
         Toaster.show(binding.root, message)
         requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
-    override fun showClientCreatedSuccessfully(client: Client) {
+    private fun showClientCreatedSuccessfully(client: Client) {
         requireActivity().supportFragmentManager.popBackStack()
         requireActivity().supportFragmentManager.popBackStack()
         Toast.makeText(
@@ -242,22 +270,17 @@ class DataTableListFragment : Fragment(), DataTableListMvpView {
         }
     }
 
-    override fun showWaitingForCheckerApproval(message: Int) {
+    private fun showWaitingForCheckerApproval(message: Int) {
         requireActivity().supportFragmentManager.popBackStack()
         Toaster.show(binding.root, message, Toast.LENGTH_SHORT)
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             safeUIBlockingUtility?.safelyBlockUI()
         } else {
             safeUIBlockingUtility?.safelyUnBlockUI()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mDataTableListPresenter.detachView()
     }
 
     companion object {

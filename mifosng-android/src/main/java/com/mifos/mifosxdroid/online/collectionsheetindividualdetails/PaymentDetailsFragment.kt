@@ -29,10 +29,10 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     private lateinit var binding: AddPaymentDetailBinding
     private val arg: PaymentDetailsFragmentArgs by navArgs()
 
-    var paymentTypeList: List<String>? = null
-    var paymentTypeOptionsList: List<PaymentTypeOptions>? = null
+    private var paymentTypeList: List<String>? = null
+    private var paymentTypeOptionsList: List<PaymentTypeOptions>? = null
     var payload: IndividualCollectionSheetPayload? = null
-    var mCallback: OnPayloadSelectedListener? = null
+    private var mCallback: OnPayloadSelectedListener? = null
     private lateinit var bulkRepaymentTransaction: BulkRepaymentTransactions
     private var position = 0
     private var clientId = 0

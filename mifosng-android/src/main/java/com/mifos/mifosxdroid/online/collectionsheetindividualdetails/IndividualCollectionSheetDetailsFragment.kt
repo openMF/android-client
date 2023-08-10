@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,22 +22,23 @@ import com.mifos.mifosxdroid.databinding.IndividualCollectionsSheetDetailsBindin
 import com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity
 import com.mifos.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.objects.collectionsheet.LoanAndClientName
+import com.mifos.states.IndividualCollectionSheetDetailsUiState
 import com.mifos.utils.Constants
+import com.mifos.viewmodels.IndividualCollectionSheetDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by aksh on 20/6/18.
  */
 @AndroidEntryPoint
-class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
-    IndividualCollectionSheetDetailsMvpView, OnRetrieveSheetItemData, ListAdapterListener {
+class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(), OnRetrieveSheetItemData,
+    ListAdapterListener {
 
     private lateinit var binding: IndividualCollectionsSheetDetailsBinding
     private val arg: IndividualCollectionSheetDetailsFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var presenter: IndividualCollectionSheetDetailsPresenter
+    private lateinit var viewModel: IndividualCollectionSheetDetailsViewModel
+
     var sheetsAdapter: IndividualCollectionSheetDetailsAdapter? = null
     private var sheet: IndividualCollectionSheet? = null
     private var paymentTypeList: List<String>? = null
@@ -65,9 +67,25 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
         binding = IndividualCollectionsSheetDetailsBinding.inflate(inflater, container, false)
         setToolbarTitle(getStringMessage(R.string.individual_collection_sheet))
         sheetsAdapter = IndividualCollectionSheetDetailsAdapter(requireContext(), this)
-        presenter.attachView(this)
+        viewModel = ViewModelProvider(this)[IndividualCollectionSheetDetailsViewModel::class.java]
         payload = (activity as GenerateCollectionSheetActivity).payload
         showCollectionSheetViews(sheet)
+
+        viewModel.individualCollectionSheetDetailsUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is IndividualCollectionSheetDetailsUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is IndividualCollectionSheetDetailsUiState.ShowProgressbar -> showProgressbar(true)
+                is IndividualCollectionSheetDetailsUiState.ShowSuccess -> {
+                    showProgressbar(false)
+                    showSuccess()
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -87,8 +105,8 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
     }
 
     private fun showCollectionSheetViews(sheet: IndividualCollectionSheet?) {
-        paymentTypeList = presenter.filterPaymentTypeOptions(sheet?.paymentTypeOptions)
-        loansAndClientNames = presenter.filterLoanAndClientNames(sheet?.clients)
+        paymentTypeList = viewModel.filterPaymentTypeOptions(sheet?.paymentTypeOptions)
+        loansAndClientNames = viewModel.filterLoanAndClientNames(sheet?.clients)
 
         //Initialize payload's BulkRepaymentTransactions array with default values.
         //The changes made (if any) will be updated by the interface 'OnRetrieveSheetItemData'
@@ -96,7 +114,7 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
         //methods.
         if (payload == null) {
             payload = IndividualCollectionSheetPayload()
-            for (loanAndClientName in presenter.filterLoanAndClientNames(sheet?.clients)) {
+            for (loanAndClientName in viewModel.filterLoanAndClientNames(sheet?.clients)) {
                 val loanCollectionSheet = loanAndClientName.loan
                 if (loanCollectionSheet != null) {
                     payload?.bulkRepaymentTransactions?.add(
@@ -119,15 +137,15 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
         sheetsAdapter?.notifyDataSetChanged()
     }
 
-    override fun showSuccess() {
+    private fun showSuccess() {
         Toaster.show(binding.root, getStringMessage(R.string.collectionsheet_submit_success))
     }
 
-    override fun showError(error: String?) {
+    private fun showError(error: String?) {
         Toaster.show(binding.root, error)
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             showMifosProgressDialog()
         } else {
@@ -168,7 +186,7 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment(),
         } else {
             payload?.actualDisbursementDate = actualDisbursementDate
             payload?.transactionDate = transactionDate
-            presenter.submitIndividualCollectionSheet(payload)
+            viewModel.submitIndividualCollectionSheet(payload)
         }
     }
 }

@@ -23,12 +23,14 @@ import com.mifos.objects.survey.ScorecardValues
 import com.mifos.objects.survey.Survey
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Date
 import java.util.Vector
 
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
+@AndroidEntryPoint
 class SurveyQuestionActivity : MifosBaseActivity(), OnAnswerSelectedListener, DisableSwipe,
     OnPageChangeListener {
 

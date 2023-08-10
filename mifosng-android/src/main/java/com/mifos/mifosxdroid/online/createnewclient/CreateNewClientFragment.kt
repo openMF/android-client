@@ -11,7 +11,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.telephony.PhoneNumberUtils
@@ -22,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
@@ -33,26 +33,26 @@ import com.mifos.objects.client.ClientPayload
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.organisation.Staff
 import com.mifos.objects.templates.clients.ClientsTemplate
+import com.mifos.states.CreateNewClientUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.ValidationUtil
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
+import com.mifos.viewmodels.CreateNewClientViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Locale
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
+class CreateNewClientFragment : ProgressableFragment() {
 
     private lateinit var binding: FragmentCreateNewClientBinding
 
-    @Inject
-    lateinit var createNewClientPresenter: CreateNewClientPresenter
+    private lateinit var viewModel: CreateNewClientViewModel
 
     // It checks whether the user wants to create the new client with or without picture
     private var createClientWithImage = false
@@ -102,9 +102,56 @@ class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCreateNewClientBinding.inflate(inflater, container, false)
-        createNewClientPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[CreateNewClientViewModel::class.java]
         showUserInterface()
-        createNewClientPresenter.loadClientTemplate()
+        viewModel.loadClientTemplate()
+
+        viewModel.createNewClientUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is CreateNewClientUiState.SetClientId -> {
+                    showProgressbar(false)
+                    setClientId(it.id)
+                }
+
+                is CreateNewClientUiState.ShowClientCreatedSuccessfully -> {
+                    showProgressbar(false)
+                    showClientCreatedSuccessfully(it.message)
+                }
+
+                is CreateNewClientUiState.ShowClientTemplate -> {
+                    showProgressbar(false)
+                    showClientTemplate(it.clientsTemplate)
+                }
+
+                is CreateNewClientUiState.ShowMessage -> {
+                    showProgressbar(false)
+                    showMessage(it.message)
+                }
+
+                is CreateNewClientUiState.ShowMessageString -> {
+                    showProgressbar(false)
+                    showMessage(it.message)
+                }
+
+                is CreateNewClientUiState.ShowOffices -> {
+                    showProgressbar(false)
+                    showOffices(it.officeList)
+                }
+
+                is CreateNewClientUiState.ShowProgress -> showProgress(it.message)
+                is CreateNewClientUiState.ShowProgressbar -> showProgressbar(true)
+                is CreateNewClientUiState.ShowStaffInOffices -> {
+                    showProgressbar(false)
+                    showStaffInOffices(it.staffList)
+                }
+
+                is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
+                    showProgressbar(false)
+                    showWaitingForCheckerApproval(it.message)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -145,7 +192,7 @@ class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
         binding.officeListField.setOnItemClickListener { adapterView, view, relativePosition, l ->
             val index = officeList.indexOf(adapterView.getItemAtPosition(relativePosition))
             officeId = clientOffices?.get(index)?.id
-            officeId?.let { createNewClientPresenter.loadStaffInOffices(it) }
+            officeId?.let { viewModel.loadStaffInOffices(it) }
         }
 
         binding.staffListField.setOnItemClickListener { adapterView, view, relativePosition, l ->
@@ -162,7 +209,7 @@ class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
 
     }
 
-    override fun showUserInterface() {
+    private fun showUserInterface() {
 
         binding.submissionDateFieldContainer.editText?.setText(getTodayFormatted())
 
@@ -275,7 +322,7 @@ class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
                 fragmentTransaction.replace(R.id.container, fragment).commit()
             } else {
                 clientPayload.datatables = null
-                createNewClientPresenter.createClient(clientPayload)
+                viewModel.createClient(clientPayload)
             }
         }
     }
@@ -285,7 +332,7 @@ class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
             if (binding.cbClientActiveStatus.isChecked) View.VISIBLE else View.GONE
     }
 
-    override fun showClientTemplate(clientsTemplate: ClientsTemplate?) {
+    private fun showClientTemplate(clientsTemplate: ClientsTemplate?) {
         this.clientsTemplate = clientsTemplate
         if (clientsTemplate != null) {
             if (clientsTemplate.dataTables.isNotEmpty()) {
@@ -293,65 +340,58 @@ class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
             }
         }
         genderOptionsList.addAll(
-            createNewClientPresenter.filterOptions(clientsTemplate?.genderOptions)
+            viewModel.filterOptions(clientsTemplate?.genderOptions)
         )
         binding.genderListField.setSimpleItems(genderOptionsList.toTypedArray())
 
         clientTypeList.addAll(
-            createNewClientPresenter.filterOptions(clientsTemplate?.clientTypeOptions)
+            viewModel.filterOptions(clientsTemplate?.clientTypeOptions)
         )
         binding.clientTypeListField.setSimpleItems(clientTypeList.toTypedArray())
 
         clientClassificationList.addAll(
-            createNewClientPresenter
+            viewModel
                 .filterOptions(clientsTemplate?.clientClassificationOptions)
         )
         binding.clientTypeListField.setSimpleItems(clientTypeList.toTypedArray())
     }
 
-    override fun showOffices(offices: List<Office?>?) {
-        clientOffices = offices as List<Office>?
-        officeList.addAll(createNewClientPresenter.filterOffices(offices))
+    private fun showOffices(offices: List<Office>) {
+        clientOffices = offices
+        officeList.addAll(viewModel.filterOffices(offices))
         officeList.sort()
         binding.officeListField.setSimpleItems(officeList.toTypedArray())
     }
 
-    override fun showStaffInOffices(staffs: List<Staff?>?) {
-        if (staffs != null) {
-            if (staffs.isEmpty()) {
-                showMessage(R.string.no_staff_associated_with_office)
-            }
+    private fun showStaffInOffices(staffs: List<Staff>) {
+        if (staffs.isEmpty()) {
+            showMessage(R.string.no_staff_associated_with_office)
         }
-        clientStaff = staffs as List<Staff>?
+        clientStaff = staffs
         staffList.clear()
-        staffList.addAll(createNewClientPresenter.filterStaff(staffs))
+        staffList.addAll(viewModel.filterStaff(staffs))
         binding.staffListField.setSimpleItems(staffList.toTypedArray())
     }
 
-    override fun showClientCreatedSuccessfully(message: Int) {
+    private fun showClientCreatedSuccessfully(message: Int) {
         Toaster.show(binding.root, message)
     }
 
-    override fun showWaitingForCheckerApproval(message: Int) {
+    private fun showWaitingForCheckerApproval(message: Int) {
         Toaster.show(binding.root, message)
         requireActivity().supportFragmentManager.popBackStack()
     }
 
-    override fun showMessage(message: Int) {
+    private fun showMessage(message: Int) {
         Toaster.show(binding.root, message)
     }
 
-    override fun showMessage(message: String?) {
+    private fun showMessage(message: String?) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         showProgress(show)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        createNewClientPresenter.detachView()
     }
 
     private val isFirstNameValid: Boolean
@@ -431,10 +471,10 @@ class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
             return result
         }
 
-    override fun setClientId(id: Int?) {
+    private fun setClientId(id: Int) {
         returnedClientId = id
         if (createClientWithImage) {
-            ClientImageFile?.let { createNewClientPresenter.uploadImage(returnedClientId!!, it) }
+            ClientImageFile?.let { viewModel.uploadImage(returnedClientId!!, it) }
         } else {
             requireActivity().supportFragmentManager.popBackStack()
         }
@@ -464,7 +504,7 @@ class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
         }
     }
 
-    override fun showProgress(message: String?) {
+    private fun showProgress(message: String?) {
         if (progress == null) {
             progress = ProgressDialog(activity, ProgressDialog.STYLE_SPINNER)
             progress?.setCancelable(false)
@@ -473,13 +513,13 @@ class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
         progress?.show()
     }
 
-    override fun hideProgress() {
+    private fun hideProgress() {
         if (progress != null && progress!!.isShowing) progress?.dismiss()
     }
 
     //permission is automatically granted on sdk<23 upon installation
-    val isStoragePermissionGranted: Boolean
-        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    private val isStoragePermissionGranted: Boolean
+        get() =
             if (requireActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED
             ) {
@@ -491,9 +531,6 @@ class CreateNewClientFragment : ProgressableFragment(), CreateNewClientMvpView {
                 )
                 false
             }
-        } else { //permission is automatically granted on sdk<23 upon installation
-            true
-        }
 
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>, grantResults: IntArray
