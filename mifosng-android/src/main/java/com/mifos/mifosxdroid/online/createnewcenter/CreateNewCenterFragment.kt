@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.exceptions.ShortOfLengthException
@@ -19,31 +20,32 @@ import com.mifos.mifosxdroid.databinding.FragmentCreateNewCenterBinding
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.response.SaveResponse
 import com.mifos.services.data.CenterPayload
+import com.mifos.states.CreateNewCenterUiState
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.MifosResponseHandler
 import com.mifos.utils.ValidationUtil
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
+import com.mifos.viewmodels.CreateNewCenterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Locale
-import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
  */
 @AndroidEntryPoint
-class CreateNewCenterFragment : MifosBaseFragment(), CreateNewCenterMvpView {
+class CreateNewCenterFragment : MifosBaseFragment() {
 
     private lateinit var binding: FragmentCreateNewCenterBinding
 
     var officeId: Int? = 0
     var result = true
 
-    @Inject
-    lateinit var mCreateNewCenterPresenter: CreateNewCenterPresenter
+    private lateinit var viewModel: CreateNewCenterViewModel
+
     private var activationDateString: String? = null
     private val officeNameIdHashMap = HashMap<String, Int>()
 
@@ -62,10 +64,36 @@ class CreateNewCenterFragment : MifosBaseFragment(), CreateNewCenterMvpView {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCreateNewCenterBinding.inflate(inflater, container, false)
-        mCreateNewCenterPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[CreateNewCenterViewModel::class.java]
         inflateOfficeSpinner()
         inflateActivationDate()
         //client active checkbox onCheckedListener
+
+        viewModel.createNewCenterUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is CreateNewCenterUiState.CenterCreatedSuccessfully -> {
+                    showProgressbar(false)
+                    centerCreatedSuccessfully(it.saveResponse)
+                }
+
+                is CreateNewCenterUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is CreateNewCenterUiState.ShowFetchingErrorString -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is CreateNewCenterUiState.ShowOffices -> {
+                    showProgressbar(false)
+                    showOffices(it.offices)
+                }
+
+                is CreateNewCenterUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
 
         return binding.root
     }
@@ -102,12 +130,12 @@ class CreateNewCenterFragment : MifosBaseFragment(), CreateNewCenterMvpView {
 
     //inflating office list spinner
     private fun inflateOfficeSpinner() {
-        mCreateNewCenterPresenter.loadOffices()
+        viewModel.loadOffices()
     }
 
     private fun initiateCenterCreation(centerPayload: CenterPayload) {
         if (isCenterNameValid) {
-            mCreateNewCenterPresenter.createCenter(centerPayload)
+            viewModel.createCenter(centerPayload)
         }
     }
 
@@ -151,7 +179,7 @@ class CreateNewCenterFragment : MifosBaseFragment(), CreateNewCenterMvpView {
             return result
         }
 
-    override fun showOffices(offices: List<Office?>?) {
+    private fun showOffices(offices: List<Office?>?) {
         val officeList: MutableList<String> = ArrayList()
         if (offices != null) {
             for (office in offices) {
@@ -179,7 +207,7 @@ class CreateNewCenterFragment : MifosBaseFragment(), CreateNewCenterMvpView {
         }
     }
 
-    override fun centerCreatedSuccessfully(saveResponse: SaveResponse?) {
+    private fun centerCreatedSuccessfully(saveResponse: SaveResponse?) {
         Toast.makeText(
             activity, "Center " + MifosResponseHandler.response,
             Toast.LENGTH_LONG
@@ -187,15 +215,15 @@ class CreateNewCenterFragment : MifosBaseFragment(), CreateNewCenterMvpView {
         requireActivity().supportFragmentManager.popBackStack()
     }
 
-    override fun showFetchingError(errorMessage: Int) {
+    private fun showFetchingError(errorMessage: Int) {
         Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showFetchingError(s: String?) {
+    private fun showFetchingError(s: String?) {
         Toast.makeText(activity, s, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         if (show) {
             binding.llCenter.visibility = View.GONE
             showMifosProgressBar()
@@ -203,10 +231,5 @@ class CreateNewCenterFragment : MifosBaseFragment(), CreateNewCenterMvpView {
             binding.llCenter.visibility = View.VISIBLE
             hideMifosProgressBar()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mCreateNewCenterPresenter.detachView()
     }
 }

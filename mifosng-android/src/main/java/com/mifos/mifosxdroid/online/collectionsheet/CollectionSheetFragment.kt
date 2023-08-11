@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.mifos.api.model.BulkRepaymentTransactions
@@ -19,11 +20,12 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentCollectionSheetBinding
 import com.mifos.objects.db.CollectionSheet
 import com.mifos.objects.response.SaveResponse
+import com.mifos.states.CollectionSheetUiState
 import com.mifos.utils.Constants
+import com.mifos.viewmodels.CollectionSheetViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import retrofit2.adapter.rxjava.HttpException
+import retrofit2.HttpException
 import java.util.*
-import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
@@ -31,14 +33,14 @@ import javax.inject.Inject
  * create an instance of this fragment.
  */
 @AndroidEntryPoint
-class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
+class CollectionSheetFragment : MifosBaseFragment() {
     val LOG_TAG = javaClass.simpleName
 
     private lateinit var binding: FragmentCollectionSheetBinding
 
-    @Inject
-    lateinit var mCollectionSheetPresenter: CollectionSheetPresenter
-    var collectionListAdapter: CollectionListAdapter? = null
+    private lateinit var viewModel: CollectionSheetViewModel
+
+    private var collectionListAdapter: CollectionListAdapter? = null
     private var centerId: Int? = null // Center for which collection sheet is being generated = 0
     private var dateOfCollection: String? =
         null // Date of Meeting on which collection has to be done.
@@ -65,8 +67,26 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentCollectionSheetBinding.inflate(inflater, container, false)
-        mCollectionSheetPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[CollectionSheetViewModel::class.java]
         fetchCollectionSheet()
+
+        viewModel.collectionSheetUiState.observe(viewLifecycleOwner) {
+            when(it) {
+                is CollectionSheetUiState.ShowCollectionSheet -> {
+                    showCollectionSheet(it.collectionSheet)
+                }
+                is CollectionSheetUiState.ShowCollectionSheetSuccessfullySaved -> {
+                    showCollectionSheetSuccessfullySaved(it.saveResponse)
+                }
+                is CollectionSheetUiState.ShowFailedToSaveCollectionSheet -> {
+                    showFailedToSaveCollectionSheet(it.e)
+                }
+                is CollectionSheetUiState.ShowFetchingError -> {
+                    showFetchingError(it.message)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -107,7 +127,7 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
         payload.calendarId = calendarInstanceId.toLong()
         payload.transactionDate = dateOfCollection
         payload.dateFormat = "dd-MM-YYYY"
-        mCollectionSheetPresenter.loadCollectionSheet(centerId!!.toLong(), payload)
+        viewModel.loadCollectionSheet(centerId!!.toLong(), payload)
     }
 
     @Synchronized
@@ -134,21 +154,21 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
 
         //Saving Collection Sheet
         centerId?.let {
-            mCollectionSheetPresenter.saveCollectionSheet(
+            viewModel.saveCollectionSheet(
                 it,
                 collectionSheetPayload
             )
         }
     }
 
-    override fun showCollectionSheet(collectionSheet: CollectionSheet) {
+    private fun showCollectionSheet(collectionSheet: CollectionSheet) {
         Log.i(COLLECTION_SHEET_ONLINE, "Received")
         val mifosGroups = collectionSheet.groups
         collectionListAdapter = CollectionListAdapter(requireActivity(), mifosGroups)
         binding.exlvCollectionSheet.setAdapter(collectionListAdapter)
     }
 
-    override fun showCollectionSheetSuccessfullySaved(saveResponse: SaveResponse?) {
+    private fun showCollectionSheetSuccessfullySaved(saveResponse: SaveResponse?) {
         if (saveResponse != null) {
             Toast.makeText(
                 activity, "Collection Sheet Saved Successfully",
@@ -157,34 +177,27 @@ class CollectionSheetFragment : MifosBaseFragment(), CollectionSheetMvpView {
         }
     }
 
-    override fun showFailedToSaveCollectionSheet(response: HttpException?) {
-        if (response != null) {
-            if (response.code() == 400 || response.code() == 403) {
-                //TODO for now, It is commented
-                //MFErrorParser.parseError(response.response().body());
-            }
-            Toast.makeText(
-                activity, "Collection Sheet could not be saved.",
-                Toast.LENGTH_SHORT
-            ).show()
+    private fun showFailedToSaveCollectionSheet(response: HttpException) {
+        if (response.code() == 400 || response.code() == 403) {
+            //TODO for now, It is commented
+            //MFErrorParser.parseError(response.response().body());
         }
+        Toast.makeText(
+            activity, "Collection Sheet could not be saved.",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
-    override fun showFetchingError(s: String?) {
+    private fun showFetchingError(s: String?) {
         Toast.makeText(activity, s, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             showMifosProgressDialog()
         } else {
             hideMifosProgressDialog()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mCollectionSheetPresenter.detachView()
     }
 
     companion object {

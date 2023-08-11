@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mifos.api.model.RequestCollectionSheetPayload
 import com.mifos.mifosxdroid.R
@@ -14,29 +15,29 @@ import com.mifos.mifosxdroid.dialogfragments.collectionsheetdialog.CollectionShe
 import com.mifos.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.organisation.Staff
+import com.mifos.states.NewIndividualCollectionSheetUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
+import com.mifos.viewmodels.NewIndividualCollectionSheetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Locale
-import javax.inject.Inject
 
 
 /**
  * Created by aksh on 18/6/18.
  */
 @AndroidEntryPoint
-class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualCollectionSheetMvpView,
-    View.OnClickListener {
+class NewIndividualCollectionSheetFragment : MifosBaseFragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentNewCollectionSheetBinding
 
-    @Inject
-    lateinit var presenter: NewIndividualCollectionSheetPresenter
+    private lateinit var viewModel: NewIndividualCollectionSheetViewModel
+
     private var sheet: IndividualCollectionSheet? = null
     private var requestPayload: RequestCollectionSheetPayload? = null
     private lateinit var officeNameList: ArrayList<String>
@@ -53,7 +54,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     private var selectedRepaymentDate: Instant = Instant.now()
     private val datePickerDialog by lazy {
         getDatePickerDialog(selectedRepaymentDate, DatePickerConstrainType.ONLY_FUTURE_DAYS) {
-            val formattedDate = SimpleDateFormat("dd MM yyyy", Locale.getDefault()).format(it)
+            val formattedDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(it)
             selectedRepaymentDate = Instant.ofEpochMilli(it)
             binding.repaymentDateFieldContainer.editText?.setText(formattedDate)
         }
@@ -74,8 +75,44 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
     ): View {
         binding = FragmentNewCollectionSheetBinding.inflate(inflater, container, false)
         setToolbarTitle(getStringMessage(R.string.individual_collection_sheet))
-        presenter.attachView(this)
+        viewModel = ViewModelProvider(this)[NewIndividualCollectionSheetViewModel::class.java]
         setUpUi()
+
+        viewModel.newIndividualCollectionSheetUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is NewIndividualCollectionSheetUiState.SetOfficeSpinner -> {
+                    showProgressbar(false)
+                    setOfficeSpinner(it.officeList)
+                }
+
+                is NewIndividualCollectionSheetUiState.SetStaffSpinner -> {
+                    showProgressbar(false)
+                    setStaffSpinner(it.staffList)
+                }
+
+                is NewIndividualCollectionSheetUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.errorMessage)
+                }
+
+                is NewIndividualCollectionSheetUiState.ShowNoSheetFound -> {
+                    showProgressbar(false)
+                    showNoSheetFound()
+                }
+
+                is NewIndividualCollectionSheetUiState.ShowProgressbar -> showProgressbar(true)
+                is NewIndividualCollectionSheetUiState.ShowSheet -> {
+                    showProgressbar(false)
+                    showSheet(it.individualCollectionSheet)
+                }
+
+                is NewIndividualCollectionSheetUiState.ShowSuccess -> {
+                    showProgressbar(false)
+                    showSuccess()
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -95,7 +132,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
             val i = officeNameList.indexOf(adapterView.getItemAtPosition(relativePosition))
             Toaster.show(binding.root, officeNameList[i])
             officeId = officeList[i].id
-            presenter.fetchStaff(officeId!!)
+            viewModel.fetchStaff(officeId!!)
         }
         staffNameList = ArrayList()
         binding.staffSelectionField.setSimpleItems(staffNameList.toTypedArray())
@@ -106,7 +143,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
             )
         }
         binding.btnFetchCollectionSheet.setOnClickListener(this)
-        presenter.fetchOffices()
+        viewModel.fetchOffices()
 
     }
 
@@ -124,21 +161,21 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
             binding.repaymentDateFieldContainer.editText?.text.toString()
     }
 
-    override fun setOfficeSpinner(offices: List<Office>?) {
+    private fun setOfficeSpinner(offices: List<Office>?) {
         if (offices != null) {
             officeList = offices
         }
         officeNameList.clear()
-        officeNameList.addAll(presenter.filterOffices(officeList))
+        officeNameList.addAll(viewModel.filterOffices(officeList))
         binding.officeListField.setSimpleItems(officeNameList.toTypedArray())
     }
 
     private fun retrieveCollectionSheet() {
         prepareRequestPayload()
-        presenter.fetchIndividualCollectionSheet(requestPayload)
+        viewModel.fetchIndividualCollectionSheet(requestPayload)
     }
 
-    override fun setStaffSpinner(staffs: List<Staff>?) {
+    private fun setStaffSpinner(staffs: List<Staff>?) {
         binding.staffSelectionField.setOnItemClickListener { adapterView, _, relativePosition, _ ->
             val i = staffNameList.indexOf(adapterView.getItemAtPosition(relativePosition))
             staffId = staffList[i].id
@@ -147,7 +184,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
             staffList = staffs
         }
         staffNameList.clear()
-        staffNameList.addAll(presenter.filterStaff(staffList))
+        staffNameList.addAll(viewModel.filterStaff(staffList))
         binding.staffSelectionField.setSimpleItems(staffNameList.toTypedArray())
     }
 
@@ -183,7 +220,7 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         }
     }
 
-    override fun showSheet(individualCollectionSheet: IndividualCollectionSheet?) {
+    private fun showSheet(individualCollectionSheet: IndividualCollectionSheet?) {
         sheet = individualCollectionSheet
     }
 
@@ -192,22 +229,22 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), IndividualColl
         outState.putParcelable(Constants.EXTRA_COLLECTION_INDIVIDUAL, sheet)
     }
 
-    override fun showSuccess() {
+    private fun showSuccess() {
         if (success) {
             popupDialog()
         }
     }
 
-    override fun showError(message: String?) {
+    private fun showError(message: String?) {
         Toaster.show(binding.root, message)
     }
 
-    override fun showNoSheetFound() {
+    private fun showNoSheetFound() {
         success = false
         Toaster.show(binding.root, getStringMessage(R.string.no_collectionsheet_found))
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             showMifosProgressDialog()
         } else {

@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
 import com.mifos.exceptions.RequiredFieldException
@@ -24,24 +25,25 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.loan.LoanDisbursement
 import com.mifos.objects.templates.loans.LoanTransactionTemplate
+import com.mifos.states.LoanAccountDisbursementUiState
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Network
+import com.mifos.viewmodels.LoanAccountDisbursementViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
  */
 @AndroidEntryPoint
 class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
-    LoanAccountDisbursementMvpView, OnItemSelectedListener {
+    OnItemSelectedListener {
 
     private lateinit var binding: DialogFragmentDisburseLoanBinding
     private val arg: LoanAccountDisbursementFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var loanAccountDisbursementPresenter: LoanAccountDisbursementPresenter
+    private lateinit var viewModel: LoanAccountDisbursementViewModel
+
     private var paymentTypeId = 0
     private var disbursementDates: String? = null
     private var loanAccountNumber = 0
@@ -63,9 +65,31 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
     ): View {
         activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         binding = DialogFragmentDisburseLoanBinding.inflate(inflater, container, false)
-        loanAccountDisbursementPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[LoanAccountDisbursementViewModel::class.java]
         showUserInterface()
-        loanAccountDisbursementPresenter.loadLoanTemplate(loanAccountNumber)
+        viewModel.loadLoanTemplate(loanAccountNumber)
+
+        viewModel.loanAccountDisbursementUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is LoanAccountDisbursementUiState.ShowDisburseLoanSuccessfully -> {
+                    showProgressbar(false)
+                    showDisburseLoanSuccessfully(it.genericResponse)
+                }
+
+                is LoanAccountDisbursementUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is LoanAccountDisbursementUiState.ShowLoanTransactionTemplate -> {
+                    showProgressbar(false)
+                    showLoanTransactionTemplate(it.loanTransactionTemplate)
+                }
+
+                is LoanAccountDisbursementUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -97,13 +121,13 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
             loanDisbursement.transactionAmount =
                 java.lang.Double.valueOf(binding.etDisbursedAmount.editableText.toString())
             loanDisbursement.paymentId = paymentTypeId
-            loanAccountDisbursementPresenter.disburseLoan(loanAccountNumber, loanDisbursement)
+            viewModel.disburseLoan(loanAccountNumber, loanDisbursement)
         } else {
             Toaster.show(binding.root, R.string.error_network_not_available, Toaster.LONG)
         }
     }
 
-    override fun showUserInterface() {
+    private fun showUserInterface() {
         setToolbarTitle(getString(R.string.disburse_loan))
         mfDatePicker = MFDatePicker.newInsance(this)
         binding.tvLoanDisbursementDates.text = MFDatePicker.datePickedAsString
@@ -118,7 +142,7 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
         binding.spLoanPaymentType.onItemSelectedListener = this
     }
 
-    override fun showDisbursementDate(date: String?) {
+    private fun showDisbursementDate(date: String?) {
         disbursementDates = DateHelper.getDateAsStringUsedForCollectionSheetPayload(date)
             .replace("-", " ")
     }
@@ -136,14 +160,14 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
         showDisbursementDate(date)
     }
 
-    override fun showLoanTransactionTemplate(loanTransactionTemplate: LoanTransactionTemplate) {
+    private fun showLoanTransactionTemplate(loanTransactionTemplate: LoanTransactionTemplate) {
         this.loanTransactionTemplate = loanTransactionTemplate
         binding.etDisbursedAmount.setText(loanTransactionTemplate.amount.toString())
         paymentTypeOptions.addAll()
         paymentTypeOptionAdapter?.notifyDataSetChanged()
     }
 
-    override fun showDisburseLoanSuccessfully(genericResponse: GenericResponse?) {
+    private fun showDisburseLoanSuccessfully(genericResponse: GenericResponse?) {
         Toast.makeText(
             activity, R.string.loan_disburse_successfully,
             Toast.LENGTH_LONG
@@ -151,15 +175,15 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
         requireActivity().supportFragmentManager.popBackStack()
     }
 
-    override fun showError(message: String?) {
+    private fun showError(message: String?) {
         Toaster.show(binding.root, message, Toaster.INDEFINITE)
     }
 
-    override fun showError(errorMessage: Int) {
+    private fun showError(errorMessage: Int) {
         Toaster.show(binding.root, errorMessage)
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         if (show) {
             showMifosProgressBar()
             binding.llDisburse.visibility = View.GONE
@@ -167,11 +191,6 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(), OnDatePickListener,
             hideMifosProgressBar()
             binding.llDisburse.visibility = View.VISIBLE
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        loanAccountDisbursementPresenter.detachView()
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {

@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.exceptions.ShortOfLengthException
@@ -22,6 +23,7 @@ import com.mifos.mifosxdroid.online.GroupsActivity
 import com.mifos.objects.group.GroupPayload
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.response.SaveResponse
+import com.mifos.states.CreateNewGroupUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
@@ -31,23 +33,23 @@ import com.mifos.utils.PrefManager
 import com.mifos.utils.ValidationUtil
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
+import com.mifos.viewmodels.CreateNewGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Locale
-import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
  */ //TODO Show Image and Text after successful or Failed during creation of Group and
 //TODO A button to Continue or Finish the GroupCreation.
 @AndroidEntryPoint
-class CreateNewGroupFragment : ProgressableFragment(), CreateNewGroupMvpView {
+class CreateNewGroupFragment : ProgressableFragment() {
 
     private lateinit var binding: FragmentCreateNewGroupBinding
 
-    @Inject
-    lateinit var mCreateNewGroupPresenter: CreateNewGroupPresenter
+    private lateinit var viewModel: CreateNewGroupViewModel
+
     private var activationDateString: String? = null
     var officeId: Int? = 0
     var result = true
@@ -58,7 +60,7 @@ class CreateNewGroupFragment : ProgressableFragment(), CreateNewGroupMvpView {
     private var submissionDate: Instant = Instant.now()
     private val submissionDatePickerDialog by lazy {
         getDatePickerDialog(submissionDate, DatePickerConstrainType.ONLY_FUTURE_DAYS) {
-            val formattedDate = SimpleDateFormat("dd MM yyyy", Locale.getDefault()).format(it)
+            val formattedDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(it)
             submissionDate = Instant.ofEpochMilli(it)
             binding.submittedDateFieldContainer.editText?.setText(formattedDate)
             dateofsubmissionstring = binding.submittedDateFieldContainer.editText.toString()
@@ -80,10 +82,10 @@ class CreateNewGroupFragment : ProgressableFragment(), CreateNewGroupMvpView {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCreateNewGroupBinding.inflate(inflater, container, false)
-        mCreateNewGroupPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[CreateNewGroupViewModel::class.java]
         inflateSubmissionDate()
         inflateActivationDate()
-        mCreateNewGroupPresenter.loadOffices()
+        viewModel.loadOffices()
 
         //client active checkbox onCheckedListener
         dateofsubmissionstring = getTodayFormatted()
@@ -91,6 +93,27 @@ class CreateNewGroupFragment : ProgressableFragment(), CreateNewGroupMvpView {
 
         activationDateString = getTodayFormatted()
         binding.activateDateFieldContainer.editText?.setText(getTodayFormatted())
+
+        viewModel.createNewGroupUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is CreateNewGroupUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is CreateNewGroupUiState.ShowGroupCreatedSuccessfully -> {
+                    showProgressbar(false)
+                    showGroupCreatedSuccessfully(it.saveResponse)
+                }
+
+                is CreateNewGroupUiState.ShowOffices -> {
+                    showProgressbar(false)
+                    showOffices(it.offices)
+                }
+
+                is CreateNewGroupUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
 
         return binding.root
     }
@@ -134,7 +157,7 @@ class CreateNewGroupFragment : ProgressableFragment(), CreateNewGroupMvpView {
         if (!isGroupNameValid) {
             return
         }
-        mCreateNewGroupPresenter.createGroup(groupPayload)
+        viewModel.createGroup(groupPayload)
     }
 
     private fun inflateSubmissionDate() {
@@ -191,8 +214,8 @@ class CreateNewGroupFragment : ProgressableFragment(), CreateNewGroupMvpView {
             return result
         }
 
-    override fun showOffices(offices: List<Office?>?) {
-        officeList = offices as List<Office>
+    private fun showOffices(offices: List<Office>) {
+        officeList = offices
         for (office in offices) {
             office.name?.let { mListOffices.add(it) }
         }
@@ -200,7 +223,7 @@ class CreateNewGroupFragment : ProgressableFragment(), CreateNewGroupMvpView {
         binding.officeListField.setSimpleItems(mListOffices.toTypedArray())
     }
 
-    override fun showGroupCreatedSuccessfully(group: SaveResponse?) {
+    private fun showGroupCreatedSuccessfully(group: SaveResponse?) {
         Toast.makeText(
             activity, "Group " + MifosResponseHandler.response,
             Toast.LENGTH_LONG
@@ -213,16 +236,11 @@ class CreateNewGroupFragment : ProgressableFragment(), CreateNewGroupMvpView {
         }
     }
 
-    override fun showFetchingError(s: String?) {
+    private fun showFetchingError(s: String?) {
         Toast.makeText(activity, s, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         showProgress(b)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mCreateNewGroupPresenter.detachView()
     }
 }

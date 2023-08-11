@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
@@ -21,21 +22,22 @@ import com.mifos.mifosxdroid.databinding.FragmentChargeListBinding
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.OnChargeCreateListener
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment
 import com.mifos.objects.client.Charges
+import com.mifos.states.LoanChargeUiState
 import com.mifos.utils.FragmentConstants
+import com.mifos.viewmodels.LoanChargeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
  */
 @AndroidEntryPoint
-class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, OnChargeCreateListener {
+class LoanChargeFragment : MifosBaseFragment(), OnChargeCreateListener {
 
     private lateinit var binding: FragmentChargeListBinding
     private val arg: LoanChargeFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mLoanChargePresenter: LoanChargePresenter
+    private lateinit var viewModel: LoanChargeViewModel
+
     private var chargesList: MutableList<Charges> = ArrayList()
     private var mChargesNameListAdapter: ChargeNameListAdapter? = null
     private var loanAccountNumber = 0
@@ -52,7 +54,7 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, OnChargeCreat
     ): View {
         binding = FragmentChargeListBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-        mLoanChargePresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[LoanChargeViewModel::class.java]
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvCharge.layoutManager = layoutManager
@@ -60,7 +62,7 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, OnChargeCreat
 
 
         //Loading LoanChargesList
-        mLoanChargePresenter.loadLoanChargesList(loanAccountNumber)
+        viewModel.loadLoanChargesList(loanAccountNumber)
         setToolbarTitle(getString(R.string.charges))
         /**
          * Setting mApiRestCounter to 1 and send Refresh Request to Server
@@ -72,7 +74,7 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, OnChargeCreat
             R.color.red_light
         )
         binding.swipeContainer.setOnRefreshListener {
-            mLoanChargePresenter.loadLoanChargesList(loanAccountNumber)
+            viewModel.loadLoanChargesList(loanAccountNumber)
             if (binding.swipeContainer.isRefreshing) binding.swipeContainer.isRefreshing = false
         }
         /**
@@ -88,6 +90,23 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, OnChargeCreat
                 //Future Implementation
             }
         })
+
+        viewModel.loanChargeUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is LoanChargeUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is LoanChargeUiState.ShowLoanChargesList -> {
+                    showProgressbar(false)
+                    showLoanChargesList(it.chargesPage)
+                }
+
+                is LoanChargeUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -105,14 +124,14 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, OnChargeCreat
      */
     private fun reloadOnError() {
         binding.llError.visibility = View.GONE
-        mLoanChargePresenter.loadLoanChargesList(loanAccountNumber)
+        viewModel.loadLoanChargesList(loanAccountNumber)
     }
 
-    fun setChargesList(chargesList: MutableList<Charges>) {
+    private fun setChargesList(chargesList: MutableList<Charges>) {
         this.chargesList = chargesList
     }
 
-    override fun showLoanChargesList(charges: MutableList<Charges>) {
+    private fun showLoanChargesList(charges: MutableList<Charges>) {
         chargesList = charges
         mChargesNameListAdapter = ChargeNameListAdapter(chargesList, loanAccountNumber)
         binding.rvCharge.adapter = mChargesNameListAdapter
@@ -123,24 +142,19 @@ class LoanChargeFragment : MifosBaseFragment(), LoanChargeMvpView, OnChargeCreat
         }
     }
 
-    override fun showFetchingError(s: String) {
+    private fun showFetchingError(s: String) {
         binding.llError.visibility = View.VISIBLE
         binding.noChargesText.text = "$s\n Click to Refresh "
-        mLoanChargePresenter.loadLoanChargesList(loanAccountNumber)
+        viewModel.loadLoanChargesList(loanAccountNumber)
         Toaster.show(binding.root, s)
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             showMifosProgressBar()
         } else {
             hideMifosProgressBar()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mLoanChargePresenter.detachView()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {

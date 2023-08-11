@@ -7,6 +7,7 @@ package com.mifos.mifosxdroid.online.datatabledata
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -14,6 +15,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.google.gson.JsonArray
@@ -24,22 +26,22 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentDatatableBinding
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogFragment
 import com.mifos.objects.noncore.DataTable
+import com.mifos.states.DataTableDataUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DataTableUIBuilder
 import com.mifos.utils.DataTableUIBuilder.DataTableActionListener
 import com.mifos.utils.FragmentConstants
+import com.mifos.viewmodels.DataTableDataViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, DataTableDataMvpView,
-    OnRefreshListener {
+class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, OnRefreshListener {
 
     private lateinit var binding: FragmentDatatableBinding
     private val arg: DataTableDataFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mDataTableDataPresenter: DataTableDataPresenter
+    private lateinit var viewModel: DataTableDataViewModel
+
     private var dataTable: DataTable? = null
     private var entityId = 0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,27 +58,59 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentDatatableBinding.inflate(inflater, container, false)
-        mDataTableDataPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[DataTableDataViewModel::class.java]
         dataTable!!.registeredTableName?.let { setToolbarTitle(it) }
         binding.swipeContainer.setColorSchemeColors(
             *activity
                 ?.resources!!.getIntArray(R.array.swipeRefreshColors)
         )
         binding.swipeContainer.setOnRefreshListener(this)
-        mDataTableDataPresenter.loadDataTableInfo(dataTable?.registeredTableName, entityId)
+        viewModel.loadDataTableInfo(dataTable?.registeredTableName, entityId)
+
+        viewModel.dataTableDataUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is DataTableDataUiState.ShowDataTableDeletedSuccessfully -> {
+                    showProgressbar(false)
+                    showDataTableDeletedSuccessfully()
+                }
+
+                is DataTableDataUiState.ShowDataTableInfo -> {
+                    showProgressbar(false)
+                    showDataTableInfo(it.jsonElements)
+                }
+
+                is DataTableDataUiState.ShowEmptyDataTable -> {
+                    showProgressbar(false)
+                    showEmptyDataTable()
+                }
+
+                is DataTableDataUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is DataTableDataUiState.ShowFetchingErrorString -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is DataTableDataUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
     override fun onRefresh() {
         binding.linearLayoutDatatables.visibility = View.GONE
-        mDataTableDataPresenter.loadDataTableInfo(dataTable?.registeredTableName, entityId)
+        viewModel.loadDataTableInfo(dataTable?.registeredTableName, entityId)
     }
 
     override fun showDataTableOptions(table: String, entity: Int, rowId: Int) {
         MaterialDialog.Builder().init(activity)
             .setItems(R.array.datatable_options) { dialog, which ->
                 when (which) {
-                    0 -> mDataTableDataPresenter.deleteDataTableEntry(table, entity, rowId)
+                    0 -> viewModel.deleteDataTableEntry(table, entity, rowId)
                     else -> {
                     }
                 }
@@ -85,7 +119,7 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
             .show()
     }
 
-    override fun showDataTableInfo(jsonElements: JsonArray?) {
+    private fun showDataTableInfo(jsonElements: JsonArray?) {
         if (jsonElements != null) {
             binding.linearLayoutDatatables.visibility = View.VISIBLE
             binding.llError.visibility = View.GONE
@@ -102,29 +136,29 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
         }
     }
 
-    override fun showDataTableDeletedSuccessfully() {
-        mDataTableDataPresenter.loadDataTableInfo(dataTable?.registeredTableName, entityId)
+    private fun showDataTableDeletedSuccessfully() {
+        viewModel.loadDataTableInfo(dataTable?.registeredTableName, entityId)
     }
 
-    override fun showEmptyDataTable() {
+    private fun showEmptyDataTable() {
         binding.linearLayoutDatatables.visibility = View.GONE
         binding.llError.visibility = View.VISIBLE
         binding.tvError.setText(R.string.empty_data_table)
         Toaster.show(binding.root, R.string.empty_data_table)
     }
 
-    override fun showFetchingError(message: Int) {
+    private fun showFetchingError(message: Int) {
         showFetchingError(getString(message))
     }
 
-    override fun showFetchingError(errorMessage: String?) {
+    private fun showFetchingError(errorMessage: String?) {
         binding.linearLayoutDatatables.visibility = View.GONE
         binding.llError.visibility = View.VISIBLE
         binding.tvError.text = errorMessage
         Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         binding.swipeContainer.isRefreshing = false
         if (show) {
             binding.linearLayoutDatatables.visibility = View.GONE
@@ -156,14 +190,9 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, Data
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             Constants.DIALOG_FRAGMENT -> if (resultCode == Activity.RESULT_OK) {
-                mDataTableDataPresenter
+                viewModel
                     .loadDataTableInfo(dataTable?.registeredTableName, entityId)
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mDataTableDataPresenter.detachView()
     }
 }

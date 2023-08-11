@@ -41,4 +41,4 @@ fun getDatePickerDialog(
 }
 
 fun getTodayFormatted(): String =
-    SimpleDateFormat("dd MM yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
+    SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
