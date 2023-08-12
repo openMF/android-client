@@ -9,27 +9,27 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.LoanRepaymentScheduleAdapter
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentLoanRepaymentScheduleBinding
 import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.objects.accounts.loan.RepaymentSchedule
-import com.mifos.utils.Constants
+import com.mifos.states.LoanRepaymentScheduleUiState
+import com.mifos.viewmodels.LoanRepaymentScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoanRepaymentScheduleFragment : ProgressableFragment(), LoanRepaymentScheduleMvpView {
+class LoanRepaymentScheduleFragment : ProgressableFragment() {
 
     private lateinit var binding: FragmentLoanRepaymentScheduleBinding
-    private val arg : LoanRepaymentScheduleFragmentArgs by navArgs()
+    private val arg: LoanRepaymentScheduleFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mLoanRepaymentSchedulePresenter: LoanRepaymentSchedulePresenter
+    private lateinit var viewModel: LoanRepaymentScheduleViewModel
+
     private var loanAccountNumber = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +44,25 @@ class LoanRepaymentScheduleFragment : ProgressableFragment(), LoanRepaymentSched
     ): View {
         binding = FragmentLoanRepaymentScheduleBinding.inflate(inflater, container, false)
         setToolbarTitle(resources.getString(R.string.loan_repayment_schedule))
-        mLoanRepaymentSchedulePresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[LoanRepaymentScheduleViewModel::class.java]
         inflateRepaymentSchedule()
+
+        viewModel.loanRepaymentScheduleUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is LoanRepaymentScheduleUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is LoanRepaymentScheduleUiState.ShowLoanRepaySchedule -> {
+                    showProgressbar(false)
+                    showLoanRepaySchedule(it.loanWithAssociations)
+                }
+
+                is LoanRepaymentScheduleUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -54,20 +71,15 @@ class LoanRepaymentScheduleFragment : ProgressableFragment(), LoanRepaymentSched
         super.onPrepareOptionsMenu(menu)
     }
 
-    fun inflateRepaymentSchedule() {
-        mLoanRepaymentSchedulePresenter.loadLoanRepaySchedule(loanAccountNumber)
+    private fun inflateRepaymentSchedule() {
+        viewModel.loadLoanRepaySchedule(loanAccountNumber)
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         showProgress(b)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mLoanRepaymentSchedulePresenter.detachView()
-    }
-
-    override fun showLoanRepaySchedule(loanWithAssociations: LoanWithAssociations) {
+    private fun showLoanRepaySchedule(loanWithAssociations: LoanWithAssociations) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (activity == null) return
         val listOfActualPeriods = loanWithAssociations
@@ -89,18 +101,7 @@ class LoanRepaymentScheduleFragment : ProgressableFragment(), LoanRepaymentSched
             .getNumberOfRepaymentsPending(listOfActualPeriods)
     }
 
-    override fun showFetchingError(s: String?) {
+    private fun showFetchingError(s: String?) {
         Toaster.show(binding.root, s)
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(loanAccountNumber: Int): LoanRepaymentScheduleFragment {
-            val fragment = LoanRepaymentScheduleFragment()
-            val args = Bundle()
-            args.putInt(Constants.LOAN_ACCOUNT_NUMBER, loanAccountNumber)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }
