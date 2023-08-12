@@ -1,45 +1,38 @@
-package com.mifos.mifosxdroid.online.runreports.reportcategory
+package com.mifos.viewmodels
 
-import com.mifos.api.datamanager.DataManagerRunReport
-import com.mifos.mifosxdroid.base.BasePresenter
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.mifos.objects.runreports.client.ClientReportTypeItem
-import com.mifos.utils.MFErrorParser
+import com.mifos.repositories.ReportCategoryRepository
+import com.mifos.states.ReportCategoryUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.HttpException
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
 import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
 /**
- * Created by Tarun on 03-08-17.
+ * Created by Aditya Gupta on 12/08/23.
  */
-class ReportCategoryPresenter @Inject constructor(private val dataManager: DataManagerRunReport) :
-    BasePresenter<ReportCategoryMvpView>() {
-    private val subscription: CompositeSubscription?
+@HiltViewModel
+class ReportCategoryViewModel @Inject constructor(private val repository: ReportCategoryRepository) :
+    ViewModel() {
 
-    init {
-        subscription = CompositeSubscription()
-    }
+    private val _reportCategoryUiState = MutableLiveData<ReportCategoryUiState>()
 
-    override fun attachView(mvpView: ReportCategoryMvpView) {
-        super.attachView(mvpView)
-    }
-
-    override fun detachView() {
-        super.detachView()
-        subscription?.unsubscribe()
-    }
+    val reportCategoryUiState: LiveData<ReportCategoryUiState>
+        get() = _reportCategoryUiState
 
     fun fetchCategories(
         reportCategory: String?,
         genericResultSet: Boolean,
         parameterType: Boolean
     ) {
-        checkViewAttached()
-        mvpView?.showProgressbar(true)
-        subscription?.add(dataManager.getReportCategories(
+        _reportCategoryUiState.value = ReportCategoryUiState.ShowProgressbar
+        repository.getReportCategories(
             reportCategory, genericResultSet,
             parameterType
         )
@@ -48,17 +41,15 @@ class ReportCategoryPresenter @Inject constructor(private val dataManager: DataM
             .subscribe(object : Subscriber<List<ClientReportTypeItem>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    mvpView?.showProgressbar(false)
                     try {
                         if (e is HttpException) {
                             val errorMessage = e.response()?.errorBody()
                                 ?.string()
-                            // Default User message is null in these queries most of the times.
-                            // Hence, show Developer message.
-                            mvpView?.showError(
-                                MFErrorParser.parseError(errorMessage)
-                                    .errors[0].developerMessage
-                            )
+                            _reportCategoryUiState.value = errorMessage?.let {
+                                ReportCategoryUiState.ShowError(
+                                    it
+                                )
+                            }
                         }
                     } catch (throwable: Throwable) {
                         RxJavaPlugins.getInstance().errorHandler.handleError(e)
@@ -66,11 +57,11 @@ class ReportCategoryPresenter @Inject constructor(private val dataManager: DataM
                 }
 
                 override fun onNext(clientReportTypeItems: List<ClientReportTypeItem>) {
-                    mvpView?.showProgressbar(false)
-                    mvpView?.showReportCategories(filterUniques(clientReportTypeItems))
+                    _reportCategoryUiState.value =
+                        ReportCategoryUiState.ShowReportCategories(clientReportTypeItems)
                 }
             })
-        )
+
     }
 
     /**

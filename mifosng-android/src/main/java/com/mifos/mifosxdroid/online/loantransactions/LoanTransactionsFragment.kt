@@ -10,24 +10,27 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.adapters.LoanTransactionAdapter
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentLoanTransactionsBinding
 import com.mifos.objects.accounts.loan.LoanWithAssociations
+import com.mifos.states.LoanTransactionsUiState
 import com.mifos.utils.Constants
+import com.mifos.viewmodels.LoanTransactionsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoanTransactionsFragment : MifosBaseFragment(), LoanTransactionsMvpView {
+class LoanTransactionsFragment : MifosBaseFragment() {
 
     private lateinit var binding: FragmentLoanTransactionsBinding
     private val arg: LoanTransactionsFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mLoanTransactionsPresenter: LoanTransactionsPresenter
+    private lateinit var viewModel : LoanTransactionsViewModel
+
     private var adapter: LoanTransactionAdapter? = null
     private var loanAccountNumber = 0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,8 +45,23 @@ class LoanTransactionsFragment : MifosBaseFragment(), LoanTransactionsMvpView {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLoanTransactionsBinding.inflate(inflater, container, false)
-        mLoanTransactionsPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[LoanTransactionsViewModel::class.java]
         inflateLoanTransactions()
+
+        viewModel.loanTransactionsUiState.observe(viewLifecycleOwner){
+            when(it) {
+                is LoanTransactionsUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+                is LoanTransactionsUiState.ShowLoanTransaction -> {
+                    showProgressbar(false)
+                    showLoanTransaction(it.loanWithAssociations)
+                }
+                is LoanTransactionsUiState.ShowProgressBar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -53,10 +71,10 @@ class LoanTransactionsFragment : MifosBaseFragment(), LoanTransactionsMvpView {
     }
 
     private fun inflateLoanTransactions() {
-        mLoanTransactionsPresenter.loadLoanTransaction(loanAccountNumber)
+        viewModel.loadLoanTransaction(loanAccountNumber)
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             showMifosProgressDialog()
         } else {
@@ -64,7 +82,7 @@ class LoanTransactionsFragment : MifosBaseFragment(), LoanTransactionsMvpView {
         }
     }
 
-    override fun showLoanTransaction(loanWithAssociations: LoanWithAssociations) {
+    private fun showLoanTransaction(loanWithAssociations: LoanWithAssociations) {
         Log.i("Transaction List Size", "" + loanWithAssociations.transactions.size)
         adapter = LoanTransactionAdapter(
             requireActivity(),
@@ -74,23 +92,7 @@ class LoanTransactionsFragment : MifosBaseFragment(), LoanTransactionsMvpView {
         binding.elvLoanTransactions.setGroupIndicator(null)
     }
 
-    override fun showFetchingError(s: String?) {
+    private fun showFetchingError(s: String?) {
         Toaster.show(binding.root, s)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mLoanTransactionsPresenter.detachView()
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(loanAccountNumber: Int): LoanTransactionsFragment {
-            val fragment = LoanTransactionsFragment()
-            val args = Bundle()
-            args.putInt(Constants.LOAN_ACCOUNT_NUMBER, loanAccountNumber)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

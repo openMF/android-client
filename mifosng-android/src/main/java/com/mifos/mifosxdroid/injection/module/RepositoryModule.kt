@@ -47,10 +47,14 @@ import com.mifos.repositories.DataTableRepository
 import com.mifos.repositories.DataTableRepositoryImp
 import com.mifos.repositories.DocumentListRepository
 import com.mifos.repositories.DocumentListRepositoryImp
+import com.mifos.repositories.GenerateCollectionSheetRepository
+import com.mifos.repositories.GenerateCollectionSheetRepositoryImp
 import com.mifos.repositories.GroupDetailsRepository
 import com.mifos.repositories.GroupDetailsRepositoryImp
 import com.mifos.repositories.GroupListRepository
 import com.mifos.repositories.GroupListRepositoryImp
+import com.mifos.repositories.GroupLoanAccountRepository
+import com.mifos.repositories.GroupLoanAccountRepositoryImp
 import com.mifos.repositories.GroupsListRepository
 import com.mifos.repositories.GroupsListRepositoryImp
 import com.mifos.repositories.IndividualCollectionSheetDetailsRepository
@@ -67,6 +71,10 @@ import com.mifos.repositories.LoanChargeRepository
 import com.mifos.repositories.LoanChargeRepositoryImp
 import com.mifos.repositories.LoanRepaymentRepository
 import com.mifos.repositories.LoanRepaymentRepositoryImp
+import com.mifos.repositories.LoanRepaymentScheduleRepository
+import com.mifos.repositories.LoanRepaymentScheduleRepositoryImp
+import com.mifos.repositories.LoanTransactionsRepository
+import com.mifos.repositories.LoanTransactionsRepositoryImp
 import com.mifos.repositories.LoginRepository
 import com.mifos.repositories.LoginRepositoryImp
 import com.mifos.repositories.NewIndividualCollectionSheetRepository
@@ -77,6 +85,10 @@ import com.mifos.repositories.PathTrackingRepository
 import com.mifos.repositories.PathTrackingRepositoryImp
 import com.mifos.repositories.PinPointClientRepository
 import com.mifos.repositories.PinPointClientRepositoryImp
+import com.mifos.repositories.ReportCategoryRepository
+import com.mifos.repositories.ReportCategoryRepositoryImp
+import com.mifos.repositories.ReportDetailRepository
+import com.mifos.repositories.ReportDetailRepositoryImp
 import com.mifos.repositories.SavingsAccountRepository
 import com.mifos.repositories.SavingsAccountRepositoryImp
 import com.mifos.repositories.SavingsAccountSummaryRepository
@@ -291,5 +303,38 @@ class RepositoryModule {
         dataManagerClient: DataManagerClient
     ): DataTableListRepository {
         return DataTableListRepositoryImp(dataManagerLoan, dataManager, dataManagerClient)
+    }
+
+    @Provides
+    fun providesGenerateCollectionSheetRepository(
+        dataManager: DataManager,
+        collectionDataManager: DataManagerCollectionSheet
+    ): GenerateCollectionSheetRepository {
+        return GenerateCollectionSheetRepositoryImp(dataManager, collectionDataManager)
+    }
+
+    @Provides
+    fun providesGroupLoanAccountRepository(dataManager: DataManager): GroupLoanAccountRepository {
+        return GroupLoanAccountRepositoryImp(dataManager)
+    }
+
+    @Provides
+    fun providesReportDetailRepository(dataManager: DataManagerRunReport): ReportDetailRepository {
+        return ReportDetailRepositoryImp(dataManager)
+    }
+
+    @Provides
+    fun providesReportCategoryRepository(dataManager: DataManagerRunReport): ReportCategoryRepository {
+        return ReportCategoryRepositoryImp(dataManager)
+    }
+
+    @Provides
+    fun providesLoanRepaymentScheduleRepository(dataManager: DataManager): LoanRepaymentScheduleRepository {
+        return LoanRepaymentScheduleRepositoryImp(dataManager)
+    }
+
+    @Provides
+    fun providesLoanTransactionsRepository(dataManager: DataManager): LoanTransactionsRepository {
+        return LoanTransactionsRepositoryImp(dataManager)
     }
 }

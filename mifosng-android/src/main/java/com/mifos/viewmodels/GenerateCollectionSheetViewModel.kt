@@ -1,11 +1,11 @@
-package com.mifos.mifosxdroid.online.generatecollectionsheet
+package com.mifos.viewmodels
 
 import android.content.Context
-import com.mifos.api.DataManager
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.mifos.api.GenericResponse
-import com.mifos.api.datamanager.DataManagerCollectionSheet
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.objects.PaymentTypeOption
 import com.mifos.objects.collectionsheet.AttendanceTypeOption
 import com.mifos.objects.collectionsheet.CenterDetail
@@ -18,139 +18,129 @@ import com.mifos.objects.group.CenterWithAssociations
 import com.mifos.objects.group.Group
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.organisation.Staff
-import com.mifos.utils.MFErrorParser
-import dagger.hilt.android.qualifiers.ActivityContext
+import com.mifos.repositories.GenerateCollectionSheetRepository
+import com.mifos.repositories.NewIndividualCollectionSheetRepository
+import com.mifos.states.GenerateCollectionSheetUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
 /**
- * Created by Rajan Maurya on 06/06/16.
+ * Created by Aditya Gupta on 12/08/23.
  */
-class GenerateCollectionSheetPresenter @Inject constructor(
-    private val mDataManager: DataManager,
-    private val collectionDataManager: DataManagerCollectionSheet,
-    @param:ActivityContext private val c: Context
-) : BasePresenter<GenerateCollectionSheetMvpView>() {
-    private val mSubscription: CompositeSubscription = CompositeSubscription()
-    override fun attachView(mvpView: GenerateCollectionSheetMvpView) {
-        super.attachView(mvpView)
-    }
+@HiltViewModel
+class GenerateCollectionSheetViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val repository: GenerateCollectionSheetRepository,
+    private val repositoryNewInd: NewIndividualCollectionSheetRepository,
+) : ViewModel() {
 
-    override fun detachView() {
-        super.detachView()
-        mSubscription.clear()
-    }
+    private val _generateCollectionSheetUiState = MutableLiveData<GenerateCollectionSheetUiState>()
+
+    val generateCollectionSheetUiState: LiveData<GenerateCollectionSheetUiState>
+        get() = _generateCollectionSheetUiState
 
     fun loadOffices() {
-        checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscription.add(mDataManager.offices
+        _generateCollectionSheetUiState.value = GenerateCollectionSheetUiState.ShowProgressbar
+        repositoryNewInd.offices()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<List<Office>>() {
                 override fun onCompleted() {
-                    mvpView!!.showProgressbar(false)
                 }
 
                 override fun onError(e: Throwable) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showError(MFErrorParser.errorMessage(e))
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(offices: List<Office>) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showOffices(offices)
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowOffices(offices)
                 }
             })
-        )
     }
 
     fun loadStaffInOffice(officeId: Int) {
-        checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscription.add(mDataManager.getStaffInOffice(officeId)
+        _generateCollectionSheetUiState.value = GenerateCollectionSheetUiState.ShowProgressbar
+        repositoryNewInd.getStaffInOffice(officeId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<List<Staff>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showError(MFErrorParser.errorMessage(e))
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(staffs: List<Staff>) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showStaffInOffice(staffs, officeId)
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowStaffInOffice(staffs, officeId)
                 }
             })
-        )
+
     }
 
     fun loadCentersInOffice(id: Int, params: Map<String, String>) {
-        checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscription.add(mDataManager.getCentersInOffice(id, params)
+        _generateCollectionSheetUiState.value = GenerateCollectionSheetUiState.ShowProgressbar
+        repository.getCentersInOffice(id, params)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<List<Center>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showError(MFErrorParser.errorMessage(e))
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(centers: List<Center>) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showCentersInOffice(centers)
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowCentersInOffice(centers)
                 }
             })
-        )
     }
 
     fun loadGroupsInOffice(office: Int, params: Map<String, String>) {
-        checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscription.add(mDataManager.getGroupsByOffice(office, params)
+        _generateCollectionSheetUiState.value = GenerateCollectionSheetUiState.ShowProgressbar
+        repository.getGroupsByOffice(office, params)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<List<Group>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showError(MFErrorParser.errorMessage(e))
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(groups: List<Group>) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showGroupsInOffice(groups)
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowGroupsInOffice(groups)
                 }
             })
-        )
     }
 
     fun loadGroupByCenter(centerId: Int) {
-        checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscription.add(collectionDataManager.fetchGroupsAssociatedWithCenter(centerId)
+        _generateCollectionSheetUiState.value = GenerateCollectionSheetUiState.ShowProgressbar
+        repository.fetchGroupsAssociatedWithCenter(centerId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<CenterWithAssociations>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showError(MFErrorParser.errorMessage(e))
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(centerWithAssociations: CenterWithAssociations) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showGroupByCenter(centerWithAssociations)
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowGroupByCenter(centerWithAssociations)
                 }
             })
-        )
+
     }
 
     /**
@@ -161,9 +151,8 @@ class GenerateCollectionSheetPresenter @Inject constructor(
         format: String?, locale: String?, meetingDate: String?,
         officeId: Int, staffId: Int
     ) {
-        checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscription.add(collectionDataManager.fetchCenterDetails(
+        _generateCollectionSheetUiState.value = GenerateCollectionSheetUiState.ShowProgressbar
+        repository.fetchCenterDetails(
             format, locale,
             meetingDate, officeId, staffId
         )
@@ -172,16 +161,16 @@ class GenerateCollectionSheetPresenter @Inject constructor(
             .subscribe(object : Subscriber<List<CenterDetail>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showError(MFErrorParser.errorMessage(e))
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(centerDetails: List<CenterDetail>) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.onCenterLoadSuccess(centerDetails)
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.OnCenterLoadSuccess(centerDetails)
                 }
             })
-        )
+
     }
 
     /**
@@ -191,104 +180,92 @@ class GenerateCollectionSheetPresenter @Inject constructor(
         centerId: Int,
         payload: CollectionSheetRequestPayload?
     ) {
-        checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscription.add(collectionDataManager.fetchProductiveCollectionSheet(centerId, payload)
+        _generateCollectionSheetUiState.value = GenerateCollectionSheetUiState.ShowProgressbar
+        repository.fetchProductiveCollectionSheet(centerId, payload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<CollectionSheetResponse>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showError(MFErrorParser.errorMessage(e))
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(collectionSheetResponse: CollectionSheetResponse) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showProductive(collectionSheetResponse)
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowProductive(collectionSheetResponse)
                 }
             })
-        )
+
     }
 
     fun loadCollectionSheet(
         groupId: Int,
         payload: CollectionSheetRequestPayload?
     ) {
-        checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscription.add(collectionDataManager.fetchCollectionSheet(groupId, payload)
+        _generateCollectionSheetUiState.value = GenerateCollectionSheetUiState.ShowProgressbar
+        repository.fetchCollectionSheet(groupId, payload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<CollectionSheetResponse>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showError(MFErrorParser.errorMessage(e))
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(collectionSheetResponse: CollectionSheetResponse) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showCollection(collectionSheetResponse)
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowCollection(collectionSheetResponse)
                 }
             })
-        )
+
     }
 
     /**
      * Method to submit the ProductiveCollectionSheet
      */
     fun submitProductiveSheet(centerId: Int, payload: ProductiveCollectionSheetPayload?) {
-        checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscription.add(collectionDataManager.submitProductiveSheet(centerId, payload)
+        _generateCollectionSheetUiState.value = GenerateCollectionSheetUiState.ShowProgressbar
+        repository.submitProductiveSheet(centerId, payload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<GenericResponse>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showError(MFErrorParser.errorMessage(e))
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(genericResponse: GenericResponse) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showError(
-                        c.resources.getString(
-                            R.string.collectionsheet_submit_success
-                        )
-                    )
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowError(context.resources.getString(R.string.collectionsheet_submit_success))
                 }
             })
-        )
+
     }
 
     /**
      * Method to submit the CollectionSheet
      */
     fun submitCollectionSheet(groupId: Int, payload: CollectionSheetPayload?) {
-        checkViewAttached()
-        mvpView!!.showProgressbar(true)
-        mSubscription.add(collectionDataManager.submitCollectionSheet(groupId, payload)
+        _generateCollectionSheetUiState.value = GenerateCollectionSheetUiState.ShowProgressbar
+        repository.submitCollectionSheet(groupId, payload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<GenericResponse>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showError(MFErrorParser.errorMessage(e))
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(genericResponse: GenericResponse) {
-                    mvpView!!.showProgressbar(false)
-                    mvpView!!.showError(
-                        c.resources.getString(
-                            R.string.collectionsheet_submit_success
-                        )
-                    )
+                    _generateCollectionSheetUiState.value =
+                        GenerateCollectionSheetUiState.ShowError(context.resources.getString(R.string.collectionsheet_submit_success))
                 }
             })
-        )
+
     }
 
     /**
@@ -304,9 +281,9 @@ class GenerateCollectionSheetPresenter @Inject constructor(
         officeNames: MutableList<String?>
     ): HashMap<String?, Int?> {
         val officeMap = HashMap<String?, Int?>()
-        officeMap[c.resources.getString(R.string.spinner_office)] = -1
+        officeMap[context.resources.getString(R.string.spinner_office)] = -1
         officeNames.clear()
-        officeNames.add(c.resources.getString(R.string.spinner_office))
+        officeNames.add(context.resources.getString(R.string.spinner_office))
         Observable.from(offices)
             .subscribe { office ->
                 officeMap[office.name] = office.id
@@ -328,9 +305,9 @@ class GenerateCollectionSheetPresenter @Inject constructor(
         staffNames: MutableList<String?>
     ): HashMap<String?, Int?> {
         val staffMap = HashMap<String?, Int?>()
-        staffMap[c.resources.getString(R.string.spinner_staff)] = -1
+        staffMap[context.resources.getString(R.string.spinner_staff)] = -1
         staffNames.clear()
-        staffNames.add(c.resources.getString(R.string.spinner_staff))
+        staffNames.add(context.resources.getString(R.string.spinner_staff))
         Observable.from(staffs)
             .subscribe { staff ->
                 staffMap[staff.displayName] = staff.id
@@ -352,9 +329,9 @@ class GenerateCollectionSheetPresenter @Inject constructor(
         centerNames: MutableList<String?>
     ): HashMap<String?, Int?> {
         val centerMap = HashMap<String?, Int?>()
-        centerMap[c.resources.getString(R.string.spinner_center)] = -1
+        centerMap[context.resources.getString(R.string.spinner_center)] = -1
         centerNames.clear()
-        centerNames.add(c.resources.getString(R.string.spinner_center))
+        centerNames.add(context.resources.getString(R.string.spinner_center))
         Observable.from(centers)
             .subscribe { center ->
                 centerMap[center.name] = center.id
@@ -376,9 +353,9 @@ class GenerateCollectionSheetPresenter @Inject constructor(
         groupNames: MutableList<String?>
     ): HashMap<String?, Int?> {
         val groupMap = HashMap<String?, Int?>()
-        groupMap[c.resources.getString(R.string.spinner_group)] = -1
+        groupMap[context.resources.getString(R.string.spinner_group)] = -1
         groupNames.clear()
-        groupNames.add(c.resources.getString(R.string.spinner_group))
+        groupNames.add(context.resources.getString(R.string.spinner_group))
         Observable.from(groups)
             .subscribe { group ->
                 groupMap[group.name] = group.id
@@ -405,9 +382,9 @@ class GenerateCollectionSheetPresenter @Inject constructor(
         paymentTypeNames: MutableList<String?>
     ): HashMap<String, Int> {
         val paymentMap = HashMap<String, Int>()
-        paymentMap[c.resources.getString(R.string.payment_type)] = -1
+        paymentMap[context.resources.getString(R.string.payment_type)] = -1
         paymentTypeNames.clear()
-        paymentTypeNames.add(c.resources.getString(R.string.payment_type))
+        paymentTypeNames.add(context.resources.getString(R.string.payment_type))
         Observable.from(paymentTypeOptions)
             .subscribe { paymentTypeOption ->
                 paymentMap[paymentTypeOption.name] = paymentTypeOption.id
@@ -415,5 +392,4 @@ class GenerateCollectionSheetPresenter @Inject constructor(
             }
         return paymentMap
     }
-
 }

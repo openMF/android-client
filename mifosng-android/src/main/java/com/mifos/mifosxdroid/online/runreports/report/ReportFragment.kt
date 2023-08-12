@@ -33,19 +33,16 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.util.Date
-import javax.inject.Inject
 
 /**
  * Created by Tarun on 05-08-17.
  */
 @AndroidEntryPoint
-class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener {
+class ReportFragment : MifosBaseFragment(), ScrollChangeListener {
 
     private lateinit var binding: FragmentClientReportBinding
     private val arg: ReportFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var presenter: ReportPresenter
     private var report: FullParameterListResponse? = null
     private var page = 0
     private var bottom = 0
@@ -56,7 +53,6 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
     ): View {
         binding = FragmentClientReportBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-        presenter.attachView(this)
         val time = Date().time
         report = arg.respose
         setUpUi()
@@ -254,7 +250,7 @@ class ReportFragment : MifosBaseFragment(), ReportMvpView, ScrollChangeListener 
         }
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             showMifosProgressDialog()
         } else {

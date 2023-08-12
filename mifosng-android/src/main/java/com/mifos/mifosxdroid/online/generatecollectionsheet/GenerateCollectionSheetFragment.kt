@@ -17,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.api.model.BulkRepaymentTransactions
 import com.mifos.api.model.ClientsAttendance
 import com.mifos.mifosxdroid.R
@@ -34,19 +35,20 @@ import com.mifos.objects.group.CenterWithAssociations
 import com.mifos.objects.group.Group
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.organisation.Staff
+import com.mifos.states.GenerateCollectionSheetUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
+import com.mifos.viewmodels.GenerateCollectionSheetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Locale
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionSheetMvpView,
+class GenerateCollectionSheetFragment : MifosBaseFragment(),
     View.OnClickListener {
 
     private lateinit var binding: FragmentGenerateCollectionSheetBinding
@@ -56,8 +58,8 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private val TAG_TYPE_PRODUCTIVE = 111
     private val TAG_TYPE_COLLECTION = 222
 
-    @Inject
-    lateinit var presenter: GenerateCollectionSheetPresenter
+    private lateinit var viewModel: GenerateCollectionSheetViewModel
+
     private var officeNameIdHashMap = HashMap<String?, Int?>()
     private var staffNameIdHashMap = HashMap<String?, Int?>()
     private var centerNameIdHashMap = HashMap<String?, Int?>()
@@ -77,7 +79,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     private var selectedRepaymentDate: Instant = Instant.now()
     private val datePickerDialog by lazy {
         getDatePickerDialog(selectedRepaymentDate, DatePickerConstrainType.ONLY_FUTURE_DAYS) {
-            val formattedDate = SimpleDateFormat("dd MM yyyy", Locale.getDefault()).format(it)
+            val formattedDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(it)
             selectedRepaymentDate = Instant.ofEpochMilli(it)
             binding.meetingDateFieldContainer.editText?.setText(formattedDate)
         }
@@ -97,8 +99,59 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentGenerateCollectionSheetBinding.inflate(inflater, container, false)
-        presenter.attachView(this)
+        viewModel = ViewModelProvider(this)[GenerateCollectionSheetViewModel::class.java]
         setUpUi()
+
+        viewModel.generateCollectionSheetUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is GenerateCollectionSheetUiState.OnCenterLoadSuccess -> {
+                    showProgressbar(false)
+                    onCenterLoadSuccess(it.centerDetails)
+                }
+
+                is GenerateCollectionSheetUiState.ShowCentersInOffice -> {
+                    showProgressbar(false)
+                    showCentersInOffice(it.centers)
+                }
+
+                is GenerateCollectionSheetUiState.ShowCollection -> {
+                    showProgressbar(false)
+                    showCollection(it.collectionSheetResponse)
+                }
+
+                is GenerateCollectionSheetUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is GenerateCollectionSheetUiState.ShowGroupByCenter -> {
+                    showProgressbar(false)
+                    showGroupByCenter(it.centerWithAssociations)
+                }
+
+                is GenerateCollectionSheetUiState.ShowGroupsInOffice -> {
+                    showProgressbar(false)
+                    showGroupsInOffice(it.groups)
+                }
+
+                is GenerateCollectionSheetUiState.ShowOffices -> {
+                    showProgressbar(false)
+                    showOffices(it.offices)
+                }
+
+                is GenerateCollectionSheetUiState.ShowProductive -> {
+                    showProgressbar(false)
+                    showProductive(it.collectionSheetResponse)
+                }
+
+                is GenerateCollectionSheetUiState.ShowProgressbar -> showProgressbar(true)
+                is GenerateCollectionSheetUiState.ShowStaffInOffice -> {
+                    showProgressbar(false)
+                    showStaffInOffice(it.staffs, it.officeId)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -108,11 +161,11 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
     }
 
     private fun inflateOfficeSpinner() {
-        presenter.loadOffices()
+        viewModel.loadOffices()
     }
 
     private fun inflateStaffSpinner(officeId: Int) {
-        presenter.loadStaffInOffice(officeId)
+        viewModel.loadStaffInOffice(officeId)
     }
 
     private fun inflateCenterSpinner(officeId: Int, staffId: Int) {
@@ -123,7 +176,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         if (staffId >= 0) {
             params[STAFF_ID] = staffId.toString()
         }
-        presenter.loadCentersInOffice(officeId, params)
+        viewModel.loadCentersInOffice(officeId, params)
     }
 
 
@@ -142,18 +195,18 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         params[ORDER_BY] = ORDER_BY_FIELD_NAME
         params[SORT_ORDER] = ASCENDING
         if (staffId >= 0) params[STAFF_ID] = staffId.toString()
-        presenter.loadGroupsInOffice(officeId, params)
+        viewModel.loadGroupsInOffice(officeId, params)
     }
 
     private fun inflateGroupSpinner(centerId: Int) {
-        presenter.loadGroupByCenter(centerId)
+        viewModel.loadGroupByCenter(centerId)
     }
 
-    override fun showOffices(offices: List<Office>) {
+    private fun showOffices(offices: List<Office>) {
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (activity == null) return
         officeNameIdHashMap =
-            presenter.createOfficeNameIdMap(offices, officeNames as MutableList<String?>)
+            viewModel.createOfficeNameIdMap(offices, officeNames as MutableList<String?>)
         binding.officeField.setSimpleItems(officeNames.toTypedArray())
         binding.officeField.setOnItemClickListener { _, _, i, _ ->
             officeId = officeNameIdHashMap[officeNames[i]]!!
@@ -167,9 +220,9 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         }
     }
 
-    override fun showStaffInOffice(staffs: List<Staff>, officeId: Int) {
+    private fun showStaffInOffice(staffs: List<Staff>, officeId: Int) {
         this.officeId = officeId
-        staffNameIdHashMap = presenter.createStaffIdMap(staffs, staffNames as MutableList<String?>)
+        staffNameIdHashMap = viewModel.createStaffIdMap(staffs, staffNames as MutableList<String?>)
         binding.staffField.setSimpleItems(staffNames.toTypedArray())
         binding.staffField.setOnItemClickListener { _, _, i, _ ->
             staffId = staffNameIdHashMap[staffNames[i]]!!
@@ -183,9 +236,9 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         staffId = -1 //Reset staff id
     }
 
-    override fun showCentersInOffice(centers: List<Center>) {
+    private fun showCentersInOffice(centers: List<Center>) {
         centerNameIdHashMap =
-            presenter.createCenterIdMap(centers, centerNames as MutableList<String?>)
+            viewModel.createCenterIdMap(centers, centerNames as MutableList<String?>)
         binding.centerField.setSimpleItems(centerNames.toTypedArray())
         binding.centerField.setOnItemClickListener { _, _, i, _ ->
             centerId = centerNameIdHashMap[centerNames[i]]!!
@@ -225,7 +278,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         val requestPayload = CollectionSheetRequestPayload()
         requestPayload.transactionDate = binding.meetingDateFieldContainer.editText?.text.toString()
         requestPayload.calendarId = calendarId
-        presenter.loadCollectionSheet(groupId, requestPayload)
+        viewModel.loadCollectionSheet(groupId, requestPayload)
     }
 
     private fun fetchProductiveCollectionSheet() {
@@ -233,17 +286,17 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         val requestPayload = CollectionSheetRequestPayload()
         requestPayload.transactionDate = binding.meetingDateFieldContainer.editText?.text.toString()
         requestPayload.calendarId = calendarId
-        productiveCenterId?.let { presenter.loadProductiveCollectionSheet(it, requestPayload) }
+        productiveCenterId?.let { viewModel.loadProductiveCollectionSheet(it, requestPayload) }
     }
 
     private fun fetchCenterDetails() {
-        presenter.loadCenterDetails(
+        viewModel.loadCenterDetails(
             Constants.DATE_FORMAT_LONG, Constants.LOCALE_EN,
             binding.meetingDateFieldContainer.editText?.text.toString(), officeId, staffId
         )
     }
 
-    override fun onCenterLoadSuccess(centerDetails: List<CenterDetail>) {
+    private fun onCenterLoadSuccess(centerDetails: List<CenterDetail>) {
         if (centerDetails.isEmpty()) {
             Toaster.show(binding.root, getString(R.string.no_collectionsheet_found))
             return
@@ -255,11 +308,11 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         fetchProductiveCollectionSheet()
     }
 
-    override fun showProductive(sheet: CollectionSheetResponse) {
+    private fun showProductive(sheet: CollectionSheetResponse) {
         inflateProductiveCollectionTable(sheet)
     }
 
-    override fun showCollection(sheet: CollectionSheetResponse) {
+    private fun showCollection(sheet: CollectionSheetResponse) {
         inflateCollectionTable(sheet)
     }
 
@@ -272,12 +325,12 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         //A List to be used to inflate Attendance Spinners
         val attendanceTypes = ArrayList<String?>()
         attendanceTypeOptions.clear()
-        attendanceTypeOptions = presenter.filterAttendanceTypes(
+        attendanceTypeOptions = viewModel.filterAttendanceTypes(
             collectionSheetResponse
                 ?.attendanceTypeOptions, attendanceTypes
         )
         additionalPaymentTypeMap.clear()
-        additionalPaymentTypeMap = presenter.filterPaymentTypes(
+        additionalPaymentTypeMap = viewModel.filterPaymentTypes(
             collectionSheetResponse
                 ?.paymentTypeOptions, paymentTypes as MutableList<String?>
         )
@@ -459,7 +512,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         //A List to be used to inflate Attendance Spinners
         val attendanceTypes = ArrayList<String?>()
         attendanceTypeOptions.clear()
-        attendanceTypeOptions = presenter.filterAttendanceTypes(
+        attendanceTypeOptions = viewModel.filterAttendanceTypes(
             collectionSheetResponse
                 ?.attendanceTypeOptions, attendanceTypes
         )
@@ -584,7 +637,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         }
 
         //Payload with all the items is ready. Now, hit the endpoint and submit it.
-        productiveCenterId?.let { presenter.submitProductiveSheet(it, payload) }
+        productiveCenterId?.let { viewModel.submitProductiveSheet(it, payload) }
     }
 
     private fun submitCollectionSheet() {
@@ -663,7 +716,7 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         }
 
         //Payload with all the items is ready. Now, hit the endpoint and submit it.
-        presenter.submitCollectionSheet(groupId, payload)
+        viewModel.submitCollectionSheet(groupId, payload)
     }
 
     private fun concatIdWithName(name: String, id: Int): String {
@@ -680,13 +733,13 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         }
     }
 
-    override fun showGroupsInOffice(groups: List<Group>) {
-        groupNameIdHashMap = presenter.createGroupIdMap(groups, groupNames as MutableList<String?>)
+    private fun showGroupsInOffice(groups: List<Group>) {
+        groupNameIdHashMap = viewModel.createGroupIdMap(groups, groupNames as MutableList<String?>)
         binding.groupField.setSimpleItems(groupNames.toTypedArray())
     }
 
-    override fun showGroupByCenter(centerWithAssociations: CenterWithAssociations) {
-        groupNameIdHashMap = presenter.createGroupIdMap(
+    private fun showGroupByCenter(centerWithAssociations: CenterWithAssociations) {
+        groupNameIdHashMap = viewModel.createGroupIdMap(
             centerWithAssociations.groupMembers, groupNames as MutableList<String?>
         )
         binding.groupField.setSimpleItems(groupNames.toTypedArray())
@@ -698,20 +751,15 @@ class GenerateCollectionSheetFragment : MifosBaseFragment(), GenerateCollectionS
         }
     }
 
-    override fun showError(s: String?) {
+    private fun showError(s: String?) {
         Toaster.show(binding.root, s)
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             showMifosProgressDialog()
         } else {
             hideMifosProgressDialog()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        presenter.detachView()
     }
 }

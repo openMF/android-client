@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
@@ -26,10 +27,11 @@ import com.mifos.objects.templates.loans.GroupLoanTemplate
 import com.mifos.objects.templates.loans.RepaymentFrequencyDaysOfWeekTypeOptions
 import com.mifos.objects.templates.loans.RepaymentFrequencyNthDayTypeOptions
 import com.mifos.services.data.GroupLoanPayload
+import com.mifos.states.GroupLoanAccountUiState
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
+import com.mifos.viewmodels.GroupLoanAccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -39,15 +41,15 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListener,
-    GroupLoanAccountMvpView, OnItemSelectedListener {
+    OnItemSelectedListener {
 
     private lateinit var binding: FragmentAddLoanBinding
     private val arg: GroupLoanAccountFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mGroupLoanAccountPresenter: GroupLoanAccountPresenter
-    var submissionDate: String? = null
-    var disbursementDate: String? = null
+    private lateinit var viewModel: GroupLoanAccountViewModel
+
+    private var submissionDate: String? = null
+    private var disbursementDate: String? = null
     private val mListener: OnDialogFragmentInteractionListener? = null
     private var mfDatePicker: DialogFragment? = null
     private var productId: Int? = 0
@@ -69,8 +71,8 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     private val linkAccountId: Int? = null
 
     // Boolean values to act as flags for date selection
-    var isdisbursementDate = false
-    var issubmittedDate = false
+    private var isdisbursementDate = false
+    private var issubmittedDate = false
     private val amortizationType: MutableList<String> = ArrayList()
     private val interestCalculationPeriodType: MutableList<String> = ArrayList()
     private val transactionProcessingStrategy: MutableList<String> = ArrayList()
@@ -96,8 +98,9 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     private var fundOptionsAdapter: ArrayAdapter<String>? = null
     private var mGroupLoanTemplate: GroupLoanTemplate? = null
     private var mLoanProducts: List<LoanProducts>? = null
-    var mRepaymentFrequencyNthDayTypeOptions: List<RepaymentFrequencyNthDayTypeOptions>? = null
-    var mRepaymentFrequencyDaysOfWeekTypeOptions: List<RepaymentFrequencyDaysOfWeekTypeOptions>? =
+    private var mRepaymentFrequencyNthDayTypeOptions: List<RepaymentFrequencyNthDayTypeOptions>? =
+        null
+    private var mRepaymentFrequencyDaysOfWeekTypeOptions: List<RepaymentFrequencyDaysOfWeekTypeOptions>? =
         null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,7 +117,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
         // Inflate the layout for this fragment
         activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         binding = FragmentAddLoanBinding.inflate(inflater, container, false)
-        mGroupLoanAccountPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[GroupLoanAccountViewModel::class.java]
 
         //Linking Options not yet implemented for Groups but the layout file is shared.
         //So, hiding the widgets
@@ -130,6 +133,32 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
             .replace("-", " ")
         disbursementDate = DateHelper.getDateAsStringUsedForCollectionSheetPayload(disbursementDate)
             .replace("-", " ")
+
+        viewModel.groupLoanAccountUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is GroupLoanAccountUiState.ShowAllLoans -> {
+                    showProgressbar(false)
+                    showAllLoans(it.productLoans)
+                }
+
+                is GroupLoanAccountUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is GroupLoanAccountUiState.ShowGroupLoanTemplate -> {
+                    showProgressbar(false)
+                    showGroupLoanTemplate(it.groupLoanTemplate)
+                }
+
+                is GroupLoanAccountUiState.ShowGroupLoansAccountCreatedSuccessfully -> {
+                    showProgressbar(false)
+                    showGroupLoansAccountCreatedSuccessfully(it.loans)
+                }
+
+                is GroupLoanAccountUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
 
         return binding.root
     }
@@ -286,15 +315,15 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
     }
 
     private fun inflateLoansProductSpinner() {
-        mGroupLoanAccountPresenter.loadAllLoans()
+        viewModel.loadAllLoans()
     }
 
     private fun inflateLoanPurposeSpinner() {
-        productId?.let { mGroupLoanAccountPresenter.loadGroupLoansAccountTemplate(groupId, it) }
+        productId?.let { viewModel.loadGroupLoansAccountTemplate(groupId, it) }
     }
 
     private fun initiateLoanCreation(loansPayload: GroupLoanPayload) {
-        mGroupLoanAccountPresenter.createGroupLoanAccount(loansPayload)
+        viewModel.createGroupLoanAccount(loansPayload)
     }
 
     private fun inflateSubmissionDate() {
@@ -325,22 +354,22 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
         )
     }
 
-    override fun showAllLoans(productLoans: List<LoanProducts?>?) {
-        mLoanProducts = loans as List<LoanProducts>
-        mGroupLoanAccountPresenter
-            .filterLoanProducts(loans).let { mListLoanProductsNames.addAll(it) }
+    private fun showAllLoans(productLoans: List<LoanProducts>) {
+        mLoanProducts = productLoans
+        viewModel
+            .filterLoanProducts(productLoans).let { mListLoanProductsNames.addAll(it) }
         loanProductAdapter?.notifyDataSetChanged()
     }
 
-    override fun showGroupLoanTemplate(groupLoanTemplate: GroupLoanTemplate?) {
+    private fun showGroupLoanTemplate(groupLoanTemplate: GroupLoanTemplate?) {
         mGroupLoanTemplate = groupLoanTemplate
         amortizationType.clear()
-        amortizationType.addAll(mGroupLoanAccountPresenter.filterAmortizations(groupLoanTemplate?.amortizationTypeOptions))
+        amortizationType.addAll(viewModel.filterAmortizations(groupLoanTemplate?.amortizationTypeOptions))
         amortizationTypeAdapter?.notifyDataSetChanged()
         interestCalculationPeriodType.clear()
         if (groupLoanTemplate != null) {
             interestCalculationPeriodType.addAll(
-                mGroupLoanAccountPresenter.filterInterestCalculationPeriods(
+                viewModel.filterInterestCalculationPeriods(
                     groupLoanTemplate.interestCalculationPeriodTypeOptions
                 )
             )
@@ -348,33 +377,33 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
         interestCalculationPeriodTypeAdapter?.notifyDataSetChanged()
         transactionProcessingStrategy.clear()
         transactionProcessingStrategy.addAll(
-            mGroupLoanAccountPresenter.filterTransactionProcessingStrategies(
+            viewModel.filterTransactionProcessingStrategies(
                 groupLoanTemplate?.transactionProcessingStrategyOptions
             )
         )
         transactionProcessingStrategyAdapter?.notifyDataSetChanged()
         termFrequencyType.clear()
         termFrequencyType.addAll(
-            mGroupLoanAccountPresenter.filterTermFrequencyTypes(
+            viewModel.filterTermFrequencyTypes(
                 groupLoanTemplate?.termFrequencyTypeOptions
             )
         )
         termFrequencyTypeAdapter?.notifyDataSetChanged()
         loanPurposeType.clear()
-        loanPurposeType.addAll(mGroupLoanAccountPresenter.filterLoanPurposeTypes(groupLoanTemplate?.loanPurposeOptions))
+        loanPurposeType.addAll(viewModel.filterLoanPurposeTypes(groupLoanTemplate?.loanPurposeOptions))
         loanPurposeTypeAdapter?.notifyDataSetChanged()
         interestTypeOptions.clear()
         interestTypeOptions.addAll(
-            mGroupLoanAccountPresenter.filterInterestTypeOptions(
+            viewModel.filterInterestTypeOptions(
                 groupLoanTemplate?.interestTypeOptions
             )
         )
         interestTypeOptionsAdapter?.notifyDataSetChanged()
         loanOfficerOptions.clear()
-        loanOfficerOptions.addAll(mGroupLoanAccountPresenter.filterLoanOfficers(groupLoanTemplate?.loanOfficerOptions))
+        loanOfficerOptions.addAll(viewModel.filterLoanOfficers(groupLoanTemplate?.loanOfficerOptions))
         loanOfficerOptionsAdapter?.notifyDataSetChanged()
         fundOptions.clear()
-        fundOptions.addAll(mGroupLoanAccountPresenter.filterFunds(groupLoanTemplate?.fundOptions))
+        fundOptions.addAll(viewModel.filterFunds(groupLoanTemplate?.fundOptions))
         fundOptionsAdapter?.notifyDataSetChanged()
         mListRepaymentFrequencyNthDayTypeOptions.clear()
         mRepaymentFrequencyNthDayTypeOptions = mGroupLoanTemplate
@@ -391,7 +420,7 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
         showDefaultValues()
     }
 
-    override fun showGroupLoansAccountCreatedSuccessfully(loans: Loans?) {
+    private fun showGroupLoansAccountCreatedSuccessfully(loans: Loans?) {
         Toast.makeText(
             requireActivity(),
             "The Loan has been submitted for Approval",
@@ -399,17 +428,12 @@ class GroupLoanAccountFragment : ProgressableDialogFragment(), OnDatePickListene
         ).show()
     }
 
-    override fun showFetchingError(s: String?) {
+    private fun showFetchingError(s: String?) {
         Toaster.show(binding.root, s)
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         showProgress(b)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mGroupLoanAccountPresenter.detachView()
     }
 
     interface OnDialogFragmentInteractionListener
