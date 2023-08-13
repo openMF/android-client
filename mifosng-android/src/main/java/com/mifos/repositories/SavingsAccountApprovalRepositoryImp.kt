@@ -6,6 +6,9 @@ import com.mifos.objects.accounts.loan.SavingsApproval
 import rx.Observable
 import javax.inject.Inject
 
+/**
+ * Created by Aditya Gupta on 13/08/23.
+ */
 class SavingsAccountApprovalRepositoryImp @Inject constructor(private val dataManagerSavings: DataManagerSavings) :
     SavingsAccountApprovalRepository {
 

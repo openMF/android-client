@@ -7,6 +7,9 @@ import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate
 import rx.Observable
 import javax.inject.Inject
 
+/**
+ * Created by Aditya Gupta on 13/08/23.
+ */
 class SavingsAccountTransactionRepositoryImp @Inject constructor(private val dataManagerSavings: DataManagerSavings) :
     SavingsAccountTransactionRepository {
 

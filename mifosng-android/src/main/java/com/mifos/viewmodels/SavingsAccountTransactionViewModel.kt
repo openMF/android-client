@@ -14,6 +14,9 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 
+/**
+ * Created by Aditya Gupta on 13/08/23.
+ */
 @HiltViewModel
 class SavingsAccountTransactionViewModel @Inject constructor(private val repository: SavingsAccountTransactionRepository) :
     ViewModel() {
@@ -25,8 +28,6 @@ class SavingsAccountTransactionViewModel @Inject constructor(private val reposit
         get() = _savingsAccountTransactionUiState
 
     fun loadSavingAccountTemplate(type: String?, accountId: Int, transactionType: String?) {
-//        checkViewAttached()
-//        mvpView?.showProgressbar(true)
         _savingsAccountTransactionUiState.value = SavingsAccountTransactionUiState.ShowProgressbar
         repository.getSavingsAccountTransactionTemplate(type, accountId, transactionType)
             .observeOn(AndroidSchedulers.mainThread())
@@ -34,15 +35,11 @@ class SavingsAccountTransactionViewModel @Inject constructor(private val reposit
             .subscribe(object : Subscriber<SavingsAccountTransactionTemplate>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-//                    mvpView?.showProgressbar(false)
-//                    mvpView?.showError(R.string.failed_to_fetch_savings_template)
                     _savingsAccountTransactionUiState.value =
                         SavingsAccountTransactionUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate) {
-//                    mvpView?.showProgressbar(false)
-//                    mvpView?.showSavingAccountTemplate(savingsAccountTransactionTemplate)
                     _savingsAccountTransactionUiState.value =
                         SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
                             savingsAccountTransactionTemplate
@@ -55,8 +52,6 @@ class SavingsAccountTransactionViewModel @Inject constructor(private val reposit
         type: String?, accountId: Int, transactionType: String?,
         request: SavingsAccountTransactionRequest
     ) {
-//        checkViewAttached()
-//        mvpView?.showProgressbar(true)
         _savingsAccountTransactionUiState.value = SavingsAccountTransactionUiState.ShowProgressbar
         repository
             .processTransaction(type, accountId, transactionType, request)
@@ -65,15 +60,11 @@ class SavingsAccountTransactionViewModel @Inject constructor(private val reposit
             .subscribe(object : Subscriber<SavingsAccountTransactionResponse>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-//                    mvpView?.showProgressbar(false)
-//                    mvpView?.showError(R.string.transaction_failed)
                     _savingsAccountTransactionUiState.value =
                         SavingsAccountTransactionUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(savingsAccountTransactionResponse: SavingsAccountTransactionResponse) {
-//                    mvpView?.showProgressbar(false)
-//                    mvpView?.showTransactionSuccessfullyDone(savingsAccountTransactionResponse)
                     _savingsAccountTransactionUiState.value =
                         SavingsAccountTransactionUiState.ShowTransactionSuccessfullyDone(
                             savingsAccountTransactionResponse
@@ -83,8 +74,6 @@ class SavingsAccountTransactionViewModel @Inject constructor(private val reposit
     }
 
     fun checkInDatabaseSavingAccountTransaction(savingAccountId: Int) {
-//        checkViewAttached()
-//        mvpView?.showProgressbar(true)
         _savingsAccountTransactionUiState.value = SavingsAccountTransactionUiState.ShowProgressbar
         repository.getSavingsAccountTransaction(savingAccountId)
             .observeOn(AndroidSchedulers.mainThread())
@@ -92,15 +81,11 @@ class SavingsAccountTransactionViewModel @Inject constructor(private val reposit
             .subscribe(object : Subscriber<SavingsAccountTransactionRequest>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-//                        mvpView?.showProgressbar(false)
-//                        mvpView?.showError(R.string.failed_to_load_savingaccounttransaction)
                     _savingsAccountTransactionUiState.value =
                         SavingsAccountTransactionUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest) {
-//                        mvpView?.showProgressbar(false)
-//                        mvpView?.showSavingAccountTransactionExistInDatabase()
                     _savingsAccountTransactionUiState.value =
                         SavingsAccountTransactionUiState.ShowSavingAccountTransactionExistInDatabase
                 }

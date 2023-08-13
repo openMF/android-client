@@ -13,6 +13,9 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 
+/**
+ * Created by Aditya Gupta on 13/08/23.
+ */
 @HiltViewModel
 class SavingsAccountApprovalViewModel @Inject constructor(private val repository: SavingsAccountApprovalRepository) :
     ViewModel() {
@@ -23,8 +26,6 @@ class SavingsAccountApprovalViewModel @Inject constructor(private val repository
         get() = _savingsAccountApprovalUiState
 
     fun approveSavingsApplication(savingsAccountId: Int, savingsApproval: SavingsApproval?) {
-//        checkViewAttached()
-//        mvpView!!.showProgressbar(true)
         _savingsAccountApprovalUiState.value = SavingsAccountApprovalUiState.ShowProgressbar
         repository
             .approveSavingsApplication(savingsAccountId, savingsApproval)
@@ -33,14 +34,10 @@ class SavingsAccountApprovalViewModel @Inject constructor(private val repository
             .subscribe(object : Subscriber<GenericResponse>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-//                    mvpView!!.showProgressbar(false)
-//                    mvpView!!.showError(MFErrorParser.errorMessage(e))
 
                 }
 
                 override fun onNext(genericResponse: GenericResponse) {
-//                    mvpView!!.showProgressbar(false)
-//                    mvpView!!.showSavingAccountApprovedSuccessfully(genericResponse)
                     _savingsAccountApprovalUiState.value =
                         SavingsAccountApprovalUiState.ShowSavingAccountApprovedSuccessfully(
                             genericResponse

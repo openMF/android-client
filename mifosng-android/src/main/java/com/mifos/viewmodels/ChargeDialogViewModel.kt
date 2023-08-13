@@ -18,6 +18,9 @@ import rx.plugins.RxJavaPlugins
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 
+/**
+ * Created by Aditya Gupta on 13/08/23.
+ */
 @HiltViewModel
 class ChargeDialogViewModel @Inject constructor(private val repository: ChargeDialogRepository) :
     ViewModel() {
@@ -28,27 +31,19 @@ class ChargeDialogViewModel @Inject constructor(private val repository: ChargeDi
         get() = _chargeDialogUiState
 
     fun loadAllChargesV2(clientId: Int) {
-//        checkViewAttached()
-//        mvpView?.showProgressbar(true)
         _chargeDialogUiState.value = ChargeDialogUiState.ShowProgressbar
         repository.getAllChargesV2(clientId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<ChargeTemplate>() {
                 override fun onCompleted() {
-//                    mvpView?.showProgressbar(false)
                 }
 
                 override fun onError(e: Throwable) {
-//                    mvpView?.showProgressbar(false)
                     try {
                         if (e is HttpException) {
                             val errorMessage = e.response()?.errorBody()
                                 ?.string()
-//                            mvpView?.showFetchingError(
-//                                MFErrorParser.parseError(errorMessage)
-//                                    .errors[0].defaultUserMessage
-//                            )
                             _chargeDialogUiState.value = errorMessage?.let {
                                 ChargeDialogUiState.ShowFetchingError(
                                     it
@@ -61,8 +56,6 @@ class ChargeDialogViewModel @Inject constructor(private val repository: ChargeDi
                 }
 
                 override fun onNext(chargeTemplate: ChargeTemplate) {
-//                    mvpView?.showProgressbar(false)
-//                    mvpView?.showAllChargesV2(chargeTemplate)
                     _chargeDialogUiState.value =
                         ChargeDialogUiState.ShowAllChargesV2(chargeTemplate)
                 }
@@ -70,28 +63,19 @@ class ChargeDialogViewModel @Inject constructor(private val repository: ChargeDi
     }
 
     fun createCharges(clientId: Int, payload: ChargesPayload?) {
-//        checkViewAttached()
-//        mvpView?.showProgressbar(true)
-//        if (mSubscription != null) mSubscription?.unsubscribe()
         _chargeDialogUiState.value = ChargeDialogUiState.ShowProgressbar
         repository.createCharges(clientId, payload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<ChargeCreationResponse>() {
                 override fun onCompleted() {
-//                    mvpView?.showProgressbar(false)
                 }
 
                 override fun onError(e: Throwable) {
-//                    mvpView?.showProgressbar(false)
                     try {
                         if (e is HttpException) {
                             val errorMessage = e.response()?.errorBody()
                                 ?.string()
-//                            mvpView?.showChargeCreatedFailure(
-//                                MFErrorParser.parseError(errorMessage)
-//                                    .errors[0].defaultUserMessage
-//                            )
                             _chargeDialogUiState.value = errorMessage?.let {
                                 ChargeDialogUiState.ShowFetchingError(
                                     it
@@ -104,8 +88,6 @@ class ChargeDialogViewModel @Inject constructor(private val repository: ChargeDi
                 }
 
                 override fun onNext(chargeCreationResponse: ChargeCreationResponse) {
-//                    mvpView?.showProgressbar(false)
-//                    mvpView?.showChargesCreatedSuccessfully(chargeCreationResponse)
                     _chargeDialogUiState.value =
                         ChargeDialogUiState.ShowChargesCreatedSuccessfully(chargeCreationResponse)
                 }
