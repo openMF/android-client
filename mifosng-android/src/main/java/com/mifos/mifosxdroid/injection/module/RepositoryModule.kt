@@ -23,6 +23,8 @@ import com.mifos.repositories.CenterDetailsRepository
 import com.mifos.repositories.CenterDetailsRepositoryImp
 import com.mifos.repositories.CenterListRepository
 import com.mifos.repositories.CenterListRepositoryImp
+import com.mifos.repositories.ChargeDialogRepository
+import com.mifos.repositories.ChargeDialogRepositoryImp
 import com.mifos.repositories.ClientChargeRepository
 import com.mifos.repositories.ClientChargeRepositoryImp
 import com.mifos.repositories.ClientDetailsRepository
@@ -45,6 +47,8 @@ import com.mifos.repositories.DataTableListRepository
 import com.mifos.repositories.DataTableListRepositoryImp
 import com.mifos.repositories.DataTableRepository
 import com.mifos.repositories.DataTableRepositoryImp
+import com.mifos.repositories.DataTableRowDialogRepository
+import com.mifos.repositories.DataTableRowDialogRepositoryImp
 import com.mifos.repositories.DocumentListRepository
 import com.mifos.repositories.DocumentListRepositoryImp
 import com.mifos.repositories.GenerateCollectionSheetRepository
@@ -89,16 +93,24 @@ import com.mifos.repositories.ReportCategoryRepository
 import com.mifos.repositories.ReportCategoryRepositoryImp
 import com.mifos.repositories.ReportDetailRepository
 import com.mifos.repositories.ReportDetailRepositoryImp
+import com.mifos.repositories.SavingsAccountActivateRepository
+import com.mifos.repositories.SavingsAccountActivateRepositoryImp
+import com.mifos.repositories.SavingsAccountApprovalRepository
+import com.mifos.repositories.SavingsAccountApprovalRepositoryImp
 import com.mifos.repositories.SavingsAccountRepository
 import com.mifos.repositories.SavingsAccountRepositoryImp
 import com.mifos.repositories.SavingsAccountSummaryRepository
 import com.mifos.repositories.SavingsAccountSummaryRepositoryImp
+import com.mifos.repositories.SavingsAccountTransactionRepository
+import com.mifos.repositories.SavingsAccountTransactionRepositoryImp
 import com.mifos.repositories.SearchRepository
 import com.mifos.repositories.SearchRepositoryImp
 import com.mifos.repositories.SignatureRepository
 import com.mifos.repositories.SignatureRepositoryImp
 import com.mifos.repositories.SurveyListRepository
 import com.mifos.repositories.SurveyListRepositoryImp
+import com.mifos.repositories.SurveySubmitRepository
+import com.mifos.repositories.SurveySubmitRepositoryImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -336,5 +348,35 @@ class RepositoryModule {
     @Provides
     fun providesLoanTransactionsRepository(dataManager: DataManager): LoanTransactionsRepository {
         return LoanTransactionsRepositoryImp(dataManager)
+    }
+
+    @Provides
+    fun providesSavingsAccountTransactionRepository(dataManagerSavings: DataManagerSavings): SavingsAccountTransactionRepository {
+        return SavingsAccountTransactionRepositoryImp(dataManagerSavings)
+    }
+
+    @Provides
+    fun providesSavingsAccountActivateRepository(dataManagerSavings: DataManagerSavings): SavingsAccountActivateRepository {
+        return SavingsAccountActivateRepositoryImp(dataManagerSavings)
+    }
+
+    @Provides
+    fun providesSavingsAccountApprovalRepository(dataManagerSavings: DataManagerSavings): SavingsAccountApprovalRepository {
+        return SavingsAccountApprovalRepositoryImp(dataManagerSavings)
+    }
+
+    @Provides
+    fun providesSurveySubmitRepository(dataManagerSurveys: DataManagerSurveys): SurveySubmitRepository {
+        return SurveySubmitRepositoryImp(dataManagerSurveys)
+    }
+
+    @Provides
+    fun providesChargeDialogRepository(dataManager: DataManager): ChargeDialogRepository {
+        return ChargeDialogRepositoryImp(dataManager)
+    }
+
+    @Provides
+    fun providesDataTableRowDialogRepository(dataManagerDataTable: DataManagerDataTable) : DataTableRowDialogRepository {
+        return DataTableRowDialogRepositoryImp(dataManagerDataTable)
     }
 }

@@ -13,6 +13,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
@@ -24,11 +25,12 @@ import com.mifos.objects.client.ChargeCreationResponse
 import com.mifos.objects.client.Charges
 import com.mifos.objects.templates.clients.ChargeTemplate
 import com.mifos.services.data.ChargesPayload
+import com.mifos.states.ChargeDialogUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
+import com.mifos.viewmodels.ChargeDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -37,15 +39,14 @@ import javax.inject.Inject
  * Use this Dialog Fragment to Create and/or Update charges
  */
 @AndroidEntryPoint
-class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, ChargeDialogMvpView,
+class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener,
     OnItemSelectedListener {
     val LOG_TAG = javaClass.simpleName
 
     private lateinit var binding: DialogFragmentChargeBinding
 
-    @JvmField
-    @Inject
-    var mChargeDialogPresenter: ChargeDialogPresenter? = null
+    private lateinit var viewModel: ChargeDialogViewModel
+
     private var chargeCreateListener: OnChargeCreateListener? = null
     private val chargeNameList: MutableList<String> = ArrayList()
     private lateinit var chargeNameAdapter: ArrayAdapter<String>
@@ -78,10 +79,32 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
             true
         )
         binding = DialogFragmentChargeBinding.inflate(inflater, container, false)
-        mChargeDialogPresenter?.attachView(this)
+        viewModel = ViewModelProvider(this)[ChargeDialogViewModel::class.java]
         inflateDueDate()
         inflateChargesSpinner()
         inflateChargeNameSpinner()
+
+        viewModel.chargeDialogUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is ChargeDialogUiState.ShowAllChargesV2 -> {
+                    showProgressbar(false)
+                    showAllChargesV2(it.chargeTemplate)
+                }
+
+                is ChargeDialogUiState.ShowChargesCreatedSuccessfully -> {
+                    showProgressbar(false)
+                    showChargesCreatedSuccessfully(it.chargeCreationResponse)
+                }
+
+                is ChargeDialogUiState.ShowFetchingError -> {
+                    showProgressbar(false)
+                    showFetchingError(it.message)
+                }
+
+                is ChargeDialogUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -129,12 +152,12 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
 
     //Charges Fetching API
     private fun inflateChargesSpinner() {
-        mChargeDialogPresenter?.loadAllChargesV2(clientId)
+        viewModel.loadAllChargesV2(clientId)
     }
 
     //Charges Creation APi
     private fun initiateChargesCreation(chargesPayload: ChargesPayload) {
-        mChargeDialogPresenter?.createCharges(clientId, chargesPayload)
+        viewModel.createCharges(clientId, chargesPayload)
     }
 
     private fun inflateDueDate() {
@@ -164,10 +187,9 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
         binding.spChargeName.onItemSelectedListener = this
     }
 
-    override fun showAllChargesV2(chargeTemplate: ChargeTemplate) {
+    private fun showAllChargesV2(chargeTemplate: ChargeTemplate) {
         mChargeTemplate = chargeTemplate
-        mChargeDialogPresenter?.filterChargeName(chargeTemplate.chargeOptions)
-            ?.let { chargeNameList.addAll(it) }
+        viewModel.filterChargeName(chargeTemplate.chargeOptions).let { chargeNameList.addAll(it) }
         chargeNameAdapter.notifyDataSetChanged()
     }
 
@@ -181,7 +203,7 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {}
-    override fun showChargesCreatedSuccessfully(chargeCreationResponse: ChargeCreationResponse) {
+    private fun showChargesCreatedSuccessfully(chargeCreationResponse: ChargeCreationResponse) {
         if (chargeCreateListener != null) {
             createdCharge?.clientId = chargeCreationResponse.clientId
             createdCharge?.id = chargeCreationResponse.resourceId
@@ -192,7 +214,7 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
         dialog?.dismiss()
     }
 
-    override fun showChargeCreatedFailure(errorMessage: String) {
+    private fun showChargeCreatedFailure(errorMessage: String) {
         if (chargeCreateListener != null) {
             chargeCreateListener?.onChargeCreatedFailure(errorMessage)
         } else {
@@ -200,17 +222,12 @@ class ChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener, C
         }
     }
 
-    override fun showFetchingError(s: String) {
+    private fun showFetchingError(s: String) {
         show(binding.root, s)
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         showProgress(b)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mChargeDialogPresenter?.detachView()
     }
 
     fun setOnChargeCreatedListener(chargeCreatedListener: OnChargeCreateListener?) {
