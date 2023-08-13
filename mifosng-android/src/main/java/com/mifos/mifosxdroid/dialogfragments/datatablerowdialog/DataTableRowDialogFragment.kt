@@ -14,6 +14,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.api.GenericResponse
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
@@ -24,24 +25,24 @@ import com.mifos.mifosxdroid.formwidgets.FormSpinner
 import com.mifos.mifosxdroid.formwidgets.FormToggleButton
 import com.mifos.mifosxdroid.formwidgets.FormWidget
 import com.mifos.objects.noncore.DataTable
+import com.mifos.states.DataTableRowDialogUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.SafeUIBlockingUtility
+import com.mifos.viewmodels.DataTableRowDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by ishankhanna on 01/08/14.
  */
 @AndroidEntryPoint
-class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
+class DataTableRowDialogFragment : DialogFragment() {
 
     private lateinit var binding: DialogFragmentAddEntryToDatatableBinding
 
     private val LOG_TAG = javaClass.simpleName
 
-    @JvmField
-    @Inject
-    var dataTableRowDialogPresenter: DataTableRowDialogPresenter? = null
+    private lateinit var viewModel: DataTableRowDialogViewModel
+
     private var dataTable: DataTable? = null
     private var entityId = 0
     private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
@@ -59,13 +60,28 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
          */
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         binding = DialogFragmentAddEntryToDatatableBinding.inflate(inflater, container, false)
-        dataTableRowDialogPresenter?.attachView(this)
+        viewModel = ViewModelProvider(this)[DataTableRowDialogViewModel::class.java]
         dialog?.setTitle(dataTable?.registeredTableName)
         safeUIBlockingUtility = SafeUIBlockingUtility(
             requireContext(), getString(R.string.data_table_row_dialog_loading_message)
         )
         createForm(dataTable)
         addSaveButton()
+
+        viewModel.dataTableRowDialogUiState.observe(viewLifecycleOwner){
+            when(it){
+                is DataTableRowDialogUiState.ShowDataTableEntrySuccessfully -> {
+                    showProgressbar(false)
+                    showDataTableEntrySuccessfully(it.genericResponse)
+                }
+                is DataTableRowDialogUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+                is DataTableRowDialogUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -146,9 +162,8 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
         }
     }
 
-    @Throws(RequiredFieldException::class)
-    fun onSaveActionRequested() {
-        dataTableRowDialogPresenter?.addDataTableEntry(
+    private fun onSaveActionRequested() {
+        viewModel.addDataTableEntry(
             dataTable?.registeredTableName,
             entityId, addDataTableInput()
         )
@@ -181,7 +196,7 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
         return payload
     }
 
-    override fun showDataTableEntrySuccessfully(genericResponse: GenericResponse) {
+    private fun showDataTableEntrySuccessfully(genericResponse: GenericResponse) {
         Toast.makeText(activity, R.string.data_table_entry_added, Toast.LENGTH_LONG).show()
         targetFragment?.onActivityResult(
             targetRequestCode, Activity.RESULT_OK,
@@ -190,22 +205,17 @@ class DataTableRowDialogFragment : DialogFragment(), DataTableRowDialogMvpView {
         requireActivity().supportFragmentManager.popBackStack()
     }
 
-    override fun showError(message: String) {
+    private fun showError(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
         requireActivity().supportFragmentManager.popBackStack()
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             safeUIBlockingUtility?.safelyBlockUI()
         } else {
             safeUIBlockingUtility?.safelyUnBlockUI()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        dataTableRowDialogPresenter?.detachView()
     }
 
     companion object {

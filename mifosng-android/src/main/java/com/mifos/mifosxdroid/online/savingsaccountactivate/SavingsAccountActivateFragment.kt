@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.R
@@ -19,11 +20,12 @@ import com.mifos.mifosxdroid.databinding.DialogFragmentApproveSavingsBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.savings.DepositType
+import com.mifos.states.SavingsAccountActivateUiState
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.SafeUIBlockingUtility
+import com.mifos.viewmodels.SavingsAccountActivateViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by Tarun on 01/06/17.
@@ -31,14 +33,13 @@ import javax.inject.Inject
  * It uses the same layout as Savings Account Approve Fragment.
  */
 @AndroidEntryPoint
-class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
-    SavingsAccountActivateMvpView {
+class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener {
 
     private lateinit var binding: DialogFragmentApproveSavingsBinding
     private val arg: SavingsAccountActivateFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mSavingsAccountActivatePresenter: SavingsAccountActivatePresenter
+    private lateinit var viewModel: SavingsAccountActivateViewModel
+
     var activationDate: String? = null
     var savingsAccountNumber = 0
     var savingsAccountType: DepositType? = null
@@ -59,12 +60,29 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
         // Inflate the layout for this fragment
         activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         binding = DialogFragmentApproveSavingsBinding.inflate(inflater, container, false)
-        mSavingsAccountActivatePresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SavingsAccountActivateViewModel::class.java]
         safeUIBlockingUtility = SafeUIBlockingUtility(
             requireContext(),
             getString(R.string.savings_account_loading_message)
         )
         showUserInterface()
+
+        viewModel.savingsAccountActivateUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SavingsAccountActivateUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is SavingsAccountActivateUiState.ShowProgressbar -> showProgressbar(true)
+
+                is SavingsAccountActivateUiState.ShowSavingAccountActivatedSuccessfully -> {
+                    showProgressbar(false)
+                    showSavingAccountActivatedSuccessfully(it.genericResponse)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -80,7 +98,7 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
         }
     }
 
-    override fun showUserInterface() {
+    private fun showUserInterface() {
         binding.etSavingsApprovalReason.visibility = View.GONE
         binding.tvApprovalDateOn.text = resources.getString(R.string.activated_on)
         mfDatePicker = MFDatePicker.newInsance(this)
@@ -94,7 +112,7 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
         hashMap["dateFormat"] = "dd MMMM yyyy"
         hashMap["activatedOnDate"] = activationDate.toString()
         hashMap["locale"] = "en"
-        mSavingsAccountActivatePresenter.activateSavings(savingsAccountNumber, hashMap)
+        viewModel.activateSavings(savingsAccountNumber, hashMap)
     }
 
     private fun onClickApprovalDate() {
@@ -115,7 +133,7 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
             .replace("-", " ")
     }
 
-    override fun showSavingAccountActivatedSuccessfully(genericResponse: GenericResponse?) {
+    private fun showSavingAccountActivatedSuccessfully(genericResponse: GenericResponse?) {
         Toaster.show(
             binding.tvApprovalDateOn,
             resources.getString(R.string.savings_account_activated)
@@ -124,20 +142,15 @@ class SavingsAccountActivateFragment : MifosBaseFragment(), OnDatePickListener,
         requireActivity().supportFragmentManager.popBackStack()
     }
 
-    override fun showError(message: String?) {
+    private fun showError(message: String?) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             safeUIBlockingUtility?.safelyBlockUI()
         } else {
             safeUIBlockingUtility?.safelyUnBlockUI()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mSavingsAccountActivatePresenter.detachView()
     }
 }

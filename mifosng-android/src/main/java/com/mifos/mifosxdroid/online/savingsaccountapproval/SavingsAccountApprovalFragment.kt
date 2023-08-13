@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.R
@@ -19,26 +20,25 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.loan.SavingsApproval
 import com.mifos.objects.accounts.savings.DepositType
-import com.mifos.utils.Constants
+import com.mifos.states.SavingsAccountApprovalUiState
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Network
 import com.mifos.utils.SafeUIBlockingUtility
+import com.mifos.viewmodels.SavingsAccountApprovalViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * @author nellyk
  */
 @AndroidEntryPoint
-class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener,
-    SavingsAccountApprovalMvpView {
+class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener {
 
     private lateinit var binding: DialogFragmentApproveSavingsBinding
     private val arg: SavingsAccountApprovalFragmentArgs by navArgs()
 
-    @Inject
-    lateinit var mSavingsAccountApprovalPresenter: SavingsAccountApprovalPresenter
+    private lateinit var viewModel: SavingsAccountApprovalViewModel
+
     var approvaldate: String? = null
     var savingsAccountNumber = 0
     var savingsAccountType: DepositType? = null
@@ -59,12 +59,29 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener,
         // Inflate the layout for this fragment
         activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
         binding = DialogFragmentApproveSavingsBinding.inflate(inflater, container, false)
-        mSavingsAccountApprovalPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SavingsAccountApprovalViewModel::class.java]
         safeUIBlockingUtility = SafeUIBlockingUtility(
             requireContext(),
             getString(R.string.savings_account_approval_fragment_loading_message)
         )
         showUserInterface()
+
+        viewModel.savingsAccountApprovalUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SavingsAccountApprovalUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is SavingsAccountApprovalUiState.ShowProgressbar -> showProgressbar(true)
+
+                is SavingsAccountApprovalUiState.ShowSavingAccountApprovedSuccessfully -> {
+                    showProgressbar(false)
+                    showSavingAccountApprovedSuccessfully(it.genericResponse)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -80,7 +97,7 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener,
         }
     }
 
-    override fun showUserInterface() {
+    private fun showUserInterface() {
         mfDatePicker = MFDatePicker.newInsance(this)
         binding.tvApprovalDate.text = MFDatePicker.datePickedAsString
         approvaldate = binding.tvApprovalDate.text.toString()
@@ -121,44 +138,25 @@ class SavingsAccountApprovalFragment : MifosBaseFragment(), OnDatePickListener,
     }
 
     private fun initiateSavingsApproval(savingsApproval: SavingsApproval) {
-        mSavingsAccountApprovalPresenter.approveSavingsApplication(
+        viewModel.approveSavingsApplication(
             savingsAccountNumber, savingsApproval
         )
     }
 
-    override fun showSavingAccountApprovedSuccessfully(genericResponse: GenericResponse?) {
+    private fun showSavingAccountApprovedSuccessfully(genericResponse: GenericResponse?) {
         Toast.makeText(activity, "Savings Approved", Toast.LENGTH_LONG).show()
         requireActivity().supportFragmentManager.popBackStack()
     }
 
-    override fun showError(message: String?) {
+    private fun showError(message: String?) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             safeUIBlockingUtility!!.safelyBlockUI()
         } else {
             safeUIBlockingUtility!!.safelyUnBlockUI()
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mSavingsAccountApprovalPresenter.detachView()
-    }
-
-    companion object {
-        fun newInstance(
-            savingsAccountNumber: Int,
-            type: DepositType?
-        ): SavingsAccountApprovalFragment {
-            val savingsAccountApproval = SavingsAccountApprovalFragment()
-            val args = Bundle()
-            args.putInt(Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountNumber)
-            args.putParcelable(Constants.SAVINGS_ACCOUNT_TYPE, type)
-            savingsAccountApproval.arguments = args
-            return savingsAccountApproval
         }
     }
 }

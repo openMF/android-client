@@ -11,25 +11,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentSurveyLastBinding
 import com.mifos.mifosxdroid.online.Communicator
 import com.mifos.mifosxdroid.online.SurveyQuestionActivity
 import com.mifos.objects.survey.Scorecard
+import com.mifos.states.SurveySubmitUiState
+import com.mifos.viewmodels.SurveySubmitViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
 @AndroidEntryPoint
-class SurveySubmitFragment : MifosBaseFragment(), Communicator, SurveySubmitMvpView {
+class SurveySubmitFragment : MifosBaseFragment(), Communicator {
 
     private lateinit var binding: FragmentSurveyLastBinding
 
-    @Inject
-    lateinit var mSurveySubmitPresenter: SurveySubmitPresenter
+    private lateinit var viewModel: SurveySubmitViewModel
+
     private var mDetachFragment: DisableSwipe? = null
     private var mScorecard: Scorecard? = null
     private var mSurveyId = 0
@@ -39,7 +41,24 @@ class SurveySubmitFragment : MifosBaseFragment(), Communicator, SurveySubmitMvpV
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSurveyLastBinding.inflate(inflater, container, false)
-        mSurveySubmitPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SurveySubmitViewModel::class.java]
+
+        viewModel.surveySubmitUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SurveySubmitUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is SurveySubmitUiState.ShowProgressbar -> showProgressbar(true)
+
+                is SurveySubmitUiState.ShowSurveySubmittedSuccessfully -> {
+                    showProgressbar(false)
+                    showSurveySubmittedSuccessfully(it.scorecard)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -68,7 +87,7 @@ class SurveySubmitFragment : MifosBaseFragment(), Communicator, SurveySubmitMvpV
             binding.btnSubmit.text = resources.getString(R.string.submitting_surveys)
             binding.btnSubmit.isEnabled = false
             binding.btnSubmit.visibility = View.GONE
-            mSurveySubmitPresenter.submitSurvey(mSurveyId, mScorecard)
+            viewModel.submitSurvey(mSurveyId, mScorecard)
         } else {
             Toast.makeText(
                 context, resources
@@ -78,7 +97,7 @@ class SurveySubmitFragment : MifosBaseFragment(), Communicator, SurveySubmitMvpV
         }
     }
 
-    override fun showSurveySubmittedSuccessfully(scorecard: Scorecard?) {
+    private fun showSurveySubmittedSuccessfully(scorecard: Scorecard?) {
         Toast.makeText(
             context, resources.getString(R.string.scorecard_created_successfully),
             Toast.LENGTH_LONG
@@ -88,23 +107,18 @@ class SurveySubmitFragment : MifosBaseFragment(), Communicator, SurveySubmitMvpV
         binding.btnSubmit.visibility = View.GONE
     }
 
-    override fun showError(errorMessage: Int) {
-        Toast.makeText(context, resources.getString(errorMessage), Toast.LENGTH_LONG).show()
+    private fun showError(errorMessage: String) {
+        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
         binding.surveySubmitTextView.text = resources.getString(R.string.error_submitting_survey)
         binding.btnSubmit.visibility = View.GONE
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             showMifosProgressBar()
         } else {
             hideMifosProgressBar()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mSurveySubmitPresenter.detachView()
     }
 
     override fun onAttach(context: Context) {

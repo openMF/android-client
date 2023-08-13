@@ -14,6 +14,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.jakewharton.fliptables.FlipTable
@@ -28,27 +29,26 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.savings.DepositType
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse
-import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.states.SavingsAccountTransactionUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Network
 import com.mifos.utils.PrefManager
 import com.mifos.utils.Utils
+import com.mifos.viewmodels.SavingsAccountTransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickListener,
-    SavingsAccountTransactionMvpView {
+class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickListener {
 
 
     private lateinit var binding: FragmentSavingsAccountTransactionBinding
     private val arg: SavingsAccountTransactionFragmentArgs by navArgs()
     val LOG_TAG = javaClass.simpleName
 
-    @Inject
-    lateinit var mSavingAccountTransactionPresenter: SavingsAccountTransactionPresenter
+    private lateinit var viewModel: SavingsAccountTransactionViewModel
+
     private var savingsAccountNumber: String? = null
     private var savingsAccountId: Int? = null
     private var savingsAccountType: DepositType? = null
@@ -87,12 +87,39 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
                     .getString(R.string.space) + resources.getString(R.string.withdrawal)
             )
         }
-        mSavingAccountTransactionPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SavingsAccountTransactionViewModel::class.java]
 
         //This Method Checking SavingAccountTransaction made before in Offline mode or not.
         //If yes then User have to sync that first then he will be able to make transaction.
         //If not then User able to make SavingAccountTransaction in Online or Offline.
         checkSavingAccountTransactionStatusInDatabase()
+
+        viewModel.savingsAccountTransactionUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SavingsAccountTransactionUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is SavingsAccountTransactionUiState.ShowProgressbar -> showProgressbar(true)
+
+                is SavingsAccountTransactionUiState.ShowSavingAccountTemplate -> {
+                    showProgressbar(false)
+                    showSavingAccountTemplate(it.savingsAccountTransactionTemplate)
+                }
+
+                is SavingsAccountTransactionUiState.ShowSavingAccountTransactionExistInDatabase -> {
+                    showProgressbar(false)
+                    showSavingAccountTransactionDoesNotExistInDatabase()
+                }
+
+                is SavingsAccountTransactionUiState.ShowTransactionSuccessfullyDone -> {
+                    showProgressbar(false)
+                    showTransactionSuccessfullyDone(it.savingsAccountTransactionResponse)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -109,15 +136,15 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
 
     }
 
-    override fun checkSavingAccountTransactionStatusInDatabase() {
+    private fun checkSavingAccountTransactionStatusInDatabase() {
         // Checking SavingAccountTransaction Already made in Offline mode or Not.
         savingsAccountId?.let {
-            mSavingAccountTransactionPresenter
+            viewModel
                 .checkInDatabaseSavingAccountTransaction(it)
         }
     }
 
-    override fun showSavingAccountTransactionExistInDatabase() {
+    private fun showSavingAccountTransactionExistInDatabase() {
         //Visibility of ParentLayout GONE, If SavingAccountTransaction Already made in Offline Mode
         binding.viewFlipper.visibility = View.GONE
         MaterialDialog.Builder().init(activity)
@@ -131,7 +158,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
             .show()
     }
 
-    override fun showSavingAccountTransactionDoesNotExistInDatabase() {
+    private fun showSavingAccountTransactionDoesNotExistInDatabase() {
         // This Method Inflating UI and Initializing the Loading SavingAccountTransaction
         // Template for transaction.
         inflateUI()
@@ -147,7 +174,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
 
     private fun inflateSavingsAccountTemplate() {
         savingsAccountId?.let {
-            mSavingAccountTransactionPresenter.loadSavingAccountTemplate(
+            viewModel.loadSavingAccountTemplate(
                 savingsAccountType?.endpoint, it, transactionType
             )
         }
@@ -228,7 +255,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
         Log.i(resources.getString(R.string.transaction_body), builtTransactionRequestAsJson)
         if (!Network.isOnline(requireActivity())) PrefManager.userStatus = Constants.USER_OFFLINE
         savingsAccountId?.let {
-            mSavingAccountTransactionPresenter.processTransaction(
+            viewModel.processTransaction(
                 savingsAccountType?.endpoint,
                 it, transactionType, savingsAccountTransactionRequest
             )
@@ -257,7 +284,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
         binding.tvTransactionDate.text = date
     }
 
-    override fun showSavingAccountTemplate(savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate?) {
+    private fun showSavingAccountTemplate(savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate?) {
         if (savingsAccountTransactionTemplate != null) {
             val listOfPaymentTypes = Utils.getPaymentTypeOptions(
                 savingsAccountTransactionTemplate.paymentTypeOptions
@@ -284,7 +311,7 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
         }
     }
 
-    override fun showTransactionSuccessfullyDone(savingsAccountTransactionResponse: SavingsAccountTransactionResponse?) {
+    private fun showTransactionSuccessfullyDone(savingsAccountTransactionResponse: SavingsAccountTransactionResponse?) {
         if (savingsAccountTransactionResponse?.resourceId == null) {
             Toaster.show(binding.root, resources.getString(R.string.transaction_saved_in_db))
         } else {
@@ -303,46 +330,11 @@ class SavingsAccountTransactionFragment : ProgressableFragment(), OnDatePickList
         requireActivity().supportFragmentManager.popBackStackImmediate()
     }
 
-    override fun showError(errorMessage: Int) {
+    private fun showError(errorMessage: String) {
         Toaster.show(binding.root, errorMessage)
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         showProgress(b)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mSavingAccountTransactionPresenter.detachView()
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param savingsAccountWithAssociations Savings Account of the Client with some additional
-         * association details
-         * @param transactionType                Type of Transaction (Deposit or Withdrawal)
-         * @return A new instance of fragment SavingsAccountTransactionDialogFragment.
-         */
-        @JvmStatic
-        fun newInstance(
-            savingsAccountWithAssociations: SavingsAccountWithAssociations,
-            transactionType: String?, accountType: DepositType?
-        ): SavingsAccountTransactionFragment {
-            val fragment = SavingsAccountTransactionFragment()
-            val args = Bundle()
-            args.putString(
-                Constants.SAVINGS_ACCOUNT_NUMBER, savingsAccountWithAssociations
-                    .accountNo.toString()
-            )
-            savingsAccountWithAssociations.id?.let { args.putInt(Constants.SAVINGS_ACCOUNT_ID, it) }
-            args.putString(Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE, transactionType)
-            args.putString(Constants.CLIENT_NAME, savingsAccountWithAssociations.clientName)
-            args.putParcelable(Constants.SAVINGS_ACCOUNT_TYPE, accountType)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }
