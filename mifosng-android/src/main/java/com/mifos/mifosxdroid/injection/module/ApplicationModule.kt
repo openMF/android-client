@@ -1,9 +1,12 @@
 package com.mifos.mifosxdroid.injection.module
 
+import android.content.Context
 import com.mifos.api.BaseApiManager
+import com.mifos.utils.NetworkUtilsWrapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -19,6 +22,12 @@ class ApplicationModule {
     @Singleton
     fun provideBaseApiManager(): BaseApiManager {
         return BaseApiManager()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNetworkUtilsWrapper(@ApplicationContext context: Context): NetworkUtilsWrapper {
+        return NetworkUtilsWrapper(context)
     }
 
 }

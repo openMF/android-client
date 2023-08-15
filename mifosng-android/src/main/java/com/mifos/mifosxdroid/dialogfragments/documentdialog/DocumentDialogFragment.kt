@@ -5,7 +5,6 @@
 package com.mifos.mifosxdroid.dialogfragments.documentdialog
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.api.GenericResponse
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
@@ -24,14 +24,15 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.DialogFragmentDocumentBinding
 import com.mifos.objects.noncore.Document
+import com.mifos.states.DocumentDialogUiState
 import com.mifos.utils.AndroidVersionUtil
 import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.FileUtils
 import com.mifos.utils.SafeUIBlockingUtility
+import com.mifos.viewmodels.DocumentDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-import javax.inject.Inject
 
 /**
  * Created by ishankhanna on 04/07/14.
@@ -40,16 +41,13 @@ import javax.inject.Inject
  * Use this Dialog Fragment to Create and/or Update Documents
  */
 @AndroidEntryPoint
-class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
+class DocumentDialogFragment : DialogFragment() {
 
     private lateinit var binding: DialogFragmentDocumentBinding
 
-    private val LOG_TAG = javaClass.simpleName
+    private lateinit var viewModel: DocumentDialogViewModel
 
-    @Inject
-    lateinit var mDocumentDialogPresenter: DocumentDialogPresenter
-    var safeUIBlockingUtility: SafeUIBlockingUtility? = null
-    private val mListener: OnDialogFragmentInteractionListener? = null
+    private var safeUIBlockingUtility: SafeUIBlockingUtility? = null
     private var documentName: String? = null
     private var documentDescription: String? = null
     private var entityType: String? = null
@@ -79,7 +77,7 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
         savedInstanceState: Bundle?
     ): View {
         binding = DialogFragmentDocumentBinding.inflate(inflater, container, false)
-        mDocumentDialogPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[DocumentDialogViewModel::class.java]
         if (resources.getString(R.string.update_document) == documentAction) {
             binding.tvDocumentAction.setText(R.string.update_document)
             binding.etDocumentName.setText(document?.name)
@@ -88,6 +86,33 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
             binding.tvDocumentAction.setText(R.string.upload_document)
         }
         binding.btUpload.isEnabled = false
+
+        viewModel.documentDialogUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is DocumentDialogUiState.ShowDocumentUpdatedSuccessfully -> {
+                    showProgressbar(false)
+                    showDocumentUpdatedSuccessfully()
+                }
+
+                is DocumentDialogUiState.ShowDocumentedCreatedSuccessfully -> {
+                    showProgressbar(false)
+                    showDocumentedCreatedSuccessfully(it.genericResponse)
+                }
+
+                is DocumentDialogUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is DocumentDialogUiState.ShowProgressbar -> showProgressbar(true)
+
+                is DocumentDialogUiState.ShowUploadError -> {
+                    showProgressbar(false)
+                    showUploadError(it.message)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -137,12 +162,12 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
 
         //Start Uploading Document
         if (documentAction == resources.getString(R.string.update_document)) {
-            mDocumentDialogPresenter.updateDocument(
+            viewModel.updateDocument(
                 entityType, entityId, document!!.id,
                 documentName, documentDescription, fileChoosen!!
             )
         } else if (documentAction == resources.getString(R.string.upload_document)) {
-            mDocumentDialogPresenter.createDocument(
+            viewModel.createDocument(
                 entityType, entityId,
                 documentName, documentDescription, fileChoosen!!
             )
@@ -155,7 +180,7 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
      * and If Permission is granted already then start Intent to get the Document from the External
      * Storage.
      */
-    override fun checkPermissionAndRequest() {
+    private fun checkPermissionAndRequest() {
         if (CheckSelfPermissionAndRequest.checkSelfPermission(
                 activity,
                 Manifest.permission.READ_EXTERNAL_STORAGE
@@ -170,8 +195,7 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
     /**
      * This Method is Requesting the Permission
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    override fun requestPermission() {
+    private fun requestPermission() {
         CheckSelfPermissionAndRequest.requestPermission(
             activity as MifosBaseActivity,
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -223,7 +247,7 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
      * If Android Version is Kitkat or greater then start intent with ACTION_OPEN_DOCUMENT,
      * otherwise with ACTION_GET_CONTENT
      */
-    override fun getExternalStorageDocument() {
+    private fun getExternalStorageDocument() {
         val intentDocument: Intent =
             if (AndroidVersionUtil.isApiVersionGreaterOrEqual(Build.VERSION_CODES.KITKAT)) {
                 Intent(Intent.ACTION_OPEN_DOCUMENT)
@@ -262,7 +286,7 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun showDocumentedCreatedSuccessfully(genericResponse: GenericResponse) {
+    private fun showDocumentedCreatedSuccessfully(genericResponse: GenericResponse) {
         Toast.makeText(
             activity, String.format(getString(R.string.uploaded_successfully), fileChoosen?.name),
             Toast.LENGTH_SHORT
@@ -270,7 +294,7 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
         dialog?.dismiss()
     }
 
-    override fun showDocumentUpdatedSuccessfully() {
+    private fun showDocumentUpdatedSuccessfully() {
         Toast.makeText(
             activity,
             String.format(getString(R.string.document_updated_successfully), fileChoosen?.name),
@@ -279,27 +303,22 @@ class DocumentDialogFragment : DialogFragment(), DocumentDialogMvpView {
         dialog?.dismiss()
     }
 
-    override fun showError(errorMessage: Int) {
-        Toast.makeText(activity, getString(errorMessage), Toast.LENGTH_SHORT).show()
-        dialog?.dismiss()
-    }
-
-    override fun showUploadError(errorMessage: String) {
+    private fun showError(errorMessage: String) {
         Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
         dialog?.dismiss()
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showUploadError(errorMessage: String) {
+        Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
+        dialog?.dismiss()
+    }
+
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             safeUIBlockingUtility?.safelyBlockUI()
         } else {
             safeUIBlockingUtility?.safelyUnBlockUI()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mDocumentDialogPresenter.detachView()
     }
 
     interface OnDialogFragmentInteractionListener {

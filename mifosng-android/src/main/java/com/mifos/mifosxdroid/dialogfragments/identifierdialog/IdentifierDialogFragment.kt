@@ -8,6 +8,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.databinding.DialogFragmentIdentifierBinding
@@ -16,24 +17,24 @@ import com.mifos.objects.noncore.Identifier
 import com.mifos.objects.noncore.IdentifierCreationResponse
 import com.mifos.objects.noncore.IdentifierPayload
 import com.mifos.objects.noncore.IdentifierTemplate
+import com.mifos.states.IdentifierDialogUiState
 import com.mifos.utils.Constants
+import com.mifos.viewmodels.IdentifierDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 01/10/16.
  */
 @AndroidEntryPoint
-class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogMvpView,
+class IdentifierDialogFragment : ProgressableDialogFragment(),
     OnItemSelectedListener {
 
     private lateinit var binding: DialogFragmentIdentifierBinding
 
     lateinit var identifierStatus: Array<String>
 
-    //    @JvmField
-    @Inject
-    lateinit var mIdentifierDialogPresenter: IdentifierDialogPresenter
+    private lateinit var viewModel: IdentifierDialogViewModel
+
     private var clientIdentifierCreationListener: ClientIdentifierCreationListener? = null
     private var clientId = 0
     private var identifierTemplate: IdentifierTemplate? = null
@@ -57,9 +58,31 @@ class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogM
     ): View {
         binding = DialogFragmentIdentifierBinding.inflate(inflater, container, false)
         identifierStatus = binding.root.resources.getStringArray(R.array.status)
-        mIdentifierDialogPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[IdentifierDialogViewModel::class.java]
         showIdentifierSpinners()
-        mIdentifierDialogPresenter.loadClientIdentifierTemplate(clientId)
+        viewModel.loadClientIdentifierTemplate(clientId)
+
+        viewModel.identifierDialogUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is IdentifierDialogUiState.ShowClientIdentifierTemplate -> {
+                    showProgressbar(false)
+                    showClientIdentifierTemplate(it.identifierTemplate)
+                }
+
+                is IdentifierDialogUiState.ShowError -> {
+                    showProgressbar(false)
+                    showErrorMessage(it.message)
+                }
+
+                is IdentifierDialogUiState.ShowIdentifierCreatedSuccessfully -> {
+                    showProgressbar(false)
+                    showIdentifierCreatedSuccessfully(it.identifierCreationResponse)
+                }
+
+                is IdentifierDialogUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -71,7 +94,7 @@ class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogM
         }
     }
 
-    override fun showIdentifierSpinners() {
+    private fun showIdentifierSpinners() {
         mIdentifierTypeAdapter = ArrayAdapter(
             requireActivity(),
             android.R.layout.simple_spinner_item, mListIdentifierType
@@ -110,14 +133,14 @@ class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogM
             identifier.documentKey = binding.etUniqueId.text.toString()
             identifier.documentType = documentTypeHashMap
                 ?.get(binding.spIdentifierType.selectedItem.toString())
-            mIdentifierDialogPresenter.createClientIdentifier(clientId, identifierPayload)
+            viewModel.createClientIdentifier(clientId, identifierPayload)
         }
     }
 
-    override fun showClientIdentifierTemplate(identifierTemplate: IdentifierTemplate) {
+    private fun showClientIdentifierTemplate(identifierTemplate: IdentifierTemplate) {
         this.identifierTemplate = identifierTemplate
         identifierTemplate.allowedDocumentTypes?.let {
-            mIdentifierDialogPresenter.getIdentifierDocumentTypeNames(
+            viewModel.getIdentifierDocumentTypeNames(
                 it
             )
         }?.let {
@@ -126,13 +149,13 @@ class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogM
             )
         }
         documentTypeHashMap = identifierTemplate.allowedDocumentTypes?.let {
-            mIdentifierDialogPresenter
+            viewModel
                 .mapDocumentTypesWithName(it)
         }
         mIdentifierTypeAdapter!!.notifyDataSetChanged()
     }
 
-    override fun showIdentifierCreatedSuccessfully(
+    private fun showIdentifierCreatedSuccessfully(
         identifierCreationResponse: IdentifierCreationResponse
     ) {
         Toast.makeText(
@@ -147,7 +170,7 @@ class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogM
         dialog!!.dismiss()
     }
 
-    override fun showErrorMessage(message: String) {
+    private fun showErrorMessage(message: String) {
         if (clientIdentifierCreationListener != null) {
             clientIdentifierCreationListener!!.onClientIdentifierCreationFailure(message)
         } else {
@@ -155,17 +178,12 @@ class IdentifierDialogFragment : ProgressableDialogFragment(), IdentifierDialogM
         }
     }
 
-    override fun showError(errorMessage: Int) {
+    private fun showError(errorMessage: Int) {
         Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         showProgress(show)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mIdentifierDialogPresenter.detachView()
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {

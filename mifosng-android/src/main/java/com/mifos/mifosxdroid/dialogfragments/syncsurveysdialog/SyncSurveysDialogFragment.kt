@@ -6,23 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.DialogFragmentSyncSurveysBinding
 import com.mifos.objects.survey.Survey
+import com.mifos.states.SyncSurveysDialogUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.Network.isOnline
 import com.mifos.utils.PrefManager.userStatus
+import com.mifos.viewmodels.SyncSurveysDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class SyncSurveysDialogFragment : DialogFragment(), SyncSurveysDialogMvpView {
+class SyncSurveysDialogFragment : DialogFragment() {
 
     private lateinit var binding: DialogFragmentSyncSurveysBinding
 
-    @Inject
-    lateinit var mSyncSurveysDialogPresenter: SyncSurveysDialogPresenter
+    private lateinit var viewModel: SyncSurveysDialogViewModel
+
     private var mSurveyList: List<Survey>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         mSurveyList = ArrayList()
@@ -35,14 +37,86 @@ class SyncSurveysDialogFragment : DialogFragment(), SyncSurveysDialogMvpView {
         savedInstanceState: Bundle?
     ): View {
         binding = DialogFragmentSyncSurveysBinding.inflate(inflater, container, false)
-        mSyncSurveysDialogPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SyncSurveysDialogViewModel::class.java]
         //Start Syncing Surveys
         if (isOnline && userStatus == Constants.USER_ONLINE) {
-            mSyncSurveysDialogPresenter.loadSurveyList()
+            viewModel.loadSurveyList()
         } else {
             showNetworkIsNotAvailable()
             fragmentManager?.popBackStack()
         }
+
+        viewModel.syncSurveysDialogUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SyncSurveysDialogUiState.DismissDialog -> hideDialog()
+                is SyncSurveysDialogUiState.SetQuestionSyncProgressBarMax -> {
+                    showProgressbar(false)
+                    setQuestionSyncProgressBarMax(it.total)
+                }
+
+                is SyncSurveysDialogUiState.SetResponseSyncProgressBarMax -> {
+                    showProgressbar(false)
+                    setResponseSyncProgressBarMax(it.total)
+                }
+
+                is SyncSurveysDialogUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is SyncSurveysDialogUiState.ShowNetworkIsNotAvailable -> {
+                    showProgressbar(false)
+                    showNetworkIsNotAvailable()
+                }
+
+                is SyncSurveysDialogUiState.ShowProgressbar -> showProgressbar(true)
+                is SyncSurveysDialogUiState.ShowSurveysSyncSuccessfully -> {
+                    showProgressbar(false)
+                    showSurveysSyncSuccessfully()
+                }
+
+                is SyncSurveysDialogUiState.ShowSyncedFailedSurveys -> {
+                    showProgressbar(false)
+                    showSyncedFailedSurveys(it.failedCount)
+                }
+
+                is SyncSurveysDialogUiState.ShowSyncingSurvey -> {
+                    showProgressbar(false)
+                    showSyncingSurvey(it.surveyName)
+                }
+
+                is SyncSurveysDialogUiState.ShowUI -> {
+                    showProgressbar(false)
+                    showUI()
+                }
+
+                is SyncSurveysDialogUiState.UpdateQuestionSyncProgressBar -> {
+                    showProgressbar(false)
+                    updateQuestionSyncProgressBar(it.index)
+                }
+
+                is SyncSurveysDialogUiState.UpdateResponseSyncProgressBar -> {
+                    showProgressbar(false)
+                    updateResponseSyncProgressBar(it.index)
+                }
+
+                is SyncSurveysDialogUiState.UpdateSingleSyncSurveyProgressBar -> {
+                    showProgressbar(false)
+                    updateSingleSyncSurveyProgressBar(it.index)
+                }
+
+                is SyncSurveysDialogUiState.UpdateSurveyList -> {
+                    showProgressbar(false)
+                    updateSurveyList(it.surveys)
+                }
+
+                is SyncSurveysDialogUiState.UpdateTotalSyncSurveyProgressBarAndCount -> {
+                    showProgressbar(false)
+                    updateTotalSyncSurveyProgressBarAndCount(it.total)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -70,11 +144,11 @@ class SyncSurveysDialogFragment : DialogFragment(), SyncSurveysDialogMvpView {
         }
     }
 
-    override fun updateSurveyList(surveyList: List<Survey>) {
+    private fun updateSurveyList(surveyList: List<Survey>) {
         mSurveyList = surveyList
     }
 
-    override fun showUI() {
+    private fun showUI() {
         binding.pbTotalSyncSurvey.max = mSurveyList!!.size
         val totalSurveys = mSurveyList!!.size.toString() + resources.getString(R.string.space) +
                 resources.getString(R.string.surveys)
@@ -82,36 +156,36 @@ class SyncSurveysDialogFragment : DialogFragment(), SyncSurveysDialogMvpView {
         binding.tvSyncFailed.text = 0.toString()
     }
 
-    override fun showSyncingSurvey(surveyName: String?) {
+    private fun showSyncingSurvey(surveyName: String?) {
         binding.tvSyncingSurvey.text = surveyName
         binding.tvSurveyName.text = surveyName
     }
 
-    override fun showSyncedFailedSurveys(failedCount: Int) {
+    private fun showSyncedFailedSurveys(failedCount: Int) {
         binding.tvSyncFailed.text = failedCount.toString()
     }
 
-    override fun setQuestionSyncProgressBarMax(count: Int) {
+    private fun setQuestionSyncProgressBarMax(count: Int) {
         binding.pbSyncQuestion.max = count
     }
 
-    override fun setResponseSyncProgressBarMax(count: Int) {
+    private fun setResponseSyncProgressBarMax(count: Int) {
         binding.pbSyncResponse.max = count
     }
 
-    override fun updateSingleSyncSurveyProgressBar(count: Int) {
+    private fun updateSingleSyncSurveyProgressBar(count: Int) {
         binding.pbSyncSurvey.progress = count
     }
 
-    override fun updateQuestionSyncProgressBar(i: Int) {
+    private fun updateQuestionSyncProgressBar(i: Int) {
         binding.pbSyncQuestion.progress = i
     }
 
-    override fun updateResponseSyncProgressBar(i: Int) {
+    private fun updateResponseSyncProgressBar(i: Int) {
         binding.pbSyncResponse.progress = i
     }
 
-    override fun updateTotalSyncSurveyProgressBarAndCount(count: Int) {
+    private fun updateTotalSyncSurveyProgressBarAndCount(count: Int) {
         binding.pbTotalSyncSurvey.progress = count
         val totalSyncCount = resources
             .getString(R.string.space) + count + resources
@@ -119,13 +193,13 @@ class SyncSurveysDialogFragment : DialogFragment(), SyncSurveysDialogMvpView {
         binding.tvTotalProgress.text = totalSyncCount
     }
 
-    override var maxSingleSyncSurveyProgressBar: Int
+    private var maxSingleSyncSurveyProgressBar: Int
         get() = binding.pbSyncSurvey.max
         set(total) {
             binding.pbSyncSurvey.max = total
         }
 
-    override fun showNetworkIsNotAvailable() {
+    private fun showNetworkIsNotAvailable() {
         Toast.makeText(
             activity,
             resources.getString(R.string.error_network_not_available),
@@ -133,36 +207,32 @@ class SyncSurveysDialogFragment : DialogFragment(), SyncSurveysDialogMvpView {
         ).show()
     }
 
-    override fun showSurveysSyncSuccessfully() {
+    private fun showSurveysSyncSuccessfully() {
         binding.btnCancel.visibility = View.INVISIBLE
         dismissDialog()
         Toast.makeText(activity, R.string.sync_success, Toast.LENGTH_SHORT).show()
     }
 
-    override val isOnline: Boolean
+    private val isOnline: Boolean
         get() = activity?.let { isOnline(it) } == true
 
-    override fun dismissDialog() {
+    private fun dismissDialog() {
         dialog?.dismiss()
     }
 
-    override fun showDialog() {
+    private fun showDialog() {
         dialog?.show()
     }
 
-    override fun hideDialog() {
+    private fun hideDialog() {
         dialog?.hide()
     }
 
-    override fun showError(s: Int) {
+    private fun showError(s: String) {
         show(binding.root, s)
     }
 
-    override fun showProgressbar(b: Boolean) {}
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mSyncSurveysDialogPresenter.detachView()
-    }
+    private fun showProgressbar(b: Boolean) {}
 
     companion object {
         val LOG_TAG = SyncSurveysDialogFragment::class.java.simpleName

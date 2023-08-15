@@ -7,26 +7,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.DialogFragmentSyncGroupsBinding
 import com.mifos.objects.group.Group
+import com.mifos.states.SyncGroupsDialogUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.Network.isOnline
 import com.mifos.utils.PrefManager.userStatus
+import com.mifos.viewmodels.SyncGroupsDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 11/09/16.
  */
 @AndroidEntryPoint
-class SyncGroupsDialogFragment : DialogFragment(), SyncGroupsDialogMvpView {
+class SyncGroupsDialogFragment : DialogFragment() {
 
     private lateinit var binding: DialogFragmentSyncGroupsBinding
 
-    @Inject
-    lateinit var syncGroupsDialogPresenter: SyncGroupsDialogPresenter
+    private lateinit var viewModel: SyncGroupsDialogViewModel
+
     private var groups: List<Group>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         if (arguments != null) {
@@ -40,16 +42,68 @@ class SyncGroupsDialogFragment : DialogFragment(), SyncGroupsDialogMvpView {
         savedInstanceState: Bundle?
     ): View {
         binding = DialogFragmentSyncGroupsBinding.inflate(inflater, container, false)
-        syncGroupsDialogPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SyncGroupsDialogViewModel::class.java]
         showUI()
 
         //Start Syncing Groups
         if (isOnline && userStatus == Constants.USER_ONLINE) {
-            syncGroupsDialogPresenter.startSyncingGroups(groups!!)
+            viewModel.startSyncingGroups(groups!!)
         } else {
             showNetworkIsNotAvailable()
             requireActivity().supportFragmentManager.popBackStack()
         }
+
+        viewModel.syncGroupsDialogUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SyncGroupsDialogUiState.DismissDialog -> dismissDialog()
+                is SyncGroupsDialogUiState.SetClientSyncProgressBarMax -> {
+                    showProgressbar(false)
+                    setClientSyncProgressBarMax(it.size)
+                }
+
+                is SyncGroupsDialogUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is SyncGroupsDialogUiState.ShowGroupsSyncSuccessfully -> {
+                    showProgressbar(false)
+                    showGroupsSyncSuccessfully()
+                }
+
+                is SyncGroupsDialogUiState.ShowNetworkIsNotAvailable -> {
+                    showProgressbar(false)
+                    showNetworkIsNotAvailable()
+                }
+
+                is SyncGroupsDialogUiState.ShowProgressbar -> showProgressbar(true)
+                is SyncGroupsDialogUiState.ShowSyncedFailedGroups -> {
+                    showProgressbar(false)
+                    showSyncedFailedGroups(it.size)
+                }
+
+                is SyncGroupsDialogUiState.ShowSyncingGroup -> {
+                    showProgressbar(false)
+                    showSyncingGroup(it.groupName)
+                }
+
+                is SyncGroupsDialogUiState.UpdateClientSyncProgressBar -> {
+                    showProgressbar(false)
+                    updateClientSyncProgressBar(it.index)
+                }
+
+                is SyncGroupsDialogUiState.UpdateSingleSyncGroupProgressBar -> {
+                    showProgressbar(false)
+                    updateSingleSyncGroupProgressBar(it.index)
+                }
+
+                is SyncGroupsDialogUiState.UpdateTotalSyncGroupProgressBarAndCount -> {
+                    showProgressbar(false)
+                    updateTotalSyncGroupProgressBarAndCount(it.total)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -77,7 +131,7 @@ class SyncGroupsDialogFragment : DialogFragment(), SyncGroupsDialogMvpView {
         }
     }
 
-    override fun showUI() {
+    private fun showUI() {
         binding.pbSyncGroup.max = groups!!.size
         val totalGroups = groups?.size.toString() + resources.getString(R.string.space) +
                 resources.getString(R.string.groups)
@@ -85,28 +139,28 @@ class SyncGroupsDialogFragment : DialogFragment(), SyncGroupsDialogMvpView {
         binding.tvSyncFailed.text = 0.toString()
     }
 
-    override fun showSyncingGroup(groupName: String?) {
+    private fun showSyncingGroup(groupName: String?) {
         binding.tvSyncingGroup.text = groupName
         binding.tvGroupName.text = groupName
     }
 
-    override fun showSyncedFailedGroups(failedCount: Int) {
+    private fun showSyncedFailedGroups(failedCount: Int) {
         binding.tvSyncFailed.text = failedCount.toString()
     }
 
-    override fun setClientSyncProgressBarMax(count: Int) {
+    private fun setClientSyncProgressBarMax(count: Int) {
         binding.pbSyncClient.max = count
     }
 
-    override fun updateClientSyncProgressBar(i: Int) {
+    private fun updateClientSyncProgressBar(i: Int) {
         binding.pbSyncClient.progress = i
     }
 
-    override fun updateSingleSyncGroupProgressBar(count: Int) {
+    private fun updateSingleSyncGroupProgressBar(count: Int) {
         binding.pbSyncGroup.progress = count
     }
 
-    override fun updateTotalSyncGroupProgressBarAndCount(count: Int) {
+    private fun updateTotalSyncGroupProgressBarAndCount(count: Int) {
         binding.pbTotalSyncGroup.progress = count
         val totalSyncCount = resources
             .getString(R.string.space) + count + resources
@@ -114,48 +168,44 @@ class SyncGroupsDialogFragment : DialogFragment(), SyncGroupsDialogMvpView {
         binding.tvTotalProgress.text = totalSyncCount
     }
 
-    override var maxSingleSyncGroupProgressBar: Int
+    private var maxSingleSyncGroupProgressBar: Int
         get() = binding.pbSyncGroup.max
         set(total) {
             binding.pbSyncGroup.max = total
         }
 
-    override fun showNetworkIsNotAvailable() {
+    private fun showNetworkIsNotAvailable() {
         Toast.makeText(
             activity, resources
                 .getString(R.string.error_network_not_available), Toast.LENGTH_SHORT
         ).show()
     }
 
-    override fun showGroupsSyncSuccessfully() {
+    private fun showGroupsSyncSuccessfully() {
         binding.btnCancel.visibility = View.INVISIBLE
         binding.btnHide.text = resources.getString(R.string.dialog_action_ok)
     }
 
-    override val isOnline: Boolean
+    private val isOnline: Boolean
         get() = isOnline(requireActivity())
 
-    override fun dismissDialog() {
+    private fun dismissDialog() {
         dialog?.dismiss()
     }
 
-    override fun showDialog() {
+    private fun showDialog() {
         dialog?.show()
     }
 
-    override fun hideDialog() {
+    private fun hideDialog() {
         dialog?.hide()
     }
 
-    override fun showError(s: Int) {
+    private fun showError(s: String) {
         show(binding.root, s)
     }
 
-    override fun showProgressbar(b: Boolean) {}
-    override fun onDestroyView() {
-        super.onDestroyView()
-        syncGroupsDialogPresenter.detachView()
-    }
+    private fun showProgressbar(b: Boolean) {}
 
     companion object {
         fun newInstance(groups: List<Group>?): SyncGroupsDialogFragment {
