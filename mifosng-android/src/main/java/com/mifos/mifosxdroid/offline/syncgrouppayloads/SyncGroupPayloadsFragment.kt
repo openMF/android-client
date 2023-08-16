@@ -9,6 +9,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SyncGroupPayloadAdapter
@@ -17,8 +18,10 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
 import com.mifos.objects.group.GroupPayload
+import com.mifos.states.SyncGroupPayloadsUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.userStatus
+import com.mifos.viewmodels.SyncGroupPayloadsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -26,22 +29,20 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 19/07/16.
  */
 @AndroidEntryPoint
-class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
-    DialogInterface.OnClickListener {
+class SyncGroupPayloadsFragment : MifosBaseFragment(), DialogInterface.OnClickListener {
 
     private lateinit var binding: FragmentSyncpayloadBinding
 
     val LOG_TAG = javaClass.simpleName
 
-    @Inject
-    lateinit var mSyncGroupPayloadsPresenter: SyncGroupPayloadsPresenter
+    private lateinit var viewModel: SyncGroupPayloadsViewModel
 
     @JvmField
     @Inject
     var mSyncGroupPayloadAdapter: SyncGroupPayloadAdapter? = null
     var groupPayloads: MutableList<GroupPayload>? = null
     var onCancelListener: DialogInterface.OnCancelListener? = null
-    var mClientSyncIndex = 0
+    private var mClientSyncIndex = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         groupPayloads = ArrayList()
@@ -53,7 +54,7 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSyncpayloadBinding.inflate(inflater, container, false)
-        mSyncGroupPayloadsPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SyncGroupPayloadsViewModel::class.java]
         val mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvSyncPayload.layoutManager = mLayoutManager
@@ -67,10 +68,47 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
                 .resources.getIntArray(R.array.swipeRefreshColors)
         )
         binding.swipeContainer.setOnRefreshListener {
-            mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload()
+            viewModel.loanDatabaseGroupPayload()
             if (binding.swipeContainer.isRefreshing) binding.swipeContainer.isRefreshing = false
         }
-        mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload()
+        viewModel.loanDatabaseGroupPayload()
+
+        viewModel.syncGroupPayloadsUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SyncGroupPayloadsUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is SyncGroupPayloadsUiState.ShowGroupPayloadUpdated -> {
+                    showProgressbar(false)
+                    showGroupPayloadUpdated(it.groupPayload)
+                }
+
+                is SyncGroupPayloadsUiState.ShowGroupSyncFailed -> {
+                    showProgressbar(false)
+                    showGroupSyncFailed(it.message)
+                }
+
+                is SyncGroupPayloadsUiState.ShowGroupSyncResponse -> {
+                    showProgressbar(false)
+                    showGroupSyncResponse()
+                }
+
+                is SyncGroupPayloadsUiState.ShowGroups -> {
+                    showProgressbar(false)
+                    showGroups(it.groupPayloads)
+                }
+
+                is SyncGroupPayloadsUiState.ShowPayloadDeletedAndUpdatePayloads -> {
+                    showProgressbar(false)
+                    showPayloadDeletedAndUpdatePayloads(it.groupPayloads)
+                }
+
+                is SyncGroupPayloadsUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -90,17 +128,17 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
 
     private fun reloadOnError() {
         binding.llError.visibility = View.GONE
-        mSyncGroupPayloadsPresenter.loanDatabaseGroupPayload()
+        viewModel.loanDatabaseGroupPayload()
     }
 
-    override fun showGroupSyncResponse() {
-        mSyncGroupPayloadsPresenter.deleteAndUpdateGroupPayload(
+    private fun showGroupSyncResponse() {
+        viewModel.deleteAndUpdateGroupPayload(
             groupPayloads
-            !!.get(mClientSyncIndex).id
+            !![mClientSyncIndex].id
         )
     }
 
-    override fun showOfflineModeDialog() {
+    private fun showOfflineModeDialog() {
         MaterialDialog.Builder().init(activity)
             .setTitle(R.string.offline_mode)
             .setMessage(R.string.dialog_message_offline_sync_alert)
@@ -130,7 +168,7 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
         }
     }
 
-    override fun showError(stringId: Int) {
+    private fun showError(stringId: Int) {
         binding.llError.visibility = View.VISIBLE
         val message = stringId.toString() + resources.getString(R.string.click_to_refresh)
         binding.noPayloadText.text = message
@@ -145,7 +183,7 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
      *
      * @param groupPayload
      */
-    override fun showGroups(groupPayload: List<GroupPayload>) {
+    private fun showGroups(groupPayload: List<GroupPayload>) {
         groupPayloads = groupPayload as MutableList<GroupPayload>
         if (groupPayload.isEmpty()) {
             binding.llError.visibility = View.VISIBLE
@@ -157,13 +195,13 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
         }
     }
 
-    override fun showGroupSyncFailed(errorMessage: String) {
+    private fun showGroupSyncFailed(errorMessage: String) {
         val groupPayload = groupPayloads!![mClientSyncIndex]
         groupPayload.errorMessage = errorMessage
-        mSyncGroupPayloadsPresenter.updateGroupPayload(groupPayload)
+        viewModel.updateGroupPayload(groupPayload)
     }
 
-    override fun showPayloadDeletedAndUpdatePayloads(groups: List<GroupPayload>) {
+    private fun showPayloadDeletedAndUpdatePayloads(groups: List<GroupPayload>) {
         mClientSyncIndex = 0
         groupPayloads = groups as MutableList<GroupPayload>
         mSyncGroupPayloadAdapter?.setGroupPayload(groupPayloads!!)
@@ -177,7 +215,7 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
         }
     }
 
-    override fun showGroupPayloadUpdated(groupPayload: GroupPayload) {
+    private fun showGroupPayloadUpdated(groupPayload: GroupPayload) {
         groupPayloads!![mClientSyncIndex] = groupPayload
         mSyncGroupPayloadAdapter?.notifyDataSetChanged()
         mClientSyncIndex += 1
@@ -186,7 +224,7 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
         }
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         binding.swipeContainer.isRefreshing = show
         if (show && mSyncGroupPayloadAdapter?.itemCount == 0) {
             showMifosProgressBar()
@@ -224,7 +262,7 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
     private fun syncGroupPayload() {
         for (i in groupPayloads!!.indices) {
             if (groupPayloads!![i].errorMessage == null) {
-                mSyncGroupPayloadsPresenter.syncGroupPayload(groupPayloads!![i])
+                viewModel.syncGroupPayload(groupPayloads!![i])
                 mClientSyncIndex = i
                 break
             } else {
@@ -235,11 +273,6 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), SyncGroupPayloadsMvpView,
                 )
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mSyncGroupPayloadsPresenter.detachView()
     }
 
     companion object {

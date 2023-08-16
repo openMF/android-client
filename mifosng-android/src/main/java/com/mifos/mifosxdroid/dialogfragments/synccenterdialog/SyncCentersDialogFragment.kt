@@ -7,21 +7,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.DialogFragmentSyncCentersBinding
 import com.mifos.objects.group.Center
+import com.mifos.states.SyncCentersDialogUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.Network.isOnline
 import com.mifos.utils.PrefManager.userStatus
-import javax.inject.Inject
+import com.mifos.viewmodels.SyncCentersDialogViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class SyncCentersDialogFragment : DialogFragment(), SyncCenterDialogMvpView {
+@AndroidEntryPoint
+class SyncCentersDialogFragment : DialogFragment() {
 
     private lateinit var binding: DialogFragmentSyncCentersBinding
 
-    @Inject
-    lateinit var syncCentersDialogPresenter: SyncCenterDialogPresenter
+    private lateinit var viewModel: SyncCentersDialogViewModel
+
     private lateinit var mCenterList: List<Center>
     override fun onCreate(savedInstanceState: Bundle?) {
         if (arguments != null) {
@@ -35,16 +39,78 @@ class SyncCentersDialogFragment : DialogFragment(), SyncCenterDialogMvpView {
         savedInstanceState: Bundle?
     ): View {
         binding = DialogFragmentSyncCentersBinding.inflate(inflater, container, false)
-        syncCentersDialogPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SyncCentersDialogViewModel::class.java]
         showUI()
 
         //Start Syncing Centers
         if (isOnline && userStatus == Constants.USER_ONLINE) {
-            syncCentersDialogPresenter.startSyncingCenters(mCenterList)
+            viewModel.startSyncingCenters(mCenterList)
         } else {
             showNetworkIsNotAvailable()
             requireActivity().supportFragmentManager.popBackStack()
         }
+
+        viewModel.syncCentersDialogUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SyncCentersDialogUiState.DismissDialog -> dismissDialog()
+                is SyncCentersDialogUiState.SetClientSyncProgressBarMax -> {
+                    showProgressbar(false)
+                    setClientSyncProgressBarMax(it.total)
+                }
+
+                is SyncCentersDialogUiState.SetGroupSyncProgressBarMax -> {
+                    showProgressbar(false)
+                    setGroupSyncProgressBarMax(it.size)
+                }
+
+                is SyncCentersDialogUiState.ShowCentersSyncSuccessfully -> {
+                    showProgressbar(false)
+                    showCentersSyncSuccessfully()
+                }
+
+                is SyncCentersDialogUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is SyncCentersDialogUiState.ShowNetworkIsNotAvailable -> {
+                    showProgressbar(false)
+                    showNetworkIsNotAvailable()
+                }
+
+                is SyncCentersDialogUiState.ShowProgressbar -> showProgressbar(true)
+                is SyncCentersDialogUiState.ShowSyncedFailedCenters -> {
+                    showProgressbar(false)
+                    showSyncedFailedCenters(it.size)
+                }
+
+                is SyncCentersDialogUiState.ShowSyncingCenter -> {
+                    showProgressbar(false)
+                    showSyncingCenter(it.centerName)
+                }
+
+                is SyncCentersDialogUiState.UpdateClientSyncProgressBar -> {
+                    showProgressbar(false)
+                    updateClientSyncProgressBar(it.index)
+                }
+
+                is SyncCentersDialogUiState.UpdateGroupSyncProgressBar -> {
+                    showProgressbar(false)
+                    updateGroupSyncProgressBar(it.index)
+                }
+
+                is SyncCentersDialogUiState.UpdateSingleSyncCenterProgressBar -> {
+                    showProgressbar(false)
+                    updateSingleSyncCenterProgressBar(it.total)
+                }
+
+                is SyncCentersDialogUiState.UpdateTotalSyncCenterProgressBarAndCount -> {
+                    showProgressbar(false)
+                    updateTotalSyncCenterProgressBarAndCount(it.total)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -72,7 +138,7 @@ class SyncCentersDialogFragment : DialogFragment(), SyncCenterDialogMvpView {
         }
     }
 
-    override fun showUI() {
+    private fun showUI() {
         binding.pbTotalSyncCenter.max = mCenterList.size
         val totalCenters = mCenterList.size.toString() + resources.getString(R.string.space) +
                 resources.getString(R.string.centers)
@@ -80,20 +146,20 @@ class SyncCentersDialogFragment : DialogFragment(), SyncCenterDialogMvpView {
         binding.tvSyncFailed.text = 0.toString()
     }
 
-    override fun showSyncingCenter(centerName: String) {
+    private fun showSyncingCenter(centerName: String) {
         binding.tvSyncingCenter.text = centerName
         binding.tvSyncingCenter.text = centerName
     }
 
-    override fun showSyncedFailedCenters(failedCount: Int) {
+    private fun showSyncedFailedCenters(failedCount: Int) {
         binding.tvSyncFailed.text = failedCount.toString()
     }
 
-    override fun updateSingleSyncCenterProgressBar(count: Int) {
+    private fun updateSingleSyncCenterProgressBar(count: Int) {
         binding.pbSyncCenter.progress = count
     }
 
-    override fun updateTotalSyncCenterProgressBarAndCount(count: Int) {
+    private fun updateTotalSyncCenterProgressBarAndCount(count: Int) {
         binding.pbTotalSyncCenter.progress = count
         val totalSyncCount = resources
             .getString(R.string.space) + count + resources
@@ -101,13 +167,13 @@ class SyncCentersDialogFragment : DialogFragment(), SyncCenterDialogMvpView {
         binding.tvTotalProgress.text = totalSyncCount
     }
 
-    override var maxSingleSyncCenterProgressBar: Int
+    private var maxSingleSyncCenterProgressBar: Int
         get() = binding.pbSyncCenter.max
         set(value) {
             binding.pbSyncCenter.max = value
         }
 
-    override fun showNetworkIsNotAvailable() {
+    private fun showNetworkIsNotAvailable() {
         Toast.makeText(
             activity,
             resources.getString(R.string.error_network_not_available),
@@ -115,51 +181,47 @@ class SyncCentersDialogFragment : DialogFragment(), SyncCenterDialogMvpView {
         ).show()
     }
 
-    override fun showCentersSyncSuccessfully() {
+    private fun showCentersSyncSuccessfully() {
         binding.btnCancel.visibility = View.INVISIBLE
         binding.btnHide.text = resources.getString(R.string.dialog_action_ok)
     }
 
-    override val isOnline: Boolean
+    private val isOnline: Boolean
         get() = isOnline(requireContext())
 
-    override fun setGroupSyncProgressBarMax(count: Int) {
+    private fun setGroupSyncProgressBarMax(count: Int) {
         binding.pbSyncGroup.max = count
     }
 
-    override fun updateGroupSyncProgressBar(i: Int) {
+    private fun updateGroupSyncProgressBar(i: Int) {
         binding.pbSyncGroup.progress = i
     }
 
-    override fun setClientSyncProgressBarMax(count: Int) {
+    private fun setClientSyncProgressBarMax(count: Int) {
         binding.pbSyncClient.max = count
     }
 
-    override fun updateClientSyncProgressBar(i: Int) {
+    private fun updateClientSyncProgressBar(i: Int) {
         binding.pbSyncClient.progress = i
     }
 
-    override fun dismissDialog() {
+    private fun dismissDialog() {
         dialog?.dismiss()
     }
 
-    override fun showDialog() {
+    private fun showDialog() {
         dialog?.show()
     }
 
-    override fun hideDialog() {
+    private fun hideDialog() {
         dialog?.hide()
     }
 
-    override fun showError(s: Int) {
+    private fun showError(s: String) {
         show(binding.root, s)
     }
 
-    override fun showProgressbar(b: Boolean) {}
-    override fun onDestroyView() {
-        super.onDestroyView()
-        syncCentersDialogPresenter.detachView()
-    }
+    private fun showProgressbar(b: Boolean) {}
 
     companion object {
         fun newInstance(center: List<Center>?): SyncCentersDialogFragment {

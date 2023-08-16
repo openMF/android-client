@@ -15,6 +15,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
@@ -26,15 +27,16 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.client.ChargeCreationResponse
 import com.mifos.objects.client.Charges
 import com.mifos.services.data.ChargesPayload
+import com.mifos.states.LoanChargeDialogUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
+import com.mifos.viewmodels.LoanChargeDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import javax.inject.Inject
 
 /**
  * Created by nellyk on 1/22/2016.
@@ -43,16 +45,14 @@ import javax.inject.Inject
  * Use this Dialog Fragment to Create and/or Update charges
  */
 @AndroidEntryPoint
-class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener,
-    LoanChargeDialogMvpView {
+class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListener {
 
     private lateinit var binding: DialogFragmentChargeBinding
 
     val LOG_TAG = javaClass.simpleName
 
-    @JvmField
-    @Inject
-    var mLoanChargeDialogPresenter: LoanChargeDialogPresenter? = null
+    private lateinit var viewModel: LoanChargeDialogViewModel
+
     private lateinit var dueDateString: String
     private var mfDatePicker: DialogFragment? = null
     private var chargeId = 0
@@ -85,9 +85,31 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
             true
         )
         binding = DialogFragmentChargeBinding.inflate(inflater, container, false)
-        mLoanChargeDialogPresenter?.attachView(this)
+        viewModel = ViewModelProvider(this)[LoanChargeDialogViewModel::class.java]
         inflateDueDate()
         inflateChargesSpinner()
+
+        viewModel.loanChargeDialogUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is LoanChargeDialogUiState.ShowAllChargesV3 -> {
+                    showProgressbar(false)
+                    showAllChargesV3(it.response)
+                }
+
+                is LoanChargeDialogUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is LoanChargeDialogUiState.ShowLoanChargesCreatedSuccessfully -> {
+                    showProgressbar(false)
+                    showLoanChargesCreatedSuccessfully(it.chargeCreationResponse)
+                }
+
+                is LoanChargeDialogUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -133,11 +155,11 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
     }
 
     private fun inflateChargesSpinner() {
-        mLoanChargeDialogPresenter?.loanAllChargesV3(loanAccountNumber)
+        viewModel.loanAllChargesV3(loanAccountNumber)
     }
 
     private fun initiateChargesCreation(chargesPayload: ChargesPayload) {
-        mLoanChargeDialogPresenter?.createLoanCharges(loanAccountNumber, chargesPayload)
+        viewModel.createLoanCharges(loanAccountNumber, chargesPayload)
     }
 
     private fun inflateDueDate() {
@@ -157,7 +179,7 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
         )
     }
 
-    override fun showAllChargesV3(result: ResponseBody) {
+    private fun showAllChargesV3(result: ResponseBody) {
 
         /* Activity is null - Fragment has been detached; no need to do anything. */
         if (activity == null) return
@@ -212,7 +234,7 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
         }
     }
 
-    override fun showLoanChargesCreatedSuccessfully(chargeCreationResponse: ChargeCreationResponse) {
+    private fun showLoanChargesCreatedSuccessfully(chargeCreationResponse: ChargeCreationResponse) {
         if (onChargeCreateListener != null) {
             createdCharge?.clientId = chargeCreationResponse.clientId
             createdCharge?.id = chargeCreationResponse.resourceId
@@ -223,11 +245,11 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
         dialog?.dismiss()
     }
 
-    override fun showError(s: String) {
+    private fun showError(s: String) {
         show(binding.root, s)
     }
 
-    override fun showChargeCreatedFailure(errorMessage: String) {
+    private fun showChargeCreatedFailure(errorMessage: String) {
         if (onChargeCreateListener != null) {
             onChargeCreateListener?.onChargeCreatedFailure(errorMessage)
         } else {
@@ -235,13 +257,8 @@ class LoanChargeDialogFragment : ProgressableDialogFragment(), OnDatePickListene
         }
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         showProgress(b)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mLoanChargeDialogPresenter?.detachView()
     }
 
     fun setOnChargeCreateListener(onChargeCreateListener: OnChargeCreateListener?) {

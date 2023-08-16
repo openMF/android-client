@@ -49,6 +49,8 @@ import com.mifos.repositories.DataTableRepository
 import com.mifos.repositories.DataTableRepositoryImp
 import com.mifos.repositories.DataTableRowDialogRepository
 import com.mifos.repositories.DataTableRowDialogRepositoryImp
+import com.mifos.repositories.DocumentDialogRepository
+import com.mifos.repositories.DocumentDialogRepositoryImp
 import com.mifos.repositories.DocumentListRepository
 import com.mifos.repositories.DocumentListRepositoryImp
 import com.mifos.repositories.GenerateCollectionSheetRepository
@@ -61,6 +63,8 @@ import com.mifos.repositories.GroupLoanAccountRepository
 import com.mifos.repositories.GroupLoanAccountRepositoryImp
 import com.mifos.repositories.GroupsListRepository
 import com.mifos.repositories.GroupsListRepositoryImp
+import com.mifos.repositories.IdentifierDialogRepository
+import com.mifos.repositories.IdentifierDialogRepositoryImp
 import com.mifos.repositories.IndividualCollectionSheetDetailsRepository
 import com.mifos.repositories.IndividualCollectionSheetDetailsRepositoryImp
 import com.mifos.repositories.LoanAccountApprovalRepository
@@ -71,6 +75,8 @@ import com.mifos.repositories.LoanAccountRepository
 import com.mifos.repositories.LoanAccountRepositoryImp
 import com.mifos.repositories.LoanAccountSummaryRepository
 import com.mifos.repositories.LoanAccountSummaryRepositoryImp
+import com.mifos.repositories.LoanChargeDialogRepository
+import com.mifos.repositories.LoanChargeDialogRepositoryImp
 import com.mifos.repositories.LoanChargeRepository
 import com.mifos.repositories.LoanChargeRepositoryImp
 import com.mifos.repositories.LoanRepaymentRepository
@@ -85,6 +91,8 @@ import com.mifos.repositories.NewIndividualCollectionSheetRepository
 import com.mifos.repositories.NewIndividualCollectionSheetRepositoryImp
 import com.mifos.repositories.NoteRepository
 import com.mifos.repositories.NoteRepositoryImp
+import com.mifos.repositories.OfflineDashboardRepository
+import com.mifos.repositories.OfflineDashboardRepositoryImp
 import com.mifos.repositories.PathTrackingRepository
 import com.mifos.repositories.PathTrackingRepositoryImp
 import com.mifos.repositories.PinPointClientRepository
@@ -111,6 +119,24 @@ import com.mifos.repositories.SurveyListRepository
 import com.mifos.repositories.SurveyListRepositoryImp
 import com.mifos.repositories.SurveySubmitRepository
 import com.mifos.repositories.SurveySubmitRepositoryImp
+import com.mifos.repositories.SyncCenterPayloadsRepository
+import com.mifos.repositories.SyncCenterPayloadsRepositoryImp
+import com.mifos.repositories.SyncCentersDialogRepository
+import com.mifos.repositories.SyncCentersDialogRepositoryImp
+import com.mifos.repositories.SyncClientPayloadsRepository
+import com.mifos.repositories.SyncClientPayloadsRepositoryImp
+import com.mifos.repositories.SyncClientsDialogRepository
+import com.mifos.repositories.SyncClientsDialogRepositoryImp
+import com.mifos.repositories.SyncGroupPayloadsRepository
+import com.mifos.repositories.SyncGroupPayloadsRepositoryImp
+import com.mifos.repositories.SyncGroupsDialogRepository
+import com.mifos.repositories.SyncGroupsDialogRepositoryImp
+import com.mifos.repositories.SyncLoanRepaymentTransactionRepository
+import com.mifos.repositories.SyncLoanRepaymentTransactionRepositoryImp
+import com.mifos.repositories.SyncSavingsAccountTransactionRepository
+import com.mifos.repositories.SyncSavingsAccountTransactionRepositoryImp
+import com.mifos.repositories.SyncSurveysDialogRepository
+import com.mifos.repositories.SyncSurveysDialogRepositoryImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -376,7 +402,117 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesDataTableRowDialogRepository(dataManagerDataTable: DataManagerDataTable) : DataTableRowDialogRepository {
+    fun providesDataTableRowDialogRepository(dataManagerDataTable: DataManagerDataTable): DataTableRowDialogRepository {
         return DataTableRowDialogRepositoryImp(dataManagerDataTable)
+    }
+
+    @Provides
+    fun providesDocumentDialogRepository(dataManagerDocument: DataManagerDocument): DocumentDialogRepository {
+        return DocumentDialogRepositoryImp(dataManagerDocument)
+    }
+
+    @Provides
+    fun providesIdentifierDialogRepository(dataManagerClient: DataManagerClient): IdentifierDialogRepository {
+        return IdentifierDialogRepositoryImp(dataManagerClient)
+    }
+
+    @Provides
+    fun providesLoanChargeDialogRepository(dataManager: DataManager): LoanChargeDialogRepository {
+        return LoanChargeDialogRepositoryImp(dataManager)
+    }
+
+    @Provides
+    fun providesSyncSurveysDialogRepository(dataManagerSurvey: DataManagerSurveys): SyncSurveysDialogRepository {
+        return SyncSurveysDialogRepositoryImp(dataManagerSurvey)
+    }
+
+    @Provides
+    fun providesSyncGroupsDialogRepository(
+        dataManagerGroups: DataManagerGroups,
+        dataManagerLoan: DataManagerLoan,
+        dataManagerSavings: DataManagerSavings,
+        dataManagerClient: DataManagerClient
+    ): SyncGroupsDialogRepository {
+        return SyncGroupsDialogRepositoryImp(
+            dataManagerGroups,
+            dataManagerLoan,
+            dataManagerSavings,
+            dataManagerClient
+        )
+    }
+
+    @Provides
+    fun providesSyncClientsDialogRepository(
+        dataManagerClient: DataManagerClient,
+        dataManagerLoan: DataManagerLoan,
+        dataManagerSavings: DataManagerSavings
+    ): SyncClientsDialogRepository {
+        return SyncClientsDialogRepositoryImp(
+            dataManagerClient,
+            dataManagerLoan,
+            dataManagerSavings
+        )
+    }
+
+    @Provides
+    fun providesSyncCentersDialogRepository(
+        dataManagerCenter: DataManagerCenter,
+        dataManagerLoan: DataManagerLoan,
+        dataManagerSavings: DataManagerSavings,
+        dataManagerGroups: DataManagerGroups,
+        dataManagerClient: DataManagerClient
+    ): SyncCentersDialogRepository {
+        return SyncCentersDialogRepositoryImp(
+            dataManagerCenter,
+            dataManagerLoan,
+            dataManagerSavings,
+            dataManagerGroups,
+            dataManagerClient
+        )
+    }
+
+    @Provides
+    fun providesOfflineDashboardRepository(
+        dataManagerClient: DataManagerClient,
+        dataManagerGroups: DataManagerGroups,
+        dataManagerCenter: DataManagerCenter,
+        dataManagerLoan: DataManagerLoan,
+        dataManagerSavings: DataManagerSavings
+    ): OfflineDashboardRepository {
+        return OfflineDashboardRepositoryImp(
+            dataManagerClient,
+            dataManagerGroups,
+            dataManagerCenter,
+            dataManagerLoan,
+            dataManagerSavings
+        )
+    }
+
+    @Provides
+    fun providesSyncCenterPayloadsRepository(dataManagerCenter: DataManagerCenter): SyncCenterPayloadsRepository {
+        return SyncCenterPayloadsRepositoryImp(dataManagerCenter)
+    }
+
+    @Provides
+    fun providesSyncSavingsAccountTransactionRepository(
+        dataManagerSavings: DataManagerSavings,
+        dataManagerLoan: DataManagerLoan
+    ): SyncSavingsAccountTransactionRepository {
+        return SyncSavingsAccountTransactionRepositoryImp(dataManagerSavings, dataManagerLoan)
+    }
+
+    @Provides
+    fun providesSyncLoanRepaymentTransactionRepository(dataManagerLoan: DataManagerLoan): SyncLoanRepaymentTransactionRepository {
+        return SyncLoanRepaymentTransactionRepositoryImp(dataManagerLoan)
+    }
+
+    @Provides
+    fun providesSyncGroupPayloadsRepository(dataManagerGroups: DataManagerGroups): SyncGroupPayloadsRepository {
+        return SyncGroupPayloadsRepositoryImp(dataManagerGroups)
+    }
+
+    @Provides
+    fun providesSyncClientPayloadsRepository(dataManagerClient: DataManagerClient): SyncClientPayloadsRepository {
+        return SyncClientPayloadsRepositoryImp(dataManagerClient)
     }
 }
