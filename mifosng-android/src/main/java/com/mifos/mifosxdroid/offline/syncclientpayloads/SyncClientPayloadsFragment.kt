@@ -9,6 +9,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SyncPayloadsAdapter
@@ -17,10 +18,11 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
 import com.mifos.objects.client.ClientPayload
+import com.mifos.states.SyncClientPayloadsUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.userStatus
+import com.mifos.viewmodels.SyncClientPayloadsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * This Class for Syncing the clients that is created in offline mode.
@@ -30,14 +32,13 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 08/07/16.
  */
 @AndroidEntryPoint
-class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpView,
-    DialogInterface.OnClickListener {
+class SyncClientPayloadsFragment : MifosBaseFragment(), DialogInterface.OnClickListener {
     val LOG_TAG = javaClass.simpleName
 
     private lateinit var binding: FragmentSyncpayloadBinding
 
-    @Inject
-    lateinit var mSyncPayloadsPresenter: SyncClientPayloadsPresenter
+    private lateinit var viewModel: SyncClientPayloadsViewModel
+
     var clientPayloads: MutableList<ClientPayload>? = null
     var mSyncPayloadsAdapter: SyncPayloadsAdapter? = null
     var mClientSyncIndex = 0
@@ -52,12 +53,12 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSyncpayloadBinding.inflate(inflater, container, false)
-        mSyncPayloadsPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SyncClientPayloadsViewModel::class.java]
         val mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvSyncPayload.layoutManager = mLayoutManager
         binding.rvSyncPayload.setHasFixedSize(true)
-        mSyncPayloadsPresenter.loadDatabaseClientPayload()
+        viewModel.loadDatabaseClientPayload()
         /**
          * Loading All Client Payloads from Database
          */
@@ -65,9 +66,41 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
             *requireActivity().resources.getIntArray(R.array.swipeRefreshColors)
         )
         binding.swipeContainer.setOnRefreshListener {
-            mSyncPayloadsPresenter.loadDatabaseClientPayload()
+            viewModel.loadDatabaseClientPayload()
             if (binding.swipeContainer.isRefreshing) binding.swipeContainer.isRefreshing = false
         }
+
+        viewModel.syncClientPayloadsUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SyncClientPayloadsUiState.ShowClientPayloadUpdated -> {
+                    showProgressbar(false)
+                    showClientPayloadUpdated(it.clientPayload)
+                }
+
+                is SyncClientPayloadsUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is SyncClientPayloadsUiState.ShowPayloadDeletedAndUpdatePayloads -> {
+                    showProgressbar(false)
+                    showPayloadDeletedAndUpdatePayloads(it.clientPayloads)
+                }
+
+                is SyncClientPayloadsUiState.ShowPayloads -> {
+                    showProgressbar(false)
+                    showPayloads(it.clientPayloads)
+                }
+
+                is SyncClientPayloadsUiState.ShowProgressbar -> showProgressbar(true)
+
+                is SyncClientPayloadsUiState.ShowSyncResponse -> {
+                    showProgressbar(false)
+                    showSyncResponse()
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -86,7 +119,7 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
 
     private fun reloadOnError() {
         binding.llError.visibility = View.GONE
-        mSyncPayloadsPresenter.loadDatabaseClientPayload()
+        viewModel.loadDatabaseClientPayload()
     }
 
     /**
@@ -97,7 +130,7 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
      *
      * @param clientPayload
      */
-    override fun showPayloads(clientPayload: List<ClientPayload>) {
+    private fun showPayloads(clientPayload: List<ClientPayload>) {
         clientPayloads = clientPayload as MutableList<ClientPayload>
         if (clientPayload.isEmpty()) {
             binding.llError.visibility = View.VISIBLE
@@ -115,12 +148,12 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
      *
      * @param s Error String
      */
-    override fun showError(stringId: Int) {
+    private fun showError(stringId: String) {
         binding.llError.visibility = View.VISIBLE
         val message =
-            stringId.toString() + activity!!.resources.getString(R.string.click_to_refresh)
+            stringId + activity!!.resources.getString(R.string.click_to_refresh)
         binding.noPayloadText.text = message
-        show(binding.root, resources.getString(stringId))
+        show(binding.root, stringId)
     }
 
     /**
@@ -128,10 +161,10 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
      * then first delete that client from database and sync again from Database
      * and update the recyclerView
      */
-    override fun showSyncResponse() {
+    private fun showSyncResponse() {
         clientPayloads?.get(mClientSyncIndex)?.id?.let {
             clientPayloads?.get(mClientSyncIndex)?.clientCreationTime?.let { it1 ->
-                mSyncPayloadsPresenter.deleteAndUpdateClientPayload(
+                viewModel.deleteAndUpdateClientPayload(
                     it,
                     it1
                 )
@@ -145,17 +178,17 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
      * If client synced failed the there is no need to delete from the Database and increase
      * the mClientSyncIndex by one and sync the next client payload
      */
-    override fun showClientSyncFailed(errorMessage: String) {
+    private fun showClientSyncFailed(errorMessage: String) {
         val clientPayload = clientPayloads!![mClientSyncIndex]
         clientPayload.errorMessage = errorMessage
-        mSyncPayloadsPresenter.updateClientPayload(clientPayload)
+        viewModel.updateClientPayload(clientPayload)
     }
 
     /**
      * This Method will called whenever user trying to sync the client payload in
      * offline mode.
      */
-    override fun showOfflineModeDialog() {
+    private fun showOfflineModeDialog() {
         MaterialDialog.Builder().init(activity)
             .setTitle(R.string.offline_mode)
             .setMessage(R.string.dialog_message_offline_sync_alert)
@@ -191,7 +224,7 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
      *
      * @param clientPayload
     </ClientPayload> */
-    override fun showClientPayloadUpdated(clientPayload: ClientPayload) {
+    private fun showClientPayloadUpdated(clientPayload: ClientPayload) {
         clientPayloads?.set(mClientSyncIndex, clientPayload)
         mSyncPayloadsAdapter!!.notifyDataSetChanged()
         mClientSyncIndex += 1
@@ -206,7 +239,7 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
      *
      * @param clients
      */
-    override fun showPayloadDeletedAndUpdatePayloads(clients: List<ClientPayload>) {
+    private fun showPayloadDeletedAndUpdatePayloads(clients: List<ClientPayload>) {
         mClientSyncIndex = 0
         clientPayloads?.clear()
         clientPayloads = clients as MutableList<ClientPayload>
@@ -221,7 +254,7 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
         }
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             showMifosProgressBar()
         } else {
@@ -257,7 +290,7 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
     private fun syncClientPayload() {
         for (i in clientPayloads!!.indices) {
             if (clientPayloads!![i].errorMessage == null) {
-                mSyncPayloadsPresenter.syncClientPayload(clientPayloads!![i])
+                viewModel.syncClientPayload(clientPayloads!![i])
                 mClientSyncIndex = i
                 break
             } else {
@@ -268,12 +301,6 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), SyncClientPayloadsMvpVie
                 )
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        hideMifosProgressBar()
-        mSyncPayloadsPresenter.detachView()
     }
 
     companion object {

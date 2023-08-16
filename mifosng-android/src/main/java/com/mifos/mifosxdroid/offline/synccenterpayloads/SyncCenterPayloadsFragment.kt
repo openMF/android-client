@@ -9,6 +9,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SyncCenterPayloadAdapter
@@ -17,28 +18,28 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
 import com.mifos.services.data.CenterPayload
+import com.mifos.states.SyncCenterPayloadsUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.userStatus
+import com.mifos.viewmodels.SyncCenterPayloadsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpView,
+class SyncCenterPayloadsFragment : MifosBaseFragment(),
     DialogInterface.OnClickListener {
 
     private lateinit var binding: FragmentSyncpayloadBinding
 
     val LOG_TAG = javaClass.simpleName
 
-    @Inject
-    lateinit var mSyncCenterPayloadsPresenter: SyncCenterPayloadsPresenter
+    private lateinit var viewModel: SyncCenterPayloadsViewModel
 
-    @JvmField
     @Inject
-    var mSyncCenterPayloadAdapter: SyncCenterPayloadAdapter? = null
+    lateinit var mSyncCenterPayloadAdapter: SyncCenterPayloadAdapter
     var centerPayloads: MutableList<CenterPayload>? = null
     var onCancelListener: DialogInterface.OnCancelListener? = null
-    var mCenterSyncIndex = 0
+    private var mCenterSyncIndex = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         centerPayloads = ArrayList()
@@ -50,7 +51,7 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSyncpayloadBinding.inflate(inflater, container, false)
-        mSyncCenterPayloadsPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SyncCenterPayloadsViewModel::class.java]
         val mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvSyncPayload.layoutManager = mLayoutManager
@@ -63,10 +64,47 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
             *activity?.resources?.getIntArray(R.array.swipeRefreshColors) ?: intArrayOf()
         )
         binding.swipeContainer.setOnRefreshListener {
-            mSyncCenterPayloadsPresenter.loadDatabaseCenterPayload()
+            viewModel.loadDatabaseCenterPayload()
             if (binding.swipeContainer.isRefreshing) binding.swipeContainer.isRefreshing = false
         }
-        mSyncCenterPayloadsPresenter.loadDatabaseCenterPayload()
+        viewModel.loadDatabaseCenterPayload()
+
+        viewModel.syncCenterPayloadsUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SyncCenterPayloadsUiState.ShowCenterPayloadUpdated -> {
+                    showProgressbar(false)
+                    showCenterPayloadUpdated(it.centerPayload)
+                }
+
+                is SyncCenterPayloadsUiState.ShowCenterSyncFailed -> {
+                    showProgressbar(false)
+                    showCenterSyncFailed(it.message)
+                }
+
+                is SyncCenterPayloadsUiState.ShowCenterSyncResponse -> {
+                    showProgressbar(false)
+                    showCenterSyncResponse()
+                }
+
+                is SyncCenterPayloadsUiState.ShowCenters -> {
+                    showProgressbar(false)
+                    showCenters(it.centerPayloads)
+                }
+
+                is SyncCenterPayloadsUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is SyncCenterPayloadsUiState.ShowPayloadDeletedAndUpdatePayloads -> {
+                    showProgressbar(false)
+                    showPayloadDeletedAndUpdatePayloads(it.centerPayloads)
+                }
+
+                is SyncCenterPayloadsUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -85,17 +123,17 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
 
     private fun reloadOnError() {
         binding.llError.visibility = View.GONE
-        mSyncCenterPayloadsPresenter.loadDatabaseCenterPayload()
+        viewModel.loadDatabaseCenterPayload()
     }
 
-    override fun showCenterSyncResponse() {
-        mSyncCenterPayloadsPresenter.deleteAndUpdateCenterPayload(
+    private fun showCenterSyncResponse() {
+        viewModel.deleteAndUpdateCenterPayload(
             centerPayloads
-            !!.get(mCenterSyncIndex).id
+            !![mCenterSyncIndex].id
         )
     }
 
-    override fun showOfflineModeDialog() {
+    private fun showOfflineModeDialog() {
         MaterialDialog.Builder().init(activity)
             .setTitle(R.string.offline_mode)
             .setMessage(R.string.dialog_message_offline_sync_alert)
@@ -125,9 +163,9 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
         }
     }
 
-    override fun showError(stringId: Int) {
+    private fun showError(stringId: String) {
         binding.llError.visibility = View.VISIBLE
-        val message = stringId.toString() + resources.getString(R.string.click_to_refresh)
+        val message = stringId + resources.getString(R.string.click_to_refresh)
         binding.noPayloadText.text = message
         show(binding.root, stringId)
     }
@@ -140,7 +178,7 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
      *
      * @param centerPayload
      */
-    override fun showCenters(centerPayload: List<CenterPayload>) {
+    private fun showCenters(centerPayload: List<CenterPayload>) {
         centerPayloads = centerPayload as MutableList<CenterPayload>
         if (centerPayload.isEmpty()) {
             binding.llError.visibility = View.VISIBLE
@@ -148,20 +186,20 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
                 ?.resources?.getString(R.string.no_center_payload_to_sync)
             binding.noPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp)
         } else {
-            mSyncCenterPayloadAdapter?.setCenterPayload(centerPayloads!!)
+            mSyncCenterPayloadAdapter.setCenterPayload(centerPayloads!!)
         }
     }
 
-    override fun showCenterSyncFailed(errorMessage: String) {
+    private fun showCenterSyncFailed(errorMessage: String) {
         val centerPayload = centerPayloads!![mCenterSyncIndex]
         centerPayload.errorMessage = errorMessage
-        mSyncCenterPayloadsPresenter.updateCenterPayload(centerPayload)
+        viewModel.updateCenterPayload(centerPayload)
     }
 
-    override fun showPayloadDeletedAndUpdatePayloads(centers: List<CenterPayload>) {
+    private fun showPayloadDeletedAndUpdatePayloads(centers: List<CenterPayload>) {
         mCenterSyncIndex = 0
         centerPayloads = centers as MutableList<CenterPayload>
-        mSyncCenterPayloadAdapter?.setCenterPayload(centerPayloads!!)
+        mSyncCenterPayloadAdapter.setCenterPayload(centerPayloads!!)
         if (centerPayloads?.size != 0) {
             syncCenterPayload()
         } else {
@@ -172,18 +210,18 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
         }
     }
 
-    override fun showCenterPayloadUpdated(centerPayload: CenterPayload) {
+    private fun showCenterPayloadUpdated(centerPayload: CenterPayload) {
         centerPayloads!![mCenterSyncIndex] = centerPayload
-        mSyncCenterPayloadAdapter?.notifyDataSetChanged()
+        mSyncCenterPayloadAdapter.notifyDataSetChanged()
         mCenterSyncIndex += 1
         if (centerPayloads?.size != mCenterSyncIndex) {
             syncCenterPayload()
         }
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         binding.swipeContainer.isRefreshing = show
-        if (show && mSyncCenterPayloadAdapter?.itemCount == 0) {
+        if (show && mSyncCenterPayloadAdapter.itemCount == 0) {
             showMifosProgressBar()
             binding.swipeContainer.isRefreshing = false
         } else {
@@ -219,7 +257,7 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
     private fun syncCenterPayload() {
         for (i in centerPayloads!!.indices) {
             if (centerPayloads!![i].errorMessage == null) {
-                mSyncCenterPayloadsPresenter.syncCenterPayload(centerPayloads!![i])
+                viewModel.syncCenterPayload(centerPayloads!![i])
                 mCenterSyncIndex = i
                 break
             } else {
@@ -230,11 +268,6 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(), SyncCenterPayloadsMvpVie
                 )
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mSyncCenterPayloadsPresenter.detachView()
     }
 
     companion object {

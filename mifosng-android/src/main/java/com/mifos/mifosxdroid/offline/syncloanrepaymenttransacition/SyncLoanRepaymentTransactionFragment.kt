@@ -9,6 +9,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SyncLoanRepaymentAdapter
@@ -18,8 +19,10 @@ import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
 import com.mifos.objects.PaymentTypeOption
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.states.SyncLoanRepaymentTransactionUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.userStatus
+import com.mifos.viewmodels.SyncLoanRepaymentTransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -27,15 +30,13 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 28/07/16.
  */
 @AndroidEntryPoint
-class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(),
-    SyncLoanRepaymentTransactionMvpView, DialogInterface.OnClickListener {
+class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(), DialogInterface.OnClickListener {
 
     private lateinit var binding: FragmentSyncpayloadBinding
 
     val LOG_TAG = javaClass.simpleName
 
-    @Inject
-    lateinit var mSyncLoanRepaymentTransactionPresenter: SyncLoanRepaymentTransactionPresenter
+    private lateinit var viewModel: SyncLoanRepaymentTransactionViewModel
 
     @JvmField
     @Inject
@@ -53,7 +54,7 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(),
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSyncpayloadBinding.inflate(inflater, container, false)
-        mSyncLoanRepaymentTransactionPresenter.attachView(this)
+        viewModel = ViewModelProvider(this)[SyncLoanRepaymentTransactionViewModel::class.java]
         val mLayoutManager = LinearLayoutManager(activity)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvSyncPayload.layoutManager = mLayoutManager
@@ -67,14 +68,56 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(),
                 .resources.getIntArray(R.array.swipeRefreshColors)
         )
         binding.swipeContainer.setOnRefreshListener { //Loading LoanRepayment Transactions and PaymentTypeOptions From Database
-            mSyncLoanRepaymentTransactionPresenter.loadDatabaseLoanRepaymentTransactions()
-            mSyncLoanRepaymentTransactionPresenter.loanPaymentTypeOption()
+            viewModel.loadDatabaseLoanRepaymentTransactions()
+            viewModel.loanPaymentTypeOption()
             if (binding.swipeContainer.isRefreshing) binding.swipeContainer.isRefreshing = false
         }
 
         //Loading LoanRepayment Transactions  and PaymentTypeOptions From Database
-        mSyncLoanRepaymentTransactionPresenter.loadDatabaseLoanRepaymentTransactions()
-        mSyncLoanRepaymentTransactionPresenter.loanPaymentTypeOption()
+        viewModel.loadDatabaseLoanRepaymentTransactions()
+        viewModel.loanPaymentTypeOption()
+
+        viewModel.syncLoanRepaymentTransactionUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is SyncLoanRepaymentTransactionUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is SyncLoanRepaymentTransactionUiState.ShowLoanRepaymentDeletedAndUpdateLoanRepayment -> {
+                    showProgressbar(false)
+                    showLoanRepaymentDeletedAndUpdateLoanRepayment(it.loanRepaymentRequests)
+                }
+
+                is SyncLoanRepaymentTransactionUiState.ShowLoanRepaymentTransactions -> {
+                    showProgressbar(false)
+                    showLoanRepaymentTransactions(it.loanRepaymentRequests)
+                }
+
+                is SyncLoanRepaymentTransactionUiState.ShowLoanRepaymentUpdated -> {
+                    showProgressbar(false)
+                    showLoanRepaymentUpdated(it.loanRepaymentRequest)
+                }
+
+                is SyncLoanRepaymentTransactionUiState.ShowPaymentFailed -> {
+                    showProgressbar(false)
+                    showPaymentFailed(it.message)
+                }
+
+                is SyncLoanRepaymentTransactionUiState.ShowPaymentSubmittedSuccessfully -> {
+                    showProgressbar(false)
+                    showPaymentSubmittedSuccessfully()
+                }
+
+                is SyncLoanRepaymentTransactionUiState.ShowPaymentTypeOption -> {
+                    showProgressbar(false)
+                    showPaymentTypeOption(it.paymentTypeOptions)
+                }
+
+                is SyncLoanRepaymentTransactionUiState.ShowProgressbar -> showProgressbar(true)
+            }
+        }
+
         return binding.root
     }
 
@@ -93,10 +136,10 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(),
 
     private fun reloadOnError() {
         binding.llError.visibility = View.GONE
-        mSyncLoanRepaymentTransactionPresenter.loadDatabaseLoanRepaymentTransactions()
+        viewModel.loadDatabaseLoanRepaymentTransactions()
     }
 
-    override fun showOfflineModeDialog() {
+    private fun showOfflineModeDialog() {
         MaterialDialog.Builder().init(activity)
             .setTitle(R.string.offline_mode)
             .setMessage(R.string.dialog_message_offline_sync_alert)
@@ -126,7 +169,7 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(),
         }
     }
 
-    override fun showLoanRepaymentTransactions(loanRepaymentRequests: List<LoanRepaymentRequest>) {
+    private fun showLoanRepaymentTransactions(loanRepaymentRequests: List<LoanRepaymentRequest>) {
         mLoanRepaymentRequests = loanRepaymentRequests as MutableList<LoanRepaymentRequest>
         if (loanRepaymentRequests.isEmpty()) {
             binding.llError.visibility = View.VISIBLE
@@ -138,26 +181,26 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(),
         }
     }
 
-    override fun showPaymentTypeOption(paymentTypeOptions: List<PaymentTypeOption>) {
+    private fun showPaymentTypeOption(paymentTypeOptions: List<PaymentTypeOption>) {
         mSyncLoanRepaymentAdapter!!.setPaymentTypeOptions(paymentTypeOptions)
     }
 
-    override fun showPaymentSubmittedSuccessfully() {
+    private fun showPaymentSubmittedSuccessfully() {
         mLoanRepaymentRequests?.get(mClientSyncIndex)?.loanId?.let {
-            mSyncLoanRepaymentTransactionPresenter
+            viewModel
                 .deleteAndUpdateLoanRepayments(
                     it
                 )
         }
     }
 
-    override fun showPaymentFailed(errorMessage: String) {
+    private fun showPaymentFailed(errorMessage: String) {
         val loanRepaymentRequest = mLoanRepaymentRequests!![mClientSyncIndex]
         loanRepaymentRequest.errorMessage = errorMessage
-        mSyncLoanRepaymentTransactionPresenter.updateLoanRepayment(loanRepaymentRequest)
+        viewModel.updateLoanRepayment(loanRepaymentRequest)
     }
 
-    override fun showLoanRepaymentUpdated(loanRepaymentRequest: LoanRepaymentRequest) {
+    private fun showLoanRepaymentUpdated(loanRepaymentRequest: LoanRepaymentRequest) {
         mLoanRepaymentRequests?.set(mClientSyncIndex, loanRepaymentRequest)
         mSyncLoanRepaymentAdapter!!.notifyDataSetChanged()
         mClientSyncIndex += 1
@@ -166,7 +209,7 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(),
         }
     }
 
-    override fun showLoanRepaymentDeletedAndUpdateLoanRepayment(loanRepaymentRequests: List<LoanRepaymentRequest>) {
+    private fun showLoanRepaymentDeletedAndUpdateLoanRepayment(loanRepaymentRequests: List<LoanRepaymentRequest>) {
         mClientSyncIndex = 0
         mLoanRepaymentRequests = loanRepaymentRequests as MutableList<LoanRepaymentRequest>
         mSyncLoanRepaymentAdapter!!.setLoanRepaymentRequests(loanRepaymentRequests)
@@ -180,7 +223,7 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(),
         }
     }
 
-    override fun showError(stringId: Int) {
+    private fun showError(stringId: Int) {
         binding.llError.visibility = View.VISIBLE
         val message =
             stringId.toString() + requireActivity().resources.getString(R.string.click_to_refresh)
@@ -188,7 +231,7 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(),
         show(binding.root, stringId)
     }
 
-    override fun showProgressbar(show: Boolean) {
+    private fun showProgressbar(show: Boolean) {
         binding.swipeContainer.isRefreshing = show
         if (show && mSyncLoanRepaymentAdapter!!.itemCount == 0) {
             showMifosProgressBar()
@@ -227,7 +270,7 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(),
         for (i in mLoanRepaymentRequests!!.indices) {
             if (mLoanRepaymentRequests?.get(i)?.errorMessage == null) {
                 mLoanRepaymentRequests?.get(i)?.loanId?.let {
-                    mSyncLoanRepaymentTransactionPresenter.syncLoanRepayment(
+                    viewModel.syncLoanRepayment(
                         it, mLoanRepaymentRequests?.get(i)
                     )
                 }
@@ -241,11 +284,6 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(),
                 )
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mSyncLoanRepaymentTransactionPresenter.detachView()
     }
 
     companion object {

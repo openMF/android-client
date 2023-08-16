@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,9 +24,10 @@ import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.objects.client.ClientPayload
 import com.mifos.objects.group.GroupPayload
 import com.mifos.services.data.CenterPayload
+import com.mifos.states.OfflineDashboardUiState
 import com.mifos.utils.ItemOffsetDecoration
+import com.mifos.viewmodels.OfflineDashboardViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * This Fragment is the Dashboard of the Offline sync of Clients, Groups, LoanRepayment etc.
@@ -49,15 +51,14 @@ import javax.inject.Inject
  * Created by Rajan Maurya on 20/07/16.
 </Class> */
 @AndroidEntryPoint
-class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
+class OfflineDashboardFragment : MifosBaseFragment() {
 
     private lateinit var binding: FragmentOfflineDashboardBinding
 
     val LOG_TAG = javaClass.simpleName
 
-    @JvmField
-    @Inject
-    var mOfflineDashboardPresenter: OfflineDashboardPresenter? = null
+    private lateinit var viewModel: OfflineDashboardViewModel
+
     private lateinit var mOfflineDashboardAdapter: OfflineDashboardAdapter
 
     // update mPayloadIndex to number of request is going to fetch data in Presenter;
@@ -75,7 +76,7 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
     ): View {
         binding = FragmentOfflineDashboardBinding.inflate(inflater, container, false)
         setToolbarTitle(requireActivity().resources.getString(R.string.offline))
-        mOfflineDashboardPresenter?.attachView(this)
+        viewModel = ViewModelProvider(this)[OfflineDashboardViewModel::class.java]
         val mLayoutManager: LinearLayoutManager = GridLayoutManager(activity, GRID_COUNT)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvOfflineDashboard.layoutManager = mLayoutManager
@@ -95,6 +96,43 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
             }
         }
         binding.rvOfflineDashboard.adapter = mOfflineDashboardAdapter
+
+        viewModel.offlineDashboardUiState.observe(viewLifecycleOwner) {
+            when (it) {
+                is OfflineDashboardUiState.ShowCenters -> {
+                    showProgressbar(false)
+                    showCenters(it.centerPayloads)
+                }
+
+                is OfflineDashboardUiState.ShowClients -> {
+                    showProgressbar(false)
+                    showClients(it.clientPayloads)
+                }
+
+                is OfflineDashboardUiState.ShowError -> {
+                    showProgressbar(false)
+                    showError(it.message)
+                }
+
+                is OfflineDashboardUiState.ShowGroups -> {
+                    showProgressbar(false)
+                    showGroups(it.groupPayloads)
+                }
+
+                is OfflineDashboardUiState.ShowLoanRepaymentTransactions -> {
+                    showProgressbar(false)
+                    showLoanRepaymentTransactions(it.loanRepaymentRequests)
+                }
+
+                is OfflineDashboardUiState.ShowProgressbar -> showProgressbar(true)
+
+                is OfflineDashboardUiState.ShowSavingsAccountTransaction -> {
+                    showProgressbar(false)
+                    showSavingsAccountTransaction(it.transactionRequests)
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -103,11 +141,11 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
         mOfflineDashboardAdapter.removeAllCards()
         mPayloadClasses?.clear()
         mPayloadIndex = 5
-        mOfflineDashboardPresenter?.loadDatabaseClientPayload()
-        mOfflineDashboardPresenter?.loadDatabaseGroupPayload()
-        mOfflineDashboardPresenter?.loadDatabaseCenterPayload()
-        mOfflineDashboardPresenter?.loadDatabaseLoanRepaymentTransactions()
-        mOfflineDashboardPresenter?.loadDatabaseSavingsAccountTransactions()
+        viewModel.loadDatabaseClientPayload()
+        viewModel.loadDatabaseGroupPayload()
+        viewModel.loadDatabaseCenterPayload()
+        viewModel.loadDatabaseLoanRepaymentTransactions()
+        viewModel.loadDatabaseSavingsAccountTransactions()
     }
 
     /**
@@ -117,7 +155,7 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
      *
      * @param clientPayloads List<ClientPayload> from DatabaseHelperClient
     </ClientPayload></ClientPayload> */
-    override fun showClients(clientPayloads: List<ClientPayload>) {
+    private fun showClients(clientPayloads: List<ClientPayload>) {
         if (clientPayloads.isNotEmpty()) {
             mOfflineDashboardAdapter.showCard(
                 activity
@@ -138,7 +176,7 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
      *
      * @param groupPayloads List<GroupPayload> from DatabaseHelperGroup
     </GroupPayload></GroupsPayload> */
-    override fun showGroups(groupPayloads: List<GroupPayload>) {
+    private fun showGroups(groupPayloads: List<GroupPayload>) {
         if (groupPayloads.isNotEmpty()) {
             mOfflineDashboardAdapter.showCard(
                 activity
@@ -159,7 +197,7 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
      *
      * @param centerPayloads List<CenterPayload> from DatabaseHelperGroup
     </CenterPayload></CenterPayload> */
-    override fun showCenters(centerPayloads: List<CenterPayload>) {
+    private fun showCenters(centerPayloads: List<CenterPayload>) {
         if (centerPayloads.isNotEmpty()) {
             mOfflineDashboardAdapter.showCard(
                 activity
@@ -181,7 +219,7 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
      *
      * @param loanRepaymentRequests List<LoanRepaymentRequest> from DatabaseHelperLoan
     </LoanRepaymentRequest></LoanRepaymentRequest> */
-    override fun showLoanRepaymentTransactions(loanRepaymentRequests: List<LoanRepaymentRequest>) {
+    private fun showLoanRepaymentTransactions(loanRepaymentRequests: List<LoanRepaymentRequest>) {
         if (loanRepaymentRequests.isNotEmpty()) {
             mOfflineDashboardAdapter.showCard(
                 requireActivity().resources
@@ -203,7 +241,7 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
      *
      * @param transactions List<SavingsAccountTransaction>
     </SavingsAccountTransaction></SavingsAccountTransactionRequest> */
-    override fun showSavingsAccountTransaction(transactions: List<SavingsAccountTransactionRequest>) {
+    private fun showSavingsAccountTransaction(transactions: List<SavingsAccountTransactionRequest>) {
         if (transactions.isNotEmpty()) {
             mOfflineDashboardAdapter.showCard(
                 requireActivity().resources
@@ -222,7 +260,7 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
      * TextView that Nothing to Sync when mPayloadIndex = 0. It means there is nothing in the
      * Database to sync to the Server.
      */
-    override fun showNoPayloadToShow() {
+    private fun showNoPayloadToShow() {
         if (mPayloadIndex == 0) {
             binding.rvOfflineDashboard.visibility = View.GONE
             binding.llError.visibility = View.VISIBLE
@@ -232,11 +270,11 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
         }
     }
 
-    override fun showError(stringId: Int) {
-        show(binding.root, resources.getString(stringId))
+    private fun showError(stringId: String) {
+        show(binding.root, stringId)
     }
 
-    override fun showProgressbar(b: Boolean) {
+    private fun showProgressbar(b: Boolean) {
         if (b) {
             binding.pbOfflineDashboard.visibility = View.VISIBLE
         } else {
@@ -252,11 +290,6 @@ class OfflineDashboardFragment : MifosBaseFragment(), OfflineDashboardMvpView {
     private fun <T> startPayloadActivity(t: Class<*>) {
         val intent = Intent(activity, t)
         startActivity(intent)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mOfflineDashboardPresenter?.detachView()
     }
 
     companion object {

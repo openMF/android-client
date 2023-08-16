@@ -1,48 +1,47 @@
-package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction
+package com.mifos.viewmodels
 
-import com.mifos.api.datamanager.DataManagerLoan
-import com.mifos.api.datamanager.DataManagerSavings
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.base.BasePresenter
 import com.mifos.objects.PaymentTypeOption
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse
-import com.mifos.utils.MFErrorParser.errorMessage
+import com.mifos.repositories.SyncSavingsAccountTransactionRepository
+import com.mifos.states.SyncSavingsAccountTransactionUiState
+import com.mifos.utils.MFErrorParser
+import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
 /**
- * Created by Rajan Maurya on 19/08/16.
+ * Created by Aditya Gupta on 16/08/23.
  */
-class SyncSavingsAccountTransactionPresenter @Inject constructor(
-    val mDataManagerSavings: DataManagerSavings,
-    val mDataManagerLoan: DataManagerLoan
-) : BasePresenter<SyncSavingsAccountTransactionMvpView>() {
-    val LOG_TAG = javaClass.simpleName
-    private val mSubscriptions: CompositeSubscription = CompositeSubscription()
-    private var mSavingsAccountTransactionRequests: MutableList<SavingsAccountTransactionRequest>
+@HiltViewModel
+class SyncSavingsAccountTransactionViewModel @Inject constructor(private val repository: SyncSavingsAccountTransactionRepository) :
+    ViewModel() {
+
+    private val _syncSavingsAccountTransactionUiState =
+        MutableLiveData<SyncSavingsAccountTransactionUiState>()
+
+    val syncSavingsAccountTransactionUiState: LiveData<SyncSavingsAccountTransactionUiState>
+        get() = _syncSavingsAccountTransactionUiState
+
+    private var mSavingsAccountTransactionRequests: MutableList<SavingsAccountTransactionRequest> =
+        ArrayList()
     private var mTransactionIndex = 0
     private var mTransactionsFailed = 0
-
-    init {
-        mSavingsAccountTransactionRequests = ArrayList()
-    }
-
-    override fun detachView() {
-        super.detachView()
-        mSubscriptions.unsubscribe()
-    }
 
     fun syncSavingsAccountTransactions() {
         if (mSavingsAccountTransactionRequests.size != 0) {
             mTransactionIndex = 0
             checkErrorAndSync()
         } else {
-            mvpView?.showError(R.string.nothing_to_sync)
+            _syncSavingsAccountTransactionUiState.value =
+                SyncSavingsAccountTransactionUiState.ShowError(R.string.nothing_to_sync)
         }
     }
 
@@ -68,7 +67,8 @@ class SyncSavingsAccountTransactionPresenter @Inject constructor(
                 }
                 break
             } else if (checkTransactionsSyncBeforeOrNot()) {
-                mvpView?.showError(R.string.error_fix_before_sync)
+                _syncSavingsAccountTransactionUiState.value =
+                    SyncSavingsAccountTransactionUiState.ShowError(R.string.error_fix_before_sync)
             }
         }
     }
@@ -106,7 +106,10 @@ class SyncSavingsAccountTransactionPresenter @Inject constructor(
      */
     fun showTransactionUpdatedSuccessfully(transaction: SavingsAccountTransactionRequest) {
         mSavingsAccountTransactionRequests[mTransactionIndex] = transaction
-        mvpView?.showSavingsAccountTransactions(mSavingsAccountTransactionRequests)
+        _syncSavingsAccountTransactionUiState.value =
+            SyncSavingsAccountTransactionUiState.ShowSavingsAccountTransactions(
+                mSavingsAccountTransactionRequests
+            )
         mTransactionIndex += 1
         if (mSavingsAccountTransactionRequests.size != mTransactionIndex) {
             syncSavingsAccountTransactions()
@@ -123,11 +126,13 @@ class SyncSavingsAccountTransactionPresenter @Inject constructor(
     fun showTransactionDeletedAndUpdated(transactions: MutableList<SavingsAccountTransactionRequest>) {
         mTransactionIndex = 0
         mSavingsAccountTransactionRequests = transactions
-        mvpView?.showSavingsAccountTransactions(transactions)
+        _syncSavingsAccountTransactionUiState.value =
+            SyncSavingsAccountTransactionUiState.ShowSavingsAccountTransactions(transactions)
         if (mSavingsAccountTransactionRequests.size != 0) {
             syncSavingsAccountTransactions()
         } else {
-            mvpView?.showEmptySavingsAccountTransactions(R.string.nothing_to_sync)
+            _syncSavingsAccountTransactionUiState.value =
+                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.nothing_to_sync)
         }
     }
 
@@ -143,33 +148,35 @@ class SyncSavingsAccountTransactionPresenter @Inject constructor(
      * SavingsAccountTransactionRequest_Table and Update the UI
     </SavingsAccountTransactionRequest> */
     fun loadDatabaseSavingsAccountTransactions() {
-        checkViewAttached()
-        mvpView?.showProgressbar(true)
-        mSubscriptions.add(
-            mDataManagerSavings.allSavingsAccountTransactions
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<List<SavingsAccountTransactionRequest>>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        mvpView?.showProgressbar(false)
-                        mvpView?.showError(R.string.failed_to_load_savingaccounttransaction)
-                    }
+        _syncSavingsAccountTransactionUiState.value =
+            SyncSavingsAccountTransactionUiState.ShowProgressbar
+        repository.allSavingsAccountTransactions()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<List<SavingsAccountTransactionRequest>>() {
+                override fun onCompleted() {}
+                override fun onError(e: Throwable) {
+                    _syncSavingsAccountTransactionUiState.value =
+                        SyncSavingsAccountTransactionUiState.ShowError(R.string.failed_to_load_savingaccounttransaction)
+                }
 
-                    override fun onNext(transactionRequests: List<SavingsAccountTransactionRequest>) {
-                        mvpView?.showProgressbar(false)
-                        if (transactionRequests.isNotEmpty()) {
-                            mvpView?.showSavingsAccountTransactions(transactionRequests)
-                            mSavingsAccountTransactionRequests =
+                override fun onNext(transactionRequests: List<SavingsAccountTransactionRequest>) {
+                    if (transactionRequests.isNotEmpty()) {
+                        _syncSavingsAccountTransactionUiState.value =
+                            SyncSavingsAccountTransactionUiState.ShowSavingsAccountTransactions(
                                 transactionRequests as MutableList<SavingsAccountTransactionRequest>
-                        } else {
-                            mvpView?.showEmptySavingsAccountTransactions(
+                            )
+                        mSavingsAccountTransactionRequests =
+                            transactionRequests
+                    } else {
+                        _syncSavingsAccountTransactionUiState.value =
+                            SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(
                                 R.string.no_transaction_to_sync
                             )
-                        }
                     }
-                })
-        )
+                }
+            })
+
     }
 
     /**
@@ -177,25 +184,26 @@ class SyncSavingsAccountTransactionPresenter @Inject constructor(
      * and update the UI.
      */
     fun loadPaymentTypeOption() {
-        checkViewAttached()
-        mvpView?.showProgressbar(true)
-        mSubscriptions.add(
-            mDataManagerLoan.paymentTypeOption
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<List<PaymentTypeOption>>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        mvpView?.showProgressbar(false)
-                        mvpView?.showError(R.string.failed_to_load_paymentoptions)
-                    }
+        _syncSavingsAccountTransactionUiState.value =
+            SyncSavingsAccountTransactionUiState.ShowProgressbar
+        repository.paymentTypeOption()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<List<PaymentTypeOption>>() {
+                override fun onCompleted() {}
+                override fun onError(e: Throwable) {
+                    _syncSavingsAccountTransactionUiState.value =
+                        SyncSavingsAccountTransactionUiState.ShowError(R.string.failed_to_load_paymentoptions)
+                }
 
-                    override fun onNext(paymentTypeOptions: List<PaymentTypeOption>) {
-                        mvpView?.showProgressbar(false)
-                        mvpView?.showPaymentTypeOptions(paymentTypeOptions)
-                    }
-                })
-        )
+                override fun onNext(paymentTypeOptions: List<PaymentTypeOption>) {
+                    _syncSavingsAccountTransactionUiState.value =
+                        SyncSavingsAccountTransactionUiState.ShowPaymentTypeOptions(
+                            paymentTypeOptions
+                        )
+                }
+            })
+
     }
 
     /**
@@ -217,26 +225,23 @@ class SyncSavingsAccountTransactionPresenter @Inject constructor(
         type: String?, accountId: Int, transactionType: String?,
         request: SavingsAccountTransactionRequest?
     ) {
-        checkViewAttached()
-        mvpView?.showProgressbar(true)
-        mSubscriptions.add(
-            mDataManagerSavings
-                .processTransaction(type, accountId, transactionType, request!!)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<SavingsAccountTransactionResponse>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        mvpView?.showProgressbar(false)
-                        showTransactionSyncFailed(errorMessage(e))
-                    }
+        _syncSavingsAccountTransactionUiState.value =
+            SyncSavingsAccountTransactionUiState.ShowProgressbar
+        repository
+            .processTransaction(type, accountId, transactionType, request!!)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<SavingsAccountTransactionResponse>() {
+                override fun onCompleted() {}
+                override fun onError(e: Throwable) {
+                    showTransactionSyncFailed(MFErrorParser.errorMessage(e))
+                }
 
-                    override fun onNext(savingsAccountTransactionResponse: SavingsAccountTransactionResponse) {
-                        mvpView?.showProgressbar(false)
-                        showTransactionSyncSuccessfully()
-                    }
-                })
-        )
+                override fun onNext(savingsAccountTransactionResponse: SavingsAccountTransactionResponse) {
+                    showTransactionSyncSuccessfully()
+                }
+            })
+
     }
 
     /**
@@ -247,25 +252,23 @@ class SyncSavingsAccountTransactionPresenter @Inject constructor(
      * @param savingsAccountId SavingsAccountTransactionRequest's SavingsAccount Id
     </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
     private fun deleteAndUpdateSavingsAccountTransaction(savingsAccountId: Int) {
-        checkViewAttached()
-        mvpView?.showProgressbar(true)
-        mSubscriptions.add(
-            mDataManagerSavings.deleteAndUpdateTransactions(savingsAccountId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<List<SavingsAccountTransactionRequest>>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        mvpView?.showProgressbar(false)
-                        mvpView?.showError(R.string.failed_to_update_list)
-                    }
+        _syncSavingsAccountTransactionUiState.value =
+            SyncSavingsAccountTransactionUiState.ShowProgressbar
+        repository.deleteAndUpdateTransactions(savingsAccountId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<List<SavingsAccountTransactionRequest>>() {
+                override fun onCompleted() {}
+                override fun onError(e: Throwable) {
+                    _syncSavingsAccountTransactionUiState.value =
+                        SyncSavingsAccountTransactionUiState.ShowError(R.string.failed_to_update_list)
+                }
 
-                    override fun onNext(savingsAccountTransactionRequests: List<SavingsAccountTransactionRequest>) {
-                        mvpView?.showProgressbar(false)
-                        showTransactionDeletedAndUpdated(savingsAccountTransactionRequests as MutableList<SavingsAccountTransactionRequest>)
-                    }
-                })
-        )
+                override fun onNext(savingsAccountTransactionRequests: List<SavingsAccountTransactionRequest>) {
+                    showTransactionDeletedAndUpdated(savingsAccountTransactionRequests as MutableList<SavingsAccountTransactionRequest>)
+                }
+            })
+
     }
 
     /**
@@ -276,24 +279,22 @@ class SyncSavingsAccountTransactionPresenter @Inject constructor(
      * @param request SavingsAccountTransactionRequest
      */
     private fun updateSavingsAccountTransaction(request: SavingsAccountTransactionRequest?) {
-        checkViewAttached()
-        mvpView?.showProgressbar(true)
-        mSubscriptions.add(
-            mDataManagerSavings.updateLoanRepaymentTransaction(request!!)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<SavingsAccountTransactionRequest>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        mvpView?.showProgressbar(false)
-                        mvpView?.showError(R.string.failed_to_update_savingsaccount)
-                    }
+        _syncSavingsAccountTransactionUiState.value =
+            SyncSavingsAccountTransactionUiState.ShowProgressbar
+        repository.updateLoanRepaymentTransaction(request!!)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(object : Subscriber<SavingsAccountTransactionRequest>() {
+                override fun onCompleted() {}
+                override fun onError(e: Throwable) {
+                    _syncSavingsAccountTransactionUiState.value =
+                        SyncSavingsAccountTransactionUiState.ShowError(R.string.failed_to_update_savingsaccount)
+                }
 
-                    override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest) {
-                        mvpView?.showProgressbar(false)
-                        showTransactionUpdatedSuccessfully(savingsAccountTransactionRequest)
-                    }
-                })
-        )
+                override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest) {
+                    showTransactionUpdatedSuccessfully(savingsAccountTransactionRequest)
+                }
+            })
+
     }
 }
