@@ -1,6 +1,6 @@
 package com.mifos.repositories
 
-import com.mifos.objects.user.User
+import org.apache.fineract.client.models.PostAuthenticationResponse
 import rx.Observable
 
 /**
@@ -9,6 +9,6 @@ import rx.Observable
 
 interface LoginRepository {
 
-    fun login(username: String, password: String) : Observable<User>
+    fun login(username: String, password: String): Observable<PostAuthenticationResponse>
 
 }

@@ -1,13 +1,13 @@
 package com.mifos.mifosxdroid.injection.module
 
 import android.content.Context
-import com.mifos.api.BaseApiManager
 import com.mifos.utils.NetworkUtilsWrapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import org.mifos.core.apimanager.BaseApiManager
 import javax.inject.Singleton
 
 /**
@@ -20,8 +20,14 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideBaseApiManager(): BaseApiManager {
-        return BaseApiManager()
+    fun provideBaseApiManager(): com.mifos.api.BaseApiManager {
+        return com.mifos.api.BaseApiManager()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSdkBaseApiManager(): BaseApiManager {
+        return BaseApiManager.getInstance()
     }
 
     @Provides

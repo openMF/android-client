@@ -5,7 +5,6 @@
 package com.mifos.api
 
 import com.google.gson.GsonBuilder
-import com.mifos.api.services.AuthService
 import com.mifos.api.services.CenterService
 import com.mifos.api.services.ChargeService
 import com.mifos.api.services.CheckerInboxService
@@ -39,8 +38,6 @@ class BaseApiManager {
         createService()
     }
 
-    val authApi: AuthService
-        get() = Companion.authApi
     val centerApi: CenterService
         get() = Companion.centerApi
     val accountsApi: ClientAccountsService
@@ -78,7 +75,6 @@ class BaseApiManager {
 
     companion object {
         private var mRetrofit: Retrofit? = null
-        private lateinit var authApi: AuthService
         private lateinit var centerApi: CenterService
         private lateinit var accountsApi: ClientAccountsService
         private lateinit var clientsApi: ClientService
@@ -98,9 +94,6 @@ class BaseApiManager {
         private lateinit var checkerInboxApi: CheckerInboxService
 
         fun init() {
-            authApi = createApi(
-                AuthService::class.java
-            )
             centerApi = createApi(
                 CenterService::class.java
             )

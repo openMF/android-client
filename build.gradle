@@ -123,4 +123,10 @@ ext {
 
     // hiltVersion
     hiltVersion = '2.44'
+
+    // fineract sdk
+    sdkVersion = '1.06'
+
+    // sdk client
+    clientVersion = '2.0.3'
 }

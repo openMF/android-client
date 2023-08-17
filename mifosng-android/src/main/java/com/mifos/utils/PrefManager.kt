@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.mifos.App
 import com.mifos.api.BaseUrl
 import com.mifos.objects.user.User
+import org.apache.fineract.client.models.PostAuthenticationResponse
 
 /**
  * @author fomenkoo
@@ -96,7 +97,7 @@ object PrefManager {
      * Authentication
      */
 
-    fun saveUser(user: User?) {
+    fun saveUser(user: PostAuthenticationResponse) {
         putString(USER_DETAILS, gson.toJson(user))
     }
 

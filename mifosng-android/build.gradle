@@ -280,6 +280,11 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$rootProject.hiltVersion"
 
+    // fineract sdk dependencies
+    implementation "com.github.openMF:mifos-android-sdk-arch:$rootProject.sdkVersion"
+
+    // sdk client
+    implementation "com.github.openMF:fineract-client:$rootProject.clientVersion"
 }
 /*
 All direct/transitive dependencies shared between your test and production APKs need to be
