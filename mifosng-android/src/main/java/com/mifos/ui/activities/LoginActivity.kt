@@ -24,10 +24,10 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.ActivityLoginBinding
 import com.mifos.mifosxdroid.passcode.PassCodeActivity
-import com.mifos.objects.user.User
 import com.mifos.states.LoginUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.Network
+import com.mifos.utils.PrefManager
 import com.mifos.utils.PrefManager.instanceDomain
 import com.mifos.utils.PrefManager.instanceUrl
 import com.mifos.utils.PrefManager.passCodeStatus
@@ -39,6 +39,8 @@ import com.mifos.utils.PrefManager.userId
 import com.mifos.utils.ValidationUtil
 import com.mifos.viewmodels.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import org.apache.fineract.client.models.PostAuthenticationResponse
+import javax.inject.Inject
 
 /**
  * Created by ishankhanna on 08/02/14.
@@ -49,6 +51,9 @@ class LoginActivity : MifosBaseActivity(){
     private lateinit var binding: ActivityLoginBinding
 
     private lateinit var viewModel: LoginViewModel
+
+    @Inject
+    lateinit var baseApiManager: org.mifos.core.apimanager.BaseApiManager
 
     private lateinit var username: String
     private lateinit var instanceURL: String
@@ -172,9 +177,9 @@ class LoginActivity : MifosBaseActivity(){
         Toaster.show(findViewById(android.R.id.content), message, Toaster.LONG)
     }
 
-    private fun onLoginSuccessful(user: User) {
+    private fun onLoginSuccessful(user: PostAuthenticationResponse) {
         // Saving userID
-        userId = user.userId
+        userId = user.userId!!.toInt()
         // Saving user's token
         saveToken("Basic " + user.base64EncodedAuthenticationKey)
         // Saving user
@@ -219,6 +224,7 @@ class LoginActivity : MifosBaseActivity(){
         port = binding.etInstancePort.editableText.toString()
         // Updating Services
         BaseApiManager.createService()
+        baseApiManager.createService(username,password,instanceUrl,tenant,true)
         if (Network.isOnline(this)) {
             viewModel.login(username, password)
         } else {
