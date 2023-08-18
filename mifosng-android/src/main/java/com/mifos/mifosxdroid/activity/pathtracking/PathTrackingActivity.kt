@@ -31,12 +31,9 @@ import com.mifos.objects.user.UserLocation
 import com.mifos.states.PathTrackingUiState
 import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
-import com.mifos.utils.PrefManager.getBoolean
-import com.mifos.utils.PrefManager.putBoolean
-import com.mifos.utils.PrefManager.userId
+import com.mifos.utils.PrefManager
 import com.mifos.viewmodels.PathTrackingViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * @author fomenkoo
@@ -62,7 +59,7 @@ class PathTrackingActivity : MifosBaseActivity(), OnRefreshListener {
         intentLocationService = Intent(this, PathTrackingService::class.java)
         createNotificationReceiver()
         showUserInterface()
-        viewModel.loadPathTracking(userId)
+        viewModel.loadPathTracking(PrefManager.getUserId())
         binding.layoutError.findViewById<Button>(R.id.btnTryAgain).setOnClickListener {
             reloadOnError()
         }
@@ -122,7 +119,7 @@ class PathTrackingActivity : MifosBaseActivity(), OnRefreshListener {
     }
 
     override fun onRefresh() {
-        viewModel.loadPathTracking(userId)
+        viewModel.loadPathTracking(PrefManager.getUserId())
     }
 
     private fun showPathTracking(userLocations: List<UserLocation>) {
@@ -133,7 +130,7 @@ class PathTrackingActivity : MifosBaseActivity(), OnRefreshListener {
 
     private fun reloadOnError() {
         sweetUIErrorHandler?.hideSweetErrorLayoutUI(binding.rvPathTracker, binding.layoutError)
-        viewModel.loadPathTracking(userId)
+        viewModel.loadPathTracking(PrefManager.getUserId())
     }
 
     private fun showEmptyPathTracking() {
@@ -230,7 +227,7 @@ class PathTrackingActivity : MifosBaseActivity(), OnRefreshListener {
             R.id.menu_start_path_track -> {
                 if (checkPermissionAndRequest()) {
                     startService(intentLocationService)
-                    putBoolean(Constants.SERVICE_STATUS, true)
+                    PrefManager.userStatus = true
                     invalidateOptionsMenu()
                 }
                 true
@@ -238,7 +235,7 @@ class PathTrackingActivity : MifosBaseActivity(), OnRefreshListener {
 
             R.id.menu_stop_path_track -> {
                 stopService(intentLocationService)
-                putBoolean(Constants.SERVICE_STATUS, false)
+                PrefManager.userStatus = false
                 invalidateOptionsMenu()
                 true
             }
@@ -250,9 +247,9 @@ class PathTrackingActivity : MifosBaseActivity(), OnRefreshListener {
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         super.onPrepareOptionsMenu(menu)
         menu.findItem(R.id.menu_start_path_track).isVisible =
-            !getBoolean(Constants.SERVICE_STATUS, false)
+            !PrefManager.userStatus
         menu.findItem(R.id.menu_stop_path_track).isVisible =
-            getBoolean(Constants.SERVICE_STATUS, false)
+            PrefManager.userStatus
         return true
     }
 
@@ -262,7 +259,7 @@ class PathTrackingActivity : MifosBaseActivity(), OnRefreshListener {
                 val action = intent.action
                 if (Constants.STOP_TRACKING == action) {
                     invalidateOptionsMenu()
-                    viewModel.loadPathTracking(userId)
+                    viewModel.loadPathTracking(PrefManager.getUserId())
                 }
             }
         }

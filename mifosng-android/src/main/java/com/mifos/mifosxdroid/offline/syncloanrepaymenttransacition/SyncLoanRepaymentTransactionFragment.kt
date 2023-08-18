@@ -249,7 +249,7 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(), DialogInterfac
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_sync) {
             when (userStatus) {
-                0 -> if (mLoanRepaymentRequests!!.isNotEmpty()) {
+                false -> if (mLoanRepaymentRequests!!.isNotEmpty()) {
                     mClientSyncIndex = 0
                     syncGroupPayload()
                 } else {
@@ -259,8 +259,7 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(), DialogInterfac
                     )
                 }
 
-                1 -> showOfflineModeDialog()
-                else -> {}
+                true -> showOfflineModeDialog()
             }
         }
         return super.onOptionsItemSelected(item)

@@ -19,7 +19,6 @@ import com.mifos.utils.PrefManager.userStatus
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import rx.Observable
-import rx.functions.Func1
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,7 +30,8 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerClient @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperClient: DatabaseHelperClient
+    val mDatabaseHelperClient: DatabaseHelperClient,
+    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -51,10 +51,10 @@ class DataManagerClient @Inject constructor(
      */
     fun getAllClients(paged: Boolean, offset: Int, limit: Int): Observable<Page<Client>> {
         return when (userStatus) {
-            0 -> mBaseApiManager.clientsApi.getAllClients(paged, offset, limit)
+            false -> mBaseApiManager.clientsApi.getAllClients(paged, offset, limit)
                 .concatMap { clientPage -> Observable.just(clientPage) }
 
-            1 -> {
+            true -> {
                 /**
                  * Return All Clients List from DatabaseHelperClient only one time.
                  * If offset is zero this means this is first request and
@@ -62,8 +62,6 @@ class DataManagerClient @Inject constructor(
                  */
                 if (offset == 0) mDatabaseHelperClient.readAllClients() else Observable.just(Page())
             }
-
-            else -> Observable.just(Page())
         }
     }
 
@@ -84,16 +82,14 @@ class DataManagerClient @Inject constructor(
      */
     fun getClient(clientId: Int): Observable<Client> {
         return when (userStatus) {
-            0 -> mBaseApiManager.clientsApi.getClient(clientId)
+            false -> mBaseApiManager.clientsApi.getClient(clientId)
                 .concatMap { client -> Observable.just(client) }
 
-            1 ->
+            true ->
                 /**
                  * Return Clients from DatabaseHelperClient only one time.
                  */
                 mDatabaseHelperClient.getClient(clientId)
-
-            else -> Observable.just(Client())
         }
     }
 
@@ -114,14 +110,12 @@ class DataManagerClient @Inject constructor(
      */
     fun getClientAccounts(clientId: Int): Observable<ClientAccounts> {
         return when (userStatus) {
-            0 -> mBaseApiManager.clientsApi.getClientAccounts(clientId)
-            1 ->
+            false -> mBaseApiManager.clientsApi.getClientAccounts(clientId)
+            true ->
                 /**
                  * Return Clients from DatabaseHelperClient only one time.
                  */
                 mDatabaseHelperClient.realClientAccounts(clientId)
-
-            else -> Observable.just(ClientAccounts())
         }
     }
 
@@ -181,14 +175,14 @@ class DataManagerClient @Inject constructor(
      */
     val clientTemplate: Observable<ClientsTemplate>
         get() = when (userStatus) {
-            0 -> mBaseApiManager.clientsApi.clientTemplate
+            false -> mBaseApiManager.clientsApi.clientTemplate
                 .concatMap { clientsTemplate ->
                     mDatabaseHelperClient.saveClientTemplate(
                         clientsTemplate
                     )
                 }
 
-            1 ->
+            true ->
                 /**
                  * Return Clients from DatabaseHelperClient only one time.
                  */
@@ -196,8 +190,6 @@ class DataManagerClient @Inject constructor(
                  * Return Clients from DatabaseHelperClient only one time.
                  */
                 mDatabaseHelperClient.readClientTemplate()
-
-            else -> Observable.just(ClientsTemplate())
         }
 
     /**
@@ -210,17 +202,15 @@ class DataManagerClient @Inject constructor(
      */
     fun createClient(clientPayload: ClientPayload): Observable<Client> {
         return when (userStatus) {
-            0 -> mBaseApiManager.clientsApi.createClient(clientPayload)
+            false -> mBaseApiManager.clientsApi.createClient(clientPayload)
                 .concatMap { client -> Observable.just(client) }
 
-            1 ->
+            true ->
                 /**
                  * If user is in offline mode and he is making client. client payload will be saved
                  * in Database for future synchronization to sever.
                  */
                 mDatabaseHelperClient.saveClientPayloadToDB(clientPayload)
-
-            else -> Observable.just(Client())
         }
     }
 

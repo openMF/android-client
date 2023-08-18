@@ -31,12 +31,8 @@ class DataManagerSurveys @Inject constructor(
     </Survey></Survey> */
     val allSurvey: Observable<List<Survey>>
         get() = when (userStatus) {
-            0 -> mBaseApiManager.surveyApi.allSurveys
-            1 -> mDatabaseHelperSurveys.readAllSurveys()
-            else -> {
-                val defaultSurveyList: List<Survey> = ArrayList()
-                Observable.just(defaultSurveyList)
-            }
+            false -> mBaseApiManager.surveyApi.allSurveys
+            true -> mDatabaseHelperSurveys.readAllSurveys()
         }
 
     /**

@@ -134,8 +134,8 @@ object Constants {
      * User Logged In Status
      * 0 for Online and 1 for Offline
      */
-    const val USER_ONLINE = 0
-    const val USER_OFFLINE = 1
+    const val USER_ONLINE = false
+    const val USER_OFFLINE = true
 
     /**
      * Constants to determine in the generic DataTableListFragment, the type of query that

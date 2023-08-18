@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mifos.repositories.LoginRepository
 import com.mifos.states.LoginUiState
+import com.mifos.utils.PrefManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.apache.fineract.client.models.PostAuthenticationResponse
 import rx.Subscriber
@@ -39,6 +40,7 @@ class LoginViewModel @Inject constructor(private val loginRepository: LoginRepos
 
                 override fun onNext(user: PostAuthenticationResponse) {
                     _loginUiState.value = LoginUiState.ShowLoginSuccessful(user)
+                    PrefManager.usernamePassword = Pair(username,password)
                 }
             })
     }

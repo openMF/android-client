@@ -27,7 +27,7 @@ class OfflineSyncGroup : Job() {
     private var mClientSyncIndex = 0
     override fun onRunJob(params: Params): Result {
         mSubscriptions = CompositeSubscription()
-        return if (userStatus == 0) {
+        return if (!userStatus) {
             loadDatabaseGroupPayload()
             Result.SUCCESS
         } else {

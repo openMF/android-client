@@ -149,7 +149,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
      */
     private fun loadClientDetails() {
         // download logged in user
-        val loggedInUser = PrefManager.user
+        val loggedInUser = PrefManager.getUser()
         navHeaderBinding.tvUserName.text = loggedInUser.username
         navHeaderBinding.ivUserPicture.setImageResource(R.drawable.ic_dp_placeholder)
     }

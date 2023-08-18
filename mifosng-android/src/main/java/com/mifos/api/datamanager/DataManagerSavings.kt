@@ -45,17 +45,15 @@ class DataManagerSavings @Inject constructor(
         type: String?, savingsAccountId: Int, association: String?
     ): Observable<SavingsAccountWithAssociations> {
         return when (userStatus) {
-            0 -> mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
+            false -> mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
                 type, savingsAccountId, association
             )
 
-            1 ->
+            true ->
                 /**
                  * Return SavingsAccountWithAssociations from DatabaseHelperSavings.
                  */
                 mDatabaseHelperSavings.readSavingsAccount(savingsAccountId)
-
-            else -> Observable.just(SavingsAccountWithAssociations())
         }
     }
 
@@ -115,20 +113,16 @@ class DataManagerSavings @Inject constructor(
         type: String?, savingsAccountId: Int, transactionType: String?
     ): Observable<SavingsAccountTransactionTemplate> {
         return when (userStatus) {
-            0 -> mBaseApiManager.savingsApi.getSavingsAccountTransactionTemplate(
+            false -> mBaseApiManager.savingsApi.getSavingsAccountTransactionTemplate(
                 type,
                 savingsAccountId, transactionType
             )
 
-            1 ->
+            true ->
                 /**
                  * Return SavingsAccountTransactionTemplate from DatabaseHelperSavings.
                  */
                 mDatabaseHelperSavings.readSavingsAccountTransactionTemplate(savingsAccountId)
-
-            else -> Observable.just(
-                SavingsAccountTransactionTemplate()
-            )
         }
     }
 
@@ -177,12 +171,12 @@ class DataManagerSavings @Inject constructor(
         request: SavingsAccountTransactionRequest
     ): Observable<SavingsAccountTransactionResponse> {
         return when (userStatus) {
-            0 -> mBaseApiManager.savingsApi.processTransaction(
+            false -> mBaseApiManager.savingsApi.processTransaction(
                 savingsAccountType,
                 savingsAccountId, transactionType, request
             )
 
-            1 ->
+            true ->
                 /**
                  * Return SavingsAccountTransactionResponse from DatabaseHelperSavings.
                  */
@@ -191,10 +185,6 @@ class DataManagerSavings @Inject constructor(
                         savingsAccountType, savingsAccountId,
                         transactionType, request
                     )
-
-            else -> Observable.just(
-                SavingsAccountTransactionResponse()
-            )
         }
     }
 

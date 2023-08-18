@@ -242,7 +242,7 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), DialogInterface.OnClickLi
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_sync) {
             when (userStatus) {
-                0 -> if (groupPayloads?.size != 0) {
+                false -> if (groupPayloads?.size != 0) {
                     mClientSyncIndex = 0
                     syncGroupPayload()
                 } else {
@@ -252,8 +252,7 @@ class SyncGroupPayloadsFragment : MifosBaseFragment(), DialogInterface.OnClickLi
                     )
                 }
 
-                1 -> showOfflineModeDialog()
-                else -> {}
+                true -> showOfflineModeDialog()
             }
         }
         return super.onOptionsItemSelected(item)

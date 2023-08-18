@@ -23,22 +23,17 @@ class DataManagerStaff @Inject constructor(
      */
     fun getStaffInOffice(officeId: Int): Observable<List<Staff>> {
         return when (userStatus) {
-            0 -> mBaseApiManager.staffApi.getStaffForOffice(officeId)
+            false -> mBaseApiManager.staffApi.getStaffForOffice(officeId)
                 .concatMap { staffs ->
                     mDatabaseHelperStaff.saveAllStaffOfOffices(staffs)
                     Observable.just(staffs)
                 }
 
-            1 ->
+            true ->
                 /**
                  * return all List of Staffs of Office from DatabaseHelperOffices
                  */
                 mDatabaseHelperStaff.readAllStaffOffices(officeId)
-
-            else -> {
-                val staffs: List<Staff> = ArrayList()
-                Observable.just(staffs)
-            }
         }
     }
 }

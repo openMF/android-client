@@ -32,7 +32,7 @@ class OfflineSyncSavingsAccount : Job() {
     override fun onRunJob(params: Params): Result {
         mSubscriptions = CompositeSubscription()
         mSavingsAccountTransactionRequests = ArrayList()
-        return if (userStatus == 0) {
+        return if (!userStatus) {
             loadDatabaseSavingsAccountTransactions()
             Result.SUCCESS
         } else {

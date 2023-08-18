@@ -15,7 +15,6 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.mifos.App
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.SplashScreenActivity
 import com.mifos.mifosxdroid.passcode.PassCodeActivity
@@ -23,7 +22,6 @@ import com.mifos.mobile.passcode.BasePassCodeActivity
 import com.mifos.utils.Constants
 import com.mifos.utils.LanguageHelper
 import com.mifos.utils.PrefManager
-import com.mifos.utils.PrefManager.clearPrefs
 
 /**
  * @author fomenkoo
@@ -115,7 +113,7 @@ open class MifosBaseActivity : BasePassCodeActivity(), BaseActivityCallback {
             .setPositiveButton(
                 getString(R.string.logout)
             ) { dialog, which ->
-                clearPrefs()
+                PrefManager.clear()
                 startActivity(
                     Intent(
                         this@MifosBaseActivity,

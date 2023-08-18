@@ -45,8 +45,8 @@ class DataManagerCenter @Inject constructor(
      */
     fun getCenters(paged: Boolean, offset: Int, limit: Int): Observable<Page<Center>> {
         return when (userStatus) {
-            0 -> mBaseApiManager.centerApi.getCenters(paged, offset, limit)
-            1 -> {
+            false -> mBaseApiManager.centerApi.getCenters(paged, offset, limit)
+            true -> {
                 /**
                  * Return All Centers List from DatabaseHelperCenter only one time.
                  * If offset is zero this means this is first request and
@@ -54,8 +54,6 @@ class DataManagerCenter @Inject constructor(
                  */
                 if (offset == 0) mDatabaseHelperCenter.readAllCenters() else Observable.just(Page())
             }
-
-            else -> Observable.just(Page())
         }
     }
 
@@ -102,14 +100,12 @@ class DataManagerCenter @Inject constructor(
 
     fun createCenter(centerPayload: CenterPayload): Observable<SaveResponse> {
         return when (userStatus) {
-            0 -> mBaseApiManager.centerApi.createCenter(centerPayload)
-            1 ->
+            false -> mBaseApiManager.centerApi.createCenter(centerPayload)
+            true ->
                 /**
                  * Save CenterPayload in Database table.
                  */
                 mDatabaseHelperCenter.saveCenterPayload(centerPayload)
-
-            else -> Observable.just(SaveResponse())
         }
     }
 
@@ -120,14 +116,12 @@ class DataManagerCenter @Inject constructor(
      */
     fun getCenterWithAssociations(centerId: Int): Observable<CenterWithAssociations> {
         return when (userStatus) {
-            0 -> mBaseApiManager.centerApi.getAllGroupsForCenter(centerId)
-            1 ->
+            false -> mBaseApiManager.centerApi.getAllGroupsForCenter(centerId)
+            true ->
                 /**
                  * Return Groups from DatabaseHelperGroups.
                  */
                 mDatabaseHelperCenter.getCenterAssociateGroups(centerId)
-
-            else -> Observable.just(CenterWithAssociations())
         }
     }
 

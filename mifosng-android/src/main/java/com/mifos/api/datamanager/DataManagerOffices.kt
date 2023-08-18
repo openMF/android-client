@@ -25,13 +25,13 @@ class DataManagerOffices @Inject constructor(
      */
     val offices: Observable<List<Office>>
         get() = when (userStatus) {
-            0 -> mBaseApiManager.officeApi.allOffices
+            false -> mBaseApiManager.officeApi.allOffices
                 .concatMap { offices ->
                     mDatabaseHelperOffices.saveAllOffices(offices)
                     Observable.just(offices)
                 }
 
-            1 ->
+            true ->
                 /**
                  * return all List of Offices from DatabaseHelperOffices
                  */
@@ -39,10 +39,5 @@ class DataManagerOffices @Inject constructor(
                  * return all List of Offices from DatabaseHelperOffices
                  */
                 mDatabaseHelperOffices.readAllOffices()
-
-            else -> {
-                val offices: List<Office> = ArrayList()
-                Observable.just(offices)
-            }
         }
 }

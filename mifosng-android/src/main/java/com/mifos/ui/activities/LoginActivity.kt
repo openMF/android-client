@@ -28,14 +28,8 @@ import com.mifos.states.LoginUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.Network
 import com.mifos.utils.PrefManager
-import com.mifos.utils.PrefManager.instanceDomain
-import com.mifos.utils.PrefManager.instanceUrl
-import com.mifos.utils.PrefManager.passCodeStatus
-import com.mifos.utils.PrefManager.port
+import com.mifos.utils.PrefManager.savePostAuthenticationResponse
 import com.mifos.utils.PrefManager.saveToken
-import com.mifos.utils.PrefManager.saveUser
-import com.mifos.utils.PrefManager.tenant
-import com.mifos.utils.PrefManager.userId
 import com.mifos.utils.ValidationUtil
 import com.mifos.viewmodels.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -90,8 +84,8 @@ class LoginActivity : MifosBaseActivity(){
         title = null
         setContentView(binding.root)
         binding.etInstancePort.inputType = InputType.TYPE_CLASS_NUMBER
-        if (port != "80") binding.etInstancePort.setText(port)
-        binding.etInstanceURL.setText(instanceDomain)
+        if (PrefManager.getPort() != "80") binding.etInstancePort.setText(PrefManager.getPort())
+        binding.etInstanceURL.setText(PrefManager.getInstanceDomain())
         binding.etInstanceURL.addTextChangedListener(urlWatcher)
         binding.etInstancePort.addTextChangedListener(urlWatcher)
         urlWatcher.afterTextChanged(Editable.Factory.getInstance().newEditable(""))
@@ -179,15 +173,15 @@ class LoginActivity : MifosBaseActivity(){
 
     private fun onLoginSuccessful(user: PostAuthenticationResponse) {
         // Saving userID
-        userId = user.userId!!.toInt()
+        PrefManager.setUserId(user.userId!!.toInt())
         // Saving user's token
         saveToken("Basic " + user.base64EncodedAuthenticationKey)
         // Saving user
-        saveUser(user)
+        savePostAuthenticationResponse(user)
         Toast.makeText(
             this, getString(R.string.toast_welcome) + " " + user.username, Toast.LENGTH_SHORT
         ).show()
-        if (passCodeStatus) {
+        if (PrefManager.getPassCodeStatus()) {
             startActivity(Intent(this, HomeActivity::class.java))
         } else {
             val intent = Intent(this, PassCodeActivity::class.java)
@@ -215,16 +209,16 @@ class LoginActivity : MifosBaseActivity(){
             return
         }
         // Saving tenant
-        tenant = binding.etTenantIdentifier.editableText.toString()
+        PrefManager.setTenant(binding.etTenantIdentifier.editableText.toString())
         // Saving InstanceURL for next usages
-        instanceUrl = instanceURL
+        PrefManager.setInstanceUrl(instanceURL)
         // Saving domain name
-        instanceDomain = binding.etInstanceURL.editableText.toString()
+        PrefManager.setInstanceDomain(binding.etInstanceURL.editableText.toString())
         // Saving port
-        port = binding.etInstancePort.editableText.toString()
+        PrefManager.setPort(binding.etInstancePort.editableText.toString())
         // Updating Services
         BaseApiManager.createService()
-        baseApiManager.createService(username,password,instanceUrl,tenant,true)
+        baseApiManager.createService(username,password,PrefManager.getInstanceUrl(),PrefManager.getTenant(),true)
         if (Network.isOnline(this)) {
             viewModel.login(username, password)
         } else {

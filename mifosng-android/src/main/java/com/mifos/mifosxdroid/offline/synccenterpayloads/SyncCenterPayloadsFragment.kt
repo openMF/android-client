@@ -237,7 +237,7 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_sync) {
             when (userStatus) {
-                0 -> if (centerPayloads?.size != 0) {
+                false -> if (centerPayloads?.size != 0) {
                     mCenterSyncIndex = 0
                     syncCenterPayload()
                 } else {
@@ -247,8 +247,7 @@ class SyncCenterPayloadsFragment : MifosBaseFragment(),
                     )
                 }
 
-                1 -> showOfflineModeDialog()
-                else -> {}
+                true -> showOfflineModeDialog()
             }
         }
         return super.onOptionsItemSelected(item)

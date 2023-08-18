@@ -29,7 +29,7 @@ class OfflineSyncCenter : Job() {
     override fun onRunJob(params: Params): Result {
         mSubscriptions = CompositeSubscription()
         centerPayloads = ArrayList()
-        return if (userStatus == 0) {
+        return if (!userStatus) {
             loadDatabaseCenterPayload()
             Result.SUCCESS
         } else {
