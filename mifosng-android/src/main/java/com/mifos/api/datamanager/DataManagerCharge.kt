@@ -35,13 +35,13 @@ class DataManagerCharge @Inject constructor(
      */
     fun getClientCharges(clientId: Int, offset: Int, limit: Int): Observable<Page<Charges>> {
         return when (userStatus) {
-            0 -> mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
+            false -> mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
                 .concatMap { chargesPage ->
                     mDatabaseHelperCharge.saveClientCharges(chargesPage, clientId)
                     Observable.just(chargesPage)
                 }
 
-            1 -> {
+            true -> {
                 /**
                  * Return Client Charges from DatabaseHelperClient only one time.
                  */
@@ -49,8 +49,6 @@ class DataManagerCharge @Inject constructor(
                     Page()
                 )
             }
-
-            else -> Observable.just(Page())
         }
     }
 }

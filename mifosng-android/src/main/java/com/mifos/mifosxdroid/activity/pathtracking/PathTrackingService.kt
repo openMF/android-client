@@ -35,8 +35,7 @@ import com.mifos.objects.user.UserLocation
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.DateHelper.getCurrentDateTime
-import com.mifos.utils.PrefManager.putBoolean
-import com.mifos.utils.PrefManager.userId
+import com.mifos.utils.PrefManager
 import rx.Subscriber
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -252,9 +251,9 @@ class PathTrackingService : Service(), ConnectionCallbacks, OnConnectionFailedLi
         googleApiClient!!.disconnect()
         stopNotification()
         unregisterReceiver(notificationReceiver)
-        putBoolean(Constants.SERVICE_STATUS, false)
+        PrefManager.userStatus = false
         stopTime = getCurrentDateTime(DateHelper.TIME_FORMAT_VALUE)
-        addPathTracking(userId, buildUserLocation())
+        addPathTracking(PrefManager.getUserId(), buildUserLocation())
         super.onDestroy()
     }
 
@@ -276,7 +275,7 @@ class PathTrackingService : Service(), ConnectionCallbacks, OnConnectionFailedLi
         userLocation.startTime = startTime
         userLocation.stopTime = stopTime
         userLocation.date = date
-        userLocation.userId = userId
+        userLocation.userId = PrefManager.getUserId()
         return userLocation
     }
 

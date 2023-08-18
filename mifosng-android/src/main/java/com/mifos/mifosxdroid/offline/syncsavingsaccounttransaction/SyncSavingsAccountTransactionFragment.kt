@@ -197,9 +197,8 @@ class SyncSavingsAccountTransactionFragment : MifosBaseFragment(), OnRefreshList
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_sync) {
             when (userStatus) {
-                0 -> checkNetworkConnectionAndSync()
-                1 -> showOfflineModeDialog()
-                else -> {}
+                false -> checkNetworkConnectionAndSync()
+                true -> showOfflineModeDialog()
             }
         }
         return super.onOptionsItemSelected(item)

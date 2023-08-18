@@ -43,14 +43,12 @@ class DataManagerLoan @Inject constructor(
      */
     fun getLoanById(loanId: Int): Observable<LoanWithAssociations> {
         return when (userStatus) {
-            0 -> mBaseApiManager.loanApi.getLoanByIdWithAllAssociations(loanId)
-            1 ->
+            false -> mBaseApiManager.loanApi.getLoanByIdWithAllAssociations(loanId)
+            true ->
                 /**
                  * Return LoanWithAssociation from DatabaseHelperLoan.
                  */
                 mDatabaseHelperLoan.getLoanById(loanId)
-
-            else -> Observable.just(LoanWithAssociations())
         }
     }
 
@@ -105,14 +103,12 @@ class DataManagerLoan @Inject constructor(
      */
     fun getLoanRepayTemplate(loanId: Int): Observable<LoanRepaymentTemplate> {
         return when (userStatus) {
-            0 -> mBaseApiManager.loanApi.getLoanRepaymentTemplate(loanId)
-            1 ->
+            false -> mBaseApiManager.loanApi.getLoanRepaymentTemplate(loanId)
+            true ->
                 /**
                  * Return LoanRepaymentTemplate from DatabaseHelperLoan.
                  */
                 mDatabaseHelperLoan.getLoanRepayTemplate(loanId)
-
-            else -> Observable.just(LoanRepaymentTemplate())
         }
     }
 
@@ -158,16 +154,14 @@ class DataManagerLoan @Inject constructor(
         request: LoanRepaymentRequest
     ): Observable<LoanRepaymentResponse> {
         return when (userStatus) {
-            0 -> mBaseApiManager.loanApi.submitPayment(loanId, request)
+            false -> mBaseApiManager.loanApi.submitPayment(loanId, request)
                 .concatMap { loanRepaymentResponse -> Observable.just(loanRepaymentResponse) }
 
-            1 ->
+            true ->
                 /**
                  * Return LoanRepaymentResponse from DatabaseHelperLoan.
                  */
                 mDatabaseHelperLoan.saveLoanRepaymentTransaction(loanId, request)
-
-            else -> Observable.just(LoanRepaymentResponse())
         }
     }
 

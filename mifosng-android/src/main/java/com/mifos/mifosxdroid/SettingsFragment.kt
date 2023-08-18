@@ -4,7 +4,6 @@ package com.mifos.mifosxdroid
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import androidx.preference.*
 import androidx.preference.Preference.OnPreferenceChangeListener
@@ -60,7 +59,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         mInstanceUrlPref = (findPreference(
             requireContext().getString(R.string.hint_instance_url)
         ) as EditTextPreference?)!!
-        val instanceUrl = PrefManager.instanceUrl
+        val instanceUrl = PrefManager.getInstanceUrl()
         mInstanceUrlPref.text = instanceUrl
         mInstanceUrlPref.isSelectable = true
         mInstanceUrlPref.dialogTitle = "Edit Instance Url"
@@ -69,14 +68,10 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             OnPreferenceChangeListener { _, o ->
                 val newUrl = o.toString()
                 if (newUrl != instanceUrl) {
-                    PrefManager.instanceUrl = newUrl
+                    PrefManager.setInstanceUrl(newUrl)
                     Toast.makeText(activity, newUrl, Toast.LENGTH_SHORT).show()
                     startActivity(Intent(activity, DashboardActivity::class.java))
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        activity?.finishAffinity()
-                    } else {
-                        activity?.finish()
-                    }
+                    activity?.finishAffinity()
                 }
                 true
             }

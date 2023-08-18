@@ -69,7 +69,7 @@ class SurveyListViewModel @Inject constructor(private val repository: SurveyList
 
                 override fun onNext(surveyList: List<Survey>) {
                     mDbSurveyList = surveyList
-                    if (PrefManager.userStatus == 1) {
+                    if (PrefManager.userStatus) {
                         for (survey in mSyncSurveyList) {
                             loadDatabaseQuestionData(survey.id, survey)
                         }

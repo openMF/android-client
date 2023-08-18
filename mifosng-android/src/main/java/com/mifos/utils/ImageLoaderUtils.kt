@@ -10,16 +10,13 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.signature.ObjectKey
 import com.mifos.api.MifosInterceptor
 import com.mifos.mifosxdroid.R
-import com.mifos.utils.PrefManager.instanceUrl
-import com.mifos.utils.PrefManager.tenant
-import com.mifos.utils.PrefManager.token
 
 /**
  * Created by Rajan Maurya on 05/02/17.
  */
 object ImageLoaderUtils {
     private fun buildImageUrl(clientId: Int): String {
-        return (instanceUrl
+        return (PrefManager.getInstanceUrl()
                 + "clients/"
                 + clientId
                 + "/images?maxHeight=120&maxWidth=120")
@@ -28,8 +25,8 @@ object ImageLoaderUtils {
     private fun buildGlideUrl(clientId: Int): GlideUrl {
         return GlideUrl(
             buildImageUrl(clientId), LazyHeaders.Builder()
-                .addHeader(MifosInterceptor.HEADER_TENANT, tenant)
-                .addHeader(MifosInterceptor.HEADER_AUTH, token)
+                .addHeader(MifosInterceptor.HEADER_TENANT, PrefManager.getTenant())
+                .addHeader(MifosInterceptor.HEADER_AUTH, PrefManager.getToken())
                 .addHeader("Accept", "application/octet-stream")
                 .build()
         )

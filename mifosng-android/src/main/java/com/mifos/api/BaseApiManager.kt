@@ -23,7 +23,7 @@ import com.mifos.api.services.SearchService
 import com.mifos.api.services.StaffService
 import com.mifos.api.services.SurveyService
 import com.mifos.utils.JsonDateSerializer
-import com.mifos.utils.PrefManager.instanceUrl
+import com.mifos.utils.PrefManager
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -155,7 +155,7 @@ class BaseApiManager {
             val gson = GsonBuilder()
                 .registerTypeAdapter(Date::class.java, JsonDateSerializer()).create()
             mRetrofit = Retrofit.Builder()
-                .baseUrl(instanceUrl)
+                .baseUrl(PrefManager.getInstanceUrl())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())

@@ -46,8 +46,8 @@ class DataManagerGroups @Inject constructor(
      */
     fun getGroups(paged: Boolean, offset: Int, limit: Int): Observable<Page<Group>> {
         return when (userStatus) {
-            0 -> mBaseApiManager.groupApi.getGroups(paged, offset, limit)
-            1 -> {
+            false -> mBaseApiManager.groupApi.getGroups(paged, offset, limit)
+            true -> {
                 /**
                  * offset : is the value from which position we want to fetch the list, It means
                  * if offset is 0 and User is in the Offline Mode So fetch all groups
@@ -59,8 +59,6 @@ class DataManagerGroups @Inject constructor(
                     Page()
                 )
             }
-
-            else -> Observable.just(Page())
         }
     }
 
@@ -82,14 +80,12 @@ class DataManagerGroups @Inject constructor(
      */
     fun getGroup(groupId: Int): Observable<Group> {
         return when (userStatus) {
-            0 -> mBaseApiManager.groupApi.getGroup(groupId)
-            1 ->
+            false -> mBaseApiManager.groupApi.getGroup(groupId)
+            true ->
                 /**
                  * Return Groups from DatabaseHelperGroups.
                  */
                 mDatabaseHelperGroups.getGroup(groupId)
-
-            else -> Observable.just(Group())
         }
     }
 
@@ -110,14 +106,12 @@ class DataManagerGroups @Inject constructor(
      */
     fun getGroupWithAssociations(groupId: Int): Observable<GroupWithAssociations> {
         return when (userStatus) {
-            0 -> mBaseApiManager.groupApi.getGroupWithAssociations(groupId)
-            1 ->
+            false -> mBaseApiManager.groupApi.getGroupWithAssociations(groupId)
+            true ->
                 /**
                  * Return Groups from DatabaseHelperGroups.
                  */
                 mDatabaseHelperClient.getGroupAssociateClients(groupId)
-
-            else -> Observable.just(GroupWithAssociations())
         }
     }
 
@@ -130,14 +124,12 @@ class DataManagerGroups @Inject constructor(
      */
     fun getGroupAccounts(groupId: Int): Observable<GroupAccounts> {
         return when (userStatus) {
-            0 -> mBaseApiManager.groupApi.getGroupAccounts(groupId)
-            1 ->
+            false -> mBaseApiManager.groupApi.getGroupAccounts(groupId)
+            true ->
                 /**
                  * Return Groups from DatabaseHelperGroups.
                  */
                 mDatabaseHelperGroups.readGroupAccounts(groupId)
-
-            else -> Observable.just(GroupAccounts())
         }
     }
 
@@ -167,14 +159,12 @@ class DataManagerGroups @Inject constructor(
      */
     fun createGroup(groupPayload: GroupPayload): Observable<SaveResponse> {
         return when (userStatus) {
-            0 -> mBaseApiManager.groupApi.createGroup(groupPayload)
-            1 ->
+            false -> mBaseApiManager.groupApi.createGroup(groupPayload)
+            true ->
                 /**
                  * Save GroupPayload in Database table.
                  */
                 mDatabaseHelperGroups.saveGroupPayload(groupPayload)
-
-            else -> Observable.just(SaveResponse())
         }
     }
 

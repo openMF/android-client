@@ -4,9 +4,7 @@
  */
 package com.mifos.api
 
-import com.mifos.utils.PrefManager.isAuthenticated
-import com.mifos.utils.PrefManager.tenant
-import com.mifos.utils.PrefManager.token
+import com.mifos.utils.PrefManager
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
@@ -19,8 +17,8 @@ class MifosInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val chianrequest = chain.request()
         val builder = chianrequest.newBuilder()
-            .header(HEADER_TENANT, tenant)
-        if (isAuthenticated) builder.header(HEADER_AUTH, token)
+            .header(HEADER_TENANT, PrefManager.getTenant())
+        if (PrefManager.isAuthenticated()) builder.header(HEADER_AUTH, PrefManager.getToken())
         val request = builder.build()
         return chain.proceed(request)
     }

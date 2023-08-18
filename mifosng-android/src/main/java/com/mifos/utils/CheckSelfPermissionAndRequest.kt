@@ -13,8 +13,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MaterialDialog
-import com.mifos.utils.PrefManager.getBoolean
-import com.mifos.utils.PrefManager.putBoolean
 
 /**
  * This Class is the Generic Class to Request the Dangerous permissions that are not granted
@@ -85,7 +83,7 @@ object CheckSelfPermissionAndRequest {
         permissionRequestCode: Int,
         dialogMessageRetry: String?,
         messageNeverAskAgain: String?,
-        permissionDeniedStatus: String?
+        permissionDeniedStatus: String
     ) {
         // Should we show an explanation?
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
@@ -110,8 +108,8 @@ object CheckSelfPermissionAndRequest {
         } else {
 
             //Requesting Permission, first time to the device.
-            if (getBoolean(permissionDeniedStatus, true)) {
-                putBoolean(permissionDeniedStatus, false)
+            if (PrefManager.getPermissionDeniedStatus(permissionDeniedStatus)) {
+                PrefManager.setPermissionDeniedStatus(permissionDeniedStatus, false)
                 ActivityCompat.requestPermissions(
                     activity, arrayOf(permission),
                     permissionRequestCode
