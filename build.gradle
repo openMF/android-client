@@ -43,7 +43,7 @@ ext {
     okHttp3MainVersion = '4.9.2'
 
     // flipTable version
-    flipTableVersion = '1.0.1'
+    flipTableVersion = '1.1.0'
 
     //mifos passcode version
     mifosPasscodeVersion = '1.0.0'
