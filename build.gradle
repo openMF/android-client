@@ -113,7 +113,7 @@ ext {
     annotationLibraryVersion = '1.6.0'
 
     // android job version
-    androidJobVersion = '1.2.6'
+    androidJobVersion = '1.4.3'
 
     // splashscreen version
     splashscreenVersion = '1.1.0-alpha01'
