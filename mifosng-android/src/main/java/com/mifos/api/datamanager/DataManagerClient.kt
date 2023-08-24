@@ -3,6 +3,7 @@ package com.mifos.api.datamanager
 import com.mifos.api.BaseApiManager
 import com.mifos.api.GenericResponse
 import com.mifos.api.local.databasehelper.DatabaseHelperClient
+import com.mifos.mappers.clients.GetClientResponseMapper
 import com.mifos.objects.accounts.ClientAccounts
 import com.mifos.objects.client.ActivatePayload
 import com.mifos.objects.client.Client
@@ -30,7 +31,7 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerClient @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperClient: DatabaseHelperClient,
+    private val mDatabaseHelperClient: DatabaseHelperClient,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager
 ) {
     /**
@@ -51,8 +52,12 @@ class DataManagerClient @Inject constructor(
      */
     fun getAllClients(paged: Boolean, offset: Int, limit: Int): Observable<Page<Client>> {
         return when (userStatus) {
-            false -> mBaseApiManager.clientsApi.getAllClients(paged, offset, limit)
-                .concatMap { clientPage -> Observable.just(clientPage) }
+            false -> baseApiManager.getClientsApi().retrieveAll21(
+                null, null, null,
+                null, null, null,
+                null, null, offset,
+                limit, null, null, null
+            ).map(GetClientResponseMapper::mapFromEntity)
 
             true -> {
                 /**

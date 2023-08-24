@@ -4,6 +4,7 @@ import com.mifos.api.BaseApiManager
 import com.mifos.api.GenericResponse
 import com.mifos.api.local.databasehelper.DatabaseHelperClient
 import com.mifos.api.local.databasehelper.DatabaseHelperGroups
+import com.mifos.mappers.groups.GetGroupsResponseMapper
 import com.mifos.objects.accounts.GroupAccounts
 import com.mifos.objects.client.ActivatePayload
 import com.mifos.objects.client.Page
@@ -26,7 +27,8 @@ import javax.inject.Singleton
 class DataManagerGroups @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     private val mDatabaseHelperGroups: DatabaseHelperGroups,
-    private val mDatabaseHelperClient: DatabaseHelperClient
+    private val mDatabaseHelperClient: DatabaseHelperClient,
+    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -46,7 +48,20 @@ class DataManagerGroups @Inject constructor(
      */
     fun getGroups(paged: Boolean, offset: Int, limit: Int): Observable<Page<Group>> {
         return when (userStatus) {
-            false -> mBaseApiManager.groupApi.getGroups(paged, offset, limit)
+            false -> baseApiManager.getGroupApi().retrieveAll24(
+                null,
+                null,
+                null,
+                null,
+                null,
+                paged,
+                offset,
+                limit,
+                null,
+                null,
+                null
+            ).map(GetGroupsResponseMapper::mapFromEntity)
+
             true -> {
                 /**
                  * offset : is the value from which position we want to fetch the list, It means

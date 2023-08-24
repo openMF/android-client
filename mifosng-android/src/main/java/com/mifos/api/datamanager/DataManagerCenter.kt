@@ -3,6 +3,7 @@ package com.mifos.api.datamanager
 import com.mifos.api.BaseApiManager
 import com.mifos.api.GenericResponse
 import com.mifos.api.local.databasehelper.DatabaseHelperCenter
+import com.mifos.mappers.centers.GetCentersResponseMapper
 import com.mifos.objects.accounts.CenterAccounts
 import com.mifos.objects.client.ActivatePayload
 import com.mifos.objects.client.Page
@@ -25,7 +26,8 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerCenter @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperCenter: DatabaseHelperCenter
+    private val mDatabaseHelperCenter: DatabaseHelperCenter,
+    private val baseApiManager : org.mifos.core.apimanager.BaseApiManager
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -45,7 +47,11 @@ class DataManagerCenter @Inject constructor(
      */
     fun getCenters(paged: Boolean, offset: Int, limit: Int): Observable<Page<Center>> {
         return when (userStatus) {
-            false -> mBaseApiManager.centerApi.getCenters(paged, offset, limit)
+            false -> baseApiManager.getCenterApi()
+                .retrieveAll23(
+                    null, null, null, null, null, paged,
+                    offset, limit, null, null, null, null, null
+                ).map(GetCentersResponseMapper::mapFromEntity)
             true -> {
                 /**
                  * Return All Centers List from DatabaseHelperCenter only one time.
