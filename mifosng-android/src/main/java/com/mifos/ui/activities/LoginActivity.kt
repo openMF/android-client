@@ -172,6 +172,8 @@ class LoginActivity : MifosBaseActivity(){
     }
 
     private fun onLoginSuccessful(user: PostAuthenticationResponse) {
+
+        PrefManager.usernamePassword = Pair(username,password)
         // Saving userID
         PrefManager.setUserId(user.userId!!.toInt())
         // Saving user's token

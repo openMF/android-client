@@ -55,7 +55,7 @@ ext {
     jUnitVersion = '4.13.2'
 
     // mockito version
-    mockitoVersion = '5.4.0'
+    mockitoVersion = '5.5.0'
 
     //jsr version
     jsrVersion = '1.0'
@@ -129,4 +129,7 @@ ext {
 
     // sdk client
     clientVersion = '2.0.3'
+
+    // arch core testing
+    archCoreVersion = '2.2.0'
 }
