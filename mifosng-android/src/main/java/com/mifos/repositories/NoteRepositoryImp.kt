@@ -2,6 +2,7 @@ package com.mifos.repositories
 
 import com.mifos.api.datamanager.DataManagerNote
 import com.mifos.objects.noncore.Note
+import org.apache.fineract.client.models.GetResourceTypeResourceIdNotesResponse
 import rx.Observable
 import javax.inject.Inject
 
@@ -11,7 +12,7 @@ import javax.inject.Inject
 class NoteRepositoryImp @Inject constructor(private val dataManagerNote: DataManagerNote) :
     NoteRepository {
 
-    override fun getNotes(entityType: String?, entityId: Int): Observable<List<Note>> {
+    override fun getNotes(entityType: String?, entityId: Int): Observable<List<GetResourceTypeResourceIdNotesResponse>> {
         return dataManagerNote.getNotes(entityType, entityId)
     }
 }

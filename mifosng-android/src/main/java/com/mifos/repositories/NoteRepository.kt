@@ -1,6 +1,7 @@
 package com.mifos.repositories
 
 import com.mifos.objects.noncore.Note
+import org.apache.fineract.client.models.GetResourceTypeResourceIdNotesResponse
 import rx.Observable
 
 /**
@@ -8,6 +9,6 @@ import rx.Observable
  */
 interface NoteRepository {
 
-    fun getNotes(entityType: String?, entityId: Int): Observable<List<Note>>
+    fun getNotes(entityType: String?, entityId: Int): Observable<List<GetResourceTypeResourceIdNotesResponse>>
 
 }
