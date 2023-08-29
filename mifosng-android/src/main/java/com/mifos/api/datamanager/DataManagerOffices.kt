@@ -2,6 +2,7 @@ package com.mifos.api.datamanager
 
 import com.mifos.api.BaseApiManager
 import com.mifos.api.local.databasehelper.DatabaseHelperOffices
+import com.mifos.mappers.offices.GetOfficeResponseMapper
 import com.mifos.objects.organisation.Office
 import com.mifos.utils.PrefManager.userStatus
 import rx.Observable
@@ -18,18 +19,16 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerOffices @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperOffices: DatabaseHelperOffices
+    private val mDatabaseHelperOffices: DatabaseHelperOffices,
+    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager
 ) {
     /**
      * return all List of Offices from DatabaseHelperOffices
      */
     val offices: Observable<List<Office>>
         get() = when (userStatus) {
-            false -> mBaseApiManager.officeApi.allOffices
-                .concatMap { offices ->
-                    mDatabaseHelperOffices.saveAllOffices(offices)
-                    Observable.just(offices)
-                }
+            false -> baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
+                .map(GetOfficeResponseMapper::mapFromEntityList)
 
             true ->
                 /**

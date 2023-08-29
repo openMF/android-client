@@ -2,10 +2,10 @@ package com.mifos.api.datamanager
 
 import com.mifos.api.BaseApiManager
 import com.mifos.api.local.databasehelper.DatabaseHelperStaff
+import com.mifos.mappers.staffs.StaffMapper
 import com.mifos.objects.organisation.Staff
 import com.mifos.utils.PrefManager.userStatus
 import rx.Observable
-import rx.functions.Func1
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,7 +15,8 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerStaff @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    private val mDatabaseHelperStaff: DatabaseHelperStaff
+    private val mDatabaseHelperStaff: DatabaseHelperStaff,
+    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager
 ) {
     /**
      * @param officeId
@@ -23,11 +24,8 @@ class DataManagerStaff @Inject constructor(
      */
     fun getStaffInOffice(officeId: Int): Observable<List<Staff>> {
         return when (userStatus) {
-            false -> mBaseApiManager.staffApi.getStaffForOffice(officeId)
-                .concatMap { staffs ->
-                    mDatabaseHelperStaff.saveAllStaffOfOffices(staffs)
-                    Observable.just(staffs)
-                }
+            false -> baseApiManager.getStaffApi().retrieveAll16(officeId.toLong(), null, null, null)
+                .map(StaffMapper::mapFromEntityList)
 
             true ->
                 /**

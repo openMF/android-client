@@ -40,7 +40,6 @@ class LoginViewModel @Inject constructor(private val loginRepository: LoginRepos
 
                 override fun onNext(user: PostAuthenticationResponse) {
                     _loginUiState.value = LoginUiState.ShowLoginSuccessful(user)
-                    PrefManager.usernamePassword = Pair(username,password)
                 }
             })
     }

@@ -7,6 +7,7 @@ import com.mifos.objects.organisation.Staff
 import com.mifos.objects.templates.clients.ClientsTemplate
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
+import org.apache.fineract.client.models.RetrieveOneResponse
 import rx.Observable
 
 /**
