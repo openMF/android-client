@@ -4,6 +4,9 @@ import com.mifos.api.BaseApiManager
 import com.mifos.api.GenericResponse
 import com.mifos.api.local.databasehelper.DatabaseHelperClient
 import com.mifos.mappers.clients.GetClientResponseMapper
+import com.mifos.mappers.clients.GetClientsClientIdAccountMapper
+import com.mifos.mappers.clients.GetIdentifiersTemplateMapper
+import com.mifos.mappers.clients.IdentifierMapper
 import com.mifos.objects.accounts.ClientAccounts
 import com.mifos.objects.client.ActivatePayload
 import com.mifos.objects.client.Client
@@ -19,6 +22,9 @@ import com.mifos.objects.templates.clients.ClientsTemplate
 import com.mifos.utils.PrefManager.userStatus
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
+import org.apache.fineract.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
+import org.apache.fineract.client.models.PostClientsClientIdRequest
+import org.apache.fineract.client.models.PostClientsClientIdResponse
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -115,7 +121,9 @@ class DataManagerClient @Inject constructor(
      */
     fun getClientAccounts(clientId: Int): Observable<ClientAccounts> {
         return when (userStatus) {
-            false -> mBaseApiManager.clientsApi.getClientAccounts(clientId)
+            false -> baseApiManager.getClientsApi().retrieveAssociatedAccounts(clientId.toLong())
+                .map(GetClientsClientIdAccountMapper::mapFromEntity)
+
             true ->
                 /**
                  * Return Clients from DatabaseHelperClient only one time.
@@ -133,7 +141,8 @@ class DataManagerClient @Inject constructor(
      * @return ClientAccounts
      */
     fun syncClientAccounts(clientId: Int): Observable<ClientAccounts> {
-        return mBaseApiManager.clientsApi.getClientAccounts(clientId)
+        return baseApiManager.getClientsApi().retrieveAssociatedAccounts(clientId.toLong())
+            .map(GetClientsClientIdAccountMapper::mapFromEntity)
             .concatMap { clientAccounts ->
                 mDatabaseHelperClient.saveClientAccounts(
                     clientAccounts,
@@ -259,7 +268,8 @@ class DataManagerClient @Inject constructor(
      * @return List<Identifier>
     </Identifier> */
     fun getClientIdentifiers(clientId: Int): Observable<List<Identifier>> {
-        return mBaseApiManager.clientsApi.getClientIdentifiers(clientId)
+        return baseApiManager.getClient().clientIdentifiers.retrieveAllClientIdentifiers(clientId.toLong())
+            .map(IdentifierMapper::mapFromEntityList)
     }
 
     /**
@@ -282,7 +292,8 @@ class DataManagerClient @Inject constructor(
      * @return IdentifierTemplate
      */
     fun getClientIdentifierTemplate(clientId: Int): Observable<IdentifierTemplate> {
-        return mBaseApiManager.clientsApi.getClientIdentifierTemplate(clientId)
+        return baseApiManager.getClient().clientIdentifiers.newClientIdentifierDetails(clientId.toLong())
+            .map(GetIdentifiersTemplateMapper::mapFromEntity)
     }
 
     /**
@@ -292,8 +303,8 @@ class DataManagerClient @Inject constructor(
      * @param identifierId Identifier Id
      * @return GenericResponse
      */
-    fun deleteClientIdentifier(clientId: Int, identifierId: Int): Observable<GenericResponse> {
-        return mBaseApiManager.clientsApi.deleteClientIdentifier(clientId, identifierId)
+    fun deleteClientIdentifier(clientId: Int, identifierId: Int): Observable<DeleteClientsClientIdIdentifiersIdentifierIdResponse> {
+        return baseApiManager.getClient().clientIdentifiers.deleteClientIdentifier(clientId.toLong(),identifierId.toLong())
     }
 
     /**
@@ -363,7 +374,12 @@ class DataManagerClient @Inject constructor(
     fun activateClient(
         clientId: Int,
         clientActivate: ActivatePayload?
-    ): Observable<GenericResponse> {
-        return mBaseApiManager.clientsApi.activateClient(clientId, clientActivate)
+    ): Observable<PostClientsClientIdResponse> {
+        return baseApiManager.getClientsApi().activate1(clientId.toLong(),
+            PostClientsClientIdRequest().apply {
+                activationDate = clientActivate?.activationDate
+                dateFormat = clientActivate?.dateFormat
+                locale = clientActivate?.locale
+            },null)
     }
 }
