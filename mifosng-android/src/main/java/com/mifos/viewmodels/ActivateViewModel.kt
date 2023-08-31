@@ -8,8 +8,9 @@ import com.mifos.mifosxdroid.R
 import com.mifos.objects.client.ActivatePayload
 import com.mifos.repositories.ActivateRepository
 import com.mifos.states.ActivateUiState
-import com.mifos.utils.MFErrorParser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.apache.fineract.client.models.PostCentersCenterIdResponse
+import org.apache.fineract.client.models.PostClientsClientIdResponse
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -32,13 +33,13 @@ class ActivateViewModel @Inject constructor(private val repository: ActivateRepo
         repository.activateClient(clientId, clientActivate)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<GenericResponse>() {
+            .subscribe(object : Subscriber<PostClientsClientIdResponse>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _activateUiState.value = ActivateUiState.ShowError(e.message.toString())
                 }
 
-                override fun onNext(genericResponse: GenericResponse) {
+                override fun onNext(genericResponse: PostClientsClientIdResponse) {
                     _activateUiState.value =
                         ActivateUiState.ShowActivatedSuccessfully(R.string.client_activated_successfully)
                 }
@@ -51,13 +52,13 @@ class ActivateViewModel @Inject constructor(private val repository: ActivateRepo
         repository.activateCenter(centerId, activatePayload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<GenericResponse>() {
+            .subscribe(object : Subscriber<PostCentersCenterIdResponse>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _activateUiState.value = ActivateUiState.ShowError(e.message.toString())
                 }
 
-                override fun onNext(genericResponse: GenericResponse) {
+                override fun onNext(genericResponse: PostCentersCenterIdResponse) {
                     _activateUiState.value =
                         ActivateUiState.ShowActivatedSuccessfully(R.string.center_activated_successfully)
                 }

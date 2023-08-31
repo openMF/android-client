@@ -1,7 +1,7 @@
 package com.mifos.repositories
 
-import com.mifos.api.GenericResponse
 import com.mifos.objects.noncore.Identifier
+import org.apache.fineract.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import rx.Observable
 
 /**
@@ -11,5 +11,5 @@ interface ClientIdentifiersRepository {
 
     fun getClientIdentifiers(clientId: Int): Observable<List<Identifier>>
 
-    fun deleteClientIdentifier(clientId: Int, identifierId: Int): Observable<GenericResponse>
+    fun deleteClientIdentifier(clientId: Int, identifierId: Int): Observable<DeleteClientsClientIdIdentifiersIdentifierIdResponse>
 }

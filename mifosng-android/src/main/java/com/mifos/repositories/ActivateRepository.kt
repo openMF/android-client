@@ -2,6 +2,8 @@ package com.mifos.repositories
 
 import com.mifos.api.GenericResponse
 import com.mifos.objects.client.ActivatePayload
+import org.apache.fineract.client.models.PostCentersCenterIdResponse
+import org.apache.fineract.client.models.PostClientsClientIdResponse
 import rx.Observable
 
 /**
@@ -13,12 +15,12 @@ interface ActivateRepository {
     fun activateClient(
         clientId: Int,
         clientActivate: ActivatePayload?
-    ): Observable<GenericResponse>
+    ): Observable<PostClientsClientIdResponse>
 
     fun activateCenter(
         centerId: Int,
         activatePayload: ActivatePayload?
-    ): Observable<GenericResponse>
+    ): Observable<PostCentersCenterIdResponse>
 
     fun activateGroup(
         groupId: Int,

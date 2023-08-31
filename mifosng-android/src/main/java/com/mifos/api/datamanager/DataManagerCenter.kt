@@ -4,6 +4,7 @@ import com.mifos.api.BaseApiManager
 import com.mifos.api.GenericResponse
 import com.mifos.api.local.databasehelper.DatabaseHelperCenter
 import com.mifos.mappers.centers.GetCentersResponseMapper
+import com.mifos.mappers.offices.GetOfficeResponseMapper
 import com.mifos.objects.accounts.CenterAccounts
 import com.mifos.objects.client.ActivatePayload
 import com.mifos.objects.client.Page
@@ -13,6 +14,9 @@ import com.mifos.objects.organisation.Office
 import com.mifos.objects.response.SaveResponse
 import com.mifos.services.data.CenterPayload
 import com.mifos.utils.PrefManager.userStatus
+import org.apache.fineract.client.models.PostCentersCenterIdRequest
+import org.apache.fineract.client.models.PostCentersCenterIdResponse
+import org.apache.fineract.client.models.PostClientsClientIdRequest
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -139,8 +143,10 @@ class DataManagerCenter @Inject constructor(
      */
     val allDatabaseCenters: Observable<Page<Center>>
         get() = mDatabaseHelperCenter.readAllCenters()
+
     val offices: Observable<List<Office>>
-        get() = mBaseApiManager.officeApi.allOffices
+        get() = baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
+            .map(GetOfficeResponseMapper::mapFromEntityList)
 
     /**
      * This method loading the all CenterPayloads from the Database.
@@ -181,7 +187,12 @@ class DataManagerCenter @Inject constructor(
     fun activateCenter(
         centerId: Int,
         activatePayload: ActivatePayload?
-    ): Observable<GenericResponse> {
-        return mBaseApiManager.centerApi.activateCenter(centerId, activatePayload)
+    ): Observable<PostCentersCenterIdResponse> {
+        return baseApiManager.getCenterApi().activate2(centerId.toLong(),
+            PostCentersCenterIdRequest().apply {
+                closureDate = activatePayload?.activationDate
+                dateFormat = activatePayload?.dateFormat
+                locale = activatePayload?.locale
+            },"activate")
     }
 }
