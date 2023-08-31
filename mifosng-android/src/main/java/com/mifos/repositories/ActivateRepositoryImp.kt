@@ -5,6 +5,7 @@ import com.mifos.api.datamanager.DataManagerCenter
 import com.mifos.api.datamanager.DataManagerClient
 import com.mifos.api.datamanager.DataManagerGroups
 import com.mifos.objects.client.ActivatePayload
+import org.apache.fineract.client.models.PostCentersCenterIdResponse
 import org.apache.fineract.client.models.PostClientsClientIdResponse
 import rx.Observable
 import javax.inject.Inject
@@ -28,7 +29,7 @@ class ActivateRepositoryImp @Inject constructor(
     override fun activateCenter(
         centerId: Int,
         activatePayload: ActivatePayload?
-    ): Observable<GenericResponse> {
+    ): Observable<PostCentersCenterIdResponse> {
         return dataManagerCenter.activateCenter(centerId, activatePayload)
     }
 

@@ -4,8 +4,11 @@ import com.google.gson.JsonArray
 import com.mifos.api.BaseApiManager
 import com.mifos.api.GenericResponse
 import com.mifos.api.local.databasehelper.DatabaseHelperDataTable
+import com.mifos.mappers.dataTable.GetDataTablesResponseMapper
 import com.mifos.objects.noncore.DataTable
 import com.mifos.objects.user.UserLocation
+import org.apache.fineract.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
+import org.apache.fineract.client.models.GetDataTablesResponse
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,7 +22,8 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerDataTable @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperDataTable: DatabaseHelperDataTable
+    val mDatabaseHelperDataTable: DatabaseHelperDataTable,
+    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager
 ) {
     /**
      * This Method Request the REST API of Datatable and In response give the List of DataTable
@@ -31,7 +35,8 @@ class DataManagerDataTable @Inject constructor(
      * @return List<DataTable>
     </DataTable> */
     fun getDataTable(tableName: String?): Observable<List<DataTable>> {
-        return mBaseApiManager.dataTableApi.getTableOf(tableName)
+        return baseApiManager.getDataTableApi().getDatatables(tableName).map(
+            GetDataTablesResponseMapper::mapFromEntityList)
     }
 
     fun getDataTableInfo(table: String?, entityId: Int): Observable<JsonArray> {
@@ -45,10 +50,8 @@ class DataManagerDataTable @Inject constructor(
             .createEntryInDataTable(table, entityId, payload)
     }
 
-    fun deleteDataTableEntry(table: String?, entity: Int, rowId: Int): Observable<GenericResponse> {
-        return mBaseApiManager.dataTableApi.deleteEntryOfDataTableManyToMany(
-            table, entity, rowId
-        )
+    fun deleteDataTableEntry(table: String?, entity: Int, rowId: Int): Observable<DeleteDataTablesDatatableAppTableIdDatatableIdResponse> {
+        return baseApiManager.getDataTableApi().deleteDatatableEntries1(table,entity.toLong(),rowId.toLong())
     }
 
     /**

@@ -2,6 +2,7 @@ package com.mifos.repositories
 
 import com.google.gson.JsonArray
 import com.mifos.api.GenericResponse
+import org.apache.fineract.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import rx.Observable
 
 /**
@@ -11,6 +12,6 @@ interface DataTableDataRepository {
 
     fun getDataTableInfo(table: String?, entityId: Int): Observable<JsonArray>
 
-    fun deleteDataTableEntry(table: String?, entity: Int, rowId: Int): Observable<GenericResponse>
+    fun deleteDataTableEntry(table: String?, entity: Int, rowId: Int): Observable<DeleteDataTablesDatatableAppTableIdDatatableIdResponse>
 
 }

@@ -7,10 +7,11 @@ import org.apache.fineract.client.models.GetClientsClientIdIdentifiersTemplateRe
 import org.mifos.core.data.AbstractMapper
 
 /**
- * Created by Aditya Gupta on 06/08/23.
+ * Created by Aditya Gupta on 30/08/23.
  */
 
-object GetIdentifiersTemplateMapper : AbstractMapper<GetClientsClientIdIdentifiersTemplateResponse, IdentifierTemplate>() {
+object GetIdentifiersTemplateMapper :
+    AbstractMapper<GetClientsClientIdIdentifiersTemplateResponse, IdentifierTemplate>() {
 
     override fun mapFromEntity(entity: GetClientsClientIdIdentifiersTemplateResponse): IdentifierTemplate {
         return IdentifierTemplate().apply {

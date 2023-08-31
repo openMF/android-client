@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonArray
-import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.R
 import com.mifos.repositories.DataTableDataRepository
 import com.mifos.states.DataTableDataUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import org.apache.fineract.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -56,14 +56,14 @@ class DataTableDataViewModel @Inject constructor(private val repository: DataTab
         repository.deleteDataTableEntry(table, entity, rowId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<GenericResponse>() {
+            .subscribe(object : Subscriber<DeleteDataTablesDatatableAppTableIdDatatableIdResponse>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _dataTableDataUiState.value =
                         DataTableDataUiState.ShowFetchingErrorString(e.message.toString())
                 }
 
-                override fun onNext(genericResponse: GenericResponse) {
+                override fun onNext(genericResponse: DeleteDataTablesDatatableAppTableIdDatatableIdResponse) {
                     _dataTableDataUiState.value =
                         DataTableDataUiState.ShowDataTableDeletedSuccessfully
                 }

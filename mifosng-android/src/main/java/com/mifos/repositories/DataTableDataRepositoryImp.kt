@@ -1,8 +1,8 @@
 package com.mifos.repositories
 
 import com.google.gson.JsonArray
-import com.mifos.api.GenericResponse
 import com.mifos.api.datamanager.DataManagerDataTable
+import org.apache.fineract.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import rx.Observable
 import javax.inject.Inject
 
@@ -20,7 +20,7 @@ class DataTableDataRepositoryImp @Inject constructor(private val dataManagerData
         table: String?,
         entity: Int,
         rowId: Int
-    ): Observable<GenericResponse> {
+    ): Observable<DeleteDataTablesDatatableAppTableIdDatatableIdResponse> {
         return dataManagerDataTable.deleteDataTableEntry(table, entity, rowId)
     }
 

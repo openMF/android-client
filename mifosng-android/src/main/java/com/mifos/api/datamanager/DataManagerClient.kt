@@ -380,6 +380,6 @@ class DataManagerClient @Inject constructor(
                 activationDate = clientActivate?.activationDate
                 dateFormat = clientActivate?.dateFormat
                 locale = clientActivate?.locale
-            },null)
+            },"activate")
     }
 }

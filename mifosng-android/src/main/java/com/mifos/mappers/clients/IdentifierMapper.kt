@@ -7,7 +7,7 @@ import org.apache.fineract.client.models.GetClientsDocumentType
 import org.mifos.core.data.AbstractMapper
 
 /**
- * Created by Aditya Gupta on 06/08/23.
+ * Created by Aditya Gupta on 30/08/23.
  */
 object IdentifierMapper : AbstractMapper<GetClientsClientIdIdentifiersResponse, Identifier>() {
     override fun mapFromEntity(entity: GetClientsClientIdIdentifiersResponse): Identifier {
