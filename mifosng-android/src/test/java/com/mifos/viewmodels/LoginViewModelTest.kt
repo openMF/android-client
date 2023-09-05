@@ -17,6 +17,9 @@ import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 import rx.Observable
 
+/**
+ * Created by Aditya Gupta on 02/09/23.
+ */
 @RunWith(MockitoJUnitRunner::class)
 class LoginViewModelTest {
 
