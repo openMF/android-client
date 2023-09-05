@@ -30,8 +30,8 @@ class ClientListViewModel @Inject constructor(private val repository: ClientList
     private var mSyncClientList: List<Client> = ArrayList()
     private val limit = 100
     private var loadmore = false
-    var mRestApiClientSyncStatus = false
-    var mDatabaseClientSyncStatus = false
+    private var mRestApiClientSyncStatus = false
+    private var mDatabaseClientSyncStatus = false
 
 
     /**
