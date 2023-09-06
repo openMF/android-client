@@ -95,13 +95,13 @@ class ClientListViewModel @Inject constructor(private val repository: ClientList
      * @param limit  Maximum size of the Center
      */
     private fun loadClients(paged: Boolean, offset: Int, limit: Int) {
+        _clientListUiState.value = ClientListUiState.ShowProgressbar(true)
         repository.getAllClients(paged, offset, limit)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<Page<Client>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    _clientListUiState.value = ClientListUiState.ShowProgressbar(true)
                     if (loadmore) {
                         _clientListUiState.value =
                             ClientListUiState.ShowMessage(R.string.failed_to_load_client)
