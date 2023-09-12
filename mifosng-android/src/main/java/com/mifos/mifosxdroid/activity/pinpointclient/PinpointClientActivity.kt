@@ -24,11 +24,9 @@ import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.ActivityPinpointLocationBinding
 import com.mifos.objects.client.ClientAddressRequest
 import com.mifos.objects.client.ClientAddressResponse
-import com.mifos.states.PinPointClientUiState
 import com.mifos.utils.CheckSelfPermissionAndRequest.checkSelfPermission
 import com.mifos.utils.CheckSelfPermissionAndRequest.requestPermission
 import com.mifos.utils.Constants
-import com.mifos.viewmodels.PinPointClientViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

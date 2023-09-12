@@ -5,8 +5,8 @@
 package com.mifos.mifosxdroid.views
 
 import android.graphics.Typeface
-import com.mifos.App
-import com.mifos.App.Companion.instance
+import com.mifos.application.App
+import com.mifos.application.App.Companion.instance
 import java.io.File
 
 /**

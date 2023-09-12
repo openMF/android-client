@@ -23,13 +23,11 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentSignBinding
 import com.mifos.mifosxdroid.views.SignatureView.OnSignatureSaveListener
-import com.mifos.states.SignatureUiState
 import com.mifos.utils.AndroidVersionUtil
 import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.FileUtils
 import com.mifos.utils.SafeUIBlockingUtility
-import com.mifos.viewmodels.SignatureViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 

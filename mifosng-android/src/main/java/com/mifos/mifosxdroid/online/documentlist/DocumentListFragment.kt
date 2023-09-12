@@ -29,12 +29,10 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentDocumentListBinding
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment
 import com.mifos.objects.noncore.Document
-import com.mifos.states.DocumentListUiState
 import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.FileUtils
 import com.mifos.utils.FragmentConstants
-import com.mifos.viewmodels.DocumentListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.ResponseBody
 import java.io.File

@@ -16,7 +16,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.SplashScreenActivity
+import com.mifos.mifosxdroid.activity.splashscreen.SplashScreenActivity
 import com.mifos.mifosxdroid.passcode.PassCodeActivity
 import com.mifos.mobile.passcode.BasePassCodeActivity
 import com.mifos.utils.Constants

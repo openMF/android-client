@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.TextView
 import com.google.android.material.R
 import com.google.android.material.snackbar.Snackbar
-import com.mifos.App
+import com.mifos.application.App
 
 /**
  * @author fomenkoo

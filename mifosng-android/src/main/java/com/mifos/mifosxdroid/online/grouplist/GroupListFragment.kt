@@ -21,10 +21,7 @@ import com.mifos.objects.client.Client
 import com.mifos.objects.group.CenterWithAssociations
 import com.mifos.objects.group.GroupWithAssociations
 import com.mifos.objects.navigation.ClientListArgs
-import com.mifos.states.GroupListUiState
-import com.mifos.viewmodels.GroupListViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class GroupListFragment : ProgressableFragment(),

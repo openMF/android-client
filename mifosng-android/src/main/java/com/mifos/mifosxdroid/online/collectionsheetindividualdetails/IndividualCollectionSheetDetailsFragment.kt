@@ -22,9 +22,7 @@ import com.mifos.mifosxdroid.databinding.IndividualCollectionsSheetDetailsBindin
 import com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity
 import com.mifos.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.objects.collectionsheet.LoanAndClientName
-import com.mifos.states.IndividualCollectionSheetDetailsUiState
 import com.mifos.utils.Constants
-import com.mifos.viewmodels.IndividualCollectionSheetDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

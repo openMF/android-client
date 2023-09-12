@@ -2,11 +2,12 @@ package com.mifos.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.mifos.mifosxdroid.online.clientcharge.ClientChargeViewModel
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
 import com.mifos.objects.client.Charges
 import com.mifos.objects.client.Page
-import com.mifos.repositories.ClientChargeRepository
-import com.mifos.states.ClientChargeUiState
+import com.mifos.mifosxdroid.online.clientcharge.ClientChargeRepository
+import com.mifos.mifosxdroid.online.clientcharge.ClientChargeUiState
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before

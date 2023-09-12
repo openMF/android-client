@@ -27,11 +27,9 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.client.ChargeCreationResponse
 import com.mifos.objects.client.Charges
 import com.mifos.services.data.ChargesPayload
-import com.mifos.states.LoanChargeDialogUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
-import com.mifos.viewmodels.LoanChargeDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.ResponseBody
 import org.json.JSONObject

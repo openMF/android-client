@@ -15,13 +15,11 @@ import com.mifos.mifosxdroid.dialogfragments.collectionsheetdialog.CollectionShe
 import com.mifos.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.organisation.Staff
-import com.mifos.states.NewIndividualCollectionSheetUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
-import com.mifos.viewmodels.NewIndividualCollectionSheetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant

@@ -27,10 +27,8 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.runreports.FullParameterListResponse
 import com.mifos.objects.runreports.client.ClientReportTypeItem
-import com.mifos.states.ReportDetailUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
-import com.mifos.viewmodels.ReportDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.ParseException
 import java.text.SimpleDateFormat

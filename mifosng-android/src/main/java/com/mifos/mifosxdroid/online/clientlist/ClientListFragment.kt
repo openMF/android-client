@@ -18,7 +18,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
-import com.mifos.mifosxdroid.HomeActivity
+import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.ClientNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
@@ -29,9 +29,7 @@ import com.mifos.mifosxdroid.databinding.FragmentClientBinding
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment
 import com.mifos.objects.client.Client
 import com.mifos.objects.navigation.ClientArgs
-import com.mifos.states.ClientListUiState
 import com.mifos.utils.FragmentConstants
-import com.mifos.viewmodels.ClientListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

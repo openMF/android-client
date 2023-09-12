@@ -18,10 +18,8 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
 import com.mifos.services.data.CenterPayload
-import com.mifos.states.SyncCenterPayloadsUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.userStatus
-import com.mifos.viewmodels.SyncCenterPayloadsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

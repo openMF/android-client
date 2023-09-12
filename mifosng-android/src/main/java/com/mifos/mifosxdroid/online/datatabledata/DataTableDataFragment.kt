@@ -7,7 +7,6 @@ package com.mifos.mifosxdroid.online.datatabledata
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -26,12 +25,10 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentDatatableBinding
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogFragment
 import com.mifos.objects.noncore.DataTable
-import com.mifos.states.DataTableDataUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DataTableUIBuilder
 import com.mifos.utils.DataTableUIBuilder.DataTableActionListener
 import com.mifos.utils.FragmentConstants
-import com.mifos.viewmodels.DataTableDataViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

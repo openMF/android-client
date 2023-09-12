@@ -20,8 +20,6 @@ import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentSurveyListBinding
 import com.mifos.objects.survey.Survey
-import com.mifos.states.SurveyListUiState
-import com.mifos.viewmodels.SurveyListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

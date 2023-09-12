@@ -21,12 +21,9 @@ import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.databinding.FragmentLoanAccountSummaryBinding
 import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.objects.client.Charges
-import com.mifos.states.LoanAccountSummaryUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
-import com.mifos.viewmodels.LoanAccountSummaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by ishankhanna on 09/05/14.

@@ -15,12 +15,9 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentCenterDetailsBinding
 import com.mifos.objects.group.CenterInfo
 import com.mifos.objects.group.CenterWithAssociations
-import com.mifos.states.CenterDetailsUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.Utils
-import com.mifos.viewmodels.CenterDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 05/02/17.
