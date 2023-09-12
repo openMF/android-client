@@ -25,10 +25,8 @@ import com.mifos.mifosxdroid.formwidgets.FormSpinner
 import com.mifos.mifosxdroid.formwidgets.FormToggleButton
 import com.mifos.mifosxdroid.formwidgets.FormWidget
 import com.mifos.objects.noncore.DataTable
-import com.mifos.states.DataTableRowDialogUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.SafeUIBlockingUtility
-import com.mifos.viewmodels.DataTableRowDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

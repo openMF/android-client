@@ -28,11 +28,9 @@ import com.mifos.mifosxdroid.adapters.PathTrackingAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.databinding.ActivityPathTrackerBinding
 import com.mifos.objects.user.UserLocation
-import com.mifos.states.PathTrackingUiState
 import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager
-import com.mifos.viewmodels.PathTrackingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

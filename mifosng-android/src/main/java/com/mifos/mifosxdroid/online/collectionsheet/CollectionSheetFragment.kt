@@ -20,9 +20,7 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentCollectionSheetBinding
 import com.mifos.objects.db.CollectionSheet
 import com.mifos.objects.response.SaveResponse
-import com.mifos.states.CollectionSheetUiState
 import com.mifos.utils.Constants
-import com.mifos.viewmodels.CollectionSheetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.HttpException
 import java.util.*

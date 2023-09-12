@@ -24,9 +24,7 @@ import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.objects.client.ClientPayload
 import com.mifos.objects.group.GroupPayload
 import com.mifos.services.data.CenterPayload
-import com.mifos.states.OfflineDashboardUiState
 import com.mifos.utils.ItemOffsetDecoration
-import com.mifos.viewmodels.OfflineDashboardViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

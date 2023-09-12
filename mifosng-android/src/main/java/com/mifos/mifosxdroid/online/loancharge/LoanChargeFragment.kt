@@ -22,9 +22,7 @@ import com.mifos.mifosxdroid.databinding.FragmentChargeListBinding
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.OnChargeCreateListener
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment
 import com.mifos.objects.client.Charges
-import com.mifos.states.LoanChargeUiState
 import com.mifos.utils.FragmentConstants
-import com.mifos.viewmodels.LoanChargeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

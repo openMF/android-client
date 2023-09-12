@@ -24,13 +24,11 @@ import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.DialogFragmentDocumentBinding
 import com.mifos.objects.noncore.Document
-import com.mifos.states.DocumentDialogUiState
 import com.mifos.utils.AndroidVersionUtil
 import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.FileUtils
 import com.mifos.utils.SafeUIBlockingUtility
-import com.mifos.viewmodels.DocumentDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 

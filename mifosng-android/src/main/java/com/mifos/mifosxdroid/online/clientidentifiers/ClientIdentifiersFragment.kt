@@ -27,10 +27,8 @@ import com.mifos.mifosxdroid.dialogfragments.identifierdialog.ClientIdentifierCr
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogFragment
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment
 import com.mifos.objects.noncore.Identifier
-import com.mifos.states.ClientIdentifiersUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
-import com.mifos.viewmodels.ClientIdentifiersViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

@@ -2,7 +2,7 @@ package com.mifos.utils
 
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.mifos.App
+import com.mifos.application.App
 import com.mifos.objects.user.User
 import org.apache.fineract.client.models.PostAuthenticationResponse
 import org.mifos.core.sharedpreference.Key

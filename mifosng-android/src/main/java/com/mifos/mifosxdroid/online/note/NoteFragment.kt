@@ -14,8 +14,6 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentNotesBinding
 import com.mifos.objects.noncore.Note
-import com.mifos.states.NoteUiState
-import com.mifos.viewmodels.NoteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

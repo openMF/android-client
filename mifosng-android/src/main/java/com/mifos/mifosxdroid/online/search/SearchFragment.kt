@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mifos.mifosxdroid.HomeActivity
+import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SearchAdapter
 import com.mifos.mifosxdroid.core.MifosBaseFragment
@@ -26,14 +26,11 @@ import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentClientSearchBinding
 import com.mifos.objects.SearchedEntity
 import com.mifos.objects.navigation.ClientArgs
-import com.mifos.states.SearchUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.Network
-import com.mifos.viewmodels.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig
-import javax.inject.Inject
 
 
 @AndroidEntryPoint

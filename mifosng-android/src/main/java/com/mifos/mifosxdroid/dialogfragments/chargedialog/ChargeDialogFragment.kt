@@ -25,11 +25,9 @@ import com.mifos.objects.client.ChargeCreationResponse
 import com.mifos.objects.client.Charges
 import com.mifos.objects.templates.clients.ChargeTemplate
 import com.mifos.services.data.ChargesPayload
-import com.mifos.states.ChargeDialogUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
-import com.mifos.viewmodels.ChargeDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

@@ -17,9 +17,7 @@ import com.mifos.objects.noncore.Identifier
 import com.mifos.objects.noncore.IdentifierCreationResponse
 import com.mifos.objects.noncore.IdentifierPayload
 import com.mifos.objects.noncore.IdentifierTemplate
-import com.mifos.states.IdentifierDialogUiState
 import com.mifos.utils.Constants
-import com.mifos.viewmodels.IdentifierDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

@@ -29,11 +29,8 @@ import com.mifos.objects.accounts.savings.DepositType.ServerTypes
 import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.objects.accounts.savings.Status
 import com.mifos.objects.accounts.savings.Transaction
-import com.mifos.states.SavingsAccountSummaryUiState
 import com.mifos.utils.Constants
-import com.mifos.viewmodels.SavingsAccountSummaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlin.properties.Delegates
 
 @AndroidEntryPoint

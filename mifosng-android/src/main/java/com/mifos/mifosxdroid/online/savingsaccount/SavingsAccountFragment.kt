@@ -25,11 +25,9 @@ import com.mifos.objects.client.Savings
 import com.mifos.objects.organisation.ProductSavings
 import com.mifos.objects.templates.savings.SavingProductsTemplate
 import com.mifos.services.data.SavingsPayload
-import com.mifos.states.SavingAccountUiState
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Network
-import com.mifos.viewmodels.SavingAccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

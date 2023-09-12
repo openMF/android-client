@@ -35,13 +35,11 @@ import com.mifos.objects.group.CenterWithAssociations
 import com.mifos.objects.group.Group
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.organisation.Staff
-import com.mifos.states.GenerateCollectionSheetUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
-import com.mifos.viewmodels.GenerateCollectionSheetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant

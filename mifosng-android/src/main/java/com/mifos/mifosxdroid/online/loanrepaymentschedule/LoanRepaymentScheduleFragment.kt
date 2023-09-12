@@ -18,8 +18,6 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentLoanRepaymentScheduleBinding
 import com.mifos.objects.accounts.loan.LoanWithAssociations
 import com.mifos.objects.accounts.loan.RepaymentSchedule
-import com.mifos.states.LoanRepaymentScheduleUiState
-import com.mifos.viewmodels.LoanRepaymentScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

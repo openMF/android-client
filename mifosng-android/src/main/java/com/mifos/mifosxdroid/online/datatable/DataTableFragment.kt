@@ -15,8 +15,6 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentDatatablesBinding
 import com.mifos.objects.noncore.DataTable
-import com.mifos.states.DataTableUiState
-import com.mifos.viewmodels.DataTableViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

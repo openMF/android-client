@@ -21,10 +21,8 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.loan.LoanApproval
 import com.mifos.objects.accounts.loan.LoanWithAssociations
-import com.mifos.states.LoanAccountApprovalUiState
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
-import com.mifos.viewmodels.LoanAccountApprovalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

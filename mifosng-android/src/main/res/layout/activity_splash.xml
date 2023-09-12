@@ -5,5 +5,5 @@
 
 <FrameLayout xmlns:tools="http://schemas.android.com/tools"
     style="@style/FrameLayout.Container"
-    tools:context=".SplashScreenActivity"
+    tools:context=".activity.splashscreen.SplashScreenActivity"
     tools:ignore="MergeRootFrame" />

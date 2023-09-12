@@ -20,14 +20,12 @@ import com.mifos.mifosxdroid.databinding.FragmentCreateNewCenterBinding
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.response.SaveResponse
 import com.mifos.services.data.CenterPayload
-import com.mifos.states.CreateNewCenterUiState
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.MifosResponseHandler
 import com.mifos.utils.ValidationUtil
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
-import com.mifos.viewmodels.CreateNewCenterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant

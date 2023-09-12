@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.widget.NestedScrollView
-import com.mifos.mifosxdroid.HomeActivity
+import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.SplashScreenActivity
+import com.mifos.mifosxdroid.activity.splashscreen.SplashScreenActivity
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mobile.passcode.MifosPassCodeActivity
 import com.mifos.mobile.passcode.utils.EncryptionUtil

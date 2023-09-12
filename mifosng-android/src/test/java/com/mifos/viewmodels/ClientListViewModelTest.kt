@@ -2,14 +2,13 @@ package com.mifos.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.mifos.mifosxdroid.FakeRemoteDataSource
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
-import com.mifos.objects.client.Charges
 import com.mifos.objects.client.Client
 import com.mifos.objects.client.Page
-import com.mifos.repositories.ClientListRepository
-import com.mifos.states.ClientListUiState
+import com.mifos.mifosxdroid.online.clientlist.ClientListRepository
+import com.mifos.mifosxdroid.online.clientlist.ClientListUiState
+import com.mifos.mifosxdroid.online.clientlist.ClientListViewModel
 
 import org.junit.After
 import org.junit.Before

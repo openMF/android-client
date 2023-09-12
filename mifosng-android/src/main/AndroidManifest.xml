@@ -15,7 +15,7 @@
         android:required="true" />
 
     <application
-        android:name="com.mifos.App"
+        android:name="com.mifos.application.App"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -34,7 +34,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".activity.splashscreen.SplashScreenActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:exported="true"
@@ -46,11 +46,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mifos.ui.activities.LoginActivity"
+            android:name=".activity.login.LoginActivity"
             android:label="@string/mifos_account"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".activity.home.HomeActivity"
             android:label="home_activity"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
@@ -60,7 +60,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".online.SurveyQuestionActivity"
+            android:name=".online.surveyquestion.SurveyQuestionActivity"
             android:label="Survey"
             android:parentActivityName="com.mifos.mifosxdroid.online.ClientActivity"
             android:screenOrientation="portrait">
@@ -81,27 +81,27 @@
             android:name=".online.CentersActivity"
             android:label="@string/title_activity_centers"
             android:screenOrientation="portrait"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName=".activity.home.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
+                android:value=".activity.home.HomeActivity" />
         </activity>
         <activity
             android:name=".online.GenerateCollectionSheetActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_generate_collection_sheet"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName=".activity.home.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
+                android:value=".activity.home.HomeActivity" />
         </activity>
         <activity
-            android:name=".online.RunReportsActivity"
+            android:name=".online.runreports.RunReportsActivity"
             android:label="@string/run_report"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName=".activity.home.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
+                android:value=".activity.home.HomeActivity" />
         </activity>
         <activity
             android:name=".activity.pinpointclient.PinpointClientActivity"
@@ -135,13 +135,13 @@
             android:label="@string/sync_loanrepayments"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activity.setting.SettingsActivity"
             android:label="@string/settings"
             android:screenOrientation="portrait"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName=".activity.home.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
+                android:value=".activity.home.HomeActivity" />
         </activity>
         <activity
             android:name=".offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionActivity"
@@ -152,7 +152,7 @@
             android:label="@string/pass_code"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".AboutActivity"
+        <activity android:name=".activity.about.AboutActivity"
             android:label="@string/about"
             android:screenOrientation="portrait" />
 

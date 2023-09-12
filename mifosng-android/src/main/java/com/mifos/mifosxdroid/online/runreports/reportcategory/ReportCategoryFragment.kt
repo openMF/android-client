@@ -16,9 +16,7 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentRunreportBinding
 import com.mifos.objects.runreports.client.ClientReportTypeItem
-import com.mifos.states.ReportCategoryUiState
 import com.mifos.utils.Constants
-import com.mifos.viewmodels.ReportCategoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

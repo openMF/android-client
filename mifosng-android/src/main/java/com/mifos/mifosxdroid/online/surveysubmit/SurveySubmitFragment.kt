@@ -15,11 +15,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentSurveyLastBinding
-import com.mifos.mifosxdroid.online.Communicator
-import com.mifos.mifosxdroid.online.SurveyQuestionActivity
+import com.mifos.mifosxdroid.online.surveyquestion.Communicator
+import com.mifos.mifosxdroid.online.surveyquestion.SurveyQuestionActivity
 import com.mifos.objects.survey.Scorecard
-import com.mifos.states.SurveySubmitUiState
-import com.mifos.viewmodels.SurveySubmitViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
