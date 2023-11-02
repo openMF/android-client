@@ -90,7 +90,7 @@ class ClientDetailsViewModel @Inject constructor(private val repository: ClientD
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _clientDetailsUiState.value =
-                        ClientDetailsUiState.ShowFetchingError("Client not found")
+                        ClientDetailsUiState.ShowFetchingError("No internet connection")
                 }
 
                 override fun onNext(clientAndClientAccounts: ClientAndClientAccounts) {
