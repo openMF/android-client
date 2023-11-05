@@ -10,12 +10,15 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.joanzapata.iconify.widget.IconTextView
 import com.mifos.mifosxdroid.R
@@ -45,6 +48,7 @@ class GroupDetailsFragment : MifosBaseFragment() {
     private lateinit var binding: FragmentGroupDetailsBinding
 
     private lateinit var viewModel: GroupDetailsViewModel
+    private var sweetUIErrorHandler: SweetUIErrorHandler? = null
 
     private var groupId = 0
     private var accountAccordion: AccountAccordion? = null
@@ -65,11 +69,14 @@ class GroupDetailsFragment : MifosBaseFragment() {
         viewModel = ViewModelProvider(this)[GroupDetailsViewModel::class.java]
         viewModel.loadGroupDetailsAndAccounts(groupId)
 
+        showUserInterface()
+
         viewModel.groupDetailsUiState.observe(viewLifecycleOwner) {
             when (it) {
                 is GroupDetailsUiState.ShowFetchingError -> {
                     showProgressbar(false)
-                    showFetchingError(it.message)
+                   // showFetchingError(it.message)
+                    showErrorLayout()
                 }
 
                 is GroupDetailsUiState.ShowGroup -> {
@@ -100,8 +107,29 @@ class GroupDetailsFragment : MifosBaseFragment() {
         binding.btnActivateGroup.setOnClickListener {
             onClickActivateGroup()
         }
+        binding.layoutError.findViewById<Button>(R.id.btnTryAgain).setOnClickListener {
+            reloadOnError()
+        }
     }
 
+    fun reloadOnError() {
+        sweetUIErrorHandler?.hideSweetErrorLayoutUI(binding.scrollGroupDetails, binding.layoutError)
+        viewModel.loadGroupDetailsAndAccounts(groupId)
+
+    }
+
+    private fun showErrorLayout() {
+        val errorMessage = getStringMessage(R.string.failed_to_load_group_details)
+        sweetUIErrorHandler?.showSweetErrorUI(
+            errorMessage, R.drawable.ic_error_black_24dp,
+            binding.scrollGroupDetails, binding.layoutError
+        )
+    }
+
+    private fun showUserInterface() {
+
+        sweetUIErrorHandler = SweetUIErrorHandler(requireActivity(), binding.root)
+    }
     private fun onClickActivateGroup() {
         val action = GroupDetailsFragmentDirections.actionGroupDetailsFragmentToActivateFragment(
             groupId,

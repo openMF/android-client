@@ -640,5 +640,6 @@
     <string name="lang_changed">भाषा बदली गए</string>
     <string name="lang_change_description">उस भाषा का चयन करें जिसमें आप ऐप देखना चाहते हैं</string>
     <string name="dark_mode">डार्क मोडं</string>
+    <string name="failed_to_load_group_details">समूह विवरण लोड करने में विफल</string>
 
 </resources>

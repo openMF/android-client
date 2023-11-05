@@ -165,5 +165,6 @@
     <string name="dark_mode">modo oscuro</string>
 
     <string name="accounts">cuenta</string>
+    <string name="failed_to_load_group_details">Error al cargar los detalles del grupo</string>
 
 </resources>

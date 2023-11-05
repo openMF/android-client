@@ -652,6 +652,7 @@
     <string name="failed_to_sync_loan">Failed to Sync Loan</string>
     <string name="failed_to_sync_loanrepayment">Failed to Sync LoanRepayment</string>
     <string name="failed_to_load_client">Failed To Load Clients</string>
+    <string name="failed_to_group_details">Failed To Load Group Details</string>
     <string name="failed_to_fetch_savingsaccount">Failed To Fetch SavingsAccount</string>
     <string name="failed_to_fetch_datatable">Failed To Fetch DataTable</string>
     <string name="failed_to_fetch_savings_template">Failed to load Saving Template</string>
@@ -916,5 +917,6 @@
 
     <string name="instance_url">Instance Url</string>
     <string name="no_check_inbox">Checker Inbox is empty</string>
+    <string name="failed_to_load_group_details">Failed To Load Group Details</string>
 
 </resources>

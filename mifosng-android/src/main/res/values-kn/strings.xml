@@ -595,5 +595,6 @@
     <string name="dark_mode">ಡಾರ್ಕ್ ಮೋಡ್</string>
 
     <string name="accounts">ಖಾತೆ</string>
+    <string name="failed_to_load_group_details">ಸಮೂಹ ವಿವರಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ</string>
 
 </resources>

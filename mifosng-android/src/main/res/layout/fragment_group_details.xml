@@ -7,7 +7,9 @@
     android:layout_marginStart="@dimen/default_padding"
     android:layout_marginEnd="@dimen/default_padding">
 
-    <ScrollView style="@style/ScrollView.Base">
+    <ScrollView
+        android:id="@+id/scroll_group_details"
+        style="@style/ScrollView.Base">
 
         <LinearLayout style="@style/LinearLayout.Base">
 
@@ -176,5 +178,9 @@
             android:background="@color/accent"
             android:text="@string/activate_group" />
     </LinearLayout>
+    <include
+        android:id="@+id/layout_error"
+        layout="@layout/layout_sweet_exception_handler"
+        android:visibility="gone" />
 
 </RelativeLayout>
