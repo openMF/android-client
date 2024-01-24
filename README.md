@@ -24,10 +24,15 @@ This is an Android Application built on top of the [MifosX](https://mifosforge.j
 ### Status
 
 <a href="https://github.com/openMF/android-client/releases"><img src="https://img.shields.io/github/v/release/openMF/android-client" alt="release"/></a>
-<a href="https://gitter.im/openMF/android-client"><img src="https://img.shields.io/gitter/room/openMF/android-client" alt="Chat"/></a>
+<a href="https://mifos.slack.com/"><img src="https://img.shields.io/badge/Join%20Our%20Community-Slack-blue" alt="Chat"/></a>
 <a href="https://github.com/openMF/android-client/actions"><img src="https://img.shields.io/github/checks-status/openMF/android-client/master?label=build" alt="build"/></a>
 <a href="https://github.com/openMF/android-client/issues"><img src="https://img.shields.io/github/commit-activity/m/openMF/android-client" alt="commit-activity"/></a>
 <a href="https://github.com/openMF/android-client/blob/main/"><img src="https://img.shields.io/github/license/openMF/android-client" alt="license"/></a>
+
+
+## Join Us on Slack
+
+Mifos boasts an active and vibrant contributor community, Please join us on [slack](https://mifos.slack.com/). Once you've joined the mifos slack community, please join the `#android-client` channel to engage with android-client development.
 
 
 ## How to Contribute
