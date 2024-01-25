@@ -11,7 +11,7 @@ class BaseUrl {
     // "/" in the last of the base url always
     companion object {
         const val PROTOCOL_HTTPS = "https://"
-        const val API_ENDPOINT = "dev.mifos.io"
+        const val API_ENDPOINT = "demo.mifos.community"
         const val API_PATH = "/fineract-provider/api/v1/"
         const val PORT = "80"
     }
