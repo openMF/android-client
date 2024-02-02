@@ -10,7 +10,6 @@ import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
 import android.preference.PreferenceManager
 import androidx.multidex.MultiDexApplication
-import com.crashlytics.android.Crashlytics
 import com.evernote.android.job.JobManager
 import com.facebook.stetho.Stetho
 import com.joanzapata.iconify.Iconify
@@ -22,7 +21,6 @@ import com.mifos.utils.ThemeHelper
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import dagger.hilt.android.HiltAndroidApp
-import io.fabric.sdk.android.Fabric
 
 /**
  * Created by ishankhanna on 13/03/15.
@@ -37,7 +35,6 @@ class App : MultiDexApplication() {
             ThemeHelper.applyTheme(themePref)
         }
         instance = this
-        Fabric.with(this, Crashlytics())
         Iconify.with(MaterialModule())
         JobManager.create(this).addJobCreator(OfflineJobCreator())
         //Initializing the DBFlow and SQL Cipher Encryption
@@ -58,8 +55,9 @@ class App : MultiDexApplication() {
     companion object {
         @JvmField
         val typefaceManager: MutableMap<Int, Typeface?> = HashMap()
+
         @JvmStatic
-        var instance: App? =null
+        var instance: App? = null
 
         @JvmStatic
         val context: App?

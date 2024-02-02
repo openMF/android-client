@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.mifos.mifosxdroid">
+    xmlns:tools="http://schemas.android.com/tools">
+<!--    package="com.mifos.mifosxdroid">-->
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -26,9 +26,9 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="facae47316396ae7954149cc408e25b7a37ab7ea" />
+<!--        <meta-data-->
+<!--            android:name="io.fabric.ApiKey"-->
+<!--            android:value="facae47316396ae7954149cc408e25b7a37ab7ea" />-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />

@@ -20,7 +20,7 @@ class PassCodeActivity : MifosPassCodeActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        findViewById<NestedScrollView>(R.id.cl_rootview).setBackgroundColor(android.R.attr.colorBackground)
+        findViewById<NestedScrollView>(com.mifos.mobile.passcode.R.id.cl_rootview).setBackgroundColor(android.R.attr.colorBackground)
 
         intent?.let {
             currPassCode = it.getStringExtra(Constants.CURR_PASSWORD)
