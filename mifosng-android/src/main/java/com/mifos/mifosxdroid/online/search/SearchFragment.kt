@@ -325,7 +325,7 @@ class SearchFragment : MifosBaseFragment() {
     private fun onClickSearch() {
         hideKeyboard(binding.etSearch)
         if (!Network.isOnline(requireContext())) {
-            showMessage(getStringMessage(R.string.no_internet_connection))
+            showMessage(getStringMessage(com.github.therajanmaurya.sweeterror.R.string.no_internet_connection))
             return
         }
         val query = binding.etSearch.editableText.toString().trim { it <= ' ' }

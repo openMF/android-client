@@ -208,7 +208,7 @@ class ClientListFragment : MifosBaseFragment(), OnRefreshListener {
             }
         }
 
-        binding.layoutError.findViewById<Button>(R.id.btnTryAgain).setOnClickListener {
+        binding.layoutError.findViewById<Button>(com.github.therajanmaurya.sweeterror.R.id.btnTryAgain).setOnClickListener {
             reloadOnError()
         }
 
