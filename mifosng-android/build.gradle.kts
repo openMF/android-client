@@ -15,6 +15,8 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization")
 }
 
+apply(from = "../config/quality/quality.gradle")
+
 android {
     namespace = "com.mifos.mifosxdroid"
     compileSdk = 33
