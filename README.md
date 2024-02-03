@@ -34,6 +34,12 @@ This is an Android Application built on top of the [MifosX](https://mifosforge.j
 
 Mifos boasts an active and vibrant contributor community, Please join us on [slack](https://mifos.slack.com/). Once you've joined the mifos slack community, please join the `#android-client` channel to engage with android-client development.
 
+## Demo credentials
+Fineract Instance: gsoc.mifos.community
+
+Username: `mifos`
+
+Password: `password`
 
 ## How to Contribute
 
