@@ -616,6 +616,9 @@
     <string name="due_collection">कलेक्शन का देय</string>
     <string name="accounts">खाता</string>
 
+    <string name="client_not_found">ग्राहक नहीं मिला।</string>
+    <string name="device_not_connected_to_internet">डिवाइस इंटरनेट से कनेक्ट नहीं है</string>
+
     !-- About App -->
     <string name="about_app">फील्ड ऑफिसर एप्लीकेशन एक एप्लीकेशन है बैंक स्टाफ फील्ड ऑफिसर के लिए विकसित किया गया
          ग्राहकों का केंद्र, समूह, ऋण खाता, बचत खाता, आदि।ट्रैक रखने के लिए </string>

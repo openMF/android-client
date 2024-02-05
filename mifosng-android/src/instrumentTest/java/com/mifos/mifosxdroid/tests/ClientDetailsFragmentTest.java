@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.mifos.mifosxdroid.R;
 import com.mifos.mifosxdroid.online.ClientActivity;
-import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment;
 import com.mifos.utils.Constants;
 import com.mifos.utils.FragmentConstants;
 
