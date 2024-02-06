@@ -29,6 +29,9 @@ This is an Android Application built on top of the [MifosX](https://mifosforge.j
 <a href="https://github.com/openMF/android-client/issues"><img src="https://img.shields.io/github/commit-activity/m/openMF/android-client" alt="commit-activity"/></a>
 <a href="https://github.com/openMF/android-client/blob/main/"><img src="https://img.shields.io/github/license/openMF/android-client" alt="license"/></a>
 
+## Notice
+
+:warning: We are fully committed to implementing [Jetpack Compose](https://developer.android.com/jetpack/compose) and moving ourselves to support `Kotlin multi-platform`. **If you are sending any PR regarding `XML changes` we will `not` consider at this moment but converting XML to Jetpack Compose is most welcome**. We would be pleased to receive any PR you may have regarding logical changes to an Activity/Fragment.
 
 ## Join Us on Slack
 
