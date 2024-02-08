@@ -19,12 +19,12 @@ apply(from = "../config/quality/quality.gradle")
 
 android {
     namespace = "com.mifos.mifosxdroid"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.mifos.mifosxdroid"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 6
         versionName = "1.0.1"
 
@@ -228,4 +228,13 @@ dependencies {
 
     // sdk client
     implementation("com.github.openMF:fineract-client:2.0.3")
+
+    // Jetpack Compose
+    implementation("androidx.compose.material:material:1.6.0")
+    implementation("androidx.compose.compiler:compiler:1.5.8")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.6.1")
+    implementation("androidx.activity:activity-compose:1.8.2")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.6.1")
+    implementation("androidx.compose.material3:material3:1.1.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 }
