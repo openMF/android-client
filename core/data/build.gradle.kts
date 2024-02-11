@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mifos.core.common"
+    namespace = "com.mifos.core.data"
     compileSdk = 34
 
     defaultConfig {

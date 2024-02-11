@@ -35,8 +35,7 @@ fun MifosOutlinedTextField(
     label: Int,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null,
-    error: Boolean = false,
-    supportingText: String?
+    error: Int?
 ) {
 
     OutlinedTextField(
@@ -66,16 +65,14 @@ fun MifosOutlinedTextField(
         },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         visualTransformation = visualTransformation,
-        isError = error,
+        isError = error != null,
         supportingText = {
-            if (error) {
-                if (supportingText != null) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = supportingText,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
+            if (error != null) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(id = error),
+                    color = MaterialTheme.colorScheme.error
+                )
             }
         }
     )
