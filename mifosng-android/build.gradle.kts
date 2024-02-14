@@ -121,6 +121,7 @@ android {
 dependencies {
 
     implementation(project(":feature:auth"))
+    implementation(project(":feature:client"))
 
     // Multidex dependency
     implementation("androidx.multidex:multidex:2.0.1")
