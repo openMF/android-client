@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
-import com.mifos.feature.client.clientList.ClientListScreen
+import com.mifos.feature.client.clientList.presentation.ClientListScreen
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentClientBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +43,7 @@ class ClientListFragment : MifosBaseFragment()
 //    , OnRefreshListener
 {
 
-    private lateinit var binding: FragmentClientBinding
+//    private lateinit var binding: FragmentClientBinding
 //    private val arg: ClientListFragmentArgs by navArgs()
 //
 //    private lateinit var viewModel: ClientListViewModel
