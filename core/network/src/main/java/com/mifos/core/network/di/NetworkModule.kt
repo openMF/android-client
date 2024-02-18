@@ -1,6 +1,8 @@
 package com.mifos.core.network.di
 
+import com.mifos.core.database.DatabaseHelperClient
 import com.mifos.core.datastore.PrefManager
+import com.mifos.core.network.datamanger.DataManagerClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,5 +29,8 @@ object NetworkModule {
         )
         return baseManager
     }
+
+    @Provides
+    fun provideDataMangerClient() : DatabaseHelperClient = DatabaseHelperClient()
 
 }

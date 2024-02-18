@@ -37,6 +37,8 @@ android {
 dependencies {
 
     implementation(project(":core:datastore"))
+    implementation(project(":core:common"))
+    implementation(project(":core:data"))
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -58,4 +60,9 @@ dependencies {
 
     // sdk client
     implementation("com.github.openMF:fineract-client:2.0.3")
+
+    //DBFlow dependencies
+    kapt("com.github.raizlabs.dbflow.dbflow:dbflow-processor:3.1.1")
+    implementation("com.github.raizlabs.dbflow.dbflow:dbflow:3.1.1")
+    kapt("com.github.raizlabs.dbflow:dbflow-processor:4.2.4")
 }

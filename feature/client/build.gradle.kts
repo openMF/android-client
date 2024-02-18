@@ -47,6 +47,9 @@ dependencies {
 
     implementation(project(":core:data"))
     implementation(project(":core:designsystem"))
+    implementation(project(":core:datastore"))
+    implementation(project(":core:common"))
+    implementation(project(":core:network"))
 
 
     implementation("androidx.core:core-ktx:1.12.0")
@@ -94,4 +97,8 @@ dependencies {
 
     // swipe refresh
     implementation("com.google.accompanist:accompanist-swiperefresh:0.25.1")
+
+    // paging 3
+    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
+    implementation("androidx.paging:paging-compose:3.2.1")
 }

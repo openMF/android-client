@@ -3,6 +3,7 @@ package com.mifos.core.datastore
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.model.user.User
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.apache.fineract.client.models.PostAuthenticationResponse
@@ -44,6 +45,12 @@ class PrefManager @Inject constructor(@ApplicationContext context: Context) :
     fun getPermissionDeniedStatus(permissionDeniedStatus: String): Boolean {
         return get(Key.Custom(permissionDeniedStatus), true)
     }
+
+    var userStatus: Boolean
+        get() = get(Key.Custom(Constants.SERVICE_STATUS), false)
+        set(status) {
+            put(Key.Custom(Constants.SERVICE_STATUS), status)
+        }
 
     var usernamePassword: Pair<String, String>
         get() = Pair(get(Key.Custom(AUTH_USERNAME)), get(Key.Custom(AUTH_PASSWORD)))
