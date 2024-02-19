@@ -2,18 +2,20 @@ package com.mifos.core.network.datamanger
 
 import com.mifos.core.common.utils.Page
 import com.mifos.core.data.model.client.Client
-import com.mifos.core.database.DatabaseHelperClient
+import com.mifos.core.database.DatabaseClientQuery
 import com.mifos.core.datastore.PrefManager
+import com.mifos.core.model.ClientDb
 import com.mifos.core.network.di.BaseApiManagerQualifier
 import com.mifos.core.network.mappers.clients.GetClientResponseMapper
+import io.realm.kotlin.Realm
+import kotlinx.coroutines.flow.Flow
 import org.mifos.core.apimanager.BaseApiManager
 import rx.Observable
 import javax.inject.Inject
 
 class DataManagerClient @Inject constructor(
     @BaseApiManagerQualifier private val baseApiManager: BaseApiManager,
-    private val prefManager: PrefManager,
-    private val databaseHelperClient: DatabaseHelperClient
+    private val databaseClientQuery: DatabaseClientQuery
 ) {
 
     /**
@@ -34,25 +36,13 @@ class DataManagerClient @Inject constructor(
      */
 
     fun getAllClients(offset: Int, limit: Int): Observable<Page<Client>> {
-        return when (prefManager.userStatus) {
-            false -> baseApiManager.getClientsApi().retrieveAll21(
-                null, null, null,
-                null, null, null,
-                null, null, offset,
-                limit, null, null, null
-            ).map(GetClientResponseMapper::mapFromEntity)
-
-            true -> {
-                /**
-                 * Return All Clients List from DatabaseHelperClient only one time.
-                 * If offset is zero this means this is first request and
-                 * return all clients from DatabaseHelperClient
-                 */
-                if (offset == 0) databaseHelperClient.readAllClients() else Observable.just(Page())
-            }
-        }
+        return baseApiManager.getClientsApi().retrieveAll21(
+            null, null, null,
+            null, null, null,
+            null, null, offset,
+            limit, null, null, null
+        ).map(GetClientResponseMapper::mapFromEntity)
     }
-
 
     /**
      * This Method Request to the DatabaseHelperClient and DatabaseHelperClient Read the All
@@ -60,7 +50,8 @@ class DataManagerClient @Inject constructor(
      *
      * @return Page of Client List
      */
-    val allDatabaseClients: Observable<Page<Client>>
-        get() = databaseHelperClient.readAllClients()
+    fun allDatabaseClients(): Flow<Page<ClientDb>> {
+        return databaseClientQuery.getClientListFromDb()
+    }
 
 }

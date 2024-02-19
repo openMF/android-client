@@ -6,4 +6,5 @@ plugins {
     id("com.android.library") version "8.1.2" apply false
     id("org.jetbrains.kotlin.plugin.serialization") version "1.5.21" apply false
     id("androidx.navigation.safeargs") version "2.6.0" apply false
+    id("io.realm.kotlin") version "1.11.0" apply false
 }

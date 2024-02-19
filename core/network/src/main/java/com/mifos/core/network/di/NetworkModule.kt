@@ -1,12 +1,17 @@
 package com.mifos.core.network.di
 
-import com.mifos.core.database.DatabaseHelperClient
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.network.datamanger.DataManagerClient
+import com.mifos.core.model.ClientDb
+import com.mifos.core.model.ClientDateDb
+import com.mifos.core.model.GroupDb
+import com.mifos.core.model.GroupDateDb
+import com.mifos.core.model.StatusDb
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.realm.kotlin.Realm
+import io.realm.kotlin.RealmConfiguration
 import org.mifos.core.apimanager.BaseApiManager
 import javax.inject.Singleton
 
@@ -30,7 +35,21 @@ object NetworkModule {
         return baseManager
     }
 
+    @Singleton
     @Provides
-    fun provideDataMangerClient() : DatabaseHelperClient = DatabaseHelperClient()
+    fun provideRealm(): Realm {
 
+        val config = RealmConfiguration.Builder(
+            schema = setOf(
+                ClientDb::class,
+                ClientDateDb::class,
+                GroupDb::class,
+                GroupDateDb::class,
+                StatusDb::class
+            )
+        )
+            .compactOnLaunch()
+            .build()
+        return Realm.open(config)
+    }
 }
