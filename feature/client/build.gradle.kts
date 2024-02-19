@@ -101,4 +101,8 @@ dependencies {
     // paging 3
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
     implementation("androidx.paging:paging-compose:3.2.1")
+
+    // Mongo Realm
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+    implementation("io.realm.kotlin:library-base:1.11.0")
 }

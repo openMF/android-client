@@ -1,17 +1,6 @@
-/*
- * This project is licensed under the open source MPL V2.
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
-package com.mifos.core.data.model.client
+package com.mifos.core.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-
-/**
- * Created by ishankhanna on 09/02/14.
- */
-@Parcelize
-data class Timeline(
+class TimelineDb(
     var submittedOnDate: MutableList<Int> = ArrayList(),
 
     var submittedByUsername: String? = null,
@@ -35,4 +24,4 @@ data class Timeline(
     var closedByFirstname: String? = null,
 
     var closedByLastname: String? = null
-) : Parcelable
+)

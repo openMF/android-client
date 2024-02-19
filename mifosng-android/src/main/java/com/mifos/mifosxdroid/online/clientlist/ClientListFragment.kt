@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import com.mifos.feature.client.clientList.presentation.ClientListScreen
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.mifosxdroid.databinding.FragmentClientBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -112,7 +111,9 @@ class ClientListFragment : MifosBaseFragment()
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                ClientListScreen()
+                ClientListScreen(createNewClient = { }) {
+
+                }
             }
         }
     }

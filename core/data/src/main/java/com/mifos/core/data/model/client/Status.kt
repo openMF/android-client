@@ -5,11 +5,6 @@
 package com.mifos.core.data.model.client
 
 import android.os.Parcelable
-import com.mifos.core.data.model.database.MifosBaseModel
-import com.mifos.core.data.model.database.MifosDatabase
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -18,17 +13,14 @@ import kotlinx.parcelize.Parcelize
  * Created by ishankhanna on 09/02/14.
  */
 @Parcelize
-@Table(database = MifosDatabase::class)
 data class Status(
-    @PrimaryKey
+
     var id: Int = 0,
 
-    @Column
     var code: String? = null,
 
-    @Column
     var value: String? = null,
-) : MifosBaseModel(), Parcelable {
+) : Parcelable {
 
 
     companion object {

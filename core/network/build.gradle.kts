@@ -65,4 +65,8 @@ dependencies {
     kapt("com.github.raizlabs.dbflow.dbflow:dbflow-processor:3.1.1")
     implementation("com.github.raizlabs.dbflow.dbflow:dbflow:3.1.1")
     kapt("com.github.raizlabs.dbflow:dbflow-processor:4.2.4")
+
+    // Mongo Realm
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+    implementation("io.realm.kotlin:library-base:1.11.0")
 }
