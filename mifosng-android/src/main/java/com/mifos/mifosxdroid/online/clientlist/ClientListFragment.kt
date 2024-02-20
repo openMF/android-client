@@ -111,7 +111,7 @@ class ClientListFragment : MifosBaseFragment()
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                ClientListScreen(createNewClient = { }) {
+                ClientListScreen(createNewClient = { }, syncClicked = { }) {
 
                 }
             }
