@@ -1,8 +1,11 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 
 package com.mifos.feature.client.clientList.presentation
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,19 +16,31 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +60,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mifos.core.data.model.client.Client
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.theme.Black
+import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.LightGray
 import com.mifos.core.designsystem.theme.White
@@ -54,7 +70,8 @@ import com.mifos.feature.client.R
 @Composable
 fun ClientListScreen(
     createNewClient: () -> Unit,
-    onClientSelect: (Client) -> Unit
+    syncClicked: () -> Unit,
+    onClientSelect: (Client) -> Unit,
 ) {
 
     val viewModel: ClientListViewModel = hiltViewModel()
@@ -66,9 +83,40 @@ fun ClientListScreen(
 
     val state = viewModel.clientListUiState.collectAsState().value
 
+    val isInSelectionMode = remember { mutableStateOf(false) }
+    val selectedItems = remember { mutableStateListOf<Client>() }
+
+    val resetSelectionMode = {
+        isInSelectionMode.value = false
+        selectedItems.clear()
+    }
+
+    BackHandler(enabled = isInSelectionMode.value) {
+        resetSelectionMode()
+    }
+
+
+    LaunchedEffect(
+        key1 = isInSelectionMode.value,
+        key2 = selectedItems.size,
+    ) {
+        if (isInSelectionMode.value && selectedItems.isEmpty()) {
+            isInSelectionMode.value = false
+        }
+    }
+
     Scaffold(
         modifier = Modifier
             .padding(),
+        topBar = {
+            if (isInSelectionMode.value) {
+                SelectionModeTopAppBar(
+                    selectedItems = selectedItems,
+                    syncClicked = { syncClicked() },
+                    resetSelectionMode = resetSelectionMode,
+                )
+            }
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = { createNewClient() }) {
                 Icon(
@@ -91,7 +139,11 @@ fun ClientListScreen(
             ) {
                 when (state) {
                     is ClientListUiState.ClientListApi -> {
-                        LazyColumnForClientListApi(clientPagingList = state.list.collectAsLazyPagingItems()) {
+                        LazyColumnForClientListApi(
+                            clientPagingList = state.list.collectAsLazyPagingItems(),
+                            isInSelectionMode,
+                            selectedItems
+                        ) {
                             onClientSelect(it)
                         }
                     }
@@ -108,21 +160,105 @@ fun ClientListScreen(
 }
 
 @Composable
+private fun SelectionModeTopAppBar(
+    selectedItems: SnapshotStateList<Client>,
+    syncClicked: () -> Unit,
+    resetSelectionMode: () -> Unit
+) {
+    TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = BlueSecondary
+        ),
+        title = {
+            Text(
+                text = "${selectedItems.size} selected",
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                ),
+            )
+        },
+        navigationIcon = {
+            IconButton(
+                onClick = resetSelectionMode,
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Close,
+                    contentDescription = null,
+                    tint = Black,
+                )
+            }
+        },
+        actions = {
+            IconButton(
+                onClick = {
+                    syncClicked()
+                    resetSelectionMode()
+                },
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Sync,
+                    contentDescription = null,
+                    tint = Black,
+                )
+            }
+        }
+    )
+}
+
+@Composable
 fun LazyColumnForClientListApi(
     clientPagingList: LazyPagingItems<Client>,
+    isInSelectionMode: MutableState<Boolean>,
+    selectedItems: SnapshotStateList<Client>,
     onClientSelect: (Client) -> Unit
 ) {
 
+
     LazyColumn {
         items(clientPagingList.itemCount) { index ->
+
+            val isSelected = selectedItems.contains(clientPagingList[index])
+            var cardColor by remember { mutableStateOf(White) }
+
             OutlinedCard(
-                modifier = Modifier.padding(6.dp),
+                modifier = Modifier
+                    .padding(6.dp)
+                    .combinedClickable(
+                        onClick = {
+                            if (isInSelectionMode.value) {
+                                cardColor = if (isSelected) {
+                                    selectedItems.remove(clientPagingList[index])
+                                    White
+                                } else {
+                                    clientPagingList[index]?.let { selectedItems.add(it) }
+                                    LightGray
+                                }
+                            } else {
+                                clientPagingList[index]?.let { onClientSelect(it) }
+                            }
+                        },
+                        onLongClick = {
+                            if (isInSelectionMode.value) {
+                                cardColor = if (isSelected) {
+                                    selectedItems.remove(clientPagingList[index])
+                                    White
+                                } else {
+                                    clientPagingList[index]?.let { selectedItems.add(it) }
+                                    LightGray
+                                }
+                            } else {
+                                isInSelectionMode.value = true
+                                clientPagingList[index]?.let { selectedItems.add(it) }
+                                cardColor = LightGray
+                            }
+                        }
+                    ),
                 colors = CardDefaults.cardColors(
-                    containerColor = White,
-                ),
-                onClick = {
-                    clientPagingList[index]?.let { onClientSelect(it) }
-                }
+                    containerColor = if (selectedItems.isEmpty()) {
+                        cardColor = White
+                        White
+                    } else cardColor,
+                )
             ) {
                 Row(
                     modifier = Modifier
