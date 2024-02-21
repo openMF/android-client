@@ -6,6 +6,10 @@ import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.Ignore
 import io.realm.kotlin.types.annotations.PrimaryKey
 
+/**
+ * Created by Aditya Gupta on 21/02/24.
+ */
+
 class GroupDb : RealmObject {
 
     @PrimaryKey

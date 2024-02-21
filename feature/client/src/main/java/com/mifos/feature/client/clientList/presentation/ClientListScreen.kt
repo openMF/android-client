@@ -6,6 +6,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,6 +59,7 @@ import coil.compose.AsyncImage
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mifos.core.data.model.client.Client
+import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BlueSecondary
@@ -66,6 +68,10 @@ import com.mifos.core.designsystem.theme.LightGray
 import com.mifos.core.designsystem.theme.White
 import com.mifos.core.model.ClientDb
 import com.mifos.feature.client.R
+
+/**
+ * Created by Aditya Gupta on 21/02/24.
+ */
 
 @Composable
 fun ClientListScreen(
@@ -128,17 +134,19 @@ fun ClientListScreen(
         containerColor = White,
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
-        SwipeRefresh(
-            state = swipeRefreshState,
-            onRefresh = {
-                viewModel.refreshClientList()
-            }) {
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-            ) {
-                when (state) {
-                    is ClientListUiState.ClientListApi -> {
+        when (state) {
+            is ClientListUiState.ClientListApi -> {
+
+                SwipeRefresh(
+                    state = swipeRefreshState,
+                    onRefresh = {
+                        viewModel.refreshClientList()
+                    }) {
+                    Column(
+                        modifier = Modifier
+                            .padding(padding),
+                        verticalArrangement = Arrangement.Center
+                    ) {
                         LazyColumnForClientListApi(
                             clientPagingList = state.list.collectAsLazyPagingItems(),
                             isInSelectionMode,
@@ -147,14 +155,17 @@ fun ClientListScreen(
                             onClientSelect(it)
                         }
                     }
-
-                    is ClientListUiState.Empty -> {}
-
-                    is ClientListUiState.ClientListDb -> {
-                        LazyColumnForClientListDb(clientList = state.list)
-                    }
                 }
             }
+
+            is ClientListUiState.ClientListDb -> {
+                LazyColumnForClientListDb(clientList = state.list)
+            }
+
+            ClientListUiState.Empty -> {
+            }
+
+
         }
     }
 }
@@ -212,6 +223,14 @@ fun LazyColumnForClientListApi(
     selectedItems: SnapshotStateList<Client>,
     onClientSelect: (Client) -> Unit
 ) {
+
+    when (clientPagingList.loadState.refresh) {
+        is LoadState.Error -> {}
+
+        is LoadState.Loading -> MifosCircularProgress()
+
+        is LoadState.NotLoading -> Unit
+    }
 
 
     LazyColumn {

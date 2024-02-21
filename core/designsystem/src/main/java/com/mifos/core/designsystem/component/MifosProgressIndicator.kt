@@ -1,6 +1,7 @@
 package com.mifos.core.designsystem.component
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DarkGray
+
+/**
+ * Created by Aditya Gupta on 21/02/24.
+ */
 
 @Composable
 fun MifosPagingAppendProgress() {
@@ -26,6 +32,24 @@ fun MifosPagingAppendProgress() {
                 .height(40.dp)
                 .padding(8.dp),
             strokeWidth = 4.dp
+        )
+    }
+
+}
+
+@Composable
+fun MifosCircularProgress() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .width(60.dp)
+                .height(60.dp)
+                .padding(8.dp),
+            strokeWidth = 4.dp,
+            color = DarkGray
         )
     }
 

@@ -1,7 +1,10 @@
 package com.mifos.core.model
 
 import io.realm.kotlin.types.RealmObject
-import io.realm.kotlin.types.annotations.PrimaryKey
+
+/**
+ * Created by Aditya Gupta on 21/02/24.
+ */
 
 class ClientDateDb : RealmObject {
 

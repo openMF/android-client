@@ -1,5 +1,9 @@
 package com.mifos.core.model
 
+/**
+ * Created by Aditya Gupta on 21/02/24.
+ */
+
 class TimelineDb(
     var submittedOnDate: MutableList<Int> = ArrayList(),
 
