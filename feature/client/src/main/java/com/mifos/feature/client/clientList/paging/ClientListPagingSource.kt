@@ -79,7 +79,7 @@ class ClientListPagingSource(private val dataManagerClient: DataManagerClient) :
         clientList: List<Client>,
         clientDbList: List<ClientDb>
     ): List<Client> {
-        if (clientDbList.isEmpty()) {
+        if (clientDbList.isNotEmpty()) {
             clientList.forEach { client ->
                 clientDbList.forEach { clientDb ->
                     if (client.id == clientDb._id) {
