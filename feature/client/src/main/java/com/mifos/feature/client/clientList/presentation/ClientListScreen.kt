@@ -76,7 +76,7 @@ import com.mifos.feature.client.R
 @Composable
 fun ClientListScreen(
     createNewClient: () -> Unit,
-    syncClicked: () -> Unit,
+    syncClicked: (List<Client>) -> Unit,
     onClientSelect: (Client) -> Unit,
 ) {
 
@@ -118,13 +118,16 @@ fun ClientListScreen(
             if (isInSelectionMode.value) {
                 SelectionModeTopAppBar(
                     selectedItems = selectedItems,
-                    syncClicked = { syncClicked() },
+                    syncClicked = { syncClicked(selectedItems.toList()) },
                     resetSelectionMode = resetSelectionMode,
                 )
             }
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { createNewClient() }) {
+            FloatingActionButton(
+                onClick = { createNewClient() },
+                containerColor = BlueSecondary
+            ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = null
