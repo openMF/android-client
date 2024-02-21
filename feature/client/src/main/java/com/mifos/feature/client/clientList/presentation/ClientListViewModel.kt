@@ -11,18 +11,22 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Created by Aditya Gupta on 21/02/24.
+ */
+
 @HiltViewModel
 class ClientListViewModel @Inject constructor(
     private val repository: ClientListRepository,
     private val prefManager: PrefManager
 ) : ViewModel() {
 
+    private val _clientListUiState = MutableStateFlow<ClientListUiState>(ClientListUiState.Empty)
+    val clientListUiState = _clientListUiState.asStateFlow()
+
     init {
         getClientList()
     }
-
-    private val _clientListUiState = MutableStateFlow<ClientListUiState>(ClientListUiState.Empty)
-    val clientListUiState = _clientListUiState.asStateFlow()
 
     // for refresh feature
     private val _isRefreshing = MutableStateFlow(false)
@@ -40,7 +44,8 @@ class ClientListViewModel @Inject constructor(
     }
 
     private fun loadClientsFromApi() = viewModelScope.launch(Dispatchers.IO) {
-        _clientListUiState.value = ClientListUiState.ClientListApi(repository.getAllClients())
+        val response = repository.getAllClients()
+        _clientListUiState.value = ClientListUiState.ClientListApi(response)
     }
 
     private fun loadClientsFromDb() = viewModelScope.launch(Dispatchers.IO) {

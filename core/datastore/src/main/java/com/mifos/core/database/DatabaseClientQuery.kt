@@ -8,6 +8,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+/**
+ * Created by Aditya Gupta on 21/02/24.
+ */
+
 class DatabaseClientQuery @Inject constructor(private val realm: Realm) {
 
     fun getClientListFromDb(): Flow<Page<ClientDb>> {
