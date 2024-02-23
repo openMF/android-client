@@ -14,6 +14,7 @@ import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
 import rx.schedulers.Schedulers
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 /**
@@ -86,6 +87,10 @@ class NewIndividualCollectionSheetViewModel @Inject constructor(private val repo
                             _newIndividualCollectionSheetUiState.value =
                                 NewIndividualCollectionSheetUiState.ShowError(errorMessage)
                         }
+                        else if (e is UnknownHostException) {
+                            _newIndividualCollectionSheetUiState.value =
+                                NewIndividualCollectionSheetUiState.ShowError("No internet connection")
+                        }
                     } catch (throwable: Throwable) {
                         RxJavaPlugins.getInstance().errorHandler.handleError(e)
                     }
@@ -113,6 +118,10 @@ class NewIndividualCollectionSheetViewModel @Inject constructor(private val repo
                                 ?.string()
                             _newIndividualCollectionSheetUiState.value =
                                 NewIndividualCollectionSheetUiState.ShowError(errorMessage)
+                        }
+                        else if (e is UnknownHostException) {
+                            _newIndividualCollectionSheetUiState.value =
+                                NewIndividualCollectionSheetUiState.ShowError("No internet connection")
                         }
                     } catch (throwable: Throwable) {
                         RxJavaPlugins.getInstance().errorHandler.handleError(e)
