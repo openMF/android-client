@@ -2,17 +2,8 @@ package com.mifos.mifosxdroid.online.search
 
 import com.mifos.objects.SearchedEntity
 
-/**
- * Created by Aditya Gupta on 06/08/23.
- */
-sealed class SearchUiState {
-
-    data class ShowProgress(val state: Boolean) : SearchUiState()
-
-    data class ShowError(val message: String) : SearchUiState()
-
-    data class ShowSearchedResources(val searchedEntities: List<SearchedEntity>) : SearchUiState()
-
-    object ShowNoResultFound : SearchUiState()
-
-}
+data class SearchUiState(
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val searchedEntities: List<SearchedEntity> = emptyList()
+)

@@ -121,6 +121,7 @@ android {
 dependencies {
 
     implementation(project(":feature:auth"))
+    implementation(project(":core:common"))
 
     // Multidex dependency
     implementation("androidx.multidex:multidex:2.0.1")
@@ -238,16 +239,21 @@ dependencies {
     implementation("com.github.openMF:fineract-client:2.0.3")
 
     // Jetpack Compose
-    implementation("androidx.compose.material:material:1.6.0")
-    implementation("androidx.compose.compiler:compiler:1.5.8")
+    implementation("androidx.compose.material:material:1.6.1")
+    implementation("androidx.compose.compiler:compiler:1.5.9")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.1")
     implementation("androidx.activity:activity-compose:1.8.2")
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.1")
-    implementation("androidx.compose.material3:material3:1.1.2")
+    implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.1")
 
     // ViewModel utilities for Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    implementation("com.google.accompanist:accompanist-drawablepainter:0.35.0-alpha")
+
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+
 }

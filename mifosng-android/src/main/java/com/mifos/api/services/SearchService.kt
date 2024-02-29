@@ -15,9 +15,9 @@ import rx.Observable
  */
 interface SearchService {
     @GET(APIEndPoint.SEARCH)
-    fun searchResources(
+    suspend fun searchResources(
         @Query("query") clientName: String?,
         @Query("resource") resources: String?,
         @Query("exactMatch") exactMatch: Boolean?
-    ): Observable<List<SearchedEntity>>
+    ): List<SearchedEntity>
 }
