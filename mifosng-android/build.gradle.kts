@@ -6,13 +6,13 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
  */
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("kotlin-parcelize")
-    id("androidx.navigation.safeargs.kotlin")
-    id("com.google.dagger.hilt.android")
-    id("org.jetbrains.kotlin.plugin.serialization")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.androidx.navigation)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.hilt)
+    id(libs.plugins.kotlin.parcelize.get().pluginId)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
 apply(from = "../config/quality/quality.gradle")
@@ -123,131 +123,132 @@ dependencies {
     implementation(project(":feature:auth"))
 
     // Multidex dependency
-    implementation("androidx.multidex:multidex:2.0.1")
+    implementation(libs.androidx.multidex)
 
     // Text drawable dependency
-    implementation("com.github.amulyakhare:TextDrawable:558677ea31")
+    implementation(libs.textdrawable)
 
     // Kotlin standard library
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.22")
+    implementation(libs.kotlin.stdlib)
 
     //DBFlow dependencies
-    kapt("com.github.raizlabs.dbflow.dbflow:dbflow-processor:3.1.1")
-    implementation("com.github.raizlabs.dbflow.dbflow:dbflow:3.1.1")
-    kapt("com.github.raizlabs.dbflow:dbflow-processor:4.2.4")
+    kapt(libs.dbflow.processor)
+    implementation(libs.dbflow)
+    kapt(libs.github.dbflow.processor)
 
     // App's Support dependencies, including test
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.recyclerview:recyclerview:1.3.1")
-    implementation("com.google.android.material:material:1.9.0")
-    implementation("com.google.android.gms:play-services-places:17.0.0")
-    implementation("com.google.android.gms:play-services-location:21.0.1")
-    implementation("com.google.android.gms:play-services-maps:18.1.0")
-    implementation("com.google.maps.android:android-maps-utils:0.4.2")
-    implementation("androidx.test.espresso:espresso-idling-resource:3.5.1")
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.material)
+    implementation(libs.play.services.places)
+    implementation(libs.play.services.location)
+    implementation(libs.play.services.maps)
+    implementation(libs.android.maps.utils)
+    implementation(libs.androidx.espresso.idling.resource)
 
     //LifeCycle
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:2.6.1")
-    implementation("androidx.lifecycle:lifecycle-common-java8:2.6.1")
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.extensions)
+    implementation(libs.androidx.lifecycle.reactivestreams.ktx)
+    implementation(libs.androidx.lifecycle.common.java8)
 
     //Square dependencies
     implementation("com.squareup.retrofit2:retrofit:2.9.0") {
         // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
         exclude(module = "okhttp")
     }
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
-    implementation("com.squareup.retrofit2:adapter-rxjava:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.9.2")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
-    implementation("com.jakewharton.fliptables:fliptables:1.0.1")
+    implementation(libs.converter.gson)
+    implementation(libs.converter.scalars)
+    implementation(libs.adapter.rxjava)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+
+    implementation(libs.fliptables)
 
     //sweet error dependency
-    implementation("com.github.therajanmaurya:sweet-error:1.0.9")
+    implementation(libs.sweet.error)
 
     //rxjava dependencies
-    implementation("io.reactivex:rxandroid:1.1.0")
-    implementation("io.reactivex:rxjava:1.3.8")
+    implementation(libs.rxandroid)
+    implementation(libs.rxjava)
 
     //stetho dependencies
-    implementation("com.facebook.stetho:stetho:1.3.1")
-    implementation("com.facebook.stetho:stetho-okhttp3:1.3.1")
+    implementation(libs.stetho)
+    implementation(libs.stetho.okhttp3)
 
     //showcase View dependency
-    implementation("com.github.deano2390:MaterialShowcaseView:1.3.7")
+    implementation(libs.materialshowcaseview)
 
     //Iconify dependency
-    implementation("com.joanzapata.iconify:android-iconify-material:2.2.2")
+    implementation(libs.android.iconify.material)
 
     //glide dependency
-    implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.glide)
 
     //mifos passcode dependency
-    implementation("com.mifos.mobile:mifos-passcode:1.0.0")
+    implementation(libs.mifos.passcode)
 
     // Android Testing Support Library's runner and rules dependencies
-    androidTestImplementation("androidx.test:runner:1.5.2")
-    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
 
     // Espresso UI Testing dependencies.
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1") {
         exclude(group = "com.android.support", module = "appcompat")
         exclude(group = "com.android.support", module = "support-v4")
         exclude(group = "com.android.support", module = "recyclerview-v7")
         exclude(group = "com.android.support", module = "design")
     }
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+    androidTestImplementation(libs.androidx.espresso.intents)
 
     // Mockito and jUnit dependencies
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.mockito:mockito-core:5.5.0")
-    androidTestImplementation("junit:junit:4.13.2")
-    androidTestImplementation("org.mockito:mockito-core:5.5.0")
-    androidTestImplementation("org.mockito:mockito-android:5.5.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.2")
-    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation(libs.junit4)
+    testImplementation(libs.mockito.core)
+    androidTestImplementation(libs.junit4)
+    androidTestImplementation(libs.mockito.core)
+    androidTestImplementation(libs.mockito.android)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.androidx.core.testing)
 
     //Android-Jobs
-    implementation("com.evernote:android-job:1.2.6")
+    implementation(libs.android.job)
 
     // androidx annotations
-    implementation("androidx.annotation:annotation:1.6.0")
+    implementation(libs.androidx.annotation)
 
     //preferences
-    implementation("androidx.preference:preference-ktx:1.2.0")
+    implementation(libs.androidx.preference.ktx)
 
     //Splash Screen
-    implementation("androidx.core:core-splashscreen:1.1.0-alpha01")
+    implementation(libs.androidx.core.splashscreen)
 
     // Navigation Components
-    implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.6.0")
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
     // Hilt dependency
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     // fineract sdk dependencies
-    implementation("com.github.openMF:mifos-android-sdk-arch:1.06")
+    implementation(libs.mifos.android.sdk.arch)
 
     // sdk client
-    implementation("com.github.openMF:fineract-client:2.0.3")
+    implementation(libs.fineract.client)
 
     // Jetpack Compose
-    implementation("androidx.compose.material:material:1.6.0")
-    implementation("androidx.compose.compiler:compiler:1.5.8")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.6.1")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.6.1")
-    implementation("androidx.compose.material3:material3:1.1.2")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.compose.material:material-icons-extended:1.6.1")
+    implementation(libs.androidx.material)
+    implementation(libs.androidx.compiler)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.activity.compose)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.lifecycle.viewModelCompose)
+    implementation(libs.androidx.material.icons.extended)
 
     // ViewModel utilities for Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation(libs.androidx.lifecycle.viewModelCompose)
+    implementation(libs.androidx.hilt.navigation.compose)
 }
