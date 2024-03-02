@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
 android {
@@ -38,22 +38,24 @@ dependencies {
 
     implementation(project(":core:data"))
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+
+    implementation(libs.material)
+
+    testImplementation(libs.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+
+    implementation(libs.converter.gson)
 
     // Hilt dependency
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
-
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     // fineract sdk dependencies
-    implementation("com.github.openMF:mifos-android-sdk-arch:1.06")
+    implementation(libs.mifos.android.sdk.arch)
 
     // sdk client
-    implementation("com.github.openMF:fineract-client:2.0.3")
+    implementation(libs.fineract.client)
 }
