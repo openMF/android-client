@@ -6,8 +6,9 @@ import com.mifos.api.GenericResponse
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
 import com.mifos.objects.noncore.Document
-import com.mifos.repositories.DocumentListRepository
-import com.mifos.states.DocumentListUiState
+import com.mifos.mifosxdroid.online.documentlist.DocumentListRepository
+import com.mifos.mifosxdroid.online.documentlist.DocumentListUiState
+import com.mifos.mifosxdroid.online.documentlist.DocumentListViewModel
 import okhttp3.ResponseBody
 import org.junit.After
 import org.junit.Assert.*

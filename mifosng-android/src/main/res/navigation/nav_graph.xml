@@ -449,7 +449,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.mifos.mifosxdroid.SettingsFragment"
+        android:name="com.mifos.mifosxdroid.activity.setting.SettingsFragment"
         android:label="SettingsFragment" />
     <fragment
         android:id="@+id/groupDetailsFragment"

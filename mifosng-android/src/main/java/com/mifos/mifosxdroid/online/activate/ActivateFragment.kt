@@ -13,18 +13,15 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentActivateClientBinding
 import com.mifos.objects.client.ActivatePayload
-import com.mifos.states.ActivateUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
-import com.mifos.viewmodels.ActivateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Locale
-import javax.inject.Inject
 
 /**
  * Created by Rajan Maurya on 09/02/17.

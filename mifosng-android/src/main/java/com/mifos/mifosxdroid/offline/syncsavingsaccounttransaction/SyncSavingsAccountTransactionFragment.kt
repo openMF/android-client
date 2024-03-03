@@ -19,11 +19,9 @@ import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
 import com.mifos.objects.PaymentTypeOption
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.states.SyncSavingsAccountTransactionUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.Network.isOnline
 import com.mifos.utils.PrefManager.userStatus
-import com.mifos.viewmodels.SyncSavingsAccountTransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

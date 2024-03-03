@@ -12,11 +12,9 @@ import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.DialogFragmentSyncGroupsBinding
 import com.mifos.objects.group.Group
-import com.mifos.states.SyncGroupsDialogUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.Network.isOnline
 import com.mifos.utils.PrefManager.userStatus
-import com.mifos.viewmodels.SyncGroupsDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

@@ -28,11 +28,9 @@ import com.mifos.objects.templates.loans.LoanTemplate
 import com.mifos.objects.templates.loans.RepaymentFrequencyDaysOfWeekTypeOptions
 import com.mifos.objects.templates.loans.RepaymentFrequencyNthDayTypeOptions
 import com.mifos.services.data.LoansPayload
-import com.mifos.states.LoanAccountUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
-import com.mifos.viewmodels.LoanAccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

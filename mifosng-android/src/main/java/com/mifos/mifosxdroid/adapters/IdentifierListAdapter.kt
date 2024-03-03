@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mifos.App.Companion.context
+import com.mifos.application.App.Companion.context
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.databinding.RowIdentifierListBinding
 import com.mifos.objects.noncore.Identifier

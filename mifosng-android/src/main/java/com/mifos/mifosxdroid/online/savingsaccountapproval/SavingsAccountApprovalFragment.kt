@@ -20,12 +20,10 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.loan.SavingsApproval
 import com.mifos.objects.accounts.savings.DepositType
-import com.mifos.states.SavingsAccountApprovalUiState
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Network
 import com.mifos.utils.SafeUIBlockingUtility
-import com.mifos.viewmodels.SavingsAccountApprovalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

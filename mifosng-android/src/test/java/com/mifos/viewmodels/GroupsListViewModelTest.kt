@@ -6,8 +6,9 @@ import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
 import com.mifos.objects.client.Page
 import com.mifos.objects.group.Group
-import com.mifos.repositories.GroupsListRepository
-import com.mifos.states.GroupsListUiState
+import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
+import com.mifos.mifosxdroid.online.groupslist.GroupsListUiState
+import com.mifos.mifosxdroid.online.groupslist.GroupsListViewModel
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

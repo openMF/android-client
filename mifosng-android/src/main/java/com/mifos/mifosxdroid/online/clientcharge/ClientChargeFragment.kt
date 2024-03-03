@@ -24,9 +24,7 @@ import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.OnChargeCreateListener
 import com.mifos.objects.client.Charges
 import com.mifos.objects.client.Page
-import com.mifos.states.ClientChargeUiState
 import com.mifos.utils.FragmentConstants
-import com.mifos.viewmodels.ClientChargeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

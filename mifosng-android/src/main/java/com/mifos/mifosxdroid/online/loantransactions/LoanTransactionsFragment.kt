@@ -17,11 +17,7 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentLoanTransactionsBinding
 import com.mifos.objects.accounts.loan.LoanWithAssociations
-import com.mifos.states.LoanTransactionsUiState
-import com.mifos.utils.Constants
-import com.mifos.viewmodels.LoanTransactionsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoanTransactionsFragment : MifosBaseFragment() {

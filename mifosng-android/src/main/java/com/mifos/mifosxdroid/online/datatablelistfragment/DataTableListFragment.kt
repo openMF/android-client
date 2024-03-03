@@ -27,12 +27,10 @@ import com.mifos.objects.noncore.DataTable
 import com.mifos.objects.noncore.DataTablePayload
 import com.mifos.services.data.GroupLoanPayload
 import com.mifos.services.data.LoansPayload
-import com.mifos.states.DataTableListUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.MifosResponseHandler
 import com.mifos.utils.PrefManager
 import com.mifos.utils.SafeUIBlockingUtility
-import com.mifos.viewmodels.DataTableListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 

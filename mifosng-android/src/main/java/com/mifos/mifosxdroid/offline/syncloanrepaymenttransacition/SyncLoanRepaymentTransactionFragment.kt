@@ -19,10 +19,8 @@ import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
 import com.mifos.objects.PaymentTypeOption
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.states.SyncLoanRepaymentTransactionUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.userStatus
-import com.mifos.viewmodels.SyncLoanRepaymentTransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

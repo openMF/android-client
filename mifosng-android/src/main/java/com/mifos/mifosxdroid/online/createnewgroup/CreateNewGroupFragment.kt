@@ -23,7 +23,6 @@ import com.mifos.mifosxdroid.online.GroupsActivity
 import com.mifos.objects.group.GroupPayload
 import com.mifos.objects.organisation.Office
 import com.mifos.objects.response.SaveResponse
-import com.mifos.states.CreateNewGroupUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
@@ -33,7 +32,6 @@ import com.mifos.utils.PrefManager
 import com.mifos.utils.ValidationUtil
 import com.mifos.utils.getDatePickerDialog
 import com.mifos.utils.getTodayFormatted
-import com.mifos.viewmodels.CreateNewGroupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.Instant

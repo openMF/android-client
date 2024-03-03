@@ -20,11 +20,9 @@ import com.mifos.mifosxdroid.databinding.DialogFragmentApproveSavingsBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.savings.DepositType
-import com.mifos.states.SavingsAccountActivateUiState
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.SafeUIBlockingUtility
-import com.mifos.viewmodels.SavingsAccountActivateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

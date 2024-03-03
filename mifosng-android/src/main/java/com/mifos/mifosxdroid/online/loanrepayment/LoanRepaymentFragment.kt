@@ -30,10 +30,8 @@ import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
 import com.mifos.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.objects.accounts.loan.LoanRepaymentResponse
 import com.mifos.objects.templates.loans.LoanRepaymentTemplate
-import com.mifos.states.LoanRepaymentUiState
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Utils
-import com.mifos.viewmodels.LoanRepaymentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

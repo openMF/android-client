@@ -144,19 +144,19 @@
 
     <activity
         android:id="@+id/settingsActivity"
-        android:name="com.mifos.mifosxdroid.SettingsActivity"
+        android:name="com.mifos.mifosxdroid.activity.setting.SettingsActivity"
         android:label="SettingsActivity" />
 
 
     <activity
         android:id="@+id/runReportsActivity"
-        android:name="com.mifos.mifosxdroid.online.RunReportsActivity"
+        android:name="com.mifos.mifosxdroid.online.runreports.RunReportsActivity"
         android:label="RunReportsActivity" />
 
 
     <activity
         android:id="@+id/aboutActivity"
-        android:name="com.mifos.mifosxdroid.AboutActivity"
+        android:name="com.mifos.mifosxdroid.activity.about.AboutActivity"
         android:label="AboutActivity" />
 
 

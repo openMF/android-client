@@ -30,13 +30,11 @@ import com.mifos.objects.accounts.savings.DepositType
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse
 import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate
-import com.mifos.states.SavingsAccountTransactionUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Network
 import com.mifos.utils.PrefManager
 import com.mifos.utils.Utils
-import com.mifos.viewmodels.SavingsAccountTransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

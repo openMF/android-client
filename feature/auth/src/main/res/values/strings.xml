@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_auth_login">Login</string>
+    <string name="feature_auth_enter_credentials">Please enter your credentials</string>
+    <string name="feature_auth_password">Password</string>
+    <string name="feature_auth_username">Username</string>
+    <string name="feature_error_enter_credentials">Please Enter the Credentials</string>
+    <string name="feature_error_username_length">Invalid username length</string>
+    <string name="feature_error_password_length">Invalid password length</string>
+    <string name="feature_error_not_connected_internet">No Internet Connection</string>
+    <string name="feature_error_login_failed">Login Failed, Please Try Again Later.</string>
+</resources>

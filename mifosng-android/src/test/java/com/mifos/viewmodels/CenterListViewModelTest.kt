@@ -4,12 +4,11 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
-import com.mifos.objects.client.Charges
 import com.mifos.objects.client.Page
 import com.mifos.objects.group.Center
-import com.mifos.repositories.CenterListRepository
-import com.mifos.states.CenterListUiState
-import com.mifos.states.ClientListUiState
+import com.mifos.mifosxdroid.online.centerlist.CenterListRepository
+import com.mifos.mifosxdroid.online.centerlist.CenterListUiState
+import com.mifos.mifosxdroid.online.centerlist.CenterListViewModel
 import org.junit.Assert.*
 
 import org.junit.After

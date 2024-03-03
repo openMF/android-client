@@ -24,7 +24,6 @@ import com.joanzapata.iconify.widget.IconTextView
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter
-import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentGroupDetailsBinding
 import com.mifos.objects.accounts.GroupAccounts
@@ -32,12 +31,9 @@ import com.mifos.objects.accounts.savings.DepositType
 import com.mifos.objects.client.Client
 import com.mifos.objects.group.Group
 import com.mifos.objects.navigation.ClientListArgs
-import com.mifos.states.GroupDetailsUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.Utils
-import com.mifos.viewmodels.GroupDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Created by nellyk on 2/27/2016.

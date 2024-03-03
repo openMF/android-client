@@ -11,11 +11,9 @@ import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.DialogFragmentSyncSurveysBinding
 import com.mifos.objects.survey.Survey
-import com.mifos.states.SyncSurveysDialogUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.Network.isOnline
 import com.mifos.utils.PrefManager.userStatus
-import com.mifos.viewmodels.SyncSurveysDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -3,8 +3,9 @@ package com.mifos.viewmodels
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
-import com.mifos.repositories.LoginRepository
-import com.mifos.states.LoginUiState
+import com.mifos.mifosxdroid.activity.login.LoginRepository
+import com.mifos.mifosxdroid.activity.login.LoginUiState
+import com.mifos.mifosxdroid.activity.login.LoginViewModel
 import org.apache.fineract.client.models.PostAuthenticationResponse
 import org.junit.After
 import org.junit.Before

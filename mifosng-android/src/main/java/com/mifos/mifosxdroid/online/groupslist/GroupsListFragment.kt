@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
-import com.mifos.mifosxdroid.HomeActivity
+import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.GroupNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
@@ -23,10 +23,8 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentGroupsBinding
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFragment
 import com.mifos.objects.group.Group
-import com.mifos.states.GroupsListUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
-import com.mifos.viewmodels.GroupsListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -191,7 +189,7 @@ class GroupsListFragment : MifosBaseFragment(), OnRefreshListener {
             onClickCreateNewGroup()
         }
 
-        binding.layoutError.findViewById<Button>(R.id.btnTryAgain).setOnClickListener {
+        binding.layoutError.findViewById<Button>(com.github.therajanmaurya.sweeterror.R.id.btnTryAgain).setOnClickListener {
             reloadOnError()
         }
     }

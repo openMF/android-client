@@ -45,16 +45,13 @@ import com.mifos.objects.accounts.ClientAccounts
 import com.mifos.objects.accounts.savings.DepositType
 import com.mifos.objects.client.Charges
 import com.mifos.objects.client.Client
-import com.mifos.states.ClientDetailsUiState
 import com.mifos.utils.Constants
 import com.mifos.utils.ImageLoaderUtils
 import com.mifos.utils.Utils
-import com.mifos.viewmodels.ClientDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.FileOutputStream
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ClientDetailsFragment : MifosBaseFragment() {
