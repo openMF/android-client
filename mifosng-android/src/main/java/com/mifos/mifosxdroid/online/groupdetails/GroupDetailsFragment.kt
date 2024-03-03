@@ -65,14 +65,13 @@ class GroupDetailsFragment : MifosBaseFragment() {
         viewModel = ViewModelProvider(this)[GroupDetailsViewModel::class.java]
         viewModel.loadGroupDetailsAndAccounts(groupId)
 
-        showUserInterface()
+        sweetUIErrorHandler = SweetUIErrorHandler(requireActivity(), binding.root)
 
         viewModel.groupDetailsUiState.observe(viewLifecycleOwner) {
             when (it) {
                 is GroupDetailsUiState.ShowFetchingError -> {
                     showProgressbar(false)
-                   // showFetchingError(it.message)
-                    showErrorLayout()
+                    showFetchingError()
                 }
 
                 is GroupDetailsUiState.ShowGroup -> {
@@ -90,7 +89,10 @@ class GroupDetailsFragment : MifosBaseFragment() {
                     showGroupClients(it.clientMembers)
                 }
 
-                is GroupDetailsUiState.ShowProgressbar -> showProgressbar(it.state)
+                is GroupDetailsUiState.ShowProgressbar -> {
+                    sweetUIErrorHandler?.hideSweetErrorLayoutUI(binding.scrollGroupDetails, binding.layoutError)
+                    showProgressbar(it.state)
+                }
             }
         }
 
@@ -103,29 +105,15 @@ class GroupDetailsFragment : MifosBaseFragment() {
         binding.btnActivateGroup.setOnClickListener {
             onClickActivateGroup()
         }
-        binding.layoutError.findViewById<Button>(R.id.btnTryAgain).setOnClickListener {
-            reloadOnError()
+        binding.layoutError.findViewById<Button>(com.github.therajanmaurya.sweeterror.R.id.btnTryAgain).setOnClickListener {
+            loadGroupDetailsAndAccounts()
         }
     }
 
-    fun reloadOnError() {
-        sweetUIErrorHandler?.hideSweetErrorLayoutUI(binding.scrollGroupDetails, binding.layoutError)
+    fun loadGroupDetailsAndAccounts() {
         viewModel.loadGroupDetailsAndAccounts(groupId)
-
     }
 
-    private fun showErrorLayout() {
-        val errorMessage = getStringMessage(R.string.failed_to_load_group_details)
-        sweetUIErrorHandler?.showSweetErrorUI(
-            errorMessage, R.drawable.ic_error_black_24dp,
-            binding.scrollGroupDetails, binding.layoutError
-        )
-    }
-
-    private fun showUserInterface() {
-
-        sweetUIErrorHandler = SweetUIErrorHandler(requireActivity(), binding.root)
-    }
     private fun onClickActivateGroup() {
         val action = GroupDetailsFragmentDirections.actionGroupDetailsFragmentToActivateFragment(
             groupId,
@@ -281,8 +269,12 @@ class GroupDetailsFragment : MifosBaseFragment() {
         }
     }
 
-    private fun showFetchingError(errorMessage: Int) {
-        Toast.makeText(activity, getStringMessage(errorMessage), Toast.LENGTH_SHORT).show()
+    private fun showFetchingError() {
+        val errorMessage = getStringMessage(R.string.failed_to_load_group_details)
+        sweetUIErrorHandler?.showSweetErrorUI(
+            errorMessage, R.drawable.ic_error_black_24dp,
+            binding.scrollGroupDetails, binding.layoutError
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
