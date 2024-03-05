@@ -7,12 +7,12 @@ package com.mifos.mifosxdroid.online
 import android.os.Bundle
 import android.view.Menu
 import androidx.navigation.fragment.NavHostFragment
-import com.mifos.api.model.IndividualCollectionSheetPayload
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.databinding.ActivityToolbarContainerBinding
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment.OnPayloadSelectedListener
-import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,10 +1,10 @@
 package com.mifos.mifosxdroid.online.datatablelistfragment
 
-import com.mifos.objects.accounts.loan.Loans
-import com.mifos.objects.client.Client
-import com.mifos.objects.client.ClientPayload
-import com.mifos.services.data.GroupLoanPayload
-import com.mifos.services.data.LoansPayload
+import com.mifos.core.data.GroupLoanPayload
+import com.mifos.core.data.LoansPayload
+import com.mifos.core.objects.accounts.loan.Loans
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.ClientPayload
 import rx.Observable
 
 /**

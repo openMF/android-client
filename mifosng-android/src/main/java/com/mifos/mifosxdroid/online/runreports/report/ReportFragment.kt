@@ -19,15 +19,15 @@ import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.navArgs
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.runreports.FullParameterListResponse
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentClientReportBinding
 import com.mifos.mifosxdroid.views.scrollview.ScrollChangeListener
-import com.mifos.objects.runreports.FullParameterListResponse
 import com.mifos.utils.CheckSelfPermissionAndRequest
-import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileWriter

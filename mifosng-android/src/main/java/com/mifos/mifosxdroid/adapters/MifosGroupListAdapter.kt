@@ -9,8 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import com.mifos.core.objects.db.MifosGroup
 import com.mifos.mifosxdroid.databinding.RowGroupListItemBinding
-import com.mifos.objects.db.MifosGroup
 
 class MifosGroupListAdapter(context: Context?, groups: List<MifosGroup>) : BaseAdapter() {
     private val layoutInflater: LayoutInflater

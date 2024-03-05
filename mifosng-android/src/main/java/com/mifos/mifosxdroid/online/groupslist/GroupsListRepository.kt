@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.groupslist
 
-import com.mifos.objects.client.Page
-import com.mifos.objects.group.Group
+import com.mifos.core.objects.client.Page
+import com.mifos.core.objects.group.Group
 import rx.Observable
 
 /**

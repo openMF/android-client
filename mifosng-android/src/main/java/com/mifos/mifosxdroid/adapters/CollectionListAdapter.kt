@@ -9,10 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
+import com.mifos.core.objects.db.Client
+import com.mifos.core.objects.db.MifosGroup
 import com.mifos.mifosxdroid.databinding.RowCollectionListGroupBinding
 import com.mifos.mifosxdroid.databinding.RowCollectionListGroupClientBinding
-import com.mifos.objects.db.Client
-import com.mifos.objects.db.MifosGroup
 
 /**
  * Created by ishankhanna on 17/07/14.
@@ -94,13 +94,13 @@ class CollectionListAdapter(
             RowCollectionListGroupClientBinding.bind(convertView)
         }
 
-        val client = mifosGroups[groupPosition].clients?.get(childPosition)
-        val totalDue = client?.let { calculateClientTotalDue(it) }
-        binding.tvClientId.text = client?.clientId.toString()
-        binding.tvClientName.text = client?.clientName
+        val client = mifosGroups[groupPosition].clients.get(childPosition)
+        val totalDue = client.let { calculateClientTotalDue(it) }
+        binding.tvClientId.text = client.clientId.toString()
+        binding.tvClientName.text = client.clientName
         binding.tvClientTotal.text = totalDue.toString()
 
-        val collectionSheetLoanAccountListAdapter = client?.loans?.let {
+        val collectionSheetLoanAccountListAdapter = client.loans?.let {
             CollectionSheetLoanAccountListAdapter(
                 context, it, groupPosition, childPosition
             )

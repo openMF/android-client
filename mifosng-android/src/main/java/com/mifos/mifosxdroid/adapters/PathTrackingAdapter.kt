@@ -6,20 +6,24 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.MapsInitializer
+import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.mifos.core.objects.user.UserLatLng
+import com.mifos.core.objects.user.UserLocation
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.user.UserLatLng
-import com.mifos.objects.user.UserLocation
 
 
 class PathTrackingAdapter(
     val onUserLocationClick: (UserLocation) -> Unit
-) :RecyclerView.Adapter<PathTrackingAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<PathTrackingAdapter.ViewHolder>() {
 
     private var userLocations: List<UserLocation> = ArrayList()
     private var userLatLngs: List<UserLatLng> = ArrayList()
@@ -31,7 +35,7 @@ class PathTrackingAdapter(
                 .inflate(R.layout.item_pinpoint_location, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+            if (viewHolder.adapterPosition != RecyclerView.NO_POSITION)
                 onUserLocationClick(userLocations[viewHolder.adapterPosition])
         }
         return viewHolder
@@ -40,7 +44,8 @@ class PathTrackingAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val location = userLocations[position]
         userLatLngs = getLatLngList(location.latlng)
-        holder.tvAddress.text = location.date + " from " + location.startTime + " to " + location.stopTime
+        holder.tvAddress.text =
+            location.date + " from " + location.startTime + " to " + location.stopTime
         try {
             holder.mvUserLocation.tag = userLatLngs[0]
         } catch (e: IndexOutOfBoundsException) {

@@ -21,7 +21,8 @@ class CollectionSheetDialogFragment : BottomSheetDialogFragment() {
     private var date: String? = null
     private var members = 0
     override fun onCreate(savedInstanceState: Bundle?) {
-        date = requireArguments().getString(Constants.REPAYMENT_DATE)
+        date =
+            requireArguments().getString(Constants.REPAYMENT_DATE)
         members = requireArguments().getInt(Constants.MEMBERS)
         super.onCreate(savedInstanceState)
     }

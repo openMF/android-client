@@ -1,10 +1,9 @@
 package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction
 
-import com.mifos.api.datamanager.DataManagerLoan
-import com.mifos.api.datamanager.DataManagerSavings
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse
+import com.mifos.core.network.datamanager.DataManagerLoan
+import com.mifos.core.network.datamanager.DataManagerSavings
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
 import rx.Observable
 import javax.inject.Inject
 
@@ -20,7 +19,7 @@ class SyncSavingsAccountTransactionRepositoryImp @Inject constructor(
         return dataManagerSavings.allSavingsAccountTransactions
     }
 
-    override fun paymentTypeOption(): Observable<List<PaymentTypeOption>> {
+    override fun paymentTypeOption(): Observable<List<com.mifos.core.objects.PaymentTypeOption>> {
         return dataManagerLoan.paymentTypeOption
     }
 

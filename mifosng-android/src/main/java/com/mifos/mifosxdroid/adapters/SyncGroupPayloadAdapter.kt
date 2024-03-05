@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mifos.core.objects.group.GroupPayload
 import com.mifos.mifosxdroid.databinding.ItemSyncGroupBinding
-import com.mifos.objects.group.GroupPayload
 import javax.inject.Inject
 
 /**

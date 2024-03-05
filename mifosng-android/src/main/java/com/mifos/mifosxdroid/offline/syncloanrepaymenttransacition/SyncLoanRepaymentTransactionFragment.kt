@@ -11,14 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SyncLoanRepaymentAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.userStatus
 import dagger.hilt.android.AndroidEntryPoint
@@ -179,7 +178,7 @@ class SyncLoanRepaymentTransactionFragment : MifosBaseFragment(), DialogInterfac
         }
     }
 
-    private fun showPaymentTypeOption(paymentTypeOptions: List<PaymentTypeOption>) {
+    private fun showPaymentTypeOption(paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>) {
         mSyncLoanRepaymentAdapter!!.setPaymentTypeOptions(paymentTypeOptions)
     }
 

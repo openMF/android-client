@@ -2,11 +2,11 @@ package com.mifos.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
-import com.mifos.objects.SearchedEntity
+import com.mifos.core.objects.SearchedEntity
 import com.mifos.mifosxdroid.online.search.SearchRepository
-import com.mifos.mifosxdroid.online.search.SearchViewModel
 import com.mifos.mifosxdroid.online.search.SearchUiState
+import com.mifos.mifosxdroid.online.search.SearchViewModel
+import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before

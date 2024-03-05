@@ -3,11 +3,11 @@ package com.mifos.mifosxdroid.online.collectionsheetindividualdetails
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.api.GenericResponse
-import com.mifos.api.model.IndividualCollectionSheetPayload
-import com.mifos.objects.accounts.loan.PaymentTypeOptions
-import com.mifos.objects.collectionsheet.ClientCollectionSheet
-import com.mifos.objects.collectionsheet.LoanAndClientName
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.model.IndividualCollectionSheetPayload
+import com.mifos.core.objects.accounts.loan.PaymentTypeOptions
+import com.mifos.core.objects.collectionsheet.ClientCollectionSheet
+import com.mifos.core.objects.collectionsheet.LoanAndClientName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.HttpException
 import rx.Observable

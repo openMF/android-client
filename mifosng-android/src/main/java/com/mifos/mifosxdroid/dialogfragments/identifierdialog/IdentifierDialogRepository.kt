@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.dialogfragments.identifierdialog
 
-import com.mifos.objects.noncore.IdentifierCreationResponse
-import com.mifos.objects.noncore.IdentifierPayload
-import com.mifos.objects.noncore.IdentifierTemplate
+import com.mifos.core.objects.noncore.IdentifierCreationResponse
+import com.mifos.core.objects.noncore.IdentifierPayload
+import com.mifos.core.objects.noncore.IdentifierTemplate
 import rx.Observable
 
 /**

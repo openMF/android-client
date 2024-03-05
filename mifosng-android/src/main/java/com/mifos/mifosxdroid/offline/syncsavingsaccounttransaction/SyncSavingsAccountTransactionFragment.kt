@@ -11,14 +11,13 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SyncSavingsAccountTransactionAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.Network.isOnline
 import com.mifos.utils.PrefManager.userStatus
@@ -161,7 +160,7 @@ class SyncSavingsAccountTransactionFragment : MifosBaseFragment(), OnRefreshList
         binding.noPayloadIcon.setImageResource(R.drawable.ic_assignment_turned_in_black_24dp)
     }
 
-    private fun showPaymentTypeOptions(paymentTypeOptions: List<PaymentTypeOption>) {
+    private fun showPaymentTypeOptions(paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>) {
         mSyncSavingsAccountTransactionAdapter.setPaymentTypeOptions(paymentTypeOptions)
     }
 

@@ -3,10 +3,9 @@ package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.objects.accounts.loan.LoanRepaymentResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -56,14 +55,14 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
             .paymentTypeOption()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<PaymentTypeOption>>() {
+            .subscribe(object : Subscriber<List<com.mifos.core.objects.PaymentTypeOption>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncLoanRepaymentTransactionUiState.value =
                         SyncLoanRepaymentTransactionUiState.ShowError(R.string.failed_to_load_paymentoptions)
                 }
 
-                override fun onNext(paymentTypeOptions: List<PaymentTypeOption>) {
+                override fun onNext(paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>) {
                     _syncLoanRepaymentTransactionUiState.value =
                         SyncLoanRepaymentTransactionUiState.ShowPaymentTypeOption(paymentTypeOptions)
                 }

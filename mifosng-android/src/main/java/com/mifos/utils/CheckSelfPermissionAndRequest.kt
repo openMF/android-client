@@ -108,8 +108,14 @@ object CheckSelfPermissionAndRequest {
         } else {
 
             //Requesting Permission, first time to the device.
-            if (PrefManager.getPermissionDeniedStatus(permissionDeniedStatus)) {
-                PrefManager.setPermissionDeniedStatus(permissionDeniedStatus, false)
+            if (com.mifos.utils.PrefManager.getPermissionDeniedStatus(
+                    permissionDeniedStatus
+                )
+            ) {
+                com.mifos.utils.PrefManager.setPermissionDeniedStatus(
+                    permissionDeniedStatus,
+                    false
+                )
                 ActivityCompat.requestPermissions(
                     activity, arrayOf(permission),
                     permissionRequestCode
@@ -134,7 +140,7 @@ object CheckSelfPermissionAndRequest {
                         if (intent.resolveActivity(pm) != null) {
                             activity.startActivityForResult(
                                 intent,
-                                Constants.REQUEST_PERMISSION_SETTING
+                                com.mifos.utils.Constants.REQUEST_PERMISSION_SETTING
                             )
                         } else {
                             Toast.makeText(

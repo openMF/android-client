@@ -1,9 +1,9 @@
 package com.mifos.mifosxdroid.online.collectionsheetindividual
 
-import com.mifos.api.model.RequestCollectionSheetPayload
-import com.mifos.objects.collectionsheet.IndividualCollectionSheet
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.organisation.Staff
+import com.mifos.core.network.model.RequestCollectionSheetPayload
+import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.organisation.Staff
 import rx.Observable
 
 /**

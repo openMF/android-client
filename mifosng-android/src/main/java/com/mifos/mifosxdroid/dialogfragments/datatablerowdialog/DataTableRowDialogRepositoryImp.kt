@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.dialogfragments.datatablerowdialog
 
-import com.mifos.api.GenericResponse
-import com.mifos.api.datamanager.DataManagerDataTable
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.datamanager.DataManagerDataTable
 import rx.Observable
 import javax.inject.Inject
 

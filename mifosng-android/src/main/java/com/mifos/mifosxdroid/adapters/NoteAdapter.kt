@@ -3,8 +3,8 @@ package com.mifos.mifosxdroid.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mifos.core.objects.noncore.Note
 import com.mifos.mifosxdroid.databinding.ItemNoteBinding
-import com.mifos.objects.noncore.Note
 import javax.inject.Inject
 
 /**

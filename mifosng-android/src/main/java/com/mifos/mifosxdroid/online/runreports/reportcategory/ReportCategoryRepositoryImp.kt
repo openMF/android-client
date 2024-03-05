@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.runreports.reportcategory
 
-import com.mifos.api.datamanager.DataManagerRunReport
-import com.mifos.objects.runreports.client.ClientReportTypeItem
+import com.mifos.core.network.datamanager.DataManagerRunReport
+import com.mifos.core.objects.runreports.client.ClientReportTypeItem
 import rx.Observable
 import javax.inject.Inject
 

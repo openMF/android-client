@@ -35,17 +35,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.joanzapata.iconify.widget.IconTextView
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.accounts.ClientAccounts
+import com.mifos.core.objects.accounts.savings.DepositType
+import com.mifos.core.objects.client.Charges
+import com.mifos.core.objects.client.Client
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentClientDetailsBinding
-import com.mifos.objects.accounts.ClientAccounts
-import com.mifos.objects.accounts.savings.DepositType
-import com.mifos.objects.client.Charges
-import com.mifos.objects.client.Client
-import com.mifos.utils.Constants
 import com.mifos.utils.ImageLoaderUtils
 import com.mifos.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
@@ -73,7 +73,8 @@ class ClientDetailsFragment : MifosBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            clientId = requireArguments().getInt(Constants.CLIENT_ID)
+            clientId =
+                requireArguments().getInt(Constants.CLIENT_ID)
         }
         setHasOptionsMenu(true)
         checkPermissions()
@@ -88,33 +89,38 @@ class ClientDetailsFragment : MifosBaseFragment() {
         viewModel = ViewModelProvider(this)[ClientDetailsViewModel::class.java]
         inflateClientInformation()
 
-        viewModel.clientDetailsUiState.observe(viewLifecycleOwner){
-            when(it) {
+        viewModel.clientDetailsUiState.observe(viewLifecycleOwner) {
+            when (it) {
                 is ClientDetailsUiState.ShowClientAccount -> {
                     showProgressbar(false)
                     showClientAccount(it.clientAccounts)
                 }
+
                 is ClientDetailsUiState.ShowClientImageDeletedSuccessfully -> {
                     showProgressbar(false)
                     showClientImageDeletedSuccessfully()
                 }
+
                 is ClientDetailsUiState.ShowClientInformation -> {
                     showProgressbar(false)
                     showClientInformation(it.client)
                 }
+
                 is ClientDetailsUiState.ShowFetchingError -> {
                     showProgressbar(false)
                     showFetchingError(it.message)
                 }
+
                 is ClientDetailsUiState.ShowProgressbar -> showProgressbar(it.boolean)
                 is ClientDetailsUiState.ShowUploadImageFailed -> {
                     showProgressbar(false)
                     showUploadImageFailed(it.message)
                 }
+
                 is ClientDetailsUiState.ShowUploadImageProgressbar -> showUploadImageProgressbar(it.state)
                 is ClientDetailsUiState.ShowUploadImageSuccessfully -> {
                     showProgressbar(false)
-                    showUploadImageSuccessfully(it.response,it.imagePath)
+                    showUploadImageSuccessfully(it.response, it.imagePath)
                 }
             }
         }

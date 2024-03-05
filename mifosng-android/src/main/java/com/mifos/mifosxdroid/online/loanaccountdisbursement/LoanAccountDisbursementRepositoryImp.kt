@@ -1,9 +1,9 @@
 package com.mifos.mifosxdroid.online.loanaccountdisbursement
 
-import com.mifos.api.GenericResponse
-import com.mifos.api.datamanager.DataManagerLoan
-import com.mifos.objects.accounts.loan.LoanDisbursement
-import com.mifos.objects.templates.loans.LoanTransactionTemplate
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.datamanager.DataManagerLoan
+import com.mifos.core.objects.accounts.loan.LoanDisbursement
+import com.mifos.core.objects.templates.loans.LoanTransactionTemplate
 import rx.Observable
 import javax.inject.Inject
 

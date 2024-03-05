@@ -1,15 +1,15 @@
 package com.mifos.mifosxdroid.online.loanaccount
 
-import com.mifos.objects.accounts.loan.Loans
-import com.mifos.objects.organisation.LoanProducts
-import com.mifos.objects.templates.loans.LoanTemplate
+import com.mifos.core.objects.accounts.loan.Loans
+import com.mifos.core.objects.organisation.LoanProducts
+import com.mifos.core.objects.templates.loans.LoanTemplate
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
 sealed class LoanAccountUiState {
 
-    object ShowProgressbar : LoanAccountUiState()
+    data object ShowProgressbar : LoanAccountUiState()
 
     data class ShowMessage(val message: Int) : LoanAccountUiState()
 

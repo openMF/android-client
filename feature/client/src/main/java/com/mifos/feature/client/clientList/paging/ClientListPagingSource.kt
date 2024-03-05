@@ -4,10 +4,10 @@ package com.mifos.feature.client.clientList.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.mifos.core.common.utils.Page
-import com.mifos.core.data.model.client.Client
 import com.mifos.core.model.ClientDb
 import com.mifos.core.network.datamanger.DataManagerClient
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.Page
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.suspendCancellableCoroutine

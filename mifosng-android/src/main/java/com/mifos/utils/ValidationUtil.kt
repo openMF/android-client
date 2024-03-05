@@ -4,7 +4,7 @@
  */
 package com.mifos.utils
 
-import com.mifos.api.BaseUrl
+import com.mifos.core.network.BaseUrl
 import java.net.URL
 import java.util.regex.Matcher
 import java.util.regex.Pattern

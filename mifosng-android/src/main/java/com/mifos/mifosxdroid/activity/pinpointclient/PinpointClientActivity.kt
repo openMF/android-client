@@ -16,16 +16,15 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.common.GooglePlayServicesUtil
 import com.google.android.gms.location.places.ui.PlacePicker
+import com.mifos.core.objects.client.ClientAddressRequest
+import com.mifos.core.objects.client.ClientAddressResponse
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.PinpointClientAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.ActivityPinpointLocationBinding
-import com.mifos.objects.client.ClientAddressRequest
-import com.mifos.objects.client.ClientAddressResponse
-import com.mifos.utils.CheckSelfPermissionAndRequest.checkSelfPermission
-import com.mifos.utils.CheckSelfPermissionAndRequest.requestPermission
+import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -57,7 +56,7 @@ class PinpointClientActivity : MifosBaseActivity(), OnRefreshListener,
                 R.array.client_pinpoint_location_options
             ) { dialog, which ->
                 when (which) {
-                    0 -> if (checkSelfPermission(
+                    0 -> if (CheckSelfPermissionAndRequest.checkSelfPermission(
                             this@PinpointClientActivity,
                             Manifest.permission.ACCESS_FINE_LOCATION
                         )
@@ -163,7 +162,7 @@ class PinpointClientActivity : MifosBaseActivity(), OnRefreshListener,
      * This Method is Requesting the Permission
      */
     private fun requestPermission(requestCode: Int) {
-        requestPermission(
+        CheckSelfPermissionAndRequest.requestPermission(
             this@PinpointClientActivity,
             Manifest.permission.ACCESS_FINE_LOCATION,
             requestCode,
@@ -292,7 +291,7 @@ class PinpointClientActivity : MifosBaseActivity(), OnRefreshListener,
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.save_pin) {
-            if (checkSelfPermission(
+            if (CheckSelfPermissionAndRequest.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION
                 )

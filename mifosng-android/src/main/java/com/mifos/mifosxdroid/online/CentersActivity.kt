@@ -7,18 +7,13 @@ package com.mifos.mifosxdroid.online
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navArgs
+import com.mifos.core.common.utils.Constants
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
-import com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment
-import com.mifos.mifosxdroid.online.clientlist.ClientListFragment
-import com.mifos.mifosxdroid.online.grouplist.GroupListFragment
-import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment
-import com.mifos.objects.client.Client
-import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CentersActivity : MifosBaseActivity(){
+class CentersActivity : MifosBaseActivity() {
 
     private val args: CentersActivityArgs by navArgs()
 
@@ -28,11 +23,12 @@ class CentersActivity : MifosBaseActivity(){
         showBackButton()
         val centerId = args.centerId
         val bundle = Bundle()
-        bundle.putInt(Constants.CENTER_ID,centerId)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
+        bundle.putInt(Constants.CENTER_ID, centerId)
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
         navHostFragment.navController.apply {
             popBackStack()
-            navigate(R.id.centerDetailsFragment,bundle)
+            navigate(R.id.centerDetailsFragment, bundle)
         }
     }
 }

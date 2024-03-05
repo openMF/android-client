@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.grouplist
 
-import com.mifos.objects.group.CenterWithAssociations
-import com.mifos.objects.group.GroupWithAssociations
+import com.mifos.core.objects.group.CenterWithAssociations
+import com.mifos.core.objects.group.GroupWithAssociations
 import rx.Observable
 
 /**

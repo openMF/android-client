@@ -1,10 +1,10 @@
 package com.mifos.mifosxdroid.online.activate
 
-import com.mifos.api.GenericResponse
-import com.mifos.api.datamanager.DataManagerCenter
-import com.mifos.api.datamanager.DataManagerClient
-import com.mifos.api.datamanager.DataManagerGroups
-import com.mifos.objects.client.ActivatePayload
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.datamanager.DataManagerCenter
+import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.core.network.datamanager.DataManagerGroups
+import com.mifos.core.objects.client.ActivatePayload
 import org.apache.fineract.client.models.PostCentersCenterIdResponse
 import org.apache.fineract.client.models.PostClientsClientIdResponse
 import rx.Observable

@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.offline.synccenterpayloads
 
-import com.mifos.services.data.CenterPayload
+import com.mifos.core.data.CenterPayload
 
 /**
  * Created by Aditya Gupta on 16/08/23.

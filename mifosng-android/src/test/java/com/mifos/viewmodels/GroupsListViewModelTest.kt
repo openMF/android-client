@@ -2,13 +2,13 @@ package com.mifos.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.mifos.core.objects.client.Page
+import com.mifos.core.objects.group.Group
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
-import com.mifos.objects.client.Page
-import com.mifos.objects.group.Group
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
 import com.mifos.mifosxdroid.online.groupslist.GroupsListUiState
 import com.mifos.mifosxdroid.online.groupslist.GroupsListViewModel
+import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

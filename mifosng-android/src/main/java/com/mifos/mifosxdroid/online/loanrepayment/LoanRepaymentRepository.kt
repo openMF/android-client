@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.loanrepayment
 
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.objects.accounts.loan.LoanRepaymentResponse
-import com.mifos.objects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
 import rx.Observable
 
 /**

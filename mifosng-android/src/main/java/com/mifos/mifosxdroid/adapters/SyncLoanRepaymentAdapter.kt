@@ -4,9 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.mifosxdroid.databinding.ItemSyncLoanRepaymentBinding
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.utils.Utils.getPaymentTypeName
 import javax.inject.Inject
 
@@ -16,7 +15,7 @@ import javax.inject.Inject
 class SyncLoanRepaymentAdapter @Inject constructor() :
     RecyclerView.Adapter<SyncLoanRepaymentAdapter.ViewHolder>() {
     private var loanRepaymentRequests: List<LoanRepaymentRequest>
-    private var mPaymentTypeOptions: List<PaymentTypeOption>
+    private var mPaymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>
 
     init {
         loanRepaymentRequests = ArrayList()
@@ -62,7 +61,7 @@ class SyncLoanRepaymentAdapter @Inject constructor() :
         notifyDataSetChanged()
     }
 
-    fun setPaymentTypeOptions(paymentTypeOptions: List<PaymentTypeOption>) {
+    fun setPaymentTypeOptions(paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>) {
         mPaymentTypeOptions = paymentTypeOptions
         notifyDataSetChanged()
     }

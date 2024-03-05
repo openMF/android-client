@@ -15,6 +15,13 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.data.LoansPayload
+import com.mifos.core.objects.accounts.loan.Loans
+import com.mifos.core.objects.organisation.LoanProducts
+import com.mifos.core.objects.templates.loans.LoanTemplate
+import com.mifos.core.objects.templates.loans.RepaymentFrequencyDaysOfWeekTypeOptions
+import com.mifos.core.objects.templates.loans.RepaymentFrequencyNthDayTypeOptions
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.core.util.Toaster
@@ -22,13 +29,6 @@ import com.mifos.mifosxdroid.databinding.FragmentAddLoanBinding
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
-import com.mifos.objects.accounts.loan.Loans
-import com.mifos.objects.organisation.LoanProducts
-import com.mifos.objects.templates.loans.LoanTemplate
-import com.mifos.objects.templates.loans.RepaymentFrequencyDaysOfWeekTypeOptions
-import com.mifos.objects.templates.loans.RepaymentFrequencyNthDayTypeOptions
-import com.mifos.services.data.LoansPayload
-import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import dagger.hilt.android.AndroidEntryPoint

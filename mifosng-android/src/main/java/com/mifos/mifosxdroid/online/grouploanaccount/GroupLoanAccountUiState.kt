@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.grouploanaccount
 
-import com.mifos.objects.accounts.loan.Loans
-import com.mifos.objects.organisation.LoanProducts
-import com.mifos.objects.templates.loans.GroupLoanTemplate
+import com.mifos.core.objects.accounts.loan.Loans
+import com.mifos.core.objects.organisation.LoanProducts
+import com.mifos.core.objects.templates.loans.GroupLoanTemplate
 
 /**
  * Created by Aditya Gupta on 12/08/23.

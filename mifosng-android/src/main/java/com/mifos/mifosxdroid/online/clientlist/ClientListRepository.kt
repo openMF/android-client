@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.clientlist
 
-import com.mifos.objects.client.Client
-import com.mifos.objects.client.Page
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.Page
 import rx.Observable
 
 /**

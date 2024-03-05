@@ -18,6 +18,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.jakewharton.fliptables.FlipTable
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.accounts.savings.DepositType
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
+import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MaterialDialog
@@ -26,11 +31,6 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentSavingsAccountTransactionBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
-import com.mifos.objects.accounts.savings.DepositType
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse
-import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate
-import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Network
 import com.mifos.utils.PrefManager

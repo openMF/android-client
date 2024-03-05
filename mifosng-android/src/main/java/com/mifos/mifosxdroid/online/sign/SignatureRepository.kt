@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.sign
 
-import com.mifos.api.GenericResponse
+import com.mifos.core.network.GenericResponse
 import okhttp3.MultipartBody
 import rx.Observable
 

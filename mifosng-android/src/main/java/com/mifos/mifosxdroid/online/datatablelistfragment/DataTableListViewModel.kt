@@ -3,12 +3,12 @@ package com.mifos.mifosxdroid.online.datatablelistfragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.data.GroupLoanPayload
+import com.mifos.core.data.LoansPayload
+import com.mifos.core.objects.accounts.loan.Loans
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.ClientPayload
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.accounts.loan.Loans
-import com.mifos.objects.client.Client
-import com.mifos.objects.client.ClientPayload
-import com.mifos.services.data.GroupLoanPayload
-import com.mifos.services.data.LoansPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

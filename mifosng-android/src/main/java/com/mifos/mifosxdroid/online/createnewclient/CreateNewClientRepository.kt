@@ -1,13 +1,12 @@
 package com.mifos.mifosxdroid.online.createnewclient
 
-import com.mifos.objects.client.Client
-import com.mifos.objects.client.ClientPayload
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.organisation.Staff
-import com.mifos.objects.templates.clients.ClientsTemplate
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.ClientPayload
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.organisation.Staff
+import com.mifos.core.objects.templates.clients.ClientsTemplate
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
-import org.apache.fineract.client.models.RetrieveOneResponse
 import rx.Observable
 
 /**

@@ -14,6 +14,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mifos.core.objects.client.Charges
+import com.mifos.core.objects.client.Page
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener
@@ -22,8 +24,6 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentChargeListBinding
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogFragment
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.OnChargeCreateListener
-import com.mifos.objects.client.Charges
-import com.mifos.objects.client.Page
 import com.mifos.utils.FragmentConstants
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -150,7 +150,7 @@ class ClientChargeFragment : MifosBaseFragment(), OnChargeCreateListener {
          * else if mApiRestCounter is greater than 1, SO this is for loadmore request.
          */
         if (mApiRestCounter == 1) {
-            chargesList = chargesPage.pageItems as ArrayList<Charges>
+            chargesList = chargesPage.pageItems
             mChargesNameListAdapter = ChargeNameListAdapter(chargesList, clientId)
             binding.rvCharge.adapter = mChargesNameListAdapter
             binding.llError.visibility = View.GONE

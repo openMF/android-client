@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.clientlist
 
-import com.mifos.objects.client.Client
+import com.mifos.core.objects.client.Client
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -11,9 +11,9 @@ sealed class ClientListUiState {
 
     data class ShowMessage(val message: Int) : ClientListUiState()
 
-    object ShowError : ClientListUiState()
+    data object ShowError : ClientListUiState()
 
-    object UnregisterSwipeAndScrollListener : ClientListUiState()
+    data object UnregisterSwipeAndScrollListener : ClientListUiState()
 
     data class ShowEmptyClientList(val message: Int) : ClientListUiState()
 

@@ -11,9 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
+import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.databinding.RowAccountItemBinding
-import com.mifos.objects.accounts.loan.LoanAccount
 
 /**
  * Created by ishankhanna on 01/03/14.

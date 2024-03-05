@@ -3,8 +3,8 @@ package com.mifos.mifosxdroid.offline.syncclientpayloads
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.client.Client
-import com.mifos.objects.client.ClientPayload
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.ClientPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Observer
 import rx.Subscriber

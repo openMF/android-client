@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.activity.pinpointclient
 
-import com.mifos.objects.client.ClientAddressResponse
+import com.mifos.core.objects.client.ClientAddressResponse
 
 /**
  * Created by Aditya Gupta on 08/08/23.

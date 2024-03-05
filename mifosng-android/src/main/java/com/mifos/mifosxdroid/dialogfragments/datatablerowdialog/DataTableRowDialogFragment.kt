@@ -15,7 +15,8 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import com.mifos.api.GenericResponse
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.noncore.DataTable
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.databinding.DialogFragmentAddEntryToDatatableBinding
@@ -24,7 +25,6 @@ import com.mifos.mifosxdroid.formwidgets.FormNumericEditText
 import com.mifos.mifosxdroid.formwidgets.FormSpinner
 import com.mifos.mifosxdroid.formwidgets.FormToggleButton
 import com.mifos.mifosxdroid.formwidgets.FormWidget
-import com.mifos.objects.noncore.DataTable
 import com.mifos.utils.Constants
 import com.mifos.utils.SafeUIBlockingUtility
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,16 +66,18 @@ class DataTableRowDialogFragment : DialogFragment() {
         createForm(dataTable)
         addSaveButton()
 
-        viewModel.dataTableRowDialogUiState.observe(viewLifecycleOwner){
-            when(it){
+        viewModel.dataTableRowDialogUiState.observe(viewLifecycleOwner) {
+            when (it) {
                 is DataTableRowDialogUiState.ShowDataTableEntrySuccessfully -> {
                     showProgressbar(false)
                     showDataTableEntrySuccessfully(it.genericResponse)
                 }
+
                 is DataTableRowDialogUiState.ShowError -> {
                     showProgressbar(false)
                     showError(it.message)
                 }
+
                 is DataTableRowDialogUiState.ShowProgressbar -> showProgressbar(true)
             }
         }

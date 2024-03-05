@@ -3,8 +3,8 @@ package com.mifos.mifosxdroid.online.note
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.objects.noncore.Note
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.noncore.Note
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -12,11 +12,11 @@ import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 @HiltViewModel
-class NoteViewModel @Inject constructor (private val repository: NoteRepository) : ViewModel() {
+class NoteViewModel @Inject constructor(private val repository: NoteRepository) : ViewModel() {
 
     private val _noteUiState = MutableLiveData<NoteUiState>()
 
-    val noteUiState : LiveData<NoteUiState>
+    val noteUiState: LiveData<NoteUiState>
         get() = _noteUiState
 
     /**

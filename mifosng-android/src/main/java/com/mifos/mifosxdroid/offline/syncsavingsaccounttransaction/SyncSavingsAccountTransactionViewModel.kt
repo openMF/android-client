@@ -3,10 +3,9 @@ package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse
 import com.mifos.utils.MFErrorParser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Observable
@@ -187,14 +186,14 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
         repository.paymentTypeOption()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<PaymentTypeOption>>() {
+            .subscribe(object : Subscriber<List<com.mifos.core.objects.PaymentTypeOption>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncSavingsAccountTransactionUiState.value =
                         SyncSavingsAccountTransactionUiState.ShowError(R.string.failed_to_load_paymentoptions)
                 }
 
-                override fun onNext(paymentTypeOptions: List<PaymentTypeOption>) {
+                override fun onNext(paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>) {
                     _syncSavingsAccountTransactionUiState.value =
                         SyncSavingsAccountTransactionUiState.ShowPaymentTypeOptions(
                             paymentTypeOptions

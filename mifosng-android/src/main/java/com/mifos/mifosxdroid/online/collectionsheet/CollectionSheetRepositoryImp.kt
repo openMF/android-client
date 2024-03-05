@@ -1,10 +1,10 @@
 package com.mifos.mifosxdroid.online.collectionsheet
 
-import com.mifos.api.DataManager
-import com.mifos.api.model.CollectionSheetPayload
-import com.mifos.api.model.Payload
-import com.mifos.objects.db.CollectionSheet
-import com.mifos.objects.response.SaveResponse
+import com.mifos.core.network.DataManager
+import com.mifos.core.network.model.CollectionSheetPayload
+import com.mifos.core.network.model.Payload
+import com.mifos.core.objects.db.CollectionSheet
+import com.mifos.core.objects.response.SaveResponse
 import rx.Observable
 import javax.inject.Inject
 

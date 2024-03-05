@@ -15,19 +15,19 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.data.GroupLoanPayload
+import com.mifos.core.data.LoansPayload
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.ClientPayload
+import com.mifos.core.objects.noncore.DataTable
+import com.mifos.core.objects.noncore.DataTablePayload
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.DialogFragmentAddEntryToDatatableBinding
 import com.mifos.mifosxdroid.formwidgets.*
 import com.mifos.mifosxdroid.online.ClientActivity
-import com.mifos.objects.client.Client
-import com.mifos.objects.client.ClientPayload
-import com.mifos.objects.noncore.DataTable
-import com.mifos.objects.noncore.DataTablePayload
-import com.mifos.services.data.GroupLoanPayload
-import com.mifos.services.data.LoansPayload
-import com.mifos.utils.Constants
 import com.mifos.utils.MifosResponseHandler
 import com.mifos.utils.PrefManager
 import com.mifos.utils.SafeUIBlockingUtility
@@ -226,19 +226,27 @@ class DataTableListFragment : Fragment() {
         payload[Constants.DATE_FORMAT] = "dd-mm-YYYY"
         payload[Constants.LOCALE] = "en"
         for (formWidget in formWidgets) {
-            if (formWidget.returnType == FormWidget.SCHEMA_KEY_INT) {
-                payload[formWidget.propertyName] = if (formWidget.value
-                    == ""
-                ) "0" else formWidget.value.toInt()
-            } else if (formWidget.returnType == FormWidget.SCHEMA_KEY_DECIMAL) {
-                payload[formWidget.propertyName] =
-                    if (formWidget.value == "") "0.0" else formWidget.value.toDouble()
-            } else if (formWidget.returnType == FormWidget.SCHEMA_KEY_CODEVALUE) {
-                val formSpinner = formWidget as FormSpinner
-                payload[formWidget.propertyName] =
-                    formSpinner.getIdOfSelectedItem(formWidget.value)
-            } else {
-                payload[formWidget.propertyName] = formWidget.value
+            when (formWidget.returnType) {
+                FormWidget.SCHEMA_KEY_INT -> {
+                    payload[formWidget.propertyName] = if (formWidget.value
+                        == ""
+                    ) "0" else formWidget.value.toInt()
+                }
+
+                FormWidget.SCHEMA_KEY_DECIMAL -> {
+                    payload[formWidget.propertyName] =
+                        if (formWidget.value == "") "0.0" else formWidget.value.toDouble()
+                }
+
+                FormWidget.SCHEMA_KEY_CODEVALUE -> {
+                    val formSpinner = formWidget as FormSpinner
+                    payload[formWidget.propertyName] =
+                        formSpinner.getIdOfSelectedItem(formWidget.value)
+                }
+
+                else -> {
+                    payload[formWidget.propertyName] = formWidget.value
+                }
             }
         }
         return payload

@@ -18,21 +18,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.google.gson.JsonArray
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.noncore.DataTable
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MaterialDialog
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentDatatableBinding
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogFragment
-import com.mifos.objects.noncore.DataTable
-import com.mifos.utils.Constants
 import com.mifos.utils.DataTableUIBuilder
-import com.mifos.utils.DataTableUIBuilder.DataTableActionListener
 import com.mifos.utils.FragmentConstants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, OnRefreshListener {
+class DataTableDataFragment : MifosBaseFragment(), DataTableUIBuilder.DataTableActionListener,
+    OnRefreshListener {
 
     private lateinit var binding: FragmentDatatableBinding
     private val arg: DataTableDataFragmentArgs by navArgs()
@@ -124,7 +124,7 @@ class DataTableDataFragment : MifosBaseFragment(), DataTableActionListener, OnRe
             binding.linearLayoutDatatables.invalidate()
             val mListener = activity
                 ?.supportFragmentManager
-                ?.findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE) as DataTableActionListener?
+                ?.findFragmentByTag(FragmentConstants.FRAG_DATA_TABLE) as DataTableUIBuilder.DataTableActionListener?
             DataTableUIBuilder().getDataTableLayout(
                 dataTable!!,
                 jsonElements, binding.linearLayoutDatatables, requireContext(), entityId,

@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.datatable
 
-import com.mifos.objects.noncore.DataTable
+import com.mifos.core.objects.noncore.DataTable
 import rx.Observable
 
 /**

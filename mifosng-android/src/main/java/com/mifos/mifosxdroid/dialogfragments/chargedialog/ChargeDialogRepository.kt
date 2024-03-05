@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.dialogfragments.chargedialog
 
-import com.mifos.objects.client.ChargeCreationResponse
-import com.mifos.objects.templates.clients.ChargeTemplate
-import com.mifos.services.data.ChargesPayload
+import com.mifos.core.data.ChargesPayload
+import com.mifos.core.objects.client.ChargeCreationResponse
+import com.mifos.core.objects.templates.clients.ChargeTemplate
 import rx.Observable
 
 /**

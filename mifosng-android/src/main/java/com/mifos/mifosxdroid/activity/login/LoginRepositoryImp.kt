@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.activity.login
 
-import com.mifos.api.datamanager.DataManagerAuth
+import com.mifos.core.network.datamanager.DataManagerAuth
 import org.apache.fineract.client.models.PostAuthenticationResponse
 import rx.Observable
 import javax.inject.Inject

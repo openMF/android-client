@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.documentlist
 
-import com.mifos.api.GenericResponse
-import com.mifos.api.datamanager.DataManagerDocument
-import com.mifos.objects.noncore.Document
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.datamanager.DataManagerDocument
+import com.mifos.core.objects.noncore.Document
 import okhttp3.ResponseBody
 import rx.Observable
 import javax.inject.Inject

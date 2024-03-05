@@ -14,12 +14,12 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.mifos.core.objects.survey.Survey
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SurveyListAdapter
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentSurveyListBinding
-import com.mifos.objects.survey.Survey
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

@@ -17,6 +17,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.noncore.Identifier
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.IdentifierListAdapter
 import com.mifos.mifosxdroid.adapters.IdentifierListAdapter.IdentifierOptionsListener
@@ -26,8 +28,6 @@ import com.mifos.mifosxdroid.databinding.FragmentClientIdentifiersBinding
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.ClientIdentifierCreationListener
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogFragment
 import com.mifos.mifosxdroid.online.documentlist.DocumentListFragment
-import com.mifos.objects.noncore.Identifier
-import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

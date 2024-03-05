@@ -1,7 +1,7 @@
 package com.mifos.core.network.mappers.clients
 
-import com.mifos.core.data.model.client.Client
-import com.mifos.core.data.model.client.Status
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.Status
 import org.apache.fineract.client.models.GetClientStatus
 import org.apache.fineract.client.models.GetClientsPageItemsResponse
 import org.mifos.core.data.AbstractMapper

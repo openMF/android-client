@@ -9,12 +9,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
+import com.mifos.core.objects.noncore.DataTable
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.DataTableAdapter
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentDatatablesBinding
-import com.mifos.objects.noncore.DataTable
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.centerdetails
 
-import com.mifos.objects.group.CenterInfo
-import com.mifos.objects.group.CenterWithAssociations
+import com.mifos.core.objects.group.CenterInfo
+import com.mifos.core.objects.group.CenterWithAssociations
 import rx.Observable
 
 /**

@@ -1,14 +1,14 @@
 package com.mifos.mifosxdroid.dialogfragments.chargedialog
 
-import com.mifos.objects.client.ChargeCreationResponse
-import com.mifos.objects.templates.clients.ChargeTemplate
+import com.mifos.core.objects.client.ChargeCreationResponse
+import com.mifos.core.objects.templates.clients.ChargeTemplate
 
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
 sealed class ChargeDialogUiState {
 
-    object ShowProgressbar : ChargeDialogUiState()
+    data object ShowProgressbar : ChargeDialogUiState()
 
     data class ShowFetchingError(val message: String) : ChargeDialogUiState()
 

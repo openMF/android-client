@@ -3,7 +3,7 @@ package com.mifos.mifosxdroid.online.runreports.reportcategory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.runreports.client.ClientReportTypeItem
+import com.mifos.core.objects.runreports.client.ClientReportTypeItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.HttpException
 import rx.Subscriber

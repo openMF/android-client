@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.offline.synccenterpayloads
 
-import com.mifos.objects.response.SaveResponse
-import com.mifos.services.data.CenterPayload
+import com.mifos.core.data.CenterPayload
+import com.mifos.core.objects.response.SaveResponse
 import rx.Observable
 
 /**

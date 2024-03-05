@@ -1,10 +1,10 @@
 package com.mifos.core.network.di
 
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.model.ClientDb
 import com.mifos.core.model.ClientDateDb
-import com.mifos.core.model.GroupDb
+import com.mifos.core.model.ClientDb
 import com.mifos.core.model.GroupDateDb
+import com.mifos.core.model.GroupDb
 import com.mifos.core.model.StatusDb
 import dagger.Module
 import dagger.Provides
@@ -21,7 +21,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @BaseApiManagerQualifier
+    fun provideBaseApiManager(prefManager: PrefManager): com.mifos.core.network.BaseApiManager {
+        return com.mifos.core.network.BaseApiManager(prefManager)
+    }
+
+    @Provides
+    @Singleton
     fun provideSdkBaseApiManager(prefManager: PrefManager): BaseApiManager {
         val usernamePassword: Pair<String, String> = prefManager.usernamePassword
         val baseManager = BaseApiManager.getInstance()

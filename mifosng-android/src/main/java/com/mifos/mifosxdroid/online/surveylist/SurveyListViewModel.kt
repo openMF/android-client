@@ -3,10 +3,10 @@ package com.mifos.mifosxdroid.online.surveylist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.objects.survey.QuestionDatas
+import com.mifos.core.objects.survey.ResponseDatas
+import com.mifos.core.objects.survey.Survey
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.survey.QuestionDatas
-import com.mifos.objects.survey.ResponseDatas
-import com.mifos.objects.survey.Survey
 import com.mifos.utils.PrefManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
