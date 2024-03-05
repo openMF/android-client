@@ -1,7 +1,6 @@
 package com.mifos.feature.client.clientList.presentation
 
 import androidx.paging.PagingData
-import com.mifos.core.model.ClientDb
 import com.mifos.core.objects.client.Client
 import kotlinx.coroutines.flow.Flow
 
@@ -12,7 +11,9 @@ sealed class ClientListUiState {
 
     data object Empty : ClientListUiState()
 
+    data class Error(val message: String) : ClientListUiState()
+
     data class ClientListApi(val list: Flow<PagingData<Client>>) : ClientListUiState()
 
-    data class ClientListDb(val list: List<ClientDb>) : ClientListUiState()
+    data class ClientListDb(val list: List<Client>) : ClientListUiState()
 }

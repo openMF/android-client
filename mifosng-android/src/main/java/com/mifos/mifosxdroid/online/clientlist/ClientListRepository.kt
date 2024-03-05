@@ -9,7 +9,7 @@ import rx.Observable
  */
 interface ClientListRepository {
 
-    fun getAllClients(paged: Boolean, offset: Int, limit: Int): Observable<Page<Client>>
+    fun getAllClients(offset: Int, limit: Int): Observable<Page<Client>>
 
     fun allDatabaseClients(): Observable<Page<Client>>
 

@@ -1,6 +1,6 @@
 package com.mifos.feature.client.clientList.di
 
-import com.mifos.core.network.datamanger.DataManagerClient
+import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.feature.client.clientList.data.repositoryImp.ClientListRepositoryImp
 import com.mifos.feature.client.clientList.domain.repository.ClientListRepository
 import dagger.Module

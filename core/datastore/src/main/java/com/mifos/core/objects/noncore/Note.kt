@@ -1,7 +1,7 @@
 package com.mifos.core.objects.noncore
 
 import android.os.Parcelable
-import com.mifos.core.model.client.MifosBaseModel
+import com.mifos.core.model.MifosBaseModel
 import kotlinx.parcelize.Parcelize
 
 /**

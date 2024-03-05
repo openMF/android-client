@@ -6,7 +6,7 @@ package com.mifos.core.objects.group
 
 import android.os.Parcelable
 import com.mifos.core.database.MifosDatabase
-import com.mifos.core.model.client.MifosBaseModel
+import com.mifos.core.model.MifosBaseModel
 import com.mifos.core.objects.Timeline
 import com.mifos.core.objects.client.Status
 import com.raizlabs.android.dbflow.annotation.Column

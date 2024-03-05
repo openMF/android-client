@@ -173,10 +173,10 @@ class SyncClientsDialogFragment : DialogFragment() {
 
     companion object {
         val LOG_TAG = SyncClientsDialogFragment::class.java.simpleName
-        fun newInstance(client: List<Client?>?): SyncClientsDialogFragment {
+        fun newInstance(client: ArrayList<Client>): SyncClientsDialogFragment {
             val syncClientsDialogFragment = SyncClientsDialogFragment()
             val args = Bundle()
-            args.putParcelableArrayList(Constants.CLIENT, client as ArrayList<out Parcelable?>?)
+            args.putParcelableArrayList(Constants.CLIENT, client)
             syncClientsDialogFragment.arguments = args
             return syncClientsDialogFragment
         }

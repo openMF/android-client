@@ -58,7 +58,6 @@ class ClientListViewModelTest {
         val mockPage = Page(2, list)
         Mockito.`when`(
             clientListRepository.getAllClients(
-                Mockito.anyBoolean(),
                 Mockito.anyInt(),
                 Mockito.anyInt()
             )
@@ -79,7 +78,6 @@ class ClientListViewModelTest {
     fun testClientList_SuccessfulClientListReceivedFromRepository_ReturnsEmptyClientList() {
         Mockito.`when`(
             clientListRepository.getAllClients(
-                Mockito.anyBoolean(),
                 Mockito.anyInt(),
                 Mockito.anyInt()
             )
@@ -100,7 +98,6 @@ class ClientListViewModelTest {
     fun testClientList_UnsuccessfulClientListReceivedFromRepository_ReturnsError() {
         Mockito.`when`(
             clientListRepository.getAllClients(
-                Mockito.anyBoolean(),
                 Mockito.anyInt(),
                 Mockito.anyInt()
             )
