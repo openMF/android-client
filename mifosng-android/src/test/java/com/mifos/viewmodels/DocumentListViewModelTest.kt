@@ -2,13 +2,13 @@ package com.mifos.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.mifos.api.GenericResponse
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.noncore.Document
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
-import com.mifos.objects.noncore.Document
 import com.mifos.mifosxdroid.online.documentlist.DocumentListRepository
 import com.mifos.mifosxdroid.online.documentlist.DocumentListUiState
 import com.mifos.mifosxdroid.online.documentlist.DocumentListViewModel
+import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
 import okhttp3.ResponseBody
 import org.junit.After
 import org.junit.Assert.*

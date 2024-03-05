@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
+import com.mifos.core.objects.noncore.Note
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.NoteAdapter
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentNotesBinding
-import com.mifos.objects.noncore.Note
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -60,14 +60,17 @@ class NoteFragment : MifosBaseFragment(), OnRefreshListener {
                     showProgressbar(false)
                     showEmptyNotes()
                 }
+
                 is NoteUiState.ShowError -> {
                     showProgressbar(false)
                     showEmptyNotes()
                 }
+
                 is NoteUiState.ShowNote -> {
                     showProgressbar(false)
                     showNote(it.note)
                 }
+
                 is NoteUiState.ShowProgressbar -> showProgressbar(true)
                 is NoteUiState.ShowResetVisibility -> {
                     showProgressbar(false)

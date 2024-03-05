@@ -7,9 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.joanzapata.iconify.widget.IconTextView
+import com.mifos.core.objects.noncore.Document
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.noncore.Document
-import javax.inject.Inject
 
 
 class DocumentListAdapter(
@@ -30,7 +29,7 @@ class DocumentListAdapter(
                 .inflate(R.layout.row_document_list, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+            if (viewHolder.adapterPosition != RecyclerView.NO_POSITION)
                 onDocumentClick(documents[viewHolder.adapterPosition])
         }
         return viewHolder

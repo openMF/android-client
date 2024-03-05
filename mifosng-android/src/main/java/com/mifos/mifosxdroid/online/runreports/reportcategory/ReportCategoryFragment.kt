@@ -11,12 +11,12 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.runreports.client.ClientReportTypeItem
 import com.mifos.mifosxdroid.adapters.ClientReportAdapter
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentRunreportBinding
-import com.mifos.objects.runreports.client.ClientReportTypeItem
-import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -35,7 +35,11 @@ class ReportCategoryFragment : MifosBaseFragment() {
     private var broadCastNewMessage: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             reportCategory = intent.getStringExtra(Constants.REPORT_CATEGORY)
-            viewModel.fetchCategories(reportCategory, false, true)
+            viewModel.fetchCategories(
+                reportCategory,
+                genericResultSet = false,
+                parameterType = true
+            )
         }
     }
 

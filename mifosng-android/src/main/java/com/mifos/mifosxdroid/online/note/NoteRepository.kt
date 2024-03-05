@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.note
 
-import com.mifos.objects.noncore.Note
+import com.mifos.core.objects.noncore.Note
 import rx.Observable
 
 /**

@@ -1,7 +1,6 @@
 package com.mifos.mifosxdroid.online.datatabledata
 
 import com.google.gson.JsonArray
-import com.mifos.api.GenericResponse
 import org.apache.fineract.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import rx.Observable
 

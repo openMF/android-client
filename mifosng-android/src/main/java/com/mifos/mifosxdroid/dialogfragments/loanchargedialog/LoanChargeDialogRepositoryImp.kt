@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.dialogfragments.loanchargedialog
 
-import com.mifos.api.DataManager
-import com.mifos.objects.client.ChargeCreationResponse
-import com.mifos.services.data.ChargesPayload
+import com.mifos.core.data.ChargesPayload
+import com.mifos.core.network.DataManager
+import com.mifos.core.objects.client.ChargeCreationResponse
 import okhttp3.ResponseBody
 import rx.Observable
 import javax.inject.Inject

@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mifos.core.objects.client.ClientPayload
 import com.mifos.mifosxdroid.databinding.ItemSyncClientBinding
-import com.mifos.objects.client.ClientPayload
 
 /**
  * Created by Rajan Maurya on 08/07/16.

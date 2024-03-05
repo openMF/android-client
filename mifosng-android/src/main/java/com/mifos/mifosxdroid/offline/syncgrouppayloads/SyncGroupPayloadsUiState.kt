@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.offline.syncgrouppayloads
 
-import com.mifos.objects.group.GroupPayload
-import com.mifos.objects.response.SaveResponse
+import com.mifos.core.objects.group.GroupPayload
+import com.mifos.core.objects.response.SaveResponse
 
 /**
  * Created by Aditya Gupta on 16/08/23.

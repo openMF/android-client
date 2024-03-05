@@ -3,11 +3,11 @@ package com.mifos.mifosxdroid.offline.offlinedashbarod
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.objects.client.ClientPayload
-import com.mifos.objects.group.GroupPayload
-import com.mifos.services.data.CenterPayload
+import com.mifos.core.data.CenterPayload
+import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.objects.client.ClientPayload
+import com.mifos.core.objects.group.GroupPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

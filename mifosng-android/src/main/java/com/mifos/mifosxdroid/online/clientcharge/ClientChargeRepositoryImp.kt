@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.clientcharge
 
-import com.mifos.api.datamanager.DataManagerCharge
-import com.mifos.objects.client.Charges
-import com.mifos.objects.client.Page
+import com.mifos.core.network.datamanager.DataManagerCharge
+import com.mifos.core.objects.client.Charges
+import com.mifos.core.objects.client.Page
 import rx.Observable
 import javax.inject.Inject
 

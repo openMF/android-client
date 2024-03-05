@@ -11,13 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mifos.core.objects.client.ClientPayload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SyncPayloadsAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.FragmentSyncpayloadBinding
-import com.mifos.objects.client.ClientPayload
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager.userStatus
 import dagger.hilt.android.AndroidEntryPoint
@@ -149,7 +149,7 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), DialogInterface.OnClickL
     private fun showError(stringId: String) {
         binding.llError.visibility = View.VISIBLE
         val message =
-            stringId + activity!!.resources.getString(R.string.click_to_refresh)
+            stringId + requireActivity().resources.getString(R.string.click_to_refresh)
         binding.noPayloadText.text = message
         show(binding.root, stringId)
     }
@@ -207,7 +207,7 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), DialogInterface.OnClickL
                 } else {
                     show(
                         binding.root,
-                        activity!!.resources.getString(R.string.nothing_to_sync)
+                        requireActivity().resources.getString(R.string.nothing_to_sync)
                     )
                 }
             }
@@ -274,7 +274,7 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), DialogInterface.OnClickL
                 } else {
                     show(
                         binding.root,
-                        activity!!.resources.getString(R.string.nothing_to_sync)
+                        requireActivity().resources.getString(R.string.nothing_to_sync)
                     )
                 }
 
@@ -293,7 +293,7 @@ class SyncClientPayloadsFragment : MifosBaseFragment(), DialogInterface.OnClickL
             } else {
                 Log.d(
                     LOG_TAG,
-                    activity!!.resources.getString(R.string.error_fix_before_sync) +
+                    requireActivity().resources.getString(R.string.error_fix_before_sync) +
                             clientPayloads!![i].errorMessage
                 )
             }

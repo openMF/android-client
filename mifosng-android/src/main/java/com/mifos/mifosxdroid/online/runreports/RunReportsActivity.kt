@@ -10,12 +10,12 @@ import android.widget.Spinner
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.NavHostFragment
+import com.mifos.core.common.utils.Constants
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.online.runreports.report.ReportFragment
 import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryFragment
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment
-import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

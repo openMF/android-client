@@ -3,8 +3,8 @@ package com.mifos.mifosxdroid.online.clientidentifiers
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.objects.noncore.Identifier
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.noncore.Identifier
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.apache.fineract.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import rx.Subscriber

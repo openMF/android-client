@@ -1,21 +1,20 @@
 package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition
 
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
 sealed class SyncLoanRepaymentTransactionUiState {
 
-    object ShowProgressbar : SyncLoanRepaymentTransactionUiState()
+    data object ShowProgressbar : SyncLoanRepaymentTransactionUiState()
 
     data class ShowError(val message: Int) : SyncLoanRepaymentTransactionUiState()
 
     data class ShowLoanRepaymentTransactions(val loanRepaymentRequests: List<LoanRepaymentRequest>) :
         SyncLoanRepaymentTransactionUiState()
 
-    data class ShowPaymentTypeOption(val paymentTypeOptions: List<PaymentTypeOption>) :
+    data class ShowPaymentTypeOption(val paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>) :
         SyncLoanRepaymentTransactionUiState()
 
     data class ShowPaymentFailed(val message: String) : SyncLoanRepaymentTransactionUiState()

@@ -10,8 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import com.mifos.core.objects.survey.Survey
 import com.mifos.mifosxdroid.databinding.RowSurveysListItemBinding
-import com.mifos.objects.survey.Survey
 
 /**
  * Created by Nasim Banu on 27,January,2016.

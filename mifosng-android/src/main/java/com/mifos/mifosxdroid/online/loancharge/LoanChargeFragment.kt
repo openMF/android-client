@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mifos.core.objects.client.Charges
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.ChargeNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerOnScrollListener
@@ -21,7 +22,6 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentChargeListBinding
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.OnChargeCreateListener
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogFragment
-import com.mifos.objects.client.Charges
 import com.mifos.utils.FragmentConstants
 import dagger.hilt.android.AndroidEntryPoint
 

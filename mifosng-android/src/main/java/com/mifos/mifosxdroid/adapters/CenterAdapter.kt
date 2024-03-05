@@ -9,9 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import com.mifos.core.objects.db.MeetingCenter
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.databinding.RowCenterItemBinding
-import com.mifos.objects.db.MeetingCenter
 
 class CenterAdapter(context: Context?, centers: List<MeetingCenter>) : BaseAdapter() {
     private val layoutInflater: LayoutInflater

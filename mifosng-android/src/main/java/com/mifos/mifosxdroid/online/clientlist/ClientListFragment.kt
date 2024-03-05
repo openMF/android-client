@@ -11,12 +11,12 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.navigation.ClientArgs
 import com.mifos.feature.client.clientList.presentation.ClientListScreen
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.objects.client.Client
-import com.mifos.objects.navigation.ClientArgs
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

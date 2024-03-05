@@ -3,9 +3,9 @@ package com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.survey.QuestionDatas
-import com.mifos.objects.survey.ResponseDatas
-import com.mifos.objects.survey.Survey
+import com.mifos.core.objects.survey.QuestionDatas
+import com.mifos.core.objects.survey.ResponseDatas
+import com.mifos.core.objects.survey.Survey
 import com.mifos.utils.NetworkUtilsWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.adapter.rxjava.HttpException

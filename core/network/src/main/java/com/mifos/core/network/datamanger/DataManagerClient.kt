@@ -1,20 +1,17 @@
 package com.mifos.core.network.datamanger
 
-import com.mifos.core.common.utils.Page
-import com.mifos.core.data.model.client.Client
 import com.mifos.core.database.DatabaseClientQuery
-import com.mifos.core.datastore.PrefManager
 import com.mifos.core.model.ClientDb
-import com.mifos.core.network.di.BaseApiManagerQualifier
 import com.mifos.core.network.mappers.clients.GetClientResponseMapper
-import io.realm.kotlin.Realm
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.Page
 import kotlinx.coroutines.flow.Flow
 import org.mifos.core.apimanager.BaseApiManager
 import rx.Observable
 import javax.inject.Inject
 
 class DataManagerClient @Inject constructor(
-    @BaseApiManagerQualifier private val baseApiManager: BaseApiManager,
+    private val baseApiManager: BaseApiManager,
     private val databaseClientQuery: DatabaseClientQuery
 ) {
 

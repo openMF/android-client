@@ -3,8 +3,8 @@ package com.mifos.mifosxdroid.online.runreports.reportdetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.runreports.DataRow
-import com.mifos.objects.runreports.FullParameterListResponse
+import com.mifos.core.objects.runreports.DataRow
+import com.mifos.core.objects.runreports.FullParameterListResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.HttpException
 import rx.Observable

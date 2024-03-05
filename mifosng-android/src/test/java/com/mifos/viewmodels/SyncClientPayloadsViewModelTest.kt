@@ -2,12 +2,12 @@ package com.mifos.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsViewModel
-import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
-import com.mifos.objects.client.Client
-import com.mifos.objects.client.ClientPayload
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.ClientPayload
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsRepository
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsUiState
+import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsViewModel
+import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

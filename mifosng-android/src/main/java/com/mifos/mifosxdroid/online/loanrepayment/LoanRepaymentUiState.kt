@@ -1,14 +1,14 @@
 package com.mifos.mifosxdroid.online.loanrepayment
 
-import com.mifos.objects.accounts.loan.LoanRepaymentResponse
-import com.mifos.objects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
 sealed class LoanRepaymentUiState {
 
-    object ShowProgressbar : LoanRepaymentUiState()
+    data object ShowProgressbar : LoanRepaymentUiState()
 
     data class ShowError(val message: Int) : LoanRepaymentUiState()
 
@@ -18,7 +18,7 @@ sealed class LoanRepaymentUiState {
     data class ShowPaymentSubmittedSuccessfully(val loanRepaymentResponse: LoanRepaymentResponse?) :
         LoanRepaymentUiState()
 
-    object ShowLoanRepaymentExistInDatabase : LoanRepaymentUiState()
+    data object ShowLoanRepaymentExistInDatabase : LoanRepaymentUiState()
 
-    object ShowLoanRepaymentDoesNotExistInDatabase : LoanRepaymentUiState()
+    data object ShowLoanRepaymentDoesNotExistInDatabase : LoanRepaymentUiState()
 }

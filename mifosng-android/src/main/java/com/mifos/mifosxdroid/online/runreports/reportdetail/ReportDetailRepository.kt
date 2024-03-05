@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.runreports.reportdetail
 
-import com.mifos.objects.runreports.FullParameterListResponse
+import com.mifos.core.objects.runreports.FullParameterListResponse
 import rx.Observable
 
 /**

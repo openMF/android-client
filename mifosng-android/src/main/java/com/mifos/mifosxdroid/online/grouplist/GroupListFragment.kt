@@ -13,14 +13,14 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.group.CenterWithAssociations
+import com.mifos.core.objects.group.GroupWithAssociations
+import com.mifos.core.objects.navigation.ClientListArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.GroupListAdapter
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.databinding.FragmentGroupListBinding
-import com.mifos.objects.client.Client
-import com.mifos.objects.group.CenterWithAssociations
-import com.mifos.objects.group.GroupWithAssociations
-import com.mifos.objects.navigation.ClientListArgs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

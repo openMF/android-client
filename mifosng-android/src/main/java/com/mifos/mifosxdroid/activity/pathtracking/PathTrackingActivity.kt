@@ -5,14 +5,12 @@
 package com.mifos.mifosxdroid.activity.pathtracking
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -23,11 +21,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
+import com.mifos.core.objects.user.UserLocation
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.PathTrackingAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.databinding.ActivityPathTrackerBinding
-import com.mifos.objects.user.UserLocation
 import com.mifos.utils.CheckSelfPermissionAndRequest
 import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager
@@ -41,7 +39,7 @@ class PathTrackingActivity : MifosBaseActivity(), OnRefreshListener {
 
     private lateinit var binding: ActivityPathTrackerBinding
 
-    private lateinit var viewModel : PathTrackingViewModel
+    private lateinit var viewModel: PathTrackingViewModel
 
     private var pathTrackingAdapter: PathTrackingAdapter? = null
     private var intentLocationService: Intent? = null
@@ -58,20 +56,23 @@ class PathTrackingActivity : MifosBaseActivity(), OnRefreshListener {
         createNotificationReceiver()
         showUserInterface()
         viewModel.loadPathTracking(PrefManager.getUserId())
-        binding.layoutError.findViewById<Button>(com.github.therajanmaurya.sweeterror.R.id.btnTryAgain).setOnClickListener {
-            reloadOnError()
-        }
-        viewModel.pathTrackingUiState.observe(this){
-            when(it){
+        binding.layoutError.findViewById<Button>(com.github.therajanmaurya.sweeterror.R.id.btnTryAgain)
+            .setOnClickListener {
+                reloadOnError()
+            }
+        viewModel.pathTrackingUiState.observe(this) {
+            when (it) {
                 is PathTrackingUiState.ShowProgress -> showProgressbar(it.state)
                 is PathTrackingUiState.ShowEmptyPathTracking -> {
                     hideProgress()
                     showEmptyPathTracking()
                 }
+
                 is PathTrackingUiState.ShowError -> {
                     hideProgress()
                     showError()
                 }
+
                 is PathTrackingUiState.ShowPathTracking -> {
                     hideProgress()
                     showPathTracking(it.userLocations)
@@ -169,7 +170,6 @@ class PathTrackingActivity : MifosBaseActivity(), OnRefreshListener {
     /**
      * This Method is Requesting the Permission
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     fun requestPermission() {
         CheckSelfPermissionAndRequest.requestPermission(
             this,

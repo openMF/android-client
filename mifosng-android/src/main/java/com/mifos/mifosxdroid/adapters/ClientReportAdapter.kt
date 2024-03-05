@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.mifos.core.objects.runreports.client.ClientReportTypeItem
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.runreports.client.ClientReportTypeItem
 
 
 class ClientReportAdapter(
@@ -25,7 +25,7 @@ class ClientReportAdapter(
                 .inflate(R.layout.item_client_runreport, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+            if (viewHolder.adapterPosition != RecyclerView.NO_POSITION)
                 onClientReportClick(viewHolder.adapterPosition)
         }
         return viewHolder

@@ -1,7 +1,7 @@
 package com.mifos.core.network.mappers.clients
 
-import com.mifos.core.common.utils.Page
-import com.mifos.core.data.model.client.Client
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.Page
 import org.apache.fineract.client.models.GetClientsResponse
 import org.mifos.core.data.AbstractMapper
 

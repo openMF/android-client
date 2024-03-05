@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.mifos.core.objects.noncore.DataTable
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.noncore.DataTable
 
 class DataTableAdapter(
     val onDateTableClick: (DataTable) -> Unit
@@ -23,7 +23,7 @@ class DataTableAdapter(
                 .inflate(R.layout.item_data_table, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+            if (viewHolder.adapterPosition != RecyclerView.NO_POSITION)
                 onDateTableClick(dataTables[viewHolder.adapterPosition])
         }
         return viewHolder

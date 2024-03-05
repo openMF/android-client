@@ -1,18 +1,18 @@
 package com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog
 
-import com.mifos.api.datamanager.DataManagerClient
-import com.mifos.api.datamanager.DataManagerGroups
-import com.mifos.api.datamanager.DataManagerLoan
-import com.mifos.api.datamanager.DataManagerSavings
-import com.mifos.objects.accounts.ClientAccounts
-import com.mifos.objects.accounts.GroupAccounts
-import com.mifos.objects.accounts.loan.LoanWithAssociations
-import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.objects.client.Client
-import com.mifos.objects.group.Group
-import com.mifos.objects.group.GroupWithAssociations
-import com.mifos.objects.templates.loans.LoanRepaymentTemplate
-import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.core.network.datamanager.DataManagerGroups
+import com.mifos.core.network.datamanager.DataManagerLoan
+import com.mifos.core.network.datamanager.DataManagerSavings
+import com.mifos.core.objects.accounts.ClientAccounts
+import com.mifos.core.objects.accounts.GroupAccounts
+import com.mifos.core.objects.accounts.loan.LoanWithAssociations
+import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.group.Group
+import com.mifos.core.objects.group.GroupWithAssociations
+import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
 import rx.Observable
 import javax.inject.Inject
 

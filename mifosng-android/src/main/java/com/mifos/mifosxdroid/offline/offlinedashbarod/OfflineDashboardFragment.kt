@@ -9,6 +9,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mifos.core.data.CenterPayload
+import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.objects.client.ClientPayload
+import com.mifos.core.objects.group.GroupPayload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.OfflineDashboardAdapter
 import com.mifos.mifosxdroid.core.MifosBaseFragment
@@ -19,11 +24,6 @@ import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadActivit
 import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsActivity
 import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionActivity
 import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionActivity
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.objects.client.ClientPayload
-import com.mifos.objects.group.GroupPayload
-import com.mifos.services.data.CenterPayload
 import com.mifos.utils.ItemOffsetDecoration
 import dagger.hilt.android.AndroidEntryPoint
 

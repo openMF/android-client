@@ -8,12 +8,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.CheckerInboxTasksFragmentBinding
-import com.mifos.objects.CheckerTask
-import com.mifos.objects.checkerinboxandtasks.RescheduleLoansTask
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -59,10 +58,11 @@ class CheckerInboxTasksFragment : MifosBaseFragment(), SwipeRefreshLayout.OnRefr
                 binding.badgeCheckerInbox.text = it.size.toString()
             })
 
-        viewModel.getRescheduleLoanTasks().observe(viewLifecycleOwner,
-            Observer<List<RescheduleLoansTask>> {
-                binding.badgeRescheduleLoan.text = it.size.toString()
-            })
+        viewModel.getRescheduleLoanTasks().observe(
+            viewLifecycleOwner
+        ) {
+            binding.badgeRescheduleLoan.text = it.size.toString()
+        }
 
         viewModel.status.observe(viewLifecycleOwner,
             Observer { status ->

@@ -16,7 +16,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.mifos.api.GenericResponse
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.network.GenericResponse
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
@@ -25,7 +26,6 @@ import com.mifos.mifosxdroid.databinding.FragmentSignBinding
 import com.mifos.mifosxdroid.views.SignatureView.OnSignatureSaveListener
 import com.mifos.utils.AndroidVersionUtil
 import com.mifos.utils.CheckSelfPermissionAndRequest
-import com.mifos.utils.Constants
 import com.mifos.utils.FileUtils
 import com.mifos.utils.SafeUIBlockingUtility
 import dagger.hilt.android.AndroidEntryPoint

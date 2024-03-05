@@ -11,8 +11,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mifos.api.model.BulkRepaymentTransactions
-import com.mifos.api.model.IndividualCollectionSheetPayload
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.model.BulkRepaymentTransactions
+import com.mifos.core.network.model.IndividualCollectionSheetPayload
+import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.core.objects.collectionsheet.LoanAndClientName
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.IndividualCollectionSheetDetailsAdapter
 import com.mifos.mifosxdroid.adapters.IndividualCollectionSheetDetailsAdapter.ListAdapterListener
@@ -20,9 +23,6 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.IndividualCollectionsSheetDetailsBinding
 import com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity
-import com.mifos.objects.collectionsheet.IndividualCollectionSheet
-import com.mifos.objects.collectionsheet.LoanAndClientName
-import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

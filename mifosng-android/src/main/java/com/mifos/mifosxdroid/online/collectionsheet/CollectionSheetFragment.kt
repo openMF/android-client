@@ -11,16 +11,16 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.MaterialIcons
-import com.mifos.api.model.BulkRepaymentTransactions
-import com.mifos.api.model.CollectionSheetPayload
-import com.mifos.api.model.Payload
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.model.BulkRepaymentTransactions
+import com.mifos.core.network.model.CollectionSheetPayload
+import com.mifos.core.network.model.Payload
+import com.mifos.core.objects.db.CollectionSheet
+import com.mifos.core.objects.response.SaveResponse
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.CollectionListAdapter
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentCollectionSheetBinding
-import com.mifos.objects.db.CollectionSheet
-import com.mifos.objects.response.SaveResponse
-import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.HttpException
 import java.util.*
@@ -69,16 +69,19 @@ class CollectionSheetFragment : MifosBaseFragment() {
         fetchCollectionSheet()
 
         viewModel.collectionSheetUiState.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 is CollectionSheetUiState.ShowCollectionSheet -> {
                     showCollectionSheet(it.collectionSheet)
                 }
+
                 is CollectionSheetUiState.ShowCollectionSheetSuccessfullySaved -> {
                     showCollectionSheetSuccessfullySaved(it.saveResponse)
                 }
+
                 is CollectionSheetUiState.ShowFailedToSaveCollectionSheet -> {
                     showFailedToSaveCollectionSheet(it.e)
                 }
+
                 is CollectionSheetUiState.ShowFetchingError -> {
                     showFetchingError(it.message)
                 }
@@ -204,7 +207,6 @@ class CollectionSheetFragment : MifosBaseFragment() {
         private const val MENU_ITEM_REFRESH = 2001
         private const val MENU_ITEM_SAVE = 2002
 
-        @JvmStatic
         fun newInstance(
             centerId: Int,
             dateOfCollection: String?,

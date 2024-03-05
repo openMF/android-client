@@ -10,10 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import com.joanzapata.iconify.fonts.MaterialIcons
+import com.mifos.core.objects.accounts.loan.Transaction
+import com.mifos.core.objects.accounts.loan.Type
 import com.mifos.mifosxdroid.databinding.RowLoanTransactionItemBinding
 import com.mifos.mifosxdroid.databinding.RowLoanTransactionItemDetailBinding
-import com.mifos.objects.accounts.loan.Transaction
-import com.mifos.objects.accounts.loan.Type
 import com.mifos.utils.DateHelper.getDateAsString
 
 /**

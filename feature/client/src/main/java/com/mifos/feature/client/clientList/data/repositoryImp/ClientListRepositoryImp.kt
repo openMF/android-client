@@ -3,10 +3,10 @@ package com.mifos.feature.client.clientList.data.repositoryImp
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.mifos.core.common.utils.Page
-import com.mifos.core.data.model.client.Client
 import com.mifos.core.model.ClientDb
 import com.mifos.core.network.datamanger.DataManagerClient
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.Page
 import com.mifos.feature.client.clientList.domain.repository.ClientListRepository
 import com.mifos.feature.client.clientList.paging.ClientListPagingSource
 import kotlinx.coroutines.flow.Flow

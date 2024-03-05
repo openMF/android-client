@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("kotlin-parcelize")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -69,4 +71,21 @@ dependencies {
     // Mongo Realm
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
     implementation("io.realm.kotlin:library-base:1.11.0")
+
+
+    //Square dependencies
+    implementation("com.squareup.retrofit2:retrofit:2.9.0") {
+        // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
+        exclude(module = "okhttp")
+    }
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+    implementation("com.squareup.retrofit2:adapter-rxjava:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.2")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    implementation("com.jakewharton.fliptables:fliptables:1.0.1")
+
+    //stetho dependencies
+    implementation("com.facebook.stetho:stetho:1.3.1")
+    implementation("com.facebook.stetho:stetho-okhttp3:1.3.1")
 }

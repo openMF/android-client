@@ -10,10 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
+import com.mifos.core.objects.client.Status
+import com.mifos.core.objects.group.Group
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.databinding.RowGroupListBinding
-import com.mifos.objects.client.Status
-import com.mifos.objects.group.Group
 
 /**
  * Created by ishankhanna on 28/06/14.
@@ -43,12 +43,12 @@ class GroupListAdapter(context: Context, groups: List<Group>) : BaseAdapter() {
 
     override fun getView(index: Int, view: View?, viewGroup: ViewGroup): View {
         val binding: RowGroupListBinding
-        val convertView : View
-        if(view == null){
-            binding = RowGroupListBinding.inflate(layoutInflater,viewGroup,false)
+        val convertView: View
+        if (view == null) {
+            binding = RowGroupListBinding.inflate(layoutInflater, viewGroup, false)
             convertView = binding.root
             convertView.tag = binding
-        }else{
+        } else {
             binding = view.tag as RowGroupListBinding
             convertView = view
         }

@@ -5,11 +5,10 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import androidx.core.content.ContextCompat
+import com.mifos.core.objects.accounts.loan.LoanAccount
+import com.mifos.core.objects.accounts.savings.SavingsAccount
+import com.mifos.core.objects.client.Client
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.accounts.loan.LoanAccount
-import com.mifos.objects.accounts.savings.SavingsAccount
-import com.mifos.objects.client.Client
 import rx.Observable
 import java.text.DateFormat
 import java.util.Calendar
@@ -29,7 +28,7 @@ object Utils {
      * @param paymentTypeOptions List<PaymentTypeOption>
      * @return List<String>
     </String></PaymentTypeOption></String></PaymentTypeOptions> */
-    fun getPaymentTypeOptions(paymentTypeOptions: List<PaymentTypeOption>?): List<String> {
+    fun getPaymentTypeOptions(paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>?): List<String> {
         val paymentOptions: MutableList<String> = ArrayList()
         Observable.from(paymentTypeOptions)
             .flatMap { (_, name) -> Observable.just(name) }
@@ -48,7 +47,7 @@ object Utils {
     @JvmStatic
     fun getPaymentTypeName(
         paymentId: Int,
-        paymentTypeOptions: List<PaymentTypeOption>?
+        paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>?
     ): String? {
         val paymentTypeName = arrayOfNulls<String>(1)
         Observable.from(paymentTypeOptions)

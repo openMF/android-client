@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mifos.api.model.BulkRepaymentTransactions
+import com.mifos.core.model.BulkRepaymentTransactions
+import com.mifos.core.objects.accounts.loan.PaymentTypeOptions
+import com.mifos.core.objects.collectionsheet.LoanAndClientName
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.databinding.ItemIndividualCollectionSheetBinding
 import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.OnRetrieveSheetItemData
-import com.mifos.objects.accounts.loan.PaymentTypeOptions
-import com.mifos.objects.collectionsheet.LoanAndClientName
 import com.mifos.utils.ImageLoaderUtils
 import dagger.hilt.android.qualifiers.ActivityContext
 import java.util.Locale

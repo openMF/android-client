@@ -9,13 +9,13 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.navigation.fragment.navArgs
-import com.mifos.api.model.BulkRepaymentTransactions
-import com.mifos.api.model.IndividualCollectionSheetPayload
+import com.mifos.core.model.BulkRepaymentTransactions
+import com.mifos.core.network.model.IndividualCollectionSheetPayload
+import com.mifos.core.objects.accounts.loan.PaymentTypeOptions
+import com.mifos.core.objects.collectionsheet.LoanAndClientName
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.AddPaymentDetailBinding
-import com.mifos.objects.accounts.loan.PaymentTypeOptions
-import com.mifos.objects.collectionsheet.LoanAndClientName
 import com.mifos.utils.ImageLoaderUtils
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale

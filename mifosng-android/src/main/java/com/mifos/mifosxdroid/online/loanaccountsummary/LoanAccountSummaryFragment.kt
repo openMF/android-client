@@ -16,12 +16,12 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.accounts.loan.LoanWithAssociations
+import com.mifos.core.objects.client.Charges
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.databinding.FragmentLoanAccountSummaryBinding
-import com.mifos.objects.accounts.loan.LoanWithAssociations
-import com.mifos.objects.client.Charges
-import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,7 +36,7 @@ class LoanAccountSummaryFragment : ProgressableFragment() {
 
     var loanAccountNumber = 0
 
-    private lateinit var viewModel : LoanAccountSummaryViewModel
+    private lateinit var viewModel: LoanAccountSummaryViewModel
 
     var chargesList: MutableList<Charges> = ArrayList()
 
@@ -61,16 +61,18 @@ class LoanAccountSummaryFragment : ProgressableFragment() {
         viewModel = ViewModelProvider(this)[LoanAccountSummaryViewModel::class.java]
         inflateLoanAccountSummary()
 
-        viewModel.loanAccountSummaryUiState.observe(viewLifecycleOwner){
-            when(it) {
+        viewModel.loanAccountSummaryUiState.observe(viewLifecycleOwner) {
+            when (it) {
                 is LoanAccountSummaryUiState.ShowFetchingError -> {
                     showProgressbar(false)
                     showFetchingError(it.message)
                 }
+
                 is LoanAccountSummaryUiState.ShowLoanById -> {
                     showProgressbar(false)
                     showLoanById(it.loanWithAssociations)
                 }
+
                 is LoanAccountSummaryUiState.ShowProgressbar -> showProgressbar(true)
             }
         }

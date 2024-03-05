@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.savingsaccountactivate
 
-import com.mifos.api.GenericResponse
+import com.mifos.core.network.GenericResponse
 import rx.Observable
 
 /**

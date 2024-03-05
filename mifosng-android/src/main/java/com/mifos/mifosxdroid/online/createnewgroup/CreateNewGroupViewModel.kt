@@ -3,9 +3,9 @@ package com.mifos.mifosxdroid.online.createnewgroup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.group.GroupPayload
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.response.SaveResponse
+import com.mifos.core.objects.group.GroupPayload
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.response.SaveResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

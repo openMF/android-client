@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.activate
 
-import com.mifos.api.GenericResponse
-import com.mifos.objects.client.ActivatePayload
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.client.ActivatePayload
 import org.apache.fineract.client.models.PostCentersCenterIdResponse
 import org.apache.fineract.client.models.PostClientsClientIdResponse
 import rx.Observable

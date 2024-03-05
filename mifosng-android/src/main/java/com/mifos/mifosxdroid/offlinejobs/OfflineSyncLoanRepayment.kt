@@ -2,9 +2,9 @@ package com.mifos.mifosxdroid.offlinejobs
 
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobRequest
-import com.mifos.api.datamanager.DataManagerLoan
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.network.datamanager.DataManagerLoan
+import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
 import com.mifos.utils.MFErrorParser.errorMessage
 import com.mifos.utils.PrefManager.userStatus
 import com.mifos.utils.Tags

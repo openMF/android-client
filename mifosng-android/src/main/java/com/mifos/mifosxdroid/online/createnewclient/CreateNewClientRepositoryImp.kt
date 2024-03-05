@@ -1,13 +1,13 @@
 package com.mifos.mifosxdroid.online.createnewclient
 
-import com.mifos.api.datamanager.DataManagerClient
-import com.mifos.api.datamanager.DataManagerOffices
-import com.mifos.api.datamanager.DataManagerStaff
-import com.mifos.objects.client.Client
-import com.mifos.objects.client.ClientPayload
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.organisation.Staff
-import com.mifos.objects.templates.clients.ClientsTemplate
+import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.core.network.datamanager.DataManagerOffices
+import com.mifos.core.network.datamanager.DataManagerStaff
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.ClientPayload
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.organisation.Staff
+import com.mifos.core.objects.templates.clients.ClientsTemplate
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import rx.Observable

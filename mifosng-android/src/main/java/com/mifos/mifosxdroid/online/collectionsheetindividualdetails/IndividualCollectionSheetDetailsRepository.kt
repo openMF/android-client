@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.collectionsheetindividualdetails
 
-import com.mifos.api.GenericResponse
-import com.mifos.api.model.IndividualCollectionSheetPayload
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import rx.Observable
 
 /**

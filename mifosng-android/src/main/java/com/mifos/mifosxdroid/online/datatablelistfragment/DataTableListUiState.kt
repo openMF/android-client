@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.datatablelistfragment
 
-import com.mifos.objects.client.Client
+import com.mifos.core.objects.client.Client
 
 /**
  * Created by Aditya Gupta on 10/08/23.

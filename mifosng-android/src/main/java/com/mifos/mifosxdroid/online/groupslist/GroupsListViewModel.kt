@@ -3,9 +3,9 @@ package com.mifos.mifosxdroid.online.groupslist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.objects.client.Page
+import com.mifos.core.objects.group.Group
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.client.Page
-import com.mifos.objects.group.Group
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.loantransactions
 
-import com.mifos.api.DataManager
-import com.mifos.objects.accounts.loan.LoanWithAssociations
+import com.mifos.core.network.DataManager
+import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import rx.Observable
 import javax.inject.Inject
 

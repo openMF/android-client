@@ -1,7 +1,6 @@
 package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction
 
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -18,6 +17,6 @@ sealed class SyncSavingsAccountTransactionUiState {
 
     object ShowProgressbar : SyncSavingsAccountTransactionUiState()
 
-    data class ShowPaymentTypeOptions(val paymentTypeOptions: List<PaymentTypeOption>) :
+    data class ShowPaymentTypeOptions(val paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>) :
         SyncSavingsAccountTransactionUiState()
 }

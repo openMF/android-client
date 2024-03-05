@@ -1,15 +1,15 @@
 package com.mifos.mifosxdroid.offline.offlinedashbarod
 
-import com.mifos.api.datamanager.DataManagerCenter
-import com.mifos.api.datamanager.DataManagerClient
-import com.mifos.api.datamanager.DataManagerGroups
-import com.mifos.api.datamanager.DataManagerLoan
-import com.mifos.api.datamanager.DataManagerSavings
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.objects.client.ClientPayload
-import com.mifos.objects.group.GroupPayload
-import com.mifos.services.data.CenterPayload
+import com.mifos.core.data.CenterPayload
+import com.mifos.core.network.datamanager.DataManagerCenter
+import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.core.network.datamanager.DataManagerGroups
+import com.mifos.core.network.datamanager.DataManagerLoan
+import com.mifos.core.network.datamanager.DataManagerSavings
+import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.objects.client.ClientPayload
+import com.mifos.core.objects.group.GroupPayload
 import rx.Observable
 import javax.inject.Inject
 

@@ -5,11 +5,11 @@ package com.mifos.mifosxdroid.dialogfragments.syncclientsdialog
  */
 sealed class SyncClientsDialogUiState {
 
-    object ShowClientsSyncSuccessfully : SyncClientsDialogUiState()
+    data object ShowClientsSyncSuccessfully : SyncClientsDialogUiState()
 
-    object ShowNetworkIsNotAvailable : SyncClientsDialogUiState()
+    data object ShowNetworkIsNotAvailable : SyncClientsDialogUiState()
 
-    object DismissDialog : SyncClientsDialogUiState()
+    data object DismissDialog : SyncClientsDialogUiState()
 
     data class UpdateSingleSyncClientProgressBar(val total: Int) : SyncClientsDialogUiState()
 

@@ -4,9 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.mifosxdroid.databinding.ItemSyncSavingsAccountTransactionBinding
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.utils.Utils.getPaymentTypeName
 import javax.inject.Inject
 
@@ -16,7 +15,7 @@ import javax.inject.Inject
 class SyncSavingsAccountTransactionAdapter @Inject constructor() :
     RecyclerView.Adapter<SyncSavingsAccountTransactionAdapter.ViewHolder>() {
     private var mSavingsAccountTransactionRequests: List<SavingsAccountTransactionRequest>
-    private var mPaymentTypeOptions: List<PaymentTypeOption>
+    private var mPaymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>
 
     init {
         mSavingsAccountTransactionRequests = ArrayList()
@@ -40,7 +39,7 @@ class SyncSavingsAccountTransactionAdapter @Inject constructor() :
         notifyDataSetChanged()
     }
 
-    fun setPaymentTypeOptions(paymentTypeOptions: List<PaymentTypeOption>) {
+    fun setPaymentTypeOptions(paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>) {
         mPaymentTypeOptions = paymentTypeOptions
         notifyDataSetChanged()
     }

@@ -17,8 +17,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
-import com.mifos.mifosxdroid.activity.home.HomeActivity
+import com.mifos.core.objects.group.Center
+import com.mifos.core.objects.group.CenterWithAssociations
 import com.mifos.mifosxdroid.R
+import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.adapters.CentersListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -28,8 +30,6 @@ import com.mifos.mifosxdroid.databinding.FragmentCentersListBinding
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogFragment
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetFragment
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
-import com.mifos.objects.group.Center
-import com.mifos.objects.group.CenterWithAssociations
 import com.mifos.utils.FragmentConstants
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -138,9 +138,10 @@ class CenterListFragment : MifosBaseFragment(), OnRefreshListener {
         binding.fabCreateCenter.setOnClickListener {
             onClickCreateNewCenter()
         }
-        binding.layoutError.findViewById<Button>(com.github.therajanmaurya.sweeterror.R.id.btnTryAgain).setOnClickListener {
-            reloadOnError()
-        }
+        binding.layoutError.findViewById<Button>(com.github.therajanmaurya.sweeterror.R.id.btnTryAgain)
+            .setOnClickListener {
+                reloadOnError()
+            }
     }
 
     /**

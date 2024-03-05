@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.surveylist
 
-import com.mifos.objects.survey.QuestionDatas
-import com.mifos.objects.survey.ResponseDatas
-import com.mifos.objects.survey.Survey
+import com.mifos.core.objects.survey.QuestionDatas
+import com.mifos.core.objects.survey.ResponseDatas
+import com.mifos.core.objects.survey.Survey
 import rx.Observable
 
 /**

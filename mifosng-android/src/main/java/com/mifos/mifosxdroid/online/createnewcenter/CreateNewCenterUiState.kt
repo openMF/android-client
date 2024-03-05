@@ -1,14 +1,14 @@
 package com.mifos.mifosxdroid.online.createnewcenter
 
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.response.SaveResponse
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.response.SaveResponse
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
 sealed class CreateNewCenterUiState {
 
-    object ShowProgressbar : CreateNewCenterUiState()
+    data object ShowProgressbar : CreateNewCenterUiState()
 
     data class ShowFetchingError(val message: Int) : CreateNewCenterUiState()
 

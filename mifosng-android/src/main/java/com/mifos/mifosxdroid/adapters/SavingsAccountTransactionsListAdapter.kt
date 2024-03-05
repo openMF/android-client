@@ -11,9 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
+import com.mifos.core.objects.accounts.savings.Transaction
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.databinding.RowSavingsTransactionItemBinding
-import com.mifos.objects.accounts.savings.Transaction
 import com.mifos.utils.DateHelper.getDateAsString
 
 /**

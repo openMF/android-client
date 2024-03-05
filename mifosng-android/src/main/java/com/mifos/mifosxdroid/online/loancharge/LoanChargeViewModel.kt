@@ -3,7 +3,7 @@ package com.mifos.mifosxdroid.online.loancharge
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.client.Charges
+import com.mifos.core.objects.client.Charges
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.HttpException
 import rx.Subscriber

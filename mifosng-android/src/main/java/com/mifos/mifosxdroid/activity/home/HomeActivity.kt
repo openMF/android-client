@@ -97,7 +97,10 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
 
             R.id.collection_sheet -> {
                 val bundle = Bundle()
-                bundle.putString(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_COLLECTION)
+                bundle.putString(
+                    Constants.COLLECTION_TYPE,
+                    Constants.EXTRA_COLLECTION_COLLECTION
+                )
                 findNavController(R.id.nav_host_fragment).navigate(
                     R.id.generateCollectionSheetActivity,
                     bundle

@@ -19,17 +19,16 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.mifos.api.GenericResponse
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.accounts.savings.DepositType
+import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.objects.accounts.savings.Status
+import com.mifos.core.objects.accounts.savings.Transaction
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SavingsAccountTransactionsListAdapter
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.databinding.FragmentSavingsAccountSummaryBinding
-import com.mifos.objects.accounts.savings.DepositType
-import com.mifos.objects.accounts.savings.DepositType.ServerTypes
-import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.objects.accounts.savings.Status
-import com.mifos.objects.accounts.savings.Transaction
-import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.properties.Delegates
 
@@ -42,7 +41,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment() {
     var savingsAccountType: DepositType? = null
     private val arg: SavingsAccountSummaryFragmentArgs by navArgs()
 
-    private lateinit var viewModel : SavingsAccountSummaryViewModel
+    private lateinit var viewModel: SavingsAccountSummaryViewModel
 
     // Cached List of all savings account transactions
     // that are used for inflation of rows in
@@ -81,11 +80,12 @@ class SavingsAccountSummaryFragment : ProgressableFragment() {
         viewModel.loadSavingAccount(savingsAccountType?.endpoint, savingsAccountNumber)
 
         viewModel.savingsAccountSummaryUiState.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 is SavingsAccountSummaryUiState.ShowFetchingError -> {
                     showProgressbar(false)
                     showFetchingError(it.message)
                 }
+
                 is SavingsAccountSummaryUiState.ShowProgressbar -> showProgressbar(true)
                 is SavingsAccountSummaryUiState.ShowSavingAccount -> {
                     showProgressbar(false)
@@ -118,7 +118,7 @@ class SavingsAccountSummaryFragment : ProgressableFragment() {
     private fun inflateSavingsAccountSummary() {
         showProgress(true)
         when (savingsAccountType?.serverType) {
-            ServerTypes.RECURRING -> setToolbarTitle(resources.getString(R.string.recurringAccountSummary))
+            DepositType.ServerTypes.RECURRING -> setToolbarTitle(resources.getString(R.string.recurringAccountSummary))
             else -> setToolbarTitle(resources.getString(R.string.savingsAccountSummary))
         }
     }

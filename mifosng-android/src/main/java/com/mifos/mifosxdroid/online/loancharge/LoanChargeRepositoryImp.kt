@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.loancharge
 
-import com.mifos.api.DataManager
-import com.mifos.objects.client.Charges
+import com.mifos.core.network.DataManager
+import com.mifos.core.objects.client.Charges
 import rx.Observable
 import javax.inject.Inject
 

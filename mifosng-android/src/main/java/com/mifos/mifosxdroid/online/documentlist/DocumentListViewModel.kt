@@ -3,11 +3,9 @@ package com.mifos.mifosxdroid.online.documentlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.api.GenericResponse
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.noncore.Document
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.noncore.Document
-import com.mifos.mifosxdroid.online.documentlist.DocumentListRepository
-import com.mifos.mifosxdroid.online.documentlist.DocumentListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.ResponseBody
 import rx.Subscriber

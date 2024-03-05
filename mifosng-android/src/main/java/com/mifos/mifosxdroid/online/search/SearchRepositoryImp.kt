@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.search
 
-import com.mifos.api.datamanager.DataManagerSearch
-import com.mifos.objects.SearchedEntity
+import com.mifos.core.network.datamanager.DataManagerSearch
+import com.mifos.core.objects.SearchedEntity
 import rx.Observable
 import javax.inject.Inject
 

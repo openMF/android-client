@@ -6,13 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.mifos.core.objects.client.Client
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.SelectableAdapter
-import com.mifos.objects.client.Client
 import com.mifos.utils.ImageLoaderUtils
 
 
@@ -31,11 +30,11 @@ class ClientNameListAdapter(
                 .inflate(R.layout.row_client_name, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+            if (viewHolder.adapterPosition != RecyclerView.NO_POSITION)
                 onClientNameClick(viewHolder.adapterPosition)
         }
         viewHolder.itemView.setOnLongClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+            if (viewHolder.adapterPosition != RecyclerView.NO_POSITION)
                 onClientNameLongClick(viewHolder.adapterPosition)
             return@setOnLongClickListener true
         }
@@ -65,8 +64,7 @@ class ClientNameListAdapter(
                 } else {
                     holder.itemView.context.resources.getColor(R.color.primary)
                 }
-            }
-            else Color.WHITE
+            } else Color.WHITE
         )
         holder.iv_sync_status.visibility = if (client.sync) View.VISIBLE else View.INVISIBLE
     }

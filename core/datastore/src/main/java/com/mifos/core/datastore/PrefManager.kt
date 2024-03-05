@@ -14,8 +14,9 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 19/08/23.
  */
 
-class PrefManager @Inject constructor(@ApplicationContext context: Context) :
-    UserPreferences<User>() {
+class PrefManager @Inject constructor(
+    @ApplicationContext context: Context
+) : UserPreferences<User>() {
 
 
     private val USER_DETAILS = "user_details"

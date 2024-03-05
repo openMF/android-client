@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.loancharge
 
-import com.mifos.objects.client.Charges
+import com.mifos.core.objects.client.Charges
 import rx.Observable
 
 /**

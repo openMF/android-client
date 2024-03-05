@@ -5,11 +5,11 @@ package com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog
  */
 sealed class SyncGroupsDialogUiState {
 
-    object ShowGroupsSyncSuccessfully : SyncGroupsDialogUiState()
+    data object ShowGroupsSyncSuccessfully : SyncGroupsDialogUiState()
 
-    object ShowNetworkIsNotAvailable : SyncGroupsDialogUiState()
+    data object ShowNetworkIsNotAvailable : SyncGroupsDialogUiState()
 
-    object DismissDialog : SyncGroupsDialogUiState()
+    data object DismissDialog : SyncGroupsDialogUiState()
 
     data class UpdateSingleSyncGroupProgressBar(val index: Int) : SyncGroupsDialogUiState()
 

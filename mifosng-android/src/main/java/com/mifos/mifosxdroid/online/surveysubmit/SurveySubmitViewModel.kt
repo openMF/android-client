@@ -3,7 +3,7 @@ package com.mifos.mifosxdroid.online.surveysubmit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.survey.Scorecard
+import com.mifos.core.objects.survey.Scorecard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

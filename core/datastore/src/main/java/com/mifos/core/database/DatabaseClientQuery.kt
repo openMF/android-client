@@ -1,7 +1,7 @@
 package com.mifos.core.database
 
-import com.mifos.core.common.utils.Page
 import com.mifos.core.model.ClientDb
+import com.mifos.core.objects.client.Page
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.query.Sort

@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.createnewclient
 
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.organisation.Staff
-import com.mifos.objects.templates.clients.ClientsTemplate
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.organisation.Staff
+import com.mifos.core.objects.templates.clients.ClientsTemplate
 
 /**
  * Created by Aditya Gupta on 10/08/23.

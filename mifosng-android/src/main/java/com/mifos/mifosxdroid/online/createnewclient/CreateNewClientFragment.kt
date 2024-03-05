@@ -22,6 +22,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.ViewModelProvider
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.client.ClientPayload
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.organisation.Staff
+import com.mifos.core.objects.templates.clients.ClientsTemplate
 import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
@@ -29,11 +34,6 @@ import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentCreateNewClientBinding
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment
-import com.mifos.objects.client.ClientPayload
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.organisation.Staff
-import com.mifos.objects.templates.clients.ClientsTemplate
-import com.mifos.utils.Constants
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.ValidationUtil
