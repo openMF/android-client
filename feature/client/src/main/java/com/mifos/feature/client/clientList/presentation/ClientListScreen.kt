@@ -60,12 +60,12 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
+import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.LightGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.model.ClientDb
 import com.mifos.core.objects.client.Client
 import com.mifos.feature.client.R
 
@@ -137,38 +137,45 @@ fun ClientListScreen(
         containerColor = White,
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
-        when (state) {
-            is ClientListUiState.ClientListApi -> {
 
-                SwipeRefresh(
-                    state = swipeRefreshState,
-                    onRefresh = {
-                        viewModel.refreshClientList()
-                    }) {
-                    Column(
-                        modifier = Modifier
-                            .padding(padding),
-                        verticalArrangement = Arrangement.Center
-                    ) {
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = {
+                viewModel.refreshClientList()
+            }) {
+            Column(
+                modifier = Modifier
+                    .padding(padding),
+                verticalArrangement = Arrangement.Center
+            ) {
+                when (state) {
+                    is ClientListUiState.ClientListApi -> {
                         LazyColumnForClientListApi(
                             clientPagingList = state.list.collectAsLazyPagingItems(),
                             isInSelectionMode,
-                            selectedItems
+                            selectedItems,
+                            failedRefresh = { viewModel.refreshClientList() }
                         ) {
                             onClientSelect(it)
                         }
                     }
+
+                    is ClientListUiState.ClientListDb -> {
+                        LazyColumnForClientListDb(clientList = state.list)
+                    }
+
+                    ClientListUiState.Empty -> {
+
+                    }
+
+                    is ClientListUiState.Error -> {
+                        MifosSweetError(message = state.message) {
+                            viewModel.refreshClientList()
+                        }
+                    }
                 }
+
             }
-
-            is ClientListUiState.ClientListDb -> {
-                LazyColumnForClientListDb(clientList = state.list)
-            }
-
-            ClientListUiState.Empty -> {
-            }
-
-
         }
     }
 }
@@ -224,11 +231,16 @@ fun LazyColumnForClientListApi(
     clientPagingList: LazyPagingItems<Client>,
     isInSelectionMode: MutableState<Boolean>,
     selectedItems: SnapshotStateList<Client>,
+    failedRefresh : () ->Unit,
     onClientSelect: (Client) -> Unit
 ) {
 
     when (clientPagingList.loadState.refresh) {
-        is LoadState.Error -> {}
+        is LoadState.Error -> {
+            MifosSweetError(message = "Failed to Fetch Clients") {
+                failedRefresh()
+            }
+        }
 
         is LoadState.Loading -> MifosCircularProgress()
 
@@ -371,7 +383,7 @@ fun LazyColumnForClientListApi(
 }
 
 @Composable
-fun LazyColumnForClientListDb(clientList: List<ClientDb>) {
+fun LazyColumnForClientListDb(clientList: List<Client>) {
 
     LazyColumn {
         items(clientList) { client ->

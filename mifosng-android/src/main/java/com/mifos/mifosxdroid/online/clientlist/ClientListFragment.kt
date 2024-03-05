@@ -17,6 +17,8 @@ import com.mifos.feature.client.clientList.presentation.ClientListScreen
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
+import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment
+import com.mifos.utils.FragmentConstants
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -57,8 +59,18 @@ class ClientListFragment : MifosBaseFragment() {
                         findNavController().navigate(R.id.action_clientListFragment_to_createNewClientFragment)
                     }
                 }, syncClicked = { clientList ->
-                    //Todo Store client data to realm in next Pull request
-
+                    val syncClientsDialogFragment =
+                        SyncClientsDialogFragment.newInstance(ArrayList(clientList))
+                    val fragmentTransaction = activity
+                        ?.supportFragmentManager?.beginTransaction()
+                    fragmentTransaction?.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC)
+                    syncClientsDialogFragment.isCancelable = false
+                    fragmentTransaction?.let {
+                        syncClientsDialogFragment.show(
+                            it,
+                            resources.getString(R.string.sync_clients)
+                        )
+                    }
                 }, onClientSelect = { client ->
 
                     val action =

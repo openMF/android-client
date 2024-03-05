@@ -1,4 +1,4 @@
-package com.mifos.core.model.client
+package com.mifos.core.model
 
 import com.google.gson.Gson
 import com.raizlabs.android.dbflow.structure.BaseModel

@@ -4,18 +4,17 @@ package com.mifos.feature.client.clientList.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.mifos.core.model.ClientDb
-import com.mifos.core.network.datamanger.DataManagerClient
+import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.Page
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.suspendCancellableCoroutine
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Created by Aditya Gupta on 21/02/24.
@@ -71,18 +70,34 @@ class ClientListPagingSource(private val dataManagerClient: DataManagerClient) :
         }
     }
 
-    private suspend fun getClientDbList(): List<ClientDb> {
-        return dataManagerClient.allDatabaseClients().first().pageItems
+    private suspend fun getClientDbList(): List<Client> {
+        return suspendCoroutine { continuation ->
+            dataManagerClient.allDatabaseClients
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(object : Subscriber<Page<Client>>() {
+                    override fun onCompleted() {
+                    }
+
+                    override fun onError(error: Throwable) {
+                        continuation.resumeWithException(error)
+                    }
+
+                    override fun onNext(clients: Page<Client>) {
+                        continuation.resume(clients.pageItems)
+                    }
+                })
+        }
     }
 
     private fun getClientListWithSync(
         clientList: List<Client>,
-        clientDbList: List<ClientDb>
+        clientDbList: List<Client>
     ): List<Client> {
         if (clientDbList.isNotEmpty()) {
             clientList.forEach { client ->
                 clientDbList.forEach { clientDb ->
-                    if (client.id == clientDb._id) {
+                    if (client.id == clientDb.id) {
                         client.sync = true
                     }
                 }

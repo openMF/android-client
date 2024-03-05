@@ -94,7 +94,7 @@ class ClientListViewModel @Inject constructor(private val repository: ClientList
      */
     private fun loadClients(paged: Boolean, offset: Int, limit: Int) {
         _clientListUiState.value = ClientListUiState.ShowProgressbar(true)
-        repository.getAllClients(paged, offset, limit)
+        repository.getAllClients(offset, limit)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<Page<Client>>() {

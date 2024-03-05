@@ -12,8 +12,8 @@ import javax.inject.Inject
 class ClientListRepositoryImp @Inject constructor(private val dataManagerClient: DataManagerClient) :
     ClientListRepository {
 
-    override fun getAllClients(paged: Boolean, offset: Int, limit: Int): Observable<Page<Client>> {
-        return dataManagerClient.getAllClients(paged, offset, limit)
+    override fun getAllClients(offset: Int, limit: Int): Observable<Page<Client>> {
+        return dataManagerClient.getAllClients(offset, limit)
     }
 
     override fun allDatabaseClients(): Observable<Page<Client>> {

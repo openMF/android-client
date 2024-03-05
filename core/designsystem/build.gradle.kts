@@ -58,4 +58,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.1")
     implementation("androidx.compose.material3:material3:1.1.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+
+    // coil
+    implementation("io.coil-kt:coil-compose:2.5.0")
 }

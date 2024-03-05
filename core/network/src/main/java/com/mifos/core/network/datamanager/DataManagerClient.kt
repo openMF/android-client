@@ -57,7 +57,7 @@ class DataManagerClient @Inject constructor(
      * @param limit  Maximum Number of clients will come in response
      * @return Client List from offset to max Limit
      */
-    fun getAllClients(paged: Boolean, offset: Int, limit: Int): Observable<Page<Client>> {
+    fun getAllClients(offset: Int, limit: Int): Observable<Page<Client>> {
         return when (prefManager.userStatus) {
             false -> baseApiManager.getClientsApi().retrieveAll21(
                 null, null, null,
