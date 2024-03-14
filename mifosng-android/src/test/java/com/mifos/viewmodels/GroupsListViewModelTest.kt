@@ -62,7 +62,6 @@ class GroupsListViewModelTest {
 
         Mockito.`when`(
             groupsListRepository.getGroups(
-                Mockito.anyBoolean(),
                 Mockito.anyInt(),
                 Mockito.anyInt()
             )
@@ -84,7 +83,6 @@ class GroupsListViewModelTest {
     fun testGroupsListDatabase_SuccessfulGroupsListReceivedFromRepository_ReturnsEmptyGroupsList() {
         Mockito.`when`(
             groupsListRepository.getGroups(
-                Mockito.anyBoolean(),
                 Mockito.anyInt(),
                 Mockito.anyInt()
             )
@@ -106,7 +104,6 @@ class GroupsListViewModelTest {
     fun testGroupsListDatabase_UnsuccessfulGroupsListReceivedFromRepository_ReturnsError() {
         Mockito.`when`(
             groupsListRepository.getGroups(
-                Mockito.anyBoolean(),
                 Mockito.anyInt(),
                 Mockito.anyInt()
             )

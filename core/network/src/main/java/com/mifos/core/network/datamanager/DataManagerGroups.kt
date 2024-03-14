@@ -42,12 +42,12 @@ class DataManagerGroups @Inject constructor(
      * else if offset is not zero and UserStatus is 1 then return default empty response to
      * presenter
      *
-     * @param paged  True Enable the Pagination of the client list REST API
+     * // @param paged  True Enable the Pagination of the client list REST API
      * @param offset Value give from which position Fetch GroupsList
      * @param limit  Maximum Number of clients will come in response
      * @return Groups List page from offset to max Limit
      */
-    fun getGroups(paged: Boolean, offset: Int, limit: Int): Observable<Page<Group>> {
+    fun getGroups(offset: Int, limit: Int): Observable<Page<Group>> {
         return when (prefManager.userStatus) {
             false -> baseApiManager.getGroupApi().retrieveAll24(
                 null,
@@ -55,7 +55,7 @@ class DataManagerGroups @Inject constructor(
                 null,
                 null,
                 null,
-                paged,
+                true,
                 offset,
                 limit,
                 null,

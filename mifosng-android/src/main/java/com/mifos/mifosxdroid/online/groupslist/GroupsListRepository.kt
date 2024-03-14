@@ -9,7 +9,7 @@ import rx.Observable
  */
 interface GroupsListRepository {
 
-    fun getGroups(paged: Boolean, offset: Int, limit: Int): Observable<Page<Group>>
+    fun getGroups(offset: Int, limit: Int): Observable<Page<Group>>
 
     fun databaseGroups(): Observable<Page<Group>>
 

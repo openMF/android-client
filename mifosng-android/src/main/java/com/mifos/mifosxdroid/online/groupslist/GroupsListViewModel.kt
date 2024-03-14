@@ -77,7 +77,7 @@ class GroupsListViewModel @Inject constructor(private val repository: GroupsList
 
     private fun loadGroups(paged: Boolean, offset: Int, limit: Int) {
         _groupsListUiState.value = GroupsListUiState.ShowProgressbar
-        repository.getGroups(paged, offset, limit)
+        repository.getGroups(offset, limit)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<Page<Group>>() {
