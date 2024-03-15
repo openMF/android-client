@@ -721,6 +721,7 @@
     <string name="lang_changed">语言已更改</string>
     <string name="lang_change_description">选择您要查看应用程序的语言</string>
     <string name="dark_mode">暗模式</string>
+    <string name="failed_to_load_group_details">无以加载组详细信息</string>
 
 
 </resources>

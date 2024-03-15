@@ -10,12 +10,15 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.joanzapata.iconify.widget.IconTextView
 import com.mifos.core.common.utils.Constants
@@ -41,6 +44,7 @@ class GroupDetailsFragment : MifosBaseFragment() {
     private lateinit var binding: FragmentGroupDetailsBinding
 
     private lateinit var viewModel: GroupDetailsViewModel
+    private var sweetUIErrorHandler: SweetUIErrorHandler? = null
 
     private var groupId = 0
     private var accountAccordion: AccountAccordion? = null
@@ -61,11 +65,13 @@ class GroupDetailsFragment : MifosBaseFragment() {
         viewModel = ViewModelProvider(this)[GroupDetailsViewModel::class.java]
         viewModel.loadGroupDetailsAndAccounts(groupId)
 
+        sweetUIErrorHandler = SweetUIErrorHandler(requireActivity(), binding.root)
+
         viewModel.groupDetailsUiState.observe(viewLifecycleOwner) {
             when (it) {
                 is GroupDetailsUiState.ShowFetchingError -> {
                     showProgressbar(false)
-                    showFetchingError(it.message)
+                    showFetchingError()
                 }
 
                 is GroupDetailsUiState.ShowGroup -> {
@@ -83,7 +89,10 @@ class GroupDetailsFragment : MifosBaseFragment() {
                     showGroupClients(it.clientMembers)
                 }
 
-                is GroupDetailsUiState.ShowProgressbar -> showProgressbar(it.state)
+                is GroupDetailsUiState.ShowProgressbar -> {
+                    sweetUIErrorHandler?.hideSweetErrorLayoutUI(binding.scrollGroupDetails, binding.layoutError)
+                    showProgressbar(it.state)
+                }
             }
         }
 
@@ -96,6 +105,13 @@ class GroupDetailsFragment : MifosBaseFragment() {
         binding.btnActivateGroup.setOnClickListener {
             onClickActivateGroup()
         }
+        binding.layoutError.findViewById<Button>(com.github.therajanmaurya.sweeterror.R.id.btnTryAgain).setOnClickListener {
+            loadGroupDetailsAndAccounts()
+        }
+    }
+
+    fun loadGroupDetailsAndAccounts() {
+        viewModel.loadGroupDetailsAndAccounts(groupId)
     }
 
     private fun onClickActivateGroup() {
@@ -253,8 +269,12 @@ class GroupDetailsFragment : MifosBaseFragment() {
         }
     }
 
-    private fun showFetchingError(errorMessage: Int) {
-        Toast.makeText(activity, getStringMessage(errorMessage), Toast.LENGTH_SHORT).show()
+    private fun showFetchingError() {
+        val errorMessage = getStringMessage(R.string.failed_to_load_group_details)
+        sweetUIErrorHandler?.showSweetErrorUI(
+            errorMessage, R.drawable.ic_error_black_24dp,
+            binding.scrollGroupDetails, binding.layoutError
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

@@ -165,5 +165,6 @@
     <string name="dark_mode">mode fosc</string>
 
     <string name="accounts">Comptes</string>
+    <string name="failed_to_load_group_details">No s\'han pogut carregar els detalls del grup</string>
 
 </resources>
