@@ -72,7 +72,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".online.ClientActivity"
-            android:label="@string/title_activity_client"
             android:screenOrientation="portrait" />
         <activity
             android:name=".online.CentersActivity"

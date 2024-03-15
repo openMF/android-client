@@ -36,7 +36,7 @@ class ClientActivity : MifosBaseActivity(),
         super.onCreate(savedInstanceState)
         binding = ActivityToolbarContainerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        showBackButton()
+        supportActionBar?.hide()
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
         clientId = args.client.clientId
