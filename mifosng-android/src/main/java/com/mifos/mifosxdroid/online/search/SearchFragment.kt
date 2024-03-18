@@ -15,8 +15,8 @@ import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.views.FabType
-import com.mifos.objects.SearchedEntity
-import com.mifos.objects.navigation.ClientArgs
+import com.mifos.core.objects.SearchedEntity
+import com.mifos.core.objects.navigation.ClientArgs
 import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
