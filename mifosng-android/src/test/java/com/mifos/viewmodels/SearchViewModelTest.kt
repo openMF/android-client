@@ -1,7 +1,7 @@
 package com.mifos.viewmodels
 
 import com.mifos.core.common.utils.Resource
-import com.mifos.objects.SearchedEntity
+import com.mifos.core.objects.SearchedEntity
 import com.mifos.mifosxdroid.online.search.SearchUseCase
 import com.mifos.mifosxdroid.online.search.SearchViewModel
 import kotlinx.coroutines.Dispatchers

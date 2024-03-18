@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.search
 
 import com.mifos.core.common.utils.Resource
-import com.mifos.objects.SearchedEntity
+import com.mifos.core.objects.SearchedEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

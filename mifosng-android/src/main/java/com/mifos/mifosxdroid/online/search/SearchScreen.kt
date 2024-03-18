@@ -64,7 +64,7 @@ import com.mifos.mifosxdroid.views.FabButton
 import com.mifos.mifosxdroid.views.FabButtonState
 import com.mifos.mifosxdroid.views.FabType
 import com.mifos.mifosxdroid.views.MultiFloatingActionButton
-import com.mifos.objects.SearchedEntity
+import com.mifos.core.objects.SearchedEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
