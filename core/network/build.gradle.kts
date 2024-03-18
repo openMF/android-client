@@ -88,4 +88,7 @@ dependencies {
     //stetho dependencies
     implementation("com.facebook.stetho:stetho:1.3.1")
     implementation("com.facebook.stetho:stetho-okhttp3:1.3.1")
+
+    //glide dependency
+    implementation("com.github.bumptech.glide:glide:4.15.1")
 }
