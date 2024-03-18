@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.surveysubmit
 
-import com.mifos.api.datamanager.DataManagerSurveys
-import com.mifos.objects.survey.Scorecard
+import com.mifos.core.network.datamanager.DataManagerSurveys
+import com.mifos.core.objects.survey.Scorecard
 import rx.Observable
 import javax.inject.Inject
 

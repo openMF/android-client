@@ -5,13 +5,14 @@
 package com.mifos.utils
 
 import com.google.gson.Gson
-import com.mifos.objects.mifoserror.MifosError
+import com.mifos.core.objects.mifoserror.MifosError
 import retrofit2.HttpException
 import rx.plugins.RxJavaPlugins
 
 object MFErrorParser {
     const val LOG_TAG = "MFErrorParser"
     private val gson = Gson()
+
     @JvmStatic
     fun parseError(serverResponse: String?): MifosError {
         return gson.fromJson(serverResponse, MifosError::class.java)

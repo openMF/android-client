@@ -3,10 +3,10 @@ package com.mifos.mifosxdroid.dialogfragments.chargedialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.client.ChargeCreationResponse
-import com.mifos.objects.templates.clients.ChargeOptions
-import com.mifos.objects.templates.clients.ChargeTemplate
-import com.mifos.services.data.ChargesPayload
+import com.mifos.core.data.ChargesPayload
+import com.mifos.core.objects.client.ChargeCreationResponse
+import com.mifos.core.objects.templates.clients.ChargeOptions
+import com.mifos.core.objects.templates.clients.ChargeTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.HttpException
 import rx.Observable

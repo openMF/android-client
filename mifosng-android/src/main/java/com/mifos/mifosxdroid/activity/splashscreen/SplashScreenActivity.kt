@@ -7,7 +7,7 @@ package com.mifos.mifosxdroid.activity.splashscreen
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.mifos.api.BaseUrl
+import com.mifos.core.network.BaseUrl
 import com.mifos.mifosxdroid.activity.login.LoginActivity
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.passcode.PassCodeActivity

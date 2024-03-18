@@ -1,9 +1,8 @@
 package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition
 
-import com.mifos.api.datamanager.DataManagerLoan
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.network.datamanager.DataManagerLoan
+import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
 import rx.Observable
 import javax.inject.Inject
 
@@ -14,7 +13,7 @@ class SyncLoanRepaymentTransactionRepositoryImp @Inject constructor(private val 
         return dataManagerLoan.databaseLoanRepayments
     }
 
-    override fun paymentTypeOption(): Observable<List<PaymentTypeOption>> {
+    override fun paymentTypeOption(): Observable<List<com.mifos.core.objects.PaymentTypeOption>> {
         return dataManagerLoan.paymentTypeOption
     }
 

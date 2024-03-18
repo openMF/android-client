@@ -9,14 +9,14 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.mifos.core.objects.noncore.DocumentType
+import com.mifos.core.objects.noncore.Identifier
+import com.mifos.core.objects.noncore.IdentifierCreationResponse
+import com.mifos.core.objects.noncore.IdentifierPayload
+import com.mifos.core.objects.noncore.IdentifierTemplate
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.databinding.DialogFragmentIdentifierBinding
-import com.mifos.objects.noncore.DocumentType
-import com.mifos.objects.noncore.Identifier
-import com.mifos.objects.noncore.IdentifierCreationResponse
-import com.mifos.objects.noncore.IdentifierPayload
-import com.mifos.objects.noncore.IdentifierTemplate
 import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 

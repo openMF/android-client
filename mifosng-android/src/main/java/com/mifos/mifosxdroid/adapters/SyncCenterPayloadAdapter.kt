@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mifos.mifosxdroid.databinding.ItemSyncCenterBinding
-import com.mifos.services.data.CenterPayload
+import com.mifos.core.data.CenterPayload
 import javax.inject.Inject
 
 /**

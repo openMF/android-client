@@ -12,14 +12,14 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.CheckerTaskListAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.CheckerInboxFragmentBinding
 import com.mifos.mifosxdroid.dialogfragments.checkertaskfilterdialog.CheckerTaskFilterDialogFragment
-import com.mifos.objects.CheckerTask
-import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Timestamp
 import java.util.Locale

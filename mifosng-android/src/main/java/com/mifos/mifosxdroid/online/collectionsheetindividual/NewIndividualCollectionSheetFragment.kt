@@ -6,16 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.mifos.api.model.RequestCollectionSheetPayload
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.network.model.RequestCollectionSheetPayload
+import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.organisation.Staff
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentNewCollectionSheetBinding
 import com.mifos.mifosxdroid.dialogfragments.collectionsheetdialog.CollectionSheetDialogFragment
-import com.mifos.objects.collectionsheet.IndividualCollectionSheet
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.organisation.Staff
-import com.mifos.utils.Constants
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.getDatePickerDialog
@@ -224,7 +224,10 @@ class NewIndividualCollectionSheetFragment : MifosBaseFragment(), View.OnClickLi
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(Constants.EXTRA_COLLECTION_INDIVIDUAL, sheet)
+        outState.putParcelable(
+            Constants.EXTRA_COLLECTION_INDIVIDUAL,
+            sheet
+        )
     }
 
     private fun showSuccess() {

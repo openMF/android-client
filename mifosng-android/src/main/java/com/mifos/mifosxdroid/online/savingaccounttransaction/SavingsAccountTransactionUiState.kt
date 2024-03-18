@@ -1,14 +1,14 @@
 package com.mifos.mifosxdroid.online.savingaccounttransaction
 
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse
-import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
+import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
 
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
 sealed class SavingsAccountTransactionUiState {
 
-    object ShowProgressbar : SavingsAccountTransactionUiState()
+    data object ShowProgressbar : SavingsAccountTransactionUiState()
 
     data class ShowError(val message: String) : SavingsAccountTransactionUiState()
 
@@ -18,5 +18,5 @@ sealed class SavingsAccountTransactionUiState {
     data class ShowTransactionSuccessfullyDone(val savingsAccountTransactionResponse: SavingsAccountTransactionResponse) :
         SavingsAccountTransactionUiState()
 
-    object ShowSavingAccountTransactionExistInDatabase : SavingsAccountTransactionUiState()
+    data object ShowSavingAccountTransactionExistInDatabase : SavingsAccountTransactionUiState()
 }

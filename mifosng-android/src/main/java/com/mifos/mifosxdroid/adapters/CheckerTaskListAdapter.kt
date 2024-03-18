@@ -6,7 +6,7 @@ import android.view.*
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.mifos.mifosxdroid.databinding.ItemCheckerTaskBinding
-import com.mifos.objects.CheckerTask
+import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
 
 class CheckerTaskListAdapter : ListAdapter<CheckerTask,
         CheckerTaskListAdapter.ViewHolder>(TaskDiffCallback()) {

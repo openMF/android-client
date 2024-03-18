@@ -14,7 +14,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @BaseApiManagerQualifier
+    fun provideBaseApiManager(prefManager: PrefManager): com.mifos.core.network.BaseApiManager {
+        return com.mifos.core.network.BaseApiManager(prefManager)
+    }
+
+    @Provides
+    @Singleton
     fun provideSdkBaseApiManager(prefManager: PrefManager): BaseApiManager {
         val usernamePassword: Pair<String, String> = prefManager.usernamePassword
         val baseManager = BaseApiManager.getInstance()
@@ -27,5 +32,4 @@ object NetworkModule {
         )
         return baseManager
     }
-
 }

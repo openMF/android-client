@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.documentlist
 
-import com.mifos.objects.noncore.Document
+import com.mifos.core.objects.noncore.Document
 import okhttp3.ResponseBody
 
 /**

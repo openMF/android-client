@@ -2,16 +2,15 @@ package com.mifos.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.mifos.core.objects.client.Page
+import com.mifos.core.objects.group.Center
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
-import com.mifos.objects.client.Page
-import com.mifos.objects.group.Center
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepository
 import com.mifos.mifosxdroid.online.centerlist.CenterListUiState
 import com.mifos.mifosxdroid.online.centerlist.CenterListViewModel
-import org.junit.Assert.*
-
+import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
 import org.junit.After
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -40,10 +39,10 @@ class CenterListViewModelTest {
     private lateinit var centerListViewModel: CenterListViewModel
 
     @Mock
-    private lateinit var centerListUiObserver : Observer<CenterListUiState>
+    private lateinit var centerListUiObserver: Observer<CenterListUiState>
 
     @Mock
-    private lateinit var mockCenterList : Page<Center>
+    private lateinit var mockCenterList: Page<Center>
 
     @Before
     fun setUp() {
@@ -68,13 +67,18 @@ class CenterListViewModelTest {
         ).thenReturn(
             Observable.just(mockPage)
         )
-        centerListViewModel.loadCenters(false,1)
+        centerListViewModel.loadCenters(false, 1)
         Mockito.verify(centerListUiObserver).onChanged(CenterListUiState.ShowProgressbar(true))
-        Mockito.verify(centerListUiObserver, Mockito.never()).onChanged(CenterListUiState.ShowFetchingError)
-        Mockito.verify(centerListUiObserver,Mockito.never()).onChanged(CenterListUiState.ShowMessage(R.string.failed_to_fetch_centers))
-        Mockito.verify(centerListUiObserver,Mockito.never()).onChanged(CenterListUiState.ShowEmptyCenters(R.string.center))
-        Mockito.verify(centerListUiObserver,Mockito.never()).onChanged(CenterListUiState.UnregisterSwipeAndScrollListener)
-        Mockito.verify(centerListUiObserver).onChanged(CenterListUiState.ShowCenters(mockPage.pageItems))
+        Mockito.verify(centerListUiObserver, Mockito.never())
+            .onChanged(CenterListUiState.ShowFetchingError)
+        Mockito.verify(centerListUiObserver, Mockito.never())
+            .onChanged(CenterListUiState.ShowMessage(R.string.failed_to_fetch_centers))
+        Mockito.verify(centerListUiObserver, Mockito.never())
+            .onChanged(CenterListUiState.ShowEmptyCenters(R.string.center))
+        Mockito.verify(centerListUiObserver, Mockito.never())
+            .onChanged(CenterListUiState.UnregisterSwipeAndScrollListener)
+        Mockito.verify(centerListUiObserver)
+            .onChanged(CenterListUiState.ShowCenters(mockPage.pageItems))
         Mockito.verifyNoMoreInteractions(centerListUiObserver)
     }
 
@@ -90,12 +94,16 @@ class CenterListViewModelTest {
         ).thenReturn(
             Observable.just(mockCenterList)
         )
-        centerListViewModel.loadCenters(false,1)
+        centerListViewModel.loadCenters(false, 1)
         Mockito.verify(centerListUiObserver).onChanged(CenterListUiState.ShowProgressbar(true))
-        Mockito.verify(centerListUiObserver, Mockito.never()).onChanged(CenterListUiState.ShowFetchingError)
-        Mockito.verify(centerListUiObserver,Mockito.never()).onChanged(CenterListUiState.ShowMessage(R.string.failed_to_fetch_centers))
-        Mockito.verify(centerListUiObserver).onChanged(CenterListUiState.ShowEmptyCenters(R.string.center))
-        Mockito.verify(centerListUiObserver).onChanged(CenterListUiState.UnregisterSwipeAndScrollListener)
+        Mockito.verify(centerListUiObserver, Mockito.never())
+            .onChanged(CenterListUiState.ShowFetchingError)
+        Mockito.verify(centerListUiObserver, Mockito.never())
+            .onChanged(CenterListUiState.ShowMessage(R.string.failed_to_fetch_centers))
+        Mockito.verify(centerListUiObserver)
+            .onChanged(CenterListUiState.ShowEmptyCenters(R.string.center))
+        Mockito.verify(centerListUiObserver)
+            .onChanged(CenterListUiState.UnregisterSwipeAndScrollListener)
         Mockito.verifyNoMoreInteractions(centerListUiObserver)
     }
 
@@ -110,11 +118,13 @@ class CenterListViewModelTest {
         ).thenReturn(
             Observable.error(RuntimeException("some error message"))
         )
-        centerListViewModel.loadCenters(false,1)
+        centerListViewModel.loadCenters(false, 1)
         Mockito.verify(centerListUiObserver).onChanged(CenterListUiState.ShowProgressbar(true))
         Mockito.verify(centerListUiObserver).onChanged(CenterListUiState.ShowFetchingError)
-        Mockito.verify(centerListUiObserver, Mockito.never()).onChanged(CenterListUiState.ShowEmptyCenters(R.string.center))
-        Mockito.verify(centerListUiObserver,Mockito.never()).onChanged(CenterListUiState.ShowMessage(R.string.failed_to_fetch_centers))
+        Mockito.verify(centerListUiObserver, Mockito.never())
+            .onChanged(CenterListUiState.ShowEmptyCenters(R.string.center))
+        Mockito.verify(centerListUiObserver, Mockito.never())
+            .onChanged(CenterListUiState.ShowMessage(R.string.failed_to_fetch_centers))
         Mockito.verifyNoMoreInteractions(centerListUiObserver)
     }
 
@@ -126,7 +136,8 @@ class CenterListViewModelTest {
             Observable.just(mockCenterList)
         )
         centerListViewModel.loadDatabaseCenters()
-        Mockito.verify(centerListUiObserver,Mockito.never()).onChanged(CenterListUiState.ShowMessage(R.string.failed_to_load_db_centers))
+        Mockito.verify(centerListUiObserver, Mockito.never())
+            .onChanged(CenterListUiState.ShowMessage(R.string.failed_to_load_db_centers))
         Mockito.verifyNoMoreInteractions(centerListUiObserver)
     }
 
@@ -138,8 +149,10 @@ class CenterListViewModelTest {
             Observable.error(RuntimeException("some error message"))
         )
         centerListViewModel.loadDatabaseCenters()
-        Mockito.verify(centerListUiObserver).onChanged(CenterListUiState.ShowMessage(R.string.failed_to_load_db_centers))
-        Mockito.verify(centerListUiObserver, Mockito.never()).onChanged(CenterListUiState.ShowCenters(mockCenterList.pageItems))
+        Mockito.verify(centerListUiObserver)
+            .onChanged(CenterListUiState.ShowMessage(R.string.failed_to_load_db_centers))
+        Mockito.verify(centerListUiObserver, Mockito.never())
+            .onChanged(CenterListUiState.ShowCenters(mockCenterList.pageItems))
         Mockito.verifyNoMoreInteractions(centerListUiObserver)
     }
 

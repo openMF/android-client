@@ -1,17 +1,17 @@
 package com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog
 
-import com.mifos.objects.survey.Survey
+import com.mifos.core.objects.survey.Survey
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
 sealed class SyncSurveysDialogUiState {
 
-    object ShowNetworkIsNotAvailable : SyncSurveysDialogUiState()
+    data object ShowNetworkIsNotAvailable : SyncSurveysDialogUiState()
 
-    object DismissDialog : SyncSurveysDialogUiState()
+    data object DismissDialog : SyncSurveysDialogUiState()
 
-    object ShowSurveysSyncSuccessfully : SyncSurveysDialogUiState()
+    data object ShowSurveysSyncSuccessfully : SyncSurveysDialogUiState()
 
     data class UpdateSingleSyncSurveyProgressBar(val index: Int) : SyncSurveysDialogUiState()
 
@@ -27,9 +27,9 @@ sealed class SyncSurveysDialogUiState {
 
     data class UpdateResponseSyncProgressBar(val index: Int) : SyncSurveysDialogUiState()
 
-    object ShowProgressbar : SyncSurveysDialogUiState()
+    data object ShowProgressbar : SyncSurveysDialogUiState()
 
-    object ShowUI : SyncSurveysDialogUiState()
+    data object ShowUI : SyncSurveysDialogUiState()
 
     data class UpdateTotalSyncSurveyProgressBarAndCount(val total: Int) : SyncSurveysDialogUiState()
 

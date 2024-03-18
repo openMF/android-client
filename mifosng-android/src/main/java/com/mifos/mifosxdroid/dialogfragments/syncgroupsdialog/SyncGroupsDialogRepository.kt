@@ -1,14 +1,14 @@
 package com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog
 
-import com.mifos.objects.accounts.ClientAccounts
-import com.mifos.objects.accounts.GroupAccounts
-import com.mifos.objects.accounts.loan.LoanWithAssociations
-import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.objects.client.Client
-import com.mifos.objects.group.Group
-import com.mifos.objects.group.GroupWithAssociations
-import com.mifos.objects.templates.loans.LoanRepaymentTemplate
-import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.objects.accounts.ClientAccounts
+import com.mifos.core.objects.accounts.GroupAccounts
+import com.mifos.core.objects.accounts.loan.LoanWithAssociations
+import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.group.Group
+import com.mifos.core.objects.group.GroupWithAssociations
+import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
 import rx.Observable
 
 /**

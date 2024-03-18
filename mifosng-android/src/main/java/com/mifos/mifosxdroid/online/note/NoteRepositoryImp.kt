@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.note
 
-import com.mifos.api.datamanager.DataManagerNote
-import com.mifos.objects.noncore.Note
+import com.mifos.core.network.datamanager.DataManagerNote
+import com.mifos.core.objects.noncore.Note
 import rx.Observable
 import javax.inject.Inject
 

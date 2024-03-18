@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.surveysubmit
 
-import com.mifos.objects.survey.Scorecard
+import com.mifos.core.objects.survey.Scorecard
 import rx.Observable
 
 /**

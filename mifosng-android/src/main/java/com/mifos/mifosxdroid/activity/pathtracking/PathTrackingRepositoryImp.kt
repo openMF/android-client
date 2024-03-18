@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.activity.pathtracking
 
-import com.mifos.api.datamanager.DataManagerDataTable
-import com.mifos.objects.user.UserLocation
+import com.mifos.core.network.datamanager.DataManagerDataTable
+import com.mifos.core.objects.user.UserLocation
 import rx.Observable
 import javax.inject.Inject
 

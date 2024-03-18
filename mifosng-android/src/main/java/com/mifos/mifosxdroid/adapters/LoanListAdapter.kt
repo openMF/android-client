@@ -9,10 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.TextView
-import com.mifos.mifosxdroid.R
+import com.mifos.core.objects.db.Loan
 import com.mifos.mifosxdroid.databinding.RowLoanListItemBinding
-import com.mifos.objects.db.Loan
 
 class LoanListAdapter(context: Context?, listLoans: List<Loan>) : BaseAdapter() {
     private val layoutInflater: LayoutInflater
@@ -36,10 +34,10 @@ class LoanListAdapter(context: Context?, listLoans: List<Loan>) : BaseAdapter() 
     }
 
     override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
-        val binding : RowLoanListItemBinding
-        val convertView : View
+        val binding: RowLoanListItemBinding
+        val convertView: View
         if (view == null) {
-            binding = RowLoanListItemBinding.inflate(layoutInflater,viewGroup,false)
+            binding = RowLoanListItemBinding.inflate(layoutInflater, viewGroup, false)
             convertView = binding.root
             convertView.tag = binding
         } else {

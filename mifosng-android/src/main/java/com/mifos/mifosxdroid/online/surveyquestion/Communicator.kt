@@ -4,7 +4,7 @@
  */
 package com.mifos.mifosxdroid.online.surveyquestion
 
-import com.mifos.objects.survey.Scorecard
+import com.mifos.core.objects.survey.Scorecard
 
 /**
  * Created by Nasim Banu on 28,January,2016.

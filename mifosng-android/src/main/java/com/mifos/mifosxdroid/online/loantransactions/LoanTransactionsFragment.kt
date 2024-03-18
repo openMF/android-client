@@ -12,11 +12,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import com.mifos.mifosxdroid.adapters.LoanTransactionAdapter
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentLoanTransactionsBinding
-import com.mifos.objects.accounts.loan.LoanWithAssociations
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,7 +25,7 @@ class LoanTransactionsFragment : MifosBaseFragment() {
     private lateinit var binding: FragmentLoanTransactionsBinding
     private val arg: LoanTransactionsFragmentArgs by navArgs()
 
-    private lateinit var viewModel : LoanTransactionsViewModel
+    private lateinit var viewModel: LoanTransactionsViewModel
 
     private var adapter: LoanTransactionAdapter? = null
     private var loanAccountNumber = 0
@@ -44,16 +44,18 @@ class LoanTransactionsFragment : MifosBaseFragment() {
         viewModel = ViewModelProvider(this)[LoanTransactionsViewModel::class.java]
         inflateLoanTransactions()
 
-        viewModel.loanTransactionsUiState.observe(viewLifecycleOwner){
-            when(it) {
+        viewModel.loanTransactionsUiState.observe(viewLifecycleOwner) {
+            when (it) {
                 is LoanTransactionsUiState.ShowFetchingError -> {
                     showProgressbar(false)
                     showFetchingError(it.message)
                 }
+
                 is LoanTransactionsUiState.ShowLoanTransaction -> {
                     showProgressbar(false)
                     showLoanTransaction(it.loanWithAssociations)
                 }
+
                 is LoanTransactionsUiState.ShowProgressBar -> showProgressbar(true)
             }
         }

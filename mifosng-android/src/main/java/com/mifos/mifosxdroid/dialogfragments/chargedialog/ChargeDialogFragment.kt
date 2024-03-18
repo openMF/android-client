@@ -14,6 +14,10 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.mifos.core.data.ChargesPayload
+import com.mifos.core.objects.client.ChargeCreationResponse
+import com.mifos.core.objects.client.Charges
+import com.mifos.core.objects.templates.clients.ChargeTemplate
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.ProgressableDialogFragment
 import com.mifos.mifosxdroid.core.util.Toaster.show
@@ -21,10 +25,6 @@ import com.mifos.mifosxdroid.databinding.DialogFragmentChargeBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.Companion.newInsance
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
-import com.mifos.objects.client.ChargeCreationResponse
-import com.mifos.objects.client.Charges
-import com.mifos.objects.templates.clients.ChargeTemplate
-import com.mifos.services.data.ChargesPayload
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants

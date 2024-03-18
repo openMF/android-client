@@ -121,6 +121,10 @@ android {
 dependencies {
 
     implementation(project(":feature:auth"))
+    implementation(project(":feature:client"))
+    implementation(project(":core:data"))
+    implementation(project(":core:datastore"))
+    implementation(project(":core:network"))
     implementation(project(":core:common"))
 
     // Multidex dependency

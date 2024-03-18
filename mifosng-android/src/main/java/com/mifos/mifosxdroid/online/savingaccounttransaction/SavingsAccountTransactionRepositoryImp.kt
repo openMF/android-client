@@ -1,9 +1,9 @@
 package com.mifos.mifosxdroid.online.savingaccounttransaction
 
-import com.mifos.api.datamanager.DataManagerSavings
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse
-import com.mifos.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.network.datamanager.DataManagerSavings
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
+import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
 import rx.Observable
 import javax.inject.Inject
 

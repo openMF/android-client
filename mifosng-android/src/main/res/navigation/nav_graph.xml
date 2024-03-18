@@ -103,7 +103,7 @@
             app:argType="integer" />
         <argument
             android:name="accountType"
-            app:argType="com.mifos.objects.accounts.savings.DepositType" />
+            app:argType="com.mifos.core.objects.accounts.savings.DepositType" />
         <argument
             android:name="parentFragment"
             app:argType="boolean" />
@@ -167,7 +167,7 @@
             app:argType="integer" />
         <argument
             android:name="chargesList"
-            app:argType="com.mifos.objects.client.Charges[]" />
+            app:argType="com.mifos.core.objects.client.Charges[]" />
     </fragment>
 
 
@@ -260,7 +260,7 @@
         android:label="DataTableDataFragment">
         <argument
             android:name="dataTable"
-            app:argType="com.mifos.objects.noncore.DataTable" />
+            app:argType="com.mifos.core.objects.noncore.DataTable" />
         <argument
             android:name="entityId"
             app:argType="integer" />
@@ -286,7 +286,7 @@
             app:argType="integer" />
         <argument
             android:name="chargesList"
-            app:argType="com.mifos.objects.client.Charges[]" />
+            app:argType="com.mifos.core.objects.client.Charges[]" />
     </fragment>
 
 
@@ -299,7 +299,7 @@
             app:argType="integer" />
         <argument
             android:name="loanWithAssociations"
-            app:argType="com.mifos.objects.accounts.loan.LoanWithAssociations" />
+            app:argType="com.mifos.core.objects.accounts.loan.LoanWithAssociations" />
     </fragment>
 
 
@@ -319,7 +319,7 @@
         android:label="LoanRepaymentFragment">
         <argument
             android:name="loanWithAssociations"
-            app:argType="com.mifos.objects.accounts.loan.LoanWithAssociations" />
+            app:argType="com.mifos.core.objects.accounts.loan.LoanWithAssociations" />
     </fragment>
 
 
@@ -354,7 +354,7 @@
             app:argType="integer" />
         <argument
             android:name="type"
-            app:argType="com.mifos.objects.accounts.savings.DepositType" />
+            app:argType="com.mifos.core.objects.accounts.savings.DepositType" />
     </fragment>
 
 
@@ -367,7 +367,7 @@
             app:argType="integer" />
         <argument
             android:name="type"
-            app:argType="com.mifos.objects.accounts.savings.DepositType" />
+            app:argType="com.mifos.core.objects.accounts.savings.DepositType" />
     </fragment>
 
 
@@ -378,13 +378,13 @@
         tools:layout="@layout/fragment_savings_account_transaction">
         <argument
             android:name="savingsAccountWithAssociations"
-            app:argType="com.mifos.objects.accounts.savings.SavingsAccountWithAssociations" />
+            app:argType="com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations" />
         <argument
             android:name="transactionType"
             app:argType="string" />
         <argument
             android:name="accountType"
-            app:argType="com.mifos.objects.accounts.savings.DepositType" />
+            app:argType="com.mifos.core.objects.accounts.savings.DepositType" />
     </fragment>
 
 
@@ -432,7 +432,7 @@
         android:label="ReportDetailFragment">
         <argument
             android:name="clientReportTypeItem"
-            app:argType="com.mifos.objects.runreports.client.ClientReportTypeItem" />
+            app:argType="com.mifos.core.objects.runreports.client.ClientReportTypeItem" />
         <action
             android:id="@+id/action_reportDetailFragment_to_reportFragment"
             app:destination="@id/reportFragment" />
@@ -445,7 +445,7 @@
         android:label="ReportFragment">
         <argument
             android:name="respose"
-            app:argType="com.mifos.objects.runreports.FullParameterListResponse" />
+            app:argType="com.mifos.core.objects.runreports.FullParameterListResponse" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -503,7 +503,7 @@
         android:label="ClientListFragment" >
         <argument
             android:name="clientListArgs"
-            app:argType="com.mifos.objects.navigation.ClientListArgs" />
+            app:argType="com.mifos.core.objects.navigation.ClientListArgs" />
         <action
             android:id="@+id/action_clientListFragment_to_createNewClientFragment"
             app:destination="@id/createNewClientFragment" />
@@ -517,7 +517,7 @@
         android:label="CreateNewClientFragment" >
         <argument
             android:name="client"
-            app:argType="com.mifos.objects.navigation.ClientArgs" />
+            app:argType="com.mifos.core.objects.navigation.ClientArgs" />
     </fragment>
     <fragment
         android:id="@+id/centerDetailsFragment"
@@ -551,7 +551,7 @@
         android:label="ClientActivity" >
         <argument
             android:name="client"
-            app:argType="com.mifos.objects.navigation.ClientArgs" />
+            app:argType="com.mifos.core.objects.navigation.ClientArgs" />
     </activity>
     <fragment
         android:id="@+id/individualCollectionSheetDetailsFragment"
@@ -559,7 +559,7 @@
         android:label="IndividualCollectionSheetDetailsFragment" >
         <argument
             android:name="sheet"
-            app:argType="com.mifos.objects.collectionsheet.IndividualCollectionSheet" />
+            app:argType="com.mifos.core.objects.collectionsheet.IndividualCollectionSheet" />
         <argument
             android:name="actualDisbursementDate"
             app:argType="string" />
@@ -587,16 +587,16 @@
             app:argType="integer" />
         <argument
             android:name="payload"
-            app:argType="com.mifos.api.model.IndividualCollectionSheetPayload" />
+            app:argType="com.mifos.core.network.model.IndividualCollectionSheetPayload" />
         <argument
             android:name="paymentTypeList"
             app:argType="string[]" />
         <argument
             android:name="loanAndClientName"
-            app:argType="com.mifos.objects.collectionsheet.LoanAndClientName" />
+            app:argType="com.mifos.core.objects.collectionsheet.LoanAndClientName" />
         <argument
             android:name="paymentTypeOptions"
-            app:argType="com.mifos.objects.accounts.loan.PaymentTypeOptions[]" />
+            app:argType="com.mifos.core.objects.accounts.loan.PaymentTypeOptions[]" />
         <argument
             android:name="clientId"
             app:argType="integer" />

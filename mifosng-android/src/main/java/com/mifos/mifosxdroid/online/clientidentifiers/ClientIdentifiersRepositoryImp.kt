@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.clientidentifiers
 
-import com.mifos.api.datamanager.DataManagerClient
-import com.mifos.objects.noncore.Identifier
+import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.core.objects.noncore.Identifier
 import org.apache.fineract.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import rx.Observable
 import javax.inject.Inject

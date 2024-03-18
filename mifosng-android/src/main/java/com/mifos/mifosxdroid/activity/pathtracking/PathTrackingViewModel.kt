@@ -3,7 +3,7 @@ package com.mifos.mifosxdroid.activity.pathtracking
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.user.UserLocation
+import com.mifos.core.objects.user.UserLocation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

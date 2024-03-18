@@ -1,8 +1,7 @@
 package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction
 
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
 import rx.Observable
 
 /**
@@ -12,7 +11,7 @@ interface SyncSavingsAccountTransactionRepository {
 
     fun allSavingsAccountTransactions(): Observable<List<SavingsAccountTransactionRequest>>
 
-    fun paymentTypeOption(): Observable<List<PaymentTypeOption>>
+    fun paymentTypeOption(): Observable<List<com.mifos.core.objects.PaymentTypeOption>>
 
     fun processTransaction(
         savingsAccountType: String?, savingsAccountId: Int, transactionType: String?,

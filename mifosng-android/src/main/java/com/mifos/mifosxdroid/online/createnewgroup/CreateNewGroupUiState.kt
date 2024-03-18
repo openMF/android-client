@@ -1,14 +1,14 @@
 package com.mifos.mifosxdroid.online.createnewgroup
 
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.response.SaveResponse
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.response.SaveResponse
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
 sealed class CreateNewGroupUiState {
 
-    object ShowProgressbar : CreateNewGroupUiState()
+    data object ShowProgressbar : CreateNewGroupUiState()
 
     data class ShowFetchingError(val message: String) : CreateNewGroupUiState()
 

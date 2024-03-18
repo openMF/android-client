@@ -3,9 +3,9 @@ package com.mifos.mifosxdroid.online.clientlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.Page
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.client.Client
-import com.mifos.objects.client.Page
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -94,7 +94,7 @@ class ClientListViewModel @Inject constructor(private val repository: ClientList
      */
     private fun loadClients(paged: Boolean, offset: Int, limit: Int) {
         _clientListUiState.value = ClientListUiState.ShowProgressbar(true)
-        repository.getAllClients(paged, offset, limit)
+        repository.getAllClients(offset, limit)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<Page<Client>>() {

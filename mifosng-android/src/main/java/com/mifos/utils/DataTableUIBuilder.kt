@@ -6,7 +6,6 @@ package com.mifos.utils
 
 import android.content.Context
 import android.graphics.Color
-import androidx.cardview.widget.CardView
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -16,9 +15,10 @@ import android.widget.LinearLayout.LayoutParams
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
-import com.mifos.objects.noncore.DataTable
+import com.mifos.core.objects.noncore.DataTable
 
 /**
  * Created by ishankhanna on 17/06/14.
@@ -30,12 +30,16 @@ import com.mifos.objects.noncore.DataTable
 
 class DataTableUIBuilder {
     private var tableIndex = 0
-    private var dataTableActionListener: DataTableActionListener? = null
+    private var dataTableActionListener: DataTableActionListener? =
+        null
 
     fun getDataTableLayout(
-        dataTable: DataTable, jsonElements: JsonArray,
-        parentLayout: LinearLayout, context: Context,
-        entityId: Int, mListener: DataTableActionListener?
+        dataTable: DataTable,
+        jsonElements: JsonArray,
+        parentLayout: LinearLayout,
+        context: Context,
+        entityId: Int,
+        mListener: DataTableActionListener?
     ) {
         dataTableActionListener = mListener
 
@@ -96,16 +100,18 @@ class DataTableUIBuilder {
                 key.gravity = Gravity.LEFT
                 val value = TextView(context)
                 value.gravity = Gravity.RIGHT
-                if (jsonElement.asJsonObject.get(dataTable.columnHeaderData
+                if (jsonElement.asJsonObject.get(
+                        dataTable.columnHeaderData
                             [rowIndex].dataTableColumnName
                     ).toString().contains("\"")
                 ) {
-                    value.text = jsonElement.asJsonObject.get(dataTable.columnHeaderData
+                    value.text = jsonElement.asJsonObject.get(
+                        dataTable.columnHeaderData
                             [rowIndex].dataTableColumnName
                     ).toString().replace("\"", "")
                 } else {
-                    value.
-                    text = jsonElement.asJsonObject.get(dataTable.columnHeaderData
+                    value.text = jsonElement.asJsonObject.get(
+                        dataTable.columnHeaderData
                             [rowIndex].dataTableColumnName
                     ).toString()
                 }
@@ -151,8 +157,8 @@ class DataTableUIBuilder {
             val v = View(context)
             parentLayout.addView(cardView)
             parentLayout.addView(
-                v, LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams
+                v, LayoutParams(
+                    LayoutParams
                         .MATCH_PARENT, 5
                 )
             )

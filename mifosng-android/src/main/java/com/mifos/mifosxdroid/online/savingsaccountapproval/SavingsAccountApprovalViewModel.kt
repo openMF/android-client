@@ -3,8 +3,8 @@ package com.mifos.mifosxdroid.online.savingsaccountapproval
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.api.GenericResponse
-import com.mifos.objects.accounts.loan.SavingsApproval
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.accounts.loan.SavingsApproval
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

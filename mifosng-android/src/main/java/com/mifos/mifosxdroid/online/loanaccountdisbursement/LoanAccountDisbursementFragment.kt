@@ -15,7 +15,9 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import com.mifos.api.GenericResponse
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.accounts.loan.LoanDisbursement
+import com.mifos.core.objects.templates.loans.LoanTransactionTemplate
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
@@ -23,8 +25,6 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.DialogFragmentDisburseLoanBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
-import com.mifos.objects.accounts.loan.LoanDisbursement
-import com.mifos.objects.templates.loans.LoanTransactionTemplate
 import com.mifos.utils.DateHelper
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Network

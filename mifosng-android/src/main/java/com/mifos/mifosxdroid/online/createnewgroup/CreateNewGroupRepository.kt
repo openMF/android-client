@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.createnewgroup
 
-import com.mifos.objects.group.GroupPayload
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.response.SaveResponse
+import com.mifos.core.objects.group.GroupPayload
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.response.SaveResponse
 import rx.Observable
 
 /**

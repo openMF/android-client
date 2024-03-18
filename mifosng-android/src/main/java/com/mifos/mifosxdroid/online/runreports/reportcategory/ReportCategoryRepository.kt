@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.runreports.reportcategory
 
-import com.mifos.objects.runreports.client.ClientReportTypeItem
+import com.mifos.core.objects.runreports.client.ClientReportTypeItem
 import rx.Observable
 
 /**

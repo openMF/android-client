@@ -3,10 +3,10 @@ package com.mifos.mifosxdroid.online.collectionsheet
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.api.model.CollectionSheetPayload
-import com.mifos.api.model.Payload
-import com.mifos.objects.db.CollectionSheet
-import com.mifos.objects.response.SaveResponse
+import com.mifos.core.network.model.CollectionSheetPayload
+import com.mifos.core.network.model.Payload
+import com.mifos.core.objects.db.CollectionSheet
+import com.mifos.core.objects.response.SaveResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.HttpException
 import rx.Subscriber

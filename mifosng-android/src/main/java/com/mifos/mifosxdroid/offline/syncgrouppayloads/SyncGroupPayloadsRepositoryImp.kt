@@ -1,12 +1,12 @@
 package com.mifos.mifosxdroid.offline.syncgrouppayloads
 
-import com.mifos.api.datamanager.DataManagerGroups
-import com.mifos.objects.group.GroupPayload
-import com.mifos.objects.response.SaveResponse
+import com.mifos.core.network.datamanager.DataManagerGroups
+import com.mifos.core.objects.group.GroupPayload
+import com.mifos.core.objects.response.SaveResponse
 import rx.Observable
 import javax.inject.Inject
 
-class SyncGroupPayloadsRepositoryImp  @Inject constructor(private val dataManagerGroups: DataManagerGroups)  :
+class SyncGroupPayloadsRepositoryImp @Inject constructor(private val dataManagerGroups: DataManagerGroups) :
     SyncGroupPayloadsRepository {
 
     override fun allDatabaseGroupPayload(): Observable<List<GroupPayload>> {

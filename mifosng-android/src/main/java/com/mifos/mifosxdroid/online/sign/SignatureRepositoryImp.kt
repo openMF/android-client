@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.sign
 
-import com.mifos.api.GenericResponse
-import com.mifos.api.datamanager.DataManagerDocument
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.datamanager.DataManagerDocument
 import okhttp3.MultipartBody
 import rx.Observable
 import javax.inject.Inject

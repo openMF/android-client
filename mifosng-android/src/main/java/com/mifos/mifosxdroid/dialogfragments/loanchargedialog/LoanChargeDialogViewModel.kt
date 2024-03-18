@@ -3,8 +3,8 @@ package com.mifos.mifosxdroid.dialogfragments.loanchargedialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.client.ChargeCreationResponse
-import com.mifos.services.data.ChargesPayload
+import com.mifos.core.data.ChargesPayload
+import com.mifos.core.objects.client.ChargeCreationResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.ResponseBody
 import retrofit2.HttpException

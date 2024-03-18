@@ -3,8 +3,8 @@ package com.mifos.mifosxdroid.online.loanaccountapproval
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.api.GenericResponse
-import com.mifos.objects.accounts.loan.LoanApproval
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.accounts.loan.LoanApproval
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.HttpException
 import rx.Subscriber

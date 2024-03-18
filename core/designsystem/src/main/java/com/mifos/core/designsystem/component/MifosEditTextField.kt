@@ -22,8 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGrey
+import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
+
+/**
+ * Created by Aditya Gupta on 21/02/24.
+ */
 
 @Composable
 fun MifosOutlinedTextField(
@@ -50,7 +54,7 @@ fun MifosOutlinedTextField(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (isSystemInDarkTheme()) White else DarkGrey
+                    tint = if (isSystemInDarkTheme()) White else DarkGray
                 )
             }
         } else null,

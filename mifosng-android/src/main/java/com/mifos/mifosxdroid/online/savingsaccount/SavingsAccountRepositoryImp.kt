@@ -1,10 +1,10 @@
 package com.mifos.mifosxdroid.online.savingsaccount
 
-import com.mifos.api.datamanager.DataManagerSavings
-import com.mifos.objects.client.Savings
-import com.mifos.objects.organisation.ProductSavings
-import com.mifos.objects.templates.savings.SavingProductsTemplate
-import com.mifos.services.data.SavingsPayload
+import com.mifos.core.data.SavingsPayload
+import com.mifos.core.network.datamanager.DataManagerSavings
+import com.mifos.core.objects.client.Savings
+import com.mifos.core.objects.organisation.ProductSavings
+import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import rx.Observable
 import javax.inject.Inject
 

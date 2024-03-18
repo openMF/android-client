@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.mifos.core.objects.client.Client
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.util.Toaster.show
 import com.mifos.mifosxdroid.databinding.DialogFragmentSyncClientsBinding
-import com.mifos.objects.client.Client
 import com.mifos.utils.Constants
 import com.mifos.utils.Network.isOnline
 import com.mifos.utils.PrefManager.userStatus
@@ -173,10 +173,10 @@ class SyncClientsDialogFragment : DialogFragment() {
 
     companion object {
         val LOG_TAG = SyncClientsDialogFragment::class.java.simpleName
-        fun newInstance(client: List<Client?>?): SyncClientsDialogFragment {
+        fun newInstance(client: ArrayList<Client>): SyncClientsDialogFragment {
             val syncClientsDialogFragment = SyncClientsDialogFragment()
             val args = Bundle()
-            args.putParcelableArrayList(Constants.CLIENT, client as ArrayList<out Parcelable?>?)
+            args.putParcelableArrayList(Constants.CLIENT, client)
             syncClientsDialogFragment.arguments = args
             return syncClientsDialogFragment
         }

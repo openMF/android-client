@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.savingsaccountactivate
 
-import com.mifos.api.GenericResponse
-import com.mifos.api.datamanager.DataManagerSavings
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.datamanager.DataManagerSavings
 import rx.Observable
 import javax.inject.Inject
 

@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.offline.syncclientpayloads
 
-import com.mifos.objects.client.Client
-import com.mifos.objects.client.ClientPayload
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.ClientPayload
 import rx.Observable
 
 interface SyncClientPayloadsRepository {

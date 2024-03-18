@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.collectionsheetindividualdetails
 
-import com.mifos.api.model.BulkRepaymentTransactions
+import com.mifos.core.model.BulkRepaymentTransactions
 
 /**
  * Created by aksh on 20/6/18.

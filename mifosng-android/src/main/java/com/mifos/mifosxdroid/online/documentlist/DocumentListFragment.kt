@@ -20,6 +20,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.noncore.Document
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.DocumentListAdapter
 import com.mifos.mifosxdroid.core.MaterialDialog
@@ -28,9 +30,7 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentDocumentListBinding
 import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogFragment
-import com.mifos.objects.noncore.Document
 import com.mifos.utils.CheckSelfPermissionAndRequest
-import com.mifos.utils.Constants
 import com.mifos.utils.FileUtils
 import com.mifos.utils.FragmentConstants
 import dagger.hilt.android.AndroidEntryPoint

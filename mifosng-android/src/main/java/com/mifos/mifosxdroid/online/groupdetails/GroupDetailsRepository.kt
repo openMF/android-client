@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.groupdetails
 
-import com.mifos.objects.accounts.GroupAccounts
-import com.mifos.objects.group.Group
-import com.mifos.objects.group.GroupWithAssociations
+import com.mifos.core.objects.accounts.GroupAccounts
+import com.mifos.core.objects.group.Group
+import com.mifos.core.objects.group.GroupWithAssociations
 import rx.Observable
 
 /**

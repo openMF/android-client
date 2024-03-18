@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.savingaccountsummary
 
-import com.mifos.api.datamanager.DataManagerSavings
-import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.network.datamanager.DataManagerSavings
+import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
 import rx.Observable
 import javax.inject.Inject
 

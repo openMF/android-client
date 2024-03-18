@@ -4,20 +4,19 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.api.GenericResponse
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.collectionsheet.AttendanceTypeOption
+import com.mifos.core.objects.collectionsheet.CenterDetail
+import com.mifos.core.objects.collectionsheet.CollectionSheetPayload
+import com.mifos.core.objects.collectionsheet.CollectionSheetRequestPayload
+import com.mifos.core.objects.collectionsheet.CollectionSheetResponse
+import com.mifos.core.objects.collectionsheet.ProductiveCollectionSheetPayload
+import com.mifos.core.objects.group.Center
+import com.mifos.core.objects.group.CenterWithAssociations
+import com.mifos.core.objects.group.Group
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.organisation.Staff
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.collectionsheet.AttendanceTypeOption
-import com.mifos.objects.collectionsheet.CenterDetail
-import com.mifos.objects.collectionsheet.CollectionSheetPayload
-import com.mifos.objects.collectionsheet.CollectionSheetRequestPayload
-import com.mifos.objects.collectionsheet.CollectionSheetResponse
-import com.mifos.objects.collectionsheet.ProductiveCollectionSheetPayload
-import com.mifos.objects.group.Center
-import com.mifos.objects.group.CenterWithAssociations
-import com.mifos.objects.group.Group
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.organisation.Staff
 import com.mifos.mifosxdroid.online.collectionsheetindividual.NewIndividualCollectionSheetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -376,7 +375,7 @@ class GenerateCollectionSheetViewModel @Inject constructor(
     }
 
     fun filterPaymentTypes(
-        paymentTypeOptions: List<PaymentTypeOption>?,
+        paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>?,
         paymentTypeNames: MutableList<String?>
     ): HashMap<String, Int> {
         val paymentMap = HashMap<String, Int>()

@@ -97,7 +97,7 @@
         android:label="ClientActivity">
         <argument
             android:name="client"
-            app:argType="com.mifos.objects.navigation.ClientArgs" />
+            app:argType="com.mifos.core.objects.navigation.ClientArgs" />
     </activity>
 
     <!--    CenterActivity-->

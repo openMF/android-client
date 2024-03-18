@@ -1,15 +1,14 @@
 package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition
 
-import com.mifos.objects.PaymentTypeOption
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
 import rx.Observable
 
 interface SyncLoanRepaymentTransactionRepository {
 
     fun databaseLoanRepayments(): Observable<List<LoanRepaymentRequest>>
 
-    fun paymentTypeOption(): Observable<List<PaymentTypeOption>>
+    fun paymentTypeOption(): Observable<List<com.mifos.core.objects.PaymentTypeOption>>
 
     fun submitPayment(
         loanId: Int,

@@ -20,6 +20,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.jakewharton.fliptables.FlipTable
+import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MaterialDialog
 import com.mifos.mifosxdroid.core.MifosBaseFragment
@@ -27,9 +30,6 @@ import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentLoanRepaymentBinding
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
-import com.mifos.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.objects.accounts.loan.LoanRepaymentResponse
-import com.mifos.objects.templates.loans.LoanRepaymentTemplate
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint

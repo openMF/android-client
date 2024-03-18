@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.loanaccountapproval
 
-import com.mifos.api.DataManager
-import com.mifos.api.GenericResponse
-import com.mifos.objects.accounts.loan.LoanApproval
+import com.mifos.core.network.DataManager
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.accounts.loan.LoanApproval
 import rx.Observable
 import javax.inject.Inject
 
