@@ -156,6 +156,15 @@
         <service
             android:name=".activity.pathtracking.PathTrackingService"
             android:exported="false" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.mifos.mifosxdroid.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/path_provider" />
+        </provider>
     </application>
 
 </manifest>
