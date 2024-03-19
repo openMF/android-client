@@ -11,8 +11,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.navigation.findNavController
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.objects.group.Group
-import com.mifos.feature.groupsList.presentation.GroupsListRoute
+import com.mifos.feature.groupsList.presentation.GroupsListScreen
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
@@ -48,15 +47,11 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class GroupsListFragment : MifosBaseFragment() {
 
-    private lateinit var mGroupList: List<Group>
     private var isParentFragment = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            mGroupList =
-                requireArguments()
-                    .getParcelableArrayList(Constants.GROUPS)!!
             isParentFragment = requireArguments()
                 .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
@@ -72,7 +67,7 @@ class GroupsListFragment : MifosBaseFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                GroupsListRoute(
+                GroupsListScreen(
                     onAddGroupClick = {
                         findNavController().navigate(R.id.action_navigation_group_list_to_createNewGroupFragment)
                     },

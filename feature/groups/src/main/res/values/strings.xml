@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="groups">Groups</string>
+    <string name="empty_groups_list">Empty GroupList</string>
+    <string name="failed_to_load_db_groups">Failed to load Database Groups</string>
+    <string name="failed_to_fetch_groups">Failed to Fetch Groups</string>
+    <string name="no_more_groups_available">No more Groups Available</string>
+
+</resources>

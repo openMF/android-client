@@ -6,11 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 sealed interface GroupsListState {
 
-    data object Empty: GroupsListState
+    data object Loading : GroupsListState
 
-    data class Error(val message: String): GroupsListState
-
-    data class GroupsFromAPI(val groups: Flow<PagingData<Group>>): GroupsListState
-
-    data class GroupsFromLocalDB(val groups: List<Group>): GroupsListState
+    data class ShowGroupsList(val groups: Flow<PagingData<Group>>) : GroupsListState
 }

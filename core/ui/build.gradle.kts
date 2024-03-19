@@ -1,12 +1,10 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
-    namespace = "com.mifos.feature.groups"
+    namespace = "com.mifos.core.ui"
     compileSdk = 34
 
     defaultConfig {
@@ -38,25 +36,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
     kotlinOptions {
         jvmTarget = "17"
-    }
-
-    packaging {
-        resources {
-            excludes.add("DebugProbesKt.bin")
-        }
     }
 }
 
 dependencies {
-    implementation(project(":core:data"))
+
     implementation(project(":core:designsystem"))
-    implementation(project(":core:datastore"))
     implementation(project(":core:common"))
-    implementation(project(":core:network"))
-    api(project(":core:ui"))
 
 
     implementation("androidx.core:core-ktx:1.12.0")
@@ -66,16 +54,6 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-    // Hilt dependency
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
-
-    //rxjava dependencies
-    implementation("io.reactivex:rxandroid:1.1.0")
-    implementation("io.reactivex:rxjava:1.3.8")
-
-    // Jetpack Compose
-//    implementation("androidx.compose.material:material:1.6.0")
     implementation("androidx.compose.compiler:compiler:1.5.10")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.3")
     implementation("androidx.activity:activity-compose:1.8.2")
@@ -83,33 +61,4 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.3")
-
-    // ViewModel utilities for Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-
-    // fineract sdk dependencies
-    implementation("com.github.openMF:mifos-android-sdk-arch:1.06")
-
-    // sdk client
-    implementation("com.github.openMF:fineract-client:2.0.3")
-
-    // coil
-    implementation("io.coil-kt:coil-compose:2.5.0")
-
-    // Retrofit Core
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-
-    //DBFlow dependencies
-    kapt("com.github.raizlabs.dbflow.dbflow:dbflow-processor:3.1.1")
-    implementation("com.github.raizlabs.dbflow.dbflow:dbflow:3.1.1")
-    kapt("com.github.raizlabs.dbflow:dbflow-processor:4.2.4")
-
-    // swipe refresh
-    implementation("com.google.accompanist:accompanist-swiperefresh:0.27.0")
-
-    // paging 3
-    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
-    implementation("androidx.paging:paging-compose:3.2.1")
 }

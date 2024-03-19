@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -39,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -49,57 +49,35 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.core.designsystem.component.MifosFAB
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.component.SelectionModeTopAppBar
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.PaddingLarge
-import com.mifos.core.designsystem.theme.PaddingMedium
-import com.mifos.core.designsystem.theme.PaddingSmall
 import com.mifos.core.objects.group.Group
-
-@Composable
-fun GroupsListRoute(
-    onAddGroupClick: () -> Unit,
-    onGroupClick: (Group) -> Unit,
-    onSyncClick: (List<Group>) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: GroupsListViewModel = hiltViewModel()
-) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    val isRefreshing by viewModel.isLoading.collectAsStateWithLifecycle()
-    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isRefreshing)
-
-    GroupsListScreen(
-        modifier = modifier,
-        uiState = uiState,
-        swipeRefreshState = swipeRefreshState,
-        onRefresh = viewModel::refreshData,
-        onAddGroupClick = onAddGroupClick,
-        onGroupClick = onGroupClick,
-        onSyncClick = onSyncClick,
-    )
-}
-
+import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.core.ui.components.MifosFAB
+import com.mifos.core.ui.components.SelectionModeTopAppBar
+import com.mifos.feature.groups.R
 
 @Composable
 fun GroupsListScreen(
-    modifier: Modifier = Modifier,
-    uiState: GroupsListState,
-    swipeRefreshState: SwipeRefreshState,
-    onRefresh: () -> Unit,
     onAddGroupClick: () -> Unit,
     onGroupClick: (Group) -> Unit,
     onSyncClick: (List<Group>) -> Unit,
+    viewModel: GroupsListViewModel = hiltViewModel()
 ) {
     val lazyListState = rememberLazyListState()
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
+
+    val swipeRefreshState = rememberSwipeRefreshState(
+        isRefreshing = isLoading
+    )
+
     val selectedItems = remember {
         mutableStateListOf<Group>()
     }
@@ -111,7 +89,7 @@ fun GroupsListScreen(
     }
 
     Scaffold(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize(),
         floatingActionButton = {
             MifosFAB(icon = Icons.Default.Add, onClick = onAddGroupClick)
@@ -135,30 +113,25 @@ fun GroupsListScreen(
     ) {
         SwipeRefresh(
             state = swipeRefreshState,
-            onRefresh = onRefresh,
+            onRefresh = viewModel::refreshData
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(it)
-                    .padding(PaddingSmall)
+                    .padding(4.dp)
             ) {
                 Crossfade(
                     targetState = uiState,
                     label = "GroupsList::State",
                 ) { state ->
                     when (state) {
-                        is GroupsListState.Empty -> {}
-
-                        is GroupsListState.Error -> {
-                            MifosSweetError(
-                                message = state.message,
-                                onclick = onRefresh,
-                            )
+                        is GroupsListState.Loading -> {
+                            MifosCircularProgress()
                         }
 
-                        is GroupsListState.GroupsFromAPI -> {
-                            GroupsListItemFromAPI(
+                        is GroupsListState.ShowGroupsList -> {
+                            GroupsListItem(
                                 lazyListState = lazyListState,
                                 data = state.groups.collectAsLazyPagingItems(),
                                 doesSelected = {
@@ -171,32 +144,11 @@ fun GroupsListScreen(
                                 onSelectItem = {
                                     if (selectedItems.contains(it)) {
                                         selectedItems.remove(it)
-                                    }else {
+                                    } else {
                                         selectedItems.add(it)
                                     }
                                 },
-                                onRefresh = onRefresh
-                            )
-                        }
-
-                        is GroupsListState.GroupsFromLocalDB -> {
-                            GroupsListItemFromLocalDB(
-                                lazyListState = lazyListState,
-                                data = state,
-                                doesSelected = {
-                                    selectedItems.contains(it)
-                                },
-                                doesInSelectionMode = {
-                                    selectedItems.isNotEmpty()
-                                },
-                                onGroupClick = onGroupClick,
-                                onSelectItem = {
-                                    if (selectedItems.contains(it)) {
-                                        selectedItems.remove(it)
-                                    }else {
-                                        selectedItems.add(it)
-                                    }
-                                },
+                                onRefresh = viewModel::refreshData
                             )
                         }
                     }
@@ -207,7 +159,7 @@ fun GroupsListScreen(
 }
 
 @Composable
-fun GroupsListItemFromAPI(
+fun GroupsListItem(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState,
     data: LazyPagingItems<Group>,
@@ -224,103 +176,69 @@ fun GroupsListItemFromAPI(
         when (it) {
             is LoadState.Error -> {
                 MifosSweetError(
-                    message = "Unable to fetch data from server.",
+                    message = stringResource(id = R.string.failed_to_fetch_groups),
                     onclick = onRefresh
                 )
             }
 
             is LoadState.Loading -> MifosCircularProgress()
-            is LoadState.NotLoading -> {}
-        }
-    }
 
-    LazyColumn(
-        modifier = modifier,
-        state = lazyListState,
-    ) {
-        items(
-            count = data.itemCount,
-            key = {
-                data[it]?.id ?: it
-            }
-        ) { index ->
-            data[index]?.let { group ->
-                GroupItem(
-                    group = group,
-                    doesSelected = doesSelected,
-                    doesInSelectionMode = doesInSelectionMode,
-                    onGroupClick = onGroupClick,
-                    onSelectItem = onSelectItem
-                )
-            }
-        }
+            is LoadState.NotLoading -> {
+                LazyColumn(
+                    modifier = modifier,
+                    state = lazyListState,
+                ) {
+                    items(
+                        count = data.itemCount,
+                    ) { index ->
+                        data[index]?.let { group ->
+                            GroupItem(
+                                group = group,
+                                doesSelected = doesSelected,
+                                doesInSelectionMode = doesInSelectionMode,
+                                onGroupClick = onGroupClick,
+                                onSelectItem = onSelectItem
+                            )
+                        }
+                    }
 
-        when (data.loadState.append) {
-            is LoadState.Error -> {
+                    data.loadState.apply {
+                        when {
+                            data.itemCount < 1 -> {
+                                item {
+                                    MifosEmptyUi(
+                                        text = stringResource(id = R.string.no_more_groups_available)
+                                    )
+                                }
+                            }
 
-            }
+                            data.loadState.append is LoadState.Loading -> {
+                                item {
+                                    MifosPagingAppendProgress()
+                                }
+                            }
 
-            is LoadState.Loading -> {
-                item {
-                    MifosPagingAppendProgress()
+                            data.loadState.append.endOfPaginationReached -> {
+                                item {
+                                    Text(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(6.dp),
+                                        text = stringResource(id = R.string.no_more_groups_available),
+                                        style = TextStyle(fontSize = 14.sp),
+                                        color = DarkGray,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
-
-            is LoadState.NotLoading -> Unit
-        }
-
-        when (data.loadState.append.endOfPaginationReached) {
-            true -> {
-                item {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(6.dp),
-                        text = "No More Groups Available", style = TextStyle(
-                            fontSize = 14.sp
-                        ), color = DarkGray, textAlign = TextAlign.Center
-                    )
-                }
-            }
-
-            false -> Unit
         }
     }
 }
 
-
-@Composable
-fun GroupsListItemFromLocalDB(
-    modifier: Modifier = Modifier,
-    data: GroupsListState.GroupsFromLocalDB,
-    lazyListState: LazyListState,
-    doesSelected: (Group) -> Boolean,
-    doesInSelectionMode: () -> Boolean,
-    onGroupClick: (Group) -> Unit,
-    onSelectItem: (Group) -> Unit,
-) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(PaddingSmall),
-        state = lazyListState
-    ) {
-        items(
-            items = data.groups,
-            key = {
-                it.id ?: 0
-            }
-        ){
-            GroupItem(
-                group = it,
-                doesSelected = doesSelected,
-                doesInSelectionMode = doesInSelectionMode,
-                onGroupClick = onGroupClick,
-                onSelectItem = onSelectItem
-            )
-        }
-    }
-}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -332,7 +250,7 @@ fun GroupItem(
     onGroupClick: (Group) -> Unit,
     onSelectItem: (Group) -> Unit,
 ) {
-    val borderStroke = if (doesSelected(group)) BorderStroke(1.dp, BluePrimary) else{
+    val borderStroke = if (doesSelected(group)) BorderStroke(1.dp, BluePrimary) else {
         CardDefaults.outlinedCardBorder()
     }
     val containerColor = if (doesSelected(group)) BlueSecondary else Color.Unspecified
@@ -341,9 +259,9 @@ fun GroupItem(
         OutlinedCard(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(PaddingMedium)
+                .padding(8.dp)
                 .height(70.dp)
-                .clip(RoundedCornerShape(PaddingMedium))
+                .clip(RoundedCornerShape(8.dp))
                 .combinedClickable(
                     onClick = {
                         if (doesInSelectionMode()) {
@@ -356,7 +274,7 @@ fun GroupItem(
                         onSelectItem(group)
                     }
                 ),
-            shape = RoundedCornerShape(PaddingMedium),
+            shape = RoundedCornerShape(8.dp),
             colors = CardDefaults.outlinedCardColors(
                 containerColor = containerColor
             ),
@@ -365,7 +283,7 @@ fun GroupItem(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(PaddingLarge),
+                    .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
