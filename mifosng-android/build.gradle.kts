@@ -122,6 +122,7 @@ dependencies {
 
     implementation(project(":feature:auth"))
     implementation(project(":feature:client"))
+    api(project(":feature:groups"))
     implementation(project(":core:data"))
     implementation(project(":core:datastore"))
     implementation(project(":core:network"))
