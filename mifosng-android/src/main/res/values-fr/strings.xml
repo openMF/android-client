@@ -613,5 +613,6 @@
     <string name="dark_mode">mode sombre</string>
 
     <string name="accounts">Compte</string>
+    <string name="failed_to_load_group_details">Echec du chargement des détails du groupe</string>
 
 </resources>

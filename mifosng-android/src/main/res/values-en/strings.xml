@@ -188,6 +188,7 @@
     <string name="valid">Valid</string>
     <string name="surveyEmpty">This Survey is Empty</string>
     <string name="accounts">Accounts</string>
+    <string name="failed_to_load_group_details">Failed To Load Group Details</string>
 
 
 </resources>
