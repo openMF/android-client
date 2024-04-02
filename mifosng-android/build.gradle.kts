@@ -126,6 +126,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:network"))
     implementation(project(":core:common"))
+    implementation(project(":core:designsystem"))
 
     // Multidex dependency
     implementation("androidx.multidex:multidex:2.0.1")
@@ -255,4 +256,6 @@ dependencies {
     // ViewModel utilities for Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+
 }
