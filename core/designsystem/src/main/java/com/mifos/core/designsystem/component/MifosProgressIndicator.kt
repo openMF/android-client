@@ -66,28 +66,3 @@ fun MifosCircularProgress() {
     }
 
 }
-
-@Composable
-fun MifosLoadingCircularProgress() {
-
-    Dialog(onDismissRequest = { }) {
-        Card(
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(White)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(horizontal = 40.dp, vertical = 24.dp)
-            ) {
-                CircularProgressIndicator(color = DarkGray)
-                Text(
-                    text = "Loading",
-                    fontSize = 18.sp,
-                    fontFamily = FontFamily(Font(R.font.outfit_regular))
-                )
-            }
-        }
-    }
-
-}

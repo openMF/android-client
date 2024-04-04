@@ -108,4 +108,7 @@ dependencies {
 
     // permission
     implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
+
+    // compose lifecycle
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 }

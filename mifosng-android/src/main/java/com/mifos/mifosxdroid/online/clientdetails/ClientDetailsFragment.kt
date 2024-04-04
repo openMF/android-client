@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.fragment.findNavController
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.accounts.savings.DepositType
@@ -27,6 +28,9 @@ class ClientDetailsFragment : MifosBaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+            )
             setContent {
                 ClientDetailsScreen(
                     clientId = requireArguments().getInt(Constants.CLIENT_ID),

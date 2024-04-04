@@ -8,6 +8,11 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -22,10 +27,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Groups
@@ -35,6 +43,8 @@ import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -47,14 +57,18 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -66,25 +80,28 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.mifos.core.common.utils.Utils
+import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosClientDetailsText
-import com.mifos.core.designsystem.component.MifosLoadingCircularProgress
-import com.mifos.core.designsystem.component.MifosLoanAccountExpendableCard
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
-import com.mifos.core.designsystem.component.MifosSavingsAccountExpendableCard
-import com.mifos.core.designsystem.component.MifosSelectImageDialog
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
+import com.mifos.core.designsystem.theme.BlueSecondary
+import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.core.objects.accounts.savings.DepositType
@@ -100,6 +117,7 @@ import java.util.Objects
 
 @Composable
 fun ClientDetailsScreen(
+    clientDetailsViewModel: ClientDetailsViewModel = hiltViewModel(),
     clientId: Int,
     onBackPressed: () -> Unit,
     addLoanAccount: (Int) -> Unit,
@@ -117,13 +135,13 @@ fun ClientDetailsScreen(
     activateClient: (Int) -> Unit
 ) {
 
-    val clientDetailsViewModel: ClientDetailsViewModel = hiltViewModel()
     val context = LocalContext.current
-    val state = clientDetailsViewModel.clientDetailsUiState.collectAsState().value
+    val state = clientDetailsViewModel.clientDetailsUiState.collectAsStateWithLifecycle().value
     val client = rememberSaveable { mutableStateOf<Client?>(null) }
     val loanAccounts = rememberSaveable { mutableStateOf<List<LoanAccount>?>(null) }
     val savingsAccounts = rememberSaveable { mutableStateOf<List<SavingsAccount>?>(null) }
     var clientNotFoundError by rememberSaveable { mutableStateOf(false) }
+    var showLoading by rememberSaveable { mutableStateOf(true) }
 
     var showMenu by remember { mutableStateOf(false) }
     val showSelectImageDialog = remember { mutableStateOf(false) }
@@ -176,12 +194,13 @@ fun ClientDetailsScreen(
 
     when (state) {
         is ClientDetailsUiState.Loading -> {
-            MifosLoadingCircularProgress()
+            showLoading = true
         }
 
         is ClientDetailsUiState.ShowClientImageDeletedSuccessfully -> {
             LaunchedEffect(key1 = true) {
                 snackbarHostState.showSnackbar(message = "Client Image Deleted Successfully")
+                showLoading = false
             }
         }
 
@@ -189,11 +208,13 @@ fun ClientDetailsScreen(
             client.value = state.client
             loanAccounts.value = state.clientAccounts?.loanAccounts
             savingsAccounts.value = state.clientAccounts?.savingsAccounts
+            showLoading = false
         }
 
         is ClientDetailsUiState.ShowUploadImageSuccessfully -> {
             LaunchedEffect(key1 = state.response) {
                 snackbarHostState.showSnackbar(message = "Client Image Uploaded successfully")
+                showLoading = false
             }
         }
 
@@ -201,11 +222,13 @@ fun ClientDetailsScreen(
             when (state.message == "null") {
                 true -> {
                     clientNotFoundError = true
+                    showLoading = false
                 }
 
                 false -> {
                     LaunchedEffect(key1 = state.message) {
                         snackbarHostState.showSnackbar(message = state.message)
+                        showLoading = false
                     }
                 }
             }
@@ -344,120 +367,127 @@ fun ClientDetailsScreen(
 
             }
         } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Spacer(modifier = Modifier.height(20.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+            if (showLoading) {
+                MifosCircularProgress()
+            } else {
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .verticalScroll(rememberScrollState())
                 ) {
-                    AsyncImage(
-                        modifier = Modifier
-                            .size(75.dp)
-                            .clip(RoundedCornerShape(100))
-                            .clickable(onClick = {
-                                showSelectImageDialog.value = true
-                            }),
-                        model = if (client.value?.imagePresent == true) {
-                            client.value?.clientId?.let {
-                                clientDetailsViewModel.getClientImageUrl(
-                                    it
-                                )
-                            }
-                        } else R.drawable.ic_launcher,
-                        contentDescription = null,
-                        contentScale = ContentScale.FillBounds
-                    )
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                client.value?.displayName?.let {
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = it,
-                        style = TextStyle(
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Medium,
-                            fontStyle = FontStyle.Normal,
-                            fontFamily = FontFamily(Font(R.font.outfit_regular))
-                        ),
-                        color = Black,
-                        textAlign = TextAlign.Start
-                    )
-                }
-                Spacer(modifier = Modifier.height(6.dp))
-                client.value?.accountNo?.let {
-                    MifosClientDetailsText(
-                        icon = Icons.Outlined.Numbers,
-                        field = stringResource(id = R.string.account_number),
-                        value = it
-                    )
-                }
-                client.value?.externalId?.let {
-                    MifosClientDetailsText(
-                        icon = Icons.Outlined.Numbers,
-                        field = stringResource(id = R.string.external_id),
-                        value = it
-                    )
-                }
-                client.value?.let { Utils.getStringOfDate(it.activationDate) }?.let {
-                    MifosClientDetailsText(
-                        icon = Icons.Outlined.DateRange,
-                        field = stringResource(id = R.string.activation_date),
-                        value = it
-                    )
-                }
-                client.value?.officeName?.let {
-                    MifosClientDetailsText(
-                        icon = Icons.Outlined.HomeWork,
-                        field = stringResource(id = R.string.office),
-                        value = it
-                    )
-                }
-                client.value?.mobileNo?.let {
-                    MifosClientDetailsText(
-                        icon = Icons.Outlined.MobileFriendly,
-                        field = stringResource(id = R.string.mobile_no),
-                        value = it
-                    )
-                }
-                client.value?.groupNames?.let {
-                    MifosClientDetailsText(
-                        icon = Icons.Outlined.Groups,
-                        field = stringResource(id = R.string.group),
-                        value = it
-                    )
-                }
-                Spacer(modifier = Modifier.height(20.dp))
-                if (loanAccounts.value != null && savingsAccounts.value != null) {
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp, bottom = 6.dp),
-                        text = stringResource(id = R.string.accounts),
-                        style = TextStyle(
-                            fontSize = 21.sp,
-                            fontWeight = FontWeight.Medium,
-                            fontStyle = FontStyle.Normal,
-                            fontFamily = FontFamily(Font(R.font.outfit_medium))
-                        ),
-                        color = Black,
-                        textAlign = TextAlign.Start
-                    )
-                }
-                loanAccounts.value?.let {
-                    MifosLoanAccountExpendableCard(
-                        stringResource(id = R.string.loan_account),
-                        it,
-                        loanAccountSelected
-                    )
-                }
-                savingsAccounts.value?.let {
-                    MifosSavingsAccountExpendableCard(
-                        stringResource(id = R.string.savings_account),
-                        it, savingsAccountSelected
-                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        AsyncImage(
+                            modifier = Modifier
+                                .size(75.dp)
+                                .clip(RoundedCornerShape(100))
+                                .clickable(onClick = {
+                                    showSelectImageDialog.value = true
+                                }),
+                            model = if (client.value?.imagePresent == true) {
+                                client.value?.clientId?.let {
+                                    LaunchedEffect(key1 = it) {
+                                        clientDetailsViewModel.getClientImageUrl(
+                                            it
+                                        )
+                                    }
+                                }
+                            } else R.drawable.ic_launcher,
+                            contentDescription = null,
+                            contentScale = ContentScale.FillBounds
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    client.value?.displayName?.let {
+                        Text(
+                            modifier = Modifier.padding(16.dp),
+                            text = it,
+                            style = TextStyle(
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Medium,
+                                fontStyle = FontStyle.Normal,
+                                fontFamily = FontFamily(Font(R.font.outfit_regular))
+                            ),
+                            color = Black,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(6.dp))
+                    client.value?.accountNo?.let {
+                        MifosClientDetailsText(
+                            icon = Icons.Outlined.Numbers,
+                            field = stringResource(id = R.string.account_number),
+                            value = it
+                        )
+                    }
+                    client.value?.externalId?.let {
+                        MifosClientDetailsText(
+                            icon = Icons.Outlined.Numbers,
+                            field = stringResource(id = R.string.external_id),
+                            value = it
+                        )
+                    }
+                    client.value?.let { Utils.getStringOfDate(it.activationDate) }?.let {
+                        MifosClientDetailsText(
+                            icon = Icons.Outlined.DateRange,
+                            field = stringResource(id = R.string.activation_date),
+                            value = it
+                        )
+                    }
+                    client.value?.officeName?.let {
+                        MifosClientDetailsText(
+                            icon = Icons.Outlined.HomeWork,
+                            field = stringResource(id = R.string.office),
+                            value = it
+                        )
+                    }
+                    client.value?.mobileNo?.let {
+                        MifosClientDetailsText(
+                            icon = Icons.Outlined.MobileFriendly,
+                            field = stringResource(id = R.string.mobile_no),
+                            value = it
+                        )
+                    }
+                    client.value?.groupNames?.let {
+                        MifosClientDetailsText(
+                            icon = Icons.Outlined.Groups,
+                            field = stringResource(id = R.string.group),
+                            value = it
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(20.dp))
+                    if (loanAccounts.value != null && savingsAccounts.value != null) {
+                        Text(
+                            modifier = Modifier.padding(start = 16.dp, bottom = 6.dp),
+                            text = stringResource(id = R.string.accounts),
+                            style = TextStyle(
+                                fontSize = 21.sp,
+                                fontWeight = FontWeight.Medium,
+                                fontStyle = FontStyle.Normal,
+                                fontFamily = FontFamily(Font(R.font.outfit_medium))
+                            ),
+                            color = Black,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                    loanAccounts.value?.let {
+                        MifosLoanAccountExpendableCard(
+                            stringResource(id = R.string.loan_account),
+                            it,
+                            loanAccountSelected
+                        )
+                    }
+                    savingsAccounts.value?.let {
+                        MifosSavingsAccountExpendableCard(
+                            stringResource(id = R.string.savings_account),
+                            it, savingsAccountSelected
+                        )
+                    }
                 }
             }
         }
@@ -470,5 +500,470 @@ fun Context.createImageFile(): File {
         imageFileName,
         ".jpg",
         externalCacheDir
+    )
+}
+
+@Composable
+fun MifosLoanAccountExpendableCard(
+    accountType: String,
+    loanAccounts: List<LoanAccount>,
+    loanAccountSelected: (Int) -> Unit
+) {
+
+    var expendableState by remember { mutableStateOf(false) }
+    val rotateState by animateFloatAsState(
+        targetValue = if (expendableState) 180f else 0f,
+        label = ""
+    )
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .animateContentSize(
+                animationSpec = tween(
+                    durationMillis = 300,
+                    easing = LinearOutSlowInEasing
+                )
+            ),
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(BlueSecondary)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp),
+                    text = accountType,
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontStyle = FontStyle.Normal,
+                        fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                    ),
+                    color = Black,
+                    textAlign = TextAlign.Start
+                )
+                IconButton(
+                    modifier = Modifier
+                        .size(24.dp),
+                    onClick = { expendableState = !expendableState }) {
+                    Icon(
+                        modifier = Modifier.rotate(rotateState),
+                        imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null
+                    )
+                }
+            }
+
+            if (expendableState) {
+
+                Spacer(modifier = Modifier.height(10.dp))
+                MifosLoanAccountsLazyColumn(loanAccounts, loanAccountSelected)
+            }
+        }
+    }
+}
+
+
+@Composable
+fun MifosLoanAccountsLazyColumn(
+    loanAccounts: List<LoanAccount>,
+    loanAccountSelected: (Int) -> Unit
+) {
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(White)
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .height((loanAccounts.size * 52).dp)
+                .padding(6.dp)
+        ) {
+            items(loanAccounts) { loanAccount ->
+                Row(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .clickable(onClick = {
+                            loanAccount.id?.let {
+                                loanAccountSelected(
+                                    it
+                                )
+                            }
+                        }),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Canvas(modifier = Modifier
+                        .size(20.dp)
+                        .padding(4.dp), onDraw = {
+                        drawCircle(
+                            color = when {
+                                loanAccount.status?.active == true -> {
+                                    Color.Green
+                                }
+
+                                loanAccount.status?.waitingForDisbursal == true -> {
+                                    Color.Blue
+                                }
+
+                                loanAccount.status?.pendingApproval == true -> {
+                                    Color.Yellow
+                                }
+
+                                loanAccount.status?.active == true && loanAccount.inArrears == true -> {
+                                    Color.Red
+                                }
+
+                                else -> {
+                                    Color.DarkGray
+                                }
+                            }
+                        )
+                    })
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 4.dp)
+                    ) {
+                        loanAccount.productName?.let {
+                            Text(
+                                text = it,
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                                ),
+                                color = Black,
+                                textAlign = TextAlign.Start
+                            )
+                        }
+                        Text(
+                            text = loanAccount.accountNo.toString(),
+                            style = TextStyle(
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal,
+                                fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_light))
+                            ),
+                            color = DarkGray,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                    loanAccount.productId?.let {
+                        Text(
+                            text = it.toString(),
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal,
+                                fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                            ),
+                            color = Black,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MifosSavingsAccountExpendableCard(
+    accountType: String,
+    savingsAccount: List<SavingsAccount>,
+    savingsAccountSelected: (Int, DepositType) -> Unit
+) {
+
+    var expendableState by remember { mutableStateOf(false) }
+    val rotateState by animateFloatAsState(
+        targetValue = if (expendableState) 180f else 0f,
+        label = ""
+    )
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .animateContentSize(
+                animationSpec = tween(
+                    durationMillis = 300,
+                    easing = LinearOutSlowInEasing
+                )
+            ),
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(BlueSecondary)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp),
+                    text = accountType,
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontStyle = FontStyle.Normal,
+                        fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                    ),
+                    color = Black,
+                    textAlign = TextAlign.Start
+                )
+                IconButton(
+                    modifier = Modifier
+                        .size(24.dp),
+                    onClick = { expendableState = !expendableState }) {
+                    Icon(
+                        modifier = Modifier.rotate(rotateState),
+                        imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null
+                    )
+                }
+            }
+
+            if (expendableState) {
+
+                Spacer(modifier = Modifier.height(10.dp))
+                MifosSavingsAccountsLazyColumn(savingsAccount, savingsAccountSelected)
+            }
+        }
+    }
+}
+
+
+@Composable
+fun MifosSavingsAccountsLazyColumn(
+    savingsAccounts: List<SavingsAccount>,
+    savingsAccountSelected: (Int, DepositType) -> Unit
+) {
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(White)
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .height((savingsAccounts.size * 50).dp)
+                .padding(6.dp)
+        ) {
+            items(savingsAccounts) { savingsAccount ->
+                Row(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .clickable(onClick = {
+                            savingsAccount.id?.let {
+                                savingsAccount.depositType?.let { it1 ->
+                                    savingsAccountSelected(
+                                        it, it1
+                                    )
+                                }
+                            }
+                        }),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Canvas(modifier = Modifier
+                        .size(20.dp)
+                        .padding(4.dp), onDraw = {
+                        drawCircle(
+                            color = when {
+                                savingsAccount.status?.active == true -> {
+                                    Color.Green
+                                }
+
+                                savingsAccount.status?.approved == true -> {
+                                    Color.Blue
+                                }
+
+                                savingsAccount.status?.submittedAndPendingApproval == true -> {
+                                    Color.Yellow
+                                }
+
+                                else -> {
+                                    Color.DarkGray
+                                }
+                            }
+                        )
+                    })
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 4.dp)
+                    ) {
+                        savingsAccount.productName?.let {
+                            Text(
+                                text = it,
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                                ),
+                                color = Black,
+                                textAlign = TextAlign.Start
+                            )
+                        }
+                        Text(
+                            text = savingsAccount.accountNo.toString(),
+                            style = TextStyle(
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal,
+                                fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_light))
+                            ),
+                            color = DarkGray,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                    savingsAccount.productId?.let {
+                        Text(
+                            text = it.toString(),
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal,
+                                fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                            ),
+                            color = Black,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MifosSelectImageDialog(
+    showSelectImageDialog: MutableState<Boolean>,
+    takeImage: () -> Unit,
+    uploadImage: () -> Unit,
+    deleteImage: () -> Unit
+) {
+
+    Dialog(
+        onDismissRequest = { showSelectImageDialog.value = !showSelectImageDialog.value },
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        )
+    ) {
+        Card(
+            colors = CardDefaults.cardColors(White),
+            shape = RoundedCornerShape(20.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(30.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Please Select", modifier = Modifier.fillMaxWidth(), style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontStyle = FontStyle.Normal,
+                        fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_medium))
+                    ),
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Button(
+                    onClick = { takeImage() },
+                    colors = ButtonDefaults.buttonColors(BlueSecondary)
+                ) {
+                    Text(
+                        text = "Take new image",
+                        modifier = Modifier.fillMaxWidth(),
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal,
+                            fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_medium))
+                        ),
+                        color = Color.Black,
+                        textAlign = TextAlign.Center
+                    )
+                }
+                Button(
+                    onClick = { uploadImage() },
+                    colors = ButtonDefaults.buttonColors(BlueSecondary)
+                ) {
+                    Text(
+                        text = "Upload new image",
+                        modifier = Modifier.fillMaxWidth(),
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal,
+                            fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_medium))
+                        ),
+                        color = Color.Black,
+                        textAlign = TextAlign.Center
+                    )
+                }
+                Button(
+                    onClick = { deleteImage() },
+                    colors = ButtonDefaults.buttonColors(BlueSecondary)
+                ) {
+                    Text(
+                        text = "Delete Image",
+                        modifier = Modifier.fillMaxWidth(),
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal,
+                            fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_medium))
+                        ),
+                        color = Color.Black,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ClientDetailsScreenPreview() {
+    ClientDetailsScreen(
+        clientId = 1,
+        onBackPressed = {},
+        addLoanAccount = {},
+        addSavingsAccount = {},
+        charges = {},
+        documents = {},
+        identifiers = {},
+        moreClientInfo = {},
+        notes = {},
+        pinpointLocation = {},
+        survey = {},
+        uploadSignature = {},
+        loanAccountSelected = {},
+        savingsAccountSelected = { _, _ -> },
+        activateClient = {}
     )
 }
