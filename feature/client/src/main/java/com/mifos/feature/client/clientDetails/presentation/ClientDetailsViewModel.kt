@@ -2,8 +2,13 @@ package com.mifos.feature.client.clientDetails.presentation
 
 import android.graphics.Bitmap
 import android.os.Environment
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil.Coil
+import coil.request.ImageRequest
+import coil.request.ImageResult
+import coil.transform.CircleCropTransformation
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.network.utils.ImageLoaderUtils
 import com.mifos.feature.client.clientDetails.domain.usecase.DeleteClientImageUseCase
@@ -107,7 +112,7 @@ class ClientDetailsViewModel @Inject constructor(
         }
     }
 
-    fun getClientImageUrl(clientId: Int): URL {
-        return imageLoaderUtils.buildGlideUrl(clientId)
+    suspend fun getClientImageUrl(clientId: Int): ImageResult {
+        return imageLoaderUtils.loadImage(clientId)
     }
 }

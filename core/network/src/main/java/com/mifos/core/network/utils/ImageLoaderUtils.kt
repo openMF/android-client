@@ -1,13 +1,19 @@
 package com.mifos.core.network.utils
 
-import com.bumptech.glide.load.model.GlideUrl
-import com.bumptech.glide.load.model.LazyHeaders
+import android.content.Context
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.ImageResult
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.MifosInterceptor
-import java.net.URL
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class ImageLoaderUtils @Inject constructor(private val prefManager: PrefManager) {
+class ImageLoaderUtils @Inject constructor(
+    private val prefManager: PrefManager,
+    private val imageLoader: ImageLoader,
+    @ApplicationContext private val context: Context
+) {
 
     private fun buildImageUrl(clientId: Int): String {
         return (prefManager.getInstanceUrl()
@@ -16,13 +22,13 @@ class ImageLoaderUtils @Inject constructor(private val prefManager: PrefManager)
                 + "/images?maxHeight=120&maxWidth=120")
     }
 
-    fun buildGlideUrl(clientId: Int): URL {
-        return GlideUrl(
-            buildImageUrl(clientId), LazyHeaders.Builder()
-                .addHeader(MifosInterceptor.HEADER_TENANT, prefManager.getTenant())
-                .addHeader(MifosInterceptor.HEADER_AUTH, prefManager.getToken())
-                .addHeader("Accept", "application/octet-stream")
-                .build()
-        ).toURL()
+    suspend fun loadImage(clientId: Int): ImageResult {
+        val request = ImageRequest.Builder(context)
+            .data(buildImageUrl(clientId))
+            .addHeader(MifosInterceptor.HEADER_TENANT, prefManager.getTenant())
+            .addHeader(MifosInterceptor.HEADER_AUTH, prefManager.getToken())
+            .addHeader("Accept", "application/octet-stream")
+            .build()
+        return imageLoader.execute(request)
     }
 }
