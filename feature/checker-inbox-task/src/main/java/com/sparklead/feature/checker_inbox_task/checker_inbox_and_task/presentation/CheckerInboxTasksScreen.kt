@@ -4,7 +4,6 @@ package com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.presenta
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,15 +12,9 @@ import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,18 +23,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.White
 import com.sparklead.feature.checker_inbox_task.R
 
@@ -50,51 +43,29 @@ import com.sparklead.feature.checker_inbox_task.R
  */
 
 @Composable
-fun CheckerInboxTasksScreen(onBackPressed: () -> Unit, checkerInbox: () -> Unit) {
+fun CheckerInboxTasksScreen(
+    checkerInboxTasksViewModel: CheckerInboxTasksViewModel = hiltViewModel(),
+    onBackPressed: () -> Unit,
+    checkerInbox: () -> Unit
+) {
 
-    val checkerInboxTasksViewModel: CheckerInboxTasksViewModel = hiltViewModel()
-    val state = checkerInboxTasksViewModel.checkerInboxTasksUiState.collectAsState().value
-    val isRefreshing by checkerInboxTasksViewModel.isRefreshing.collectAsState()
+    val state =
+        checkerInboxTasksViewModel.checkerInboxTasksUiState.collectAsStateWithLifecycle().value
+    val isRefreshing by checkerInboxTasksViewModel.isRefreshing.collectAsStateWithLifecycle()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isRefreshing)
 
     LaunchedEffect(key1 = true) {
         checkerInboxTasksViewModel.loadCheckerTasksBadges()
     }
 
-
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        containerColor = White,
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = White),
-                navigationIcon = {
-                    IconButton(
-                        onClick = { onBackPressed() },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.ArrowBackIosNew,
-                            contentDescription = null,
-                            tint = Black,
-                        )
-                    }
-                },
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.checker_inbox_and_pending_tasks),
-                        style = TextStyle(
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Medium,
-                            fontStyle = FontStyle.Normal,
-                            fontFamily = FontFamily(Font(R.font.outfit_medium))
-                        ),
-                        color = Black,
-                        textAlign = TextAlign.Start
-                    )
-                },
-            )
-        }
-    ) { padding ->
+    MifosScaffold(
+        icon = Icons.Rounded.ArrowBackIosNew,
+        title = stringResource(id = R.string.checker_inbox_and_pending_tasks),
+        onBackPressed = { onBackPressed() },
+        actions = { },
+        snackbarHostState = null,
+        bottomBar = { })
+    { padding ->
         SwipeRefresh(
             state = swipeRefreshState,
             onRefresh = { checkerInboxTasksViewModel.loadCheckerTasksBadges() }
@@ -206,5 +177,13 @@ fun TaskOptions(leadingIcon: Int, option: String, badge: String, onClick: () -> 
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewCheckerInboxTaskScreen() {
+    CheckerInboxTasksScreen(onBackPressed = { }) {
+
     }
 }

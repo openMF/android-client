@@ -86,4 +86,7 @@ dependencies {
     // ViewModel utilities for Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    // compose lifecycle
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 }
