@@ -2,15 +2,14 @@ package com.mifos.feature.client.clientDetails.presentation
 
 import android.graphics.Bitmap
 import android.os.Environment
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.Coil
-import coil.request.ImageRequest
 import coil.request.ImageResult
-import coil.transform.CircleCropTransformation
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.network.utils.ImageLoaderUtils
+import com.mifos.core.objects.accounts.loan.LoanAccount
+import com.mifos.core.objects.accounts.savings.SavingsAccount
+import com.mifos.core.objects.client.Client
 import com.mifos.feature.client.clientDetails.domain.usecase.DeleteClientImageUseCase
 import com.mifos.feature.client.clientDetails.domain.usecase.GetClientDetailsUseCase
 import com.mifos.feature.client.clientDetails.domain.usecase.UploadClientImageUseCase
@@ -21,7 +20,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
-import java.net.URL
 import javax.inject.Inject
 
 /**
@@ -37,8 +35,22 @@ class ClientDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _clientDetailsUiState =
-        MutableStateFlow<ClientDetailsUiState>(ClientDetailsUiState.Loading)
+        MutableStateFlow<ClientDetailsUiState>(ClientDetailsUiState.Empty)
     val clientDetailsUiState = _clientDetailsUiState.asStateFlow()
+
+    private val _loanAccounts = MutableStateFlow<List<LoanAccount>?>(null)
+    val loanAccount = _loanAccounts.asStateFlow()
+
+
+    private val _savingsAccounts = MutableStateFlow<List<SavingsAccount>?>(null)
+    val savingsAccounts = _savingsAccounts.asStateFlow()
+
+    private val _client = MutableStateFlow<Client?>(null)
+    val client = _client.asStateFlow()
+
+    private val _showLoading = MutableStateFlow(true)
+    val showLoading = _showLoading.asStateFlow()
+
 
     private fun uploadImage(id: Int, pngFile: File) = viewModelScope.launch(Dispatchers.IO) {
         uploadClientImageUseCase(id, pngFile).collect { result ->
@@ -46,10 +58,11 @@ class ClientDetailsViewModel @Inject constructor(
                 is Resource.Error -> {
                     _clientDetailsUiState.value =
                         ClientDetailsUiState.ShowError(result.message ?: "Unexpected error")
+                    _showLoading.value = false
                 }
 
                 is Resource.Loading -> {
-                    _clientDetailsUiState.value = ClientDetailsUiState.Loading
+                    _showLoading.value = true
                 }
 
                 is Resource.Success -> {
@@ -57,6 +70,7 @@ class ClientDetailsViewModel @Inject constructor(
                         result.data,
                         pngFile.absolutePath
                     )
+                    _showLoading.value = false
                 }
             }
         }
@@ -65,13 +79,19 @@ class ClientDetailsViewModel @Inject constructor(
     fun deleteClientImage(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
         deleteClientImageUseCase(clientId).collect { result ->
             when (result) {
-                is Resource.Error -> _clientDetailsUiState.value =
-                    ClientDetailsUiState.ShowError(result.message ?: "Unexpected error")
+                is Resource.Error -> {
+                    _clientDetailsUiState.value =
+                        ClientDetailsUiState.ShowError(result.message ?: "Unexpected error")
+                    _showLoading.value = false
+                }
 
-                is Resource.Loading -> _clientDetailsUiState.value = ClientDetailsUiState.Loading
+                is Resource.Loading -> _showLoading.value = true
 
-                is Resource.Success -> _clientDetailsUiState.value =
-                    ClientDetailsUiState.ShowClientImageDeletedSuccessfully
+                is Resource.Success -> {
+                    _clientDetailsUiState.value =
+                        ClientDetailsUiState.ShowClientImageDeletedSuccessfully
+                    _showLoading.value = false
+                }
             }
         }
     }
@@ -79,16 +99,19 @@ class ClientDetailsViewModel @Inject constructor(
     fun loadClientDetailsAndClientAccounts(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
         getClientDetailsUseCase(clientId).collect { result ->
             when (result) {
-                is Resource.Error -> _clientDetailsUiState.value =
-                    ClientDetailsUiState.ShowError(result.message.toString())
+                is Resource.Error -> {
+                    _clientDetailsUiState.value =
+                        ClientDetailsUiState.ShowError(result.message.toString())
+                    _showLoading.value = false
+                }
 
-                is Resource.Loading -> _clientDetailsUiState.value = ClientDetailsUiState.Loading
+                is Resource.Loading -> _showLoading.value = true
 
                 is Resource.Success -> {
-                    _clientDetailsUiState.value = ClientDetailsUiState.ShowClientDetails(
-                        result.data?.client,
-                        result.data?.clientAccounts
-                    )
+                    _client.value = result.data?.client
+                    _loanAccounts.value = result.data?.clientAccounts?.loanAccounts
+                    _savingsAccounts.value = result.data?.clientAccounts?.savingsAccounts
+                    _showLoading.value = false
                 }
             }
         }

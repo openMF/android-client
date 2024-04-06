@@ -1,4 +1,4 @@
-package com.mifos.feature.client.clientList.di
+package com.mifos.feature.client.clientDetails.di
 
 import android.content.Context
 import androidx.compose.ui.util.trace
