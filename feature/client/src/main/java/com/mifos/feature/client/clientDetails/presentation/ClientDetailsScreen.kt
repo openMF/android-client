@@ -225,6 +225,7 @@ fun ClientDetailsScreen(
 
     MifosScaffold(
         icon = Icons.Rounded.ArrowBackIosNew,
+        title = stringResource(id = R.string.feature_client),
         onBackPressed = { onBackPressed() },
         actions = {
             IconButton(onClick = { showMenu = showMenu.not() }) {

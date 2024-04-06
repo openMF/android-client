@@ -29,9 +29,10 @@ import com.mifos.core.designsystem.theme.White
 @Composable
 fun MifosScaffold(
     icon: ImageVector?,
+    title : String?,
     onBackPressed: () -> Unit,
     actions: @Composable () -> Unit,
-    snackbarHostState: SnackbarHostState,
+    snackbarHostState: SnackbarHostState?,
     bottomBar: @Composable () -> Unit,
     content: @Composable (PaddingValues) -> Unit
 ) {
@@ -54,22 +55,24 @@ fun MifosScaffold(
                     }
                 },
                 title = {
-                    Text(
-                        text = stringResource(id = R.string.feature_client),
-                        style = TextStyle(
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Medium,
-                            fontStyle = FontStyle.Normal,
-                            fontFamily = FontFamily(Font(R.font.outfit_medium))
-                        ),
-                        color = Black,
-                        textAlign = TextAlign.Start
-                    )
+                    title?.let {
+                        Text(
+                            text = it,
+                            style = TextStyle(
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Medium,
+                                fontStyle = FontStyle.Normal,
+                                fontFamily = FontFamily(Font(R.font.outfit_medium))
+                            ),
+                            color = Black,
+                            textAlign = TextAlign.Start
+                        )
+                    }
                 },
                 actions = { actions() }
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { snackbarHostState?.let { SnackbarHost(it) } },
         containerColor = White,
         bottomBar = bottomBar
     ) { padding ->
