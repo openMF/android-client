@@ -6,7 +6,7 @@ object BaseUrl {
 
     const val PROTOCOL_HTTPS = "https://"
 
-    const val API_ENDPOINT = "gsoc.mifos.community"
+    const val API_ENDPOINT = "demo.mifos.io"
 
     const val API_PATH = "/fineract-provider/api/v1/"
 

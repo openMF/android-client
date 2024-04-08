@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -12,7 +14,7 @@ android {
     defaultConfig {
         minSdk = 26
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.mifos.core.testing.MifosTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -48,6 +50,21 @@ android {
             excludes.add("DebugProbesKt.bin")
         }
     }
+
+    tasks.withType<KotlinCompile>().configureEach {
+        kotlinOptions {
+            // Set JVM target to 11
+            jvmTarget = JavaVersion.VERSION_17.toString()
+            // Treat all Kotlin warnings as errors (disabled by default)
+            // Override by setting warningsAsErrors=true in your ~/.gradle/gradle.properties
+            val warningsAsErrors: String? by project
+            allWarningsAsErrors = warningsAsErrors.toBoolean()
+            freeCompilerArgs = freeCompilerArgs + listOf(
+                // Enable experimental coroutines APIs, including Flow
+                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            )
+        }
+    }
 }
 
 dependencies {
@@ -58,6 +75,8 @@ dependencies {
     implementation(project(":core:network"))
     api(project(":core:ui"))
 
+    testImplementation(project(":core:testing"))
+    androidTestImplementation(project(":core:testing"))
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -112,4 +131,16 @@ dependencies {
     // paging 3
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
     implementation("androidx.paging:paging-compose:3.2.1")
+    // alternatively - without Android dependencies for tests
+    testImplementation ("androidx.paging:paging-common-ktx:3.2.1")
+    testImplementation ("androidx.paging:paging-testing:3.2.1")
+
+    implementation("androidx.test:rules:1.5.0")
+    implementation("com.google.dagger:hilt-android-testing:2.50")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.3")
+    testImplementation("androidx.compose.ui:ui-test:1.6.3")
+    androidTestImplementation("androidx.compose.ui:ui-test:1.6.3")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4-android:1.6.3")
+
 }

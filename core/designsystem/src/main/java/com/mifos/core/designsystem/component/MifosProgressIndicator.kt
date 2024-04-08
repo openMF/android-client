@@ -11,6 +11,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.DarkGray
 
@@ -38,13 +41,18 @@ fun MifosPagingAppendProgress() {
 }
 
 @Composable
-fun MifosCircularProgress() {
+fun MifosCircularProgress(
+    contentDesc: String = "loadingIndicator"
+) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics { contentDescription = contentDesc },
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
             modifier = Modifier
+                .testTag("loadingWheel")
                 .width(60.dp)
                 .height(60.dp)
                 .padding(8.dp),
@@ -52,5 +60,4 @@ fun MifosCircularProgress() {
             color = DarkGray
         )
     }
-
 }

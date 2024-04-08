@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.navigation.findNavController
 import com.mifos.core.common.utils.Constants
-import com.mifos.feature.groupsList.presentation.GroupsListScreen
+import com.mifos.feature.groupsList.presentation.GroupsListRoute
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
@@ -67,7 +67,7 @@ class GroupsListFragment : MifosBaseFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                GroupsListScreen(
+                GroupsListRoute(
                     onAddGroupClick = {
                         findNavController().navigate(R.id.action_navigation_group_list_to_createNewGroupFragment)
                     },
@@ -90,7 +90,10 @@ class GroupsListFragment : MifosBaseFragment() {
                         fragmentTransaction?.addToBackStack(FragmentConstants.FRAG_GROUP_SYNC)
                         syncGroupsDialogFragment.isCancelable = false
                         fragmentTransaction?.let {
-                            syncGroupsDialogFragment.show(fragmentTransaction, resources.getString(R.string.sync_groups))
+                            syncGroupsDialogFragment.show(
+                                fragmentTransaction,
+                                resources.getString(R.string.sync_groups)
+                            )
                         }
                     }
                 )

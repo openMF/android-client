@@ -31,7 +31,7 @@ android {
         multiDexEnabled = true
         compileSdkPreview = "UpsideDownCake"
         // A test runner provided by https://code.google.com/p/android-test-kit/
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.mifos.core.testing.MifosTestRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -122,11 +122,12 @@ dependencies {
 
     implementation(project(":feature:auth"))
     implementation(project(":feature:client"))
-    api(project(":feature:groups"))
+    implementation(project(":feature:groups"))
     implementation(project(":core:data"))
     implementation(project(":core:datastore"))
     implementation(project(":core:network"))
     implementation(project(":core:common"))
+    testImplementation(project(":core:testing"))
 
     // Multidex dependency
     implementation("androidx.multidex:multidex:2.0.1")
@@ -195,7 +196,7 @@ dependencies {
     implementation("com.mifos.mobile:mifos-passcode:1.0.0")
 
     // Android Testing Support Library's runner and rules dependencies
-    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test:runner:1.5.0")
     androidTestImplementation("androidx.test:rules:1.5.0")
 
     // Espresso UI Testing dependencies.
