@@ -1,4 +1,4 @@
-package com.mifos.feature.client.clientDetails.domain.repository
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.accounts.ClientAccounts
 import com.mifos.core.objects.client.Client

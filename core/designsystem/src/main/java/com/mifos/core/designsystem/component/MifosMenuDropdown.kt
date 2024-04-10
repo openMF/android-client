@@ -18,8 +18,7 @@ fun MifosMenuDropDownItem(option: String, onClick: () -> Unit) {
         Text(
             modifier = Modifier.padding(6.dp),
             text = option, style = TextStyle(
-                fontSize = 17.sp,
-                fontFamily = FontFamily(Font(R.font.outfit_regular))
+                fontSize = 17.sp
             )
         )
     }, onClick = { onClick() })

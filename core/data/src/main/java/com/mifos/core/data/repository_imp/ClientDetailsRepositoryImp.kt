@@ -1,9 +1,9 @@
-package com.mifos.feature.client.clientDetails.data.repository_imp
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.objects.accounts.ClientAccounts
 import com.mifos.core.objects.client.Client
-import com.mifos.feature.client.clientDetails.domain.repository.ClientDetailsRepository
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import rx.Observable

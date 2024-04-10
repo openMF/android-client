@@ -1,4 +1,4 @@
-package com.mifos.feature.client.clientDetails.presentation
+package com.mifos.feature.client.clientDetails.ui
 
 import android.graphics.Bitmap
 import android.os.Environment

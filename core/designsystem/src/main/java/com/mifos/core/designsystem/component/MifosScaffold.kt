@@ -14,22 +14,18 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import com.mifos.core.designsystem.R
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.White
 
 @Composable
 fun MifosScaffold(
     icon: ImageVector?,
-    title : String?,
+    title: String?,
     onBackPressed: () -> Unit,
     actions: @Composable () -> Unit,
     snackbarHostState: SnackbarHostState?,
@@ -61,8 +57,7 @@ fun MifosScaffold(
                             style = TextStyle(
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Medium,
-                                fontStyle = FontStyle.Normal,
-                                fontFamily = FontFamily(Font(R.font.outfit_medium))
+                                fontStyle = FontStyle.Normal
                             ),
                             color = Black,
                             textAlign = TextAlign.Start

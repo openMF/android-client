@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 
-package com.mifos.feature.client.clientDetails.presentation
+package com.mifos.feature.client.clientDetails.ui
 
 import android.Manifest
 import android.content.Context
@@ -71,8 +71,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -193,14 +191,16 @@ fun ClientDetailsScreen(
     when (state) {
 
         is ClientDetailsUiState.ShowClientImageDeletedSuccessfully -> {
-            LaunchedEffect(key1 = true) {
-                snackbarHostState.showSnackbar(message = "Client Image Deleted Successfully")
+            val message = stringResource(id = R.string.client_image_deleted)
+            LaunchedEffect(key1 = state) {
+                snackbarHostState.showSnackbar(message = message)
             }
         }
 
         is ClientDetailsUiState.ShowUploadImageSuccessfully -> {
+            val message = stringResource(id = R.string.client_image_updated)
             LaunchedEffect(key1 = state.response) {
-                snackbarHostState.showSnackbar(message = "Client Image Uploaded successfully")
+                snackbarHostState.showSnackbar(message = message)
             }
         }
 
@@ -218,9 +218,7 @@ fun ClientDetailsScreen(
             }
         }
 
-        ClientDetailsUiState.Empty -> {
-
-        }
+        ClientDetailsUiState.Empty -> {}
     }
 
     MifosScaffold(
@@ -292,7 +290,7 @@ fun ClientDetailsScreen(
                         containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
                     )
                 ) {
-                    Text(text = "Activate Client", fontSize = 16.sp)
+                    Text(text = stringResource(id = R.string.activate_client), fontSize = 16.sp)
                 }
 
             }
@@ -328,8 +326,8 @@ fun ClientDetailsScreen(
                 })
         }
         if (clientNotFoundError) {
-            MifosSweetError(message = "Client Not Found") {
-
+            MifosSweetError(message = stringResource(id = R.string.client_not_found)) {
+                clientDetailsViewModel.loadClientDetailsAndClientAccounts(clientId)
             }
         } else {
             if (showLoading) {
@@ -375,8 +373,7 @@ fun ClientDetailsScreen(
                             style = TextStyle(
                                 fontSize = 22.sp,
                                 fontWeight = FontWeight.Medium,
-                                fontStyle = FontStyle.Normal,
-                                fontFamily = FontFamily(Font(R.font.outfit_regular))
+                                fontStyle = FontStyle.Normal
                             ),
                             color = Black,
                             textAlign = TextAlign.Start
@@ -433,8 +430,7 @@ fun ClientDetailsScreen(
                             style = TextStyle(
                                 fontSize = 21.sp,
                                 fontWeight = FontWeight.Medium,
-                                fontStyle = FontStyle.Normal,
-                                fontFamily = FontFamily(Font(R.font.outfit_medium))
+                                fontStyle = FontStyle.Normal
                             ),
                             color = Black,
                             textAlign = TextAlign.Start
@@ -510,8 +506,7 @@ fun MifosLoanAccountExpendableCard(
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal,
-                        fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                        fontStyle = FontStyle.Normal
                     ),
                     color = Black,
                     textAlign = TextAlign.Start
@@ -606,8 +601,7 @@ fun MifosLoanAccountsLazyColumn(
                                 style = TextStyle(
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
-                                    fontStyle = FontStyle.Normal,
-                                    fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                                    fontStyle = FontStyle.Normal
                                 ),
                                 color = Black,
                                 textAlign = TextAlign.Start
@@ -618,8 +612,7 @@ fun MifosLoanAccountsLazyColumn(
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_light))
+                                fontStyle = FontStyle.Normal
                             ),
                             color = DarkGray,
                             textAlign = TextAlign.Start
@@ -631,8 +624,7 @@ fun MifosLoanAccountsLazyColumn(
                             style = TextStyle(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                                fontStyle = FontStyle.Normal
                             ),
                             color = Black,
                             textAlign = TextAlign.Start
@@ -686,8 +678,7 @@ fun MifosSavingsAccountExpendableCard(
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal,
-                        fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                        fontStyle = FontStyle.Normal
                     ),
                     color = Black,
                     textAlign = TextAlign.Start
@@ -780,8 +771,7 @@ fun MifosSavingsAccountsLazyColumn(
                                 style = TextStyle(
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
-                                    fontStyle = FontStyle.Normal,
-                                    fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                                    fontStyle = FontStyle.Normal
                                 ),
                                 color = Black,
                                 textAlign = TextAlign.Start
@@ -792,8 +782,7 @@ fun MifosSavingsAccountsLazyColumn(
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_light))
+                                fontStyle = FontStyle.Normal
                             ),
                             color = DarkGray,
                             textAlign = TextAlign.Start
@@ -805,8 +794,7 @@ fun MifosSavingsAccountsLazyColumn(
                             style = TextStyle(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                                fontStyle = FontStyle.Normal
                             ),
                             color = Black,
                             textAlign = TextAlign.Start
@@ -844,11 +832,12 @@ fun MifosSelectImageDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Please Select", modifier = Modifier.fillMaxWidth(), style = TextStyle(
+                    text = stringResource(id = R.string.please_select),
+                    modifier = Modifier.fillMaxWidth(),
+                    style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal,
-                        fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_medium))
+                        fontStyle = FontStyle.Normal
                     ),
                     color = Color.Black,
                     textAlign = TextAlign.Center
@@ -860,13 +849,12 @@ fun MifosSelectImageDialog(
                     colors = ButtonDefaults.buttonColors(BlueSecondary)
                 ) {
                     Text(
-                        text = "Take new image",
+                        text = stringResource(id = R.string.take_new_image),
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                            fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_medium))
+                            fontStyle = FontStyle.Normal
                         ),
                         color = Color.Black,
                         textAlign = TextAlign.Center
@@ -877,13 +865,12 @@ fun MifosSelectImageDialog(
                     colors = ButtonDefaults.buttonColors(BlueSecondary)
                 ) {
                     Text(
-                        text = "Upload new image",
+                        text = stringResource(id = R.string.upload_new_image),
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                            fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_medium))
+                            fontStyle = FontStyle.Normal
                         ),
                         color = Color.Black,
                         textAlign = TextAlign.Center
@@ -894,13 +881,12 @@ fun MifosSelectImageDialog(
                     colors = ButtonDefaults.buttonColors(BlueSecondary)
                 ) {
                     Text(
-                        text = "Delete Image",
+                        text = stringResource(id = R.string.delete_image),
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                            fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_medium))
+                            fontStyle = FontStyle.Normal
                         ),
                         color = Color.Black,
                         textAlign = TextAlign.Center
@@ -934,8 +920,7 @@ fun MifosClientDetailsText(icon: ImageVector, field: String, value: String) {
             style = TextStyle(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal,
-                fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                fontStyle = FontStyle.Normal
             ),
             color = Black,
             textAlign = TextAlign.Start
@@ -946,8 +931,7 @@ fun MifosClientDetailsText(icon: ImageVector, field: String, value: String) {
             style = TextStyle(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal,
-                fontFamily = FontFamily(Font(com.mifos.core.designsystem.R.font.outfit_regular))
+                fontStyle = FontStyle.Normal
             ),
             color = DarkGray,
             textAlign = TextAlign.Start

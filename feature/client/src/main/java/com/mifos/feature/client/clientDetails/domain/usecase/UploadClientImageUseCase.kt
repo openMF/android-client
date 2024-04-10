@@ -1,7 +1,7 @@
 package com.mifos.feature.client.clientDetails.domain.usecase
 
 import com.mifos.core.common.utils.Resource
-import com.mifos.feature.client.clientDetails.domain.repository.ClientDetailsRepository
+import com.mifos.core.data.repository.ClientDetailsRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
