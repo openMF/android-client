@@ -26,4 +26,13 @@
     <string name="add_savings_account">Add Savings Account</string>
     <string name="add_loan_account">Add Loan Account</string>
 
+    <string name="client_image_updated">Client Image Uploaded successfully</string>
+    <string name="client_image_deleted">Client Image Deleted Successfully</string>
+    <string name="activate_client">Activate Client</string>
+    <string name="client_not_found">Client Not Found</string>
+    <string name="please_select">Please Select</string>
+    <string name="take_new_image">Take new image</string>
+    <string name="upload_new_image">Upload new image</string>
+    <string name="delete_image">Delete Image</string>
+
 </resources>

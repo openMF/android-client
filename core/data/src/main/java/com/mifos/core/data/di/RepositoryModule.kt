@@ -1,8 +1,8 @@
-package com.mifos.feature.client.clientDetails.di
+package com.mifos.core.data.di
 
+import com.mifos.core.data.repository.ClientDetailsRepository
+import com.mifos.core.data.repository_imp.ClientDetailsRepositoryImp
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.feature.client.clientDetails.data.repository_imp.ClientDetailsRepositoryImp
-import com.mifos.feature.client.clientDetails.domain.repository.ClientDetailsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

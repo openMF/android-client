@@ -15,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.client.Charges
-import com.mifos.feature.client.clientDetails.presentation.ClientDetailsScreen
+import com.mifos.feature.client.clientDetails.ui.ClientDetailsScreen
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
