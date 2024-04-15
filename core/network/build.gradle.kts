@@ -40,7 +40,6 @@ dependencies {
 
     implementation(project(":core:datastore"))
     implementation(project(":core:common"))
-    implementation(project(":core:data"))
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -88,4 +87,7 @@ dependencies {
     //stetho dependencies
     implementation("com.facebook.stetho:stetho:1.3.1")
     implementation("com.facebook.stetho:stetho-okhttp3:1.3.1")
+
+    // coil
+    implementation("io.coil-kt:coil-compose:2.5.0")
 }
