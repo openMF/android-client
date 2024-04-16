@@ -105,4 +105,10 @@ dependencies {
     // Mongo Realm
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
     implementation("io.realm.kotlin:library-base:1.11.0")
+
+    // permission
+    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
+
+    // compose lifecycle
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 }

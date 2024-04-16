@@ -3,8 +3,8 @@ package com.mifos.core.datastore
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import com.mifos.core.common.model.user.User
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.objects.user.User
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.apache.fineract.client.models.PostAuthenticationResponse
 import org.mifos.core.sharedpreference.UserPreferences
@@ -27,7 +27,7 @@ class PrefManager @Inject constructor(
         PreferenceManager.getDefaultSharedPreferences(context)
 
     override fun getUser(): User {
-        return gson.fromJson(preference.getString(USER_DETAILS,""),User::class.java)
+        return gson.fromJson(preference.getString(USER_DETAILS, ""), User::class.java)
     }
 
     override fun saveUser(user: User) {

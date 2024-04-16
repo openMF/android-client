@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -62,4 +63,9 @@ dependencies {
 
     // coil
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    //DBFlow dependencies
+    kapt("com.github.raizlabs.dbflow.dbflow:dbflow-processor:3.1.1")
+    implementation("com.github.raizlabs.dbflow.dbflow:dbflow:3.1.1")
+    kapt("com.github.raizlabs.dbflow:dbflow-processor:4.2.4")
 }
