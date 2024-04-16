@@ -1,12 +1,13 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.presentation
+package com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Card
@@ -21,8 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -72,7 +71,7 @@ fun CheckerInboxTasksScreen(
         ) {
             when (state) {
                 is CheckerInboxTasksUiState.Error -> {
-                    MifosSweetError(message = "Failed to Load Check Inbox") {
+                    MifosSweetError(message = stringResource(id = R.string.failed_to_Load_Check_Inbox)) {
                         checkerInboxTasksViewModel.loadCheckerTasksBadges()
                     }
                 }
@@ -85,35 +84,35 @@ fun CheckerInboxTasksScreen(
                     Column(modifier = Modifier.padding(padding)) {
                         TaskOptions(
                             leadingIcon = R.drawable.ic_mail_outline_24dp,
-                            option = "Checker Inbox",
+                            option = stringResource(id = R.string.checker_Inbox),
                             badge = state.checkerInboxBadge
                         ) {
                             checkerInbox()
                         }
                         TaskOptions(
                             leadingIcon = R.drawable.ic_supervisor_account_24dp,
-                            option = "Client Approval",
+                            option = stringResource(id = R.string.client_Approval),
                             badge = "0"
                         ) {
 
                         }
                         TaskOptions(
                             leadingIcon = R.drawable.ic_assignment_black_24dp,
-                            option = "Loan Approval",
+                            option = stringResource(id = R.string.loan_Approval),
                             badge = "0"
                         ) {
 
                         }
                         TaskOptions(
                             leadingIcon = R.drawable.ic_done_all_24dp,
-                            option = "Loan Disbursal",
+                            option = stringResource(id = R.string.loan_Disbursal),
                             badge = "0"
                         ) {
 
                         }
                         TaskOptions(
                             leadingIcon = R.drawable.ic_restore_24dp,
-                            option = "Reschedule Loan",
+                            option = stringResource(id = R.string.reschedule_Loan),
                             badge = state.rescheduleLoanBadge
                         ) {
 
@@ -137,7 +136,7 @@ fun TaskOptions(leadingIcon: Int, option: String, badge: String, onClick: () -> 
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(24.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -154,24 +153,23 @@ fun TaskOptions(leadingIcon: Int, option: String, badge: String, onClick: () -> 
                 text = option,
                 style = TextStyle(
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    fontFamily = FontFamily(Font(R.font.outfit_medium))
+                    fontWeight = FontWeight.Medium
                 )
             )
             Card(
-                colors = CardDefaults.cardColors(Color.Red)
+                colors = CardDefaults.cardColors(Color.Red),
+                shape = RoundedCornerShape(10.dp)
             ) {
                 Text(
                     modifier = Modifier.padding(
                         start = 12.dp,
                         end = 12.dp,
-                        top = 4.dp,
-                        bottom = 4.dp
+                        top = 2.dp,
+                        bottom = 2.dp
                     ),
                     text = badge,
                     style = TextStyle(
                         fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.outfit_medium)),
                         color = White
                     )
                 )
@@ -180,7 +178,7 @@ fun TaskOptions(leadingIcon: Int, option: String, badge: String, onClick: () -> 
     }
 }
 
-@Preview
+@Preview(showSystemUi = true)
 @Composable
 private fun PreviewCheckerInboxTaskScreen() {
     CheckerInboxTasksScreen(onBackPressed = { }) {

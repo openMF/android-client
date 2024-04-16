@@ -1,4 +1,4 @@
-package com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.presentation
+package com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,7 +23,8 @@ class CheckerInboxTasksViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
-    private val _checkerInboxTasksUiState = MutableStateFlow<CheckerInboxTasksUiState>(CheckerInboxTasksUiState.Loading)
+    private val _checkerInboxTasksUiState =
+        MutableStateFlow<CheckerInboxTasksUiState>(CheckerInboxTasksUiState.Loading)
     val checkerInboxTasksUiState = _checkerInboxTasksUiState.asStateFlow()
 
     fun onRefresh() {

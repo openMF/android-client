@@ -1,4 +1,4 @@
-package com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.domain.repository
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
 import com.mifos.core.objects.checkerinboxandtasks.RescheduleLoansTask

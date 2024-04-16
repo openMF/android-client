@@ -1,7 +1,7 @@
-package com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.di
+package com.mifos.core.data.di
 
-import com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.data.CheckerInboxTasksRepositoryImp
-import com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.domain.repository.CheckerInboxTasksRepository
+import com.mifos.core.data.repository.CheckerInboxTasksRepository
+import com.mifos.core.data.repository_imp.CheckerInboxTasksRepositoryImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

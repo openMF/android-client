@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.data.model.user.User
+import com.mifos.core.objects.user.User
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.apache.fineract.client.models.PostAuthenticationResponse
 import org.mifos.core.sharedpreference.UserPreferences

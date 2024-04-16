@@ -1,9 +1,9 @@
-package com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.data
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import com.mifos.core.network.datamanager.DataManagerCheckerInbox
 import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
 import com.mifos.core.objects.checkerinboxandtasks.RescheduleLoansTask
-import com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.domain.repository.CheckerInboxTasksRepository
 import rx.Observable
 import javax.inject.Inject
 

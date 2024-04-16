@@ -1,4 +1,4 @@
-package com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.presentation
+package com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.ui
 
 
 /**
