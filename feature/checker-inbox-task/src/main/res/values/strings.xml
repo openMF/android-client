@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="checker_inbox_and_pending_tasks">Checker Inbox &amp; Tasks</string>
+    <string name="failed_to_Load_Check_Inbox">Failed to Load Check Inbox</string>
+
+    <string name="checker_Inbox">Checker Inbox</string>
+    <string name="client_Approval">Client Approval</string>
+    <string name="loan_Approval">Loan Approval</string>
+    <string name="loan_Disbursal">Loan Disbursal</string>
+    <string name="reschedule_Loan">Reschedule Loan</string>
+
+</resources>
