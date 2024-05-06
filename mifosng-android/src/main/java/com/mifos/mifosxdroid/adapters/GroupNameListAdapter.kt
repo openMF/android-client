@@ -9,9 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.mifos.core.objects.group.Group
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.SelectableAdapter
-import com.mifos.objects.group.Group
 
 class GroupNameListAdapter(
     val onGroupClick: (Int) -> Unit,
@@ -25,11 +25,11 @@ class GroupNameListAdapter(
                 .inflate(R.layout.row_group_name, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+            if (viewHolder.adapterPosition != RecyclerView.NO_POSITION)
                 onGroupClick(viewHolder.adapterPosition)
         }
         viewHolder.itemView.setOnLongClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+            if (viewHolder.adapterPosition != RecyclerView.NO_POSITION)
                 onGroupLongClick(viewHolder.adapterPosition)
             return@setOnLongClickListener true
         }
@@ -50,8 +50,7 @@ class GroupNameListAdapter(
                     } else {
                         itemView.context.resources.getColor(R.color.primary)
                     }
-                }
-                else Color.WHITE
+                } else Color.WHITE
             )
             iv_sync_status.visibility = if (group.sync) View.VISIBLE else View.INVISIBLE
         }

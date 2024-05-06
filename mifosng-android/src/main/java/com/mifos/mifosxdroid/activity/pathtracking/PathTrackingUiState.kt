@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.activity.pathtracking
 
-import com.mifos.objects.user.UserLocation
+import com.mifos.core.objects.user.UserLocation
 
 /**
  * Created by Aditya Gupta on 06/08/23.

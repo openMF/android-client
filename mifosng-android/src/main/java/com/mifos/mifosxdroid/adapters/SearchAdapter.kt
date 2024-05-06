@@ -10,9 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.TextDrawable.IBuilder
 import com.amulyakhare.textdrawable.util.ColorGenerator
+import com.mifos.core.objects.SearchedEntity
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.SearchedEntity
-import javax.inject.Inject
 
 
 class SearchAdapter(
@@ -28,7 +27,7 @@ class SearchAdapter(
                 .inflate(R.layout.list_item_client, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+            if (viewHolder.adapterPosition != RecyclerView.NO_POSITION)
                 onSearchItemClick(searchedResults[viewHolder.adapterPosition])
         }
         return viewHolder

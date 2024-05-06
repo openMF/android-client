@@ -18,17 +18,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.joanzapata.iconify.fonts.MaterialIcons
 import com.joanzapata.iconify.widget.IconTextView
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.accounts.GroupAccounts
+import com.mifos.core.objects.accounts.savings.DepositType
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.group.Group
+import com.mifos.core.objects.navigation.ClientListArgs
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.LoanAccountsListAdapter
 import com.mifos.mifosxdroid.adapters.SavingsAccountsListAdapter
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentGroupDetailsBinding
-import com.mifos.objects.accounts.GroupAccounts
-import com.mifos.objects.accounts.savings.DepositType
-import com.mifos.objects.client.Client
-import com.mifos.objects.group.Group
-import com.mifos.objects.navigation.ClientListArgs
-import com.mifos.utils.Constants
 import com.mifos.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 

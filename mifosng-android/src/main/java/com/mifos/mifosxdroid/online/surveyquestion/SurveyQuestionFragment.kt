@@ -14,11 +14,11 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.google.gson.Gson
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.survey.QuestionDatas
+import com.mifos.core.objects.survey.ScorecardValues
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentSurveyQuestionBinding
-import com.mifos.objects.survey.QuestionDatas
-import com.mifos.objects.survey.ScorecardValues
-import com.mifos.utils.Constants
 
 /**
  * Created by Nasim Banu on 28,January,2016.
@@ -44,7 +44,7 @@ class SurveyQuestionFragment : MifosBaseFragment(), RadioGroup.OnCheckedChangeLi
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSurveyQuestionBinding.inflate(inflater, container, false)
         binding.surveyQuestionTextView.text = mQuestionDatas?.text
         for (i in mQuestionDatas!!.responseDatas.indices) {

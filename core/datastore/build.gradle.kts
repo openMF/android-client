@@ -1,7 +1,9 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
+    id(libs.plugins.kotlin.parcelize.get().pluginId)
     id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
@@ -29,14 +31,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
+
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+        kotlinOptions {
+            jvmTarget = "17"
+        }
     }
 }
 
 dependencies {
 
-    implementation(project(":core:data"))
+    implementation(project(":core:common"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -48,6 +53,15 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.core)
 
     implementation(libs.converter.gson)
+
+    //rxjava dependencies
+    implementation(libs.rxandroid)
+    implementation(libs.rxjava)
+
+    //DBFlow dependencies
+    kapt(libs.dbflow.processor)
+    implementation(libs.dbflow)
+    kapt(libs.github.dbflow.processor)
 
     // Hilt dependency
     implementation(libs.hilt.android)

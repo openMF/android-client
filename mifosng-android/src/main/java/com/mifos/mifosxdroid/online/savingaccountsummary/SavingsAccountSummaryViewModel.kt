@@ -3,9 +3,9 @@ package com.mifos.mifosxdroid.online.savingaccountsummary
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

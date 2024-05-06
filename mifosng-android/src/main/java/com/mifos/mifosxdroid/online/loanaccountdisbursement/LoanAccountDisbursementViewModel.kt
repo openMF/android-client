@@ -3,10 +3,10 @@ package com.mifos.mifosxdroid.online.loanaccountdisbursement
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.api.GenericResponse
-import com.mifos.api.model.APIEndPoint
-import com.mifos.objects.accounts.loan.LoanDisbursement
-import com.mifos.objects.templates.loans.LoanTransactionTemplate
+import com.mifos.core.model.APIEndPoint
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.accounts.loan.LoanDisbursement
+import com.mifos.core.objects.templates.loans.LoanTransactionTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

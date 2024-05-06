@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_client_failed_to_load_client">Failed To Load Clients</string>
+    <string name="feature_client">Client</string>
+    <string name="feature_client_failed_to_load_db_clients">Failed to load Database Clients</string>
+    <string name="feature_client_no_more_clients_available">No more Clients Available</string>
+
+    <string name="account_number">Account Number</string>
+    <string name="external_id">External ID</string>
+    <string name="activation_date">Activation Date</string>
+    <string name="office">Office</string>
+    <string name="mobile_no">Mobile Number</string>
+    <string name="group">Group</string>
+    <string name="loan_account">Loan Accounts</string>
+    <string name="savings_account">Savings Accounts</string>
+    <string name="accounts">Accounts</string>
+
+    <string name="upload_signature">Upload Signature</string>
+    <string name="survey">Survey</string>
+    <string name="pinpoint_location">Pinpoint location</string>
+    <string name="notes">Notes</string>
+    <string name="more_client_info">More client info</string>
+    <string name="identifiers">Identifiers</string>
+    <string name="documents">Documents</string>
+    <string name="charges">Charges</string>
+    <string name="add_savings_account">Add Savings Account</string>
+    <string name="add_loan_account">Add Loan Account</string>
+
+    <string name="client_image_updated">Client Image Uploaded successfully</string>
+    <string name="client_image_deleted">Client Image Deleted Successfully</string>
+    <string name="activate_client">Activate Client</string>
+    <string name="client_not_found">Client Not Found</string>
+    <string name="please_select">Please Select</string>
+    <string name="take_new_image">Take new image</string>
+    <string name="upload_new_image">Upload new image</string>
+    <string name="delete_image">Delete Image</string>
+
+</resources>

@@ -1,10 +1,10 @@
 package com.mifos.mifosxdroid.online.grouploanaccount
 
-import com.mifos.api.DataManager
-import com.mifos.objects.accounts.loan.Loans
-import com.mifos.objects.organisation.LoanProducts
-import com.mifos.objects.templates.loans.GroupLoanTemplate
-import com.mifos.services.data.GroupLoanPayload
+import com.mifos.core.data.GroupLoanPayload
+import com.mifos.core.network.DataManager
+import com.mifos.core.objects.accounts.loan.Loans
+import com.mifos.core.objects.organisation.LoanProducts
+import com.mifos.core.objects.templates.loans.GroupLoanTemplate
 import rx.Observable
 import javax.inject.Inject
 

@@ -57,7 +57,7 @@ import com.mifos.core.designsystem.component.MifosAndroidClientIcon
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGrey
+import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
 import com.mifos.feature.auth.R
 
@@ -154,7 +154,7 @@ fun LoginScreen(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Normal,
-                    color = DarkGrey
+                    color = DarkGray
                 )
             )
 

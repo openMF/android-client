@@ -5,25 +5,34 @@ package com.mifos.mifosxdroid.activity.setting
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.preference.*
-import androidx.preference.Preference.OnPreferenceChangeListener
 import android.widget.Toast
+import androidx.preference.EditTextPreference
+import androidx.preference.ListPreference
+import androidx.preference.Preference
+import androidx.preference.Preference.OnPreferenceChangeListener
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogFragment
 import com.mifos.mifosxdroid.online.DashboardActivity
 import com.mifos.mifosxdroid.passcode.PassCodeActivity
 import com.mifos.mobile.passcode.utils.PasscodePreferencesHelper
-import com.mifos.utils.*
+import com.mifos.utils.Constants
+import com.mifos.utils.FragmentConstants
+import com.mifos.utils.LanguageHelper
+import com.mifos.utils.PrefManager
+import com.mifos.utils.ThemeHelper
 
 /**
  * Created by mayankjindal on 22/07/17.
  */
-class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsFragment : PreferenceFragmentCompat(),
+    SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var mEnableSyncSurvey: SwitchPreference
     private lateinit var mInstanceUrlPref: EditTextPreference
     private lateinit var languages: Array<String>
     private var languageCallback: LanguageCallback? = null
-    private var mRootKey : String? = null
+    private var mRootKey: String? = null
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
@@ -87,7 +96,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             startActivity(intent)
             requireActivity().finish()
             preferenceScreen = null
-            setPreferencesFromResource(R.xml.preferences,mRootKey)
+            setPreferencesFromResource(R.xml.preferences, mRootKey)
             preferenceScreen.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
             true
         }

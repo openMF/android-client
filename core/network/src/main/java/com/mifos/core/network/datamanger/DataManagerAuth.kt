@@ -1,6 +1,5 @@
 package com.mifos.core.network.datamanger
 
-import com.mifos.core.network.di.BaseApiManagerQualifier
 import org.apache.fineract.client.models.PostAuthenticationRequest
 import org.apache.fineract.client.models.PostAuthenticationResponse
 import org.mifos.core.apimanager.BaseApiManager
@@ -12,7 +11,7 @@ import javax.inject.Singleton
  * Created by Rajan Maurya on 19/02/17.
  */
 @Singleton
-class DataManagerAuth @Inject constructor(@BaseApiManagerQualifier private val baseApiManager: BaseApiManager) {
+class DataManagerAuth @Inject constructor(private val baseApiManager: BaseApiManager) {
     /**
      * @param username Username
      * @param password Password

@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.activity.pinpointclient
 
-import com.mifos.api.GenericResponse
-import com.mifos.objects.client.ClientAddressRequest
-import com.mifos.objects.client.ClientAddressResponse
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.client.ClientAddressRequest
+import com.mifos.core.objects.client.ClientAddressResponse
 import rx.Observable
 
 /**

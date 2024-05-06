@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.groupdetails
 
-import com.mifos.objects.accounts.GroupAccounts
-import com.mifos.objects.client.Client
-import com.mifos.objects.group.Group
+import com.mifos.core.objects.accounts.GroupAccounts
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.group.Group
 
 /**
  * Created by Aditya Gupta on 06/08/23.

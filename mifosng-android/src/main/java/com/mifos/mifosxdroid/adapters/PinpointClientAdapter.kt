@@ -10,8 +10,8 @@ import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.mifos.core.objects.client.ClientAddressResponse
 import com.mifos.mifosxdroid.databinding.ItemPinpointLocationBinding
-import com.mifos.objects.client.ClientAddressResponse
 import javax.inject.Inject
 
 /**

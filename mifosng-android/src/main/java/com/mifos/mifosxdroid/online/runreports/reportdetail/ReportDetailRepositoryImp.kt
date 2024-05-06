@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.runreports.reportdetail
 
-import com.mifos.api.datamanager.DataManagerRunReport
-import com.mifos.objects.runreports.FullParameterListResponse
+import com.mifos.core.network.datamanager.DataManagerRunReport
+import com.mifos.core.objects.runreports.FullParameterListResponse
 import rx.Observable
 import javax.inject.Inject
 

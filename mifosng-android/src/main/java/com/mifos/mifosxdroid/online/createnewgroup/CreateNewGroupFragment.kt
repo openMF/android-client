@@ -12,6 +12,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.group.GroupPayload
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.response.SaveResponse
 import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.exceptions.ShortOfLengthException
@@ -20,10 +24,6 @@ import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentCreateNewGroupBinding
 import com.mifos.mifosxdroid.online.GroupsActivity
-import com.mifos.objects.group.GroupPayload
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.response.SaveResponse
-import com.mifos.utils.Constants
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.MifosResponseHandler
@@ -229,7 +229,10 @@ class CreateNewGroupFragment : ProgressableFragment() {
         requireActivity().supportFragmentManager.popBackStack()
         if (PrefManager.userStatus == Constants.USER_ONLINE) {
             val groupActivityIntent = Intent(activity, GroupsActivity::class.java)
-            groupActivityIntent.putExtra(Constants.GROUP_ID, group?.groupId)
+            groupActivityIntent.putExtra(
+                Constants.GROUP_ID,
+                group?.groupId
+            )
             startActivity(groupActivityIntent)
         }
     }

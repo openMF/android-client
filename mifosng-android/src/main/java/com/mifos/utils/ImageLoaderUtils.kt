@@ -8,7 +8,7 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.signature.ObjectKey
-import com.mifos.api.MifosInterceptor
+import com.mifos.core.network.MifosInterceptor
 import com.mifos.mifosxdroid.R
 
 /**

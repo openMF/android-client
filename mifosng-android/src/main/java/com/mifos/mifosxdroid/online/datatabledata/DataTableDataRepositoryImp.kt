@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.datatabledata
 
 import com.google.gson.JsonArray
-import com.mifos.api.datamanager.DataManagerDataTable
+import com.mifos.core.network.datamanager.DataManagerDataTable
 import org.apache.fineract.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import rx.Observable
 import javax.inject.Inject

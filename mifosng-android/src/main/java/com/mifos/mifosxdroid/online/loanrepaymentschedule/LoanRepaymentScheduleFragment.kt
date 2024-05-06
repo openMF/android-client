@@ -11,13 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.mifos.core.objects.accounts.loan.LoanWithAssociations
+import com.mifos.core.objects.accounts.loan.RepaymentSchedule
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.LoanRepaymentScheduleAdapter
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentLoanRepaymentScheduleBinding
-import com.mifos.objects.accounts.loan.LoanWithAssociations
-import com.mifos.objects.accounts.loan.RepaymentSchedule
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

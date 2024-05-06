@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
 android {
@@ -45,7 +46,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    implementation(libs.androidx.material)
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
@@ -59,4 +60,12 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.androidx.material.icons.extended)
+
+    // coil
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    //DBFlow dependencies
+    kapt(libs.dbflow.processor)
+    implementation(libs.dbflow)
+    kapt(libs.github.dbflow.processor)
 }

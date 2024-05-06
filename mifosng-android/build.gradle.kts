@@ -121,6 +121,12 @@ android {
 dependencies {
 
     implementation(project(":feature:auth"))
+    implementation(project(":feature:client"))
+    implementation(project(":feature:checker-inbox-task"))
+    implementation(project(":core:data"))
+    implementation(project(":core:datastore"))
+    implementation(project(":core:network"))
+    implementation(project(":core:common"))
 
     // Multidex dependency
     implementation(libs.androidx.multidex)

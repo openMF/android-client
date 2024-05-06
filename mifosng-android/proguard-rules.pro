@@ -112,7 +112,7 @@
   **[] $VALUES;
   public *;
 }
--keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
 # Iconify
 -keep class com.joanzapata.iconify.** { *; }

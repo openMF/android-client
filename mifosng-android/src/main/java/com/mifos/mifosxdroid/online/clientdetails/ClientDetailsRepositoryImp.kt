@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.clientdetails
 
-import com.mifos.api.datamanager.DataManagerClient
-import com.mifos.objects.accounts.ClientAccounts
-import com.mifos.objects.client.Client
+import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.core.objects.accounts.ClientAccounts
+import com.mifos.core.objects.client.Client
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import rx.Observable

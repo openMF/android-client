@@ -10,9 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
+import com.mifos.core.objects.accounts.savings.SavingsAccount
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.databinding.RowAccountItemBinding
-import com.mifos.objects.accounts.savings.SavingsAccount
 import java.text.DecimalFormat
 
 /**
@@ -44,7 +44,7 @@ class SavingsAccountsListAdapter(context: Context, savingsAccountList: List<Savi
 
     override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
         val binding: RowAccountItemBinding
-        val convertView : View
+        val convertView: View
         if (view == null) {
             binding = RowAccountItemBinding.inflate(layoutInflater, viewGroup, false)
             convertView = binding.root

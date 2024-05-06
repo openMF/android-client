@@ -2,10 +2,10 @@ package com.mifos.mifosxdroid.offlinejobs
 
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobRequest
-import com.mifos.api.datamanager.DataManagerLoan
-import com.mifos.api.datamanager.DataManagerSavings
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.objects.accounts.savings.SavingsAccountTransactionResponse
+import com.mifos.core.network.datamanager.DataManagerLoan
+import com.mifos.core.network.datamanager.DataManagerSavings
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
 import com.mifos.utils.MFErrorParser
 import com.mifos.utils.PrefManager.userStatus
 import com.mifos.utils.Tags
@@ -27,7 +27,8 @@ class OfflineSyncSavingsAccount : Job() {
     @Inject
     var mDataManagerLoan: DataManagerLoan? = null
     private var mSubscriptions: CompositeSubscription? = null
-    private var mSavingsAccountTransactionRequests: MutableList<SavingsAccountTransactionRequest> = ArrayList()
+    private var mSavingsAccountTransactionRequests: MutableList<SavingsAccountTransactionRequest> =
+        ArrayList()
     private var mTransactionIndex = 0
     override fun onRunJob(params: Params): Result {
         mSubscriptions = CompositeSubscription()

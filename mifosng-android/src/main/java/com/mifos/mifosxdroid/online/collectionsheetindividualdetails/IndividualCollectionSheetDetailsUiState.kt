@@ -5,9 +5,9 @@ package com.mifos.mifosxdroid.online.collectionsheetindividualdetails
  */
 sealed class IndividualCollectionSheetDetailsUiState {
 
-    object ShowProgressbar : IndividualCollectionSheetDetailsUiState()
+    data object ShowProgressbar : IndividualCollectionSheetDetailsUiState()
 
     data class ShowError(val message: String) : IndividualCollectionSheetDetailsUiState()
 
-    object ShowSuccess : IndividualCollectionSheetDetailsUiState()
+    data object ShowSuccess : IndividualCollectionSheetDetailsUiState()
 }

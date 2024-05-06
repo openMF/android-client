@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.dialogfragments.documentdialog
 
-import com.mifos.api.GenericResponse
+import com.mifos.core.network.GenericResponse
 import okhttp3.MultipartBody
 import rx.Observable
 

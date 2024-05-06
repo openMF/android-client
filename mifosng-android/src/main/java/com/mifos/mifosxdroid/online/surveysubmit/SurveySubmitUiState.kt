@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.surveysubmit
 
-import com.mifos.objects.survey.Scorecard
+import com.mifos.core.objects.survey.Scorecard
 
 /**
  * Created by Aditya Gupta on 13/08/23.

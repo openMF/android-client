@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.offline.syncclientpayloads
 
-import com.mifos.api.datamanager.DataManagerClient
-import com.mifos.objects.client.Client
-import com.mifos.objects.client.ClientPayload
+import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.ClientPayload
 import rx.Observable
 import javax.inject.Inject
 

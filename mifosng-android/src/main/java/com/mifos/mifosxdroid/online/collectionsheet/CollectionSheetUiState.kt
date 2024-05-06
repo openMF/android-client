@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.collectionsheet
 
-import com.mifos.objects.db.CollectionSheet
-import com.mifos.objects.response.SaveResponse
+import com.mifos.core.objects.db.CollectionSheet
+import com.mifos.core.objects.response.SaveResponse
 import retrofit2.HttpException
 
 /**

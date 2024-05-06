@@ -3,10 +3,10 @@ package com.mifos.mifosxdroid.online.centerlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.objects.client.Page
+import com.mifos.core.objects.group.Center
+import com.mifos.core.objects.group.CenterWithAssociations
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.client.Page
-import com.mifos.objects.group.Center
-import com.mifos.objects.group.CenterWithAssociations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

@@ -3,10 +3,10 @@ package com.mifos.mifosxdroid.activity.pinpointclient
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.api.GenericResponse
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.client.ClientAddressRequest
+import com.mifos.core.objects.client.ClientAddressResponse
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.client.ClientAddressRequest
-import com.mifos.objects.client.ClientAddressResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

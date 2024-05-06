@@ -3,10 +3,10 @@ package com.mifos.mifosxdroid.online.collectionsheetindividual
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.api.model.RequestCollectionSheetPayload
-import com.mifos.objects.collectionsheet.IndividualCollectionSheet
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.organisation.Staff
+import com.mifos.core.network.model.RequestCollectionSheetPayload
+import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.organisation.Staff
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.HttpException
 import rx.Observable

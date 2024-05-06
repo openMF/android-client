@@ -12,12 +12,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.mifos.core.objects.survey.Scorecard
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentSurveyLastBinding
 import com.mifos.mifosxdroid.online.surveyquestion.Communicator
 import com.mifos.mifosxdroid.online.surveyquestion.SurveyQuestionActivity
-import com.mifos.objects.survey.Scorecard
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

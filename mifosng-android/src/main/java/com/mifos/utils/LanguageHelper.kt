@@ -36,7 +36,6 @@ object LanguageHelper {
         return preferences.getString(context.getString(R.string.language_type), defaultLanguage)
     }
 
-    @TargetApi(Build.VERSION_CODES.N)
     private fun updateResources(context: Context, language: String?): Context {
         val locale = language?.lowercase(Locale.getDefault())?.let { Locale(it) }
         if (locale != null) {

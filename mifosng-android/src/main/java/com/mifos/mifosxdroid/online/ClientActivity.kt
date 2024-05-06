@@ -10,14 +10,14 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navArgs
 import com.google.gson.Gson
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.accounts.savings.DepositType
+import com.mifos.core.objects.survey.Survey
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.databinding.ActivityToolbarContainerBinding
 import com.mifos.mifosxdroid.online.surveylist.SurveyListFragment
 import com.mifos.mifosxdroid.online.surveyquestion.SurveyQuestionActivity
-import com.mifos.objects.accounts.savings.DepositType
-import com.mifos.objects.survey.Survey
-import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,6 +36,7 @@ class ClientActivity : MifosBaseActivity(),
         super.onCreate(savedInstanceState)
         binding = ActivityToolbarContainerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+//        supportActionBar?.hide()
         showBackButton()
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment

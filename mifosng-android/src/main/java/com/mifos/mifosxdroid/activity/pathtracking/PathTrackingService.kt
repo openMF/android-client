@@ -27,11 +27,11 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.location.LocationListener
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import com.mifos.api.GenericResponse
-import com.mifos.api.datamanager.DataManagerDataTable
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.datamanager.DataManagerDataTable
+import com.mifos.core.objects.user.UserLatLng
+import com.mifos.core.objects.user.UserLocation
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.user.UserLatLng
-import com.mifos.objects.user.UserLocation
 import com.mifos.utils.Constants
 import com.mifos.utils.DateHelper
 import com.mifos.utils.DateHelper.getCurrentDateTime

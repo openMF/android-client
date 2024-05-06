@@ -9,12 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.mifos.core.objects.group.CenterInfo
+import com.mifos.core.objects.group.CenterWithAssociations
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentCenterDetailsBinding
-import com.mifos.objects.group.CenterInfo
-import com.mifos.objects.group.CenterWithAssociations
 import com.mifos.utils.Constants
 import com.mifos.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
@@ -167,6 +167,7 @@ class CenterDetailsFragment : MifosBaseFragment() {
         }
         return super.onOptionsItemSelected(item)
     }
+
     private fun addCenterSavingAccount(centerId: Int) {
         val action =
             CenterDetailsFragmentDirections.actionCenterDetailsFragmentToSavingsAccountFragment(

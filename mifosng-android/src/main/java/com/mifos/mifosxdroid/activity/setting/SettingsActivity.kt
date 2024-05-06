@@ -4,8 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.NavHostFragment
-import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.R
+import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.utils.Constants
 
@@ -20,7 +20,8 @@ class SettingsActivity : MifosBaseActivity() {
         setContentView(R.layout.activity_toolbar_container)
         setToolbarTitle(getString(R.string.settings))
         showBackButton()
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
         navHostFragment.navController.apply {
             popBackStack()
             navigate(R.id.settingsFragment)

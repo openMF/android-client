@@ -2,9 +2,9 @@ package com.mifos.mifosxdroid.offlinejobs
 
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobRequest
-import com.mifos.api.datamanager.DataManagerClient
-import com.mifos.objects.client.Client
-import com.mifos.objects.client.ClientPayload
+import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.ClientPayload
 import com.mifos.utils.MFErrorParser.errorMessage
 import com.mifos.utils.PrefManager.userStatus
 import com.mifos.utils.Tags

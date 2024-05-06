@@ -9,10 +9,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.mifos.core.objects.group.Center
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.SelectableAdapter
 import com.mifos.mifosxdroid.views.CircularImageView
-import com.mifos.objects.group.Center
 import com.mifos.utils.Utils
 
 
@@ -29,11 +29,11 @@ class CentersListAdapter(
                 .inflate(R.layout.row_center_list_item, parent, false)
         )
         viewHolder.itemView.setOnClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+            if (viewHolder.adapterPosition != RecyclerView.NO_POSITION)
                 onCenterClick(viewHolder.adapterPosition)
         }
         viewHolder.itemView.setOnLongClickListener {
-            if(viewHolder.adapterPosition != RecyclerView.NO_POSITION)
+            if (viewHolder.adapterPosition != RecyclerView.NO_POSITION)
                 onCenterLongClick(viewHolder.adapterPosition)
             return@setOnLongClickListener true
         }
@@ -59,7 +59,7 @@ class CentersListAdapter(
             tvOfficeName.text = center.officeName
             ivStatusIndicator.setImageDrawable(
                 Utils.setCircularBackground(
-                    if(center.active == true) R.color.light_green else R.color.light_red,
+                    if (center.active == true) R.color.light_green else R.color.light_red,
                     itemView.context
                 )
             )
@@ -72,8 +72,7 @@ class CentersListAdapter(
                     } else {
                         itemView.context.resources.getColor(R.color.primary)
                     }
-                }
-                else Color.WHITE
+                } else Color.WHITE
             )
             ivSyncStatus.visibility = if (center.sync) View.VISIBLE else View.INVISIBLE
         }

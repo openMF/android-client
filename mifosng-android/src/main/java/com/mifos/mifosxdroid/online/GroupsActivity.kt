@@ -3,9 +3,9 @@ package com.mifos.mifosxdroid.online
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navArgs
+import com.mifos.core.common.utils.Constants
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
-import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

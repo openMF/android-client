@@ -13,8 +13,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.github.therajanmaurya.sweeterror.SweetUIErrorHandler
-import com.mifos.mifosxdroid.activity.home.HomeActivity
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.group.Group
 import com.mifos.mifosxdroid.R
+import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.adapters.GroupNameListAdapter
 import com.mifos.mifosxdroid.core.EndlessRecyclerViewScrollListener
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -22,8 +24,6 @@ import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentGroupsBinding
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogFragment
-import com.mifos.objects.group.Group
-import com.mifos.utils.Constants
 import com.mifos.utils.FragmentConstants
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -103,7 +103,8 @@ class GroupsListFragment : MifosBaseFragment(), OnRefreshListener {
         selectedGroups = ArrayList()
         actionModeCallback = ActionModeCallback()
         if (arguments != null) {
-            mGroupList = requireArguments().getParcelableArrayList(Constants.GROUPS)!!
+            mGroupList =
+                requireArguments().getParcelableArrayList(Constants.GROUPS)!!
             isParentFragment = requireArguments()
                 .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
@@ -189,9 +190,10 @@ class GroupsListFragment : MifosBaseFragment(), OnRefreshListener {
             onClickCreateNewGroup()
         }
 
-        binding.layoutError.findViewById<Button>(com.github.therajanmaurya.sweeterror.R.id.btnTryAgain).setOnClickListener {
-            reloadOnError()
-        }
+        binding.layoutError.findViewById<Button>(com.github.therajanmaurya.sweeterror.R.id.btnTryAgain)
+            .setOnClickListener {
+                reloadOnError()
+            }
     }
 
     /**

@@ -3,9 +3,9 @@ package com.mifos.mifosxdroid.online.groupdetails
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.objects.group.GroupWithAssociations
+import com.mifos.core.objects.zipmodels.GroupAndGroupAccounts
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.group.GroupWithAssociations
-import com.mifos.objects.zipmodels.GroupAndGroupAccounts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Observable
 import rx.Subscriber

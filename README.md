@@ -35,7 +35,7 @@ This is an Android Application built on top of the [MifosX](https://mifosforge.j
 
 ## Join Us on Slack
 
-Mifos boasts an active and vibrant contributor community, Please join us on [slack](https://mifos.slack.com/). Once you've joined the mifos slack community, please join the `#android-client` channel to engage with android-client development.
+Mifos boasts an active and vibrant contributor community, Please join us on [slack](https://join.slack.com/t/mifos/shared_invite/zt-2f4nr6tk3-ZJlHMi1lc0R19FFEHxdvng). Once you've joined the mifos slack community, please join the `#android-client` channel to engage with android-client development.
 
 ## Demo credentials
 Fineract Instance: gsoc.mifos.community

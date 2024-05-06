@@ -1,9 +1,9 @@
 package com.mifos.mifosxdroid.online.centerdetails
 
-import com.mifos.api.datamanager.DataManagerCenter
-import com.mifos.api.datamanager.DataManagerRunReport
-import com.mifos.objects.group.CenterInfo
-import com.mifos.objects.group.CenterWithAssociations
+import com.mifos.core.network.datamanager.DataManagerCenter
+import com.mifos.core.network.datamanager.DataManagerRunReport
+import com.mifos.core.objects.group.CenterInfo
+import com.mifos.core.objects.group.CenterWithAssociations
 import rx.Observable
 import javax.inject.Inject
 

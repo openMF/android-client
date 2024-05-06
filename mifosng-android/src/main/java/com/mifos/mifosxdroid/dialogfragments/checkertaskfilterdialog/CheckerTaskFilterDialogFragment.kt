@@ -133,11 +133,10 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, factory)
-            .get(CheckerInboxViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, factory)[CheckerInboxViewModel::class.java]
 
         viewModel.getSearchTemplate().observe(this, Observer {
-            val checkerInboxSearchTemplate = it!!
+            val checkerInboxSearchTemplate = it
             actionOptionsList.addAll(checkerInboxSearchTemplate.actionNames)
             entityOptionsList.addAll(checkerInboxSearchTemplate.entityNames)
 

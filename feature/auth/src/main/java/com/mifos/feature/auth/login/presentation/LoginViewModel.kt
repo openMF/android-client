@@ -7,7 +7,6 @@ import com.mifos.core.common.utils.BaseUrl
 import com.mifos.core.common.utils.Network
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.network.di.BaseApiManagerQualifier
 import com.mifos.feature.auth.R
 import com.mifos.feature.auth.login.domain.use_case.LoginUseCase
 import com.mifos.feature.auth.login.domain.use_case.PasswordValidationUseCase
@@ -32,7 +31,7 @@ class LoginViewModel @Inject constructor(
     private val prefManager: PrefManager,
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
-    @BaseApiManagerQualifier private val baseApiManager: BaseApiManager,
+    private val baseApiManager: BaseApiManager,
     private val loginUseCase: LoginUseCase
 ) :
     ViewModel() {

@@ -3,7 +3,7 @@ package com.mifos.mifosxdroid.online.clientdetails
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.zipmodels.ClientAndClientAccounts
+import com.mifos.core.objects.zipmodels.ClientAndClientAccounts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody

@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.dialogfragments.datatablerowdialog
 
-import com.mifos.api.GenericResponse
+import com.mifos.core.network.GenericResponse
 import rx.Observable
 
 /**

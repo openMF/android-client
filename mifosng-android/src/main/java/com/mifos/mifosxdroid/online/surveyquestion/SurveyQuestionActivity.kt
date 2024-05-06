@@ -11,6 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.gson.Gson
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.survey.Scorecard
+import com.mifos.core.objects.survey.ScorecardValues
+import com.mifos.core.objects.survey.Survey
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SurveyPagerAdapter
 import com.mifos.mifosxdroid.core.MifosBaseActivity
@@ -18,10 +22,6 @@ import com.mifos.mifosxdroid.databinding.ActivitySurveyQuestionBinding
 import com.mifos.mifosxdroid.online.surveyquestion.SurveyQuestionFragment.OnAnswerSelectedListener
 import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitFragment.Companion.newInstance
 import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitFragment.DisableSwipe
-import com.mifos.objects.survey.Scorecard
-import com.mifos.objects.survey.ScorecardValues
-import com.mifos.objects.survey.Survey
-import com.mifos.utils.Constants
 import com.mifos.utils.PrefManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Date

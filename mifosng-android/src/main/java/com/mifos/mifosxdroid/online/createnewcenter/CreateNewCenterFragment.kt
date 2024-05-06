@@ -11,15 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import com.mifos.core.data.CenterPayload
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.response.SaveResponse
 import com.mifos.exceptions.InvalidTextInputException
 import com.mifos.exceptions.RequiredFieldException
 import com.mifos.exceptions.ShortOfLengthException
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentCreateNewCenterBinding
-import com.mifos.objects.organisation.Office
-import com.mifos.objects.response.SaveResponse
-import com.mifos.services.data.CenterPayload
 import com.mifos.utils.DatePickerConstrainType
 import com.mifos.utils.FragmentConstants
 import com.mifos.utils.MifosResponseHandler
@@ -177,7 +177,7 @@ class CreateNewCenterFragment : MifosBaseFragment() {
             return result
         }
 
-    private fun showOffices(offices: List<Office?>?) {
+    private fun showOffices(offices: List<Office>) {
         val officeList: MutableList<String> = ArrayList()
         if (offices != null) {
             for (office in offices) {

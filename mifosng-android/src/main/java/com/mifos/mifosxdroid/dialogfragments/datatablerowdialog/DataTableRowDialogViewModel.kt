@@ -3,7 +3,7 @@ package com.mifos.mifosxdroid.dialogfragments.datatablerowdialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.api.GenericResponse
+import com.mifos.core.network.GenericResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

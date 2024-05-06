@@ -3,8 +3,8 @@ package com.mifos.mifosxdroid.online.grouplist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.group.CenterWithAssociations
-import com.mifos.objects.group.GroupWithAssociations
+import com.mifos.core.objects.group.CenterWithAssociations
+import com.mifos.core.objects.group.GroupWithAssociations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

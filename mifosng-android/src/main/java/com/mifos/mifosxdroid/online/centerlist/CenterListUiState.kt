@@ -1,7 +1,7 @@
 package com.mifos.mifosxdroid.online.centerlist
 
-import com.mifos.objects.group.Center
-import com.mifos.objects.group.CenterWithAssociations
+import com.mifos.core.objects.group.Center
+import com.mifos.core.objects.group.CenterWithAssociations
 
 /**
  * Created by Aditya Gupta on 06/08/23.

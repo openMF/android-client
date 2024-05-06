@@ -3,7 +3,7 @@ package com.mifos.mifosxdroid.online.loanrepaymentschedule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mifos.objects.accounts.loan.LoanWithAssociations
+import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

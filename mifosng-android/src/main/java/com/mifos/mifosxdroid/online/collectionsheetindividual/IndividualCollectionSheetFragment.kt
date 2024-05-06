@@ -8,11 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.mifos.core.common.utils.Constants
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.FragmentIndividualRecyclerBinding
 import com.mifos.mifosxdroid.online.savedcollectionsheetindividual.SavedIndividualCollectionSheetFragment
-import com.mifos.utils.Constants
 
 /**
  * Created by Tarun on 05-07-2017.

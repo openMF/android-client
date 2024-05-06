@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.online.search
 
-import com.mifos.objects.SearchedEntity
+import com.mifos.core.objects.SearchedEntity
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -13,6 +13,6 @@ sealed class SearchUiState {
 
     data class ShowSearchedResources(val searchedEntities: List<SearchedEntity>) : SearchUiState()
 
-    object ShowNoResultFound : SearchUiState()
+    data object ShowNoResultFound : SearchUiState()
 
 }

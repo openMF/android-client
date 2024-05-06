@@ -1,13 +1,13 @@
 package com.mifos.mifosxdroid.online.clientidentifiers
 
-import com.mifos.objects.noncore.Identifier
+import com.mifos.core.objects.noncore.Identifier
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
 sealed class ClientIdentifiersUiState {
 
-    object ShowProgressbar : ClientIdentifiersUiState()
+    data object ShowProgressbar : ClientIdentifiersUiState()
 
     data class ShowFetchingError(val message: Int) : ClientIdentifiersUiState()
 

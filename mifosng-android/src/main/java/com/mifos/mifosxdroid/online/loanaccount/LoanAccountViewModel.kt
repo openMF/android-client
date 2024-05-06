@@ -3,11 +3,11 @@ package com.mifos.mifosxdroid.online.loanaccount
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.data.LoansPayload
+import com.mifos.core.objects.accounts.loan.Loans
+import com.mifos.core.objects.organisation.LoanProducts
+import com.mifos.core.objects.templates.loans.LoanTemplate
 import com.mifos.mifosxdroid.R
-import com.mifos.objects.accounts.loan.Loans
-import com.mifos.objects.organisation.LoanProducts
-import com.mifos.objects.templates.loans.LoanTemplate
-import com.mifos.services.data.LoansPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
