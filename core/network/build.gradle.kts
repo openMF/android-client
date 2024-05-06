@@ -86,5 +86,5 @@ dependencies {
     implementation(libs.stetho.okhttp3)
     
     // coil
-    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation(libs.coil.kt.compose)
 }

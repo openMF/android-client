@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
 android {
@@ -51,64 +51,55 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:network"))
 
-
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-
-    // Hilt dependency
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
-
-    //rxjava dependencies
-    implementation("io.reactivex:rxandroid:1.1.0")
-    implementation("io.reactivex:rxjava:1.3.8")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
 
     // Jetpack Compose
-    implementation("androidx.compose.material:material:1.6.0")
-    implementation("androidx.compose.compiler:compiler:1.5.8")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.6.1")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.6.1")
-    implementation("androidx.compose.material3:material3:1.1.2")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.compose.material:material-icons-extended:1.6.1")
+    implementation(libs.androidx.material)
+    implementation(libs.androidx.compiler)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.activity.compose)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.lifecycle.viewModelCompose)
+    implementation(libs.androidx.material.icons.extended)
 
     // ViewModel utilities for Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-
-    // fineract sdk dependencies
-    implementation("com.github.openMF:mifos-android-sdk-arch:1.06")
-
-    // sdk client
-    implementation("com.github.openMF:fineract-client:2.0.3")
-
-    // coil
-    implementation("io.coil-kt:coil-compose:2.5.0")
-
-    //DBFlow dependencies
-    kapt("com.github.raizlabs.dbflow.dbflow:dbflow-processor:3.1.1")
-    implementation("com.github.raizlabs.dbflow.dbflow:dbflow:3.1.1")
-    kapt("com.github.raizlabs.dbflow:dbflow-processor:4.2.4")
+    implementation(libs.androidx.lifecycle.runtimeCompose)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // swipe refresh
-    implementation("com.google.accompanist:accompanist-swiperefresh:0.25.1")
+    implementation(libs.accompanist.swiperefresh)
+    implementation(libs.accompanist.permission)
+
+    // coil
+    implementation(libs.coil.kt.compose)
+
+    // fineract sdk dependencies
+    implementation(libs.mifos.android.sdk.arch)
+
+    // sdk client
+    implementation(libs.fineract.client)
+
+    //DBFlow dependencies
+    kapt(libs.dbflow.processor)
+    implementation(libs.dbflow)
+    kapt(libs.github.dbflow.processor)
+
+    // Hilt dependency
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+
+    //rxjava dependencies
+    implementation(libs.rxandroid)
+    implementation(libs.rxjava)
 
     // paging 3
-    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
-    implementation("androidx.paging:paging-compose:3.2.1")
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.paging.compose)
 
-    // Mongo Realm
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
-    implementation("io.realm.kotlin:library-base:1.11.0")
+    testImplementation(libs.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
 
-    // permission
-    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
-
-    // compose lifecycle
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 }

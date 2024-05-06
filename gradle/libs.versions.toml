@@ -1,4 +1,6 @@
 [versions]
+accompanistSwiperefresh = "0.25.1"
+accompanistPermission = "0.34.0"
 adapterRxjava = "2.9.0"
 androidDesugarJdkLibs = "2.0.4"
 androidGradlePlugin = "8.2.2"
@@ -41,6 +43,7 @@ compiler = "1.5.10"
 converterGson = "2.9.0"
 converterScalars = "2.9.0"
 coreTesting = "2.2.0"
+coil-compose = "2.5.0"
 dbflow = "3.1.1"
 dbflowProcessor = "4.2.4"
 espressoIdlingResource = "3.5.1"
@@ -84,6 +87,7 @@ multidex = "2.0.1"
 navigationFragmentKtx = "2.7.7"
 navigationUiKtx = "2.7.7"
 okhttpVersion = "4.12.0"
+pagingRuntimeKtx = "3.2.1"
 playServicesLocation = "21.1.0"
 playServicesMaps = "18.2.0"
 playServicesPlaces = "17.0.0"
@@ -114,6 +118,8 @@ truthVersion = '1.1.5'
 
 [libraries]
 # AndroidX Libraries
+accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanistSwiperefresh" }
+accompanist-permission = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermission" }
 android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
 
 # Androidx Activity Compose
@@ -126,6 +132,8 @@ androidx-annotation = { module = "androidx.annotation:annotation", version.ref =
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 
 # Androidx Preference
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingRuntimeKtx" }
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
 
 #Androidx RecyclerView
@@ -222,6 +230,9 @@ androidx-work-testing = { group = "androidx.work", name = "work-testing", versio
 adapter-rxjava = { module = "com.squareup.retrofit2:adapter-rxjava", version.ref = "adapterRxjava" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
+
+# Coil Compose
+coil-kt-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil-compose" }
 
 # DBFlow
 dbflow = { module = "com.github.raizlabs.dbflow.dbflow:dbflow", version.ref = "dbflow" }

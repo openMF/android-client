@@ -62,7 +62,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
 
     // coil
-    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation(libs.coil.kt.compose)
 
     //DBFlow dependencies
     kapt(libs.dbflow.processor)

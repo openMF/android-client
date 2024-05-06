@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
 android {
@@ -46,47 +46,41 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
-
-
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
     implementation(project(":core:network"))
     implementation(project(":core:datastore"))
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    // Jetpack Compose
+    implementation(libs.androidx.material)
+    implementation(libs.androidx.compiler)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.activity.compose)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.lifecycle.viewModelCompose)
+    implementation(libs.androidx.material.icons.extended)
+
+    // ViewModel utilities for Compose
+    implementation(libs.androidx.lifecycle.runtimeCompose)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // swipe refresh
-    implementation("com.google.accompanist:accompanist-swiperefresh:0.25.1")
+    implementation(libs.accompanist.swiperefresh)
 
     // coil
-    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation(libs.coil.kt.compose)
 
 
     // Hilt dependency
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     //rxjava dependencies
-    implementation("io.reactivex:rxandroid:1.1.0")
-    implementation("io.reactivex:rxjava:1.3.8")
+    implementation(libs.rxandroid)
+    implementation(libs.rxjava)
 
-    // Jetpack Compose
-    implementation("androidx.compose.material:material:1.6.0")
-    implementation("androidx.compose.compiler:compiler:1.5.8")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.6.1")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.6.1")
-    implementation("androidx.compose.material3:material3:1.1.2")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.compose.material:material-icons-extended:1.6.1")
-
-    // ViewModel utilities for Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-
-    // compose lifecycle
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+    testImplementation(libs.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
 }
