@@ -1,10 +1,10 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
-    id("kotlin-parcelize")
-    id("org.jetbrains.kotlin.plugin.serialization")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.serialization)
+    id(libs.plugins.kotlin.parcelize.get().pluginId)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
 android {
@@ -41,35 +41,31 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:common"))
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    testImplementation(libs.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
 
     //rxjava dependencies
-    implementation("io.reactivex:rxandroid:1.1.0")
-    implementation("io.reactivex:rxjava:1.3.8")
+    implementation(libs.rxandroid)
+    implementation(libs.rxjava)
 
     // Hilt dependency
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     // fineract sdk dependencies
-    implementation("com.github.openMF:mifos-android-sdk-arch:1.06")
+    implementation(libs.mifos.android.sdk.arch)
 
     // sdk client
-    implementation("com.github.openMF:fineract-client:2.0.3")
+    implementation(libs.fineract.client)
 
     //DBFlow dependencies
-    kapt("com.github.raizlabs.dbflow.dbflow:dbflow-processor:3.1.1")
-    implementation("com.github.raizlabs.dbflow.dbflow:dbflow:3.1.1")
-    kapt("com.github.raizlabs.dbflow:dbflow-processor:4.2.4")
-
-    // Mongo Realm
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
-    implementation("io.realm.kotlin:library-base:1.11.0")
+    kapt(libs.dbflow.processor)
+    implementation(libs.dbflow)
+    kapt(libs.github.dbflow.processor)
 
 
     //Square dependencies
@@ -77,17 +73,18 @@ dependencies {
         // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
         exclude(module = "okhttp")
     }
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
-    implementation("com.squareup.retrofit2:adapter-rxjava:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.9.2")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
-    implementation("com.jakewharton.fliptables:fliptables:1.0.1")
+    implementation(libs.converter.gson)
+    implementation(libs.converter.scalars)
+    implementation(libs.adapter.rxjava)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+
+    implementation(libs.fliptables)
 
     //stetho dependencies
-    implementation("com.facebook.stetho:stetho:1.3.1")
-    implementation("com.facebook.stetho:stetho-okhttp3:1.3.1")
-
+    implementation(libs.stetho)
+    implementation(libs.stetho.okhttp3)
+    
     // coil
-    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation(libs.coil.kt.compose)
 }
