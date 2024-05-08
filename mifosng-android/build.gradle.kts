@@ -117,11 +117,10 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+}
 
-    secrets {
-        propertiesFileName = "secrets.properties"
-        defaultPropertiesFileName = "secrets.defaults.properties"
-    }
+secrets {
+    defaultPropertiesFileName = "secrets.defaults.properties"
 }
 
 dependencies {
