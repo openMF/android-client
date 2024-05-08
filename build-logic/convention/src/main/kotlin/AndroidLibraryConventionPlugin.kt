@@ -5,7 +5,6 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.kotlin
-import org.mifos.configureFlavors
 import org.mifos.configureKotlinAndroid
 import org.mifos.configurePrintApksTask
 import org.mifos.disableUnnecessaryAndroidTests
@@ -24,7 +23,6 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 configureKotlinAndroid(this)
                 defaultConfig.targetSdk = 34
                 testOptions.animationsDisabled = true
-                configureFlavors(this)
                 // The resource prefix is derived from the module name,
                 // so resources inside ":core:module1" must be prefixed with "core_module1_"
                 resourcePrefix =

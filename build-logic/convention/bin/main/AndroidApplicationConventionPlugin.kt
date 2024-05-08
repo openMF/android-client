@@ -16,7 +16,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
                 apply("mifos.android.lint")
-                apply("com.dropbox.dependency-guard")
             }
 
             extensions.configure<ApplicationExtension> {

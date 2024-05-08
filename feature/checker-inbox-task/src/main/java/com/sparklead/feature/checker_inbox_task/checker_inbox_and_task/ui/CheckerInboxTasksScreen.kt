@@ -35,7 +35,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.White
-import com.sparklead.feature.checker_inbox_task.R
+import com.mifos.feature.checker_inbox_task.R
 
 /**
  * Created by Aditya Gupta on 21/03/24.

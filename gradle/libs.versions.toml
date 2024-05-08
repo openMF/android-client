@@ -12,7 +12,7 @@ androidxActivity = "1.8.2"
 androidxAppCompat = "1.6.1"
 androidxArchCore = '2.2.0'
 androidxComposeBom = "2024.02.01"
-androidxComposeCompiler = "1.5.6"
+androidxComposeCompiler = "1.5.8"
 androidxComposeUi = "1.6.2"
 androidxComposeRuntime = "1.6.2"
 androidxComposeRuntimeTracing = "1.0.0-beta01"
@@ -158,9 +158,9 @@ androidx-compose-foundation-layout = { group = "androidx.compose.foundation", na
 # Androidx Compose Material
 androidx-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compiler" }
 androidx-material = { module = "androidx.compose.material:material", version.ref = "materialVersion" }
-androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "androidxComposeMaterial3" }
 androidx-compose-material3-windowSizeClass = { group = "androidx.compose.material3", name = "material3-window-size-class", version.ref = "androidxComposeMaterial3" }
+androidx-compose-material-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended" }
 
 # Android Material
 material = { module = "com.google.android.material:material", version.ref = "material" }
@@ -220,6 +220,7 @@ androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
 androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "androidxUiAutomator" }
 androidx-tracing-ktx = { group = "androidx.tracing", name = "tracing-ktx", version.ref = "androidxTracing" }
+androidx-lifecycle-runtimeTesting = { group = "androidx.lifecycle", name = "lifecycle-runtime-testing", version.ref = "androidxLifecycle" }
 androidx-window-manager = { module = "androidx.window:window", version.ref = "androidxWindowManager" }
 
 # Androidx Work
@@ -381,3 +382,16 @@ protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 realm = { id = "io.realm.kotlin", version.ref = "realmVersion" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
 
+# Plugins defined by this project
+mifos-android-application = { id = "mifos.android.application", version = "unspecified" }
+mifos-android-application-flavors = { id = "mifos.android.application.flavors", version = "unspecified" }
+mifos-android-application-compose = { id = "mifos.android.application.compose", version = "unspecified" }
+mifos-android-application-firebase = { id = "mifos.android.application.firebase", version = "unspecified" }
+mifos-android-feature = { id = "mifos.android.feature", version = "unspecified" }
+mifos-android-hilt = { id = "mifos.android.hilt", version = "unspecified" }
+mifos-android-library = { id = "mifos.android.library", version = "unspecified" }
+mifos-android-library-compose = { id = "mifos.android.library.compose", version = "unspecified" }
+mifos-android-lint = { id = "mifos.android.lint", version = "unspecified" }
+mifos-android-room = { id = "mifos.android.room", version = "unspecified" }
+mifos-android-test = { id = "mifos.android.test", version = "unspecified" }
+mifos-jvm-library = { id = "mifos.jvm.library", version = "unspecified" }

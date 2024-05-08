@@ -252,7 +252,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.lifecycle.viewModelCompose)
-    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.compose.material.iconsExtended)
 
     // ViewModel utilities for Compose
     implementation(libs.androidx.lifecycle.viewModelCompose)
