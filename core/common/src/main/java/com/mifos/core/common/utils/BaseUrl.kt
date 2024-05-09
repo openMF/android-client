@@ -4,15 +4,17 @@ import com.mifos.core.common.BuildConfig
 
 object BaseUrl {
 
+    private val configs = BuildConfig.DEMO_SERVER_CONFIG.split(",")
+
     // "/" in the last of the base url always
 
-    const val PROTOCOL_HTTPS = BuildConfig.PROTOCOL_HTTPS
+     val PROTOCOL_HTTPS = configs[0]
 
-    const val API_ENDPOINT = BuildConfig.API_ENDPOINT
+     val API_ENDPOINT = configs[1]
 
-    const val API_PATH = BuildConfig.API_PATH
+     val API_PATH = configs[2]
 
-    const val PORT = BuildConfig.PORT
+     val PORT = configs[3]
 
-    const val TENANT = BuildConfig.TENANT
+     val TENANT = configs[4]
 }
