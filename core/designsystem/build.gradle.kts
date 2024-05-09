@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.mifos.android.library.compose)
-    alias(libs.plugins.kotlin.android)
+//    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.mifos.android.library)
 }
 
 android {
@@ -32,6 +33,14 @@ dependencies {
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
+
+    api(libs.androidx.compose.foundation)
+    api(libs.androidx.compose.foundation.layout)
+    api(libs.androidx.compose.material.iconsExtended)
+    api(libs.androidx.compose.material3)
+    api(libs.androidx.compose.runtime)
+    api(libs.androidx.compose.ui.util)
+    api(libs.androidx.activity.compose)
 
     // coil
     implementation(libs.coil.kt.compose)

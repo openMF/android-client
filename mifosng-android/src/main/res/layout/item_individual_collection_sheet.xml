@@ -30,7 +30,7 @@
             android:layout_marginTop="@dimen/layout_padding_16dp"
             android:layout_marginBottom="@dimen/layout_padding_16dp"
             android:elevation="2dp"
-            android:src="@drawable/ic_dp_placeholder"
+            android:src="@drawable/feature_client_ic_dp_placeholder"
             app:border="false" />
 
         <LinearLayout

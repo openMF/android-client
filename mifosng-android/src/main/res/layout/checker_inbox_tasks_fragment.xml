@@ -29,7 +29,7 @@
                 android:layout_height="@dimen/dimension_32_dp"
                 android:layout_centerVertical="true"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/ic_mail_outline_24dp" />
+                app:srcCompat="@drawable/feature_checker_inbox_task_ic_mail_outline_24dp" />
 
             <TextView
                 android:id="@+id/tv_checker_inbox"
@@ -70,7 +70,7 @@
                 android:layout_height="@dimen/dimension_32_dp"
                 android:layout_centerVertical="true"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/ic_supervisor_account_24dp" />
+                app:srcCompat="@drawable/feature_checker_inbox_task_ic_supervisor_account_24dp" />
 
             <TextView
                 android:id="@+id/tv_client_approval"
@@ -150,7 +150,7 @@
                 android:layout_height="@dimen/dimension_32_dp"
                 android:layout_centerVertical="true"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/ic_done_all_24dp" />
+                app:srcCompat="@drawable/feature_checker_inbox_task_ic_done_all_24dp" />
 
             <TextView
                 android:id="@+id/tv_loan_disbursal"
@@ -190,7 +190,7 @@
                 android:layout_height="@dimen/dimension_32_dp"
                 android:layout_centerVertical="true"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/ic_restore_24dp" />
+                app:srcCompat="@drawable/feature_checker_inbox_task_ic_restore_24dp" />
 
             <TextView
                 android:id="@+id/tv_reschedule_loan"

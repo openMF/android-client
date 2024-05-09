@@ -8,7 +8,7 @@
         android:id="@+id/tv_icon"
         style="@style/ImageView.ListIcon"
         android:contentDescription="App Logo"
-        tools:src="@drawable/ic_launcher" />
+        tools:src="@drawable/feature_client_ic_launcher" />
 
     <TextView
         android:id="@+id/tv_name"
