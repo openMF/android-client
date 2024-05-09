@@ -35,7 +35,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.White
-import com.sparklead.feature.checker_inbox_task.R
+import com.mifos.feature.checker_inbox_task.R
 
 /**
  * Created by Aditya Gupta on 21/03/24.
@@ -59,7 +59,7 @@ fun CheckerInboxTasksScreen(
 
     MifosScaffold(
         icon = Icons.Rounded.ArrowBackIosNew,
-        title = stringResource(id = R.string.checker_inbox_and_pending_tasks),
+        title = stringResource(id = R.string.feature_checker_inbox_task_checker_inbox_and_pending_tasks),
         onBackPressed = { onBackPressed() },
         actions = { },
         snackbarHostState = null,
@@ -71,7 +71,7 @@ fun CheckerInboxTasksScreen(
         ) {
             when (state) {
                 is CheckerInboxTasksUiState.Error -> {
-                    MifosSweetError(message = stringResource(id = R.string.failed_to_Load_Check_Inbox)) {
+                    MifosSweetError(message = stringResource(id = R.string.feature_checker_inbox_task_failed_to_Load_Check_Inbox)) {
                         checkerInboxTasksViewModel.loadCheckerTasksBadges()
                     }
                 }
@@ -83,36 +83,36 @@ fun CheckerInboxTasksScreen(
                 is CheckerInboxTasksUiState.Success -> {
                     Column(modifier = Modifier.padding(padding)) {
                         TaskOptions(
-                            leadingIcon = R.drawable.ic_mail_outline_24dp,
-                            option = stringResource(id = R.string.checker_Inbox),
+                            leadingIcon = R.drawable.feature_checker_inbox_task_ic_mail_outline_24dp,
+                            option = stringResource(id = R.string.feature_checker_inbox_task_checker_Inbox),
                             badge = state.checkerInboxBadge
                         ) {
                             checkerInbox()
                         }
                         TaskOptions(
-                            leadingIcon = R.drawable.ic_supervisor_account_24dp,
-                            option = stringResource(id = R.string.client_Approval),
+                            leadingIcon = R.drawable.feature_checker_inbox_task_ic_supervisor_account_24dp,
+                            option = stringResource(id = R.string.feature_checker_inbox_task_client_Approval),
                             badge = "0"
                         ) {
 
                         }
                         TaskOptions(
-                            leadingIcon = R.drawable.ic_assignment_black_24dp,
-                            option = stringResource(id = R.string.loan_Approval),
+                            leadingIcon = R.drawable.feature_checker_inbox_task_ic_assignment_black_24dp,
+                            option = stringResource(id = R.string.feature_checker_inbox_task_loan_Approval),
                             badge = "0"
                         ) {
 
                         }
                         TaskOptions(
-                            leadingIcon = R.drawable.ic_done_all_24dp,
-                            option = stringResource(id = R.string.loan_Disbursal),
+                            leadingIcon = R.drawable.feature_checker_inbox_task_ic_done_all_24dp,
+                            option = stringResource(id = R.string.feature_checker_inbox_task_loan_Disbursal),
                             badge = "0"
                         ) {
 
                         }
                         TaskOptions(
-                            leadingIcon = R.drawable.ic_restore_24dp,
-                            option = stringResource(id = R.string.reschedule_Loan),
+                            leadingIcon = R.drawable.feature_checker_inbox_task_ic_restore_24dp,
+                            option = stringResource(id = R.string.feature_checker_inbox_task_reschedule_Loan),
                             badge = state.rescheduleLoanBadge
                         ) {
 

@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -39,13 +40,13 @@ fun MifosSweetError(message: String, onclick: () -> Unit) {
     ) {
         AsyncImage(
             modifier = Modifier.size(70.dp),
-            model = R.drawable.ic_error_black_24dp,
+            model = R.drawable.core_designsystem_ic_error_black_24dp,
             contentDescription = null,
             colorFilter = ColorFilter.tint(Color.Gray)
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "Sorry we weren't able to load",
+            text = stringResource(id = R.string.core_designsystem_unable_to_load),
             style = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
@@ -72,7 +73,7 @@ fun MifosSweetError(message: String, onclick: () -> Unit) {
         ) {
             Text(
                 modifier = Modifier.padding(start = 20.dp, end = 20.dp),
-                text = "Try Again",
+                text = stringResource(id = R.string.core_designsystem_try_again),
                 fontSize = 15.sp
             )
         }

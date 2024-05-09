@@ -32,7 +32,7 @@
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:elevation="2dp"
-            android:src="@drawable/ic_dp_placeholder"
+            android:src="@drawable/feature_client_ic_dp_placeholder"
             app:border="false"
             />
 
@@ -71,7 +71,7 @@
             android:layout_height="20dp"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            app:srcCompat="@drawable/ic_done_all_black_24dp"
+            app:srcCompat="@drawable/feature_client_ic_done_all_black_24dp"
             />
 
     </LinearLayout>

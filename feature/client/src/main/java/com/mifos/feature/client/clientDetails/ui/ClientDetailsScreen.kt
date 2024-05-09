@@ -191,14 +191,14 @@ fun ClientDetailsScreen(
     when (state) {
 
         is ClientDetailsUiState.ShowClientImageDeletedSuccessfully -> {
-            val message = stringResource(id = R.string.client_image_deleted)
+            val message = stringResource(id = R.string.feature_client_client_image_deleted)
             LaunchedEffect(key1 = state) {
                 snackbarHostState.showSnackbar(message = message)
             }
         }
 
         is ClientDetailsUiState.ShowUploadImageSuccessfully -> {
-            val message = stringResource(id = R.string.client_image_updated)
+            val message = stringResource(id = R.string.feature_client_client_image_updated)
             LaunchedEffect(key1 = state.response) {
                 snackbarHostState.showSnackbar(message = message)
             }
@@ -234,43 +234,43 @@ fun ClientDetailsScreen(
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false }
             ) {
-                MifosMenuDropDownItem(option = stringResource(id = R.string.add_loan_account)) {
+                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_add_loan_account)) {
                     addLoanAccount(clientId)
                     showMenu = false
                 }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.add_savings_account)) {
+                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_add_savings_account)) {
                     addSavingsAccount(clientId)
                     showMenu = false
                 }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.charges)) {
+                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_charges)) {
                     charges(clientId)
                     showMenu = false
                 }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.documents)) {
+                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_documents)) {
                     documents(clientId)
                     showMenu = false
                 }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.identifiers)) {
+                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_identifiers)) {
                     identifiers(clientId)
                     showMenu = false
                 }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.more_client_info)) {
+                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_more_client_info)) {
                     moreClientInfo(clientId)
                     showMenu = false
                 }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.notes)) {
+                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_notes)) {
                     notes(clientId)
                     showMenu = false
                 }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.pinpoint_location)) {
+                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_pinpoint_location)) {
                     pinpointLocation(clientId)
                     showMenu = false
                 }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.survey)) {
+                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_survey)) {
                     survey(clientId)
                     showMenu = false
                 }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.upload_signature)) {
+                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_upload_signature)) {
                     uploadSignature(clientId)
                     showMenu = false
                 }
@@ -290,7 +290,7 @@ fun ClientDetailsScreen(
                         containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
                     )
                 ) {
-                    Text(text = stringResource(id = R.string.activate_client), fontSize = 16.sp)
+                    Text(text = stringResource(id = R.string.feature_client_activate_client), fontSize = 16.sp)
                 }
 
             }
@@ -326,7 +326,7 @@ fun ClientDetailsScreen(
                 })
         }
         if (clientNotFoundError) {
-            MifosSweetError(message = stringResource(id = R.string.client_not_found)) {
+            MifosSweetError(message = stringResource(id = R.string.feature_client_client_not_found)) {
                 clientDetailsViewModel.loadClientDetailsAndClientAccounts(clientId)
             }
         } else {
@@ -360,7 +360,7 @@ fun ClientDetailsScreen(
                                         )
                                     }
                                 }
-                            } else R.drawable.ic_launcher,
+                            } else R.drawable.feature_client_ic_launcher,
                             contentDescription = null,
                             contentScale = ContentScale.FillBounds
                         )
@@ -383,42 +383,42 @@ fun ClientDetailsScreen(
                     client?.accountNo?.let {
                         MifosClientDetailsText(
                             icon = Icons.Outlined.Numbers,
-                            field = stringResource(id = R.string.account_number),
+                            field = stringResource(id = R.string.feature_client_account_number),
                             value = it
                         )
                     }
                     client?.externalId?.let {
                         MifosClientDetailsText(
                             icon = Icons.Outlined.Numbers,
-                            field = stringResource(id = R.string.external_id),
+                            field = stringResource(id = R.string.feature_client_external_id),
                             value = it
                         )
                     }
                     client?.let { Utils.getStringOfDate(it.activationDate) }?.let {
                         MifosClientDetailsText(
                             icon = Icons.Outlined.DateRange,
-                            field = stringResource(id = R.string.activation_date),
+                            field = stringResource(id = R.string.feature_client_activation_date),
                             value = it
                         )
                     }
                     client?.officeName?.let {
                         MifosClientDetailsText(
                             icon = Icons.Outlined.HomeWork,
-                            field = stringResource(id = R.string.office),
+                            field = stringResource(id = R.string.feature_client_office),
                             value = it
                         )
                     }
                     client?.mobileNo?.let {
                         MifosClientDetailsText(
                             icon = Icons.Outlined.MobileFriendly,
-                            field = stringResource(id = R.string.mobile_no),
+                            field = stringResource(id = R.string.feature_client_mobile_no),
                             value = it
                         )
                     }
                     client?.groupNames?.let {
                         MifosClientDetailsText(
                             icon = Icons.Outlined.Groups,
-                            field = stringResource(id = R.string.group),
+                            field = stringResource(id = R.string.feature_client_group),
                             value = it
                         )
                     }
@@ -426,7 +426,7 @@ fun ClientDetailsScreen(
                     if (loanAccounts != null && savingsAccounts != null) {
                         Text(
                             modifier = Modifier.padding(start = 16.dp, bottom = 6.dp),
-                            text = stringResource(id = R.string.accounts),
+                            text = stringResource(id = R.string.feature_client_accounts),
                             style = TextStyle(
                                 fontSize = 21.sp,
                                 fontWeight = FontWeight.Medium,
@@ -438,14 +438,14 @@ fun ClientDetailsScreen(
                     }
                     loanAccounts?.let {
                         MifosLoanAccountExpendableCard(
-                            stringResource(id = R.string.loan_account),
+                            stringResource(id = R.string.feature_client_loan_account),
                             it,
                             loanAccountSelected
                         )
                     }
                     savingsAccounts?.let {
                         MifosSavingsAccountExpendableCard(
-                            stringResource(id = R.string.savings_account),
+                            stringResource(id = R.string.feature_client_savings_account),
                             it, savingsAccountSelected
                         )
                     }
@@ -832,7 +832,7 @@ fun MifosSelectImageDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(id = R.string.please_select),
+                    text = stringResource(id = R.string.feature_client_please_select),
                     modifier = Modifier.fillMaxWidth(),
                     style = TextStyle(
                         fontSize = 18.sp,
@@ -849,7 +849,7 @@ fun MifosSelectImageDialog(
                     colors = ButtonDefaults.buttonColors(BlueSecondary)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.take_new_image),
+                        text = stringResource(id = R.string.feature_client_take_new_image),
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 18.sp,
@@ -865,7 +865,7 @@ fun MifosSelectImageDialog(
                     colors = ButtonDefaults.buttonColors(BlueSecondary)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.upload_new_image),
+                        text = stringResource(id = R.string.feature_client_upload_new_image),
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 18.sp,
@@ -881,7 +881,7 @@ fun MifosSelectImageDialog(
                     colors = ButtonDefaults.buttonColors(BlueSecondary)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.delete_image),
+                        text = stringResource(id = R.string.feature_client_delete_image),
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 18.sp,

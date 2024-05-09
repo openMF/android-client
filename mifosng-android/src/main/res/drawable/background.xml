@@ -4,7 +4,7 @@
     <item android:drawable="@color/summer_sky" />
 
     <item>
-        <bitmap android:src="@drawable/ic_launcher"
+        <bitmap android:src="@drawable/feature_client_ic_launcher"
             android:gravity="center" />
     </item>
 </layer-list>

@@ -16,7 +16,7 @@
     <application
         android:name="com.mifos.application.App"
         android:allowBackup="false"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/feature_client_ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MaterialAppTheme">

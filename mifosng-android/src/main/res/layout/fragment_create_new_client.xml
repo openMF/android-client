@@ -28,7 +28,7 @@
                 android:id="@+id/iv_clientImage"
                 style="@style/ClientImage"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_dp_placeholder"
+                android:src="@drawable/feature_client_ic_dp_placeholder"
                 app:border_color="@color/divider"
                 app:border_width="2dp" />
 
