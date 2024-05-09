@@ -11,7 +11,7 @@ class BaseUrl {
 
     // "/" in the last of the base url always
     companion object {
-        private val configs = BuildConfig.SERVER_CONFIG.split(",")
+        private val configs = BuildConfig.DEMO_SERVER_CONFIG.split(",")
 
          val PROTOCOL_HTTPS = configs[0]
          val API_ENDPOINT = configs[1]

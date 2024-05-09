@@ -8,14 +8,6 @@ plugins {
     id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
-val protocol = project.properties["PROTOCOL_HTTPS"].toString()
-val apiEndpoint = project.properties["API_ENDPOINT"].toString()
-val apiPath = project.properties["API_PATH"].toString()
-val port = project.properties["PORT"].toString()
-val tenant = project.properties["TENANT"].toString()
-
-val serverConfig = "$protocol,$apiEndpoint,$apiPath,$port,$tenant"
-
 android {
     namespace = "com.mifos.core.network"
     compileSdk = 34
@@ -25,8 +17,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-
-        buildConfigField("String", "SERVER_CONFIG", "\"$serverConfig\"")
     }
 
     buildTypes {
