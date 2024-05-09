@@ -11,3 +11,4 @@ android-client.iml
 mifosng-android/mifosng-android.iml
 *.hprof
 android-client.iml
+/secrets.properties
