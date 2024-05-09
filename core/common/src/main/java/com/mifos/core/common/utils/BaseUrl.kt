@@ -1,16 +1,20 @@
 package com.mifos.core.common.utils
 
+import com.mifos.core.common.BuildConfig
+
 object BaseUrl {
+
+    private val configs = BuildConfig.DEMO_SERVER_CONFIG.split(",")
 
     // "/" in the last of the base url always
 
-    const val PROTOCOL_HTTPS = "https://"
+     val PROTOCOL_HTTPS = configs[0]
 
-    const val API_ENDPOINT = "demo.mifos.community"
+     val API_ENDPOINT = configs[1]
 
-    const val API_PATH = "/fineract-provider/api/v1/"
+     val API_PATH = configs[2]
 
-    const val PORT = "80"
+     val PORT = configs[3]
 
-    const val TENANT = "default"
+     val TENANT = configs[4]
 }
