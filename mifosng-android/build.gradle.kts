@@ -222,6 +222,7 @@ dependencies {
     androidTestImplementation(libs.mockito.android)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     //Android-Jobs
     implementation(libs.android.job)
@@ -262,11 +263,6 @@ dependencies {
     // ViewModel utilities for Compose
     implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
-    implementation("com.google.accompanist:accompanist-drawablepainter:0.35.0-alpha")
-
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
-
+    implementation(libs.accompanist.drawablepainter)
 }
