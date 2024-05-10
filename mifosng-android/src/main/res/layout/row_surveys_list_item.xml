@@ -41,5 +41,5 @@
         android:layout_alignParentBottom="false"
         android:layout_gravity="center_vertical"
         android:contentDescription="Done Image"
-        app:srcCompat="@drawable/ic_done_all_black_24dp" />
+        app:srcCompat="@drawable/feature_client_ic_done_all_black_24dp" />
 </RelativeLayout>

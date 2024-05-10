@@ -33,7 +33,7 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_marginTop="20dp"
-                app:srcCompat="@drawable/ic_launcher" />
+                app:srcCompat="@drawable/feature_client_ic_launcher" />
 
             <TextView
                 android:layout_width="wrap_content"

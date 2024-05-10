@@ -8,11 +8,14 @@ package com.mifos.core.network
  * @author fomenkoo
  */
 class BaseUrl {
+
     // "/" in the last of the base url always
     companion object {
-        const val PROTOCOL_HTTPS = "https://"
-        const val API_ENDPOINT = "demo.mifos.community"
-        const val API_PATH = "/fineract-provider/api/v1/"
-        const val PORT = "80"
+        private val configs = BuildConfig.DEMO_SERVER_CONFIG.split(",")
+
+         val PROTOCOL_HTTPS = configs[0]
+         val API_ENDPOINT = configs[1]
+         val API_PATH = configs[2]
+         val PORT = configs[3]
     }
 }

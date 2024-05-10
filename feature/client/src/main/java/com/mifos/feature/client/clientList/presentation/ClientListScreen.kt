@@ -310,7 +310,7 @@ fun LazyColumnForClientListApi(
                             .size(40.dp)
                             .clip(CircleShape)
                             .border(width = 1.dp, LightGray, shape = CircleShape),
-                        model = R.drawable.ic_dp_placeholder,
+                        model = R.drawable.feature_client_ic_dp_placeholder,
                         contentDescription = null
                     )
                     Column(
@@ -342,7 +342,7 @@ fun LazyColumnForClientListApi(
                     if (clientPagingList[index]?.sync == true) {
                         AsyncImage(
                             modifier = Modifier.size(20.dp),
-                            model = R.drawable.ic_done_all_black_24dp,
+                            model = R.drawable.feature_client_ic_done_all_black_24dp,
                             contentDescription = null
                         )
                     }
@@ -410,7 +410,7 @@ fun LazyColumnForClientListDb(clientList: List<Client>) {
                             .size(40.dp)
                             .clip(CircleShape)
                             .border(width = 1.dp, LightGray, shape = CircleShape),
-                        model = R.drawable.ic_dp_placeholder,
+                        model = R.drawable.feature_client_ic_dp_placeholder,
                         contentDescription = null
                     )
                     Column(
@@ -442,7 +442,7 @@ fun LazyColumnForClientListDb(clientList: List<Client>) {
                     if (client.sync) {
                         AsyncImage(
                             modifier = Modifier.size(20.dp),
-                            model = R.drawable.ic_done_all_black_24dp,
+                            model = R.drawable.feature_client_ic_done_all_black_24dp,
                             contentDescription = null
                         )
                     }

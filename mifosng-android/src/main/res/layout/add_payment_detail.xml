@@ -113,7 +113,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:elevation="2dp"
-                    android:src="@drawable/ic_dp_placeholder" />
+                    android:src="@drawable/feature_client_ic_dp_placeholder" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

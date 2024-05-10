@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google()
         mavenCentral()
@@ -26,3 +27,4 @@ include(":feature:auth")
 include(":core:network")
 include(":core:data")
 include(":feature:client")
+include(":feature:checker-inbox-task")

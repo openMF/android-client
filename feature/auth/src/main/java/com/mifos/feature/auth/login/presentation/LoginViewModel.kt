@@ -81,7 +81,7 @@ class LoginViewModel @Inject constructor(
             login(username, password)
         } else {
             _loginUiState.value =
-                LoginUiState.ShowError(R.string.feature_error_not_connected_internet)
+                LoginUiState.ShowError(R.string.feature_auth_error_not_connected_internet)
         }
     }
 
@@ -92,7 +92,7 @@ class LoginViewModel @Inject constructor(
                 when (result) {
                     is Resource.Error -> {
                         _loginUiState.value =
-                            LoginUiState.ShowError(R.string.feature_error_login_failed)
+                            LoginUiState.ShowError(R.string.feature_auth_error_login_failed)
                     }
 
                     is Resource.Loading -> {

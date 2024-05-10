@@ -18,7 +18,7 @@ class UsernameValidationUseCase {
         } else if (username.length < 5) {
             return ValidationResult(
                 success = false,
-                R.string.feature_error_username_length
+                R.string.feature_auth_error_username_length
             )
         }
         return ValidationResult(success = true)

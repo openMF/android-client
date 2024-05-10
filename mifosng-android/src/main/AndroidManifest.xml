@@ -16,7 +16,7 @@
     <application
         android:name="com.mifos.application.App"
         android:allowBackup="false"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/feature_client_ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MaterialAppTheme">
@@ -28,7 +28,7 @@
         
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="${GEO_API_KEY}" />
 
         <activity
             android:name=".activity.splashscreen.SplashScreenActivity"
@@ -72,7 +72,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".online.ClientActivity"
-            android:label="@string/title_activity_client"
             android:screenOrientation="portrait" />
         <activity
             android:name=".online.CentersActivity"
@@ -157,6 +156,15 @@
         <service
             android:name=".activity.pathtracking.PathTrackingService"
             android:exported="false" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.mifos.mifosxdroid.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/path_provider" />
+        </provider>
     </application>
 
 </manifest>

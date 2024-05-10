@@ -142,7 +142,7 @@ fun LoginScreen(
         ) {
             Spacer(modifier = Modifier.height(80.dp))
 
-            MifosAndroidClientIcon(R.drawable.mifos_logo)
+            MifosAndroidClientIcon(R.drawable.feature_auth_mifos_logo)
 
             Text(
                 modifier = Modifier

@@ -5,4 +5,34 @@
     <string name="feature_client_failed_to_load_db_clients">Failed to load Database Clients</string>
     <string name="feature_client_no_more_clients_available">No more Clients Available</string>
 
+    <string name="feature_client_account_number">Account Number</string>
+    <string name="feature_client_external_id">External ID</string>
+    <string name="feature_client_activation_date">Activation Date</string>
+    <string name="feature_client_office">Office</string>
+    <string name="feature_client_mobile_no">Mobile Number</string>
+    <string name="feature_client_group">Group</string>
+    <string name="feature_client_loan_account">Loan Accounts</string>
+    <string name="feature_client_savings_account">Savings Accounts</string>
+    <string name="feature_client_accounts">Accounts</string>
+
+    <string name="feature_client_upload_signature">Upload Signature</string>
+    <string name="feature_client_survey">Survey</string>
+    <string name="feature_client_pinpoint_location">Pinpoint location</string>
+    <string name="feature_client_notes">Notes</string>
+    <string name="feature_client_more_client_info">More client info</string>
+    <string name="feature_client_identifiers">Identifiers</string>
+    <string name="feature_client_documents">Documents</string>
+    <string name="feature_client_charges">Charges</string>
+    <string name="feature_client_add_savings_account">Add Savings Account</string>
+    <string name="feature_client_add_loan_account">Add Loan Account</string>
+
+    <string name="feature_client_client_image_updated">Client Image Uploaded successfully</string>
+    <string name="feature_client_client_image_deleted">Client Image Deleted Successfully</string>
+    <string name="feature_client_activate_client">Activate Client</string>
+    <string name="feature_client_client_not_found">Client Not Found</string>
+    <string name="feature_client_please_select">Please Select</string>
+    <string name="feature_client_take_new_image">Take new image</string>
+    <string name="feature_client_upload_new_image">Upload new image</string>
+    <string name="feature_client_delete_image">Delete Image</string>
+
 </resources>

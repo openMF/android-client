@@ -1,11 +1,10 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
-    id("io.realm.kotlin")
-    id("kotlin-parcelize")
-    id("org.jetbrains.kotlin.plugin.serialization")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.hilt)
+    id(libs.plugins.kotlin.parcelize.get().pluginId)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
 android {
@@ -42,38 +41,35 @@ android {
 
 dependencies {
 
-    implementation(project(":core:data"))
     implementation(project(":core:common"))
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+
+    implementation(libs.material)
+
+    testImplementation(libs.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+
+    implementation(libs.converter.gson)
 
     //rxjava dependencies
-    implementation("io.reactivex:rxandroid:1.1.0")
-    implementation("io.reactivex:rxjava:1.3.8")
+    implementation(libs.rxandroid)
+    implementation(libs.rxjava)
 
     //DBFlow dependencies
-    kapt("com.github.raizlabs.dbflow.dbflow:dbflow-processor:3.1.1")
-    implementation("com.github.raizlabs.dbflow.dbflow:dbflow:3.1.1")
-    kapt("com.github.raizlabs.dbflow:dbflow-processor:4.2.4")
+    kapt(libs.dbflow.processor)
+    implementation(libs.dbflow)
+    kapt(libs.github.dbflow.processor)
 
     // Hilt dependency
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
-
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     // fineract sdk dependencies
-    implementation("com.github.openMF:mifos-android-sdk-arch:1.06")
+    implementation(libs.mifos.android.sdk.arch)
 
     // sdk client
-    implementation("com.github.openMF:fineract-client:2.0.3")
-
-    // Mongo Realm
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
-    implementation("io.realm.kotlin:library-base:1.11.0")
+    implementation(libs.fineract.client)
 }
