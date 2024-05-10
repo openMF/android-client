@@ -1,4 +1,5 @@
 [versions]
+accompanistDrawablepainter = "0.35.0-alpha"
 accompanistSwiperefresh = "0.25.1"
 accompanistPermission = "0.34.0"
 adapterRxjava = "2.9.0"
@@ -119,6 +120,7 @@ truthVersion = '1.1.5'
 
 [libraries]
 # AndroidX Libraries
+accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanistDrawablepainter" }
 accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanistSwiperefresh" }
 accompanist-permission = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermission" }
 android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }

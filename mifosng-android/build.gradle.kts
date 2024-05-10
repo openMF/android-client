@@ -214,6 +214,7 @@ dependencies {
     testImplementation(libs.mockito.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     //Android-Jobs
     implementation(libs.android.job)
@@ -256,4 +257,5 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.androidx.lifecycle.runtimeCompose)
+    implementation(libs.accompanist.drawablepainter)
 }
