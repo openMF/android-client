@@ -128,6 +128,7 @@ dependencies {
     implementation(project(":feature:auth"))
     implementation(project(":feature:client"))
     implementation(project(":feature:checker-inbox-task"))
+    implementation(project(":feature:Individual-collection-sheet"))
     implementation(project(":core:data"))
     implementation(project(":core:datastore"))
     implementation(project(":core:network"))
