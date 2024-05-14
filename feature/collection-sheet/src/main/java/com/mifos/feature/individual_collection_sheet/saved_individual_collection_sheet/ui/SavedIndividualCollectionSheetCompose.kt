@@ -15,10 +15,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.mifos.feature.individual_collection_sheet.R
+import com.mifos.feature.collection_sheet.R
 
 @Composable
 fun SavedIndividualCollectionSheetCompose() {
+
+    // Saved Individual Collection Sheet need to be integrated with API.
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -32,7 +34,7 @@ fun SavedIndividualCollectionSheetCompose() {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stringResource(id = R.string.feature_individual_collection_sheet_no_saved_collection_sheet),
+                text = stringResource(id = R.string.feature_collection_sheet_no_saved_collection_sheet),
                 style = TextStyle(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Medium

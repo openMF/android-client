@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mifos.feature.individual_collection_sheet"
+    namespace = "com.mifos.feature.collection_sheet"
 }
 
 dependencies {
