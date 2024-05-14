@@ -26,7 +26,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
@@ -36,7 +35,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -56,15 +54,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
+import com.mifos.core.designsystem.theme.Black
+import com.mifos.core.objects.SearchedEntity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.views.FabButton
 import com.mifos.mifosxdroid.views.FabButtonState
 import com.mifos.mifosxdroid.views.FabType
 import com.mifos.mifosxdroid.views.MultiFloatingActionButton
-import com.mifos.core.objects.SearchedEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,7 +76,7 @@ fun SearchScreen(
     var selectedFilter by remember { mutableIntStateOf(0) }
     val searchOptions = stringArrayResource(id = R.array.search_options)
     var showFilterDialog by remember { mutableStateOf(false) }
-    val searchUiState = viewModel.searchUiState.collectAsState().value
+    val searchUiState = viewModel.searchUiState.collectAsStateWithLifecycle().value
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     var fabButtonState by remember { mutableStateOf<FabButtonState>(FabButtonState.Collapsed) }
@@ -97,7 +97,7 @@ fun SearchScreen(
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
-                            contentColor = MaterialTheme.colorScheme.onSurface
+                            contentColor = Black
                         )
                     ) {
                         Row {
@@ -237,15 +237,24 @@ fun SearchScreen(
                     fontSize = 16.sp
                 )
             }
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                if (searchUiState.searchedEntities.isNotEmpty()) {
-                    items(searchUiState.searchedEntities.size) { position ->
-                        ClientItem(
-                            searchedEntity = searchUiState.searchedEntities[position],
-                            onSearchOptionClick = onSearchOptionClick
-                        )
+
+            if (searchUiState.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .padding(40.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    if (searchUiState.searchedEntities.isNotEmpty()) {
+                        items(searchUiState.searchedEntities.size) { position ->
+                            ClientItem(
+                                searchedEntity = searchUiState.searchedEntities[position],
+                                onSearchOptionClick = onSearchOptionClick
+                            )
+                        }
                     }
                 }
             }
@@ -268,14 +277,6 @@ fun SearchScreen(
                     snackbarHostState.showSnackbar(searchUiState.error)
                     viewModel.resetErrorMessage()
                 }
-            }
-
-            if (searchUiState.isLoading) {
-                LoadingDialog(
-                    onDismissRequest = {
-                        viewModel.dismissDialog()
-                    }
-                )
             }
         }
     }
@@ -365,27 +366,5 @@ fun SearchOption(text: String, selected: Boolean, onSelected: () -> Unit) {
             text = text,
             fontSize = 16.sp
         )
-    }
-}
-
-@Composable
-fun LoadingDialog(
-    onDismissRequest: () -> Unit
-) {
-    Dialog(onDismissRequest = onDismissRequest) {
-        Card {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier
-                    .padding(horizontal = 32.dp, vertical = 16.dp)
-            ) {
-                CircularProgressIndicator()
-                Text(
-                    text = "Loading...",
-                    fontSize = 16.sp
-                )
-            }
-        }
     }
 }
