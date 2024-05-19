@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.collectionsheetindividual
+package com.mifos.core.data.repository
 
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
@@ -11,12 +11,12 @@ import rx.Observable
  */
 interface NewIndividualCollectionSheetRepository {
 
-    fun getIndividualCollectionSheet(
+    suspend fun getIndividualCollectionSheet(
         payload: RequestCollectionSheetPayload?
-    ): Observable<IndividualCollectionSheet>
+    ): IndividualCollectionSheet
 
-    fun offices(): Observable<List<Office>>
+    suspend fun offices(): List<Office>
 
-    fun getStaffInOffice(officeId: Int): Observable<List<Staff>>
+    suspend fun getStaffInOffice(officeId: Int): List<Staff>
 
 }

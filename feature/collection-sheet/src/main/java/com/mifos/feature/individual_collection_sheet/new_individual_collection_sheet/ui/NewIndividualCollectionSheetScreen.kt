@@ -1,0 +1,259 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
+package com.mifos.feature.individual_collection_sheet.new_individual_collection_sheet.ui
+
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.core.designsystem.component.MifosDatePickerTextField
+import com.mifos.core.designsystem.component.MifosScaffoldNoTopBar
+import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.theme.BluePrimary
+import com.mifos.core.designsystem.theme.BluePrimaryDark
+import com.mifos.feature.collection_sheet.R
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
+
+@Composable
+fun NewIndividualCollectionSheetScreen(
+    state: NewIndividualCollectionSheetUiState,
+    getStaffList: (Int) -> Unit,
+    generateCollection: (Int, Int, String) -> Unit
+) {
+
+    val context = LocalContext.current
+    val localCoroutineScope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    var selectedOffice by rememberSaveable { mutableStateOf("") }
+    var selectedStaff by rememberSaveable { mutableStateOf("") }
+    var officeId by rememberSaveable { mutableIntStateOf(0) }
+    var staffId by rememberSaveable { mutableIntStateOf(0) }
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    var repaymentDate by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = repaymentDate,
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis >= System.currentTimeMillis()
+            }
+        }
+    )
+
+    LaunchedEffect(key1 = state.error) {
+        state.error?.let { snackbarHostState.showSnackbar(it) }
+    }
+
+    MifosScaffoldNoTopBar(
+        snackbarHostState = snackbarHostState,
+        bottomBar = { }
+    ) { paddingValues ->
+        if (showDatePicker) {
+            DatePickerDialog(
+                onDismissRequest = {
+                    showDatePicker = false
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showDatePicker = false
+                            datePickerState.selectedDateMillis?.let {
+                                repaymentDate = it
+                            }
+                        }
+                    ) { Text(stringResource(id = R.string.feature_collection_sheet_select)) }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            showDatePicker = false
+                        }
+                    ) { Text(stringResource(id = R.string.feature_collection_sheet_cancel)) }
+                }
+            )
+            {
+                DatePicker(state = datePickerState)
+            }
+        }
+
+        if (state.isLoading) {
+            MifosCircularProgress()
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = stringResource(id = R.string.feature_collection_sheet_generate_new),
+                    style = TextStyle(
+                        fontSize = 24.sp
+                    )
+                )
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                    text = stringResource(id = R.string.feature_collection_sheet_fill_collection_sheet_message),
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        color = Color.Black
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                MifosTextFieldDropdown(
+                    value = selectedOffice,
+                    onValueChanged = {
+                        selectedOffice = it
+                        selectedStaff = ""
+                    },
+                    onOptionSelected = { index, value ->
+                        state.officeList[index].id?.let {
+                            getStaffList(it)
+                            officeId = it
+                        }
+                        selectedOffice = value
+                        selectedStaff = ""
+                    },
+                    label = R.string.feature_collection_sheet_office,
+                    options = state.officeList.map { it.name.toString() }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                MifosDatePickerTextField(
+                    value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
+                        repaymentDate
+                    ),
+                    label = R.string.feature_collection_sheet_repayment_date,
+                    openDatePicker = {
+                        showDatePicker = true
+                    }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                MifosTextFieldDropdown(
+                    value = selectedStaff,
+                    onValueChanged = {
+                        selectedStaff = it
+                    },
+                    onOptionSelected = { index, value ->
+                        state.staffList[index].id?.let {
+                            staffId = it
+                        }
+                        selectedStaff = value
+                    },
+                    label = R.string.feature_collection_sheet_staff,
+                    options = state.staffList.map { it.displayName.toString() }
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Button(
+                        onClick = {
+                            keyboardController?.hide()
+                            if (selectedOffice == "") {
+                                localCoroutineScope.launch {
+                                    snackbarHostState.showSnackbar(message = context.getString(R.string.feature_collection_sheet_select_office))
+                                }
+                            } else if (selectedStaff == "") {
+                                localCoroutineScope.launch {
+                                    snackbarHostState.showSnackbar(message = context.getString(R.string.feature_collection_sheet_select_staff))
+                                }
+                            } else {
+                                generateCollection(
+                                    officeId,
+                                    staffId,
+                                    SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
+                                        repaymentDate
+                                    )
+                                )
+                            }
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(16.dp),
+                        contentPadding = PaddingValues(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.feature_collection_sheet_generate),
+                            fontSize = 16.sp
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            selectedOffice = ""
+                            repaymentDate = System.currentTimeMillis()
+                            selectedStaff = ""
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(16.dp),
+                        contentPadding = PaddingValues(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.feature_collection_sheet_clear),
+                            fontSize = 16.sp
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun NewIndividualCollectionSheetPreview() {
+    NewIndividualCollectionSheetScreen(
+        NewIndividualCollectionSheetUiState(),
+        getStaffList = {},
+        generateCollection = { _, _, _ ->
+        }
+    )
+}

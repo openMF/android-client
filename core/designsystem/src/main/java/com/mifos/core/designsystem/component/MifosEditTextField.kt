@@ -4,7 +4,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -77,6 +80,37 @@ fun MifosOutlinedTextField(
                     text = stringResource(id = error),
                     color = MaterialTheme.colorScheme.error
                 )
+            }
+        }
+    )
+}
+
+
+@Composable
+fun MifosDatePickerTextField(
+    value: String,
+    label: Int,
+    openDatePicker: () -> Unit
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = { },
+        label = { Text(text = stringResource(id = label)) },
+        readOnly = true,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp),
+        maxLines = 1,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+        ),
+        textStyle = LocalDensity.current.run {
+            TextStyle(fontSize = 18.sp)
+        },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        trailingIcon = {
+            IconButton(onClick = { openDatePicker() }) {
+                Icon(imageVector = Icons.Default.CalendarToday, null)
             }
         }
     )

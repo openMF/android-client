@@ -23,9 +23,9 @@ import rx.Observable
  */
 interface CollectionSheetService {
     @POST(APIEndPoint.COLLECTION_SHEET + "?command=generateCollectionSheet")
-    fun getIndividualCollectionSheet(
+    suspend fun getIndividualCollectionSheet(
         @Body payload: RequestCollectionSheetPayload?
-    ): Observable<IndividualCollectionSheet>
+    ): IndividualCollectionSheet
 
     @POST(APIEndPoint.COLLECTION_SHEET + "?command=saveCollectionSheet")
     fun saveindividualCollectionSheet(

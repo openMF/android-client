@@ -9,4 +9,11 @@ android {
 
 dependencies {
 
+    implementation(project(":core:datastore"))
+    implementation(project(":core:network"))
+
+    //DBFlow dependencies
+    ksp(libs.dbflow.processor)
+    implementation(libs.dbflow)
+    ksp(libs.github.dbflow.processor)
 }

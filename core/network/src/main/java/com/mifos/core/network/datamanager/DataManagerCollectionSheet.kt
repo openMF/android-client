@@ -25,9 +25,9 @@ class DataManagerCollectionSheet @Inject constructor(
     /**
      * Individual CollectionSheet API
      */
-    fun getIndividualCollectionSheet(
+    suspend fun getIndividualCollectionSheet(
         payload: RequestCollectionSheetPayload?
-    ): Observable<IndividualCollectionSheet> {
+    ): IndividualCollectionSheet {
         return mBaseApiManager.collectionSheetApi.getIndividualCollectionSheet(payload)
     }
 

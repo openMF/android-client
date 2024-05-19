@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.collectionsheetindividual
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerCollectionSheet
 import com.mifos.core.network.model.RequestCollectionSheetPayload
@@ -12,20 +13,20 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class NewIndividualCollectionSheetRepositoryImp @Inject internal constructor(
+class NewIndividualCollectionSheetRepositoryImp @Inject constructor(
     private val dataManager: DataManager,
     private val dataManagerCollection: DataManagerCollectionSheet
 ) : NewIndividualCollectionSheetRepository {
 
-    override fun getIndividualCollectionSheet(payload: RequestCollectionSheetPayload?): Observable<IndividualCollectionSheet> {
+    override suspend fun getIndividualCollectionSheet(payload: RequestCollectionSheetPayload?): IndividualCollectionSheet {
         return dataManagerCollection.getIndividualCollectionSheet(payload)
     }
 
-    override fun offices(): Observable<List<Office>> {
-        return dataManager.offices
+    override suspend fun offices(): List<Office> {
+        return dataManager.offices()
     }
 
-    override fun getStaffInOffice(officeId: Int): Observable<List<Staff>> {
+    override suspend fun getStaffInOffice(officeId: Int): List<Staff> {
         return dataManager.getStaffInOffice(officeId)
     }
 

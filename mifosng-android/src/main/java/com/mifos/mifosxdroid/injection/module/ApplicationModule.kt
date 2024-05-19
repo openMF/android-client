@@ -18,27 +18,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class ApplicationModule {
 
-//    @Provides
-//    @Singleton
-//    fun provideBaseApiManager(prefManager: PrefManager): com.mifos.core.network.BaseApiManager {
-//        return com.mifos.core.network.BaseApiManager(prefManager)
-//    }
-//
-//    @Provides
-//    @Singleton
-//    fun provideSdkBaseApiManager(prefManager: PrefManager): BaseApiManager {
-//        val usernamePassword: Pair<String, String> = prefManager.usernamePassword
-//        val baseManager = getInstance()
-//        baseManager.createService(
-//            usernamePassword.first,
-//            usernamePassword.second,
-//            prefManager.getInstanceUrl(),
-//            prefManager.getTenant(),
-//            false
-//        )
-//        return baseManager
-//    }
-
     @Provides
     @Singleton
     fun provideNetworkUtilsWrapper(@ApplicationContext context: Context): NetworkUtilsWrapper {

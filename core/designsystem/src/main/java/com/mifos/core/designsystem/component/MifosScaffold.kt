@@ -73,5 +73,21 @@ fun MifosScaffold(
     ) { padding ->
         content(padding)
     }
-
 }
+
+@Composable
+fun MifosScaffoldNoTopBar(
+    snackbarHostState: SnackbarHostState?,
+    bottomBar: @Composable () -> Unit,
+    content: @Composable (PaddingValues) -> Unit
+) {
+
+    Scaffold(
+        snackbarHost = { snackbarHostState?.let { SnackbarHost(it) } },
+        containerColor = White,
+        bottomBar = bottomBar
+    ) { padding ->
+        content(padding)
+    }
+}
+

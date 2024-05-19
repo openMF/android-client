@@ -15,7 +15,7 @@ import rx.Observable
  */
 interface StaffService {
     @GET(APIEndPoint.STAFF + "?status=all")
-    fun getStaffForOffice(@Query("officeId") officeId: Int): Observable<List<Staff>>
+    suspend fun getStaffForOffice(@Query("officeId") officeId: Int): List<Staff>
 
     @get:GET(APIEndPoint.STAFF)
     val allStaff: Observable<List<Staff>>
