@@ -39,21 +39,51 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
+import com.mifos.core.network.model.RequestCollectionSheetPayload
+import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.feature.collection_sheet.R
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
 fun NewIndividualCollectionSheetScreen(
+    viewModel: NewIndividualCollectionSheetViewModel = hiltViewModel(),
+    popupDialog: (IndividualCollectionSheet) -> Unit,
+    repaymentDate: (String) -> Unit
+) {
+    val state = viewModel.newIndividualCollectionSheetUiState.collectAsStateWithLifecycle().value
+    NewIndividualCollectionSheetScreen(
+        state = state,
+        getStaffList = {
+            viewModel.getStaffList(it)
+        },
+        generateCollection = { _officeId, _staffId, _repaymentDate ->
+            viewModel.getIndividualCollectionSheet(RequestCollectionSheetPayload().apply {
+                officeId = _officeId
+                transactionDate = _repaymentDate
+                staffId = _staffId
+            })
+            repaymentDate(_repaymentDate)
+        },
+        popupDialog = popupDialog
+    )
+}
+
+
+@Composable
+fun NewIndividualCollectionSheetScreen(
     state: NewIndividualCollectionSheetUiState,
     getStaffList: (Int) -> Unit,
-    generateCollection: (Int, Int, String) -> Unit
+    generateCollection: (Int, Int, String) -> Unit,
+    popupDialog: (IndividualCollectionSheet) -> Unit
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -78,6 +108,12 @@ fun NewIndividualCollectionSheetScreen(
 
     LaunchedEffect(key1 = state.error) {
         state.error?.let { snackbarHostState.showSnackbar(it) }
+    }
+
+    LaunchedEffect(key1 = state.individualCollectionSheet) {
+        state.individualCollectionSheet?.let {
+            popupDialog(it)
+        }
     }
 
     MifosScaffold(
@@ -241,6 +277,7 @@ private fun NewIndividualCollectionSheetPreview() {
         NewIndividualCollectionSheetUiState(),
         getStaffList = {},
         generateCollection = { _, _, _ ->
-        }
+        },
+        popupDialog = {}
     )
 }
