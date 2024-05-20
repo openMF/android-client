@@ -8,10 +8,10 @@ import rx.Observable
  */
 interface SearchRepository {
 
-    fun searchResources(
+    suspend fun searchResources(
         query: String?,
         resources: String?,
         exactMatch: Boolean?
-    ): Observable<List<SearchedEntity>>
+    ): List<SearchedEntity>
 
 }

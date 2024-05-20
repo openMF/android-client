@@ -133,6 +133,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:network"))
     implementation(project(":core:common"))
+    implementation(project(":core:designsystem"))
 
     // Multidex dependency
     implementation(libs.androidx.multidex)
@@ -223,6 +224,7 @@ dependencies {
     androidTestImplementation(libs.mockito.android)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     //Android-Jobs
     implementation(libs.android.job)
@@ -263,4 +265,7 @@ dependencies {
     // ViewModel utilities for Compose
     implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.lifecycle.runtimeCompose)
+
+    implementation(libs.accompanist.drawablepainter)
 }
