@@ -18,6 +18,7 @@ dependencyResolutionManagement {
     }
 }
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "AndroidClient"
 include(":mifosng-android")
 include(":core:designsystem")

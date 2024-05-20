@@ -51,6 +51,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -222,59 +224,87 @@ fun ClientDetailsScreen(
     }
 
     MifosScaffold(
-        icon = Icons.Rounded.ArrowBackIosNew,
-        title = stringResource(id = R.string.feature_client),
-        onBackPressed = { onBackPressed() },
-        actions = {
-            IconButton(onClick = { showMenu = showMenu.not() }) {
-                Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
-            }
-            DropdownMenu(
-                modifier = Modifier.background(White),
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false }
-            ) {
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_add_loan_account)) {
-                    addLoanAccount(clientId)
-                    showMenu = false
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = White),
+                navigationIcon = {
+
+                    IconButton(
+                        onClick = { onBackPressed() },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.ArrowBackIosNew,
+                            contentDescription = null,
+                            tint = Black,
+                        )
+                    }
+
+                },
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.feature_client),
+                        style = TextStyle(
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Medium,
+                            fontStyle = FontStyle.Normal
+                        ),
+                        color = Black,
+                        textAlign = TextAlign.Start
+                    )
+
+                },
+                actions = {
+                    IconButton(onClick = { showMenu = showMenu.not() }) {
+                        Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+                    }
+                    DropdownMenu(
+                        modifier = Modifier.background(White),
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false }
+                    ) {
+                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_add_loan_account)) {
+                            addLoanAccount(clientId)
+                            showMenu = false
+                        }
+                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_add_savings_account)) {
+                            addSavingsAccount(clientId)
+                            showMenu = false
+                        }
+                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_charges)) {
+                            charges(clientId)
+                            showMenu = false
+                        }
+                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_documents)) {
+                            documents(clientId)
+                            showMenu = false
+                        }
+                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_identifiers)) {
+                            identifiers(clientId)
+                            showMenu = false
+                        }
+                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_more_client_info)) {
+                            moreClientInfo(clientId)
+                            showMenu = false
+                        }
+                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_notes)) {
+                            notes(clientId)
+                            showMenu = false
+                        }
+                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_pinpoint_location)) {
+                            pinpointLocation(clientId)
+                            showMenu = false
+                        }
+                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_survey)) {
+                            survey(clientId)
+                            showMenu = false
+                        }
+                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_upload_signature)) {
+                            uploadSignature(clientId)
+                            showMenu = false
+                        }
+                    }
                 }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_add_savings_account)) {
-                    addSavingsAccount(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_charges)) {
-                    charges(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_documents)) {
-                    documents(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_identifiers)) {
-                    identifiers(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_more_client_info)) {
-                    moreClientInfo(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_notes)) {
-                    notes(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_pinpoint_location)) {
-                    pinpointLocation(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_survey)) {
-                    survey(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_upload_signature)) {
-                    uploadSignature(clientId)
-                    showMenu = false
-                }
-            }
+            )
         },
         snackbarHostState = snackbarHostState,
         bottomBar = {
@@ -290,7 +320,10 @@ fun ClientDetailsScreen(
                         containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
                     )
                 ) {
-                    Text(text = stringResource(id = R.string.feature_client_activate_client), fontSize = 16.sp)
+                    Text(
+                        text = stringResource(id = R.string.feature_client_activate_client),
+                        fontSize = 16.sp
+                    )
                 }
 
             }

@@ -29,12 +29,10 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -43,12 +41,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
-import com.mifos.core.designsystem.component.MifosScaffoldNoTopBar
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.feature.collection_sheet.R
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -59,8 +56,6 @@ fun NewIndividualCollectionSheetScreen(
     generateCollection: (Int, Int, String) -> Unit
 ) {
 
-    val context = LocalContext.current
-    val localCoroutineScope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
 
     var selectedOffice by rememberSaveable { mutableStateOf("") }
@@ -85,7 +80,8 @@ fun NewIndividualCollectionSheetScreen(
         state.error?.let { snackbarHostState.showSnackbar(it) }
     }
 
-    MifosScaffoldNoTopBar(
+    MifosScaffold(
+        topBar = { },
         snackbarHostState = snackbarHostState,
         bottomBar = { }
     ) { paddingValues ->
@@ -191,28 +187,19 @@ fun NewIndividualCollectionSheetScreen(
                     Button(
                         onClick = {
                             keyboardController?.hide()
-                            if (selectedOffice == "") {
-                                localCoroutineScope.launch {
-                                    snackbarHostState.showSnackbar(message = context.getString(R.string.feature_collection_sheet_select_office))
-                                }
-                            } else if (selectedStaff == "") {
-                                localCoroutineScope.launch {
-                                    snackbarHostState.showSnackbar(message = context.getString(R.string.feature_collection_sheet_select_staff))
-                                }
-                            } else {
-                                generateCollection(
-                                    officeId,
-                                    staffId,
-                                    SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-                                        repaymentDate
-                                    )
+                            generateCollection(
+                                officeId,
+                                staffId,
+                                SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
+                                    repaymentDate
                                 )
-                            }
+                            )
                         },
                         modifier = Modifier
                             .weight(1f)
                             .padding(16.dp),
                         contentPadding = PaddingValues(),
+                        enabled = selectedStaff != "" && selectedOffice != "",
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
                         )

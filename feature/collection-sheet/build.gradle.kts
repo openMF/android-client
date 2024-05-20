@@ -9,8 +9,8 @@ android {
 
 dependencies {
 
-    implementation(project(":core:datastore"))
-    implementation(project(":core:network"))
+    implementation(projects.core.datastore)
+    implementation(projects.core.network)
 
     //DBFlow dependencies
     ksp(libs.dbflow.processor)
