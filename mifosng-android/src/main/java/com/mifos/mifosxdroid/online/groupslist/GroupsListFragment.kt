@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.navigation.findNavController
 import com.mifos.core.common.utils.Constants
-import com.mifos.feature.groupsList.presentation.GroupsListRoute
+import com.mifos.feature.groupsList.GroupsListRoute
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment
@@ -57,7 +57,7 @@ class GroupsListFragment : MifosBaseFragment() {
         }
 
         if (!isParentFragment) (activity as HomeActivity).supportActionBar?.title =
-            getString(R.string.groups)
+            getString(R.string.feature_groups_groups)
     }
 
     override fun onCreateView(
@@ -75,9 +75,7 @@ class GroupsListFragment : MifosBaseFragment() {
                         group.id?.let { id ->
                             group.name?.let { name ->
                                 val action =
-                                    GroupsListFragmentDirections.actionNavigationGroupListToGroupsActivity(
-                                        groupId = id, groupName = name
-                                    )
+                                    GroupsListFragmentDirections.actionNavigationGroupListToGroupsActivity(id, name)
                                 findNavController().navigate(action)
                             }
                         }

@@ -1,7 +1,9 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt)
     alias(libs.plugins.secrets)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
 android {
@@ -11,7 +13,7 @@ android {
     defaultConfig {
         minSdk = 26
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.mifos.core.testing.MifosTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -53,6 +55,10 @@ dependencies {
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
+
+    // Hilt dependency
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     implementation(libs.converter.gson)
 }

@@ -1,4 +1,4 @@
-package com.mifos.feature.groupsList.presentation
+package com.mifos.feature.groupsList
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -162,87 +163,112 @@ fun GroupsListScreen(
                 state = lazyListState,
                 verticalArrangement = if (data.itemCount < 1) Arrangement.Center else Arrangement.Top
             ) {
-                when (data.loadState.refresh) {
-                    is LoadState.Error -> {
-                        item {
-                            MifosSweetError(
-                                message = stringResource(id = R.string.failed_to_fetch_groups),
-                                onclick = { data.refresh() }
-                            )
-                        }
-                    }
+                refreshState(data)
 
-                    is LoadState.Loading -> {
-                        item {
-                            MifosCircularProgress("GroupItems::Loading")
-                        }
-                    }
+                successState(
+                    pagingItems = data,
+                    isInSelectionMode = selectedItems.isNotEmpty(),
+                    isSelected = selectedItems::contains,
+                    onGroupClick = onGroupClick,
+                    onSelectItem = onSelectItem
+                )
 
-                    is LoadState.NotLoading -> {
-                        if (data.itemCount < 1) {
-                            item {
-                                MifosEmptyUi(
-                                    text = stringResource(id = R.string.no_more_groups_available)
-                                )
-                            }
-                        }
-                    }
+                appendState(data)
+            }
+        }
+    }
+}
+
+private fun LazyListScope.refreshState(data: LazyPagingItems<Group>) {
+    when (data.loadState.refresh) {
+        is LoadState.Error -> {
+            item {
+                MifosSweetError(
+                    message = stringResource(id = R.string.feature_groups_failed_to_fetch_groups),
+                    onclick = { data.refresh() }
+                )
+            }
+        }
+
+        is LoadState.Loading -> {
+            item {
+                MifosCircularProgress("GroupItems::Loading")
+            }
+        }
+
+        is LoadState.NotLoading -> {
+            if (data.itemCount < 1) {
+                item {
+                    MifosEmptyUi(
+                        text = stringResource(id = R.string.feature_groups_no_more_groups_available)
+                    )
                 }
+            }
+        }
+    }
 
-                items(
-                    count = data.itemCount
-                ) { index ->
-                    data[index]?.let { group ->
-                        GroupItem(
-                            group = group,
-                            doesSelected = selectedItems.contains(group),
-                            inSelectionMode = selectedItems.isNotEmpty(),
-                            onGroupClick = {
-                                onGroupClick(group)
-                            },
-                            onSelectItem = {
-                                onSelectItem(group)
-                            }
-                        )
-                    }
+}
+
+private fun LazyListScope.appendState(data: LazyPagingItems<Group>) {
+    when (data.loadState.append) {
+        is LoadState.Loading -> {
+            item {
+                MifosPagingAppendProgress()
+            }
+        }
+
+        is LoadState.Error -> {
+            item {
+                MifosPaginationSweetError {
+                    data.retry()
                 }
+            }
+        }
 
-                when (data.loadState.append) {
-                    is LoadState.Loading -> {
-                        item {
-                            MifosPagingAppendProgress()
-                        }
-                    }
-
-                    is LoadState.Error -> {
-                        item {
-                            MifosPaginationSweetError {
-                                data.retry()
-                            }
-                        }
-                    }
-
-                    is LoadState.NotLoading -> {
-                        if (data.loadState.append.endOfPaginationReached) {
-                            item {
-                                Text(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(6.dp),
-                                    text = stringResource(id = R.string.no_more_groups_available),
-                                    style = TextStyle(fontSize = 14.sp),
-                                    color = DarkGray,
-                                    textAlign = TextAlign.Center
-                                )
-                            }
-                        }
-                    }
+        is LoadState.NotLoading -> {
+            if (data.loadState.append.endOfPaginationReached) {
+                item {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(6.dp),
+                        text = stringResource(id = R.string.feature_groups_no_more_groups_available),
+                        style = TextStyle(fontSize = 14.sp),
+                        color = DarkGray,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
     }
 }
 
+private fun LazyListScope.successState(
+    pagingItems: LazyPagingItems<Group>,
+    isInSelectionMode: Boolean,
+    isSelected: (Group) -> Boolean,
+    onGroupClick: (Group) -> Unit,
+    onSelectItem: (Group) -> Unit
+){
+    items(
+        count = pagingItems.itemCount
+    ) { index ->
+        pagingItems[index]?.let { group ->
+            GroupItem(
+                group = group,
+                doesSelected = isSelected(group),
+                inSelectionMode = isInSelectionMode,
+                onGroupClick = {
+                    onGroupClick(group)
+                },
+                onSelectItem = {
+                    onSelectItem(group)
+                }
+            )
+        }
+    }
+
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

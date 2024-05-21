@@ -31,13 +31,12 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mifos.core.designsystem.theme.BlueSecondary
+import com.mifos.core.domain.use_cases.GroupsListPagingDataSource
 import com.mifos.core.objects.group.Group
+import com.mifos.core.testing.repository.TestGroupsListRepository
+import com.mifos.core.testing.repository.getPagedData
+import com.mifos.core.testing.repository.sampleGroups
 import com.mifos.feature.groups.R
-import com.mifos.feature.groupsList.data.repositoryImp.FakeGroupsListRepository
-import com.mifos.feature.groupsList.data.repositoryImp.getPagedData
-import com.mifos.feature.groupsList.data.repositoryImp.sampleGroups
-import com.mifos.feature.groupsList.domain.use_case.GroupsListPagingDataSource
-import com.mifos.feature.groupsList.presentation.GroupsListScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.runBlocking
@@ -51,7 +50,7 @@ class GroupListScreenTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
-    private val repository = FakeGroupsListRepository()
+    private val repository = TestGroupsListRepository()
     private val pageSize = 10
 
     private fun createPager(
@@ -126,7 +125,7 @@ class GroupListScreenTest {
             .assertExists()
             .onChildren()
             .onLast()
-            .assertTextContains(composeTestRule.activity.resources.getString(R.string.no_more_groups_available))
+            .assertTextContains(composeTestRule.activity.resources.getString(R.string.feature_groups_no_more_groups_available))
 
     }
 
@@ -200,7 +199,7 @@ class GroupListScreenTest {
             .onNodeWithContentDescription("MifosSweetError")
             .assertIsDisplayed()
             .onChildren()[1]
-            .assertTextContains(composeTestRule.activity.resources.getString(R.string.failed_to_fetch_groups))
+            .assertTextContains(composeTestRule.activity.resources.getString(R.string.feature_groups_failed_to_fetch_groups))
 
         composeTestRule
             .onNodeWithContentDescription("MifosSweetError")

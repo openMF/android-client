@@ -8,5 +8,5 @@ android {
 }
 
 dependencies {
-
+    androidTestImplementation(projects.core.testing)
 }

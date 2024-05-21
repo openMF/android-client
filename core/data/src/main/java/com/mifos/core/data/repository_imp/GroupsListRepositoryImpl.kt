@@ -1,9 +1,9 @@
-package com.mifos.feature.groupsList.data.repositoryImp
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.objects.client.Page
 import com.mifos.core.objects.group.Group
-import com.mifos.feature.groupsList.domain.repository.GroupsListRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.suspendCancellableCoroutine

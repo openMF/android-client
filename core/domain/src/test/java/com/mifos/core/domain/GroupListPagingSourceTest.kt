@@ -1,15 +1,14 @@
-package com.mifos.feature.groupsList
+package com.mifos.core.domain
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.testing.TestPager
 import com.mifos.core.objects.group.Group
+import com.mifos.core.testing.repository.TestGroupsListRepository
+import com.mifos.core.testing.repository.errorMessage
+import com.mifos.core.testing.repository.getPagedData
+import com.mifos.core.testing.repository.sampleGroups
 import com.mifos.core.testing.util.MainDispatcherRule
-import com.mifos.feature.groupsList.data.repositoryImp.FakeGroupsListRepository
-import com.mifos.feature.groupsList.data.repositoryImp.errorMessage
-import com.mifos.feature.groupsList.data.repositoryImp.getPagedData
-import com.mifos.feature.groupsList.data.repositoryImp.sampleGroups
-import com.mifos.feature.groupsList.domain.use_case.GroupsListPagingDataSource
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -23,9 +22,9 @@ class GroupListPagingSourceTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val fakeRepository = FakeGroupsListRepository()
+    private val fakeRepository = TestGroupsListRepository()
 
-    private lateinit var pagingDataSource: GroupsListPagingDataSource
+    private lateinit var pagingDataSource: com.mifos.core.domain.use_cases.GroupsListPagingDataSource
 
     private lateinit var pager: TestPager<Int, Group>
 
@@ -33,7 +32,8 @@ class GroupListPagingSourceTest {
 
     @Before
     fun setup() {
-        pagingDataSource = GroupsListPagingDataSource(fakeRepository, pageSize)
+        pagingDataSource =
+            com.mifos.core.domain.use_cases.GroupsListPagingDataSource(fakeRepository, pageSize)
 
         pager = TestPager(
             config = PagingConfig(

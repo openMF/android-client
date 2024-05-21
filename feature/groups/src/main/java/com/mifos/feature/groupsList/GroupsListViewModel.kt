@@ -1,12 +1,11 @@
-package com.mifos.feature.groupsList.presentation
+package com.mifos.feature.groupsList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.mifos.feature.groupsList.domain.repository.GroupsListRepository
-import com.mifos.feature.groupsList.domain.use_case.GroupsListPagingDataSource
+import com.mifos.core.data.repository.GroupsListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -25,7 +24,7 @@ class GroupsListViewModel @Inject constructor(
             prefetchDistance = 1,
         ),
         pagingSourceFactory = {
-            GroupsListPagingDataSource(repository, PAGE_SIZE)
+            com.mifos.core.domain.use_cases.GroupsListPagingDataSource(repository, PAGE_SIZE)
         }
     ).flow.cachedIn(viewModelScope)
 

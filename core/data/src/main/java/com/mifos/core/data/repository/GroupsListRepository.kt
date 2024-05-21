@@ -1,4 +1,4 @@
-package com.mifos.feature.groupsList.domain.repository
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.group.Group
 import kotlinx.coroutines.flow.Flow

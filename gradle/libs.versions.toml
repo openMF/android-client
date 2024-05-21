@@ -67,7 +67,7 @@ kotlinxCoroutines = "1.7.3"
 kotlinxDatetime = "0.5.0"
 kotlinxSerializationJson = "1.6.0"
 kotlinxImmutable = "0.3.6"
-ksp = "1.9.21-1.0.16" # "1.9.10-1.0.13"
+ksp = "1.9.22-1.0.17" # "1.9.10-1.0.13"
 legacySupportV4 = "1.0.0"
 lifecycleCommonJava8 = "2.7.0"
 lifecycleExtensions = "2.2.0"
@@ -134,6 +134,9 @@ androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "mult
 # Androidx Preference
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingRuntimeKtx" }
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
+androidx-paging-common-ktx = { module = "androidx.paging:paging-common-ktx", version.ref = "pagingRuntimeKtx" }
+androidx-paging-testing = { module = "androidx.paging:paging-testing", version.ref = "pagingRuntimeKtx" }
+
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
 
 #Androidx RecyclerView
@@ -228,6 +231,7 @@ androidx-work-ktx = { group = "androidx.work", name = "work-runtime-ktx", versio
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "androidxWork" }
 
 #Retrofit Converters
+retrofit-core = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 adapter-rxjava = { module = "com.squareup.retrofit2:adapter-rxjava", version.ref = "adapterRxjava" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
@@ -272,6 +276,7 @@ hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hi
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
 
+javax-inject = { module = "javax.inject:javax.inject", version = "1" }
 
 # Coroutines
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }

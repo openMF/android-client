@@ -1,19 +1,17 @@
-package com.mifos.feature.groupsList.data.repositoryImp
+package com.mifos.core.testing.repository
 
-import androidx.compose.runtime.mutableStateOf
+import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.objects.group.Group
-import com.mifos.feature.groupsList.domain.repository.GroupsListRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 
 const val errorMessage = "Unable to load data from server"
 
-class FakeGroupsListRepository : GroupsListRepository {
-    private val data = mutableStateOf<List<Group>?>(sampleGroups)
+class TestGroupsListRepository : GroupsListRepository {
+    private val data = MutableStateFlow<List<Group>?>(sampleGroups)
 
     override suspend fun getAllGroups(paged: Boolean, offset: Int, limit: Int): List<Group> {
-        println("getAllGroups - offset - $offset && limit - $limit")
-
         return if (data.value == null) {
             throw RuntimeException(errorMessage)
         } else {
@@ -25,7 +23,7 @@ class FakeGroupsListRepository : GroupsListRepository {
         return emptyFlow()
     }
 
-    internal fun setGroupsData(list: List<Group>?) {
+    fun setGroupsData(list: List<Group>?) {
         data.value = list
     }
 }

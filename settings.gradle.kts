@@ -19,16 +19,19 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "AndroidClient"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":mifosng-android")
-include(":core:designsystem")
-include(":core:datastore")
 include(":core:common")
-include(":feature:auth")
-include(":core:network")
 include(":core:data")
+include(":core:datastore")
+include(":core:designsystem")
+include(":core:domain")
+include(":core:network")
+include(":core:ui")
+include(":core:testing")
+
+include(":feature:auth")
 include(":feature:client")
 include(":feature:checker-inbox-task")
 include(":feature:collection-sheet")
 include(":feature:groups")
-include(":core:ui")
-include(":core:testing")

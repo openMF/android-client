@@ -14,7 +14,7 @@ android {
     defaultConfig {
         minSdk = 26
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.mifos.core.testing.MifosTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
