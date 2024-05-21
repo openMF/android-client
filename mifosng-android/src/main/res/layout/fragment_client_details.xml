@@ -27,7 +27,7 @@
                         android:id="@+id/iv_clientImage"
                         style="@style/ClientImage"
                         android:layout_gravity="center"
-                        tools:src="@drawable/ic_launcher" />
+                        tools:src="@drawable/feature_client_ic_launcher" />
 
                     <ProgressBar
                         android:id="@+id/pb_imageProgressBar"

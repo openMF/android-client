@@ -1,8 +1,6 @@
 package com.mifos.core.designsystem.component
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,11 +15,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import com.mifos.core.designsystem.R
 import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
 
 /**
  * Created by Aditya Gupta on 21/02/24.
@@ -66,4 +60,5 @@ fun MifosCircularProgress(
             color = DarkGray
         )
     }
+
 }

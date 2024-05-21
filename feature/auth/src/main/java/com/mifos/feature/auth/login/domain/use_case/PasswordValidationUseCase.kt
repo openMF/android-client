@@ -19,7 +19,7 @@ class PasswordValidationUseCase {
         } else if (password.length < 6) {
             return ValidationResult(
                 success = false,
-                R.string.feature_error_password_length
+                R.string.feature_auth_error_password_length
             )
         }
         return ValidationResult(success = true)

@@ -117,7 +117,7 @@
     <string name="savings_make_withdrawal">ಹಿಂತೆಗೆದುಕೊಳ್ಳುವಿಕೆ</string>
     <string name="savings_total_deposits">ಒಟ್ಟು ಠೇವಣಿಗಳು</string>
     <string name="savings_total_withdrawals">ಒಟ್ಟು ವಿತರಣೆಗಳು</string>
-    <string name="savings_transaction_detail">ವ್ಯವಹಾರ ಐಡಿ:% 1 $ d, ಸಮತೋಲನವನ್ನು ರನ್ನಿಂಗ್:% 2 $ f</string>
+    <string name="savings_transaction_detail">ವ್ಯವಹಾರ ಐಡಿ:% 1$d, ಸಮತೋಲನವನ್ನು ರನ್ನಿಂಗ್:% 2$f</string>
     <string name="search">ಹುಡುಕಿ</string>
     <string name="search_results">ಹುಡುಕಾಟ ಫಲಿತಾಂಶಗಳು</string>
     <string name="spinner_center">ಕೇಂದ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
