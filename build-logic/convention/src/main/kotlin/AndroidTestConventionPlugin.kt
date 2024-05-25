@@ -2,6 +2,7 @@ import com.android.build.gradle.TestExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
+import org.mifos.configureGradleManagedDevices
 import org.mifos.configureKotlinAndroid
 
 class AndroidTestConventionPlugin : Plugin<Project> {
@@ -14,6 +15,7 @@ class AndroidTestConventionPlugin : Plugin<Project> {
 
             extensions.configure<TestExtension> {
                 configureKotlinAndroid(this)
+                configureGradleManagedDevices(this)
                 defaultConfig.targetSdk = 34
             }
         }

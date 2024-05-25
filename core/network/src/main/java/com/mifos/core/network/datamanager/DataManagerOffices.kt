@@ -1,7 +1,6 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperOffices
-import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
 import com.mifos.core.objects.organisation.Office
@@ -21,7 +20,7 @@ class DataManagerOffices @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     private val mDatabaseHelperOffices: DatabaseHelperOffices,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-    private val prefManager: PrefManager
+    private val prefManager: com.mifos.core.datastore.PrefManager
 ) {
     /**
      * return all List of Offices from DatabaseHelperOffices

@@ -2,7 +2,6 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.data.LoansPayload
 import com.mifos.core.databasehelper.DatabaseHelperLoan
-import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.accounts.loan.LoanDisbursement
@@ -25,7 +24,7 @@ import javax.inject.Singleton
 class DataManagerLoan @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     val mDatabaseHelperLoan: DatabaseHelperLoan,
-    private val prefManager: PrefManager
+    private val prefManager: com.mifos.core.datastore.PrefManager
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and

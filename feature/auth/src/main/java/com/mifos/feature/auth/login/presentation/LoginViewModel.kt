@@ -7,10 +7,9 @@ import com.mifos.core.common.utils.BaseUrl
 import com.mifos.core.common.utils.Network
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
+import com.mifos.core.domain.use_cases.PasswordValidationUseCase
+import com.mifos.core.domain.use_cases.UsernameValidationUseCase
 import com.mifos.feature.auth.R
-import com.mifos.feature.auth.login.domain.use_case.LoginUseCase
-import com.mifos.feature.auth.login.domain.use_case.PasswordValidationUseCase
-import com.mifos.feature.auth.login.domain.use_case.UsernameValidationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +31,7 @@ class LoginViewModel @Inject constructor(
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val baseApiManager: BaseApiManager,
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: com.mifos.core.domain.use_cases.LoginUseCase
 ) :
     ViewModel() {
 

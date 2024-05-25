@@ -45,6 +45,7 @@ internal fun Project.configureAndroidCompose(
         kotlinOptions {
             freeCompilerArgs += buildComposeMetricsParameters()
             freeCompilerArgs += stabilityConfiguration()
+            freeCompilerArgs += strongSkippingConfiguration()
         }
     }
 }
@@ -78,4 +79,9 @@ private fun Project.buildComposeMetricsParameters(): List<String> {
 private fun Project.stabilityConfiguration() = listOf(
     "-P",
     "plugin:androidx.compose.compiler.plugins.kotlin:stabilityConfigurationPath=${project.rootDir.absolutePath}/compose_compiler_config.conf",
+)
+
+private fun Project.strongSkippingConfiguration() = listOf(
+    "-P",
+    "plugin:androidx.compose.compiler.plugins.kotlin:experimentalStrongSkipping=true",
 )
