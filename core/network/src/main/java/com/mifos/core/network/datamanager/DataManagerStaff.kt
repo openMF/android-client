@@ -1,7 +1,6 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperStaff
-import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.staffs.StaffMapper
 import com.mifos.core.objects.organisation.Staff
@@ -17,7 +16,7 @@ class DataManagerStaff @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     private val mDatabaseHelperStaff: DatabaseHelperStaff,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-    private val prefManager: PrefManager
+    private val prefManager: com.mifos.core.datastore.PrefManager
 ) {
     /**
      * @param officeId

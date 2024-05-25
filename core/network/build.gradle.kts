@@ -1,41 +1,18 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.mifos.android.library)
+    alias(libs.plugins.mifos.android.library.jacoco)
+    alias(libs.plugins.mifos.android.hilt)
     alias(libs.plugins.secrets)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
-    id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
 android {
     namespace = "com.mifos.core.network"
-    compileSdk = 34
 
-    defaultConfig {
-        minSdk = 26
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
         }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
     }
 
     buildFeatures {
@@ -49,23 +26,9 @@ secrets {
 
 dependencies {
 
-    implementation(project(":core:datastore"))
-    implementation(project(":core:common"))
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit4)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
-
-    //rxjava dependencies
-    implementation(libs.rxandroid)
-    implementation(libs.rxjava)
-
-    // Hilt dependency
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    api(projects.core.database)
+    api(projects.core.datastore)
+    api(projects.core.common)
 
     // fineract sdk dependencies
     implementation(libs.mifos.android.sdk.arch)
@@ -76,8 +39,6 @@ dependencies {
     //DBFlow dependencies
     kapt(libs.dbflow.processor)
     implementation(libs.dbflow)
-    kapt(libs.github.dbflow.processor)
-
 
     //Square dependencies
     implementation("com.squareup.retrofit2:retrofit:2.9.0") {
@@ -95,7 +56,6 @@ dependencies {
     //stetho dependencies
     implementation(libs.stetho)
     implementation(libs.stetho.okhttp3)
-    
-    // coil
+
     implementation(libs.coil.kt.compose)
 }

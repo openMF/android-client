@@ -2,7 +2,6 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.data.CenterPayload
 import com.mifos.core.databasehelper.DatabaseHelperCenter
-import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.centers.GetCentersResponseMapper
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
@@ -30,7 +29,7 @@ class DataManagerCenter @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     private val mDatabaseHelperCenter: DatabaseHelperCenter,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-    private val prefManager: PrefManager
+    private val prefManager: com.mifos.core.datastore.PrefManager
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and

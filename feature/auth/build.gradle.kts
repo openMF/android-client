@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.mifos.android.feature)
     alias(libs.plugins.mifos.android.library.compose)
+    alias(libs.plugins.mifos.android.library.jacoco)
 }
 
 android {
@@ -8,24 +9,11 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.data)
+    implementation(projects.core.domain)
 
-    implementation(project(":core:network"))
-    implementation(project(":core:datastore"))
+    testImplementation(libs.hilt.android.testing)
+    testImplementation(projects.core.testing)
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit4)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
-
-    //rxjava dependencies
-    implementation(libs.rxandroid)
-    implementation(libs.rxjava)
-
-    // fineract sdk dependencies
-    implementation(libs.mifos.android.sdk.arch)
-
-    // sdk client
-    implementation(libs.fineract.client)
+    androidTestImplementation(projects.core.testing)
 }
