@@ -1,4 +1,5 @@
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.mifos.MifosBuildType
 
 /*
  * This project is licensed under the open source MPL V2.
@@ -6,14 +7,14 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
  */
 
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.androidx.navigation)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.mifos.android.application)
+    alias(libs.plugins.mifos.android.application.compose)
+    alias(libs.plugins.mifos.android.application.flavors)
+//    alias(libs.plugins.mifos.android.application.jacoco)
+    alias(libs.plugins.mifos.android.hilt)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.secrets)
-    id(libs.plugins.kotlin.parcelize.get().pluginId)
-    id(libs.plugins.kotlin.kapt.get().pluginId)
+    alias(libs.plugins.androidx.navigation)
 }
 
 apply(from = "../config/quality/quality.gradle")
@@ -49,6 +50,7 @@ android {
 
         debug {
             isMinifyEnabled = false
+            applicationIdSuffix = MifosBuildType.DEBUG.applicationIdSuffix
             // TODO  Uses new built-in shrinker, To Enable update buils tools to 2.2
             // TODO http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
             //useProguard false
@@ -59,7 +61,7 @@ android {
         release {
             isMinifyEnabled = false
             isDebuggable = false
-
+            applicationIdSuffix = MifosBuildType.RELEASE.applicationIdSuffix
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             testProguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
@@ -125,16 +127,20 @@ secrets {
 
 dependencies {
 
-    implementation(project(":feature:auth"))
-    implementation(project(":feature:client"))
+    implementation(projects.feature.auth)
+    implementation(projects.feature.client)
+    implementation(projects.feature.checkerInboxTask)
+    implementation(projects.feature.collectionSheet)
     implementation(project(":feature:groups"))
-    implementation(project(":feature:checker-inbox-task"))
-    implementation(project(":feature:collection-sheet"))
-    implementation(project(":core:data"))
-    implementation(project(":core:datastore"))
-    implementation(project(":core:network"))
-    implementation(project(":core:common"))
-    testImplementation(project(":core:testing"))
+
+    implementation(projects.core.common)
+    implementation(projects.core.ui)
+    implementation(projects.core.designsystem)
+    implementation(projects.core.data)
+    implementation(projects.core.model)
+    implementation(projects.core.network)
+    implementation(projects.core.datastore)
+    implementation(projects.core.database)
 
     // Multidex dependency
     implementation(libs.androidx.multidex)
@@ -148,7 +154,6 @@ dependencies {
     //DBFlow dependencies
     kapt(libs.dbflow.processor)
     implementation(libs.dbflow)
-    kapt(libs.github.dbflow.processor)
 
     // App's Support dependencies, including test
     implementation(libs.androidx.appcompat)

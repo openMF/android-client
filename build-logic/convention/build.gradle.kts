@@ -46,6 +46,10 @@ gradlePlugin {
             id = "mifos.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
+        register("androidApplicationJacoco") {
+            id = "mifos.android.application.jacoco"
+            implementationClass = "AndroidApplicationJacocoConventionPlugin"
+        }
         register("androidHilt") {
             id = "mifos.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
@@ -66,6 +70,10 @@ gradlePlugin {
             id = "mifos.android.test"
             implementationClass = "AndroidTestConventionPlugin"
         }
+        register("androidLibraryJacoco") {
+            id = "mifos.android.library.jacoco"
+            implementationClass = "AndroidLibraryJacocoConventionPlugin"
+        }
         register("androidRoom") {
             id = "mifos.android.room"
             implementationClass = "AndroidRoomConventionPlugin"
@@ -73,6 +81,10 @@ gradlePlugin {
         register("androidFirebase") {
             id = "mifos.android.application.firebase"
             implementationClass = "AndroidApplicationFirebaseConventionPlugin"
+        }
+        register("androidFlavors") {
+            id = "mifos.android.application.flavors"
+            implementationClass = "AndroidApplicationFlavorsConventionPlugin"
         }
         register("androidLint") {
             id = "mifos.android.lint"

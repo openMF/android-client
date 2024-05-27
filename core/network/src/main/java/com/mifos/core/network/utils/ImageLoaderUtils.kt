@@ -4,13 +4,12 @@ import android.content.Context
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.ImageResult
-import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.MifosInterceptor
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class ImageLoaderUtils @Inject constructor(
-    private val prefManager: PrefManager,
+    private val prefManager: com.mifos.core.datastore.PrefManager,
     private val imageLoader: ImageLoader,
     @ApplicationContext private val context: Context
 ) {

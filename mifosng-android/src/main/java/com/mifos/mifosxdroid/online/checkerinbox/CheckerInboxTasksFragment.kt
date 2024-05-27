@@ -8,9 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.fragment.findNavController
+import com.mifos.feature.checker_inbox_task.ui.CheckerInboxTasksScreen
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.sparklead.feature.checker_inbox_task.checker_inbox_and_task.ui.CheckerInboxTasksScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,10 +1,15 @@
 plugins {
-    alias(libs.plugins.mifos.android.library.compose)
     alias(libs.plugins.mifos.android.library)
+    alias(libs.plugins.mifos.android.library.compose)
+    alias(libs.plugins.mifos.android.library.jacoco)
 }
 
 android {
     namespace = "com.mifos.core.designsystem"
+
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {
@@ -22,7 +27,6 @@ dependencies {
 
     testImplementation(libs.androidx.compose.ui.test)
     testImplementation(libs.androidx.compose.ui.testManifest)
-
     testImplementation(libs.hilt.android.testing)
     testImplementation(projects.core.testing)
 

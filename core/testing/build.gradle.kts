@@ -9,10 +9,11 @@ android {
 }
 
 dependencies {
+
     api(kotlin("test"))
     api(libs.androidx.compose.ui.test)
     api(projects.core.data)
-    api(projects.core.datastore)
+    api(projects.core.model)
 
     debugApi(libs.androidx.compose.ui.testManifest)
 

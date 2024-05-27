@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.mifos.android.feature)
     alias(libs.plugins.mifos.android.library.compose)
+    alias(libs.plugins.mifos.android.library.jacoco)
 }
 
 android {
@@ -8,24 +9,15 @@ android {
 }
 
 dependencies {
-
-    implementation(project(":core:network"))
-    implementation(project(":core:datastore"))
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
+    implementation(projects.core.domain)
 
     // swipe refresh
     implementation(libs.accompanist.swiperefresh)
 
-    // coil
     implementation(libs.coil.kt.compose)
 
-    //rxjava dependencies
-    implementation(libs.rxandroid)
-    implementation(libs.rxjava)
+    testImplementation(libs.hilt.android.testing)
+    testImplementation(projects.core.testing)
 
-    testImplementation(libs.junit4)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
+    androidTestImplementation(projects.core.testing)
 }

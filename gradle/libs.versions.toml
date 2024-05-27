@@ -59,6 +59,7 @@ googleOss = "17.0.1"
 googleOssPlugin = "0.10.6"
 hilt = "2.51"
 hiltExt = "1.2.0"
+jacoco = "0.8.7"
 junit4 = "4.13.2"
 junitJupiter = "5.8.2"
 junitVersion = "1.1.5"
@@ -278,6 +279,7 @@ junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jun
 
 javax-inject = { module = "javax.inject:javax.inject", version = "1" }
 
+
 # Coroutines
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
@@ -392,10 +394,12 @@ mifos-android-application = { id = "mifos.android.application", version = "unspe
 mifos-android-application-flavors = { id = "mifos.android.application.flavors", version = "unspecified" }
 mifos-android-application-compose = { id = "mifos.android.application.compose", version = "unspecified" }
 mifos-android-application-firebase = { id = "mifos.android.application.firebase", version = "unspecified" }
+mifos-android-application-jacoco = { id = "mifos.android.application.jacoco", version = "unspecified" }
 mifos-android-feature = { id = "mifos.android.feature", version = "unspecified" }
 mifos-android-hilt = { id = "mifos.android.hilt", version = "unspecified" }
 mifos-android-library = { id = "mifos.android.library", version = "unspecified" }
 mifos-android-library-compose = { id = "mifos.android.library.compose", version = "unspecified" }
+mifos-android-library-jacoco = { id = "mifos.android.library.jacoco", version = "unspecified" }
 mifos-android-lint = { id = "mifos.android.lint", version = "unspecified" }
 mifos-android-room = { id = "mifos.android.room", version = "unspecified" }
 mifos-android-test = { id = "mifos.android.test", version = "unspecified" }

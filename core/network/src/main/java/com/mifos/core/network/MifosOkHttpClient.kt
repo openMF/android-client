@@ -1,7 +1,6 @@
 package com.mifos.core.network
 
 import com.facebook.stetho.okhttp3.StethoInterceptor
-import com.mifos.core.datastore.PrefManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.security.SecureRandom
@@ -15,7 +14,7 @@ import javax.net.ssl.X509TrustManager
 /**
  * Created by Rajan Maurya on 16/06/16.
  */
-class MifosOkHttpClient(private val prefManager: PrefManager) {
+class MifosOkHttpClient(private val prefManager: com.mifos.core.datastore.PrefManager) {
     // Create a trust manager that does not validate certificate chains
     val mifosOkHttpClient: OkHttpClient
 

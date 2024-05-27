@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.mifos.android.library)
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.mifos.android.library.jacoco)
+    alias(libs.plugins.mifos.android.hilt)
 }
 
 android {
@@ -8,20 +9,22 @@ android {
 }
 
 dependencies {
-
     api(projects.core.data)
-    api(projects.core.datastore)
+    api(projects.core.model)
 
     implementation(libs.javax.inject)
 
-    // Retrofit Core
-    implementation(libs.retrofit.core)
+    implementation(libs.dbflow)
 
-    // paging 3
+    // sdk client
+//    implementation(libs.fineract.client)
+
+    implementation(libs.rxandroid)
+    implementation(libs.rxjava)
+
+    implementation(libs.okhttp)
+
     implementation(libs.androidx.paging.runtime.ktx)
-    implementation(libs.androidx.paging.compose)
 
     testImplementation(projects.core.testing)
-    testImplementation (libs.androidx.paging.common.ktx)
-    testImplementation (libs.androidx.paging.testing)
 }
