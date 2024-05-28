@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.mifos.android.library)
+    alias(libs.plugins.mifos.android.hilt)
     alias(libs.plugins.mifos.android.library.jacoco)
     alias(libs.plugins.secrets)
 }
@@ -24,4 +25,6 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.core)
     
     implementation(libs.converter.gson)
+
+    implementation(libs.javax.inject)
 }

@@ -56,6 +56,20 @@ class GroupListScreenTest {
     private fun createPager(
         config: PagingConfig = PagingConfig(
             pageSize = pageSize,
+            enablePlaceholders = true,
+            initialLoadSize = pageSize,
+            prefetchDistance = 0,
+        ),
+        pagingSourceFactory: () -> PagingSource<Int, Group> = {
+            GroupsListPagingDataSource(repository, pageSize)
+        }
+    ): Pager<Int, Group> {
+        return Pager(config = config, pagingSourceFactory = pagingSourceFactory)
+    }
+
+    private fun createPagerWithoutPlaceholder(
+        config: PagingConfig = PagingConfig(
+            pageSize = pageSize,
             enablePlaceholders = false,
             initialLoadSize = pageSize,
             prefetchDistance = 1,
@@ -221,9 +235,9 @@ class GroupListScreenTest {
 
     @Test
     fun checkForSuccessfulState() {
+        repository.setGroupsData(sampleGroups)
         val pager = createPager()
 
-        repository.setGroupsData(sampleGroups)
 
         lateinit var lazyPagingItems: LazyPagingItems<Group>
         lateinit var lazyListState: LazyListState
@@ -255,8 +269,13 @@ class GroupListScreenTest {
 
         composeTestRule.waitForIdle()
 
+        assertEquals(
+            expected = sampleGroups.take(pageSize),
+            actual = lazyPagingItems.itemSnapshotList.items,
+            message = "Sample Groups are differ from Snapshot items"
+        )
 
-        //Check for only first `pageSize(10)` item is displayed
+        //Check paged item is being displayed
         sampleGroups.take(pageSize).forEach { group ->
             group.name?.let {
                 composeTestRule
@@ -277,7 +296,7 @@ class GroupListScreenTest {
 
     @Test
     fun checkForAppendDataState() {
-        val pager = createPager()
+        val pager = createPagerWithoutPlaceholder()
 
         lateinit var lazyPagingItems: LazyPagingItems<Group>
         lateinit var lazyListState: LazyListState
@@ -319,22 +338,18 @@ class GroupListScreenTest {
 
         composeTestRule.runOnIdle {
             runBlocking {
-                lazyListState.scrollToItem(pageSize * 2)
+                lazyListState.scrollToItem(pageSize * 2 + 1)
             }
         }
 
         composeTestRule.waitForIdle()
 
-        val lastIndex = lazyListState.layoutInfo.visibleItemsInfo.size
+        // end of pagination reached so total item will be (pageSize * 3) + 1 = 31
+        assertEquals(
+            pageSize * 3 + 1,
+            lazyListState.layoutInfo.totalItemsCount
+        )
 
-        //Check for second paginated items has been displayed
-        sampleGroups.getPagedData(pageSize * 2, lastIndex).forEach { group ->
-            group.name?.let {
-                composeTestRule
-                    .onNodeWithTag(it)
-                    .assertIsDisplayed()
-            }
-        }
     }
 
     @Test
