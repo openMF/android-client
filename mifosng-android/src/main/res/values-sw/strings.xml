@@ -90,7 +90,7 @@
     <string name="clear_data">Futa Data</string>
     <string name="branch_id">Kitambulisho cha tawi</string>
     <string name="clients">Wateja</string>
-    <string name="groups">Makundi</string>
+    <string name="feature_groups_groups">Makundi</string>
     <string name="centers">Vituo</string>
     <string name="settings">Mipangilio</string>
     <string name="path_tracker">Kifuatio cha njia</string>
@@ -107,7 +107,7 @@
     <string name="attempt_question">"Jaribu maswali: "</string>
     <string name="empty_client_list">Orodha tupu ya wateja</string>
     <string name="empty_group_clients">Orodha tupu ya wateja kwenye kundi</string>
-    <string name="empty_groups_list">Orodha tupu ya kundi</string>
+    <string name="feature_groups_empty_groups_list">Orodha tupu ya kundi</string>
     <string name="empty_groups">Hakuna kundi linalohusishwa na kituo hiki</string>
     <string name="empty_center_list">Orodha tupu ya vituo</string>
     <string name="empty_path_tracking">Kifuatio tupu cha njia</string>
@@ -551,7 +551,7 @@
     <string name="failed_to_sync_survey">Ulandanishi wa utafiti umefeli</string>
     <string name="failed_to_add_savings_account">Uongezaji wa akaunti ya mikopo umefeli</string>
     <string name="failed_to_fetch_documents">Uchukuzi wa nyaraka umefeli</string>
-    <string name="failed_to_fetch_groups">Uchukuzi wa makundi umefeli</string>
+    <string name="feature_groups_failed_to_fetch_groups">Uchukuzi wa makundi umefeli</string>
     <string name="failed_to_fetch_centers">Uchukuzi wa vituo umefeli</string>
     <string name="failed_to_fetch_Group_and_meeting">Uchukuzi wa kundi na mkutano umefeli</string>
     <string name="failed_to_fetch_group_and_account">Uchukuzi wa kundi na akaunti umefeli</string>
@@ -675,7 +675,7 @@
     <string name="cheque_number">Namba ya cheki</string>
     <string name="bank_number">Namba ya benki</string>
     <string name="attendance">Mahudhurio</string>
-    <string name="no_more_groups_available">Makundi zaidi hayapatikani</string>
+    <string name="feature_groups_no_more_groups_available">Makundi zaidi hayapatikani</string>
     <string name="center_submission_date">Siku ya kuwasilishwa</string>
     <string name="next_meeting_on">Siku ya mkutano ufatao</string>
     <string name="interestCalculationDaysInYearTypeAdapterId">Siku kwa mwaka</string>
@@ -722,7 +722,7 @@
     <string name="par_calculation">Hesabu ya PAR</string>
     <string name="start_date">Tarehe ya kuanza</string>
     <string name="failed_to_load_db_clients">Upakio wa wateja wa hifadhidata umefeli</string>
-    <string name="failed_to_load_db_groups">Upakio wa makundi ya hifadhidata umefeli</string>
+    <string name="feature_groups_failed_to_load_db_groups">Upakio wa makundi ya hifadhidata umefeli</string>
     <string name="browse">Vinjari</string>
     <string name="accounts">akaunti</string>
 

@@ -73,6 +73,24 @@ class DatabaseHelperGroups @Inject constructor() {
     }
 
     /**
+     * Reading All groups from Database table of Group and return the GroupList
+     * @param offset
+     * @param limit
+     * @return List Of Groups
+     */
+    fun readAllGroups(offset: Int, limit: Int): Observable<Page<Group>> {
+        return Observable.defer {
+            val groupPage = Page<Group>()
+            groupPage.pageItems = SQLite.select()
+                .from(Group::class.java)
+                .offset(offset)
+                .limit(limit)
+                .queryList()
+            Observable.just(groupPage)
+        }
+    }
+
+    /**
      * This Method Retrieving the Group from the Local Database.
      *
      * @param groupId Group Id

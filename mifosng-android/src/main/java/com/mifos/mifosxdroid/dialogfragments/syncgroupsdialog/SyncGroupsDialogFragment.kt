@@ -132,7 +132,7 @@ class SyncGroupsDialogFragment : DialogFragment() {
     private fun showUI() {
         binding.pbSyncGroup.max = groups!!.size
         val totalGroups = groups?.size.toString() + resources.getString(R.string.space) +
-                resources.getString(R.string.groups)
+                resources.getString(R.string.feature_groups_groups)
         binding.tvTotalGroups.text = totalGroups
         binding.tvSyncFailed.text = 0.toString()
     }

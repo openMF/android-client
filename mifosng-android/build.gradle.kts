@@ -131,6 +131,7 @@ dependencies {
     implementation(projects.feature.client)
     implementation(projects.feature.checkerInboxTask)
     implementation(projects.feature.collectionSheet)
+    implementation(project(":feature:groups"))
 
     implementation(projects.core.common)
     implementation(projects.core.ui)
@@ -207,26 +208,9 @@ dependencies {
     //mifos passcode dependency
     implementation(libs.mifos.passcode)
 
-    // Android Testing Support Library's runner and rules dependencies
-    androidTestImplementation(libs.androidx.test.runner)
-    androidTestImplementation(libs.androidx.test.rules)
-
-    // Espresso UI Testing dependencies.
-    androidTestImplementation(libs.androidx.test.espresso.core)
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1") {
-        exclude(group = "com.android.support", module = "appcompat")
-        exclude(group = "com.android.support", module = "support-v4")
-        exclude(group = "com.android.support", module = "recyclerview-v7")
-        exclude(group = "com.android.support", module = "design")
-    }
-    androidTestImplementation(libs.androidx.espresso.intents)
-
     // Mockito and jUnit dependencies
     testImplementation(libs.junit4)
     testImplementation(libs.mockito.core)
-    androidTestImplementation(libs.junit4)
-    androidTestImplementation(libs.mockito.core)
-    androidTestImplementation(libs.mockito.android)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.androidx.core.testing)
 

@@ -85,7 +85,7 @@ class GroupsListViewModel @Inject constructor(private val repository: GroupsList
                 override fun onError(e: Throwable) {
                     if (loadmore) {
                         _groupsListUiState.value =
-                            GroupsListUiState.ShowMessage(R.string.failed_to_fetch_groups)
+                            GroupsListUiState.ShowMessage(R.string.feature_groups_failed_to_fetch_groups)
                     } else {
                         _groupsListUiState.value = GroupsListUiState.ShowFetchingError
                     }
@@ -99,7 +99,7 @@ class GroupsListViewModel @Inject constructor(private val repository: GroupsList
                             GroupsListUiState.UnregisterSwipeAndScrollListener
                     } else if (mSyncGroupList.isEmpty() && loadmore) {
                         _groupsListUiState.value =
-                            GroupsListUiState.ShowMessage(R.string.no_more_groups_available)
+                            GroupsListUiState.ShowMessage(R.string.feature_groups_no_more_groups_available)
                     } else {
                         mRestApiGroupSyncStatus = true
                         setAlreadyClientSyncStatus()
@@ -117,7 +117,7 @@ class GroupsListViewModel @Inject constructor(private val repository: GroupsList
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _groupsListUiState.value =
-                        GroupsListUiState.ShowMessage(R.string.failed_to_load_db_groups)
+                        GroupsListUiState.ShowMessage(R.string.feature_groups_failed_to_load_db_groups)
                 }
 
                 override fun onNext(groupPage: Page<Group>) {

@@ -36,4 +36,5 @@ include(":feature:auth")
 include(":feature:client")
 include(":feature:checker-inbox-task")
 include(":feature:collection-sheet")
+include(":feature:groups")
 

@@ -70,9 +70,7 @@ class DataManagerGroups @Inject constructor(
                  * If offset is zero this means this is first request and
                  * return all clients from DatabaseHelperClient
                  */
-                if (offset == 0) mDatabaseHelperGroups.readAllGroups() else Observable.just(
-                    Page()
-                )
+                mDatabaseHelperGroups.readAllGroups(offset, limit)
             }
         }
     }

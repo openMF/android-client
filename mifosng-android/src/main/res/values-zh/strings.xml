@@ -106,7 +106,7 @@
     <string name="clear_data">清除数据</string>
     <string name="branch_id">分支 Id</string>
     <string name="clients">客户端</string>
-    <string name="groups">群组</string>
+    <string name="feature_groups_groups">群组</string>
     <string name="centers">中心</string>
     <string name="settings">设置</string>
     <string name="surveys">调查</string>
@@ -132,7 +132,7 @@
     <string name="attempt_question">尝试回答问题: </string>
     <string name="empty_client_list">空客户列表</string>
     <string name="empty_group_clients">空的组客户端列表</string>
-    <string name="empty_groups_list">空的群组列表</string>
+    <string name="feature_groups_empty_groups_list">空的群组列表</string>
     <string name="empty_groups">没有与这个中心相关的组</string>
     <string name="empty_center_list">空的中心列表</string>
     <string name="empty_path_tracking">空路径跟踪</string>
@@ -356,7 +356,7 @@
     <string name="repaidevery">每月付清</string>
     <string name="repaidevery_nthfreq">开启</string>
     <string name="no_more_clients_available">没有更多的客户可用</string>
-    <string name="no_more_groups_available">没有更多的群组可用</string>
+    <string name="feature_groups_no_more_groups_available">没有更多的群组可用</string>
     <string name="no_more_centers_available">没有更多的中心可用</string>
 
     <string name="numberofrepayments">还款次数</string>
@@ -601,13 +601,13 @@
     <string name="failed_to_fetch_surveys_list">无法获取调查列表</string>
     <string name="failed_to_create_survey_scorecard">无法创建调查记分卡</string>
     <string name="failed_to_load_db_clients">无法加载数据库客户端</string>
-    <string name="failed_to_load_db_groups">无法加载数据库组</string>
+    <string name="feature_groups_failed_to_load_db_groups">无法加载数据库组</string>
     <string name="failed_to_load_db_centers">无法加载数据库中心</string>
     <string name="failed_to_load_savings_products_and_template">无法加载保存的产品和模板</string>
     <string name="failed_to_sync_survey">调查表格同步失败</string>
     <string name="failed_to_add_savings_account">无法添加储蓄账户</string>
     <string name="failed_to_fetch_documents">无法获取文件</string>
-    <string name="failed_to_fetch_groups">无法获取组</string>
+    <string name="feature_groups_failed_to_fetch_groups">无法获取组</string>
     <string name="failed_to_fetch_centers">未能提取中心</string>
     <string name="failed_to_fetch_Group_and_meeting">无法取得群组和会议</string>
     <string name="failed_to_fetch_group_and_account">无法获取组和帐户</string>

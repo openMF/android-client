@@ -206,7 +206,7 @@
     <string name="savings_account_id">Identifiant du compte d\'épargne</string>
     <string name="individual_collection_sheet">Feuille de collecte individuelle</string>
     <string name="clients">Clients</string>
-    <string name="groups">Groupes</string>
+    <string name="feature_groups_groups">Groupes</string>
     <string name="centers">Centres</string>
     <string name="settings">Paramètres</string>
     <string name="surveys">Enquêtes</string>
@@ -225,7 +225,7 @@
     <string name="attempt_question">Veuillez tenter au moins une question</string>
     <string name="empty_client_list">Tenter des questions:</string>
     <string name="empty_group_clients">ClientList vide</string>
-    <string name="empty_groups_list">Liste des clients du groupe vide</string>
+    <string name="feature_groups_empty_groups_list">Liste des clients du groupe vide</string>
     <string name="empty_groups">GroupList vide</string>
     <string name="empty_center_list">Aucun groupe associé à ce centre</string>
     <string name="empty_path_tracking">CentreList vide</string>
@@ -353,7 +353,7 @@
     <string name="repaidevery">Remboursé chaque</string>
     <string name="repaidevery_nthfreq">sur</string>
     <string name="no_more_clients_available">Plus de clients disponibles</string>
-    <string name="no_more_groups_available">Plus de groupes disponibles</string>
+    <string name="feature_groups_no_more_groups_available">Plus de groupes disponibles</string>
     <string name="no_more_centers_available">Plus de centres disponibles</string>
     <string name="numberofrepayments">Nombre de remboursements</string>
     <string name="days_in_year">Jours de l\'année</string>
@@ -500,13 +500,13 @@
     <string name="failed_to_fetch_surveys_list">La synchronisation du client a échoué</string>
     <string name="failed_to_create_survey_scorecard">Impossible de charger le client et ses comptes</string>
     <string name="failed_to_load_db_clients">La synchronisation de clientAccounts a échoué</string>
-    <string name="failed_to_load_db_groups">Echec de la synchronisation CenterAccounts</string>
+    <string name="feature_groups_failed_to_load_db_groups">Echec de la synchronisation CenterAccounts</string>
     <string name="failed_to_load_db_centers">Échec de la synchronisation du prêt</string>
     <string name="failed_to_load_savings_products_and_template">Échec de la synchronisation du remboursement de prêt</string>
     <string name="failed_to_sync_survey">Échec du chargement des clients</string>
     <string name="failed_to_add_savings_account">Échec de l\'obtention du compte d\'épargne</string>
     <string name="failed_to_fetch_documents">Impossible d\'extraire le DataTable</string>
-    <string name="failed_to_fetch_groups">Impossible de charger le modèle d\'enregistrement</string>
+    <string name="feature_groups_failed_to_fetch_groups">Impossible de charger le modèle d\'enregistrement</string>
     <string name="failed_to_fetch_centers">Impossible de charger SavingsAccountTransaction</string>
     <string name="failed_to_fetch_Group_and_meeting">Échec de la mise à jour des comptes d\'épargne</string>
     <string name="failed_to_fetch_group_and_account">Impossible d\'extraire la liste des enquêtes</string>
