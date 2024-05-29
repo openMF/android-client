@@ -4,6 +4,9 @@
  */
 package com.mifos.core.network
 
+import com.mifos.core.common.BuildConfig
+import com.mifos.core.common.utils.asServerConfig
+
 /**
  * @author fomenkoo
  */
@@ -11,11 +14,11 @@ class BaseUrl {
 
     // "/" in the last of the base url always
     companion object {
-        private val configs = BuildConfig.DEMO_SERVER_CONFIG.split(",")
+        private val configs = BuildConfig.DEMO_SERVER_CONFIG.asServerConfig()
 
-         val PROTOCOL_HTTPS = configs[0]
-         val API_ENDPOINT = configs[1]
-         val API_PATH = configs[2]
-         val PORT = configs[3]
+         val PROTOCOL_HTTPS = configs.protocol
+         val API_ENDPOINT = configs.endPoint
+         val API_PATH = configs.apiPath
+         val PORT = configs.port
     }
 }
