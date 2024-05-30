@@ -128,7 +128,7 @@ class GroupsListViewModelTest {
         groupsListViewModel.loadDatabaseGroups()
         Mockito.verify(groupsListObserver).onChanged(GroupsListUiState.ShowProgressbar)
         Mockito.verify(groupsListObserver, Mockito.never())
-            .onChanged(GroupsListUiState.ShowMessage(R.string.failed_to_load_db_groups))
+            .onChanged(GroupsListUiState.ShowMessage(R.string.feature_groups_failed_to_load_db_groups))
         Mockito.verifyNoMoreInteractions(groupsListObserver)
     }
 
@@ -139,7 +139,7 @@ class GroupsListViewModelTest {
         groupsListViewModel.loadDatabaseGroups()
         Mockito.verify(groupsListObserver).onChanged(GroupsListUiState.ShowProgressbar)
         Mockito.verify(groupsListObserver)
-            .onChanged(GroupsListUiState.ShowMessage(R.string.failed_to_load_db_groups))
+            .onChanged(GroupsListUiState.ShowMessage(R.string.feature_groups_failed_to_load_db_groups))
         Mockito.verifyNoMoreInteractions(groupsListObserver)
     }
 

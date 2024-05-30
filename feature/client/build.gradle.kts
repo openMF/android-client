@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.mifos.android.feature)
     alias(libs.plugins.mifos.android.library.compose)
+    alias(libs.plugins.mifos.android.library.jacoco)
 }
 
 android {
@@ -9,40 +10,19 @@ android {
 
 dependencies {
 
-    implementation(project(":core:datastore"))
-    implementation(project(":core:network"))
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
+    implementation(projects.core.data)
+    implementation(projects.core.domain)
+    implementation(projects.core.datastore)
 
     // swipe refresh
-    implementation(libs.accompanist.swiperefresh)
     implementation(libs.accompanist.permission)
+    implementation(libs.accompanist.swiperefresh)
 
-    // coil
     implementation(libs.coil.kt.compose)
-
-    // fineract sdk dependencies
-    implementation(libs.mifos.android.sdk.arch)
-
-    // sdk client
-    implementation(libs.fineract.client)
-
-    //DBFlow dependencies
-    ksp(libs.dbflow.processor)
-    implementation(libs.dbflow)
-    ksp(libs.github.dbflow.processor)
-
-    //rxjava dependencies
-    implementation(libs.rxandroid)
-    implementation(libs.rxjava)
-
-    // paging 3
-    implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.paging.compose)
 
-    testImplementation(libs.junit4)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
+    testImplementation(libs.hilt.android.testing)
+    testImplementation(projects.core.testing)
 
+    androidTestImplementation(projects.core.testing)
 }

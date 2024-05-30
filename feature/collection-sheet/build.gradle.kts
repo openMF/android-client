@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.mifos.android.feature)
     alias(libs.plugins.mifos.android.library.compose)
+    alias(libs.plugins.mifos.android.library.jacoco)
 }
 
 android {
@@ -13,7 +14,11 @@ dependencies {
     implementation(projects.core.network)
 
     //DBFlow dependencies
-    ksp(libs.dbflow.processor)
+    kapt(libs.dbflow.processor)
     implementation(libs.dbflow)
-    ksp(libs.github.dbflow.processor)
+    kapt(libs.github.dbflow.processor)
+    testImplementation(libs.hilt.android.testing)
+    testImplementation(projects.core.testing)
+
+    androidTestImplementation(projects.core.testing)
 }

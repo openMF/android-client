@@ -2,7 +2,6 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.data.SavingsPayload
 import com.mifos.core.databasehelper.DatabaseHelperSavings
-import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.accounts.loan.SavingsApproval
@@ -25,7 +24,7 @@ import javax.inject.Singleton
 class DataManagerSavings @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     val mDatabaseHelperSavings: DatabaseHelperSavings,
-    private val prefManager: PrefManager
+    private val prefManager: com.mifos.core.datastore.PrefManager
 ) {
     /**
      * This Method Make the Request to the REST API

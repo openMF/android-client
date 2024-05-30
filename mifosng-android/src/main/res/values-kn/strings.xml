@@ -206,7 +206,7 @@
     <string name="savings_account_id">ಉಳಿತಾಯ ಖಾತೆ ಐಡಿ</string>
     <string name="individual_collection_sheet">ವೈಯಕ್ತಿಕ ಸಂಗ್ರಹಣೆ ಶೀಟ್</string>
     <string name="clients">ಗ್ರಾಹಕರು</string>
-    <string name="groups">ಗುಂಪುಗಳು</string>
+    <string name="feature_groups_groups">ಗುಂಪುಗಳು</string>
     <string name="centers">ಕೇಂದ್ರಗಳು</string>
     <string name="settings">ಸೆಟ್ಟಿಂಗ್ಗಳು</string>
     <string name="surveys">ಸಮೀಕ್ಷೆಗಳು</string>
@@ -225,7 +225,7 @@
     <string name="attempt_question">ಪ್ರಶ್ನೆಗಳು ಪ್ರಯತ್ನಿಸು:</string>
     <string name="empty_client_list">ಖಾಲಿ ಕ್ಲೈಂಟ್ಲಿಸ್ಟ್</string>
     <string name="empty_group_clients">ಖಾಲಿ ಗುಂಪು ಗ್ರಾಹಕ ಪಟ್ಟಿ</string>
-    <string name="empty_groups_list">ಖಾಲಿ ಗುಂಪುಪಟ್ಟಿ</string>
+    <string name="feature_groups_empty_groups_list">ಖಾಲಿ ಗುಂಪುಪಟ್ಟಿ</string>
     <string name="empty_groups">ಈ ಕೇಂದ್ರದೊಂದಿಗೆ ಯಾವುದೇ ಗುಂಪು ಸಂಬಂಧವಿಲ್ಲ</string>
     <string name="empty_center_list">ಖಾಲಿ ಸೆಂಟರ್ಲಿಸ್ಟ್</string>
     <string name="empty_path_tracking">ಖಾಲಿ ಪಾತ್ ಟ್ರ್ಯಾಕಿಂಗ್</string>
@@ -350,7 +350,7 @@
     <string name="repaidevery">ಪ್ರತಿ ಮರುಪಾವತಿ</string>
     <string name="repaidevery_nthfreq">ಆನ್</string>
     <string name="no_more_clients_available">ಹೆಚ್ಚಿನ ಗ್ರಾಹಕರು ಲಭ್ಯವಿಲ್ಲ</string>
-    <string name="no_more_groups_available">ಯಾವುದೇ ಗುಂಪುಗಳು ಲಭ್ಯವಿಲ್ಲ</string>
+    <string name="feature_groups_no_more_groups_available">ಯಾವುದೇ ಗುಂಪುಗಳು ಲಭ್ಯವಿಲ್ಲ</string>
     <string name="no_more_centers_available">ಕೇಂದ್ರಗಳು ಲಭ್ಯವಿಲ್ಲ</string>
     <string name="numberofrepayments">ಮರುಪಾವತಿಗಳ ಸಂಖ್ಯೆ</string>
     <string name="days_in_year">ವರ್ಷದಲ್ಲಿ ದಿನಗಳು</string>
@@ -497,13 +497,13 @@
     <string name="failed_to_fetch_surveys_list">ಸಮೀಕ್ಷೆಗಳ ಪಟ್ಟಿಯನ್ನು ಪಡೆಯುವಲ್ಲಿ ವಿಫಲವಾಗಿದೆ</string>
     <string name="failed_to_create_survey_scorecard">ಸಮೀಕ್ಷೆ ಸ್ಕೋರ್ ಕಾರ್ಡ್ ರಚಿಸಲು ವಿಫಲವಾಗಿದೆ</string>
     <string name="failed_to_load_db_clients">ಡೇಟಾಬೇಸ್ ಕ್ಲೈಂಟ್ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ</string>
-    <string name="failed_to_load_db_groups">ಡೇಟಾಬೇಸ್ ಗುಂಪುಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ</string>
+    <string name="feature_groups_failed_to_load_db_groups">ಡೇಟಾಬೇಸ್ ಗುಂಪುಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ</string>
     <string name="failed_to_load_db_centers">ಡೇಟಾಬೇಸ್ ಕೇಂದ್ರಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ</string>
     <string name="failed_to_load_savings_products_and_template">ಉಳಿತಾಯ ಉತ್ಪನ್ನಗಳು ಮತ್ತು ಟೆಂಪ್ಲೇಟ್ ಅನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ</string>
     <string name="failed_to_sync_survey">ಸಮೀಕ್ಷೆ ಸಿಂಕ್ ವಿಫಲವಾಗಿದೆ</string>
     <string name="failed_to_add_savings_account">ಉಳಿತಾಯ ಖಾತೆ ಸೇರಿಸುವಲ್ಲಿ ವಿಫಲವಾಗಿದೆ</string>
     <string name="failed_to_fetch_documents">ಡಾಕ್ಯುಮೆಂಟ್ಗಳನ್ನು ಪಡೆಯುವಲ್ಲಿ ವಿಫಲವಾಗಿದೆ</string>
-    <string name="failed_to_fetch_groups">ಗುಂಪುಗಳನ್ನು ಪಡೆದುಕೊಳ್ಳಲು ವಿಫಲವಾಗಿದೆ</string>
+    <string name="feature_groups_failed_to_fetch_groups">ಗುಂಪುಗಳನ್ನು ಪಡೆದುಕೊಳ್ಳಲು ವಿಫಲವಾಗಿದೆ</string>
     <string name="failed_to_fetch_centers">ಕೇಂದ್ರಗಳನ್ನು ಪಡೆದುಕೊಳ್ಳಲು ವಿಫಲವಾಗಿದೆ</string>
     <string name="failed_to_fetch_Group_and_meeting">ಗುಂಪು ಮತ್ತು ಸಭೆಯನ್ನು ಪಡೆಯುವಲ್ಲಿ ವಿಫಲವಾಗಿದೆ</string>
     <string name="failed_to_fetch_group_and_account">ಗುಂಪು ಮತ್ತು ಖಾತೆಗಳನ್ನು ಪಡೆಯುವಲ್ಲಿ ವಿಫಲವಾಗಿದೆ</string>

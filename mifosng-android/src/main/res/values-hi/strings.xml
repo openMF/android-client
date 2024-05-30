@@ -133,7 +133,7 @@
     <string name="empty_data_table">रिक्त डेटाटेबल</string>
     <string name="empty_group_clients">इस समूह की ग्राहक सूची खाली है</string>
     <string name="empty_groups">इस केंद्र से कोई भी समूह संबद्धित नहीं है</string>
-    <string name="empty_groups_list">रिक्त समूह सूची</string>
+    <string name="feature_groups_empty_groups_list">रिक्त समूह सूची</string>
     <string name="empty_identifier_document_type">दस्तावेज़ की प्रकार आईडी रिक्त है, \n         या आइडेंटिफ़ायर टेम्पलेट प्राप्त नहीं हो पाई। कृपया \n         अपने इंटरनेट कनेक्शन की जाँच करें ।</string>
     <string name="empty_notes">टिप्पणियाँ खाली है</string>
     <string name="empty_path_tracking">पथ ट्रैकिंग खाली है</string>
@@ -203,7 +203,7 @@
     <string name="group_list">समूह सूची</string>
     <string name="group_name">समूह का नाम</string>
     <string name="groupname">नाम</string>
-    <string name="groups">समूह</string>
+    <string name="feature_groups_groups">समूह</string>
     <string name="hide">छिपाए</string>
     <string name="id">आईडी</string>
     <string name="identifier_created_successfully">पहचानकर्ता सफलतापूर्वक बनाई गई</string>
@@ -296,7 +296,7 @@
     <string name="no_more_centers_available">कोई और केन्द्र उपलब्ध नहीं है</string>
     <string name="no_more_clients_to_sync">कोई और ग्राहक सिंक करने के लिए नहीं है</string>
     <string name="no_more_clients_available">ग्राहक उपलब्ध नहीं है</string>
-    <string name="no_more_groups_available">कोई और समूह उपलब्ध नहीं है</string>
+    <string name="feature_groups_no_more_groups_available">कोई और समूह उपलब्ध नहीं है</string>
     <string name="no_search_query_entered">कोई खोज क्वेरी दर्ज नहीं की गई!</string>
     <string name="no_repayment_to_sync">सिंक करने के लिए कोई ऋण चुकौती नहीं है</string>
     <string name="no_search_result_found">दर्ज की गई क्वेरी के लिए कोई परिणाम नहीं मिला</string>
@@ -456,7 +456,7 @@
     <string name="failed_to_fetch_datatable_info">डेटाटेबल के विषय मे जानकारी प्राप्त करने में विफल</string>
     <string name="failed_to_fetch_documents">दस्तावेज़ प्राप्त करने में विफल</string>
     <string name="failed_to_fetch_group_and_account">समूह और खाते प्राप्त करने में विफल</string>
-    <string name="failed_to_fetch_groups">समूह प्राप्त करने में विफल</string>
+    <string name="feature_groups_failed_to_fetch_groups">समूह प्राप्त करने में विफल</string>
     <string name="failed_to_fetch_identifier">पहचानकर्ता प्राप्त करने में विफल</string>
     <string name="failed_to_fetch_identifier_template">पहचानकर्ता टेम्पलेट प्राप्त करने में विफल</string>
     <string name="failed_to_fetch_loan_products">ऋण उत्पाद प्राप्त करने में विफल</string>
@@ -474,7 +474,7 @@
     <string name="failed_to_load_client">ग्राहक लोड करने में विफल</string>
     <string name="failed_to_load_clientpayload">क्लाइंट पेलोड लोड करने में विफल</string>
     <string name="failed_to_load_db_clients">डाटाबेस मे स्थित ग्राहक को लोड करने में विफल</string>
-    <string name="failed_to_load_db_groups">डाटाबेस मे स्थित समूह को लोड करने में विफल</string>
+    <string name="feature_groups_failed_to_load_db_groups">डाटाबेस मे स्थित समूह को लोड करने में विफल</string>
     <string name="failed_to_load_grouppayload">समूह पेलोड लोड करने में विफल</string>
     <string name="failed_to_load_loanrepayment">ऋण चुकौती लोड करने में विफल</string>
     <string name="failed_to_load_paymentoptions">भुगतान प्रकार के विकल्प को लोड करने में विफलता हई</string>

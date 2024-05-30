@@ -2,7 +2,6 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperClient
 import com.mifos.core.databasehelper.DatabaseHelperGroups
-import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.groups.GetGroupsResponseMapper
@@ -29,7 +28,7 @@ class DataManagerGroups @Inject constructor(
     private val mDatabaseHelperGroups: DatabaseHelperGroups,
     private val mDatabaseHelperClient: DatabaseHelperClient,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-    private val prefManager: PrefManager
+    private val prefManager: com.mifos.core.datastore.PrefManager
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -71,9 +70,7 @@ class DataManagerGroups @Inject constructor(
                  * If offset is zero this means this is first request and
                  * return all clients from DatabaseHelperClient
                  */
-                if (offset == 0) mDatabaseHelperGroups.readAllGroups() else Observable.just(
-                    Page()
-                )
+                mDatabaseHelperGroups.readAllGroups(offset, limit)
             }
         }
     }

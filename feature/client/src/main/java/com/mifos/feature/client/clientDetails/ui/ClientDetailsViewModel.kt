@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.request.ImageResult
 import com.mifos.core.common.utils.Resource
+import com.mifos.core.domain.use_cases.DeleteClientImageUseCase
+import com.mifos.core.domain.use_cases.GetClientDetailsUseCase
+import com.mifos.core.domain.use_cases.UploadClientImageUseCase
 import com.mifos.core.network.utils.ImageLoaderUtils
 import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.core.objects.accounts.savings.SavingsAccount
 import com.mifos.core.objects.client.Client
-import com.mifos.feature.client.clientDetails.domain.usecase.DeleteClientImageUseCase
-import com.mifos.feature.client.clientDetails.domain.usecase.GetClientDetailsUseCase
-import com.mifos.feature.client.clientDetails.domain.usecase.UploadClientImageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

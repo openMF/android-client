@@ -26,7 +26,7 @@
         android:id="@+id/navigation_group_list"
         android:checked="false"
         android:icon="@drawable/ic_group_black_24dp"
-        android:title="@string/groups"
+        android:title="@string/feature_groups_groups"
         />
 
 
