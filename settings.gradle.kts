@@ -38,3 +38,4 @@ include(":feature:checker-inbox-task")
 include(":feature:collection-sheet")
 include(":feature:groups")
 
+include(":feature:settings")

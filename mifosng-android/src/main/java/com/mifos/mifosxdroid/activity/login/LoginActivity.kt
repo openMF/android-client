@@ -6,9 +6,14 @@ package com.mifos.mifosxdroid.activity.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.mifos.feature.auth.login.presentation.LoginScreen
+import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.activity.home.HomeActivity
+import com.mifos.mifosxdroid.activity.setting.UpdateServerConfigFragment
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.passcode.PassCodeActivity
 import com.mifos.utils.Constants
@@ -24,15 +29,24 @@ class LoginActivity : MifosBaseActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            LoginScreen(homeIntent = {
-                startActivity(Intent(this, HomeActivity::class.java))
-                finish()
-            }, passcodeIntent = {
-                val intent = Intent(this, PassCodeActivity::class.java)
-                intent.putExtra(Constants.INTIAL_LOGIN, true)
-                startActivity(intent)
-                finish()
-            })
+            LoginScreen(
+                homeIntent = {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    finish()
+                }, passcodeIntent = {
+                    val intent = Intent(this, PassCodeActivity::class.java)
+                    intent.putExtra(Constants.INTIAL_LOGIN, true)
+                    startActivity(intent)
+                    finish()
+                },
+                onClickToUpdateServerConfig = {
+                    // TODO:: show fragment using navController
+                    UpdateServerConfigFragment().show(
+                        supportFragmentManager,
+                        "UpdateServerConfigFragment"
+                    )
+                }
+            )
         }
     }
 }

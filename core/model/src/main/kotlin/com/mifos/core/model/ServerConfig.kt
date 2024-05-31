@@ -10,4 +10,6 @@ data class ServerConfig(
     val apiPath: String,
     val port: String,
     val tenant: String
-)
+){
+    val getInstanceUrl = protocol + endPoint + apiPath
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_settings_label_protocol">Protocol</string>
+    <string name="feature_settings_protocol_placeholder">Enter server protocol.</string>
+
+    <string name="feature_settings_label_endpoint">EndPoint</string>
+    <string name="feature_settings_endpoint_placeholder">Enter server endpoint.</string>
+
+    <string name="feature_settings_label_api_path">Api Path</string>
+    <string name="feature_settings_api_path_placeholder">Enter server api path.</string>
+
+    <string name="feature_settings_label_port">Port</string>
+    <string name="feature_settings_port_placeholder">Enter sever port.</string>
+
+    <string name="feature_settings_label_tenant">Tenant</string>
+    <string name="feature_settings_tenant_placeholder">Enter server tenant</string>
+</resources>

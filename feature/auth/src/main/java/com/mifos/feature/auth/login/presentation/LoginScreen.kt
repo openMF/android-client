@@ -1,6 +1,7 @@
 package com.mifos.feature.auth.login.presentation
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -9,9 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -20,12 +23,15 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -68,7 +74,8 @@ import com.mifos.feature.auth.R
 @Composable
 fun LoginScreen(
     homeIntent: () -> Unit,
-    passcodeIntent: () -> Unit
+    passcodeIntent: () -> Unit,
+    onClickToUpdateServerConfig: () -> Unit,
 ) {
 
     val loginViewModel: LoginViewModel = hiltViewModel()
@@ -130,7 +137,32 @@ fun LoginScreen(
             .fillMaxSize()
             .padding(16.dp),
         containerColor = Color.White,
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        bottomBar = {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                FilledTonalButton(
+                    onClick = onClickToUpdateServerConfig,
+                    modifier = Modifier
+                        .align(Alignment.Center),
+                    colors = ButtonDefaults.filledTonalButtonColors(
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        contentColor = MaterialTheme.colorScheme.tertiary
+                    )
+                ) {
+                    Text(text = "Update Server Configuration")
+
+                    Spacer(modifier = Modifier.width(4.dp))
+
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = "ArrowForward"
+                    )
+                }
+            }
+        }
     ) {
         Column(
             modifier = Modifier
@@ -233,5 +265,5 @@ fun LoginScreen(
 @Preview(showSystemUi = true, device = "id:pixel_7")
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen({}, {})
+    LoginScreen({}, {}, {})
 }

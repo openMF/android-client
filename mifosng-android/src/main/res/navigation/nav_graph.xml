@@ -602,4 +602,8 @@
             app:argType="integer" />
     </fragment>
 
+    <dialog
+        android:id="@+id/updateServerConfigFragment"
+        android:name="com.mifos.mifosxdroid.activity.setting.UpdateServerConfigFragment"
+        android:label="UpdateServerConfigFragment" />
 </navigation>
