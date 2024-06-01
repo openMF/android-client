@@ -7,7 +7,6 @@ package com.mifos.mifosxdroid.activity.splashscreen
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.mifos.core.network.BaseUrl
 import com.mifos.mifosxdroid.activity.login.LoginActivity
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.passcode.PassCodeActivity
@@ -23,8 +22,6 @@ class SplashScreenActivity : MifosBaseActivity() {
         super.onCreate(savedInstanceState)
         splashScreen.setKeepOnScreenCondition { true }
         if (!PrefManager.isAuthenticated()) {
-            PrefManager.setInstanceUrl(BaseUrl.PROTOCOL_HTTPS + BaseUrl.API_ENDPOINT + BaseUrl.API_PATH)
-            PrefManager.setInstanceDomain(BaseUrl.API_ENDPOINT)
             startActivity(Intent(this@SplashScreenActivity, LoginActivity::class.java))
         } else {
             val intent = Intent(

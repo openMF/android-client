@@ -5,6 +5,7 @@
 package com.mifos.core.network
 
 import com.google.gson.GsonBuilder
+import com.mifos.core.model.getInstanceUrl
 import com.mifos.core.network.services.CenterService
 import com.mifos.core.network.services.ChargeService
 import com.mifos.core.network.services.CheckerInboxService
@@ -157,7 +158,7 @@ class BaseApiManager @Inject constructor(private val prefManager: com.mifos.core
             val gson = GsonBuilder()
                 .registerTypeAdapter(Date::class.java, JsonDateSerializer()).create()
             mRetrofit = Retrofit.Builder()
-                .baseUrl(prefManager.getInstanceUrl())
+                .baseUrl(prefManager.getServerConfig.getInstanceUrl())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())

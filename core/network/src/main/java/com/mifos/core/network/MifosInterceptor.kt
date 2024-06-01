@@ -17,7 +17,7 @@ class MifosInterceptor(private val prefManager: com.mifos.core.datastore.PrefMan
     override fun intercept(chain: Interceptor.Chain): Response {
         val chianrequest = chain.request()
         val builder = chianrequest.newBuilder()
-            .header(HEADER_TENANT, prefManager.getTenant())
+            .header(HEADER_TENANT, prefManager.getServerConfig.tenant)
         if (prefManager.isAuthenticated()) builder.header(HEADER_AUTH, prefManager.getToken())
         val request = builder.build()
         return chain.proceed(request)
