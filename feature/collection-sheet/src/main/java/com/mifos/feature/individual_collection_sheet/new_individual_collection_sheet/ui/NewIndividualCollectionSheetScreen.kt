@@ -37,6 +37,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -49,6 +51,8 @@ import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.organisation.Staff
 import com.mifos.feature.collection_sheet.R
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -270,14 +274,37 @@ fun NewIndividualCollectionSheetScreen(
     }
 }
 
-@Preview(showSystemUi = true)
+class NewIndividualCollectionSheetUiStateProvider :
+    PreviewParameterProvider<NewIndividualCollectionSheetUiState> {
+
+    override val values: Sequence<NewIndividualCollectionSheetUiState>
+        get() = sequenceOf(
+            NewIndividualCollectionSheetUiState(staffList = sampleStaffList),
+            NewIndividualCollectionSheetUiState(officeList = sampleOfficeList),
+            NewIndividualCollectionSheetUiState(error = "Error Occurred"),
+            NewIndividualCollectionSheetUiState(isLoading = true),
+            NewIndividualCollectionSheetUiState(individualCollectionSheet = IndividualCollectionSheet())
+        )
+}
+
+@Preview(showBackground = true)
 @Composable
-private fun NewIndividualCollectionSheetPreview() {
+private fun NewIndividualCollectionSheetPreview(
+    @PreviewParameter(NewIndividualCollectionSheetUiStateProvider::class) newIndividualCollectionSheetUiState: NewIndividualCollectionSheetUiState
+) {
     NewIndividualCollectionSheetScreen(
-        NewIndividualCollectionSheetUiState(),
+        state = newIndividualCollectionSheetUiState,
         getStaffList = {},
         generateCollection = { _, _, _ ->
         },
         popupDialog = {}
     )
+}
+
+val sampleStaffList = List(10) {
+    Staff(firstname = "FirstName", lastname = "LastName", isActive = true)
+}
+
+val sampleOfficeList = List(10) {
+    Office(name = "Name")
 }
