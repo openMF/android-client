@@ -18,6 +18,6 @@ interface OfficeService {
      *
      * @param listOfOfficesCallback
      */
-    @get:GET(APIEndPoint.OFFICES)
-    val allOffices: Observable<List<Office>>
+    @GET(APIEndPoint.OFFICES)
+    suspend fun allOffices(): List<Office>
 }

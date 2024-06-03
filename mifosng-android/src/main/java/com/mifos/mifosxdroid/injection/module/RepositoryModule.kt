@@ -87,8 +87,6 @@ import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepository
 import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepositoryImp
 import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
-import com.mifos.mifosxdroid.online.collectionsheetindividual.NewIndividualCollectionSheetRepository
-import com.mifos.mifosxdroid.online.collectionsheetindividual.NewIndividualCollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.note.NoteRepository
 import com.mifos.mifosxdroid.online.note.NoteRepositoryImp
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepository
@@ -294,13 +292,6 @@ class RepositoryModule {
     @Provides
     fun providesCollectionSheetRepository(dataManager: DataManager): CollectionSheetRepository {
         return CollectionSheetRepositoryImp(dataManager)
-    }
-
-    @Provides
-    fun providesNewIndividualCollectionSheetRepository(
-        dataManager: DataManager, dataManagerCollection: DataManagerCollectionSheet
-    ): NewIndividualCollectionSheetRepository {
-        return NewIndividualCollectionSheetRepositoryImp(dataManager, dataManagerCollection)
     }
 
     @Provides

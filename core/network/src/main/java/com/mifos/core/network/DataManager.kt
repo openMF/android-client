@@ -137,13 +137,12 @@ class DataManager {
     /**
      * Offices API
      */
-    val offices: Observable<List<Office>>
-        get() = mBaseApiManager.officeApi.allOffices
+    suspend fun offices(): List<Office> = mBaseApiManager.officeApi.allOffices()
 
     /**
      * Staff API
      */
-    fun getStaffInOffice(officeId: Int): Observable<List<Staff>> {
+    suspend fun getStaffInOffice(officeId: Int): List<Staff> {
         return mBaseApiManager.staffApi.getStaffForOffice(officeId)
     }
 
