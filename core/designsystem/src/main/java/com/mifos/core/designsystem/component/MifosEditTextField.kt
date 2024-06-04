@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -250,4 +251,34 @@ private fun ClearIconButton(
             )
         }
     }
+    
+}
+
+fun MifosDatePickerTextField(
+    value: String,
+    label: Int,
+    openDatePicker: () -> Unit
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = { },
+        label = { Text(text = stringResource(id = label)) },
+        readOnly = true,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp),
+        maxLines = 1,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+        ),
+        textStyle = LocalDensity.current.run {
+            TextStyle(fontSize = 18.sp)
+        },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        trailingIcon = {
+            IconButton(onClick = { openDatePicker() }) {
+                Icon(imageVector = Icons.Default.CalendarToday, null)
+            }
+        }
+    )
 }

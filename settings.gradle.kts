@@ -18,6 +18,7 @@ dependencyResolutionManagement {
     }
 }
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "AndroidClient"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":mifosng-android")
@@ -37,5 +38,4 @@ include(":feature:client")
 include(":feature:checker-inbox-task")
 include(":feature:collection-sheet")
 include(":feature:groups")
-
 include(":feature:settings")

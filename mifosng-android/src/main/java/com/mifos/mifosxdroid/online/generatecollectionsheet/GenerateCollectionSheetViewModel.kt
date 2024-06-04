@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.collectionsheet.AttendanceTypeOption
 import com.mifos.core.objects.collectionsheet.CenterDetail
@@ -17,9 +19,9 @@ import com.mifos.core.objects.group.Group
 import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.organisation.Staff
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.online.collectionsheetindividual.NewIndividualCollectionSheetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -41,45 +43,30 @@ class GenerateCollectionSheetViewModel @Inject constructor(
     val generateCollectionSheetUiState: LiveData<GenerateCollectionSheetUiState>
         get() = _generateCollectionSheetUiState
 
-    fun loadOffices() {
+    fun loadOffices() = viewModelScope.launch {
         _generateCollectionSheetUiState.value = GenerateCollectionSheetUiState.ShowProgressbar
-        repositoryNewInd.offices()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<Office>>() {
-                override fun onCompleted() {
-                }
-
-                override fun onError(e: Throwable) {
-                    _generateCollectionSheetUiState.value =
-                        GenerateCollectionSheetUiState.ShowError(e.message.toString())
-                }
-
-                override fun onNext(offices: List<Office>) {
-                    _generateCollectionSheetUiState.value =
-                        GenerateCollectionSheetUiState.ShowOffices(offices)
-                }
-            })
+        try {
+            _generateCollectionSheetUiState.value =
+                GenerateCollectionSheetUiState.ShowOffices(repositoryNewInd.offices())
+        } catch (e: Exception) {
+            _generateCollectionSheetUiState.value =
+                GenerateCollectionSheetUiState.ShowError(e.message.toString())
+        }
     }
 
-    fun loadStaffInOffice(officeId: Int) {
+    fun loadStaffInOffice(officeId: Int) = viewModelScope.launch {
         _generateCollectionSheetUiState.value = GenerateCollectionSheetUiState.ShowProgressbar
-        repositoryNewInd.getStaffInOffice(officeId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<Staff>>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _generateCollectionSheetUiState.value =
-                        GenerateCollectionSheetUiState.ShowError(e.message.toString())
-                }
-
-                override fun onNext(staffs: List<Staff>) {
-                    _generateCollectionSheetUiState.value =
-                        GenerateCollectionSheetUiState.ShowStaffInOffice(staffs, officeId)
-                }
-            })
-
+        try {
+            _generateCollectionSheetUiState.value =
+                GenerateCollectionSheetUiState.ShowStaffInOffice(
+                    repositoryNewInd.getStaffInOffice(
+                        officeId
+                    ), officeId
+                )
+        } catch (e: Exception) {
+            _generateCollectionSheetUiState.value =
+                GenerateCollectionSheetUiState.ShowError(e.message.toString())
+        }
     }
 
     fun loadCentersInOffice(id: Int, params: Map<String, String>) {
