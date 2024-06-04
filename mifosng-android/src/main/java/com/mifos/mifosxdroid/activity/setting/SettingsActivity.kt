@@ -8,10 +8,12 @@ import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Created by mayankjindal on 22/07/17.
  */
+@AndroidEntryPoint
 class SettingsActivity : MifosBaseActivity() {
 
     private var hasLanguageSettingsChanged = false

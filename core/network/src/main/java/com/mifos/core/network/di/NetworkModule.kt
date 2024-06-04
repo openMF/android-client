@@ -1,9 +1,11 @@
 package com.mifos.core.network.di
 
 import android.content.Context
+import android.util.Log
 import androidx.core.os.trace
 import coil.ImageLoader
 import coil.util.DebugLogger
+import com.mifos.core.model.getInstanceUrl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,8 +34,8 @@ object NetworkModule {
         baseManager.createService(
             usernamePassword.first,
             usernamePassword.second,
-            prefManager.getInstanceUrl(),
-            prefManager.getTenant(),
+            prefManager.getServerConfig.getInstanceUrl(),
+            prefManager.getServerConfig.tenant,
             false
         )
         return baseManager

@@ -3,26 +3,30 @@ package com.mifos.core.datastore
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import com.mifos.core.common.BuildConfig
 import com.mifos.core.common.model.user.User
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.asServerConfig
+import com.mifos.core.model.ServerConfig
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.apache.fineract.client.models.PostAuthenticationResponse
+import org.mifos.core.sharedpreference.Key
 import org.mifos.core.sharedpreference.UserPreferences
 import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 19/08/23.
  */
+const val USER_DETAILS = "user_details"
+const val AUTH_USERNAME = "auth_username"
+const val AUTH_PASSWORD = "auth_password"
 
 class PrefManager @Inject constructor(
     @ApplicationContext context: Context
 ) : UserPreferences<User>() {
 
-
-    private val USER_DETAILS = "user_details"
-    private val AUTH_USERNAME = "auth_username"
-    private val AUTH_PASSWORD = "auth_password"
-
+    private val serverConfigKey = Key.Custom("SERVER_CONFIG_KEY")
+    
     override val preference: SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -62,4 +66,13 @@ class PrefManager @Inject constructor(
             preference.edit().putString(AUTH_USERNAME, value.first).apply()
             preference.edit().putString(AUTH_PASSWORD, value.second).apply()
         }
+
+    val getServerConfig: ServerConfig =
+        preference.getString(serverConfigKey.value, null)?.let {
+            gson.fromJson(it, ServerConfig::class.java)
+        } ?: BuildConfig.DEMO_SERVER_CONFIG.asServerConfig()
+
+    fun updateServerConfig(config: ServerConfig?) {
+        this.put(serverConfigKey, config)
+    }
 }

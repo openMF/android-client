@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_settings_close_bottomsheet">CloseBottomSheetIcon</string>
+    <string name="feature_settings_update_config_btn_text">Update Config</string>
+    <string name="feature_settings_note_text">The application will restart after a successful update.</string>
+</resources>

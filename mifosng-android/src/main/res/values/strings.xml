@@ -917,4 +917,8 @@
     <string name="instance_url">Instance Url</string>
     <string name="no_check_inbox">Checker Inbox is empty</string>
 
+    <string name="updateServerConfig">Server Config</string>
+    <string name="server_config">Server Config</string>
+    <string name="update_server_config">Update Server Config</string>
+
 </resources>
