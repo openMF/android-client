@@ -19,6 +19,7 @@
         android:icon="@drawable/feature_client_ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:windowSoftInputMode="adjustResize"
         android:theme="@style/MaterialAppTheme">
         <activity android:name=".online.checkerinbox.CheckerInboxPendingTasksActivity" />
 

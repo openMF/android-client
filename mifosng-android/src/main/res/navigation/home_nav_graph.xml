@@ -166,5 +166,9 @@
         android:label="activity_generate_collection_sheet"
         tools:layout="@layout/activity_generate_collection_sheet" />
 
+    <dialog
+        android:id="@+id/updateServerConfigFragment"
+        android:name="com.mifos.mifosxdroid.activity.setting.UpdateServerConfigFragment"
+        android:label="UpdateServerConfigFragment" />
 
 </navigation>

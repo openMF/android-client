@@ -131,7 +131,8 @@ dependencies {
     implementation(projects.feature.client)
     implementation(projects.feature.checkerInboxTask)
     implementation(projects.feature.collectionSheet)
-    implementation(project(":feature:groups"))
+    implementation(projects.feature.groups)
+    implementation(projects.feature.settings)
 
     implementation(projects.core.common)
     implementation(projects.core.ui)

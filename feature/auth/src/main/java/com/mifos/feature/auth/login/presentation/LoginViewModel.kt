@@ -3,12 +3,12 @@ package com.mifos.feature.auth.login.presentation
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.BaseUrl
 import com.mifos.core.common.utils.Network
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.use_cases.PasswordValidationUseCase
 import com.mifos.core.domain.use_cases.UsernameValidationUseCase
+import com.mifos.core.model.getInstanceUrl
 import com.mifos.feature.auth.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -60,20 +60,12 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun setupPrefManger(username: String, password: String) {
-
-        prefManager.setTenant(BaseUrl.TENANT)
-        // Saving InstanceURL for next usages
-        prefManager.setInstanceUrl(BaseUrl.PROTOCOL_HTTPS + BaseUrl.API_ENDPOINT + BaseUrl.API_PATH)
-        // Saving domain name
-        prefManager.setInstanceDomain(BaseUrl.API_ENDPOINT)
-        // Saving port
-        prefManager.setPort(BaseUrl.PORT)
         // Updating Services
         baseApiManager.createService(
             username,
             password,
-            prefManager.getInstanceUrl(),
-            prefManager.getTenant(),
+            prefManager.getServerConfig.getInstanceUrl(),
+            prefManager.getServerConfig.tenant,
             true
         )
         if (Network.isOnline(context)) {

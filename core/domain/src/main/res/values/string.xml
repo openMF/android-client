@@ -3,4 +3,20 @@
     <string name="core_domain_enter_credentials">Please enter your credentials</string>
     <string name="core_domain_error_password_length">Invalid password length</string>
     <string name="core_domain_error_username_length">Invalid username length</string>
+
+    <string name="core_domain_error_protocol_blank">Server protocol cannot be blank</string>
+    <string name="core_domain_error_protocol_invalid">Server protocol must be \'http://\' or \'https://\'</string>
+
+    <string name="core_domain_error_endpoint_blank">Server end point cannot be blank</string>
+    <string name="core_domain_error_endpoint_invalid">Server end point must be a valid domain name</string>
+
+    <string name="core_domain_error_api_path_blank">Server api path cannot be blank</string>
+    <string name="core_domain_error_api_path_start_with">Server api path must start with "'\\'"</string>
+    <string name="core_domain_error_api_path_end_with">Server api path must end with "'/'"</string>
+
+    <string name="core_domain_error_port_blank">Server port cannot be blank</string>
+    <string name="core_domain_error_port_invalid">Server port must be a valid port number (1–65535)</string>
+
+    <string name="core_domain_error_tenant_blank">Server tenant cannot be blank</string>
+    <string name="core_domain_error_tenant_invalid">Server tenant must only contain alphanumeric characters</string>
 </resources>

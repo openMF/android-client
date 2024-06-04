@@ -31,4 +31,10 @@
         android:key="@string/hint_instance_url"
         android:title="@string/instance_url"/>
 
+    <Preference
+        android:key="@string/updateServerConfig"
+        android:persistent="false"
+        android:summary="@string/update_server_config"
+        android:title="@string/server_config"/>
+
 </PreferenceScreen>

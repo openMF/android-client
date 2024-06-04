@@ -18,6 +18,7 @@ android {
 }
 
 dependencies {
+    api(projects.core.model)
     api(projects.core.common)
 
     api(libs.converter.gson)

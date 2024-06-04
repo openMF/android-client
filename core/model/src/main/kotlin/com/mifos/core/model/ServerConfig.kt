@@ -11,3 +11,7 @@ data class ServerConfig(
     val port: String,
     val tenant: String
 )
+
+fun ServerConfig.getInstanceUrl(): String {
+    return "$protocol$endPoint$apiPath"
+}
