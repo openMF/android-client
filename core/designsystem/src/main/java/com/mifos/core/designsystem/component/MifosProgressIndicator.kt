@@ -42,10 +42,11 @@ fun MifosPagingAppendProgress() {
 
 @Composable
 fun MifosCircularProgress(
-    contentDesc: String = "loadingIndicator"
+    modifier: Modifier = Modifier,
+    contentDesc: String = "loadingIndicator",
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .semantics { contentDescription = contentDesc },
         contentAlignment = Alignment.Center
@@ -60,5 +61,4 @@ fun MifosCircularProgress(
             color = DarkGray
         )
     }
-
 }

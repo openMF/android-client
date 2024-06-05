@@ -133,6 +133,7 @@ dependencies {
     implementation(projects.feature.collectionSheet)
     implementation(projects.feature.groups)
     implementation(projects.feature.settings)
+    implementation(projects.feature.search)
 
     implementation(projects.core.common)
     implementation(projects.core.ui)
@@ -214,6 +215,7 @@ dependencies {
     testImplementation(libs.mockito.core)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     //Android-Jobs
     implementation(libs.android.job)
@@ -254,6 +256,4 @@ dependencies {
     // ViewModel utilities for Compose
     implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.androidx.hilt.navigation.compose)
-
-    implementation(libs.androidx.lifecycle.runtimeCompose)
 }
