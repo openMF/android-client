@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.views
+package com.mifos.core.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -27,8 +27,9 @@ enum class FabType {
 }
 
 sealed class FabButtonState {
-    object Collapsed : FabButtonState()
-    object Expand : FabButtonState()
+    data object Collapsed : FabButtonState()
+
+    data object Expand : FabButtonState()
 
     fun isExpanded() = this == Expand
 
@@ -44,9 +45,9 @@ data class FabButton(
     val iconRes: Int,
 )
 
-
 @Composable
 fun FabItem(
+    modifier: Modifier = Modifier,
     fabButton: FabButton,
     onFabClick: (FabType) -> Unit
 ) {
@@ -54,22 +55,23 @@ fun FabItem(
         onClick = {
             onFabClick(fabButton.fabType)
         },
-        modifier = Modifier
+        modifier = modifier
             .size(48.dp)
     ) {
         Icon(
             painter = painterResource(id = fabButton.iconRes),
-            contentDescription = null
+            contentDescription = fabButton.fabType.name
         )
     }
 }
 
 @Composable
 fun MultiFloatingActionButton(
+    modifier: Modifier = Modifier,
     fabButtons: List<FabButton>,
     fabButtonState: FabButtonState,
     onFabButtonStateChange: (FabButtonState) -> Unit,
-    onFabClick: (FabType) -> Unit
+    onFabClick: (FabType) -> Unit,
 ) {
     val rotation by animateFloatAsState(
         if (fabButtonState.isExpanded())
@@ -77,7 +79,9 @@ fun MultiFloatingActionButton(
         else
             0f, label = "mainFabRotation"
     )
+
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AnimatedVisibility(
@@ -105,7 +109,7 @@ fun MultiFloatingActionButton(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = null
+                contentDescription = "mainFabIcon"
             )
         }
     }

@@ -96,9 +96,8 @@ fun CheckerInboxTasksScreen(
             )
 
         },
-        snackbarHostState = null,
-        bottomBar = { })
-    { padding ->
+        bottomBar = { }
+    ) { padding ->
         SwipeRefresh(
             state = swipeRefreshState,
             onRefresh = { checkerInboxTasksViewModel.loadCheckerTasksBadges() }

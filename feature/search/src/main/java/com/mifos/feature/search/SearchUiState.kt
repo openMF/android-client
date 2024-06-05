@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.search
+package com.mifos.feature.search
 
 import com.mifos.core.objects.SearchedEntity
 

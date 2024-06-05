@@ -1,7 +1,7 @@
-package com.mifos.mifosxdroid.online.search
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.SearchedEntity
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -12,6 +12,6 @@ interface SearchRepository {
         query: String?,
         resources: String?,
         exactMatch: Boolean?
-    ): List<SearchedEntity>
+    ): Flow<List<SearchedEntity>>
 
 }

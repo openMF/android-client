@@ -133,6 +133,7 @@ dependencies {
     implementation(projects.feature.collectionSheet)
     implementation(projects.feature.groups)
     implementation(projects.feature.settings)
+    implementation(projects.feature.search)
 
     implementation(projects.core.common)
     implementation(projects.core.ui)
@@ -255,7 +256,4 @@ dependencies {
     // ViewModel utilities for Compose
     implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.androidx.hilt.navigation.compose)
-
-    implementation(libs.androidx.lifecycle.runtimeCompose)
-    implementation(libs.accompanist.drawablepainter)
 }

@@ -11,12 +11,13 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.fragment.findNavController
-import com.mifos.mifosxdroid.activity.home.HomeActivity
-import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.mifosxdroid.views.FabType
 import com.mifos.core.objects.SearchedEntity
 import com.mifos.core.objects.navigation.ClientArgs
+import com.mifos.core.ui.components.FabType
+import com.mifos.feature.search.SearchScreenRoute
+import com.mifos.mifosxdroid.R
+import com.mifos.mifosxdroid.activity.home.HomeActivity
+import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,13 +33,14 @@ class SearchFragment : MifosBaseFragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                SearchScreen(
+                SearchScreenRoute(
                     onFabClick = { fabType ->
                         onFabClick(fabType)
                     },
-                ){ searchedEntity ->
-                    onSearchOptionClick(searchedEntity)
-                }
+                    onSearchOptionClick = {
+                        onSearchOptionClick(it)
+                    }
+                )
             }
         }
     }

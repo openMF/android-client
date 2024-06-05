@@ -1,5 +1,5 @@
 [versions]
-accompanistDrawablepainter = "0.35.0-alpha"
+accompanistDrawablepainter = "0.34.0"
 accompanistSwiperefresh = "0.25.1"
 accompanistPermission = "0.34.0"
 adapterRxjava = "2.9.0"
