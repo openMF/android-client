@@ -254,6 +254,7 @@ private fun ClearIconButton(
     
 }
 
+@Composable
 fun MifosDatePickerTextField(
     value: String,
     label: Int,
