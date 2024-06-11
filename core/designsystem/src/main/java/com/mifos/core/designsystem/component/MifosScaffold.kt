@@ -14,7 +14,7 @@ import com.mifos.core.designsystem.theme.White
 fun MifosScaffold(
     topBar: @Composable () -> Unit,
     snackbarHostState: SnackbarHostState?,
-    bottomBar: @Composable () -> Unit,
+    bottomBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
 
