@@ -1,9 +1,11 @@
 package com.mifos.core.data.di
 
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
+import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.data.repository_imp.CheckerInboxTasksRepositoryImp
+import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.GroupsListRepositoryImpl
 import com.mifos.core.data.repository_imp.NewIndividualCollectionSheetRepositoryImp
 import dagger.Binds
@@ -25,4 +27,7 @@ abstract class DataModule {
     internal abstract fun provideGroupListRepository(
         groupsListRepositoryImpl: GroupsListRepositoryImpl
     ): GroupsListRepository
+
+    @Binds
+    internal abstract fun provideGroupDetailsRepository(impl : GroupDetailsRepositoryImp) : GroupDetailsRepository
 }

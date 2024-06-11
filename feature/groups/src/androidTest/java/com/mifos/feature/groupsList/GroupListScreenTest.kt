@@ -34,9 +34,9 @@ import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.domain.use_cases.GroupsListPagingDataSource
 import com.mifos.core.objects.group.Group
 import com.mifos.core.testing.repository.TestGroupsListRepository
-import com.mifos.core.testing.repository.getPagedData
 import com.mifos.core.testing.repository.sampleGroups
 import com.mifos.feature.groups.R
+import com.mifos.feature.groupsList.group_list.GroupsListScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.runBlocking
