@@ -87,8 +87,7 @@ fun IndividualCollectionSheetScreen(
                 }
             )
         },
-        snackbarHostState = snackbarHostState,
-        bottomBar = { }
+        snackbarHostState = snackbarHostState
     ) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues)

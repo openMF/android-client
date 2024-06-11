@@ -13,7 +13,7 @@ fun MifosScaffold(
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit,
     snackbarHostState: SnackbarHostState?,
-    bottomBar: @Composable () -> Unit,
+    bottomBar: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
