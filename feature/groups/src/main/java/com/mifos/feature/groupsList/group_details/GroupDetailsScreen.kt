@@ -33,8 +33,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
@@ -330,7 +332,7 @@ fun GroupDetailsContent(
         Spacer(modifier = Modifier.height(16.dp))
         if (loanAccounts.isNotEmpty() || savingsAccounts.isNotEmpty()) {
             Text(
-                modifier = Modifier.padding(start = 16.dp, bottom = 6.dp),
+                modifier = Modifier.padding(start = 16.dp),
                 text = stringResource(id = R.string.feature_groups_accounts),
                 style = TextStyle(
                     fontSize = 21.sp,
@@ -340,6 +342,7 @@ fun GroupDetailsContent(
                 color = Black,
                 textAlign = TextAlign.Start
             )
+            HorizontalDivider(modifier = Modifier.padding(start = 16.dp, end = 16.dp))
         }
         if (loanAccounts.isNotEmpty()) {
             MifosLoanAccountExpendableCard(
@@ -567,6 +570,7 @@ fun MifosLoanAccountsLazyColumn(
                         )
                     }
                 }
+                HorizontalDivider()
             }
         }
     }
@@ -736,6 +740,7 @@ fun MifosSavingsAccountsLazyColumn(
                         )
                     }
                 }
+                HorizontalDivider()
             }
         }
     }
