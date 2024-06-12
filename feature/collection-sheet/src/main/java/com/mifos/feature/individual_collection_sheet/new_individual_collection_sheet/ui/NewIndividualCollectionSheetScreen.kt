@@ -132,8 +132,7 @@ fun NewIndividualCollectionSheetScreen(
 
     MifosScaffold(
         topBar = { },
-        snackbarHostState = snackbarHostState,
-        bottomBar = { }
+        snackbarHostState = snackbarHostState
     ) { paddingValues ->
         if (showDatePicker) {
             DatePickerDialog(
