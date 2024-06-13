@@ -133,6 +133,7 @@ dependencies {
     implementation(projects.feature.collectionSheet)
     implementation(projects.feature.groups)
     implementation(projects.feature.settings)
+    implementation(projects.feature.center)
 
     implementation(projects.core.common)
     implementation(projects.core.ui)
