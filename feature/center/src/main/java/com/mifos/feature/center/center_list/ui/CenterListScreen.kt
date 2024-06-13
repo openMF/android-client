@@ -62,6 +62,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
@@ -153,7 +154,7 @@ fun CenterListScreen(
                 containerColor = BlueSecondary
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Add,
+                    imageVector = MifosIcons.Add,
                     contentDescription = null
                 )
             }
