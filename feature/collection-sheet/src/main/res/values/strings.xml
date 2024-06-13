@@ -12,5 +12,11 @@
     <string name="feature_collection_sheet_cancel">Cancel</string>
     <string name="feature_collection_sheet_select_office">Please Select a Office</string>
     <string name="feature_collection_sheet_select_staff">Please Select a Staff</string>
+    <string name="feature_collection_sheet_individual_collection_sheet">Individual Collection Sheet</string>
+    <string name="feature_collection_sheet_found_sheet">Found Collection Sheet</string>
+    <string name="feature_collection_sheet_save_sheet_text">You Can Save this Collection Sheet for Offline Use also.</string>
+    <string name="feature_collection_sheet_date">Date:</string>
+    <string name="feature_collection_sheet_member">Member:</string>
+    <string name="feature_collection_sheet_fill_now">Fill Now</string>
 
 </resources>
