@@ -31,6 +31,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -50,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -73,7 +75,8 @@ fun CheckerInboxScreen(onBackPressed: () -> Unit) {
         onBackPressed = onBackPressed,
         onApprove = { viewModel.approveCheckerEntry(it) },
         onReject = { viewModel.rejectCheckerEntry(it) },
-        onDelete = { viewModel.deleteCheckerEntry(it) }
+        onDelete = { viewModel.deleteCheckerEntry(it) },
+        onRetry = { viewModel.loadCheckerTasks() }
     )
 }
 
@@ -83,11 +86,59 @@ fun CheckerInboxScreen(
     onBackPressed: () -> Unit,
     onApprove: (Int) -> Unit,
     onReject: (Int) -> Unit,
-    onDelete: (Int) -> Unit
+    onDelete: (Int) -> Unit,
+    onRetry: () -> Unit = {}
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
     var searchInbox by rememberSaveable { mutableStateOf("") }
+    var approveId by rememberSaveable { mutableIntStateOf(0) }
+    var showApproveDialog by rememberSaveable { mutableStateOf(false) }
+    var rejectId by rememberSaveable { mutableIntStateOf(0) }
+    var showRejectDialog by rememberSaveable { mutableStateOf(false) }
+    var deleteId by rememberSaveable { mutableIntStateOf(0) }
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+
+
+    if (showApproveDialog) {
+        MifosDialogBox(
+            showDialogState = true,
+            onDismiss = { },
+            title = R.string.feature_checker_inbox_task_are_you_sure_you_want_to_approve_this_task,
+            confirmButtonText = R.string.feature_checker_inbox_task_yes,
+            onConfirm = {
+                onApprove(approveId)
+            },
+            dismissButtonText = R.string.feature_checker_inbox_task_no
+        )
+    }
+
+    if (showRejectDialog) {
+        MifosDialogBox(
+            showDialogState = true,
+            onDismiss = { },
+            title = R.string.feature_checker_inbox_task_are_you_sure_you_want_to_reject_this_task,
+            confirmButtonText = R.string.feature_checker_inbox_task_yes,
+            onConfirm = {
+                onReject(rejectId)
+            },
+            dismissButtonText = R.string.feature_checker_inbox_task_no
+        )
+    }
+
+    if (showDeleteDialog) {
+        MifosDialogBox(
+            showDialogState = true,
+            onDismiss = { },
+            title = R.string.feature_checker_inbox_task_are_you_sure_you_want_to_delete_this_task,
+            confirmButtonText = R.string.feature_checker_inbox_task_yes,
+            onConfirm = {
+                onDelete(deleteId)
+            },
+            dismissButtonText = R.string.feature_checker_inbox_task_no
+        )
+    }
+
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
@@ -142,9 +193,18 @@ fun CheckerInboxScreen(
                         checkerTaskList = state.checkerTasks.filter { checkerTask ->
                             checkerTask.maker.contains(searchInbox)
                         },
-                        onApprove = onApprove,
-                        onReject = onReject,
-                        onDelete = onDelete
+                        onApprove = {
+                            approveId = it
+                            showApproveDialog = true
+                        },
+                        onReject = {
+                            rejectId = it
+                            showRejectDialog = true
+                        },
+                        onDelete = {
+                            deleteId = it
+                            showDeleteDialog = true
+                        }
                     )
                 }
 
@@ -152,7 +212,7 @@ fun CheckerInboxScreen(
                     MifosSweetError(
                         message = stringResource(id = R.string.feature_checker_inbox_task_failed_to_Load_Check_Inbox)
                     ) {
-                        // TODO Refresh
+                        onRetry()
                     }
                 }
 
