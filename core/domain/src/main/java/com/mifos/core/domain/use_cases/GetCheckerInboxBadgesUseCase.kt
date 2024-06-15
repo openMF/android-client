@@ -5,6 +5,8 @@ import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.zip
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -19,33 +21,42 @@ import javax.inject.Inject
 class GetCheckerInboxBadgesUseCase @Inject constructor(
     private val repository: CheckerInboxTasksRepository
 ) {
-    operator fun invoke(): Flow<Resource<Pair<Int, Int>>> = callbackFlow {
+    operator fun invoke(): Flow<Resource<Pair<Int, Int>>> = flow {
         try {
-            trySend(Resource.Loading())
-            Observable.zip(
-                repository.getCheckerTaskList(),
-                repository.getRescheduleLoansTaskList()
-            ) { checkerTasks, rescheduleLoanTasks ->
-                Pair(checkerTasks.size, rescheduleLoanTasks.size)
-            }.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Pair<Int, Int>>() {
-                    override fun onCompleted() {
+            emit(Resource.Loading())
+            repository.getCheckerTaskList()
+                .zip(repository.getRescheduleLoansTaskList()) { checkerTasks, rescheduleLoanTasks ->
+                    Pair(checkerTasks.size, rescheduleLoanTasks.size)
+                }.collect {
+                    emit(Resource.Success(it))
+                }
 
-                    }
 
-                    override fun onError(error: Throwable) {
-                        trySend(Resource.Error(error.message.toString()))
-                    }
+//            Observable.zip(
+//                repository.getCheckerTaskList(),
+//                repository.getRescheduleLoansTaskList()
+//            ) { checkerTasks, rescheduleLoanTasks ->
+//                Pair(checkerTasks.size, rescheduleLoanTasks.size)
+//            }.observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribe(object : Subscriber<Pair<Int, Int>>() {
+//                    override fun onCompleted() {
+//
+//                    }
+//
+//                    override fun onError(error: Throwable) {
+//                        trySend(Resource.Error(error.message.toString()))
+//                    }
+//
+//                    override fun onNext(badges: Pair<Int, Int>) {
+//                        trySend(Resource.Success(badges))
+//                    }
+//                })
 
-                    override fun onNext(badges: Pair<Int, Int>) {
-                        trySend(Resource.Success(badges))
-                    }
-                })
-
-            awaitClose { channel.close() }
+//            awaitClose { channel.close() }
         } catch (e: Exception) {
-            trySend(Resource.Error(e.message.toString()))
+            emit(Resource.Error(e.message.toString()))
+//            trySend(Resource.Error(e.message.toString()))
         }
     }
 }

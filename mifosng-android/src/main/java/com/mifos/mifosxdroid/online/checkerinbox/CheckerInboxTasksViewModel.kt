@@ -3,18 +3,16 @@ package com.mifos.mifosxdroid.online.checkerinbox
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.network.datamanager.DataManagerCheckerInbox
 import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
 import com.mifos.core.objects.checkerinboxandtasks.RescheduleLoansTask
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CheckerInboxTasksViewModel @Inject constructor(
-    val dataManager: DataManagerCheckerInbox,
-    val subscription: CompositeSubscription
+    val dataManager: DataManagerCheckerInbox
 ) : ViewModel() {
 
     private val checkerTasksLive: MutableLiveData<List<CheckerTask>> by lazy {
@@ -35,24 +33,13 @@ class CheckerInboxTasksViewModel @Inject constructor(
         return rescheduleLoanTasksLive
     }
 
-    fun loadRescheduleLoanTasks() {
-        subscription.add(dataManager.getRechdeduleLoansTaskList()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<RescheduleLoansTask>>() {
-                override fun onCompleted() {
-
-                }
-
-                override fun onError(e: Throwable) {
-                    status.value = false
-                }
-
-                override fun onNext(rescheduleLoanTasks: List<RescheduleLoansTask>) {
-                    rescheduleLoanTasksLive.postValue(rescheduleLoanTasks)
-                }
-            })
-        )
+    fun loadRescheduleLoanTasks() = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            val response = dataManager.getRechdeduleLoansTaskList()
+            rescheduleLoanTasksLive.postValue(response)
+        } catch (exception: Exception) {
+            status.value = false
+        }
     }
 
 
@@ -60,23 +47,13 @@ class CheckerInboxTasksViewModel @Inject constructor(
         return checkerTasksLive
     }
 
-    fun loadCheckerTasks() {
-        subscription.add(dataManager.getCheckerTaskList()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<CheckerTask>>() {
-                override fun onCompleted() {
-                }
-
-                override fun onError(e: Throwable) {
-                    status.value = false
-                }
-
-                override fun onNext(checkerTasks: List<CheckerTask>) {
-                    checkerTasksLive.postValue(checkerTasks)
-                    status.value = true
-                }
-            })
-        )
+    fun loadCheckerTasks() = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            val response = dataManager.getCheckerTaskList()
+            checkerTasksLive.postValue(response)
+            status.value = true
+        } catch (exception: Exception) {
+            status.value = false
+        }
     }
 }

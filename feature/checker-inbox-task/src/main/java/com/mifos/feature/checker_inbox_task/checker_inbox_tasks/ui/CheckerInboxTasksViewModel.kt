@@ -1,5 +1,6 @@
-package com.mifos.feature.checker_inbox_task.ui
+package com.mifos.feature.checker_inbox_task.checker_inbox_tasks.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
@@ -38,6 +39,7 @@ class CheckerInboxTasksViewModel @Inject constructor(
 
             when (result) {
                 is Resource.Error -> {
+                    Log.e("Error", result.message.toString())
                     _checkerInboxTasksUiState.value =
                         CheckerInboxTasksUiState.Error(result.message.toString())
                 }

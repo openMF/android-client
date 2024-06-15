@@ -1,17 +1,21 @@
 package com.mifos.core.objects.checkerinboxandtasks
 
-import com.google.gson.annotations.SerializedName
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Date
 
-data class CheckerTask(@SerializedName("id") var id: Int,
-                       @SerializedName("madeOnDate") var madeOnDate: Long,
-                       @SerializedName("processingResult") var status: String,
-                       @SerializedName("maker") var maker: String,
-                       @SerializedName("actionName") var action: String,
-                       @SerializedName("entityName") var entity: String,
-                       @SerializedName("resourceId") var resourceId: String) {
+@Parcelize
+data class CheckerTask(
+    var id: Int,
+    var madeOnDate: Long,
+    var processingResult: String,
+    var maker: String,
+    var actionName: String,
+    var entityName: String,
+    var resourceId: String
+) : Parcelable {
 
     var selectedFlag = false
 
