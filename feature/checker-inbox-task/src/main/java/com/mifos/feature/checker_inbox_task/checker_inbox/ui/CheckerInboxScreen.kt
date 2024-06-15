@@ -100,45 +100,42 @@ fun CheckerInboxScreen(
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
 
-    if (showApproveDialog) {
-        MifosDialogBox(
-            showDialogState = true,
-            onDismiss = { },
-            title = R.string.feature_checker_inbox_task_are_you_sure_you_want_to_approve_this_task,
-            confirmButtonText = R.string.feature_checker_inbox_task_yes,
-            onConfirm = {
-                onApprove(approveId)
-            },
-            dismissButtonText = R.string.feature_checker_inbox_task_no
-        )
-    }
+    MifosDialogBox(
+        showDialogState = showApproveDialog,
+        onDismiss = { showApproveDialog = false },
+        title = R.string.feature_checker_inbox_task_are_you_sure_you_want_to_approve_this_task,
+        confirmButtonText = R.string.feature_checker_inbox_task_yes,
+        onConfirm = {
+            onApprove(approveId)
+            showApproveDialog = false
+        },
+        dismissButtonText = R.string.feature_checker_inbox_task_no
+    )
 
-    if (showRejectDialog) {
-        MifosDialogBox(
-            showDialogState = true,
-            onDismiss = { },
-            title = R.string.feature_checker_inbox_task_are_you_sure_you_want_to_reject_this_task,
-            confirmButtonText = R.string.feature_checker_inbox_task_yes,
-            onConfirm = {
-                onReject(rejectId)
-            },
-            dismissButtonText = R.string.feature_checker_inbox_task_no
-        )
-    }
+    MifosDialogBox(
+        showDialogState = showRejectDialog,
+        onDismiss = { showRejectDialog = false },
+        title = R.string.feature_checker_inbox_task_are_you_sure_you_want_to_reject_this_task,
+        confirmButtonText = R.string.feature_checker_inbox_task_yes,
+        onConfirm = {
+            onReject(rejectId)
+            showRejectDialog = false
+        },
+        dismissButtonText = R.string.feature_checker_inbox_task_no
+    )
 
-    if (showDeleteDialog) {
-        MifosDialogBox(
-            showDialogState = true,
-            onDismiss = { },
-            title = R.string.feature_checker_inbox_task_are_you_sure_you_want_to_delete_this_task,
-            confirmButtonText = R.string.feature_checker_inbox_task_yes,
-            onConfirm = {
-                onDelete(deleteId)
-            },
-            dismissButtonText = R.string.feature_checker_inbox_task_no
-        )
-    }
 
+    MifosDialogBox(
+        showDialogState = showDeleteDialog,
+        onDismiss = { showDeleteDialog = false },
+        title = R.string.feature_checker_inbox_task_are_you_sure_you_want_to_delete_this_task,
+        confirmButtonText = R.string.feature_checker_inbox_task_yes,
+        onConfirm = {
+            onDelete(deleteId)
+            showDeleteDialog = false
+        },
+        dismissButtonText = R.string.feature_checker_inbox_task_no
+    )
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
