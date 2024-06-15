@@ -22,8 +22,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DoneAll
+import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -154,8 +156,21 @@ fun GroupsListScreen(
                             contentDescription = "GroupList::ContextualTopAppBar"
                         },
                     itemCount = selectedItems.size,
-                    syncClicked = { onSyncClick(selectedItems.toList()) },
-                    resetSelectionMode = resetSelectionMode
+                    resetSelectionMode = resetSelectionMode,
+                    actions = {
+                        FilledTonalButton(
+                            onClick = {
+                                onSyncClick(selectedItems.toList())
+                                resetSelectionMode()
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Sync,
+                                contentDescription = "Sync Items",
+                            )
+                            Text(text = "Sync")
+                        }
+                    }
                 )
             }
         },

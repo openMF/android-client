@@ -9,6 +9,7 @@ import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.PersonOutline
 import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Sync
 
 object MifosIcons {
     val Add = Icons.Rounded.Add
@@ -19,5 +20,5 @@ object MifosIcons {
     val arrowBack = Icons.Rounded.ArrowBackIosNew
     val search = Icons.Rounded.Search
     val filter = Icons.Rounded.FilterList
-
+    val sync = Icons.Rounded.Sync
 }
