@@ -45,10 +45,10 @@ class DataManagerRunReport @Inject constructor(val mBaseApiManager: BaseApiManag
             .getRunReportWithQuery(reportName, options)
     }
 
-    fun getCenterSummaryInfo(
+    suspend fun getCenterSummaryInfo(
         centerId: Int,
         genericResultSet: Boolean
-    ): Observable<List<CenterInfo>> {
+    ): List<CenterInfo> {
         return mBaseApiManager.runReportsService
             .getCenterSummaryInfo(centerId, genericResultSet)
     }

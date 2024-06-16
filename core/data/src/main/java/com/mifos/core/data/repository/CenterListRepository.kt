@@ -14,7 +14,7 @@ interface CenterListRepository {
 
     fun getAllCenters(): Flow<PagingData<Center>>
 
-    fun getCentersGroupAndMeeting(id: Int): Observable<CenterWithAssociations>
+    suspend fun getCentersGroupAndMeeting(id: Int): CenterWithAssociations
 
     fun allDatabaseCenters(): Observable<Page<Center>>
 }

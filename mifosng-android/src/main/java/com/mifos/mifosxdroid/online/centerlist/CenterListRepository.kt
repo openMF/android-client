@@ -12,7 +12,7 @@ interface CenterListRepository {
 
     fun getCenters(paged: Boolean, offset: Int, limit: Int): Observable<Page<Center>>
 
-    fun getCentersGroupAndMeeting(id: Int): Observable<CenterWithAssociations>
+    suspend fun getCentersGroupAndMeeting(id: Int): CenterWithAssociations
 
     fun allDatabaseCenters(): Observable<Page<Center>>
 }

@@ -19,8 +19,6 @@ import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import com.mifos.mifosxdroid.online.activate.ActivateRepository
 import com.mifos.mifosxdroid.online.activate.ActivateRepositoryImp
-import com.mifos.mifosxdroid.online.centerdetails.CenterDetailsRepository
-import com.mifos.mifosxdroid.online.centerdetails.CenterDetailsRepositoryImp
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepository
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepository
@@ -176,13 +174,6 @@ class RepositoryModule {
     @Provides
     fun providesClientDetailsRepository(dataManagerClient: DataManagerClient): ClientDetailsRepository {
         return ClientDetailsRepositoryImp(dataManagerClient)
-    }
-
-    @Provides
-    fun providesCenterDetailsRepository(
-        dataManagerCenter: DataManagerCenter, dataManagerRunReport: DataManagerRunReport
-    ): CenterDetailsRepository {
-        return CenterDetailsRepositoryImp(dataManagerCenter, dataManagerRunReport)
     }
 
     @Provides

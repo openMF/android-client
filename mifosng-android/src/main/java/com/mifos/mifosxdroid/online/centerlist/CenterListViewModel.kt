@@ -3,11 +3,13 @@ package com.mifos.mifosxdroid.online.centerlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.objects.client.Page
 import com.mifos.core.objects.group.Center
-import com.mifos.core.objects.group.CenterWithAssociations
 import com.mifos.mifosxdroid.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -105,23 +107,16 @@ class CenterListViewModel @Inject constructor(private val repository: CenterList
             })
     }
 
-    fun loadCentersGroupAndMeeting(id: Int) {
+    fun loadCentersGroupAndMeeting(id: Int) = viewModelScope.launch(Dispatchers.IO) {
         _centerListUiState.value = CenterListUiState.ShowProgressbar(true)
-        repository.getCentersGroupAndMeeting(id)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<CenterWithAssociations?>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _centerListUiState.value =
-                        CenterListUiState.ShowMessage(R.string.failed_to_fetch_Group_and_meeting)
-                }
-
-                override fun onNext(centerWithAssociations: CenterWithAssociations?) {
-                    _centerListUiState.value =
-                        CenterListUiState.ShowCentersGroupAndMeeting(centerWithAssociations, id)
-                }
-            })
+        try {
+            val centerWithAssociations = repository.getCentersGroupAndMeeting(id)
+            _centerListUiState.value =
+                CenterListUiState.ShowCentersGroupAndMeeting(centerWithAssociations, id)
+        } catch (exception: Exception) {
+            _centerListUiState.value =
+                CenterListUiState.ShowMessage(R.string.failed_to_fetch_Group_and_meeting)
+        }
     }
 
     /**
