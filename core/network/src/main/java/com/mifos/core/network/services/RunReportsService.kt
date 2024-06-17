@@ -22,11 +22,11 @@ interface RunReportsService {
      * @return List of ClientReportTypeItem
      */
     @GET(APIEndPoint.RUN_REPORTS + "/reportCategoryList")
-    fun getReportCategories(
+    suspend fun getReportCategories(
         @Query("R_reportCategory") category: String?,
         @Query("genericResultSet") genericResultSet: Boolean,
         @Query("parameterType") parameterType: Boolean
-    ): Observable<List<ClientReportTypeItem>>
+    ): List<ClientReportTypeItem>
 
     /**
      * Endpoint to fetch FullParameter list after fetching the categories.

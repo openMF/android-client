@@ -13,11 +13,11 @@ import javax.inject.Singleton
  */
 @Singleton
 class DataManagerRunReport @Inject constructor(val mBaseApiManager: BaseApiManager) {
-    fun getReportCategories(
+    suspend fun getReportCategories(
         reportCategory: String?,
         genericResultSet: Boolean,
         parameterType: Boolean
-    ): Observable<List<ClientReportTypeItem>> {
+    ): List<ClientReportTypeItem> {
         return mBaseApiManager.runReportsService.getReportCategories(
             reportCategory,
             genericResultSet, parameterType

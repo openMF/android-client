@@ -93,8 +93,6 @@ import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingRepository
 import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingRepositoryImp
 import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepository
 import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepositoryImp
-import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryRepository
-import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryRepositoryImp
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailRepository
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailRepositoryImp
 import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepository
@@ -341,11 +339,6 @@ class RepositoryModule {
     @Provides
     fun providesReportDetailRepository(dataManager: DataManagerRunReport): ReportDetailRepository {
         return ReportDetailRepositoryImp(dataManager)
-    }
-
-    @Provides
-    fun providesReportCategoryRepository(dataManager: DataManagerRunReport): ReportCategoryRepository {
-        return ReportCategoryRepositoryImp(dataManager)
     }
 
     @Provides

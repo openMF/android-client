@@ -10,6 +10,8 @@ import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.FilterList
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.PersonOutline
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Sync
@@ -27,4 +29,6 @@ object MifosIcons {
     val check = Icons.Rounded.Check
     val close = Icons.Rounded.Close
     val delete = Icons.Rounded.Delete
+    val arrowUp = Icons.Rounded.KeyboardArrowUp
+    val arrowDown = Icons.Rounded.KeyboardArrowDown
 }

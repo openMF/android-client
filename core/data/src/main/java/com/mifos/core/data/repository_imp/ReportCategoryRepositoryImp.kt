@@ -1,8 +1,8 @@
-package com.mifos.mifosxdroid.online.runreports.reportcategory
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.network.datamanager.DataManagerRunReport
 import com.mifos.core.objects.runreports.client.ClientReportTypeItem
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -11,13 +11,11 @@ import javax.inject.Inject
 class ReportCategoryRepositoryImp @Inject constructor(private val dataManager: DataManagerRunReport) :
     ReportCategoryRepository {
 
-    override fun getReportCategories(
-        reportCategory: String?,
+    override suspend fun getReportCategories(
+        reportCategory: String,
         genericResultSet: Boolean,
         parameterType: Boolean
-    ): Observable<List<ClientReportTypeItem>> {
+    ): List<ClientReportTypeItem> {
         return dataManager.getReportCategories(reportCategory, genericResultSet, parameterType)
     }
-
-
 }
