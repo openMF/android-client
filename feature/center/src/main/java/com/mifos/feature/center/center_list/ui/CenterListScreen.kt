@@ -153,7 +153,7 @@ fun CenterListScreen(
                                 imageVector = MifosIcons.sync,
                                 contentDescription = "Sync Items",
                             )
-                            Text(text = "Sync")
+                            Text(text = stringResource(id = R.string.feature_center_sync))
                         }
                     }
                 )

@@ -3,6 +3,7 @@
     <string name="feature_center_error_loading_centers">Failed to load Centers</string>
     <string name="feature_center_failed_to_load_db_centers">Failed to load Database Centers</string>
     <string name="feature_center_no_more_centers">No More Centers Available !</string>
+<<<<<<< HEAD
 
     <string name="feature_center_add_savings_account">Add Savings Account</string>
     <string name="feature_center_group_list">Group List</string>
@@ -25,4 +26,7 @@
     <string name="feature_center_summary_info">Summary Info</string>
     <string name="feature_center_activate_center">Activate Center</string>
 
+=======
+    <string name="feature_center_sync">Sync</string>
+>>>>>>> 2b40400a (fix: code clean up)
 </resources>

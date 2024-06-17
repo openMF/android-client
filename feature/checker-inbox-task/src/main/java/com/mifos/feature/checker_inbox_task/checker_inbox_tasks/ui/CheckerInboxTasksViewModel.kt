@@ -39,7 +39,6 @@ class CheckerInboxTasksViewModel @Inject constructor(
 
             when (result) {
                 is Resource.Error -> {
-                    Log.e("Error", result.message.toString())
                     _checkerInboxTasksUiState.value =
                         CheckerInboxTasksUiState.Error(result.message.toString())
                 }

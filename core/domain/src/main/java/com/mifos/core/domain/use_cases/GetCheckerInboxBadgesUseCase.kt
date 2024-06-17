@@ -2,15 +2,9 @@ package com.mifos.core.domain.use_cases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.zip
-import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 
@@ -30,33 +24,8 @@ class GetCheckerInboxBadgesUseCase @Inject constructor(
                 }.collect {
                     emit(Resource.Success(it))
                 }
-
-
-//            Observable.zip(
-//                repository.getCheckerTaskList(),
-//                repository.getRescheduleLoansTaskList()
-//            ) { checkerTasks, rescheduleLoanTasks ->
-//                Pair(checkerTasks.size, rescheduleLoanTasks.size)
-//            }.observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.io())
-//                .subscribe(object : Subscriber<Pair<Int, Int>>() {
-//                    override fun onCompleted() {
-//
-//                    }
-//
-//                    override fun onError(error: Throwable) {
-//                        trySend(Resource.Error(error.message.toString()))
-//                    }
-//
-//                    override fun onNext(badges: Pair<Int, Int>) {
-//                        trySend(Resource.Success(badges))
-//                    }
-//                })
-
-//            awaitClose { channel.close() }
         } catch (e: Exception) {
             emit(Resource.Error(e.message.toString()))
-//            trySend(Resource.Error(e.message.toString()))
         }
     }
 }

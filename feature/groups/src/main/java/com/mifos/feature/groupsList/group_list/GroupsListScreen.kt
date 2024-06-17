@@ -60,6 +60,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPaginationSweetError
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
@@ -165,10 +166,10 @@ fun GroupsListScreen(
                             },
                         ) {
                             Icon(
-                                imageVector = Icons.Rounded.Sync,
+                                imageVector = MifosIcons.sync,
                                 contentDescription = "Sync Items",
                             )
-                            Text(text = "Sync")
+                            Text(text = stringResource(id = R.string.feature_groups_sync))
                         }
                     }
                 )

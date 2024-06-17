@@ -204,7 +204,7 @@ fun CheckerInboxScreen(
                             resetSelectionMode()
                         }) {
                             Icon(
-                                imageVector = Icons.Rounded.Check,
+                                imageVector = MifosIcons.check,
                                 tint = Color.Green,
                                 contentDescription = null
                             )
@@ -214,7 +214,7 @@ fun CheckerInboxScreen(
                             resetSelectionMode()
                         }) {
                             Icon(
-                                imageVector = Icons.Rounded.Close,
+                                imageVector = MifosIcons.close,
                                 tint = Color.Yellow,
                                 contentDescription = null
                             )
@@ -224,7 +224,7 @@ fun CheckerInboxScreen(
                             resetSelectionMode()
                         }) {
                             Icon(
-                                imageVector = Icons.Rounded.Delete,
+                                imageVector = MifosIcons.delete,
                                 tint = Color.Red,
                                 contentDescription = null
                             )
@@ -514,21 +514,21 @@ fun CheckerInboxItem(
                 ) {
                     IconButton(onClick = { onApprove(checkerTask.id) }) {
                         Icon(
-                            imageVector = Icons.Rounded.Check,
+                            imageVector = MifosIcons.check,
                             tint = Color.Green,
                             contentDescription = null
                         )
                     }
                     IconButton(onClick = { onReject(checkerTask.id) }) {
                         Icon(
-                            imageVector = Icons.Rounded.Close,
+                            imageVector = MifosIcons.close,
                             tint = Color.Yellow,
                             contentDescription = null
                         )
                     }
                     IconButton(onClick = { onDelete(checkerTask.id) }) {
                         Icon(
-                            imageVector = Icons.Rounded.Delete,
+                            imageVector = MifosIcons.delete,
                             tint = Color.Red,
                             contentDescription = null
                         )
