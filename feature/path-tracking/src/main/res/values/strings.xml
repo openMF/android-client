@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_path_tracking_track_my_path">Track my path</string>
+
+    <string name="feature_path_tracking_failed_to_load_path_tracking">Failed to load path tracking</string>
+    <string name="feature_path_tracking_no_path_tracking_found">No path tracking found</string>
+</resources>

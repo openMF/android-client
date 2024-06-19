@@ -89,8 +89,6 @@ import com.mifos.mifosxdroid.online.note.NoteRepository
 import com.mifos.mifosxdroid.online.note.NoteRepositoryImp
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepository
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepositoryImp
-import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingRepository
-import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingRepositoryImp
 import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepository
 import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepositoryImp
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailRepository
@@ -157,11 +155,6 @@ class RepositoryModule {
     @Provides
     fun providesCenterListRepository(dataManagerCenter: DataManagerCenter): CenterListRepository {
         return CenterListRepositoryImp(dataManagerCenter)
-    }
-
-    @Provides
-    fun providesPathTrackingRepository(dataTable: DataManagerDataTable): PathTrackingRepository {
-        return PathTrackingRepositoryImp(dataTable)
     }
 
     @Provides
