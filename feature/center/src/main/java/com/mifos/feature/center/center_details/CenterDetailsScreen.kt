@@ -14,12 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material.icons.outlined.EventRepeat
-import androidx.compose.material.icons.outlined.Group
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.PersonOutline
-import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -29,8 +23,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -114,54 +106,27 @@ fun CenterDetailsScreen(
     var centerActive by remember { mutableStateOf(true) }
 
     MifosScaffold(
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = White),
-                navigationIcon = {
-                    IconButton(
-                        onClick = { onBackPressed() },
-                    ) {
-                        Icon(
-                            imageVector = MifosIcons.arrowBack,
-                            contentDescription = null,
-                            tint = Black,
-                        )
-                    }
-
-                },
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.feature_center_center),
-                        style = TextStyle(
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Medium,
-                            fontStyle = FontStyle.Normal
-                        ),
-                        color = Black,
-                        textAlign = TextAlign.Start
-                    )
-
-                },
-                actions = {
-                    IconButton(onClick = { showMenu = showMenu.not() }) {
-                        Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
-                    }
-                    DropdownMenu(
-                        modifier = Modifier.background(White),
-                        expanded = showMenu,
-                        onDismissRequest = { showMenu = false }
-                    ) {
-                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_center_add_savings_account)) {
-                            onMenuClick(MenuItems.ADD_SAVINGS_ACCOUNT)
-                            showMenu = false
-                        }
-                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_center_group_list)) {
-                            onMenuClick(MenuItems.GROUP_LIST)
-                            showMenu = false
-                        }
-                    }
+        icon = MifosIcons.arrowBack,
+        title = stringResource(id = R.string.feature_center_center),
+        onBackPressed = onBackPressed,
+        actions = {
+            IconButton(onClick = { showMenu = showMenu.not() }) {
+                Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
+            }
+            DropdownMenu(
+                modifier = Modifier.background(White),
+                expanded = showMenu,
+                onDismissRequest = { showMenu = false }
+            ) {
+                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_center_add_savings_account)) {
+                    onMenuClick(MenuItems.ADD_SAVINGS_ACCOUNT)
+                    showMenu = false
                 }
-            )
+                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_center_group_list)) {
+                    onMenuClick(MenuItems.GROUP_LIST)
+                    showMenu = false
+                }
+            }
         },
         snackbarHostState = snackbarHostState,
         bottomBar = {
