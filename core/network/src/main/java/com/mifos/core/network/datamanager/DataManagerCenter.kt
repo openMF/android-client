@@ -101,7 +101,7 @@ class DataManagerCenter @Inject constructor(
      * @param id of the center
      * @return Collection Sheet
      */
-    fun getCentersGroupAndMeeting(id: Int): Observable<CenterWithAssociations> {
+    suspend fun getCentersGroupAndMeeting(id: Int): CenterWithAssociations {
         return mBaseApiManager
             .centerApi
             .getCenterWithGroupMembersAndCollectionMeetingCalendar(id)

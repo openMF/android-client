@@ -1,10 +1,12 @@
-package com.mifos.mifosxdroid.online.centerdetails
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerRunReport
 import com.mifos.core.objects.group.CenterInfo
 import com.mifos.core.objects.group.CenterWithAssociations
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -15,14 +17,14 @@ class CenterDetailsRepositoryImp @Inject constructor(
     private val dataManagerRunReport: DataManagerRunReport
 ) : CenterDetailsRepository {
 
-    override fun getCentersGroupAndMeeting(id: Int): Observable<CenterWithAssociations> {
-        return dataManagerCenter.getCentersGroupAndMeeting(id)
+    override suspend fun getCentersGroupAndMeeting(id: Int): Flow<CenterWithAssociations> {
+        return flow { emit(dataManagerCenter.getCentersGroupAndMeeting(id)) }
     }
 
-    override fun getCenterSummaryInfo(
+    override suspend fun getCenterSummaryInfo(
         centerId: Int,
         genericResultSet: Boolean
-    ): Observable<List<CenterInfo>> {
-        return dataManagerRunReport.getCenterSummaryInfo(centerId, genericResultSet)
+    ): Flow<List<CenterInfo>> {
+        return flow { emit(dataManagerRunReport.getCenterSummaryInfo(centerId, genericResultSet)) }
     }
 }

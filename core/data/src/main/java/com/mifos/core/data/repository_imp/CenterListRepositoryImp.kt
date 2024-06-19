@@ -29,7 +29,7 @@ class CenterListRepositoryImp @Inject constructor(private val dataManagerCenter:
         ).flow
     }
 
-    override fun getCentersGroupAndMeeting(id: Int): Observable<CenterWithAssociations> {
+    override suspend fun getCentersGroupAndMeeting(id: Int): CenterWithAssociations {
         return dataManagerCenter.getCentersGroupAndMeeting(id)
     }
 

@@ -79,8 +79,8 @@ interface RunReportsService {
     ): Observable<FullParameterListResponse>
 
     @GET(APIEndPoint.RUN_REPORTS + "/GroupSummaryCounts")
-    fun getCenterSummaryInfo(
+    suspend fun getCenterSummaryInfo(
         @Query("R_groupId") centerId: Int,
         @Query("genericResultSet") genericResultSet: Boolean
-    ): Observable<List<CenterInfo>>
+    ): List<CenterInfo>
 }
