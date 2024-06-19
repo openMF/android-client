@@ -5,15 +5,12 @@ import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.rounded.Add
-<<<<<<< HEAD
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
-import androidx.compose.material.icons.rounded.PersonOutline
-=======
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
->>>>>>> 2b40400a (fix: code clean up)
 import androidx.compose.material.icons.rounded.FilterList
+import androidx.compose.material.icons.rounded.PersonOutline
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Sync
 
@@ -27,10 +24,7 @@ object MifosIcons {
     val search = Icons.Rounded.Search
     val filter = Icons.Rounded.FilterList
     val sync = Icons.Rounded.Sync
-<<<<<<< HEAD
-=======
     val check = Icons.Rounded.Check
     val close = Icons.Rounded.Close
     val delete = Icons.Rounded.Delete
->>>>>>> 2b40400a (fix: code clean up)
 }
