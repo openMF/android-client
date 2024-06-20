@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.MyLocation
 import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -32,8 +31,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -47,7 +44,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -71,6 +67,7 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.user.UserLatLng
@@ -156,59 +153,33 @@ fun PathTrackingScreen(
     )
 
     MifosScaffold(
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = White),
-                navigationIcon = {
-                    IconButton(
-                        onClick = { onBackPressed() },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.ArrowBackIosNew,
-                            contentDescription = null,
-                            tint = Black,
-                        )
-                    }
-                },
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.feature_path_tracking_track_my_path),
-                        style = TextStyle(
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Medium,
-                            fontStyle = FontStyle.Normal
-                        ),
-                        color = Black,
-                        textAlign = TextAlign.Start
-                    )
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            if (userStatus) {
-                                // TODO stop Path Service
-                                updateUserStatus(false)
+        icon = MifosIcons.arrowBack,
+        title = stringResource(id = R.string.feature_path_tracking_track_my_path),
+        actions = {
+            IconButton(
+                onClick = {
+                    if (userStatus) {
+                        // TODO stop Path Service
+                        updateUserStatus(false)
+                    } else {
+                        permissionState.permissions.all { per ->
+                            per.status.isGranted
+                        }.let { allGranted ->
+                            if (allGranted) {
+                                // TODO Run Path Service
+                                updateUserStatus(true)
                             } else {
-                                permissionState.permissions.all { per ->
-                                    per.status.isGranted
-                                }.let { allGranted ->
-                                    if (allGranted) {
-                                        // TODO Run Path Service
-                                        updateUserStatus(true)
-                                    } else {
-                                        permissionState.launchMultiplePermissionRequest()
-                                    }
-                                }
+                                permissionState.launchMultiplePermissionRequest()
                             }
                         }
-                    ) {
-                        Icon(
-                            imageVector = if (userStatus) Icons.Rounded.Stop else Icons.Rounded.MyLocation,
-                            contentDescription = null,
-                        )
                     }
                 }
-            )
+            ) {
+                Icon(
+                    imageVector = if (userStatus) Icons.Rounded.Stop else Icons.Rounded.MyLocation,
+                    contentDescription = null,
+                )
+            }
         },
         snackbarHostState = snackbarHostState
     ) { paddingValues ->
