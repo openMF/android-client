@@ -3,6 +3,7 @@ package com.mifos.feature.path_tracking
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.use_cases.GetUserPathTrackingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -13,12 +14,25 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PathTrackingViewModel @Inject constructor(
-    private val getUserPathTrackingUseCase: GetUserPathTrackingUseCase
+    private val getUserPathTrackingUseCase: GetUserPathTrackingUseCase,
+    private val prefManager: PrefManager
 ) : ViewModel() {
 
     private val _pathTrackingUiState =
         MutableStateFlow<PathTrackingUiState>(PathTrackingUiState.Loading)
     val pathTrackingUiState = _pathTrackingUiState.asStateFlow()
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
+    private val _userStatus = MutableStateFlow(prefManager.userStatus)
+    val userStatus = _userStatus.asStateFlow()
+
+    fun refreshCenterList(userId: Int) {
+        _isRefreshing.value = true
+        loadPathTracking(userId)
+        _isRefreshing.value = false
+    }
 
 
     fun loadPathTracking(userId: Int) = viewModelScope.launch(Dispatchers.IO) {
@@ -39,6 +53,11 @@ class PathTrackingViewModel @Inject constructor(
             }
 
         }
+    }
+
+    fun updateUserStatus(status: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+        prefManager.userStatus = status
+        _userStatus.value = status
     }
 
 }

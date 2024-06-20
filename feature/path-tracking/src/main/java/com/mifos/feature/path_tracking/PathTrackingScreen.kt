@@ -1,17 +1,30 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class,
+    ExperimentalPermissionsApi::class
+)
 
 package com.mifos.feature.path_tracking
 
+import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.MyLocation
 import androidx.compose.material.icons.rounded.Stop
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,13 +35,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -39,42 +53,82 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.registerReceiver
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.White
+import com.mifos.core.objects.user.UserLatLng
 import com.mifos.core.objects.user.UserLocation
 
 @Composable
 fun PathTrackingScreen(
-    userId : Int,
+    userId: Int,
     onBackPressed: () -> Unit,
-    onPathTrackingClick: () -> Unit
+    onPathTrackingClick: (List<UserLatLng>) -> Unit
 ) {
 
+    val context = LocalContext.current
     val viewModel: PathTrackingViewModel = hiltViewModel()
     val state by viewModel.pathTrackingUiState.collectAsStateWithLifecycle()
+    val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
+
+    DisposableEffect(Unit) {
+
+        val notificationReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val action = intent.action
+                if (Constants.STOP_TRACKING == action) {
+                    viewModel.loadPathTracking(userId)
+                }
+            }
+        }
+        registerReceiver(
+            context,
+            notificationReceiver,
+            IntentFilter(Constants.STOP_TRACKING),
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+
+        onDispose {
+            context.unregisterReceiver(notificationReceiver)
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.loadPathTracking(userId)
     }
 
     PathTrackingScreen(
-        state = PathTrackingUiState.PathTracking(samplePathTrackingList),
+        state = state,
         onBackPressed = onBackPressed,
-        onRetry = {},
-        onPathTrackingClick = onPathTrackingClick
+        onRetry = {
+            viewModel.loadPathTracking(userId)
+        },
+        onPathTrackingClick = onPathTrackingClick,
+        onRefresh = {
+            viewModel.refreshCenterList(userId)
+        },
+        refreshState = refreshState,
+        userStatus = userStatus,
+        updateUserStatus = { viewModel.updateUserStatus(it) }
     )
-
 }
 
 @Composable
@@ -82,11 +136,24 @@ fun PathTrackingScreen(
     state: PathTrackingUiState,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
-    onPathTrackingClick: () -> Unit
+    onPathTrackingClick: (List<UserLatLng>) -> Unit,
+    onRefresh: () -> Unit,
+    refreshState: Boolean,
+    userStatus: Boolean,
+    updateUserStatus: (Boolean) -> Unit
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
-    var locateLocation by rememberSaveable { mutableStateOf(false) }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = refreshState,
+        onRefresh = onRefresh
+    )
+    val permissionState = rememberMultiplePermissionsState(
+        permissions = listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+    )
 
     MifosScaffold(
         topBar = {
@@ -117,10 +184,26 @@ fun PathTrackingScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { locateLocation = locateLocation.not() }
+                        onClick = {
+                            if (userStatus) {
+                                // TODO stop Path Service
+                                updateUserStatus(false)
+                            } else {
+                                permissionState.permissions.all { per ->
+                                    per.status.isGranted
+                                }.let { allGranted ->
+                                    if (allGranted) {
+                                        // TODO Run Path Service
+                                        updateUserStatus(true)
+                                    } else {
+                                        permissionState.launchMultiplePermissionRequest()
+                                    }
+                                }
+                            }
+                        }
                     ) {
                         Icon(
-                            imageVector = if (locateLocation) Icons.Rounded.Stop else Icons.Rounded.MyLocation,
+                            imageVector = if (userStatus) Icons.Rounded.Stop else Icons.Rounded.MyLocation,
                             contentDescription = null,
                         )
                     }
@@ -130,21 +213,28 @@ fun PathTrackingScreen(
         snackbarHostState = snackbarHostState
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
-            when (state) {
-                is PathTrackingUiState.Error -> {
-                    MifosSweetError(message = stringResource(id = state.message)) {
-                        onRetry()
+            Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
+                when (state) {
+                    is PathTrackingUiState.Error -> {
+                        MifosSweetError(message = stringResource(id = state.message)) {
+                            onRetry()
+                        }
+                    }
+
+                    is PathTrackingUiState.Loading -> MifosCircularProgress()
+
+                    is PathTrackingUiState.PathTracking -> {
+                        PathTrackingContent(
+                            pathTrackingList = state.userLocations,
+                            onPathTrackingClick = onPathTrackingClick
+                        )
                     }
                 }
-
-                is PathTrackingUiState.Loading -> MifosCircularProgress()
-
-                is PathTrackingUiState.PathTracking -> {
-                    PathTrackingContent(
-                        pathTrackingList = state.userLocations,
-                        onPathTrackingClick = onPathTrackingClick
-                    )
-                }
+                PullRefreshIndicator(
+                    refreshing = refreshState,
+                    state = pullRefreshState,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
             }
         }
     }
@@ -154,7 +244,7 @@ fun PathTrackingScreen(
 @Composable
 fun PathTrackingContent(
     pathTrackingList: List<UserLocation>,
-    onPathTrackingClick: () -> Unit
+    onPathTrackingClick: (List<UserLatLng>) -> Unit
 ) {
     LazyColumn {
         items(pathTrackingList) { pathTracking ->
@@ -169,13 +259,14 @@ fun PathTrackingContent(
 @Composable
 fun PathTrackingItem(
     pathTracking: UserLocation,
-    onPathTrackingClick: () -> Unit
+    onPathTrackingClick: (List<UserLatLng>) -> Unit
 ) {
-    val testLatLng = LatLng(12.905150682069308, 77.5651237271759)
+    val latLngList = getLatLngList(pathTracking.latlng)
+    val latLng = latLngList[0]
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(testLatLng, 15f)
+        position = CameraPosition.fromLatLngZoom(LatLng(latLng.lat, latLng.lng), 15f)
     }
-    var uiSettings by remember {
+    val uiSettings by remember {
         mutableStateOf(MapUiSettings(zoomControlsEnabled = false))
     }
 
@@ -183,7 +274,7 @@ fun PathTrackingItem(
         modifier = Modifier
             .padding(8.dp),
         onClick = {
-            onPathTrackingClick()
+            onPathTrackingClick(latLngList)
         },
         colors = CardDefaults.outlinedCardColors(White)
     ) {
@@ -207,6 +298,14 @@ fun PathTrackingItem(
     }
 }
 
+private fun getLatLngList(latLngString: String?): List<UserLatLng> {
+    val gson = Gson()
+    return gson.fromJson(
+        latLngString,
+        object : TypeToken<List<UserLatLng>>() {}.type
+    )
+}
+
 
 class PathTrackingUiStateProvider : PreviewParameterProvider<PathTrackingUiState> {
 
@@ -217,7 +316,6 @@ class PathTrackingUiStateProvider : PreviewParameterProvider<PathTrackingUiState
             PathTrackingUiState.Error(R.string.feature_path_tracking_failed_to_load_path_tracking),
             PathTrackingUiState.PathTracking(samplePathTrackingList)
         )
-
 }
 
 @Preview(showBackground = true)
@@ -229,10 +327,20 @@ private fun PathTrackingScreenPreview(
         state = state,
         onBackPressed = {},
         onRetry = {},
-        onPathTrackingClick = {}
+        onPathTrackingClick = {},
+        onRefresh = {},
+        refreshState = false,
+        userStatus = false,
+        updateUserStatus = {}
     )
 }
 
 val samplePathTrackingList = List(10) {
-    UserLocation(user_id = it, latlng = "123,456", date = "")
+    UserLocation(
+        user_id = it,
+        latlng = "123,456",
+        date = "date $it",
+        start_time = "start time $it",
+        stop_time = "stop time $it",
+    )
 }
