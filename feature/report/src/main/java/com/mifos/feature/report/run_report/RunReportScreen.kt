@@ -21,6 +21,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -49,7 +51,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
@@ -113,7 +114,7 @@ private fun RunReportScreen(
     var showMenu by remember { mutableStateOf(false) }
     var menuTitle by rememberSaveable { mutableStateOf(MenuItems.Client.name) }
 
-    MifosScaffold(
+    Scaffold(
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = White),
@@ -196,7 +197,8 @@ private fun RunReportScreen(
                 actions = {}
             )
         },
-        snackbarHostState = snackbarHostState
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        containerColor = White
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
