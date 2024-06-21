@@ -22,8 +22,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DoneAll
+import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -58,6 +60,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPaginationSweetError
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
@@ -154,8 +157,21 @@ fun GroupsListScreen(
                             contentDescription = "GroupList::ContextualTopAppBar"
                         },
                     itemCount = selectedItems.size,
-                    syncClicked = { onSyncClick(selectedItems.toList()) },
-                    resetSelectionMode = resetSelectionMode
+                    resetSelectionMode = resetSelectionMode,
+                    actions = {
+                        FilledTonalButton(
+                            onClick = {
+                                onSyncClick(selectedItems.toList())
+                                resetSelectionMode()
+                            },
+                        ) {
+                            Icon(
+                                imageVector = MifosIcons.sync,
+                                contentDescription = "Sync Items",
+                            )
+                            Text(text = stringResource(id = R.string.feature_groups_sync))
+                        }
+                    }
                 )
             }
         },

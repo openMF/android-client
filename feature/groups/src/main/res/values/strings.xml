@@ -23,5 +23,6 @@
     <string name="feature_groups_savings_account">Savings Account</string>
     <string name="feature_groups_failed_to_load_client">Failed to Load Client</string>
     <string name="feature_groups_activate_group">Activate Group</string>
+    <string name="feature_groups_sync">Sync</string>
 
 </resources>

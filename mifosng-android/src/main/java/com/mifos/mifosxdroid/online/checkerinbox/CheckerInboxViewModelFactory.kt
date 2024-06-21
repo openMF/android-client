@@ -17,7 +17,7 @@ class CheckerInboxViewModelFactory @Inject constructor(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if (modelClass.isAssignableFrom(CheckerInboxTasksViewModel::class.java)) {
-            return CheckerInboxTasksViewModel(dataManagerCheckerInbox, subscription) as T
+            return CheckerInboxTasksViewModel(dataManagerCheckerInbox) as T
         }
         if (modelClass.isAssignableFrom(CheckerInboxViewModel::class.java)) {
             return CheckerInboxViewModel(dataManagerCheckerInbox, subscription) as T

@@ -25,4 +25,5 @@
     <string name="feature_center_summary_info">Summary Info</string>
     <string name="feature_center_activate_center">Activate Center</string>
 
+    <string name="feature_center_sync">Sync</string>
 </resources>

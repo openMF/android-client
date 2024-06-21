@@ -22,6 +22,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedCard
@@ -140,8 +141,21 @@ fun CenterListScreen(
             if (isInSelectionMode) {
                 SelectionModeTopAppBar(
                     itemCount = selectedItems.size,
-                    syncClicked = { syncClicked(selectedItems.toList()) },
-                    resetSelectionMode = resetSelectionMode
+                    resetSelectionMode = resetSelectionMode,
+                    actions = {
+                        FilledTonalButton(
+                            onClick = {
+                                syncClicked(selectedItems.toList())
+                                resetSelectionMode()
+                            },
+                        ) {
+                            Icon(
+                                imageVector = MifosIcons.sync,
+                                contentDescription = "Sync Items",
+                            )
+                            Text(text = stringResource(id = R.string.feature_center_sync))
+                        }
+                    }
                 )
             }
         },

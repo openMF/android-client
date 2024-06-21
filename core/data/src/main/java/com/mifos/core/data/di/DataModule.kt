@@ -2,12 +2,14 @@ package com.mifos.core.data.di
 
 import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.data.repository.CenterListRepository
+import com.mifos.core.data.repository.CheckerInboxRepository
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.data.repository_imp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.CenterListRepositoryImp
+import com.mifos.core.data.repository_imp.CheckerInboxRepositoryImp
 import com.mifos.core.data.repository_imp.CheckerInboxTasksRepositoryImp
 import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.GroupsListRepositoryImpl
@@ -40,4 +42,7 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindCenterDetailsRepository(impl: CenterDetailsRepositoryImp): CenterDetailsRepository
+
+    @Binds
+    internal abstract fun bindCheckerInboxRepository(impl: CheckerInboxRepositoryImp): CheckerInboxRepository
 }

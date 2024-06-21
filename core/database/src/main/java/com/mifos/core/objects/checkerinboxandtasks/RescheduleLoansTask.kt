@@ -1,11 +1,15 @@
 package com.mifos.core.objects.checkerinboxandtasks
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
-data class RescheduleLoansTask (@SerializedName("id") var id: Int,
-                        @SerializedName("clientName") var clientName: String,
-                        @SerializedName("loanAccountNumber") var loanAccountNo: String,
-                        @SerializedName("rescheduleFromDate") var rescheduleFromDate: Array<Int>,
-                        @SerializedName("actionName") var action: String,
-                        @SerializedName("rescheduleReasonCodeValue")
-                                var rescheduleReasonCodeValue: RescheduleReasonCodeValue)
+@Parcelize
+data class RescheduleLoansTask(
+    var id: Int,
+    var clientName: String,
+    var loanAccountNumber: String,
+    var rescheduleFromDate: Array<Int>,
+    var actionName: String,
+    var rescheduleReasonCodeValue: RescheduleReasonCodeValue
+) : Parcelable

@@ -2,6 +2,7 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
 import com.mifos.core.objects.checkerinboxandtasks.RescheduleLoansTask
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
 
@@ -11,11 +12,11 @@ import rx.Observable
 
 interface CheckerInboxTasksRepository {
 
-    fun getRescheduleLoansTaskList(): Observable<List<RescheduleLoansTask>>
+    suspend fun getRescheduleLoansTaskList(): Flow<List<RescheduleLoansTask>>
 
-    fun getCheckerTaskList(
+    suspend fun getCheckerTaskList(
         actionName: String? = null, entityName: String? = null,
         resourceId: Int? = null
-    ): Observable<List<CheckerTask>>
+    ): Flow<List<CheckerTask>>
 
 }

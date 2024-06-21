@@ -14,28 +14,28 @@ class DataManagerCheckerInbox @Inject constructor(
 ) {
 
 
-    fun getCheckerTaskList(
+    suspend fun getCheckerTaskList(
         actionName: String? = null, entityName: String? = null,
         resourceId: Int? = null
-    ): Observable<List<CheckerTask>> {
+    ): List<CheckerTask> {
         return mBaseApiManager.checkerInboxApi.getCheckerList(
             actionName, entityName, resourceId
         )
     }
 
-    fun approveCheckerEntry(auditId: Int): Observable<GenericResponse> {
+    suspend fun approveCheckerEntry(auditId: Int): GenericResponse {
         return mBaseApiManager.checkerInboxApi.approveCheckerEntry(auditId)
     }
 
-    fun rejectCheckerEntry(auditId: Int): Observable<GenericResponse> {
+    suspend fun rejectCheckerEntry(auditId: Int): GenericResponse {
         return mBaseApiManager.checkerInboxApi.rejectCheckerEntry(auditId)
     }
 
-    fun deleteCheckerEntry(auditId: Int): Observable<GenericResponse> {
+    suspend fun deleteCheckerEntry(auditId: Int): GenericResponse {
         return mBaseApiManager.checkerInboxApi.deleteCheckerEntry(auditId)
     }
 
-    fun getRechdeduleLoansTaskList(): Observable<List<RescheduleLoansTask>> {
+    suspend fun getRechdeduleLoansTaskList(): List<RescheduleLoansTask> {
         return mBaseApiManager.checkerInboxApi.getRescheduleLoansTaskList()
     }
 

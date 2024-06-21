@@ -6,7 +6,13 @@ import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.PersonOutline
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Sync
 
 object MifosIcons {
     val Add = Icons.Rounded.Add
@@ -15,4 +21,10 @@ object MifosIcons {
     val eventRepeat = Icons.Outlined.EventRepeat
     val date = Icons.Outlined.DateRange
     val arrowBack = Icons.Rounded.ArrowBackIosNew
+    val search = Icons.Rounded.Search
+    val filter = Icons.Rounded.FilterList
+    val sync = Icons.Rounded.Sync
+    val check = Icons.Rounded.Check
+    val close = Icons.Rounded.Close
+    val delete = Icons.Rounded.Delete
 }
