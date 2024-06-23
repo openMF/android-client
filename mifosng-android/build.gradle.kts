@@ -134,6 +134,7 @@ dependencies {
     implementation(projects.feature.groups)
     implementation(projects.feature.settings)
     implementation(projects.feature.center)
+    implementation(projects.feature.about)
 
     implementation(projects.core.common)
     implementation(projects.core.ui)
