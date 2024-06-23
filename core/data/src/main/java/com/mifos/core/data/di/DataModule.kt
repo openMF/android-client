@@ -7,6 +7,7 @@ import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
+import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.data.repository_imp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.CenterListRepositoryImp
 import com.mifos.core.data.repository_imp.CheckerInboxRepositoryImp
@@ -14,6 +15,7 @@ import com.mifos.core.data.repository_imp.CheckerInboxTasksRepositoryImp
 import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.GroupsListRepositoryImpl
 import com.mifos.core.data.repository_imp.NewIndividualCollectionSheetRepositoryImp
+import com.mifos.core.data.repository_imp.ReportCategoryRepositoryImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -45,4 +47,7 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindCheckerInboxRepository(impl: CheckerInboxRepositoryImp): CheckerInboxRepository
+
+    @Binds
+    internal abstract fun bindReportCategoryRepository(impl: ReportCategoryRepositoryImp): ReportCategoryRepository
 }
