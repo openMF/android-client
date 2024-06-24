@@ -1,5 +1,5 @@
 @file:OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class,
+    ExperimentalMaterialApi::class,
     ExperimentalPermissionsApi::class
 )
 
@@ -25,7 +25,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
@@ -37,6 +36,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -54,8 +54,6 @@ import androidx.core.content.ContextCompat.registerReceiver
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
@@ -67,11 +65,13 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.user.UserLatLng
 import com.mifos.core.objects.user.UserLocation
+import com.mifos.feature.path.tracking.R
 
 @Composable
 fun PathTrackingScreen(
@@ -145,16 +145,29 @@ fun PathTrackingScreen(
         refreshing = refreshState,
         onRefresh = onRefresh
     )
-    val permissionState = rememberMultiplePermissionsState(
-        permissions = listOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+    var checkPermission by remember { mutableStateOf(false) }
+
+
+    if (checkPermission) {
+        PermissionBox(
+            requiredPermissions = listOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ),
+            title = R.string.feature_path_tracking_permission_required,
+            description = R.string.feature_path_tracking_approve_permission_description_location,
+            confirmButtonText = R.string.feature_path_tracking_proceed,
+            dismissButtonText = R.string.feature_path_tracking_dismiss,
+            onGranted = {
+                updateUserStatus(true)
+            }
         )
-    )
+    }
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_path_tracking_track_my_path),
+        onBackPressed = onBackPressed,
         actions = {
             IconButton(
                 onClick = {
@@ -162,16 +175,7 @@ fun PathTrackingScreen(
                         // TODO stop Path Service
                         updateUserStatus(false)
                     } else {
-                        permissionState.permissions.all { per ->
-                            per.status.isGranted
-                        }.let { allGranted ->
-                            if (allGranted) {
-                                // TODO Run Path Service
-                                updateUserStatus(true)
-                            } else {
-                                permissionState.launchMultiplePermissionRequest()
-                            }
-                        }
+                        checkPermission = true
                     }
                 }
             ) {

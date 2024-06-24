@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mifos.feature.path_tracking"
+    namespace = "com.mifos.feature.path.tracking"
 }
 
 dependencies {
