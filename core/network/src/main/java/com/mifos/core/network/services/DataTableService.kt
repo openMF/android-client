@@ -52,5 +52,5 @@ interface DataTableService {
     ): Observable<GenericResponse>
 
     @GET(APIEndPoint.DATATABLES + "/user_tracking/{userId}")
-    fun getUserPathTracking(@Path("userId") userId: Int): Observable<List<UserLocation>>
+    suspend fun getUserPathTracking(@Path("userId") userId: Int): List<UserLocation>
 }

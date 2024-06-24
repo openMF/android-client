@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.activity.pathtracking
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.network.datamanager.DataManagerDataTable
 import com.mifos.core.objects.user.UserLocation
 import rx.Observable
@@ -11,7 +12,7 @@ import javax.inject.Inject
 class PathTrackingRepositoryImp @Inject constructor(private val dataManagerDataTable: DataManagerDataTable) :
     PathTrackingRepository {
 
-    override fun getUserPathTracking(userId: Int): Observable<List<UserLocation>> {
+    override suspend fun getUserPathTracking(userId: Int): List<UserLocation> {
         return dataManagerDataTable.getUserPathTracking(userId)
     }
 

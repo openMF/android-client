@@ -79,7 +79,7 @@ class DataManagerDataTable @Inject constructor(
      * @param userId UserId Id
      * @return List<UserLocation>
     </UserLocation> */
-    fun getUserPathTracking(userId: Int): Observable<List<UserLocation>> {
+    suspend fun getUserPathTracking(userId: Int): List<UserLocation> {
         return mBaseApiManager.dataTableApi.getUserPathTracking(userId)
     }
 }
