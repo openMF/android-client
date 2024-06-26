@@ -1,6 +1,7 @@
-package com.mifos.mifosxdroid.online.note
+package com.mifos.feature.note
 
 import com.mifos.core.objects.noncore.Note
+
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -8,8 +9,6 @@ import com.mifos.core.objects.noncore.Note
 sealed class NoteUiState {
 
     data object ShowProgressbar : NoteUiState()
-
-    data object ShowResetVisibility : NoteUiState()
 
     data class ShowError(val message: Int) : NoteUiState()
 
