@@ -272,10 +272,10 @@ class PathTrackingService : Service(), ConnectionCallbacks, OnConnectionFailedLi
     private fun buildUserLocation(): UserLocation {
         val userLocation = UserLocation()
         userLocation.latlng = latLngs.toString()
-        userLocation.startTime = startTime
-        userLocation.stopTime = stopTime
+        userLocation.start_time = startTime
+        userLocation.stop_time = stopTime
         userLocation.date = date
-        userLocation.userId = PrefManager.getUserId()
+        userLocation.user_id = PrefManager.getUserId()
         return userLocation
     }
 

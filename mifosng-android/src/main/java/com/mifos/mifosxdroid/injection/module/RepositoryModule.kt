@@ -89,12 +89,8 @@ import com.mifos.mifosxdroid.online.note.NoteRepository
 import com.mifos.mifosxdroid.online.note.NoteRepositoryImp
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepository
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepositoryImp
-import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingRepository
-import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingRepositoryImp
 import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepository
 import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepositoryImp
-import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryRepository
-import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryRepositoryImp
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailRepository
 import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailRepositoryImp
 import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepository
@@ -159,11 +155,6 @@ class RepositoryModule {
     @Provides
     fun providesCenterListRepository(dataManagerCenter: DataManagerCenter): CenterListRepository {
         return CenterListRepositoryImp(dataManagerCenter)
-    }
-
-    @Provides
-    fun providesPathTrackingRepository(dataTable: DataManagerDataTable): PathTrackingRepository {
-        return PathTrackingRepositoryImp(dataTable)
     }
 
     @Provides
@@ -341,11 +332,6 @@ class RepositoryModule {
     @Provides
     fun providesReportDetailRepository(dataManager: DataManagerRunReport): ReportDetailRepository {
         return ReportDetailRepositoryImp(dataManager)
-    }
-
-    @Provides
-    fun providesReportCategoryRepository(dataManager: DataManagerRunReport): ReportCategoryRepository {
-        return ReportCategoryRepositoryImp(dataManager)
     }
 
     @Provides

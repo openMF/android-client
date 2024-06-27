@@ -29,7 +29,7 @@
                 android:id="@+id/iv_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_report_item" />
+                app:srcCompat="@drawable/feature_report_ic_report_item" />
         </LinearLayout>
 
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="feature_report_failed_to_fetch_reports">Failed to Fetch Reports</string>
+    <string name="feature_report_client">Client</string>
+    <string name="feature_report_loan">Loan</string>
+    <string name="feature_report_savings">Savings</string>
+    <string name="feature_report_fund">Fund</string>
+    <string name="feature_report_accounting">Accounting</string>
+    <string name="feature_report_xbrl">XBRL</string>
+    <string name="feature_report_all">All</string>
+
+    <string name="feature_report_no_reports_found">No Reports Found</string>
+
+</resources>
