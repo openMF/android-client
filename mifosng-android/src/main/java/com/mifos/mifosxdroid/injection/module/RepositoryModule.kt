@@ -1,5 +1,7 @@
 package com.mifos.mifosxdroid.injection.module
 
+import com.mifos.core.data.repository.NoteRepository
+import com.mifos.core.data.repository_imp.NoteRepositoryImp
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerAuth
 import com.mifos.core.network.datamanager.DataManagerCenter
@@ -85,8 +87,6 @@ import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepository
 import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepositoryImp
 import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
-import com.mifos.mifosxdroid.online.note.NoteRepository
-import com.mifos.mifosxdroid.online.note.NoteRepositoryImp
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepository
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepositoryImp
 import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepository

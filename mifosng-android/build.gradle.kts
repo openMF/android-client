@@ -127,6 +127,7 @@ secrets {
 
 dependencies {
 
+    implementation(projects.feature.note)
     implementation(projects.feature.auth)
     implementation(projects.feature.client)
     implementation(projects.feature.checkerInboxTask)

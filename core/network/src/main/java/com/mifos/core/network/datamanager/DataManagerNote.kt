@@ -1,9 +1,10 @@
 package com.mifos.core.network.datamanager
 
+import android.database.Observable
 import com.mifos.core.databasehelper.DatabaseHelperNote
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.objects.noncore.Note
-import rx.Observable
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,7 +21,7 @@ class DataManagerNote @Inject constructor(
     /**
      * This Method Request the REST API of Note and In response give the List of Notes
      */
-    fun getNotes(entityType: String?, entityId: Int): Observable<List<Note>> {
+    fun getNotes(entityType: String?, entityId: Int): List<Note> {
         return mBaseApiManager.noteApi.getNotes(entityType, entityId)
     }
 }
