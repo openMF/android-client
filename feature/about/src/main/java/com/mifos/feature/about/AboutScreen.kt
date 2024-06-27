@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -40,6 +39,8 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.White
+import com.mifos.core.designsystem.theme.aboutItemTextStyle
+import com.mifos.core.designsystem.theme.aboutItemTextStyleBold
 
 
 @Composable
@@ -128,23 +129,14 @@ fun AboutScreenContent(
             .fillMaxWidth()
             .padding(16.dp),
         text = stringResource(id = R.string.feature_about_mifos_x_droid),
-        style = TextStyle(
-            fontSize = 24.sp,
-            fontWeight = FontWeight.SemiBold,
-        ),
-        color = Black,
-        textAlign = TextAlign.Center
+        style = aboutItemTextStyleBold
     )
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp),
         text = stringResource(id = R.string.feature_about_app),
-        style = TextStyle(
-            fontSize = 16.sp
-        ),
-        color = Black,
-        textAlign = TextAlign.Center
+        style = aboutItemTextStyle
     )
     Text(
         modifier = Modifier
