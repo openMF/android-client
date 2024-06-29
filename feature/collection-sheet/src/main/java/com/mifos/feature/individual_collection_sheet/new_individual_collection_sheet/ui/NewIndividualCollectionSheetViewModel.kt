@@ -3,11 +3,11 @@ package com.mifos.feature.individual_collection_sheet.new_individual_collection_
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
+import com.mifos.core.domain.use_cases.GetIndividualCollectionSheetUseCase
+import com.mifos.core.domain.use_cases.GetOfficeListUseCase
+import com.mifos.core.domain.use_cases.GetStaffInOfficeUseCase
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
-import com.mifos.feature.individual_collection_sheet.new_individual_collection_sheet.domain.use_case.GetIndividualCollectionSheetUseCase
-import com.mifos.feature.individual_collection_sheet.new_individual_collection_sheet.domain.use_case.GetOfficeListUseCase
-import com.mifos.feature.individual_collection_sheet.new_individual_collection_sheet.domain.use_case.GetStaffInOfficeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,8 +1,8 @@
-package com.mifos.mifosxdroid.online.createnewcenter
+package com.mifos.core.data.repository_imp
 
 import com.mifos.core.data.CenterPayload
+import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.network.datamanager.DataManagerCenter
-import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.response.SaveResponse
 import rx.Observable
 import javax.inject.Inject
@@ -12,10 +12,6 @@ import javax.inject.Inject
  */
 class CreateNewCenterRepositoryImp @Inject constructor(private val dataManagerCenter: DataManagerCenter) :
     CreateNewCenterRepository {
-
-    override fun offices(): Observable<List<Office>> {
-        return dataManagerCenter.offices
-    }
 
     override fun createCenter(centerPayload: CenterPayload): Observable<SaveResponse> {
         return dataManagerCenter.createCenter(centerPayload)

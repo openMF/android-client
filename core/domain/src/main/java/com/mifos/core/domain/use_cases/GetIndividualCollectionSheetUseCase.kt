@@ -1,4 +1,4 @@
-package com.mifos.feature.individual_collection_sheet.new_individual_collection_sheet.domain.use_case
+package com.mifos.core.domain.use_cases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
