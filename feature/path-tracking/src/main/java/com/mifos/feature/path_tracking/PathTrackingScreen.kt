@@ -128,6 +128,7 @@ fun PathTrackingScreen(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PathTrackingScreen(
     state: PathTrackingUiState,
