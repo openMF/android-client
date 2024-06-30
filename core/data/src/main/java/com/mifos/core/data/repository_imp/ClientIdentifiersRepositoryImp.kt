@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.clientidentifiers
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.objects.noncore.Identifier
 import org.apache.fineract.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
@@ -22,6 +23,5 @@ class ClientIdentifiersRepositoryImp @Inject constructor(private val dataManager
     ): Observable<DeleteClientsClientIdIdentifiersIdentifierIdResponse> {
         return dataManagerClient.deleteClientIdentifier(clientId, identifierId)
     }
-
 
 }
