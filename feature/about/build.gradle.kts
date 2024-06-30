@@ -5,11 +5,10 @@ plugins {
 }
 
 android {
-    namespace = "com.mifos.feature.collection_sheet"
+    namespace = "com.mifos.feature.about"
 }
 
 dependencies {
-
     implementation(projects.core.domain)
 
     //DBFlow dependencies

@@ -10,11 +10,12 @@ android {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    implementation(libs.androidx.runtime.livedata)
-    testImplementation(libs.junit4)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
+    //DBFlow dependencies
+    kapt(libs.dbflow.processor)
+    implementation(libs.dbflow)
+    kapt(libs.github.dbflow.processor)
+    testImplementation(libs.hilt.android.testing)
+    testImplementation(projects.core.testing)
+
+    androidTestImplementation(projects.core.testing)
 }

@@ -26,4 +26,20 @@
     <string name="feature_center_activate_center">Activate Center</string>
 
     <string name="feature_center_sync">Sync</string>
+
+    <string name="feature_center_failed_to_load_offices">Failed to load Offices</string>
+    <string name="feature_center_failed_to_create_center">Failed to Create Center</string>
+
+    <string name="feature_center_create_new_center">Create New Center</string>
+    <string name="feature_center_center_name">Name</string>
+    <string name="feature_center_office">Office</string>
+    <string name="feature_center_select">Select</string>
+    <string name="feature_center_cancel">Cancel</string>
+    <string name="feature_center_create">Create</string>
+    <string name="feature_center_center_name_empty">Center Name can\'t be empty</string>
+    <string name="feature_center_center_name_should_be_more_than_4_characters">Center Name should be more than 4 characters</string>
+    <string name="feature_center_center_name_should_not_contains_special_characters_or_numbers">Center Name should not contains any special characters or numbers</string>
+    <string name="feature_center_select_office">Select Office</string>
+    <string name="feature_center_activate">Activate</string>
+    <string name="feature_center_center_created_successfully">Center Created Successfully</string>
 </resources>
