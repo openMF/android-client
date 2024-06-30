@@ -6,7 +6,10 @@ import androidx.lifecycle.ViewModel
 import com.mifos.core.objects.group.GroupPayload
 import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.response.SaveResponse
+import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -19,9 +22,8 @@ import javax.inject.Inject
 class CreateNewGroupViewModel @Inject constructor(private val repository: CreateNewGroupRepository) :
     ViewModel() {
 
-    private val _createNewGroupUiState = MutableLiveData<CreateNewGroupUiState>()
-
-    val createNewGroupUiState: LiveData<CreateNewGroupUiState>
+    private val _createNewGroupUiState = MutableStateFlow<CreateNewGroupUiState>(CreateNewGroupUiState.ShowProgressbar)
+    val createNewGroupUiState: StateFlow<CreateNewGroupUiState>
         get() = _createNewGroupUiState
 
     fun loadOffices() {
