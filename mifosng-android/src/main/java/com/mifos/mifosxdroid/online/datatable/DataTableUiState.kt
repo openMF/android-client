@@ -9,8 +9,6 @@ sealed class DataTableUiState {
 
     data object ShowProgressbar : DataTableUiState()
 
-    data object ShowResetVisibility : DataTableUiState()
-
     data class ShowError(val message: Int) : DataTableUiState()
 
     data class ShowDataTables(val dataTables: List<DataTable>) : DataTableUiState()
