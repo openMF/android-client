@@ -1,6 +1,7 @@
 package com.mifos.core.designsystem.component
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -23,9 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -98,6 +102,61 @@ fun MifosOutlinedTextField(
     )
 }
 
+@Composable
+fun MifosOutlinedTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    maxLines: Int = 1,
+    singleLine: Boolean = true,
+    icon: ImageVector? = null,
+    label: String,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    error: Int?
+) {
+
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp),
+        leadingIcon = if (icon != null) {
+            {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = if (isSystemInDarkTheme()) White else DarkGray
+                )
+            }
+        } else null,
+        trailingIcon = trailingIcon,
+        maxLines = maxLines,
+        singleLine = singleLine,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+            focusedLabelColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
+        ),
+        textStyle = LocalDensity.current.run {
+            TextStyle(fontSize = 18.sp)
+        },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        visualTransformation = visualTransformation,
+        isError = error != null,
+        supportingText = if (error != null) {
+            {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(id = error),
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        } else {
+            null
+        }
+    )
+}
 
 @Composable
 fun MifosOutlinedTextField(
