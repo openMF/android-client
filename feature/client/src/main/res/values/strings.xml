@@ -35,6 +35,14 @@
     <string name="feature_client_upload_new_image">Upload new image</string>
     <string name="feature_client_delete_image">Delete Image</string>
 
+    <string name="feature_client_failed_to_load_client_identifiers">Failed to load client identifiers</string>
+    <string name="feature_client_failed_to_delete_identifier">Failed to delete identifier</string>
+    <string name="feature_client_there_is_no_identifier_to_show">There is no identifier to show</string>
+    <string name="feature_client_id">Id</string>
+    <string name="feature_client_type">Type</string>
+    <string name="feature_client_description">Description</string>
+    <string name="feature_client_remove">Remove</string>
+    <string name="feature_client_identifier_deleted">Identifier Deleted Successfully</string>
     <string name="feature_client_failed_to_load_client_charges">Failed To Load Client Charges</string>
     <string name="feature_client_client_id">Client Id</string>
     <string name="feature_client_charge_name">Charge Name</string>
