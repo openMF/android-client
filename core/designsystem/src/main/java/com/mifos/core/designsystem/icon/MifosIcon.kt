@@ -1,6 +1,7 @@
 package com.mifos.core.designsystem.icon
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Group
@@ -33,4 +34,6 @@ object MifosIcons {
     val arrowUp = Icons.Rounded.KeyboardArrowUp
     val threeDotVertical = Icons.Rounded.MoreVert
     val arrowDown = Icons.Rounded.KeyboardArrowDown
+    val moreVert = Icons.Rounded.MoreVert
+    val fileTask = Icons.Default.AssignmentTurnedIn
 }

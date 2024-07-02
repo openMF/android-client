@@ -19,3 +19,17 @@ val aboutItemTextStyleBold = TextStyle(
     fontSize = 24.sp,
     fontWeight = FontWeight.SemiBold
 )
+
+val identifierTextStyleDark = TextStyle(
+    color = Color.Black,
+    textAlign = TextAlign.Start,
+    fontSize = 16.sp,
+    fontWeight = FontWeight.Normal
+)
+
+val identifierTextStyleLight = TextStyle(
+    color = DarkGray,
+    textAlign = TextAlign.Start,
+    fontSize = 16.sp,
+    fontWeight = FontWeight.Normal
+)

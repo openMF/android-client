@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.clientidentifiers
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.noncore.Identifier
 import org.apache.fineract.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse

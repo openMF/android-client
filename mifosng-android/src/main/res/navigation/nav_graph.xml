@@ -175,6 +175,9 @@
         android:id="@+id/clientIdentifiersFragment"
         android:name="com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment"
         android:label="ClientIdentifiersFragment">
+        <action
+            android:id="@+id/action_clientIdentifiersFragment_to_documentListFragment"
+            app:destination="@id/documentListFragment" />
         <argument
             android:name="clientId"
             app:argType="integer" />

@@ -61,8 +61,6 @@ import com.mifos.mifosxdroid.online.clientcharge.ClientChargeRepository
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeRepositoryImp
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsRepository
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsRepositoryImp
-import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersRepository
-import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersRepositoryImp
 import com.mifos.mifosxdroid.online.clientlist.ClientListRepository
 import com.mifos.mifosxdroid.online.clientlist.ClientListRepositoryImp
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
@@ -237,11 +235,6 @@ class RepositoryModule {
     @Provides
     fun providesSignatureRepository(dataManagerDocument: DataManagerDocument): SignatureRepository {
         return SignatureRepositoryImp(dataManagerDocument)
-    }
-
-    @Provides
-    fun providesClientIdentifiersRepository(dataManagerClient: DataManagerClient): ClientIdentifiersRepository {
-        return ClientIdentifiersRepositoryImp(dataManagerClient)
     }
 
     @Provides
