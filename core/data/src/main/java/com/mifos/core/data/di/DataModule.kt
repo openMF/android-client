@@ -1,24 +1,26 @@
 package com.mifos.core.data.di
 
 
+import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.data.repository.CenterListRepository
 import com.mifos.core.data.repository.CheckerInboxRepository
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
-import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.ClientChargeRepository
+import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.data.repository.ReportCategoryRepository
+import com.mifos.core.data.repository_imp.ActivateRepositoryImp
 import com.mifos.core.data.repository_imp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.CenterListRepositoryImp
 import com.mifos.core.data.repository_imp.CheckerInboxRepositoryImp
 import com.mifos.core.data.repository_imp.CheckerInboxTasksRepositoryImp
-import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repository_imp.ClientChargeRepositoryImp
+import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repository_imp.CreateNewCenterRepositoryImp
 import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.GroupsListRepositoryImpl
@@ -65,10 +67,13 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindClientChargeRepository(impl: ClientChargeRepositoryImp): ClientChargeRepository
-  
+
     @Binds
     internal abstract fun bindCreateNewCenterRepository(impl: CreateNewCenterRepositoryImp): CreateNewCenterRepository
 
     @Binds
     internal abstract fun bindClientIdentifiersRepository(impl: ClientIdentifiersRepositoryImp): ClientIdentifiersRepository
+
+    @Binds
+    internal abstract fun bindActivateRepository(impl: ActivateRepositoryImp): ActivateRepository
 }
