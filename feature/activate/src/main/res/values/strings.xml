@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_activate">Activate</string>
+    <string name="feature_activate_activation_date">Activation date</string>
+    <string name="feature_activate_select">Select</string>
+    <string name="feature_activate_cancel">Cancel</string>
+    <string name="feature_activate_client">Client activated successfully</string>
+    <string name="feature_activate_center">Center activated successfully</string>
+    <string name="feature_activate_group">Group activated successfully</string>
+    <string name="feature_activate_failed_to_activate_client">Failed to activate client</string>
+    <string name="feature_activate_failed_to_activate_center">Failed to activate center</string>
+    <string name="feature_activate_failed_to_activate_group">Failed to activate group</string>
+
+</resources>
