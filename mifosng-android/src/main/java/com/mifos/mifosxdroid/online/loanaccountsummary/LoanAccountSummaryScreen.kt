@@ -16,6 +16,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -133,17 +136,46 @@ fun LoanAccountSummaryScreen(
                 )
             }
             if (openDropdown) {
-                LoanAccountSummaryMenuDropdown(
-                    dropDownvalue = openDropdown,
-                    setDropDownValueToFalse = {
-                        openDropdown = false
-                    },
-                    onMoreInfoClicked = onMoreInfoClicked,
-                    onChargesClicked = onChargesClicked,
-                    onTransactionsClicked = onTransactionsClicked,
-                    onRepaymentScheduleClicked = onRepaymentScheduleClicked,
-                    onDocumentsClicked = onDocumentsClicked,
-                )
+                DropdownMenu(
+                    expanded = openDropdown,
+                    onDismissRequest = { openDropdown = false }
+                ) {
+                    MifosMenuDropDownItem(
+                        option = Constants.DATA_TABLE_LOAN_NAME,
+                        onClick = {
+                            openDropdown = false
+                            onMoreInfoClicked.invoke()
+                        }
+                    )
+                    MifosMenuDropDownItem(
+                        option = stringResource(id = R.string.transactions),
+                        onClick = {
+                            openDropdown = false
+                            onTransactionsClicked.invoke()
+                        }
+                    )
+                    MifosMenuDropDownItem(
+                        option = stringResource(id = R.string.loan_repayment_schedule),
+                        onClick = {
+                            openDropdown = false
+                            onRepaymentScheduleClicked.invoke()
+                        }
+                    )
+                    MifosMenuDropDownItem(
+                        option = stringResource(id = R.string.documents),
+                        onClick = {
+                            openDropdown = false
+                            onDocumentsClicked.invoke()
+                        }
+                    )
+                    MifosMenuDropDownItem(
+                        option = stringResource(id = R.string.charges),
+                        onClick = {
+                            openDropdown = false
+                            onChargesClicked.invoke()
+                        }
+                    )
+                }
             }
         }) {
         Box(
@@ -185,6 +217,7 @@ fun LoanAccountSummaryContent(
 ) {
     val context = LocalContext.current
     val inflateLoanSummary = getInflateLoanSummaryValue(status = loanWithAssociations.status)
+    val scrollState = rememberScrollState()
 
     fun getActualDisbursementDateInStringFormat(): String {
         try {
@@ -205,6 +238,7 @@ fun LoanAccountSummaryContent(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 8.dp)
+            .verticalScroll(scrollState)
     ) {
         Text(
             modifier = Modifier
@@ -473,48 +507,7 @@ private fun LoanAccountSummaryMenuDropdown(
         mutableStateOf(dropDownvalue)
     }
 
-    if (dropDownvalue) {
-        DropdownMenu(
-            expanded = openDropdown,
-            onDismissRequest = { setDropDownValueToFalse.invoke() }
-        ) {
-            MifosMenuDropDownItem(
-                option = Constants.DATA_TABLE_LOAN_NAME,
-                onClick = {
-                    setDropDownValueToFalse.invoke()
-                    onMoreInfoClicked.invoke()
-                }
-            )
-            MifosMenuDropDownItem(
-                option = stringResource(id = R.string.transactions),
-                onClick = {
-                    setDropDownValueToFalse.invoke()
-                    onTransactionsClicked.invoke()
-                }
-            )
-            MifosMenuDropDownItem(
-                option = stringResource(id = R.string.loan_repayment_schedule),
-                onClick = {
-                    setDropDownValueToFalse.invoke()
-                    onRepaymentScheduleClicked.invoke()
-                }
-            )
-            MifosMenuDropDownItem(
-                option = stringResource(id = R.string.documents),
-                onClick = {
-                    setDropDownValueToFalse.invoke()
-                    onDocumentsClicked.invoke()
-                }
-            )
-            MifosMenuDropDownItem(
-                option = stringResource(id = R.string.charges),
-                onClick = {
-                    setDropDownValueToFalse.invoke()
-                    onChargesClicked.invoke()
-                }
-            )
-        }
-    }
+
 }
 
 private fun getButtonText(context: Context, status: Status): String {
@@ -527,7 +520,7 @@ private fun getButtonText(context: Context, status: Status): String {
             context.resources.getString(R.string.approve_loan)
         }
 
-        status.waitingForDisbursal == true  -> {
+        status.waitingForDisbursal == true -> {
             context.resources.getString(R.string.disburse_loan)
         }
 
