@@ -132,7 +132,7 @@ fun LoanAccountSummaryScreen(
         actions = {
             IconButton(onClick = { openDropdown = !openDropdown }) {
                 Icon(
-                    imageVector = MifosIcons.threeDotVertical, contentDescription = null
+                    imageVector = MifosIcons.moreVert, contentDescription = null
                 )
             }
             if (openDropdown) {
@@ -237,7 +237,7 @@ fun LoanAccountSummaryContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 24.dp)
             .verticalScroll(scrollState)
     ) {
         Text(
@@ -453,18 +453,18 @@ private fun DataTableRow(
         Text(
             text = summaryColumnTitle,
             modifier = Modifier
-                .weight(2f)
+                .weight(2.5f)
                 .padding(vertical = 6.dp)
                 .padding(start = 2.dp),
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal
+            fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
         )
 
         Text(
             text = loanColumnValue,
             modifier = Modifier
-                .weight(3f)
-                .padding(horizontal = 8.dp, vertical = 6.dp),
+                .weight(2.8f)
+                .padding(horizontal = 6.dp, vertical = 6.dp),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
@@ -473,8 +473,8 @@ private fun DataTableRow(
         Text(
             text = amountColumnValue,
             modifier = Modifier
-                .weight(3f)
-                .padding(end = 8.dp, top = 6.dp, bottom = 6.dp),
+                .weight(2.7f)
+                .padding(end = 6.dp, top = 6.dp, bottom = 6.dp),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
@@ -491,23 +491,6 @@ private fun DataTableRow(
             textAlign = TextAlign.End
         )
     }
-}
-
-@Composable
-private fun LoanAccountSummaryMenuDropdown(
-    dropDownvalue: Boolean,
-    setDropDownValueToFalse: () -> Unit,
-    onMoreInfoClicked: () -> Unit,
-    onTransactionsClicked: () -> Unit,
-    onRepaymentScheduleClicked: () -> Unit,
-    onDocumentsClicked: () -> Unit,
-    onChargesClicked: () -> Unit
-) {
-    var openDropdown by rememberSaveable {
-        mutableStateOf(dropDownvalue)
-    }
-
-
 }
 
 private fun getButtonText(context: Context, status: Status): String {

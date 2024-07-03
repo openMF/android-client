@@ -32,7 +32,6 @@ object MifosIcons {
     val close = Icons.Rounded.Close
     val delete = Icons.Rounded.Delete
     val arrowUp = Icons.Rounded.KeyboardArrowUp
-    val threeDotVertical = Icons.Rounded.MoreVert
     val arrowDown = Icons.Rounded.KeyboardArrowDown
     val moreVert = Icons.Rounded.MoreVert
     val fileTask = Icons.Default.AssignmentTurnedIn
