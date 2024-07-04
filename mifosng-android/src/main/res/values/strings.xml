@@ -68,6 +68,7 @@
     <string name="id">ID</string>
     <string name="charge_id">Charge Id</string>
     <string name="transactions">Transactions</string>
+    <string name="loan_transactions">Loan Transactions</string>
     <string name="name">Name</string>
     <string name="charge_name">Charge Name</string>
     <string name="description">Description</string>
