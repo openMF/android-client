@@ -10,6 +10,7 @@ import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.data.repository.GroupsListRepository
+import com.mifos.core.data.repository.LoanAccountRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.data.repository.PinPointClientRepository
@@ -23,6 +24,7 @@ import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repository_imp.CreateNewCenterRepositoryImp
 import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.GroupsListRepositoryImpl
+import com.mifos.core.data.repository_imp.LoanAccountRepositoryImp
 import com.mifos.core.data.repository_imp.NewIndividualCollectionSheetRepositoryImp
 import com.mifos.core.data.repository_imp.PathTrackingRepositoryImp
 import com.mifos.core.data.repository_imp.PinPointClientRepositoryImp
@@ -76,4 +78,7 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindPinpointRepository(impl: PinPointClientRepositoryImp): PinPointClientRepository
+    
+    @Binds
+    internal abstract fun bindLoanAccountRepository(impl: LoanAccountRepositoryImp): LoanAccountRepository
 }

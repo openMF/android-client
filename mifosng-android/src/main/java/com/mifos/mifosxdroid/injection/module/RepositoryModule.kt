@@ -87,8 +87,6 @@ import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountRepository
 import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountRepositoryImp
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepositoryImp
-import com.mifos.mifosxdroid.online.loanaccount.LoanAccountRepository
-import com.mifos.mifosxdroid.online.loanaccount.LoanAccountRepositoryImp
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApprovalRepository
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApprovalRepositoryImp
 import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementRepository
@@ -219,11 +217,6 @@ class RepositoryModule {
     @Provides
     fun providesSavingAccountRepository(dataManagerSavings: DataManagerSavings): SavingsAccountRepository {
         return SavingsAccountRepositoryImp(dataManagerSavings)
-    }
-
-    @Provides
-    fun providesLoanAccountRepository(dataManagerLoan: DataManagerLoan): LoanAccountRepository {
-        return LoanAccountRepositoryImp(dataManagerLoan)
     }
 
     @Provides
