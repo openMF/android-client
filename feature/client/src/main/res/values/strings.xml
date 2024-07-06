@@ -50,4 +50,21 @@
     <string name="feature_client_due_date">Due Date</string>
     <string name="feature_client_no_more_charges_available">No More Charges Available!</string>
 
+
+    <string name="feature_client_permission_required">Permissions Required</string>
+    <string name="feature_client_approve_permission_description_location">You need to approve these permissions in order to access Location.</string>
+    <string name="feature_client_proceed">Proceed</string>
+    <string name="feature_client_dismiss">Dismiss</string>
+    <string name="feature_client_failed_to_load_pinpoint">Failed To Load Pinpoint Location</string>
+    <string name="feature_client_failed_to_add_pinpoint">Failed To Add Pinpoint Location</string>
+    <string name="feature_client_failed_to_delete_pinpoint">Failed To Delete Pinpoint Location</string>
+    <string name="feature_client_failed_to_update_pinpoint">Failed To Update Pinpoint Location</string>
+    <string name="feature_client_pinpoint_location_added">Pinpoint Location Added Successfully</string>
+    <string name="feature_client_pinpoint_location_deleted">Pinpoint Location Deleted Successfully</string>
+    <string name="feature_client_pinpoint_location_updated">Pinpoint Location Updated Successfully</string>
+
+    <string name="feature_client_update_client_address">Update Address</string>
+    <string name="feature_client_delete_client_address">Delete Address</string>
+    <string name="feature_client_no_pinpoint_found">No Pinpoint Found</string>
+
 </resources>

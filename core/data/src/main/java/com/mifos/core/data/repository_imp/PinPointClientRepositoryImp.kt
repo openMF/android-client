@@ -1,10 +1,10 @@
-package com.mifos.mifosxdroid.activity.pinpointclient
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.objects.client.ClientAddressRequest
 import com.mifos.core.objects.client.ClientAddressResponse
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -13,31 +13,29 @@ import javax.inject.Inject
 class PinPointClientRepositoryImp @Inject constructor(private val dataManagerClient: DataManagerClient) :
     PinPointClientRepository {
 
-    override fun getClientPinpointLocations(clientId: Int): Observable<List<ClientAddressResponse>> {
+    override suspend fun getClientPinpointLocations(clientId: Int): List<ClientAddressResponse> {
         return dataManagerClient.getClientPinpointLocations(clientId)
     }
 
-    override fun addClientPinpointLocation(
+    override suspend fun addClientPinpointLocation(
         clientId: Int,
-        address: ClientAddressRequest?
-    ): Observable<GenericResponse> {
+        address: ClientAddressRequest
+    ): GenericResponse {
         return dataManagerClient.addClientPinpointLocation(clientId, address)
     }
 
-    override fun deleteClientAddressPinpointLocation(
+    override suspend fun deleteClientAddressPinpointLocation(
         apptableId: Int,
         datatableId: Int
-    ): Observable<GenericResponse> {
+    ): GenericResponse {
         return dataManagerClient.deleteClientAddressPinpointLocation(apptableId, datatableId)
     }
 
-    override fun updateClientPinpointLocation(
+    override suspend fun updateClientPinpointLocation(
         apptableId: Int,
         datatableId: Int,
-        address: ClientAddressRequest?
-    ): Observable<GenericResponse> {
+        address: ClientAddressRequest
+    ): GenericResponse {
         return dataManagerClient.updateClientPinpointLocation(apptableId, datatableId, address)
     }
-
-
 }

@@ -21,8 +21,6 @@ import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
-import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepository
-import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepository
@@ -207,10 +205,6 @@ class RepositoryModule {
         return DataTableRepositoryImp(dataManagerDataTable)
     }
 
-    @Provides
-    fun providesPinPointClientRepository(dataManagerClient: DataManagerClient): PinPointClientRepository {
-        return PinPointClientRepositoryImp(dataManagerClient)
-    }
 
     @Provides
     fun providesDocumentListRepository(dataManagerDocument: DataManagerDocument): DocumentListRepository {

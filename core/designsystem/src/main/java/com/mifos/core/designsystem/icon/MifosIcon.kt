@@ -6,6 +6,7 @@ import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.AddLocation
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
@@ -35,4 +36,5 @@ object MifosIcons {
     val arrowDown = Icons.Rounded.KeyboardArrowDown
     val moreVert = Icons.Rounded.MoreVert
     val fileTask = Icons.Default.AssignmentTurnedIn
+    val addLocation = Icons.Rounded.AddLocation
 }
