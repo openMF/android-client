@@ -207,14 +207,14 @@
     </dialog>
 
 
-    <dialog
+    <fragment
         android:id="@+id/loanAccountFragment"
         android:name="com.mifos.mifosxdroid.online.loanaccount.LoanAccountFragment"
         android:label="LoanAccountFragment">
         <argument
             android:name="clientId"
             app:argType="integer" />
-    </dialog>
+    </fragment>
 
 
     <fragment
@@ -498,14 +498,14 @@
             android:id="@+id/action_groupDetailsFragment_to_createNewClientFragment"
             app:destination="@id/createNewClientFragment" />
     </fragment>
-    <dialog
+    <fragment
         android:id="@+id/groupLoanAccountFragment"
         android:name="com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountFragment"
         android:label="GroupLoanAccountFragment">
         <argument
             android:name="groupId"
             app:argType="integer" />
-    </dialog>
+    </fragment>
     <fragment
         android:id="@+id/clientListFragment"
         android:name="com.mifos.mifosxdroid.online.clientlist.ClientListFragment"
