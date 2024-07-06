@@ -62,6 +62,7 @@
     <string name="create_loan_terms">Loan Terms</string>
     <string name="create_center">Create Center</string>
     <string name="create_group">Create Group</string>
+    <string name="create_new_group">Create New Group</string>
     <string name="create_identifier">Create Identifier</string>
     <string name="staff_id">Staff Id</string>
     <string name="office_id">Office Id</string>
@@ -461,6 +462,7 @@
     <string name="add_charge">Add Charges</string>
 
     <!-- Error Messages -->
+    <string name="error_office_not_selected">Office not selected</string>
     <string name="error_invalid_url">Invalid URL</string>
     <string name="error_invalid_connection">Invalid connection Data</string>
     <string name="error_username_length">Invalid username length</string>
@@ -481,6 +483,9 @@
     <string name="error_save_location_not_available">Location Unavailable, Please try again later!</string>
     <string name="list_all_clients">Client List</string>
     <string name="group_list">Group List</string>
+    <string name="error_group_name_cannot_be_empty">Group name can not be empty</string>
+    <string name="error_group_name_should_contain_only_alphabets">Group name should contain only alphabets</string>
+    <string name="error_group_name_must_be_at_least_four_characters_long">Group name must be at least 4 characters long</string>
     <string name="error_invalid_amount">Invalid Amount Entered</string>
     <string name="error_select_office">Please Select an Office</string>
     <string name="error_select_group">Please Select a Group</string>
@@ -821,6 +826,7 @@
     <string name="checker_inbox">Checker Inbox</string>
     <string name="select_from_date">Select From Date</string>
     <string name="select_to_date">Select To Date</string>
+    <string name="select_date">Select Date</string>
     <string name="approve">APPROVE</string>
     <string name="approve_confirmation">Do you want to approve this entry?</string>
     <string name="yes">Yes</string>
