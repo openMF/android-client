@@ -1,8 +1,8 @@
-package com.mifos.mifosxdroid.online.runreports.reportdetail
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.network.datamanager.DataManagerRunReport
 import com.mifos.core.objects.runreports.FullParameterListResponse
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -11,40 +11,40 @@ import javax.inject.Inject
 class ReportDetailRepositoryImp @Inject constructor(private val dataManager: DataManagerRunReport) :
     ReportDetailRepository {
 
-    override fun getReportFullParameterList(
-        reportName: String?,
+    override suspend fun getReportFullParameterList(
+        reportName: String,
         parameterType: Boolean
-    ): Observable<FullParameterListResponse> {
+    ): FullParameterListResponse {
         return dataManager.getReportFullParameterList(reportName, parameterType)
     }
 
-    override fun getReportParameterDetails(
-        parameterName: String?,
+    override suspend fun getReportParameterDetails(
+        parameterName: String,
         parameterType: Boolean
-    ): Observable<FullParameterListResponse> {
+    ): FullParameterListResponse {
         return dataManager.getReportParameterDetails(parameterName, parameterType)
     }
 
-    override fun getRunReportOffices(
-        parameterName: String?,
+    override suspend fun getRunReportOffices(
+        parameterName: String,
         officeId: Int,
         parameterType: Boolean
-    ): Observable<FullParameterListResponse> {
+    ): FullParameterListResponse {
         return dataManager.getRunReportOffices(parameterName, officeId, parameterType)
     }
 
-    override fun getRunReportProduct(
-        parameterName: String?,
-        currency: String?,
+    override suspend fun getRunReportProduct(
+        parameterName: String,
+        currency: String,
         parameterType: Boolean
-    ): Observable<FullParameterListResponse> {
+    ): FullParameterListResponse {
         return dataManager.getRunReportProduct(parameterName, currency, parameterType)
     }
 
-    override fun getRunReportWithQuery(
-        reportName: String?,
-        options: Map<String?, String?>
-    ): Observable<FullParameterListResponse> {
+    override suspend fun getRunReportWithQuery(
+        reportName: String,
+        options: Map<String, String>
+    ): FullParameterListResponse {
         return dataManager.getRunReportWithQuery(reportName, options)
     }
 }
