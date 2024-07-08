@@ -1,10 +1,10 @@
 package com.mifos.mifosxdroid.online.loantransactions
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -17,14 +17,14 @@ import javax.inject.Inject
 class LoanTransactionsViewModel @Inject constructor(private val repository: LoanTransactionsRepository) :
     ViewModel() {
 
-    private val _loanTransactionsUiState = MutableLiveData<LoanTransactionsUiState>()
+    private val _loanTransactionsUiState = MutableStateFlow<LoanTransactionsUiState>(LoanTransactionsUiState.ShowProgressBar)
+    val loanTransactionsUiState: StateFlow<LoanTransactionsUiState> get() = _loanTransactionsUiState
 
-    val loanTransactionsUiState: LiveData<LoanTransactionsUiState>
-        get() = _loanTransactionsUiState
+    var loanId = 0
 
-    fun loadLoanTransaction(loan: Int) {
+    fun loadLoanTransaction() {
         _loanTransactionsUiState.value = LoanTransactionsUiState.ShowProgressBar
-        repository.getLoanTransactions(loan)
+        repository.getLoanTransactions(loanId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<LoanWithAssociations>() {

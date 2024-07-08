@@ -10,29 +10,32 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import com.mifos.mifosxdroid.adapters.LoanTransactionAdapter
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentLoanTransactionsBinding
+import com.mifos.mifosxdroid.online.datatable.DataTableScreen
+import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoanTransactionsFragment : MifosBaseFragment() {
 
-    private lateinit var binding: FragmentLoanTransactionsBinding
     private val arg: LoanTransactionsFragmentArgs by navArgs()
+    private val viewModel: LoanTransactionsViewModel by viewModels()
 
-    private lateinit var viewModel: LoanTransactionsViewModel
 
-    private var adapter: LoanTransactionAdapter? = null
-    private var loanAccountNumber = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loanAccountNumber = arg.loanId
-        setHasOptionsMenu(false)
+        viewModel.loanId = arg.loanId
     }
 
     override fun onCreateView(
@@ -40,57 +43,22 @@ class LoanTransactionsFragment : MifosBaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentLoanTransactionsBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this)[LoanTransactionsViewModel::class.java]
-        inflateLoanTransactions()
-
-        viewModel.loanTransactionsUiState.observe(viewLifecycleOwner) {
-            when (it) {
-                is LoanTransactionsUiState.ShowFetchingError -> {
-                    showProgressbar(false)
-                    showFetchingError(it.message)
-                }
-
-                is LoanTransactionsUiState.ShowLoanTransaction -> {
-                    showProgressbar(false)
-                    showLoanTransaction(it.loanWithAssociations)
-                }
-
-                is LoanTransactionsUiState.ShowProgressBar -> showProgressbar(true)
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                LoanTransactionsScreen(
+                    navigateBack = { findNavController().popBackStack() })
             }
         }
-
-        return binding.root
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.clear()
-        super.onPrepareOptionsMenu(menu)
+    override fun onResume() {
+        super.onResume()
+        toolbar?.visibility = View.GONE
     }
 
-    private fun inflateLoanTransactions() {
-        viewModel.loadLoanTransaction(loanAccountNumber)
-    }
-
-    private fun showProgressbar(b: Boolean) {
-        if (b) {
-            showMifosProgressDialog()
-        } else {
-            hideMifosProgressDialog()
-        }
-    }
-
-    private fun showLoanTransaction(loanWithAssociations: LoanWithAssociations) {
-        Log.i("Transaction List Size", "" + loanWithAssociations.transactions.size)
-        adapter = LoanTransactionAdapter(
-            requireActivity(),
-            loanWithAssociations.transactions
-        )
-        binding.elvLoanTransactions.setAdapter(adapter)
-        binding.elvLoanTransactions.setGroupIndicator(null)
-    }
-
-    private fun showFetchingError(s: String?) {
-        Toaster.show(binding.root, s)
+    override fun onStop() {
+        super.onStop()
+        toolbar?.visibility = View.VISIBLE
     }
 }
