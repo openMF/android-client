@@ -1,7 +1,6 @@
 package com.mifos.core.designsystem.component
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -24,12 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -105,7 +101,7 @@ fun MifosOutlinedTextField(
 @Composable
 fun MifosOutlinedTextField(
     value: String,
-    onValueChange: (String) -> Unit,
+    onvalueChange: (String) -> Unit,
     maxLines: Int = 1,
     singleLine: Boolean = true,
     icon: ImageVector? = null,
@@ -117,7 +113,7 @@ fun MifosOutlinedTextField(
 
     OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = onvalueChange,
         label = { Text(label) },
         modifier = Modifier
             .fillMaxWidth()

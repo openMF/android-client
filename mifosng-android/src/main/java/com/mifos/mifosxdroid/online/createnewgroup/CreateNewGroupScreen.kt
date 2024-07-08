@@ -54,8 +54,6 @@ import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.objects.group.GroupPayload
 import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.response.SaveResponse
-import com.mifos.feature.note.NoteScreenPreviewProvider
-import com.mifos.feature.note.NoteUiState
 import com.mifos.mifosxdroid.R
 import com.mifos.utils.MifosResponseHandler
 import com.mifos.utils.Network
@@ -232,7 +230,7 @@ fun CreateNewGroupContent(
 
         MifosOutlinedTextField(
             value = groupName,
-            onValueChange = { groupName = it },
+            onvalueChange = { groupName = it },
             label = stringResource(id = R.string.name) + "*",
             error = null
         )
@@ -272,7 +270,7 @@ fun CreateNewGroupContent(
 
         MifosOutlinedTextField(
             value = externalId,
-            onValueChange = { externalId = it },
+            onvalueChange = { externalId = it },
             label = stringResource(id = R.string.external_id),
             error = null
         )

@@ -66,6 +66,7 @@
     <string name="create_identifier">Create Identifier</string>
     <string name="staff_id">Staff Id</string>
     <string name="office_id">Office Id</string>
+    <string name="create_new_client">Create New Client</string>
     <string name="id">ID</string>
     <string name="charge_id">Charge Id</string>
     <string name="transactions">Transactions</string>
@@ -462,6 +463,13 @@
     <string name="add_charge">Add Charges</string>
 
     <!-- Error Messages -->
+
+    <string name="image_not_selected">Image not selected</string>
+    <string name="error_first_name_can_not_be_empty">First name can not be empty</string>
+    <string name="error_last_name_can_not_be_empty">Last name can not be empty</string>
+    <string name="error_first_name_should_contain_only_alphabets">First name should contain only alphabets</string>
+    <string name="error_last_name_should_contain_only_alphabets">Last name should contain only alphabets</string>
+    <string name="error_middle_name_should_contain_only_alphabets">Middle name should contain only alphabets</string>
     <string name="error_office_not_selected">Office not selected</string>
     <string name="error_invalid_url">Invalid URL</string>
     <string name="error_invalid_connection">Invalid connection Data</string>

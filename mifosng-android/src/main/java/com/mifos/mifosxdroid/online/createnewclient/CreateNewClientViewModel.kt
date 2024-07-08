@@ -11,6 +11,8 @@ import com.mifos.core.objects.templates.clients.ClientsTemplate
 import com.mifos.core.objects.templates.clients.Options
 import com.mifos.mifosxdroid.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -31,10 +33,8 @@ import javax.inject.Inject
 class CreateNewClientViewModel @Inject constructor(private val repository: CreateNewClientRepository) :
     ViewModel() {
 
-    private val _createNewClientUiState = MutableLiveData<CreateNewClientUiState>()
-
-    val createNewClientUiState: LiveData<CreateNewClientUiState>
-        get() = _createNewClientUiState
+    private val _createNewClientUiState = MutableStateFlow<CreateNewClientUiState>(CreateNewClientUiState.ShowProgressbar)
+    val createNewClientUiState: StateFlow<CreateNewClientUiState> get() = _createNewClientUiState
 
     fun loadClientTemplate() {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
@@ -109,12 +109,12 @@ class CreateNewClientViewModel @Inject constructor(private val repository: Creat
                     try {
                         if (e is HttpException) {
                             val errorMessage = e.response()?.errorBody()
-                                ?.string()
+                                ?.string() ?: ""
                             _createNewClientUiState.value = errorMessage?.let {
                                 CreateNewClientUiState.ShowMessageString(
                                     it
                                 )
-                            }
+                            }!!
                         }
                     } catch (throwable: Throwable) {
                         RxJavaPlugins.getInstance().errorHandler.handleError(e)
@@ -130,13 +130,13 @@ class CreateNewClientViewModel @Inject constructor(private val repository: Creat
                                 CreateNewClientUiState.SetClientId(
                                     it
                                 )
-                            }
+                            }!!
                         } else {
                             _createNewClientUiState.value = client.clientId?.let {
                                 CreateNewClientUiState.ShowWaitingForCheckerApproval(
                                     it
                                 )
-                            }
+                            }!!
                         }
                     }
                 }
