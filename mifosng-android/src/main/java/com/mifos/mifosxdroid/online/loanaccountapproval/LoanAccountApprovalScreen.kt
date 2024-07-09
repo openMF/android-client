@@ -259,7 +259,6 @@ fun LoanAccountApprovalContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
         MifosDatePickerTextField(
             value = disbursementDate ?: "null",
             label = R.string.loan_expected_disbursement_on,
@@ -309,7 +308,9 @@ fun LoanAccountApprovalContent(
                 containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
             ),
             onClick = {
-                if (isFieldValid(amount = approvedAmount, context = context)) {
+                if (isFieldValid(amount = approvedAmount, context = context) &&
+                    isFieldValid(amount = transactionAmount, context = context)
+                ) {
                     if (com.mifos.core.common.utils.Network.isOnline(context)) {
                         val approvedOnDate = SimpleDateFormat(
                             "dd MMMM yyyy",
