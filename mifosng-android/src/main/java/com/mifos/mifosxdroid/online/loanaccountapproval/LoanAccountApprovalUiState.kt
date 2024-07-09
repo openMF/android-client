@@ -7,6 +7,8 @@ import com.mifos.core.network.GenericResponse
  */
 sealed class LoanAccountApprovalUiState {
 
+    data object Initial : LoanAccountApprovalUiState()
+
     data object ShowProgressbar : LoanAccountApprovalUiState()
 
     data class ShowLoanApproveFailed(val message: String) : LoanAccountApprovalUiState()
