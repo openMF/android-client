@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
@@ -106,7 +108,11 @@ fun LoanAccountDisbursementScreen(
         ) {
             when (uiState) {
                 is LoanAccountDisbursementUiState.ShowDisburseLoanSuccessfully -> {
-                    Toast.makeText(context, stringResource(id = R.string.loan_disburse_successfully), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        stringResource(id = R.string.loan_disburse_successfully),
+                        Toast.LENGTH_LONG
+                    ).show()
                     navigateBack.invoke()
                 }
 
@@ -165,6 +171,7 @@ fun LoanAccountDisbursementContent(
             }
         }
     )
+    val scrollState = rememberScrollState()
 
     if (showDatePickerDialog) {
         DatePickerDialog(
@@ -195,8 +202,12 @@ fun LoanAccountDisbursementContent(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
     ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
         MifosDatePickerTextField(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 disbursementDate
@@ -313,7 +324,8 @@ fun isAmountValid(amount: String): Boolean {
     return amount.toDoubleOrNull() != null
 }
 
-class LoanAccountDisbursementScreenPreviewProvider : PreviewParameterProvider<LoanAccountDisbursementUiState> {
+class LoanAccountDisbursementScreenPreviewProvider :
+    PreviewParameterProvider<LoanAccountDisbursementUiState> {
     override val values: Sequence<LoanAccountDisbursementUiState>
         get() = sequenceOf(
             LoanAccountDisbursementUiState.ShowProgressbar,
