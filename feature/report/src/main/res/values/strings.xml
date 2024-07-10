@@ -25,4 +25,18 @@
     <string name="feature_report_failed_to_load_report_details">Failed to Load Report Details</string>
     <string name="feature_report_run_report">Run Report</string>
 
+    <string name="feature_report_title">Report</string>
+    <string name="feature_report_export_csv">Export CSV</string>
+    <string name="feature_report_export_csv_directory">/mifos/documents/report/</string>
+
+    <string name="feature_report_permission_required">Permissions Required</string>
+    <string name="feature_report_external_approve_permission_description">You need to approve these permissions in order to Save.</string>
+    <string name="feature_report_proceed">Proceed</string>
+    <string name="feature_report_dismiss">Dismiss</string>
+
+    <string name="feature_report_unable_to_create_directory">Unable to create directory</string>
+    <string name="feature_report_unable_to_export">Unable to Export</string>
+    <string name="feature_report_exported_successfully">Exported Successfully</string>
+    <string name="feature_report_export_started">Export Started</string>
+
 </resources>
