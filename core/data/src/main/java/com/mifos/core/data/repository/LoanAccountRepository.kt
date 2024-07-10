@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.loanaccount
+package com.mifos.core.data.repository
 
 import com.mifos.core.data.LoansPayload
 import com.mifos.core.objects.accounts.loan.Loans
@@ -11,11 +11,9 @@ import rx.Observable
  */
 interface LoanAccountRepository {
 
-    fun allLoans(): Observable<List<LoanProducts>>
+    suspend fun allLoans(): Observable<List<LoanProducts>>
 
-    fun getLoansAccountTemplate(clientId: Int, productId: Int): Observable<LoanTemplate>
+    suspend fun getLoansAccountTemplate(clientId: Int, productId: Int): Observable<LoanTemplate>
 
-    fun createLoansAccount(loansPayload: LoansPayload?): Observable<Loans>
-
-
+    suspend fun createLoansAccount(loansPayload: LoansPayload): Observable<Loans>
 }
