@@ -12,4 +12,31 @@
 
     <string name="feature_report_no_reports_found">No Reports Found</string>
 
+    <string name="feature_report_details">Report Details</string>
+    <string name="feature_report_loan_officer">Loan Officer</string>
+    <string name="feature_report_office">Office</string>
+    <string name="feature_report_product">Product</string>
+    <string name="feature_report_loan_purpose">Loan Purpose</string>
+    <string name="feature_report_currency">Currency</string>
+    <string name="feature_report_par_type">Par type</string>
+    <string name="feature_report_saving_account">Saving Account</string>
+    <string name="feature_report_gl_account">GL Account</string>
+    <string name="feature_report_obligation_date">Obligation Date</string>
+    <string name="feature_report_failed_to_load_report_details">Failed to Load Report Details</string>
+    <string name="feature_report_run_report">Run Report</string>
+
+    <string name="feature_report_title">Report</string>
+    <string name="feature_report_export_csv">Export CSV</string>
+    <string name="feature_report_export_csv_directory">/mifos/documents/report/</string>
+
+    <string name="feature_report_permission_required">Permissions Required</string>
+    <string name="feature_report_external_approve_permission_description">You need to approve these permissions in order to Save.</string>
+    <string name="feature_report_proceed">Proceed</string>
+    <string name="feature_report_dismiss">Dismiss</string>
+
+    <string name="feature_report_unable_to_create_directory">Unable to create directory</string>
+    <string name="feature_report_unable_to_export">Unable to Export</string>
+    <string name="feature_report_exported_successfully">Exported Successfully</string>
+    <string name="feature_report_export_started">Export Started</string>
+
 </resources>

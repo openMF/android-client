@@ -15,6 +15,7 @@ import com.mifos.core.data.repository.LoanAccountRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.data.repository.ReportCategoryRepository
+import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.data.repository_imp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.CenterListRepositoryImp
 import com.mifos.core.data.repository_imp.CheckerInboxRepositoryImp
@@ -29,6 +30,7 @@ import com.mifos.core.data.repository_imp.LoanAccountRepositoryImp
 import com.mifos.core.data.repository_imp.NewIndividualCollectionSheetRepositoryImp
 import com.mifos.core.data.repository_imp.PathTrackingRepositoryImp
 import com.mifos.core.data.repository_imp.ReportCategoryRepositoryImp
+import com.mifos.core.data.repository_imp.ReportDetailRepositoryImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -76,6 +78,9 @@ abstract class DataModule {
     @Binds
     internal abstract fun bindClientIdentifiersRepository(impl: ClientIdentifiersRepositoryImp): ClientIdentifiersRepository
 
+    @Binds
+    internal abstract fun bindReportDetailRepository(impl: ReportDetailRepositoryImp): ReportDetailRepository
+  
     @Binds
     internal abstract fun bindLoanAccountRepository(impl: LoanAccountRepositoryImp): LoanAccountRepository
 
