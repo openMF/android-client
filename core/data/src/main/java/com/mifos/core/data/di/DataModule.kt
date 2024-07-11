@@ -9,6 +9,7 @@ import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import com.mifos.core.data.repository.ClientChargeRepository
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.CreateNewCenterRepository
+import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.data.repository.LoanAccountRepository
@@ -16,6 +17,7 @@ import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.data.repository_imp.ActivateRepositoryImp
+import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.data.repository_imp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.CenterListRepositoryImp
 import com.mifos.core.data.repository_imp.CheckerInboxRepositoryImp
@@ -23,12 +25,14 @@ import com.mifos.core.data.repository_imp.CheckerInboxTasksRepositoryImp
 import com.mifos.core.data.repository_imp.ClientChargeRepositoryImp
 import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repository_imp.CreateNewCenterRepositoryImp
+import com.mifos.core.data.repository_imp.DocumentListRepositoryImp
 import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.GroupsListRepositoryImpl
 import com.mifos.core.data.repository_imp.LoanAccountRepositoryImp
 import com.mifos.core.data.repository_imp.NewIndividualCollectionSheetRepositoryImp
 import com.mifos.core.data.repository_imp.PathTrackingRepositoryImp
 import com.mifos.core.data.repository_imp.ReportCategoryRepositoryImp
+import com.mifos.core.data.repository_imp.ReportDetailRepositoryImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -78,7 +82,13 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindActivateRepository(impl: ActivateRepositoryImp): ActivateRepository
+
+    @Binds
+    internal abstract fun bindReportDetailRepository(impl: ReportDetailRepositoryImp): ReportDetailRepository
   
     @Binds
     internal abstract fun bindLoanAccountRepository(impl: LoanAccountRepositoryImp): LoanAccountRepository
+
+    @Binds
+    internal abstract fun bindDocumentListRepository(impl: DocumentListRepositoryImp): DocumentListRepository
 }

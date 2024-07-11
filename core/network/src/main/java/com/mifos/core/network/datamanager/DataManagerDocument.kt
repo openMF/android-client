@@ -24,7 +24,7 @@ class DataManagerDocument @Inject constructor(val mBaseApiManager: BaseApiManage
      * @param entityId   Entity Id
      * @return List<Document>
     </Document> */
-    fun getDocumentsList(entityType: String?, entityId: Int): Observable<List<Document>> {
+    suspend fun getDocumentsList(entityType: String, entityId: Int): List<Document> {
         return mBaseApiManager.documentApi.getDocuments(entityType, entityId)
     }
 
@@ -60,10 +60,10 @@ class DataManagerDocument @Inject constructor(val mBaseApiManager: BaseApiManage
      * @param documentId Document Id
      * @return ResponseBody Binary File of Document
      */
-    fun downloadDocument(
-        entityType: String?, entityId: Int,
+    suspend fun downloadDocument(
+        entityType: String, entityId: Int,
         documentId: Int
-    ): Observable<ResponseBody> {
+    ): ResponseBody {
         return mBaseApiManager.documentApi.downloadDocument(entityType, entityId, documentId)
     }
 
@@ -79,10 +79,10 @@ class DataManagerDocument @Inject constructor(val mBaseApiManager: BaseApiManage
      * @param documentId Document Id
      * @return GenericResponse
      */
-    fun removeDocument(
-        entityType: String?, entityId: Int,
+    suspend fun removeDocument(
+        entityType: String, entityId: Int,
         documentId: Int
-    ): Observable<GenericResponse> {
+    ): GenericResponse {
         return mBaseApiManager.documentApi.removeDocument(entityType, entityId, documentId)
     }
 

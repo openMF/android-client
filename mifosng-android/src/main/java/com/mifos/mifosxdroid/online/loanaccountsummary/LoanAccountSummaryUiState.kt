@@ -11,6 +11,5 @@ sealed class LoanAccountSummaryUiState {
 
     data class ShowFetchingError(val message: String) : LoanAccountSummaryUiState()
 
-    data class ShowLoanById(val loanWithAssociations: LoanWithAssociations) :
-        LoanAccountSummaryUiState()
+    data class ShowLoanById(val loanWithAssociations: LoanWithAssociations) : LoanAccountSummaryUiState()
 }
