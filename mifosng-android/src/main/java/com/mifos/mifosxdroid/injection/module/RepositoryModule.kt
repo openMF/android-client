@@ -14,7 +14,6 @@ import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerNote
 import com.mifos.core.network.datamanager.DataManagerOffices
-import com.mifos.core.network.datamanager.DataManagerRunReport
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.network.datamanager.DataManagerSearch
 import com.mifos.core.network.datamanager.DataManagerStaff
@@ -75,8 +74,6 @@ import com.mifos.mifosxdroid.online.datatabledata.DataTableDataRepository
 import com.mifos.mifosxdroid.online.datatabledata.DataTableDataRepositoryImp
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepository
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepositoryImp
-import com.mifos.mifosxdroid.online.documentlist.DocumentListRepository
-import com.mifos.mifosxdroid.online.documentlist.DocumentListRepositoryImp
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepository
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
@@ -101,8 +98,6 @@ import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleR
 import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleRepositoryImp
 import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepository
 import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepositoryImp
-import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailRepository
-import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailRepositoryImp
 import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryRepository
 import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryRepositoryImp
 import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionRepository
@@ -205,11 +200,6 @@ class RepositoryModule {
 
 
     @Provides
-    fun providesDocumentListRepository(dataManagerDocument: DataManagerDocument): DocumentListRepository {
-        return DocumentListRepositoryImp(dataManagerDocument)
-    }
-
-    @Provides
     fun providesNoteRepository(dataManagerNote: DataManagerNote): NoteRepository {
         return NoteRepositoryImp(dataManagerNote)
     }
@@ -300,11 +290,6 @@ class RepositoryModule {
     @Provides
     fun providesGroupLoanAccountRepository(dataManager: DataManager): GroupLoanAccountRepository {
         return GroupLoanAccountRepositoryImp(dataManager)
-    }
-
-    @Provides
-    fun providesReportDetailRepository(dataManager: DataManagerRunReport): ReportDetailRepository {
-        return ReportDetailRepositoryImp(dataManager)
     }
 
     @Provides

@@ -1,10 +1,10 @@
-package com.mifos.mifosxdroid.online.documentlist
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
 import com.mifos.core.objects.noncore.Document
 import okhttp3.ResponseBody
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -12,23 +12,24 @@ import javax.inject.Inject
  */
 class DocumentListRepositoryImp @Inject constructor(private val dataManagerDocument: DataManagerDocument) :
     DocumentListRepository {
-    override fun getDocumentsList(entityType: String?, entityId: Int): Observable<List<Document>> {
+
+    override suspend fun getDocumentsList(entityType: String, entityId: Int): List<Document> {
         return dataManagerDocument.getDocumentsList(entityType, entityId)
     }
 
-    override fun downloadDocument(
-        entityType: String?,
+    override suspend fun downloadDocument(
+        entityType: String,
         entityId: Int,
         documentId: Int
-    ): Observable<ResponseBody> {
+    ): ResponseBody {
         return dataManagerDocument.downloadDocument(entityType, entityId, documentId)
     }
 
-    override fun removeDocument(
-        entityType: String?,
+    override suspend fun removeDocument(
+        entityType: String,
         entityId: Int,
         documentId: Int
-    ): Observable<GenericResponse> {
+    ): GenericResponse {
         return dataManagerDocument.removeDocument(entityType, entityId, documentId)
     }
 }

@@ -315,6 +315,9 @@
     <string name="break_down">Break Down</string>
     <string name="loanAccounts">Loan Accounts</string>
     <string name="loanAccountSummary">Loan Account Summary</string>
+    <string name="make_Repayment">Make Repayment</string>
+    <string name="loan_closed">Loan closed</string>
+    <string name="approve_loan">Approve Loan</string>
     <string name="loanAccountSummaryStatus">Loan Account Summary</string>
     <string name="loan_repayment_schedule">Loan Repayment Schedule</string>
     <string name="loan_rejected_message">Loan was Rejected</string>
@@ -487,6 +490,7 @@
     <string name="error_group_name_should_contain_only_alphabets">Group name should contain only alphabets</string>
     <string name="error_group_name_must_be_at_least_four_characters_long">Group name must be at least 4 characters long</string>
     <string name="error_invalid_amount">Invalid Amount Entered</string>
+    <string name="error_amount_can_not_be_empty">Amount can not be empty</string>
     <string name="error_select_office">Please Select an Office</string>
     <string name="error_select_group">Please Select a Group</string>
     <string name="error_select_payment">Please Select Payment Type</string>
@@ -764,6 +768,7 @@
     <string name="no_staff">no staff</string>
     <string name="not_available">N.A</string>
     <string name="note">Notes</string>
+    <string name="disbursement_note">Note</string>
     <string name="empty_notes">Empty Notes</string>
     <string name="failed_to_fetch_notes">Failed to Fetch Notes</string>
     <string name="one">1</string>
@@ -821,6 +826,9 @@
     <string name="checker_inbox_and_pending_tasks">Checker Inbox &amp; Tasks</string>
     <string name="client_approval">Client Approval</string>
     <string name="loan_approval">Loan Approval</string>
+    <string name="loan_approval_amount_can_not_be_empty">Amount can not be empty</string>
+    <string name="loan_approved">Loan Approved</string>
+    <string name="loan_expected_disbursement_on">Expected disbursement on</string>
     <string name="loan_disbursal">Loan Disbursal</string>
     <string name="reschedule_loan">Reschedule Loan</string>
     <string name="checker_inbox">Checker Inbox</string>

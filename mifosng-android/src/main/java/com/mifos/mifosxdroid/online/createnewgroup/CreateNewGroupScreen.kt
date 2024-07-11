@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -21,7 +22,10 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -36,12 +40,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -51,11 +61,11 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
+import com.mifos.core.designsystem.theme.DarkGray
+import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.group.GroupPayload
 import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.response.SaveResponse
-import com.mifos.feature.note.NoteScreenPreviewProvider
-import com.mifos.feature.note.NoteUiState
 import com.mifos.mifosxdroid.R
 import com.mifos.utils.MifosResponseHandler
 import com.mifos.utils.Network
@@ -125,9 +135,7 @@ fun CreateNewGroupScreen(
                 MifosCircularProgress()
             }
         }
-
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -313,7 +321,7 @@ fun CreateNewGroupContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .heightIn(44.dp),
+                .heightIn(46.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
             ),
