@@ -83,10 +83,11 @@ fun PermissionBox(
             if (!isGranted) {
                 shouldShowPermissionRationale =
                     requiredPermissions.all {
-                        ActivityCompat.shouldShowRequestPermissionRationale(
-                            context as Activity,
-                            it
-                        )
+                        (context as? Activity)?.let { it1 ->
+                            ActivityCompat.shouldShowRequestPermissionRationale(
+                                it1, it
+                            )
+                        } == false
                     }
             }
             shouldDirectUserToApplicationSettings =
@@ -114,7 +115,7 @@ fun PermissionBox(
 
     if (shouldShowPermissionRationale) {
         MifosDialogBox(
-            showDialogState = shouldShowPermissionRationale,
+            showDialogState =  shouldShowPermissionRationale,
             onDismiss = { shouldShowPermissionRationale = false },
             title = title,
             message = description,
