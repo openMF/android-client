@@ -8,6 +8,8 @@ import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.accounts.loan.LoanDisbursement
 import com.mifos.core.objects.templates.loans.LoanTransactionTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -21,12 +23,14 @@ class LoanAccountDisbursementViewModel @Inject constructor(private val repositor
     ViewModel() {
 
 
-    private val _loanAccountDisbursementUiState = MutableLiveData<LoanAccountDisbursementUiState>()
+    private val _loanAccountDisbursementUiState = MutableStateFlow<LoanAccountDisbursementUiState>(LoanAccountDisbursementUiState.ShowProgressbar)
 
-    val loanAccountDisbursementUiState: LiveData<LoanAccountDisbursementUiState>
+    val loanAccountDisbursementUiState: StateFlow<LoanAccountDisbursementUiState>
         get() = _loanAccountDisbursementUiState
 
-    fun loadLoanTemplate(loanId: Int) {
+    var loanId : Int = 0
+
+    fun loadLoanTemplate() {
         _loanAccountDisbursementUiState.value = LoanAccountDisbursementUiState.ShowProgressbar
         repository.getLoanTransactionTemplate(loanId, APIEndPoint.DISBURSE)
             .observeOn(AndroidSchedulers.mainThread())
@@ -47,7 +51,7 @@ class LoanAccountDisbursementViewModel @Inject constructor(private val repositor
             })
     }
 
-    fun disburseLoan(loanId: Int, loanDisbursement: LoanDisbursement?) {
+    fun disburseLoan(loanDisbursement: LoanDisbursement?) {
         _loanAccountDisbursementUiState.value = LoanAccountDisbursementUiState.ShowProgressbar
         repository.disburseLoan(loanId, loanDisbursement)
             .observeOn(AndroidSchedulers.mainThread())
