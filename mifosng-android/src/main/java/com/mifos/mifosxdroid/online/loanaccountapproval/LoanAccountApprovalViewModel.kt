@@ -5,7 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.accounts.loan.LoanApproval
+import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import retrofit2.HttpException
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -20,12 +23,13 @@ import javax.inject.Inject
 class LoanAccountApprovalViewModel @Inject constructor(private val repository: LoanAccountApprovalRepository) :
     ViewModel() {
 
-    private val _loanAccountApprovalUiState = MutableLiveData<LoanAccountApprovalUiState>()
+    private val _loanAccountApprovalUiState = MutableStateFlow<LoanAccountApprovalUiState>(LoanAccountApprovalUiState.Initial)
+    val loanAccountApprovalUiState: StateFlow<LoanAccountApprovalUiState> get() = _loanAccountApprovalUiState
 
-    val loanAccountApprovalUiState: LiveData<LoanAccountApprovalUiState>
-        get() = _loanAccountApprovalUiState
+    var loanId = 0
+    var loanWithAssociations : LoanWithAssociations? = null
 
-    fun approveLoan(loanId: Int, loanApproval: LoanApproval?) {
+    fun approveLoan(loanApproval: LoanApproval?) {
         _loanAccountApprovalUiState.value = LoanAccountApprovalUiState.ShowProgressbar
         repository.approveLoan(loanId, loanApproval)
             .observeOn(AndroidSchedulers.mainThread())
@@ -37,11 +41,9 @@ class LoanAccountApprovalViewModel @Inject constructor(private val repository: L
                         if (e is HttpException) {
                             val errorMessage = e.response()?.errorBody()
                                 ?.string()
-                            _loanAccountApprovalUiState.value = errorMessage?.let {
-                                LoanAccountApprovalUiState.ShowLoanApproveFailed(
-                                    it
-                                )
-                            }
+                            _loanAccountApprovalUiState.value = LoanAccountApprovalUiState.ShowLoanApproveFailed(
+                                errorMessage ?: "Something went wrong"
+                            )
                         }
                     } catch (throwable: Throwable) {
                         RxJavaPlugins.getInstance().errorHandler.handleError(e)
@@ -53,7 +55,7 @@ class LoanAccountApprovalViewModel @Inject constructor(private val repository: L
                         LoanAccountApprovalUiState.ShowLoanApproveSuccessfully(
                             it
                         )
-                    }
+                    }!!
                 }
             })
     }

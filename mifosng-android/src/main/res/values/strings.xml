@@ -824,6 +824,9 @@
     <string name="checker_inbox_and_pending_tasks">Checker Inbox &amp; Tasks</string>
     <string name="client_approval">Client Approval</string>
     <string name="loan_approval">Loan Approval</string>
+    <string name="loan_approval_amount_can_not_be_empty">Amount can not be empty</string>
+    <string name="loan_approved">Loan Approved</string>
+    <string name="loan_expected_disbursement_on">Expected disbursement on</string>
     <string name="loan_disbursal">Loan Disbursal</string>
     <string name="reschedule_loan">Reschedule Loan</string>
     <string name="checker_inbox">Checker Inbox</string>
