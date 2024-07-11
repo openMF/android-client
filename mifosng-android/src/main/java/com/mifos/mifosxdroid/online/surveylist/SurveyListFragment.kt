@@ -12,14 +12,19 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mifos.core.objects.survey.Survey
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.adapters.SurveyListAdapter
+import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.core.ProgressableFragment
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mifosxdroid.databinding.FragmentSurveyListBinding
+import com.mifos.mifosxdroid.online.datatable.DataTableScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -30,74 +35,55 @@ import dagger.hilt.android.AndroidEntryPoint
  * Created by Nasim Banu on 27,January,2016.
  */
 @AndroidEntryPoint
-class SurveyListFragment : ProgressableFragment() {
+class SurveyListFragment : MifosBaseFragment() {
 
     private lateinit var binding: FragmentSurveyListBinding
     private val arg: SurveyListFragmentArgs by navArgs()
 
-    private lateinit var viewModel: SurveyListViewModel
-
     private var mListener: OnFragmentInteractionListener? = null
     private var clientId = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         clientId = arg.clientId
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSurveyListBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this)[SurveyListViewModel::class.java]
-        setToolbarTitle(getString(R.string.surveys))
-        viewModel.loadSurveyList()
-
-        viewModel.surveyListUiState.observe(viewLifecycleOwner) {
-            when (it) {
-                is SurveyListUiState.ShowAllSurvey -> {
-                    showProgressbar(false)
-                    showAllSurvey(it.syncSurvey)
-                }
-
-                is SurveyListUiState.ShowFetchingError -> {
-                    showProgressbar(false)
-                    showFetchingError(it.message)
-                }
-
-                is SurveyListUiState.ShowProgressbar -> showProgressbar(true)
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                SurveyListScreen(
+                    navigateBack = { findNavController().popBackStack() },
+                    onCardClicked = { position, surveys ->
+                        openSurvey(position, surveys)
+                    }
+                )
             }
         }
-
-        return binding.root
     }
 
-    private fun showAllSurvey(surveys: List<Survey>) {
-        if (surveys.isEmpty()) {
-            binding.tvSurveyName.text =
-                resources.getString(R.string.no_survey_available_for_client)
-        } else {
-            val surveyListAdapter = SurveyListAdapter(requireActivity(), surveys)
-            binding.lvSurveysList.adapter = surveyListAdapter
-            binding.lvSurveysList.onItemClickListener =
-                AdapterView.OnItemClickListener { adapterView, view, position, l ->
-                    mListener?.loadSurveyQuestion(
-                        surveys[position],
-                        clientId
-                    )
-                }
-        }
+    fun openSurvey(position: Int, surveys: List<Survey>) {
+        mListener?.loadSurveyQuestion(
+            surveys[position],
+            clientId
+        )
     }
 
-    private fun showFetchingError(errorMessage: Int) {
-        Toaster.show(binding.root, resources.getString(errorMessage))
+    override fun onResume() {
+        super.onResume()
+        toolbar?.visibility = View.GONE
     }
 
-    private fun showProgressbar(b: Boolean) {
-        showProgress(b)
+    override fun onStop() {
+        super.onStop()
+        toolbar?.visibility = View.VISIBLE
     }
-
+    
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.mItem_search) requireActivity().finish()
         return super.onOptionsItemSelected(item)
