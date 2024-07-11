@@ -77,8 +77,6 @@ import com.mifos.mifosxdroid.online.datatabledata.DataTableDataRepository
 import com.mifos.mifosxdroid.online.datatabledata.DataTableDataRepositoryImp
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepository
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepositoryImp
-import com.mifos.mifosxdroid.online.documentlist.DocumentListRepository
-import com.mifos.mifosxdroid.online.documentlist.DocumentListRepositoryImp
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepository
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
@@ -208,11 +206,6 @@ class RepositoryModule {
     @Provides
     fun providesPinPointClientRepository(dataManagerClient: DataManagerClient): PinPointClientRepository {
         return PinPointClientRepositoryImp(dataManagerClient)
-    }
-
-    @Provides
-    fun providesDocumentListRepository(dataManagerDocument: DataManagerDocument): DocumentListRepository {
-        return DocumentListRepositoryImp(dataManagerDocument)
     }
 
     @Provides

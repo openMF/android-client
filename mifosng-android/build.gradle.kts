@@ -139,6 +139,7 @@ dependencies {
     implementation(projects.feature.report)
     implementation(projects.feature.pathTracking)
     implementation(projects.feature.loan)
+    implementation(projects.feature.document)
 
     implementation(projects.core.common)
     implementation(projects.core.ui)
