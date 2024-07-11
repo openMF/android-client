@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.mifosxdroid.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -19,12 +22,13 @@ import javax.inject.Inject
 class SavingsAccountSummaryViewModel @Inject constructor(private val repository: SavingsAccountSummaryRepository) :
     ViewModel() {
 
-    private val _savingsAccountSummaryUiState = MutableLiveData<SavingsAccountSummaryUiState>()
+    private val _savingsAccountSummaryUiState = MutableStateFlow<SavingsAccountSummaryUiState>(SavingsAccountSummaryUiState.ShowProgressbar)
+    val savingsAccountSummaryUiState: StateFlow<SavingsAccountSummaryUiState> get() = _savingsAccountSummaryUiState
 
-    val savingsAccountSummaryUiState: LiveData<SavingsAccountSummaryUiState>
-        get() = _savingsAccountSummaryUiState
+    var accountId = 0
+    var savingsAccountType: DepositType? = null
 
-    fun loadSavingAccount(type: String?, accountId: Int) {
+    fun loadSavingAccount(type: String?) {
         _savingsAccountSummaryUiState.value = SavingsAccountSummaryUiState.ShowProgressbar
         repository.getSavingsAccount(type, accountId, Constants.TRANSACTIONS)
             .observeOn(AndroidSchedulers.mainThread())
