@@ -140,7 +140,7 @@
         <argument
             android:name="entityType"
             app:argType="string"
-            app:nullable="true" />
+            app:nullable="false" />
     </fragment>
 
 

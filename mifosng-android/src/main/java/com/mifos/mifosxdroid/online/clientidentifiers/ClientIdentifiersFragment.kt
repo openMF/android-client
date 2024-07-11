@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.mifos.core.common.utils.Constants
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,7 +63,7 @@ class ClientIdentifiersFragment : MifosBaseFragment() {
         val action =
             ClientIdentifiersFragmentDirections.actionClientIdentifiersFragmentToDocumentListFragment(
                 identifierId,
-                null
+                Constants.ENTITY_TYPE_CLIENTS
             )
         findNavController().navigate(action)
     }
