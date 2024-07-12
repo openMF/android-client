@@ -204,4 +204,11 @@ object Constants {
     const val CURR_PASSWORD = "currentPassword"
     const val IS_TO_UPDATE_PASS_CODE = "updatePassCode"
     const val HAS_SETTING_CHANGED = "hasSettingsChanged"
+
+
+    const val TENANT = "tenant"
+    const val BASE_URL = "base_url"
+    const val PASSCODE = "preferences_mifos_passcode_string"
+    const val THEME = "theme"
+    const val LANGUAGE = "language_type"
 }

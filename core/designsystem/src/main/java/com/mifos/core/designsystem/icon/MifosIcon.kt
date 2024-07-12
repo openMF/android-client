@@ -8,16 +8,19 @@ import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
+import androidx.compose.material.icons.rounded.Bedtime
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PersonOutline
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Sync
+import androidx.compose.material.icons.rounded.Translate
 
 object MifosIcons {
     val Add = Icons.Rounded.Add
@@ -37,4 +40,7 @@ object MifosIcons {
     val moreVert = Icons.Rounded.MoreVert
     val fileTask = Icons.Default.AssignmentTurnedIn
     val cloudDownload = Icons.Default.CloudDownload
+    val password = Icons.Rounded.Lock
+    val theme = Icons.Rounded.Bedtime
+    val language = Icons.Rounded.Translate
 }

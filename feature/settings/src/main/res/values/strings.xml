@@ -3,4 +3,43 @@
     <string name="feature_settings_close_bottomsheet">CloseBottomSheetIcon</string>
     <string name="feature_settings_update_config_btn_text">Update Config</string>
     <string name="feature_settings_note_text">The application will restart after a successful update.</string>
+
+    <string name="feature_settings">Settings</string>
+    <string name="feature_settings_sync_survey">Sync Survey</string>
+    <string name="feature_settings_sync_survey_desc">Click to Sync Survey</string>
+    <string name="feature_settings_language">Language</string>
+    <string name="feature_settings_language_desc">Select your preferred language</string>
+    <string name="feature_settings_theme">Theme</string>
+    <string name="feature_settings_theme_desc">Select theme</string>
+    <string name="feature_settings_change_passcode">Change Passcode</string>
+    <string name="feature_settings_change_passcode_desc">Change App Passcode</string>
+    <string name="feature_settings_instance_url">Instance URL</string>
+    <string name="feature_settings_instance_url_desc">Update Instance URL</string>
+    <string name="feature_settings_server_config">Server Config</string>
+    <string name="feature_settings_server_config_desc">Update Server Config</string>
+    <string name="feature_settings_choose_language">Choose Language</string>
+    <string name="feature_settings_change_app_theme">Change App Theme</string>
+
+
+    <string-array name="feature_settings_languages" translatable="false">
+        <item>System Language</item>
+        <item>English</item>
+        <item>हिंदी</item>
+        <item>عربى</item>
+        <item>اُردُو</item>
+        <item>বাঙালি</item>
+        <item>Español</item>
+        <item>français</item>
+        <item>bahasa Indonesia</item>
+        <item>ភាសាខ្មែរ</item>
+        <item>ಕನ್ನಡ</item>
+        <item>తెలుగు</item>
+        <item>မြန်မာ</item>
+        <item>Polski</item>
+        <item>Português</item>
+        <item>русский</item>
+        <item>Kiswahili</item>
+        <item>فارسی</item>
+    </string-array>
+
 </resources>
