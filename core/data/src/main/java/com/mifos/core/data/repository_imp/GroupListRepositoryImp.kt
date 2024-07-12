@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.grouplist
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.objects.group.CenterWithAssociations
 import com.mifos.core.objects.group.GroupWithAssociations
