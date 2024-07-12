@@ -389,6 +389,7 @@
     <string name="transaction_amount">Transaction amount*</string>
     <string name="approval_note">Note</string>
     <string name="savings_approval_reason">Reason for Approval</string>
+    <string name="savings_approved">Savings Approved</string>
     <string name="add_group">Add Group</string>
     <string name="client_active">Client Active</string>
     <string name="submit">Submit</string>
