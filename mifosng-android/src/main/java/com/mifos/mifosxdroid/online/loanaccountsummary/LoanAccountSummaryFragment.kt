@@ -6,24 +6,16 @@ package com.mifos.mifosxdroid.online.loanaccountsummary
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import com.mifos.core.objects.client.Charges
-import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.mifosxdroid.databinding.FragmentLoanAccountSummaryBinding
-import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryFragment.Companion.MENU_ITEM_DATA_TABLES
-import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryFragment.Companion.MENU_ITEM_DOCUMENTS
-import com.mifos.utils.DateHelper
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
