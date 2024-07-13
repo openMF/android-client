@@ -11,6 +11,7 @@ import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.data.repository.GroupsListRepository
+import com.mifos.core.data.repository.IndividualCollectionSheetDetailsRepository
 import com.mifos.core.data.repository.LoanAccountRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.data.repository.PathTrackingRepository
@@ -26,6 +27,7 @@ import com.mifos.core.data.repository_imp.CreateNewCenterRepositoryImp
 import com.mifos.core.data.repository_imp.DocumentListRepositoryImp
 import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.GroupsListRepositoryImpl
+import com.mifos.core.data.repository_imp.IndividualCollectionSheetDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.LoanAccountRepositoryImp
 import com.mifos.core.data.repository_imp.NewIndividualCollectionSheetRepositoryImp
 import com.mifos.core.data.repository_imp.PathTrackingRepositoryImp
@@ -80,10 +82,13 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindReportDetailRepository(impl: ReportDetailRepositoryImp): ReportDetailRepository
-  
+
     @Binds
     internal abstract fun bindLoanAccountRepository(impl: LoanAccountRepositoryImp): LoanAccountRepository
 
     @Binds
     internal abstract fun bindDocumentListRepository(impl: DocumentListRepositoryImp): DocumentListRepository
+
+    @Binds
+    internal abstract fun bindIndividualCollectionSheetDetailsRepositoryImp(impl: IndividualCollectionSheetDetailsRepositoryImp): IndividualCollectionSheetDetailsRepository
 }

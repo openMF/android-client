@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.collectionsheetindividualdetails
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.IndividualCollectionSheetDetailsRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerCollectionSheet
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
@@ -12,7 +13,7 @@ import javax.inject.Inject
 class IndividualCollectionSheetDetailsRepositoryImp @Inject constructor(private val dataManagerCollection: DataManagerCollectionSheet) :
     IndividualCollectionSheetDetailsRepository {
 
-    override fun saveIndividualCollectionSheet(payload: IndividualCollectionSheetPayload?): Observable<GenericResponse> {
+    override suspend fun saveIndividualCollectionSheet(payload: IndividualCollectionSheetPayload): GenericResponse {
         return dataManagerCollection.saveIndividualCollectionSheet(payload)
     }
 }
