@@ -64,8 +64,6 @@ import com.mifos.mifosxdroid.online.clientlist.ClientListRepository
 import com.mifos.mifosxdroid.online.clientlist.ClientListRepositoryImp
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepositoryImp
-import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsRepository
-import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsRepositoryImp
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepository
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepositoryImp
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupRepository
@@ -241,11 +239,6 @@ class RepositoryModule {
     @Provides
     fun providesCollectionSheetRepository(dataManager: DataManager): CollectionSheetRepository {
         return CollectionSheetRepositoryImp(dataManager)
-    }
-
-    @Provides
-    fun providesIndividualCollectionSheetDetailsRepository(dataManagerCollection: DataManagerCollectionSheet): IndividualCollectionSheetDetailsRepository {
-        return IndividualCollectionSheetDetailsRepositoryImp(dataManagerCollection)
     }
 
     @Provides

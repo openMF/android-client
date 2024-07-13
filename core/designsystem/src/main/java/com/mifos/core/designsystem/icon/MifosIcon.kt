@@ -11,6 +11,7 @@ import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
@@ -37,4 +38,5 @@ object MifosIcons {
     val moreVert = Icons.Rounded.MoreVert
     val fileTask = Icons.Default.AssignmentTurnedIn
     val cloudDownload = Icons.Default.CloudDownload
+    val save = Icons.Rounded.Download
 }
