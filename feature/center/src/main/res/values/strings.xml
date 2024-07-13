@@ -42,4 +42,10 @@
     <string name="feature_center_select_office">Select Office</string>
     <string name="feature_center_activate">Activate</string>
     <string name="feature_center_center_created_successfully">Center Created Successfully</string>
+
+    <string name="feature_center_failed_to_load_group_list">Failed to load Group List</string>
+    <string name="feature_center_active">Active</string>
+    <string name="feature_center_inactive">InActive</string>
+    <string name="feature_center_groups">Groups</string>
+    <string name="feature_center_no_group_list_to_show">No Group List to Show</string>
 </resources>

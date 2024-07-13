@@ -10,6 +10,7 @@ import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
+import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.data.repository.IndividualCollectionSheetDetailsRepository
 import com.mifos.core.data.repository.LoanAccountRepository
@@ -26,6 +27,7 @@ import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repository_imp.CreateNewCenterRepositoryImp
 import com.mifos.core.data.repository_imp.DocumentListRepositoryImp
 import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
+import com.mifos.core.data.repository_imp.GroupListRepositoryImp
 import com.mifos.core.data.repository_imp.GroupsListRepositoryImpl
 import com.mifos.core.data.repository_imp.IndividualCollectionSheetDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.LoanAccountRepositoryImp
@@ -91,4 +93,7 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindIndividualCollectionSheetDetailsRepositoryImp(impl: IndividualCollectionSheetDetailsRepositoryImp): IndividualCollectionSheetDetailsRepository
+    
+    @Binds
+    internal abstract fun bindGroupListRepository(impl: GroupListRepositoryImp): GroupListRepository
 }
