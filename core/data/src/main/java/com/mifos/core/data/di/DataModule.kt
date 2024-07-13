@@ -1,6 +1,7 @@
 package com.mifos.core.data.di
 
 
+import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.data.repository.CenterListRepository
 import com.mifos.core.data.repository.CheckerInboxRepository
@@ -17,6 +18,7 @@ import com.mifos.core.data.repository.LoanAccountRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.data.repository.ReportCategoryRepository
+import com.mifos.core.data.repository_imp.ActivateRepositoryImp
 import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.data.repository_imp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.CenterListRepositoryImp
@@ -81,6 +83,9 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindClientIdentifiersRepository(impl: ClientIdentifiersRepositoryImp): ClientIdentifiersRepository
+
+    @Binds
+    internal abstract fun bindActivateRepository(impl: ActivateRepositoryImp): ActivateRepository
 
     @Binds
     internal abstract fun bindReportDetailRepository(impl: ReportDetailRepositoryImp): ReportDetailRepository
