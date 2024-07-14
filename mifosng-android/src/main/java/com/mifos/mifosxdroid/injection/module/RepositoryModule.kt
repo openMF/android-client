@@ -62,8 +62,6 @@ import com.mifos.mifosxdroid.online.clientlist.ClientListRepository
 import com.mifos.mifosxdroid.online.clientlist.ClientListRepositoryImp
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepositoryImp
-import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsRepository
-import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsRepositoryImp
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepository
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepositoryImp
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupRepository
@@ -78,8 +76,6 @@ import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSh
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepositoryImp
-import com.mifos.mifosxdroid.online.grouplist.GroupListRepository
-import com.mifos.mifosxdroid.online.grouplist.GroupListRepositoryImp
 import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountRepository
 import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountRepositoryImp
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
@@ -142,11 +138,6 @@ class RepositoryModule {
     @Provides
     fun providesCenterListRepository(dataManagerCenter: DataManagerCenter): CenterListRepository {
         return CenterListRepositoryImp(dataManagerCenter)
-    }
-
-    @Provides
-    fun providesGroupListRepository(dataManager: DataManager): GroupListRepository {
-        return GroupListRepositoryImp(dataManager)
     }
 
     @Provides
@@ -242,11 +233,6 @@ class RepositoryModule {
     @Provides
     fun providesCollectionSheetRepository(dataManager: DataManager): CollectionSheetRepository {
         return CollectionSheetRepositoryImp(dataManager)
-    }
-
-    @Provides
-    fun providesIndividualCollectionSheetDetailsRepository(dataManagerCollection: DataManagerCollectionSheet): IndividualCollectionSheetDetailsRepository {
-        return IndividualCollectionSheetDetailsRepositoryImp(dataManagerCollection)
     }
 
     @Provides

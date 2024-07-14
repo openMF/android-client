@@ -31,9 +31,9 @@ class DataManagerCollectionSheet @Inject constructor(
         return mBaseApiManager.collectionSheetApi.getIndividualCollectionSheet(payload)
     }
 
-    fun saveIndividualCollectionSheet(
+    suspend fun saveIndividualCollectionSheet(
         payload: IndividualCollectionSheetPayload?
-    ): Observable<GenericResponse> {
+    ): GenericResponse {
         return mBaseApiManager.collectionSheetApi.saveindividualCollectionSheet(payload)
     }
 

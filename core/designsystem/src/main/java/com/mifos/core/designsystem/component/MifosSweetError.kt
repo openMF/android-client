@@ -36,7 +36,11 @@ import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.DarkGray
 
 @Composable
-fun MifosSweetError(message: String, onclick: () -> Unit) {
+fun MifosSweetError(
+    message: String,
+    isRetryEnabled : Boolean  = true,
+    onclick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,19 +76,21 @@ fun MifosSweetError(message: String, onclick: () -> Unit) {
                 color = DarkGray
             )
         )
-        Spacer(modifier = Modifier.height(20.dp))
-        Button(
-            onClick = { onclick() },
-            contentPadding = PaddingValues(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
-            )
-        ) {
-            Text(
-                modifier = Modifier.padding(start = 20.dp, end = 20.dp),
-                text = stringResource(id = R.string.core_designsystem_try_again),
-                fontSize = 15.sp
-            )
+        if (isRetryEnabled){
+            Spacer(modifier = Modifier.height(20.dp))
+            Button(
+                onClick = { onclick() },
+                contentPadding = PaddingValues(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
+                )
+            ) {
+                Text(
+                    modifier = Modifier.padding(start = 20.dp, end = 20.dp),
+                    text = stringResource(id = R.string.core_designsystem_try_again),
+                    fontSize = 15.sp
+                )
+            }
         }
     }
 }

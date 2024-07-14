@@ -303,7 +303,7 @@ fun LoanAccountApprovalContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .heightIn(44.dp),
+                .heightIn(46.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
             ),

@@ -12,6 +12,8 @@ dependencies {
 
     implementation(projects.core.domain)
 
+    implementation(libs.coil.kt.compose)
+
     //DBFlow dependencies
     kapt(libs.dbflow.processor)
     implementation(libs.dbflow)

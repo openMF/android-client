@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.collectionsheetindividualdetails
+package com.mifos.core.data.repository
 
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
@@ -9,8 +9,8 @@ import rx.Observable
  */
 interface IndividualCollectionSheetDetailsRepository {
 
-    fun saveIndividualCollectionSheet(
-        payload: IndividualCollectionSheetPayload?
-    ): Observable<GenericResponse>
+    suspend fun saveIndividualCollectionSheet(
+        payload: IndividualCollectionSheetPayload
+    ): GenericResponse
 
 }
