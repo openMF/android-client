@@ -63,20 +63,36 @@ import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.noncore.Document
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.document.R
+import com.mifos.feature.document.document_dialog.DocumentDialogScreen
 
 @Composable
 fun DocumentListScreen(
     entityType: String,
     entityId: Int,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    openFilePicker: () -> Unit,
+    uploadDocument: (String, String, String) -> Unit,
+    documentAction: String?,
+    document: Document?
 ) {
+    val context = LocalContext.current
     val viewModel: DocumentListViewModel = hiltViewModel()
     val state by viewModel.documentListUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val downloadState by viewModel.downloadDocumentState.collectAsStateWithLifecycle()
     val removeState by viewModel.removeDocumentState.collectAsStateWithLifecycle()
+    val isDialogBoxActive = remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
+    if(isDialogBoxActive.value)
+    {
+        DocumentDialogScreen(
+            documentAction = documentAction,
+            document = document,
+            openFilePicker = { openFilePicker() },
+            closeDialog = { isDialogBoxActive.value = false },
+            uploadDocument = uploadDocument
+        )
+    }
 
     LaunchedEffect(Unit) {
         viewModel.loadDocumentList(entityType, entityId)
@@ -113,7 +129,7 @@ fun DocumentListScreen(
             viewModel.loadDocumentList(entityType, entityId)
         },
         onAddDocument = {
-            // TODO Implement Add document dialog
+            isDialogBoxActive.value = true
         },
         onDownloadDocument = { documentId ->
             viewModel.downloadDocument(entityType, entityId, documentId)
@@ -125,10 +141,9 @@ fun DocumentListScreen(
             viewModel.removeDocument(entityType, entityId, documentId)
         }
     )
-
-
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DocumentListScreen(
     state: DocumentListUiState,

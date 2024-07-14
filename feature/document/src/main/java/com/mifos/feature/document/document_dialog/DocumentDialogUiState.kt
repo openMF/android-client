@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.dialogfragments.documentdialog
+package com.mifos.feature.document.document_dialog
 
 import com.mifos.core.network.GenericResponse
 
@@ -7,6 +7,7 @@ import com.mifos.core.network.GenericResponse
  */
 sealed class DocumentDialogUiState {
 
+    object Initial : DocumentDialogUiState()
     object ShowProgressbar : DocumentDialogUiState()
 
     data class ShowUploadError(val message: String) : DocumentDialogUiState()
