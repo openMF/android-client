@@ -1,8 +1,8 @@
-package com.mifos.mifosxdroid.online.loancharge
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.LoanChargeRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.objects.client.Charges
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -11,7 +11,7 @@ import javax.inject.Inject
 class LoanChargeRepositoryImp @Inject constructor(private val dataManager: DataManager) :
     LoanChargeRepository {
 
-    override fun getListOfLoanCharges(loanId: Int): Observable<List<Charges>> {
+    override suspend fun getListOfLoanCharges(loanId: Int): List<Charges> {
         return dataManager.getListOfLoanCharges(loanId)
     }
 }

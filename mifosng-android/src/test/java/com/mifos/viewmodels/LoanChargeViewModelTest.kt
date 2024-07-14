@@ -3,9 +3,6 @@ package com.mifos.viewmodels
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.mifos.core.objects.client.Charges
-import com.mifos.mifosxdroid.online.loancharge.LoanChargeRepository
-import com.mifos.mifosxdroid.online.loancharge.LoanChargeUiState
-import com.mifos.mifosxdroid.online.loancharge.LoanChargeViewModel
 import com.mifos.mifosxdroid.util.RxSchedulersOverrideRule
 import org.junit.After
 import org.junit.Assert.*
