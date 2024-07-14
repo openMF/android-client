@@ -92,7 +92,7 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindPinpointRepository(impl: PinPointClientRepositoryImp): PinPointClientRepository
-    
+
     @Binds
     internal abstract fun bindActivateRepository(impl: ActivateRepositoryImp): ActivateRepository
 
