@@ -78,8 +78,6 @@ import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSh
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepositoryImp
-import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountRepository
-import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountRepositoryImp
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepositoryImp
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApprovalRepository
@@ -277,11 +275,6 @@ class RepositoryModule {
         collectionDataManager: DataManagerCollectionSheet
     ): GenerateCollectionSheetRepository {
         return GenerateCollectionSheetRepositoryImp(dataManager, collectionDataManager)
-    }
-
-    @Provides
-    fun providesGroupLoanAccountRepository(dataManager: DataManager): GroupLoanAccountRepository {
-        return GroupLoanAccountRepositoryImp(dataManager)
     }
 
     @Provides
