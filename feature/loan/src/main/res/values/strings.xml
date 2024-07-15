@@ -34,4 +34,13 @@
     <string name="feature_loan_failed_to_load_loan">Failed to load loan</string>
     <string name="feature_loan_failed_to_load_template">Failed to load loan template</string>
     <string name="feature_loan_failed_to_create_loan_account">Failed to create loan account</string>
+
+    <string name="feature_loan_loan_charges">Loan Charges</string>
+    <string name="feature_loan_failed_to_load_loan_charges">Failed to load loan charges</string>
+    <string name="feature_loan_no_loan_charges">No Loan Charges Available for this client</string>
+
+    <string name="feature_loan_client_id">Client ID</string>
+    <string name="feature_loan_charge_name">Charge Name</string>
+    <string name="feature_loan_charge_amount">Charge Amount</string>
+    <string name="feature_loan_charge_due_date">Charge Due Date</string>
 </resources>

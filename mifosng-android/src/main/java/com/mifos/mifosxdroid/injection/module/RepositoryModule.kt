@@ -86,8 +86,6 @@ import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursem
 import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementRepositoryImp
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryRepository
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryRepositoryImp
-import com.mifos.mifosxdroid.online.loancharge.LoanChargeRepository
-import com.mifos.mifosxdroid.online.loancharge.LoanChargeRepositoryImp
 import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentRepository
 import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentRepositoryImp
 import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleRepository
@@ -212,11 +210,6 @@ class RepositoryModule {
     @Provides
     fun providesSurveyListRepository(dataManagerSurveys: DataManagerSurveys): SurveyListRepository {
         return SurveyListRepositoryImp(dataManagerSurveys)
-    }
-
-    @Provides
-    fun providesLoanChargeRepository(dataManager: DataManager): LoanChargeRepository {
-        return LoanChargeRepositoryImp(dataManager)
     }
 
     @Provides
