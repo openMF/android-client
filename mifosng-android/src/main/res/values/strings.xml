@@ -925,6 +925,7 @@
 
 
     <string name="got_it">GOT IT</string>
+    <string name="go_back">Go Back</string>
     <string name="finish">FINISH</string>
     <string name="sp_search_intro">Filter out the results using this dropdown</string>
     <string name="cb_exactMatch_intro">To get the result matching exactly the keyword entered.\n Simply check this box</string>

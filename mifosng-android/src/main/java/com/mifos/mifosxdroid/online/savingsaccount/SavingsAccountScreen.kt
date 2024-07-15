@@ -47,9 +47,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.Network
+import com.mifos.core.data.SavingsPayload
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -60,8 +65,15 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.objects.accounts.savings.FieldOfficerOptions
+import com.mifos.core.objects.client.Savings
+import com.mifos.core.objects.organisation.ProductSavings
+import com.mifos.core.objects.templates.loans.LoanTransactionTemplate
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
+import com.mifos.core.objects.zipmodels.SavingProductsAndTemplate
 import com.mifos.mifosxdroid.R
+import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementScreen
+import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementScreenPreviewProvider
+import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementUiState
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -78,26 +90,43 @@ fun SavingsAccountScreen(
     val savingProductsTemplate by viewModel.savingProductsTemplate.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.loadSavings()
-//        viewModel.loadSavingsAccountsAndTemplate()
+        viewModel.loadSavingsAccountsAndTemplate()
     }
 
     SavingsAccountScreen(
-        savingProductsTemplate = savingProductsTemplate,
         uiState = uiState,
-        navigateBack = { /*TODO*/ },
-        createSavingsAccount = {},
-        onRetry = {}
+        savingProductsTemplate = savingProductsTemplate,
+        navigateBack = navigateBack,
+        onRetry = {
+            viewModel.loadSavingsAccountsAndTemplate()
+        },
+        onSavingsProductSelected = {
+            viewModel.loadLoanTemplateByProduct(it)
+        },
+        fetchTemplate = {
+            viewModel.loadLoanTemplateByProduct(it)
+        },
+        clientId = viewModel.clientId,
+        groupId = viewModel.groupId,
+        isGroupAccount = viewModel.isGroupAccount,
+        createSavingsAccount = { savingsPayload ->
+            viewModel.createSavingsAccount(savingsPayload)
+        }
     )
 }
 
 @Composable
 fun SavingsAccountScreen(
-    savingProductsTemplate: SavingProductsTemplate,
     uiState: SavingAccountUiState,
+    savingProductsTemplate: SavingProductsTemplate,
+    onSavingsProductSelected: (Int) -> Unit,
     navigateBack: () -> Unit,
-    createSavingsAccount: () -> Unit,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    fetchTemplate: (Int) -> Unit,
+    isGroupAccount: Boolean,
+    clientId: Int,
+    groupId: Int,
+    createSavingsAccount: (savingsPayload: SavingsPayload) -> Unit,
 ) {
     val snackBarHostState = remember {
         SnackbarHostState()
@@ -110,8 +139,16 @@ fun SavingsAccountScreen(
         icon = MifosIcons.arrowBack,
         onBackPressed = navigateBack
     ) {
-        Box(modifier = Modifier.padding(it)) {
+        Box(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+        ) {
             when (uiState) {
+                is SavingAccountUiState.ShowProgress -> {
+                    MifosCircularProgress()
+                }
+
                 is SavingAccountUiState.ShowFetchingError -> {
                     MifosSweetError(message = stringResource(id = uiState.message)) {
                         onRetry()
@@ -119,13 +156,29 @@ fun SavingsAccountScreen(
                 }
 
                 is SavingAccountUiState.ShowFetchingErrorString -> {
-                    MifosSweetError(message = uiState.message) {
-                        onRetry()
-                    }
+                    MifosSweetError(
+                        message = uiState.message,
+                        buttonText = stringResource(id = R.string.go_back),
+                        onclick = { onRetry() }
+                    )
                 }
 
-                SavingAccountUiState.ShowProgress -> {
-                    MifosCircularProgress()
+                is SavingAccountUiState.LoadAllSavings -> {
+                    val productSavingsList = uiState.savingsTemplate.getmProductSavings()
+
+                    SavingsAccountContent(
+                        clientId = clientId,
+                        groupId = groupId,
+                        isGroupAccount = isGroupAccount,
+                        fieldOfficerOptions = savingProductsTemplate.fieldOfficerOptions
+                            ?: emptyList(),
+                        savingProductsTemplate = uiState.savingsTemplate,
+                        productSavings = productSavingsList,
+                        onSavingsProductSelected = onSavingsProductSelected,
+                        createSavingsAccount = createSavingsAccount
+                    )
+
+                    productSavingsList[0].id?.let { it2 -> fetchTemplate.invoke(it2) }
                 }
 
                 is SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully -> {
@@ -137,13 +190,6 @@ fun SavingsAccountScreen(
 
                     navigateBack()
                 }
-
-                is SavingAccountUiState.ShowAllSavingsAccount -> {
-                    SavingsAccountContent(
-                        savingProductsTemplate = savingProductsTemplate
-                    )
-
-                }
             }
         }
     }
@@ -152,9 +198,16 @@ fun SavingsAccountScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SavingsAccountContent(
-    savingProductsTemplate: SavingProductsTemplate,
+    clientId: Int,
+    groupId: Int,
+    isGroupAccount: Boolean,
+    fieldOfficerOptions: List<FieldOfficerOptions>,
+    productSavings: List<ProductSavings>,
+    savingProductsTemplate: SavingProductsAndTemplate,
+    onSavingsProductSelected: (Int) -> Unit,
+    createSavingsAccount: (savingsPayload: SavingsPayload) -> Unit
 ) {
-    var savingsProduct by rememberSaveable {
+    var selectedSavingsProduct by rememberSaveable {
         mutableStateOf("")
     }
     var selectedFieldOfficer by rememberSaveable {
@@ -169,8 +222,6 @@ fun SavingsAccountContent(
     var externalId by rememberSaveable {
         mutableStateOf("")
     }
-
-
     var maximumOverdraftAmount by rememberSaveable {
         mutableStateOf("")
     }
@@ -186,29 +237,27 @@ fun SavingsAccountContent(
     var interestCalculatedUsing by rememberSaveable {
         mutableStateOf("")
     }
-    var interestCompoundingPeriod by rememberSaveable {
-        mutableStateOf("")
-    }
-
     var interestPostingPeriod by rememberSaveable {
-        mutableStateOf("")
-    }
-    var daysInYear by rememberSaveable {
         mutableStateOf("")
     }
     var fieldOfficerId by rememberSaveable {
         mutableStateOf(0)
     }
-
+    var selectedSavingsProductID by rememberSaveable {
+        mutableStateOf(0)
+    }
+    var nominalAnnualInterestOverdraft by rememberSaveable {
+        mutableStateOf("")
+    }
 
     val context = LocalContext.current
     val density = LocalDensity.current
     val scrollState = rememberScrollState()
 
-    var submittedOn by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
+    var submittedOnDate by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
     var pickSubmitDate by rememberSaveable { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = submittedOn,
+        initialSelectedDateMillis = submittedOnDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis >= System.currentTimeMillis()
@@ -225,7 +274,7 @@ fun SavingsAccountContent(
                 TextButton(
                     onClick = {
                         datePickerState.selectedDateMillis?.let {
-                            submittedOn = it
+                            submittedOnDate = it
                         }
                         pickSubmitDate = false
                     }
@@ -244,7 +293,6 @@ fun SavingsAccountContent(
         }
     }
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -253,15 +301,20 @@ fun SavingsAccountContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosTextFieldDropdown(
-            value = savingsProduct,
+            value = selectedSavingsProduct,
             onValueChanged = {
-                savingsProduct = it
+                selectedSavingsProduct = it
             },
-            onOptionSelected = { _, _ ->
+            onOptionSelected = { index, value ->
+                selectedSavingsProduct = value
+                productSavings[index].id?.let {
+                    selectedSavingsProductID = it
+                    onSavingsProductSelected.invoke(it)
+                }
 
             },
             label = R.string.product,
-            options = listOf(),
+            options = productSavings.map { it.name.toString() },
             readOnly = true
         )
 
@@ -274,12 +327,12 @@ fun SavingsAccountContent(
             },
             onOptionSelected = { index, value ->
                 selectedFieldOfficer = value
-                savingProductsTemplate.fieldOfficerOptions?.get(index)?.id?.let {
+                fieldOfficerOptions[index].id?.let {
                     fieldOfficerId = it
                 }
             },
             label = R.string.field_officer,
-            options = if (savingProductsTemplate.fieldOfficerOptions != null) savingProductsTemplate.fieldOfficerOptions!!.map { it.displayName.toString() } else listOf(),
+            options = fieldOfficerOptions.map { it.displayName.toString() },
             readOnly = true
         )
 
@@ -297,7 +350,7 @@ fun SavingsAccountContent(
         MifosDatePickerTextField(
             value = SimpleDateFormat(
                 "dd MMMM yyyy", Locale.getDefault()
-            ).format(submittedOn),
+            ).format(submittedOnDate),
             label = R.string.submitted_on
         ) {
             pickSubmitDate = true
@@ -310,13 +363,14 @@ fun SavingsAccountContent(
             value = nominalAnnualInterest,
             onValueChange = { nominalAnnualInterest = it },
             label = stringResource(id = R.string.nominal),
-            error = null
+            error = null,
+            keyboardType = KeyboardType.Number
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosOutlinedTextField(
-            value = interestCalculatedUsing,
+            value = savingProductsTemplate.mSavingProductsTemplate.interestCalculationType?.value.toString(),
             onValueChange = { interestCalculatedUsing = it },
             label = stringResource(id = R.string.interest_calc),
             error = null,
@@ -326,17 +380,17 @@ fun SavingsAccountContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosOutlinedTextField(
-            value = interestCompoundingPeriod,
-            onValueChange = { interestCompoundingPeriod = it },
+            value = savingProductsTemplate.mSavingProductsTemplate.interestCompoundingPeriodType?.value.toString(),
+            onValueChange = { },
             label = stringResource(id = R.string.interest_comp),
             error = null,
-            readOnly = true
+            readOnly = true,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosOutlinedTextField(
-            value = interestPostingPeriod,
+            value = savingProductsTemplate.mSavingProductsTemplate.interestPostingPeriodType?.value.toString(),
             onValueChange = { interestPostingPeriod = it },
             label = stringResource(id = R.string.interest_p_period),
             error = null,
@@ -346,8 +400,8 @@ fun SavingsAccountContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosOutlinedTextField(
-            value = daysInYear,
-            onValueChange = { daysInYear = it },
+            value = savingProductsTemplate.mSavingProductsTemplate.interestCalculationDaysInYearType?.value.toString(),
+            onValueChange = { },
             label = stringResource(id = R.string.days_in_year),
             error = null,
             readOnly = true
@@ -387,7 +441,8 @@ fun SavingsAccountContent(
                 value = minimumRequiredBalance,
                 onValueChange = { minimumRequiredBalance = it },
                 label = stringResource(id = R.string.saving_min_required_balance),
-                error = null
+                error = null,
+                keyboardType = KeyboardType.Number
             )
         }
 
@@ -433,9 +488,9 @@ fun SavingsAccountContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 MifosOutlinedTextField(
-                    value = nominalAnnualInterest,
-                    onValueChange = { nominalAnnualInterest = it },
-                    label = stringResource(id = R.string.nominal),
+                    value = nominalAnnualInterestOverdraft,
+                    onValueChange = { nominalAnnualInterestOverdraft = it },
+                    label = stringResource(id = R.string.nominal_overdraft),
                     error = null,
                     keyboardType = KeyboardType.Number
                 )
@@ -464,10 +519,81 @@ fun SavingsAccountContent(
                 containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
             ),
             onClick = {
+                if (Network.isOnline(context)) {
+                    val savingsPayload = SavingsPayload()
 
+                    savingsPayload.externalId = externalId
+                    savingsPayload.locale = "en"
+                    savingsPayload.submittedOnDate = SimpleDateFormat(
+                        "dd MMMM yyyy", Locale.getDefault()
+                    ).format(submittedOnDate)
+                    savingsPayload.dateFormat = "dd MMMM yyyy"
+                    if (isGroupAccount) {
+                        savingsPayload.groupId = groupId
+                    } else {
+                        savingsPayload.clientId = clientId
+                    }
+                    savingsPayload.productId = selectedSavingsProductID
+                    savingsPayload.fieldOfficerId = fieldOfficerId
+                    savingsPayload.nominalAnnualInterestRate = nominalAnnualInterest
+                    savingsPayload.allowOverdraft = overDraftAllowed
+                    savingsPayload.nominalAnnualInterestRateOverdraft = nominalAnnualInterestOverdraft
+                    savingsPayload.overdraftLimit = maximumOverdraftAmount
+                    savingsPayload.minOverdraftForInterestCalculation = minimumOverdraftAmount
+                    savingsPayload.enforceMinRequiredBalance = enforceMinimumBalance
+                    savingsPayload.minRequiredOpeningBalance = minimumRequiredBalance
+
+                    createSavingsAccount.invoke(savingsPayload)
+                } else {
+                    Toast.makeText(
+                        context,
+                        context.resources.getString(R.string.error_not_connected_internet),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         ) {
             Text(text = stringResource(id = R.string.submit))
         }
+    }
+}
+
+
+class SavingsAccountScreenPreviewProvider : PreviewParameterProvider<SavingAccountUiState> {
+    override val values: Sequence<SavingAccountUiState>
+        get() = sequenceOf(
+            SavingAccountUiState.ShowProgress,
+            SavingAccountUiState.LoadAllSavings(SavingProductsAndTemplate(
+                mProductSavings = listOf(
+                    ProductSavings(
+                        id = 0,
+                        name = "Product"
+                    )
+                ),
+                mSavingProductsTemplate = SavingProductsTemplate()
+            )),
+            SavingAccountUiState.ShowFetchingErrorString("F"),
+            SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(Savings()),
+            SavingAccountUiState.ShowFetchingError(R.string.savings_account_submitted_for_approval)
+        )
+}
+
+@Composable
+@Preview(showSystemUi = true)
+fun PreviewSavingsAccountScreen(
+    @PreviewParameter(SavingsAccountScreenPreviewProvider::class) savingAccountUiState: SavingAccountUiState
+) {
+    SavingsAccountScreen(
+        uiState = savingAccountUiState,
+        savingProductsTemplate = SavingProductsTemplate(),
+        onSavingsProductSelected = { } ,
+        navigateBack = { },
+        onRetry = { },
+        fetchTemplate = { },
+        isGroupAccount = true,
+        clientId = 0,
+        groupId = 0
+    ) {
+
     }
 }

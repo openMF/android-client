@@ -214,7 +214,8 @@ fun MifosOutlinedTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
-    error: Int?
+    error: Int?,
+    enabled: Boolean = true
 ) {
 
     OutlinedTextField(
@@ -223,6 +224,7 @@ fun MifosOutlinedTextField(
         label = { Text(label) },
         modifier = modifier,
         readOnly = readOnly,
+        enabled = enabled,
         leadingIcon = if (icon != null) {
             {
                 Icon(

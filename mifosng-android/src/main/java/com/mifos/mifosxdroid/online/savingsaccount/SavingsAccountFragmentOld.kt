@@ -176,11 +176,9 @@
 //            }
 //            savingsPayload.productId = productId
 //            savingsPayload.fieldOfficerId = fieldOfficerId
-//            savingsPayload.nominalAnnualInterestRate = binding.etNominalAnnual.editableText
-//                .toString()
+//            savingsPayload.nominalAnnualInterestRate = binding.etNominalAnnual.editableText.toString()
 //            savingsPayload.allowOverdraft = binding.cbOverdraftAllowed.isChecked
-//            savingsPayload.nominalAnnualInterestRateOverdraft =
-//                binding.etNominalAnnualOverdraft.editableText.toString()
+//            savingsPayload.nominalAnnualInterestRateOverdraft = binding.etNominalAnnualOverdraft.editableText.toString()
 //            savingsPayload.overdraftLimit = binding.etMaxOverdraftAmount.editableText
 //                .toString()
 //            savingsPayload.minOverdraftForInterestCalculation =
