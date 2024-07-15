@@ -389,6 +389,7 @@
     <string name="transaction_amount">Transaction amount*</string>
     <string name="approval_note">Note</string>
     <string name="savings_approval_reason">Reason for Approval</string>
+    <string name="savings_approved">Savings Approved</string>
     <string name="add_group">Add Group</string>
     <string name="client_active">Client Active</string>
     <string name="submit">Submit</string>
@@ -916,6 +917,7 @@
     <string name="currency">Currency</string>
     <string name="account_number">Account Number</string>
     <string name="saving_account_id">Saving Account Id</string>
+    <string name="more_savings_account_info">More savings account info</string>
     <string name="running_balance">Running Balance</string>
     <string name="transaction_type">Transaction Type</string>
     <string name="date">Date</string>

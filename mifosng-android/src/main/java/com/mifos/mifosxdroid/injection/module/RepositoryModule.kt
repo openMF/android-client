@@ -64,8 +64,6 @@ import com.mifos.mifosxdroid.online.clientlist.ClientListRepository
 import com.mifos.mifosxdroid.online.clientlist.ClientListRepositoryImp
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepositoryImp
-import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsRepository
-import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsRepositoryImp
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepository
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepositoryImp
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupRepository
@@ -90,8 +88,6 @@ import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursem
 import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementRepositoryImp
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryRepository
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryRepositoryImp
-import com.mifos.mifosxdroid.online.loancharge.LoanChargeRepository
-import com.mifos.mifosxdroid.online.loancharge.LoanChargeRepositoryImp
 import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentRepository
 import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentRepositoryImp
 import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleRepository
@@ -219,11 +215,6 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesLoanChargeRepository(dataManager: DataManager): LoanChargeRepository {
-        return LoanChargeRepositoryImp(dataManager)
-    }
-
-    @Provides
     fun providesLoanAccountApprovalRepository(dataManager: DataManager): LoanAccountApprovalRepository {
         return LoanAccountApprovalRepositoryImp(dataManager)
     }
@@ -241,11 +232,6 @@ class RepositoryModule {
     @Provides
     fun providesCollectionSheetRepository(dataManager: DataManager): CollectionSheetRepository {
         return CollectionSheetRepositoryImp(dataManager)
-    }
-
-    @Provides
-    fun providesIndividualCollectionSheetDetailsRepository(dataManagerCollection: DataManagerCollectionSheet): IndividualCollectionSheetDetailsRepository {
-        return IndividualCollectionSheetDetailsRepositoryImp(dataManagerCollection)
     }
 
     @Provides

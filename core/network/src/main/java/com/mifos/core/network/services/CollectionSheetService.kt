@@ -28,9 +28,9 @@ interface CollectionSheetService {
     ): IndividualCollectionSheet
 
     @POST(APIEndPoint.COLLECTION_SHEET + "?command=saveCollectionSheet")
-    fun saveindividualCollectionSheet(
+    suspend fun saveindividualCollectionSheet(
         @Body payload: IndividualCollectionSheetPayload?
-    ): Observable<GenericResponse>
+    ): GenericResponse
     //Productive CollectionSheet Endpoints
     /**
      * Endpoint to fetch Productive CollectionSheet

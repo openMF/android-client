@@ -1,11 +1,15 @@
 package com.mifos.mifosxdroid.online.savingsaccountapproval
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.accounts.loan.SavingsApproval
+import com.mifos.core.objects.accounts.savings.DepositType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -18,12 +22,14 @@ import javax.inject.Inject
 class SavingsAccountApprovalViewModel @Inject constructor(private val repository: SavingsAccountApprovalRepository) :
     ViewModel() {
 
-    private val _savingsAccountApprovalUiState = MutableLiveData<SavingsAccountApprovalUiState>()
-
-    val savingsAccountApprovalUiState: LiveData<SavingsAccountApprovalUiState>
+    private val _savingsAccountApprovalUiState =
+        MutableStateFlow<SavingsAccountApprovalUiState>(SavingsAccountApprovalUiState.Initial)
+    val savingsAccountApprovalUiState: StateFlow<SavingsAccountApprovalUiState>
         get() = _savingsAccountApprovalUiState
 
-    fun approveSavingsApplication(savingsAccountId: Int, savingsApproval: SavingsApproval?) {
+    var savingsAccountId = 0
+
+    fun approveSavingsApplication(savingsApproval: SavingsApproval?) {
         _savingsAccountApprovalUiState.value = SavingsAccountApprovalUiState.ShowProgressbar
         repository
             .approveSavingsApplication(savingsAccountId, savingsApproval)
@@ -32,7 +38,8 @@ class SavingsAccountApprovalViewModel @Inject constructor(private val repository
             .subscribe(object : Subscriber<GenericResponse>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-
+                    _savingsAccountApprovalUiState.value =
+                        SavingsAccountApprovalUiState.ShowError(e.message ?: "Something went wrong")
                 }
 
                 override fun onNext(genericResponse: GenericResponse) {
