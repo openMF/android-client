@@ -16,7 +16,9 @@
     <string name="feature_document_upload_document">Upload Document</string>
     <string name="feature_document_name">Name</string>
     <string name="feature_document_message_field_required"> is mandatory and cannot be left blank</string>
-    <string name="feature_document_description">Description\n</string>
-    <string name="feature_document_selected_file">Selected File\n</string>
+    <string name="feature_document_description">Description</string>
+    <string name="feature_document_selected_file">Selected File</string>
     <string name="feature_document_message_file_required">File not selected</string>
+    <string name="feature_document_upload">UPLOAD</string>
+    <string name="feature_document_browse">BROWSE</string>
 </resources>

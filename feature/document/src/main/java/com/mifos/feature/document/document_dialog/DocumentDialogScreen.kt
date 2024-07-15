@@ -15,9 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
@@ -52,6 +49,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.White
@@ -167,9 +165,9 @@ fun DocumentDialogContent(
         mutableStateOf(TextFieldValue(""))
     }
 
-    var nameError by remember { mutableStateOf(false) }
-    var descriptionError by remember { mutableStateOf(false) }
-    var fileError by remember { mutableStateOf(false) }
+    var nameError by rememberSaveable { mutableStateOf(false) }
+    var descriptionError by rememberSaveable { mutableStateOf(false) }
+    var fileError by rememberSaveable { mutableStateOf(false) }
 
     if( documentAction == stringResource(id = R.string.feature_document_update_document))
     {
@@ -210,7 +208,9 @@ fun DocumentDialogContent(
                 Column(modifier = Modifier.padding(20.dp)) {
 
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -220,7 +220,7 @@ fun DocumentDialogContent(
                             color = BluePrimary
                         )
                         Icon(
-                            imageVector = Icons.Filled.Cancel,
+                            imageVector = MifosIcons.cancel,
                             contentDescription = "",
                             tint = colorResource(android.R.color.darker_gray),
                             modifier = Modifier
@@ -229,8 +229,6 @@ fun DocumentDialogContent(
                                 .clickable { setShowDialog(false) }
                         )
                     }
-
-                    Spacer(modifier = Modifier.height(20.dp))
 
                     MifosOutlinedTextField(
                         value = name,
@@ -242,12 +240,11 @@ fun DocumentDialogContent(
                         error = if(nameError) R.string.feature_document_message_field_required else null,
                         trailingIcon = {
                             if (nameError) {
-                                Icon(imageVector = Icons.Filled.Error, contentDescription = null)
+                                Icon(imageVector = MifosIcons.error, contentDescription = null)
                             }
                         }
                     )
 
-                    Spacer(modifier = Modifier.height(20.dp))
 
                     MifosOutlinedTextField(
                         value = description,
@@ -259,12 +256,11 @@ fun DocumentDialogContent(
                         error = if(descriptionError) R.string.feature_document_message_field_required else null,
                         trailingIcon = {
                             if (descriptionError) {
-                                Icon(imageVector = Icons.Filled.Error, contentDescription = null)
+                                Icon(imageVector = MifosIcons.error, contentDescription = null)
                             }
                         }
                     )
 
-                    Spacer(modifier = Modifier.height(20.dp))
 
                     androidx.compose.material3.OutlinedTextField(
                         value = if(fileName != null) TextFieldValue(fileName) else TextFieldValue(""),
@@ -277,7 +273,7 @@ fun DocumentDialogContent(
                             .padding(start = 16.dp, end = 16.dp),
                         trailingIcon = {
                             if (descriptionError) {
-                                Icon(imageVector = Icons.Filled.Error, contentDescription = null)
+                                Icon(imageVector = MifosIcons.error, contentDescription = null)
                             }
                         },
                         enabled = false,
@@ -308,7 +304,6 @@ fun DocumentDialogContent(
                             onClick = {
                                 openFilePicker.invoke()
                             },
-                            shape = RoundedCornerShape(50.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(50.dp), 
@@ -319,7 +314,7 @@ fun DocumentDialogContent(
                                 disabledContentColor = White
                             )
                         ) {
-                            Text(text = "BROWSE")
+                            Text(text = stringResource(id =R.string.feature_document_browse))
                         }
                     }
 
@@ -333,7 +328,6 @@ fun DocumentDialogContent(
                                       uploadDocument.invoke(name.text, description.text, dialogTitle)
                                   }
                             },
-                            shape = RoundedCornerShape(50.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(50.dp),
@@ -344,7 +338,7 @@ fun DocumentDialogContent(
                                 disabledContentColor = Gray
                             )
                         ) {
-                            Text(text = "UPLOAD")
+                            Text(text = stringResource(id =R.string.feature_document_upload))
                         }
                     }
                 }
