@@ -175,7 +175,7 @@ class DataManager {
         return mBaseApiManager.loanApi.approveLoanApplication(loanId, loanApproval)
     }
 
-    fun getListOfLoanCharges(loanId: Int): Observable<List<Charges>> {
+    suspend fun getListOfLoanCharges(loanId: Int): List<Charges> {
         return mBaseApiManager.loanApi.getListOfLoanCharges(loanId)
     }
 
