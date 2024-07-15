@@ -1,10 +1,10 @@
-package com.mifos.mifosxdroid.dialogfragments.chargedialog
+package com.mifos.core.data.repository_imp
 
 import com.mifos.core.data.ChargesPayload
+import com.mifos.core.data.repository.ChargeDialogRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.objects.client.ChargeCreationResponse
 import com.mifos.core.objects.templates.clients.ChargeTemplate
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -13,14 +13,14 @@ import javax.inject.Inject
 class ChargeDialogRepositoryImp @Inject constructor(private val dataManager: DataManager) :
     ChargeDialogRepository {
 
-    override fun getAllChargesV2(clientId: Int): Observable<ChargeTemplate> {
+    override suspend fun getAllChargesV2(clientId: Int): ChargeTemplate {
         return dataManager.getAllChargesV2(clientId)
     }
 
-    override fun createCharges(
+    override suspend fun createCharges(
         clientId: Int,
-        payload: ChargesPayload?
-    ): Observable<ChargeCreationResponse> {
+        payload: ChargesPayload
+    ): ChargeCreationResponse {
         return dataManager.createCharges(clientId, payload)
     }
 }

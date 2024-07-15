@@ -1,6 +1,8 @@
 package com.mifos.mifosxdroid.injection.module
 
+import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.data.repository.NoteRepository
+import com.mifos.core.data.repository_imp.DocumentDialogRepositoryImp
 import com.mifos.core.data.repository_imp.NoteRepositoryImp
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerAuth
@@ -20,12 +22,8 @@ import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepositoryImp
-import com.mifos.core.data.repository.DocumentDialogRepository
-import com.mifos.core.data.repository_imp.DocumentDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepository
@@ -290,11 +288,6 @@ class RepositoryModule {
     @Provides
     fun providesSurveySubmitRepository(dataManagerSurveys: DataManagerSurveys): SurveySubmitRepository {
         return SurveySubmitRepositoryImp(dataManagerSurveys)
-    }
-
-    @Provides
-    fun providesChargeDialogRepository(dataManager: DataManager): ChargeDialogRepository {
-        return ChargeDialogRepositoryImp(dataManager)
     }
 
     @Provides

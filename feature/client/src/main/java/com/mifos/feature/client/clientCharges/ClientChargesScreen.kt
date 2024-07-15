@@ -24,7 +24,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -53,6 +56,7 @@ import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.objects.client.Charges
 import com.mifos.feature.client.R
+import com.mifos.feature.client.client_charge_dialog.ChargeDialogScreen
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
@@ -70,13 +74,14 @@ fun ClientChargesScreen(
     }
 
     ClientChargesScreen(
+        clientId = clientId,
         state = clientChargeUiState,
         onBackPressed = onBackPressed,
         onRetry = { viewModel.loadCharges(clientId) },
         onRefresh = { viewModel.refreshCenterList(clientId) },
         refreshState = refreshState,
-        addCharges = {
-            // TODO Implement Dialog to add charges
+        onChargeCreated = {
+            viewModel.loadCharges(clientId)
         }
     )
 
@@ -84,12 +89,13 @@ fun ClientChargesScreen(
 
 @Composable
 fun ClientChargesScreen(
+    clientId: Int,
     state: ClientChargeUiState,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
     onRefresh: () -> Unit,
     refreshState: Boolean,
-    addCharges: () -> Unit
+    onChargeCreated: () -> Unit
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -97,13 +103,27 @@ fun ClientChargesScreen(
         refreshing = refreshState,
         onRefresh = onRefresh
     )
+    var showClientChargeDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showClientChargeDialog) {
+        ChargeDialogScreen(
+            clientId = clientId,
+            onDismiss = {
+                showClientChargeDialog = false
+            },
+            onCreated = {
+                onChargeCreated()
+                showClientChargeDialog = false
+            }
+        )
+    }
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_client_charges),
         onBackPressed = onBackPressed,
         actions = {
-            IconButton(onClick = { addCharges() }) {
+            IconButton(onClick = { showClientChargeDialog = true }) {
                 Icon(imageVector = MifosIcons.Add, contentDescription = null)
             }
         },
@@ -277,12 +297,13 @@ private fun ClientChargesScreenPreview(
     @PreviewParameter(ClientChargesScreenUiStateProvider::class) state: ClientChargeUiState
 ) {
     ClientChargesScreen(
+        clientId = 1,
         state = state,
         onBackPressed = {},
         onRetry = {},
         onRefresh = {},
         refreshState = false,
-        addCharges = {}
+        onChargeCreated = {}
     )
 }
 

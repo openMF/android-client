@@ -1,19 +1,18 @@
-package com.mifos.mifosxdroid.dialogfragments.chargedialog
+package com.mifos.core.data.repository
 
 import com.mifos.core.data.ChargesPayload
 import com.mifos.core.objects.client.ChargeCreationResponse
 import com.mifos.core.objects.templates.clients.ChargeTemplate
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
 interface ChargeDialogRepository {
 
-    fun getAllChargesV2(clientId: Int): Observable<ChargeTemplate>
+    suspend fun getAllChargesV2(clientId: Int): ChargeTemplate
 
-    fun createCharges(
+    suspend fun createCharges(
         clientId: Int,
-        payload: ChargesPayload?
-    ): Observable<ChargeCreationResponse>
+        payload: ChargesPayload
+    ): ChargeCreationResponse
 }
