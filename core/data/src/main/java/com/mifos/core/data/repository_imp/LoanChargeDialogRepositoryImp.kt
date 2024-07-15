@@ -1,10 +1,10 @@
-package com.mifos.mifosxdroid.dialogfragments.loanchargedialog
+package com.mifos.core.data.repository_imp
 
 import com.mifos.core.data.ChargesPayload
+import com.mifos.core.data.repository.LoanChargeDialogRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.objects.client.ChargeCreationResponse
 import okhttp3.ResponseBody
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -12,14 +12,15 @@ import javax.inject.Inject
  */
 class LoanChargeDialogRepositoryImp @Inject constructor(private val dataManager: DataManager) :
     LoanChargeDialogRepository {
-    override fun getAllChargesV3(loanId: Int): Observable<ResponseBody> {
+
+    override suspend fun getAllChargesV3(loanId: Int): ResponseBody {
         return dataManager.getAllChargesV3(loanId)
     }
 
-    override fun createLoanCharges(
+    override suspend fun createLoanCharges(
         loanId: Int,
-        chargesPayload: ChargesPayload?
-    ): Observable<ChargeCreationResponse> {
+        chargesPayload: ChargesPayload
+    ): ChargeCreationResponse {
         return dataManager.createLoanCharges(loanId, chargesPayload)
     }
 }

@@ -247,6 +247,7 @@ fun MifosOutlinedTextField(
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next,keyboardType = keyboardType),
         visualTransformation = visualTransformation,
         isError = error != null,
+        readOnly = readOnly,
         supportingText = if (error != null) {
             {
                 Text(

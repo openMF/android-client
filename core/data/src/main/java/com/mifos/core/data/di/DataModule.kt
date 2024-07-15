@@ -16,6 +16,7 @@ import com.mifos.core.data.repository.GroupLoanAccountRepository
 import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.data.repository.IndividualCollectionSheetDetailsRepository
 import com.mifos.core.data.repository.LoanAccountRepository
+import com.mifos.core.data.repository.LoanChargeDialogRepository
 import com.mifos.core.data.repository.LoanChargeRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.data.repository.PathTrackingRepository
@@ -37,6 +38,7 @@ import com.mifos.core.data.repository_imp.GroupLoanAccountRepositoryImp
 import com.mifos.core.data.repository_imp.GroupsListRepositoryImpl
 import com.mifos.core.data.repository_imp.IndividualCollectionSheetDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.LoanAccountRepositoryImp
+import com.mifos.core.data.repository_imp.LoanChargeDialogRepositoryImp
 import com.mifos.core.data.repository_imp.LoanChargeRepositoryImp
 import com.mifos.core.data.repository_imp.NewIndividualCollectionSheetRepositoryImp
 import com.mifos.core.data.repository_imp.PathTrackingRepositoryImp
@@ -116,4 +118,7 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindLoanChargeRepository(impl: LoanChargeRepositoryImp): LoanChargeRepository
+
+    @Binds
+    internal abstract fun bindLoanChargeDialogRepository(impl: LoanChargeDialogRepositoryImp): LoanChargeDialogRepository
 }
