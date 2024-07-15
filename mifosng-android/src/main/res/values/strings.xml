@@ -47,7 +47,7 @@
     <string name="loanterm">Loan Term</string>
     <string name="loanterm_month">Select Loan Term</string>
     <string name="nominal">Nominal annual interest </string>
-    <string name="submittedon">Submitted On</string>
+    <string name="submitted_on">Submitted On</string>
     <string name="activation_date">Activation Date</string>
     <string name="office">Office</string>
     <string name="group">Group</string>

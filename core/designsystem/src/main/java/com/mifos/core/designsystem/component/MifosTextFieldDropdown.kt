@@ -54,7 +54,8 @@ fun MifosTextFieldDropdown(
             maxLines = 1,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
+                focusedLabelColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+                ),
             textStyle = LocalDensity.current.run {
                 TextStyle(fontSize = 18.sp)
             },

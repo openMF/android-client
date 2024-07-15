@@ -207,6 +207,7 @@ fun MifosOutlinedTextField(
     value: String,
     onValueChange: (String) -> Unit,
     maxLines: Int = 1,
+    readOnly : Boolean = false,
     singleLine: Boolean = true,
     icon: ImageVector? = null,
     label: String,
@@ -221,6 +222,7 @@ fun MifosOutlinedTextField(
         onValueChange = onValueChange,
         label = { Text(label) },
         modifier = modifier,
+        readOnly = readOnly,
         leadingIcon = if (icon != null) {
             {
                 Icon(

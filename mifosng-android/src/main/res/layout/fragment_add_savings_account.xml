@@ -6,11 +6,11 @@
     android:outAnimation="@android:anim/fade_out">
 
     <!-- Comment this out when editing the actual content -->
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+<!--    <ProgressBar-->
+<!--        android:id="@+id/progress_bar"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center" />-->
 
     <!-- Actual content -->
     <ScrollView
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="16dp"
                 android:paddingBottom="10dp"
-                android:text="@string/submittedon"
+                android:text="@string/submitted_on"
                 android:textSize="16sp" />
 
             <TextView
@@ -170,7 +170,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:checked="false"
+                android:checked="true"
                 android:paddingTop="10dp"
                 android:text="@string/saving_min_required_balance" />
 
@@ -193,7 +193,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:checked="false"
+                android:checked="true"
                 android:paddingTop="10dp"
                 android:text="@string/saving_overdraft_allowed" />
 
