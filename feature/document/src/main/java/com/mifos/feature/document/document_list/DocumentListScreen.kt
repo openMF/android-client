@@ -32,6 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,10 +71,6 @@ fun DocumentListScreen(
     entityType: String,
     entityId: Int,
     onBackPressed: () -> Unit,
-    openFilePicker: () -> Unit,
-    uploadDocument: (String, String, String) -> Unit,
-    documentAction: String?,
-    document: Document?
 ) {
     val context = LocalContext.current
     val viewModel: DocumentListViewModel = hiltViewModel()
@@ -81,16 +78,23 @@ fun DocumentListScreen(
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val downloadState by viewModel.downloadDocumentState.collectAsStateWithLifecycle()
     val removeState by viewModel.removeDocumentState.collectAsStateWithLifecycle()
-    val isDialogBoxActive = remember { mutableStateOf(false) }
+    val isDialogBoxActive = rememberSaveable { mutableStateOf(false) }
+    val dialogBoxAction = rememberSaveable { mutableStateOf("") }
+    val dialogDocument = rememberSaveable { mutableStateOf(Document()) }
+
 
     if(isDialogBoxActive.value)
     {
         DocumentDialogScreen(
-            documentAction = documentAction,
-            document = document,
-            openFilePicker = { openFilePicker() },
+            entityType= entityType,
+            entityId = entityId,
+            documentAction = dialogBoxAction.value,
+            document = dialogDocument.value,
             closeDialog = { isDialogBoxActive.value = false },
-            uploadDocument = uploadDocument
+            closeScreen = {
+                isDialogBoxActive.value = false
+                onBackPressed()
+            }
         )
     }
 
@@ -129,13 +133,16 @@ fun DocumentListScreen(
             viewModel.loadDocumentList(entityType, entityId)
         },
         onAddDocument = {
+            dialogBoxAction.value = context.getString(R.string.feature_document_upload_document)
             isDialogBoxActive.value = true
         },
         onDownloadDocument = { documentId ->
             viewModel.downloadDocument(entityType, entityId, documentId)
         },
         onUpdateDocument = { document ->
-            // TODO Implement Add document dialog
+            dialogDocument.value = document
+            dialogBoxAction.value = context.getString(R.string.feature_document_update_document)
+            isDialogBoxActive.value = true
         },
         onRemovedDocument = { documentId ->
             viewModel.removeDocument(entityType, entityId, documentId)

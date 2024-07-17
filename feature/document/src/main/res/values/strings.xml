@@ -21,4 +21,6 @@
     <string name="feature_document_message_file_required">File not selected</string>
     <string name="feature_document_upload">UPLOAD</string>
     <string name="feature_document_browse">BROWSE</string>
+    <string name="feature_document_permission_granted">Permission to read  document granted !!</string>
+    <string name="feature_document_permission_denied">Permission to read  document denied !!</string>
 </resources>

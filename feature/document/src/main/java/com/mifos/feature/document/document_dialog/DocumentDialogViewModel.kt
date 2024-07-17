@@ -1,15 +1,11 @@
 package com.mifos.feature.document.document_dialog
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.network.GenericResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -33,12 +29,6 @@ class DocumentDialogViewModel @Inject constructor(private val repository: Docume
     val documentDialogUiState: StateFlow<DocumentDialogUiState>
         get() = _documentDialogUiState
 
-    private val _fileName = MutableStateFlow<String>("")
-    var fileName: StateFlow<String> = _fileName
-
-    fun setFilePath(fileName: String) {
-        _fileName.value = fileName
-    }
     fun createDocument(type: String?, id: Int, name: String?, desc: String?, file: File) {
         _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
         repository

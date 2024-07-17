@@ -1,6 +1,13 @@
 package com.mifos.feature.document.document_dialog
 
+import android.Manifest
+import android.content.Context
+import android.os.Build
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -20,16 +27,15 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.platform.LocalContext
@@ -45,6 +51,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.content.ContextCompat
+import androidx.core.content.PermissionChecker
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -56,28 +64,98 @@ import com.mifos.core.designsystem.theme.White
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.noncore.Document
 import com.mifos.feature.document.R
+import java.io.File
+import com.mifos.core.common.utils.FileUtils
+
 
 @Composable
 fun DocumentDialogScreen(
     viewModel: DocumentDialogViewModel = hiltViewModel(),
     documentAction: String?,
     document: Document?,
-    openFilePicker: () -> Unit,
     closeDialog: () -> Unit,
-    uploadDocument: (String, String, String) -> Unit,
+    entityType: String,
+    entityId: Int,
+    closeScreen: () -> Unit
 ) {
+
+    val context = LocalContext.current
     val state by viewModel.documentDialogUiState.collectAsStateWithLifecycle()
-    val fileName by viewModel.fileName.collectAsStateWithLifecycle()
+    val requiredPermissions = if (Build.VERSION.SDK_INT >= 33) {
+        arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
+    } else {
+        arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+    }
+    var fileName by rememberSaveable { mutableStateOf<String?>(document?.name) }
+    var fileChosen by rememberSaveable { mutableStateOf<File?>(null) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
+        it?.let { uri ->
+            val filePath = FileUtils.getPathReal(context, uri)
+            filePath?.let { path ->
+                fileChosen = File(path)
+                fileName = fileChosen!!.name
+            }
+        }
+    }
+    val permissionsLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        permissionsMap: Map<String, Boolean> ->
+        permissionsMap.forEach { (permission, isGranted) ->
+            if (isGranted) {
+                Toast.makeText(context, context.getString(R.string.feature_document_permission_granted), Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, context.getString(R.string.feature_document_permission_denied), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     DocumentDialogScreen(
         uiState = state,
         documentAction = documentAction,
-        document= document,
-        openFilePicker = openFilePicker,
-        closeDialog= closeDialog,
-        uploadDocument = uploadDocument,
-        filename = fileName
+        document = document,
+        openFilePicker = {
+            if ( checkPermission(context) ) {
+                launcher.launch(
+                    PickVisualMediaRequest(mediaType = ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+                )
+            } else {
+                permissionsLauncher.launch(requiredPermissions)
+            }
+        },
+        closeDialog = closeDialog,
+        uploadDocument = { documentName, documentDescription ->
+
+            if (documentAction == context.getString(R.string.feature_document_update_document)) {
+                viewModel.updateDocument(
+                    entityType, entityId, document!!.id, documentName, documentDescription, fileChosen!!
+                )
+            } else if (documentAction == context.getString(R.string.feature_document_upload_document)) {
+                viewModel.createDocument(
+                    entityType, entityId, documentName, documentDescription, fileChosen!!
+                )
+            }
+        },
+        filename = fileName,
+        closeScreen = closeScreen
     )
+}
+
+fun checkPermission( context: Context ) : Boolean {
+    if ( Build.VERSION.SDK_INT >= 33 )
+    {
+        if(ContextCompat.checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES) == PermissionChecker.PERMISSION_GRANTED)
+            return true;
+    }else {
+        if(ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_GRANTED )
+            return true;
+    }
+
+    return false;
 }
 
 @Composable
@@ -87,8 +165,9 @@ fun DocumentDialogScreen(
     document: Document?,
     openFilePicker: () -> Unit,
     closeDialog: () -> Unit?,
-    uploadDocument: (String, String, String) -> Unit,
-    filename: String?
+    uploadDocument: (String, String) -> Unit,
+    filename: String?,
+    closeScreen: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -113,7 +192,7 @@ fun DocumentDialogScreen(
             LaunchedEffect(true) {
                 Toast.makeText(
                     context,
-                    String.format(context.getString(R.string.feature_document_uploaded_successfully), "ksfhkhj"),
+                    String.format(context.getString(R.string.feature_document_uploaded_successfully), filename),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -124,7 +203,7 @@ fun DocumentDialogScreen(
             LaunchedEffect(true) {
                 Toast.makeText(
                     context,
-                    String.format(context.getString(R.string.feature_document_document_updated_successfully), "shgfdsnfbmns"),
+                    String.format(context.getString(R.string.feature_document_document_updated_successfully), filename),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -135,14 +214,14 @@ fun DocumentDialogScreen(
             LaunchedEffect(true){
                 Toast.makeText(context, uiState.message, Toast.LENGTH_SHORT).show()
             }
-            closeDialog.invoke()
+            closeScreen.invoke()
         }
 
         is DocumentDialogUiState.ShowError -> {
             LaunchedEffect(true) {
                 Toast.makeText(context, uiState.message, Toast.LENGTH_SHORT).show()
             }
-            closeDialog.invoke()
+            closeScreen.invoke()
         }
     }
 }
@@ -153,7 +232,7 @@ fun DocumentDialogContent(
     documentAction: String?,
     document: Document?,
     openFilePicker: () -> Unit,
-    uploadDocument: (String, String, String) -> Unit,
+    uploadDocument: (String, String) -> Unit,
     fileName: String?
 ) {
 
@@ -198,148 +277,147 @@ fun DocumentDialogContent(
     }
 
     Dialog(onDismissRequest = { setShowDialog(false) }) {
-        Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = Color.White
+
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.White),
+            contentAlignment = Alignment.Center,
         ) {
-            Box(
-                contentAlignment = Alignment.Center
-            ) {
-                Column(modifier = Modifier.padding(20.dp)) {
+            Column(modifier = Modifier.padding(20.dp)) {
 
-                    Row(
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = dialogTitle,
+                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                        color = BluePrimary
+                    )
+                    Icon(
+                        imageVector = MifosIcons.cancel,
+                        contentDescription = "",
+                        tint = colorResource(android.R.color.darker_gray),
+                        modifier = Modifier
+                            .width(30.dp)
+                            .height(30.dp)
+                            .clickable { setShowDialog(false) }
+                    )
+                }
+
+                MifosOutlinedTextField(
+                    value = name,
+                    onValueChange = { value ->
+                        name = value
+                        nameError = false
+                    },
+                    label = R.string.feature_document_name,
+                    error = if(nameError) R.string.feature_document_message_field_required else null,
+                    trailingIcon = {
+                        if (nameError) {
+                            Icon(imageVector = MifosIcons.error, contentDescription = null)
+                        }
+                    }
+                )
+
+
+                MifosOutlinedTextField(
+                    value = description,
+                    onValueChange = { value ->
+                        description = value
+                        descriptionError = false
+                    },
+                    label = R.string.feature_document_description,
+                    error = if(descriptionError) R.string.feature_document_message_field_required else null,
+                    trailingIcon = {
+                        if (descriptionError) {
+                            Icon(imageVector = MifosIcons.error, contentDescription = null)
+                        }
+                    }
+                )
+
+
+                androidx.compose.material3.OutlinedTextField(
+                    value = if(fileName != null) TextFieldValue(fileName) else TextFieldValue(""),
+                    onValueChange = {
+                        fileError = false
+                    },
+                    label = { Text(stringResource(id = R.string.feature_document_selected_file)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp),
+                    trailingIcon = {
+                        if (descriptionError) {
+                            Icon(imageVector = MifosIcons.error, contentDescription = null)
+                        }
+                    },
+                    enabled = false,
+                    maxLines = 1,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+                    ),
+                    textStyle = LocalDensity.current.run {
+                        TextStyle(fontSize = 18.sp)
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                    isError = fileError,
+                    supportingText = {
+                        if (fileError) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = stringResource(id = R.string.feature_document_message_file_required),
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Box(modifier = Modifier.padding(20.dp, 0.dp, 20.dp, 0.dp)) {
+                    Button(
+                        onClick = {
+                            openFilePicker.invoke()
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                            .height(50.dp),
+                        colors = ButtonColors(
+                            containerColor = BluePrimary,
+                            contentColor = White,
+                            disabledContainerColor = BluePrimary,
+                            disabledContentColor = White
+                        )
                     ) {
-                        Text(
-                            text = dialogTitle,
-                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                            color = BluePrimary
-                        )
-                        Icon(
-                            imageVector = MifosIcons.cancel,
-                            contentDescription = "",
-                            tint = colorResource(android.R.color.darker_gray),
-                            modifier = Modifier
-                                .width(30.dp)
-                                .height(30.dp)
-                                .clickable { setShowDialog(false) }
-                        )
+                        Text(text = stringResource(id =R.string.feature_document_browse))
                     }
+                }
 
-                    MifosOutlinedTextField(
-                        value = name,
-                        onValueChange = { value ->
-                            name = value
-                            nameError = false
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Box(modifier = Modifier.padding(20.dp, 0.dp, 20.dp, 0.dp)) {
+                    Button(
+                        onClick = {
+                              if(validateInput())
+                              {
+                                  uploadDocument.invoke(name.text, description.text)
+                              }
                         },
-                        label = R.string.feature_document_name,
-                        error = if(nameError) R.string.feature_document_message_field_required else null,
-                        trailingIcon = {
-                            if (nameError) {
-                                Icon(imageVector = MifosIcons.error, contentDescription = null)
-                            }
-                        }
-                    )
-
-
-                    MifosOutlinedTextField(
-                        value = description,
-                        onValueChange = { value ->
-                            description = value
-                            descriptionError = false
-                        },
-                        label = R.string.feature_document_description,
-                        error = if(descriptionError) R.string.feature_document_message_field_required else null,
-                        trailingIcon = {
-                            if (descriptionError) {
-                                Icon(imageVector = MifosIcons.error, contentDescription = null)
-                            }
-                        }
-                    )
-
-
-                    androidx.compose.material3.OutlinedTextField(
-                        value = if(fileName != null) TextFieldValue(fileName) else TextFieldValue(""),
-                        onValueChange = {
-                            fileError = false
-                        },
-                        label = { Text(stringResource(id = R.string.feature_document_selected_file)) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp),
-                        trailingIcon = {
-                            if (descriptionError) {
-                                Icon(imageVector = MifosIcons.error, contentDescription = null)
-                            }
-                        },
-                        enabled = false,
-                        maxLines = 1,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                        ),
-                        textStyle = LocalDensity.current.run {
-                            TextStyle(fontSize = 18.sp)
-                        },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                        isError = fileError,
-                        supportingText = {
-                            if (fileError) {
-                                Text(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    text = stringResource(id = R.string.feature_document_message_file_required),
-                                    color = MaterialTheme.colorScheme.error
-                                )
-                            }
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    Box(modifier = Modifier.padding(20.dp, 0.dp, 20.dp, 0.dp)) {
-                        Button(
-                            onClick = {
-                                openFilePicker.invoke()
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp), 
-                            colors = ButtonColors(
-                                containerColor = BluePrimary,
-                                contentColor = White,
-                                disabledContainerColor = BluePrimary,
-                                disabledContentColor = White
-                            )
-                        ) {
-                            Text(text = stringResource(id =R.string.feature_document_browse))
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    Box(modifier = Modifier.padding(20.dp, 0.dp, 20.dp, 0.dp)) {
-                        Button(
-                            onClick = {
-                                  if(validateInput())
-                                  {
-                                      uploadDocument.invoke(name.text, description.text, dialogTitle)
-                                  }
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp),
-                            colors = ButtonColors(
-                                containerColor = BluePrimary,
-                                contentColor = White,
-                                disabledContainerColor = BluePrimary,
-                                disabledContentColor = Gray
-                            )
-                        ) {
-                            Text(text = stringResource(id =R.string.feature_document_upload))
-                        }
+                            .height(50.dp),
+                        colors = ButtonColors(
+                            containerColor = BluePrimary,
+                            contentColor = White,
+                            disabledContainerColor = BluePrimary,
+                            disabledContentColor = Gray
+                        )
+                    ) {
+                        Text(text = stringResource(id =R.string.feature_document_upload))
                     }
                 }
             }
@@ -370,7 +448,8 @@ private fun DocumentDialogPreview(
         document = Document(),
         openFilePicker = {  },
         closeDialog = {  },
-        uploadDocument = { _,_, _->  },
-        filename = ""
+        uploadDocument = { _, _,->  },
+        filename = "",
+        closeScreen = { }
     )
 }
