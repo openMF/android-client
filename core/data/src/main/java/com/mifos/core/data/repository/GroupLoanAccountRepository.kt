@@ -1,8 +1,7 @@
-package com.mifos.mifosxdroid.online.grouploanaccount
+package com.mifos.core.data.repository
 
 import com.mifos.core.data.GroupLoanPayload
 import com.mifos.core.objects.accounts.loan.Loans
-import com.mifos.core.objects.organisation.LoanProducts
 import com.mifos.core.objects.templates.loans.GroupLoanTemplate
 import rx.Observable
 
@@ -11,9 +10,7 @@ import rx.Observable
  */
 interface GroupLoanAccountRepository {
 
-    fun allLoans(): Observable<List<LoanProducts>>
-
     fun getGroupLoansAccountTemplate(groupId: Int, productId: Int): Observable<GroupLoanTemplate>
 
-    fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Observable<Loans>
+    fun createGroupLoansAccount(loansPayload: GroupLoanPayload): Observable<Loans>
 }

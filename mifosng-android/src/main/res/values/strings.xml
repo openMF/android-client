@@ -47,7 +47,7 @@
     <string name="loanterm">Loan Term</string>
     <string name="loanterm_month">Select Loan Term</string>
     <string name="nominal">Nominal annual interest </string>
-    <string name="submittedon">Submitted On</string>
+    <string name="submitted_on">Submitted On</string>
     <string name="activation_date">Activation Date</string>
     <string name="office">Office</string>
     <string name="group">Group</string>
@@ -567,6 +567,7 @@
     <string name="submit_date">Submit Date</string>
     <string name="error_message">Server Sync Error</string>
     <string name="sync_clients">Clients</string>
+    <string name="sync_clients_payloads">Sync Client Payloads</string>
     <string name="sync_groups">Groups</string>
     <string name="sync_centers">Centers</string>
     <string name="sync_loanrepayments">LoanRepayments</string>
@@ -927,6 +928,7 @@
 
 
     <string name="got_it">GOT IT</string>
+    <string name="go_back">Go Back</string>
     <string name="finish">FINISH</string>
     <string name="sp_search_intro">Filter out the results using this dropdown</string>
     <string name="cb_exactMatch_intro">To get the result matching exactly the keyword entered.\n Simply check this box</string>

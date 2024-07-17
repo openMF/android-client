@@ -170,7 +170,7 @@
     <string name="loanterm">durée du prêt</string>
     <string name="loanterm_month">sélectionnez un terme de prêt</string>
     <string name="nominal">intérêt annuel nominal</string>
-    <string name="submittedon">soumis le</string>
+    <string name="submitted_on">soumis le</string>
     <string name="survey">enquête</string>
     <string name="create_client">créer un client</string>
     <string name="create_savings_account">ajouter un compte d\'épargne</string>

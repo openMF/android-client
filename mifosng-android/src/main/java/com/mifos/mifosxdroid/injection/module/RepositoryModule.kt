@@ -20,8 +20,6 @@ import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
-import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepository
-import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepository
@@ -78,8 +76,6 @@ import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSh
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepositoryImp
-import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountRepository
-import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountRepositoryImp
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepositoryImp
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApprovalRepository
@@ -189,10 +185,6 @@ class RepositoryModule {
         return DataTableRepositoryImp(dataManagerDataTable)
     }
 
-    @Provides
-    fun providesPinPointClientRepository(dataManagerClient: DataManagerClient): PinPointClientRepository {
-        return PinPointClientRepositoryImp(dataManagerClient)
-    }
 
     @Provides
     fun providesNoteRepository(dataManagerNote: DataManagerNote): NoteRepository {
@@ -270,11 +262,6 @@ class RepositoryModule {
         collectionDataManager: DataManagerCollectionSheet
     ): GenerateCollectionSheetRepository {
         return GenerateCollectionSheetRepositoryImp(dataManager, collectionDataManager)
-    }
-
-    @Provides
-    fun providesGroupLoanAccountRepository(dataManager: DataManager): GroupLoanAccountRepository {
-        return GroupLoanAccountRepositoryImp(dataManager)
     }
 
     @Provides
