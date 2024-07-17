@@ -1,11 +1,14 @@
 package com.mifos.mifosxdroid.offline.syncclientpayloads
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
+import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment.Companion.LOG_TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import rx.Observer
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -16,13 +19,27 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 16/08/23.
  */
 @HiltViewModel
-class SyncClientPayloadsViewModel @Inject constructor(private val repository: SyncClientPayloadsRepository) :
-    ViewModel() {
+class SyncClientPayloadsViewModel @Inject constructor(
+    private val repository: SyncClientPayloadsRepository
+) : ViewModel() {
 
-    private val _syncClientPayloadsRepository = MutableLiveData<SyncClientPayloadsUiState>()
+    private val _syncClientPayloadsRepository =
+        MutableStateFlow<SyncClientPayloadsUiState>(SyncClientPayloadsUiState.ShowProgressbar)
 
-    val syncClientPayloadsUiState: LiveData<SyncClientPayloadsUiState>
+    val syncClientPayloadsUiState: StateFlow<SyncClientPayloadsUiState>
         get() = _syncClientPayloadsRepository
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
+    private var mClientPayloads: MutableList<ClientPayload> = mutableListOf()
+    private var mClientSyncIndex = 0
+
+    fun refreshClientPayloads() {
+        _isRefreshing.value = true
+        loadDatabaseClientPayload()
+        _isRefreshing.value = false
+    }
 
     fun loadDatabaseClientPayload() {
         _syncClientPayloadsRepository.value = SyncClientPayloadsUiState.ShowProgressbar
@@ -37,8 +54,9 @@ class SyncClientPayloadsViewModel @Inject constructor(private val repository: Sy
                 }
 
                 override fun onNext(clientPayloads: List<ClientPayload>) {
+                    mClientPayloads = clientPayloads.toMutableList()
                     _syncClientPayloadsRepository.value =
-                        SyncClientPayloadsUiState.ShowPayloads(clientPayloads)
+                        SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
                 }
             })
 
@@ -57,7 +75,14 @@ class SyncClientPayloadsViewModel @Inject constructor(private val repository: Sy
                 }
 
                 override fun onNext(client: Client) {
-                    _syncClientPayloadsRepository.value = SyncClientPayloadsUiState.ShowSyncResponse
+                    mClientPayloads[mClientSyncIndex].id?.let {
+                        mClientPayloads[mClientSyncIndex].clientCreationTime?.let { it1 ->
+                            deleteAndUpdateClientPayload(
+                                it,
+                                it1
+                            )
+                        }
+                    }
                 }
             })
 
@@ -76,8 +101,13 @@ class SyncClientPayloadsViewModel @Inject constructor(private val repository: Sy
                 }
 
                 override fun onNext(clientPayloads: List<ClientPayload>) {
+                    mClientSyncIndex = 0
+                    if (clientPayloads.isNotEmpty()) {
+                        syncClientPayload()
+                    }
+                    mClientPayloads = clientPayloads.toMutableList()
                     _syncClientPayloadsRepository.value =
-                        SyncClientPayloadsUiState.ShowPayloadDeletedAndUpdatePayloads(clientPayloads)
+                        SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
                 }
             })
 
@@ -96,10 +126,30 @@ class SyncClientPayloadsViewModel @Inject constructor(private val repository: Sy
                 }
 
                 override fun onNext(clientPayload: ClientPayload) {
-                    _syncClientPayloadsRepository.value =
-                        SyncClientPayloadsUiState.ShowClientPayloadUpdated(clientPayload)
+                    mClientPayloads[mClientSyncIndex] = clientPayload
+                    mClientSyncIndex += 1
+                    if (mClientPayloads.size != mClientSyncIndex) {
+                        syncClientPayload()
+                    }
                 }
             })
 
+    }
+
+    fun syncClientPayload() {
+        for (i in mClientPayloads.indices) {
+            if (mClientPayloads[i].errorMessage == null) {
+                syncClientPayload(mClientPayloads[i])
+                mClientSyncIndex = i
+                break
+            } else {
+                mClientPayloads[i].errorMessage?.let {
+                    Log.d(
+                        LOG_TAG,
+                        it
+                    )
+                }
+            }
+        }
     }
 }

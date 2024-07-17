@@ -565,6 +565,7 @@
     <string name="submit_date">Submit Date</string>
     <string name="error_message">Server Sync Error</string>
     <string name="sync_clients">Clients</string>
+    <string name="sync_clients_payloads">Sync Client Payloads</string>
     <string name="sync_groups">Groups</string>
     <string name="sync_centers">Centers</string>
     <string name="sync_loanrepayments">LoanRepayments</string>
