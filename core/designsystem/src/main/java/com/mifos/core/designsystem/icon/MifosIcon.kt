@@ -8,10 +8,12 @@ import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
+import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.Error
 import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
@@ -32,6 +34,8 @@ object MifosIcons {
     val sync = Icons.Rounded.Sync
     val check = Icons.Rounded.Check
     val close = Icons.Rounded.Close
+    val cancel = Icons.Rounded.Cancel
+    val error = Icons.Rounded.Error
     val delete = Icons.Rounded.Delete
     val arrowUp = Icons.Rounded.KeyboardArrowUp
     val arrowDown = Icons.Rounded.KeyboardArrowDown

@@ -66,6 +66,8 @@ junitJupiter = "5.8.2"
 junitVersion = "1.1.5"
 kotlin = "1.9.22"
 kotlinxCoroutines = "1.7.3"
+kotlinxCoroutinesCoreVersion = "1.5.1"
+kotlinxCoroutinesRx2 = "1.5.1"
 kotlinxDatetime = "0.5.0"
 kotlinxSerializationJson = "1.6.0"
 kotlinxImmutable = "0.3.6"
@@ -153,6 +155,8 @@ android-maps-utils = { module = "com.google.maps.android:android-maps-utils", ve
 android-iconify-material = { module = "com.joanzapata.iconify:android-iconify-material", version.ref = "androidIconifyMaterial" }
 
 #RxAndroid
+kotlinx-coroutines-core-v151 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCoreVersion" }
+kotlinx-coroutines-rx2 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2", version.ref = "kotlinxCoroutinesRx2" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 rxandroid = { module = "io.reactivex:rxandroid", version.ref = "rxandroidVersion" }
 rxjava = { module = "io.reactivex:rxjava", version.ref = "rxjava" }
