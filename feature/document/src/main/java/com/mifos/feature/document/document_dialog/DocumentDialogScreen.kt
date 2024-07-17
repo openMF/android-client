@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -378,50 +379,46 @@ fun DocumentDialogContent(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                Box(modifier = Modifier.padding(20.dp, 0.dp, 20.dp, 0.dp)) {
-                    Button(
-                        onClick = {
-                            openFilePicker.invoke()
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        colors = ButtonColors(
-                            containerColor = BluePrimary,
-                            contentColor = White,
-                            disabledContainerColor = BluePrimary,
-                            disabledContentColor = White
-                        )
-                    ) {
-                        Text(text = stringResource(id =R.string.feature_document_browse))
-                    }
-                }
+                DialogButton(
+                    text = stringResource(id = R.string.feature_document_browse),
+                    onClick = openFilePicker
+                )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                Box(modifier = Modifier.padding(20.dp, 0.dp, 20.dp, 0.dp)) {
-                    Button(
-                        onClick = {
-                              if(validateInput())
-                              {
-                                  uploadDocument.invoke(name.text, description.text)
-                              }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        colors = ButtonColors(
-                            containerColor = BluePrimary,
-                            contentColor = White,
-                            disabledContainerColor = BluePrimary,
-                            disabledContentColor = Gray
-                        )
-                    ) {
-                        Text(text = stringResource(id =R.string.feature_document_upload))
+                DialogButton(
+                    text = stringResource(id = R.string.feature_document_upload),
+                    onClick = {
+                        if (validateInput()) {
+                            uploadDocument.invoke(name.text, description.text)
+                        }
                     }
-                }
+                )
             }
         }
+    }
+}
+
+@Composable
+fun DialogButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            .padding(20.dp, 0.dp, 20.dp, 0.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = BluePrimary,
+            contentColor = White,
+            disabledContainerColor = BluePrimary,
+            disabledContentColor = White
+        )
+    ) {
+        Text(text = text)
     }
 }
 

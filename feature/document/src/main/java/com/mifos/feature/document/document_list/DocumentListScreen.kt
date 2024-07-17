@@ -68,12 +68,12 @@ import com.mifos.feature.document.document_dialog.DocumentDialogScreen
 
 @Composable
 fun DocumentListScreen(
+    viewModel: DocumentListViewModel = hiltViewModel(),
     entityType: String,
     entityId: Int,
     onBackPressed: () -> Unit,
 ) {
     val context = LocalContext.current
-    val viewModel: DocumentListViewModel = hiltViewModel()
     val state by viewModel.documentListUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val downloadState by viewModel.downloadDocumentState.collectAsStateWithLifecycle()
