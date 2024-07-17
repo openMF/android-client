@@ -1,9 +1,9 @@
-package com.mifos.mifosxdroid.online.grouploanaccount
+package com.mifos.core.data.repository_imp
 
 import com.mifos.core.data.GroupLoanPayload
+import com.mifos.core.data.repository.GroupLoanAccountRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.objects.accounts.loan.Loans
-import com.mifos.core.objects.organisation.LoanProducts
 import com.mifos.core.objects.templates.loans.GroupLoanTemplate
 import rx.Observable
 import javax.inject.Inject
@@ -14,10 +14,6 @@ import javax.inject.Inject
 class GroupLoanAccountRepositoryImp @Inject constructor(private val dataManager: DataManager) :
     GroupLoanAccountRepository {
 
-    override fun allLoans(): Observable<List<LoanProducts>> {
-        return dataManager.allLoans
-    }
-
     override fun getGroupLoansAccountTemplate(
         groupId: Int,
         productId: Int
@@ -25,7 +21,7 @@ class GroupLoanAccountRepositoryImp @Inject constructor(private val dataManager:
         return dataManager.getGroupLoansAccountTemplate(groupId, productId)
     }
 
-    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Observable<Loans> {
+    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload): Observable<Loans> {
         return dataManager.createGroupLoansAccount(loansPayload)
     }
 }
