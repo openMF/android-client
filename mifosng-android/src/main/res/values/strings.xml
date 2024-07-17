@@ -939,5 +939,6 @@
     <string name="updateServerConfig">Server Config</string>
     <string name="server_config">Server Config</string>
     <string name="update_server_config">Update Server Config</string>
+    <string name="group_sync_failed">Group sync failed</string>
 
 </resources>
