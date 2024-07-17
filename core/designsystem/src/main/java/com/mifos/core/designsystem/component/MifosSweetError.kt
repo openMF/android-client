@@ -39,6 +39,7 @@ import com.mifos.core.designsystem.theme.DarkGray
 fun MifosSweetError(
     message: String,
     isRetryEnabled : Boolean  = true,
+    buttonText : String = stringResource(id = R.string.core_designsystem_try_again),
     onclick: () -> Unit
 ) {
     Column(
@@ -87,7 +88,7 @@ fun MifosSweetError(
             ) {
                 Text(
                     modifier = Modifier.padding(start = 20.dp, end = 20.dp),
-                    text = stringResource(id = R.string.core_designsystem_try_again),
+                    text = buttonText,
                     fontSize = 15.sp
                 )
             }

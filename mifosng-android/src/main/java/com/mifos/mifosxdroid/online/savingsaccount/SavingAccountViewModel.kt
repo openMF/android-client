@@ -1,8 +1,8 @@
 package com.mifos.mifosxdroid.online.savingsaccount
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.SavingsPayload
 import com.mifos.core.objects.accounts.savings.FieldOfficerOptions
 import com.mifos.core.objects.client.Savings
@@ -12,6 +12,11 @@ import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import com.mifos.core.objects.zipmodels.SavingProductsAndTemplate
 import com.mifos.mifosxdroid.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -25,10 +30,23 @@ import javax.inject.Inject
 class SavingAccountViewModel @Inject constructor(private val repository: SavingsAccountRepository) :
     ViewModel() {
 
-    private val _savingAccountUiState = MutableLiveData<SavingAccountUiState>()
+    private val _savingAccountUiState = MutableStateFlow<SavingAccountUiState>(SavingAccountUiState.ShowProgress)
+    val savingAccountUiState: StateFlow<SavingAccountUiState> get() = _savingAccountUiState
 
-    val savingAccountUiState: LiveData<SavingAccountUiState>
-        get() = _savingAccountUiState
+    var clientId = 0
+    var groupId = 0
+    var isGroupAccount = false
+
+    private val _savingProductsTemplate = MutableStateFlow(SavingProductsTemplate())
+    val savingProductsTemplate = _savingProductsTemplate.asStateFlow()
+
+    fun loadLoanTemplateByProduct(productId: Int) {
+        if (isGroupAccount) {
+            loadGroupSavingAccountTemplateByProduct(groupId, productId)
+        } else {
+            loadClientSavingAccountTemplateByProduct(clientId, productId)
+        }
+    }
 
     fun loadSavingsAccountsAndTemplate() {
         _savingAccountUiState.value = SavingAccountUiState.ShowProgress
@@ -46,14 +64,15 @@ class SavingAccountViewModel @Inject constructor(private val repository: Savings
                 }
 
                 override fun onNext(productsAndTemplate: SavingProductsAndTemplate?) {
-                    _savingAccountUiState.value =
-                        SavingAccountUiState.ShowSavingsAccounts(productsAndTemplate?.getmProductSavings())
+                    if (productsAndTemplate != null) {
+                        _savingAccountUiState.value =
+                            SavingAccountUiState.LoadAllSavings(productsAndTemplate)
+                    }
                 }
             })
     }
 
-    fun loadClientSavingAccountTemplateByProduct(clientId: Int, productId: Int) {
-        _savingAccountUiState.value = SavingAccountUiState.ShowProgress
+    private fun loadClientSavingAccountTemplateByProduct(clientId: Int, productId: Int) {
         repository.getClientSavingsAccountTemplateByProduct(clientId, productId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -67,17 +86,13 @@ class SavingAccountViewModel @Inject constructor(private val repository: Savings
                 }
 
                 override fun onNext(savingProductsTemplate: SavingProductsTemplate?) {
-                    _savingAccountUiState.value = savingProductsTemplate?.let {
-                        SavingAccountUiState.ShowSavingsAccountTemplateByProduct(
-                            it
-                        )
-                    }
+                    _savingProductsTemplate.value =
+                        savingProductsTemplate ?: SavingProductsTemplate()
                 }
             })
     }
 
-    fun loadGroupSavingAccountTemplateByProduct(groupId: Int, productId: Int) {
-        _savingAccountUiState.value = SavingAccountUiState.ShowProgress
+    private fun loadGroupSavingAccountTemplateByProduct(groupId: Int, productId: Int) {
         repository.getGroupSavingsAccountTemplateByProduct(groupId, productId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -91,11 +106,8 @@ class SavingAccountViewModel @Inject constructor(private val repository: Savings
                 }
 
                 override fun onNext(savingProductsTemplate: SavingProductsTemplate?) {
-                    _savingAccountUiState.value = savingProductsTemplate?.let {
-                        SavingAccountUiState.ShowSavingsAccountTemplateByProduct(
-                            it
-                        )
-                    }
+                    _savingProductsTemplate.value =
+                        savingProductsTemplate ?: SavingProductsTemplate()
                 }
             })
     }
@@ -118,32 +130,4 @@ class SavingAccountViewModel @Inject constructor(private val repository: Savings
                 }
             })
     }
-
-    fun filterSpinnerOptions(interestTypes: List<InterestType>?): List<String> {
-        val interestNameList = ArrayList<String>()
-        Observable.from(interestTypes)
-            .subscribe { interestType -> interestType.value?.let { interestNameList.add(it) } }
-        return interestNameList
-    }
-
-    fun filterSavingProductsNames(productSavings: List<ProductSavings>?): List<String> {
-        val productsNames = ArrayList<String>()
-        Observable.from(productSavings)
-            .subscribe { product -> product.name?.let { productsNames.add(it) } }
-        return productsNames
-    }
-
-    fun filterFieldOfficerNames(fieldOfficerOptions: List<FieldOfficerOptions>?): List<String> {
-        val fieldOfficerNames = ArrayList<String>()
-        Observable.from(fieldOfficerOptions)
-            .subscribe { fieldOfficerOptions ->
-                fieldOfficerOptions.displayName?.let {
-                    fieldOfficerNames.add(
-                        it
-                    )
-                }
-            }
-        return fieldOfficerNames
-    }
-
 }
