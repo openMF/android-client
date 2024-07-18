@@ -32,6 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,20 +64,39 @@ import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.noncore.Document
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.document.R
+import com.mifos.feature.document.document_dialog.DocumentDialogScreen
 
 @Composable
 fun DocumentListScreen(
+    viewModel: DocumentListViewModel = hiltViewModel(),
     entityType: String,
     entityId: Int,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
-    val viewModel: DocumentListViewModel = hiltViewModel()
+    val context = LocalContext.current
     val state by viewModel.documentListUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val downloadState by viewModel.downloadDocumentState.collectAsStateWithLifecycle()
     val removeState by viewModel.removeDocumentState.collectAsStateWithLifecycle()
+    var isDialogBoxActive by rememberSaveable { mutableStateOf(false) }
+    var dialogBoxAction by rememberSaveable { mutableStateOf("") }
+    var dialogDocument by rememberSaveable { mutableStateOf(Document()) }
 
-    val context = LocalContext.current
+
+    if(isDialogBoxActive)
+    {
+        DocumentDialogScreen(
+            entityType= entityType,
+            entityId = entityId,
+            documentAction = dialogBoxAction,
+            document = dialogDocument,
+            closeDialog = { isDialogBoxActive = false },
+            closeScreen = {
+                isDialogBoxActive = false
+                onBackPressed()
+            }
+        )
+    }
 
     LaunchedEffect(Unit) {
         viewModel.loadDocumentList(entityType, entityId)
@@ -113,22 +133,24 @@ fun DocumentListScreen(
             viewModel.loadDocumentList(entityType, entityId)
         },
         onAddDocument = {
-            // TODO Implement Add document dialog
+            dialogBoxAction = context.getString(R.string.feature_document_upload_document)
+            isDialogBoxActive = true
         },
         onDownloadDocument = { documentId ->
             viewModel.downloadDocument(entityType, entityId, documentId)
         },
         onUpdateDocument = { document ->
-            // TODO Implement Add document dialog
+            dialogDocument = document
+            dialogBoxAction = context.getString(R.string.feature_document_update_document)
+            isDialogBoxActive = true
         },
         onRemovedDocument = { documentId ->
             viewModel.removeDocument(entityType, entityId, documentId)
         }
     )
-
-
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DocumentListScreen(
     state: DocumentListUiState,

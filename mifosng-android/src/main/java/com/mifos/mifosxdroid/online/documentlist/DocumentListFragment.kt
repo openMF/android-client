@@ -15,6 +15,7 @@ import androidx.navigation.fragment.navArgs
 import com.mifos.feature.document.document_list.DocumentListScreen
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 
 @AndroidEntryPoint
 class DocumentListFragment : MifosBaseFragment() {
@@ -42,7 +43,7 @@ class DocumentListFragment : MifosBaseFragment() {
                 DocumentListScreen(
                     entityType = entityType,
                     entityId = entityId,
-                    onBackPressed = {}
+                    onBackPressed = { requireActivity().supportFragmentManager.popBackStack() }
                 )
             }
         }
@@ -57,13 +58,4 @@ class DocumentListFragment : MifosBaseFragment() {
         super.onStop()
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
     }
-
-//    private fun showDocumentDialog(documentAction: String) {
-//        val documentDialogFragment =
-//            DocumentDialogFragment.newInstance(entityType, entityId, documentAction, document)
-//        val fragmentTransaction = requireActivity().supportFragmentManager
-//            .beginTransaction()
-//        fragmentTransaction.addToBackStack(FragmentConstants.FRAG_DOCUMENT_LIST)
-//        documentDialogFragment.show(fragmentTransaction, "Document Dialog Fragment")
-//    }
 }

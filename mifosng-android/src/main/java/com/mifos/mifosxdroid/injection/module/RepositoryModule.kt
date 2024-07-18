@@ -23,8 +23,8 @@ import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogRepositoryImp
+import com.mifos.core.data.repository.DocumentDialogRepository
+import com.mifos.core.data.repository_imp.DocumentDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogRepository
