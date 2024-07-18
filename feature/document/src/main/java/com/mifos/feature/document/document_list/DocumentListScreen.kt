@@ -78,21 +78,21 @@ fun DocumentListScreen(
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val downloadState by viewModel.downloadDocumentState.collectAsStateWithLifecycle()
     val removeState by viewModel.removeDocumentState.collectAsStateWithLifecycle()
-    val isDialogBoxActive = rememberSaveable { mutableStateOf(false) }
-    val dialogBoxAction = rememberSaveable { mutableStateOf("") }
-    val dialogDocument = rememberSaveable { mutableStateOf(Document()) }
+    var isDialogBoxActive by rememberSaveable { mutableStateOf(false) }
+    var dialogBoxAction by rememberSaveable { mutableStateOf("") }
+    var dialogDocument by rememberSaveable { mutableStateOf(Document()) }
 
 
-    if(isDialogBoxActive.value)
+    if(isDialogBoxActive)
     {
         DocumentDialogScreen(
             entityType= entityType,
             entityId = entityId,
-            documentAction = dialogBoxAction.value,
-            document = dialogDocument.value,
-            closeDialog = { isDialogBoxActive.value = false },
+            documentAction = dialogBoxAction,
+            document = dialogDocument,
+            closeDialog = { isDialogBoxActive = false },
             closeScreen = {
-                isDialogBoxActive.value = false
+                isDialogBoxActive = false
                 onBackPressed()
             }
         )
@@ -133,16 +133,16 @@ fun DocumentListScreen(
             viewModel.loadDocumentList(entityType, entityId)
         },
         onAddDocument = {
-            dialogBoxAction.value = context.getString(R.string.feature_document_upload_document)
-            isDialogBoxActive.value = true
+            dialogBoxAction = context.getString(R.string.feature_document_upload_document)
+            isDialogBoxActive = true
         },
         onDownloadDocument = { documentId ->
             viewModel.downloadDocument(entityType, entityId, documentId)
         },
         onUpdateDocument = { document ->
-            dialogDocument.value = document
-            dialogBoxAction.value = context.getString(R.string.feature_document_update_document)
-            isDialogBoxActive.value = true
+            dialogDocument = document
+            dialogBoxAction = context.getString(R.string.feature_document_update_document)
+            isDialogBoxActive = true
         },
         onRemovedDocument = { documentId ->
             viewModel.removeDocument(entityType, entityId, documentId)
