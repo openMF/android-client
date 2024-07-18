@@ -42,11 +42,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoanRepaymentFragment : MifosBaseFragment() {
 
-//    private lateinit var binding: FragmentLoanRepaymentBinding
-//    val LOG_TAG = javaClass.simpleName
     private val arg: LoanRepaymentFragmentArgs by navArgs()
-
-//    private lateinit var viewModel: LoanRepaymentViewModel
     val viewmodel : LoanRepaymentViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,23 +52,6 @@ class LoanRepaymentFragment : MifosBaseFragment() {
         viewmodel.loanAccountNumber = arg.loanWithAssociations.accountNo
         viewmodel.amountInArrears = arg.loanWithAssociations.summary.totalOverdue
         viewmodel.loanProductName = arg.loanWithAssociations.loanProductName
-
-//        clientName = arg.loanWithAssociations.clientName
-//        loanAccountNumber = arg.loanWithAssociations.accountNo
-//        loanId = arg.loanWithAssociations.id.toString()
-//        loanProductName = arg.loanWithAssociations.loanProductName
-//        amountInArrears = arg.loanWithAssociations.summary.totalOverdue
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        toolbar?.visibility = View.GONE
-    }
-
-    override fun onStop() {
-        super.onStop()
-        toolbar?.visibility = View.VISIBLE
     }
 
     override fun onCreateView(
@@ -90,4 +69,13 @@ class LoanRepaymentFragment : MifosBaseFragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        toolbar?.visibility = View.GONE
+    }
+
+    override fun onStop() {
+        super.onStop()
+        toolbar?.visibility = View.VISIBLE
+    }
 }

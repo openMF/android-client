@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid.online.loanrepayment
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -60,11 +61,11 @@ import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.PaymentTypeOption
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApprovalScreen
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApprovalUiState
@@ -86,6 +87,7 @@ fun LoanRepaymentScreen(
     }
 
     LoanRepaymentScreen(
+        loanId = viewmodel.loanId,
         clientName = viewmodel.clientName,
         loanProductName = viewmodel.loanProductName,
         amountInArrears = viewmodel.amountInArrears,
@@ -104,6 +106,7 @@ fun LoanRepaymentScreen(
 
 @Composable
 fun LoanRepaymentScreen(
+    loanId: Int,
     clientName: String,
     loanProductName: String,
     amountInArrears: Double?,
@@ -137,6 +140,7 @@ fun LoanRepaymentScreen(
 
                 is LoanRepaymentUiState.ShowLoanRepayTemplate -> {
                     LoanRepaymentContent(
+                        loanId = loanId,
                         loanAccountNumber = loanAccountNumber,
                         clientName = clientName,
                         loanProductName = loanProductName,
@@ -152,7 +156,14 @@ fun LoanRepaymentScreen(
                 }
 
                 LoanRepaymentUiState.ShowLoanRepaymentExistInDatabase -> {
-
+                    AlertDialog(onDismissRequest = { }, confirmButton = {
+                        TextButton(onClick = { navigateBack.invoke() }) {
+                            Text(text = stringResource(id = R.string.dialog_action_ok))
+                        }
+                    },
+                        title = {
+                            Text(text = stringResource(id = R.string.sync_previous_transaction), style = MaterialTheme.typography.titleLarge) },
+                        text = { Text(text = stringResource(id = R.string.dialog_message_sync_transaction)) })
                 }
 
                 is LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully -> {
@@ -178,6 +189,7 @@ fun LoanRepaymentScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoanRepaymentContent(
+    loanId: Int,
     clientName: String,
     loanProductName: String,
     amountInArrears: Double?,
@@ -186,37 +198,14 @@ fun LoanRepaymentContent(
     navigateBack: () -> Unit,
     submitPayment: (request: LoanRepaymentRequest) -> Unit
 ) {
-    var showDatePickerDialog by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var paymentType by rememberSaveable {
-        mutableStateOf("")
-    }
-    var amount by rememberSaveable {
-        mutableStateOf("0")
-    }
-    var additionalPayment by rememberSaveable {
-        mutableStateOf("0")
-    }
-    var fees by rememberSaveable {
-        mutableStateOf("0")
-    }
-    var paymentTypeId by rememberSaveable {
-        mutableIntStateOf(0)
-    }
+    var paymentType by rememberSaveable { mutableStateOf("") }
+    var amount by rememberSaveable { mutableStateOf("") }
+    var additionalPayment by rememberSaveable { mutableStateOf("") }
+    var fees by rememberSaveable { mutableStateOf("") }
+    var paymentTypeId by rememberSaveable { mutableIntStateOf(0) }
 
-    fun calculateTotal(): Double {
-        return try {
-            fees.toDouble() + amount.toDouble() + additionalPayment.toDouble()
-        } catch (nfe: NumberFormatException) {
-            0.0
-        }
-    }
-
-    val total by rememberSaveable {
-        mutableStateOf(calculateTotal().toString())
-    }
     var repaymentDate by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
+    var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = repaymentDate,
         selectableDates = object : SelectableDates {
@@ -227,54 +216,32 @@ fun LoanRepaymentContent(
     )
     val scrollState = rememberScrollState()
     val context = LocalContext.current
-    var showLoanRepaymentConfirmationDialog by rememberSaveable {
+    var showConfirmationDialog by rememberSaveable {
         mutableStateOf(false)
     }
 
-    if (showLoanRepaymentConfirmationDialog) {
+    if (showConfirmationDialog) {
         ShowLoanRepaymentConfirmationDialog(
-            dialogValue = showLoanRepaymentConfirmationDialog,
-            onDismiss = { showLoanRepaymentConfirmationDialog = false },
-            onConfirm = {
-                if (Network.isOnline(context)) {
-                    val request = LoanRepaymentRequest()
-
-                    request.accountNumber = loanAccountNumber
-                    request.paymentTypeId = paymentTypeId.toString()
-                    request.dateFormat = "dd MM yyyy"
-                    request.locale = "en"
-                    request.transactionAmount = calculateTotal().toString()
-                    request.transactionDate = SimpleDateFormat(
-                        "dd MMMM yyyy",
-                        Locale.getDefault()
-                    ).format(
-                        repaymentDate
-                    )
-
-                    submitPayment.invoke(request)
-
-                    val builtRequest = Gson().toJson(request)
-                    Log.i("LOG_TAG", builtRequest)
-                } else {
-                    Toast.makeText(
-                        context,
-                        context.resources.getString(R.string.error_not_connected_internet),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            },
+            onDismiss = { showConfirmationDialog = false },
             loanAccountNumber = loanAccountNumber,
-            repaymentDate = repaymentDate.toString(),
+            paymentTypeId = paymentTypeId.toString(),
+            repaymentDate = repaymentDate,
             paymentType = paymentType,
             amount = amount,
             additionalPayment = additionalPayment,
             fees = fees,
-            total = total
+            total = calculateTotal(
+                fees = fees,
+                amount = amount,
+                additionalPayment = additionalPayment
+            ).toString(),
+            context = context,
+            submitPayment = submitPayment,
         )
     }
 
     if (showDatePickerDialog) {
-        /* Had this TODO in the fragment -
+        /* Had this TODO in the fragment (keeping as it is, implement todo if needed)
              Add Validation to make sure :
             2. Date Entered is not greater than Date Today i.e Date is not in future
          */
@@ -305,31 +272,14 @@ fun LoanRepaymentContent(
         }
     }
 
-    fun isAllFieldsValid(): Boolean {
-        return when {
-            amount.isNotEmpty() && additionalPayment.isNotEmpty() && fees.isNotEmpty() && paymentType.isNotEmpty() -> {
-                true
-            }
-
-            else -> {
-                Toast.makeText(
-                    context,
-                    context.resources.getString(R.string.loan_repayment_make_sure_every_field_has_a_value),
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                false
-            }
-        }
-    }
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
             .verticalScroll(scrollState)
     ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
@@ -338,10 +288,7 @@ fun LoanRepaymentContent(
 
         HorizontalDivider(modifier = Modifier.padding(top = 10.dp))
 
-        FarApartTextItem(
-            title = loanRepaymentTemplate.type?.toString() ?: "Loan type",
-            value = "57"
-        )
+        FarApartTextItem(title = loanProductName, value = loanId.toString())
         FarApartTextItem(
             title = stringResource(id = R.string.loan_in_arrears),
             value = amountInArrears?.toString() ?: ""
@@ -387,9 +334,6 @@ fun LoanRepaymentContent(
             value = amount,
             onValueChange = {
                 amount = it
-                if (amount.isEmpty()) {
-                    amount = "0"
-                }
             },
             label = stringResource(id = R.string.amount),
             error = null,
@@ -403,9 +347,6 @@ fun LoanRepaymentContent(
             value = additionalPayment,
             onValueChange = {
                 additionalPayment = it
-                if (additionalPayment.isEmpty()) {
-                    additionalPayment = "0"
-                }
             },
             label = stringResource(id = R.string.additional_payment),
             error = null,
@@ -419,9 +360,6 @@ fun LoanRepaymentContent(
             value = fees,
             onValueChange = {
                 fees = it
-                if (fees.isEmpty()) {
-                    fees = "0"
-                }
             },
             label = stringResource(id = R.string.loan_fees),
             error = null,
@@ -432,11 +370,15 @@ fun LoanRepaymentContent(
 
         MifosOutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = calculateTotal().toString(),
+            value = calculateTotal(
+                fees = fees,
+                amount = amount,
+                additionalPayment = additionalPayment
+            ).toString(),
             onValueChange = { },
             label = stringResource(id = R.string.total),
             error = null,
-
+            readOnly = true
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -447,7 +389,7 @@ fun LoanRepaymentContent(
         ) {
             Button(
                 modifier = Modifier
-                    .heightIn(44.dp),
+                    .heightIn(46.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
                 ),
@@ -457,13 +399,20 @@ fun LoanRepaymentContent(
 
             Button(
                 modifier = Modifier
-                    .heightIn(44.dp),
+                    .heightIn(46.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
                 ),
                 onClick = {
-                    if (isAllFieldsValid()) {
-                        showLoanRepaymentConfirmationDialog = true
+                    if (isAllFieldsValid(
+                            amount = amount,
+                            additionalPayment = additionalPayment,
+                            fees = fees,
+                            paymentType = paymentType,
+                            context = context
+                        )
+                    ) {
+                        showConfirmationDialog = true
                     }
                 }
             ) {
@@ -497,72 +446,173 @@ private fun FarApartTextItem(title: String, value: String) {
 
 @Composable
 fun ShowLoanRepaymentConfirmationDialog(
-    dialogValue: Boolean,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
     loanAccountNumber: String,
-    repaymentDate: String,
+    paymentTypeId: String,
+    repaymentDate: Long,
     paymentType: String,
     amount: String,
     additionalPayment: String,
     fees: String,
-    total: String
+    total: String,
+    context: Context,
+    submitPayment: (request: LoanRepaymentRequest) -> Unit
 ) {
-    val showDialog by rememberSaveable {
-        mutableStateOf(dialogValue)
-    }
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { onDismiss() },
-            confirmButton = {
-                TextButton(
-                    onClick = { onConfirm() }) {
-                    Text(text = stringResource(id = R.string.dialog_action_pay_now))
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = { onDismiss() }) {
-                    Text(text = stringResource(id = R.string.cancel))
-                }
-            },
-            title = { Text(text = stringResource(id = R.string.review_payment)) },
-            text = {
-                Column {
-                    Text(text = stringResource(id = R.string.account_number) + " : " + loanAccountNumber)
-                    Text(text = stringResource(id = R.string.repayment_date) + " : " + repaymentDate)
-                    Text(text = stringResource(id = R.string.payment_type) + " : " + paymentType)
-                    Text(text = stringResource(id = R.string.amount) + " : " + amount)
-                    Text(text = stringResource(id = R.string.additional_payment) + " : " + additionalPayment)
-                    Text(text = stringResource(id = R.string.loan_fees) + " : " + fees)
-                    Text(text = stringResource(id = R.string.total) + " : " + total)
-                }
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onDismiss()
+                    if (Network.isOnline(context)) {
+                        val request = LoanRepaymentRequest()
+
+                        request.accountNumber = loanAccountNumber
+                        request.paymentTypeId = paymentTypeId
+                        request.dateFormat = "dd MM yyyy"
+                        request.locale = "en"
+                        request.transactionAmount = total
+                        request.transactionDate = SimpleDateFormat(
+                            "dd MMMM yyyy",
+                            Locale.getDefault()
+                        ).format(
+                            repaymentDate
+                        )
+
+                        submitPayment.invoke(request)
+                    } else {
+                        Toast.makeText(
+                            context,
+                            context.resources.getString(R.string.error_not_connected_internet),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }) {
+                Text(text = stringResource(id = R.string.dialog_action_pay_now))
             }
-        )
+        },
+        dismissButton = {
+            TextButton(
+                onClick = { onDismiss() }) {
+                Text(text = stringResource(id = R.string.cancel))
+            }
+        },
+        title = { Text(text = stringResource(id = R.string.review_payment), style = MaterialTheme.typography.titleLarge) },
+        text = {
+            Column {
+                Text(text = stringResource(id = R.string.account_number) + " : " + loanAccountNumber)
+                Text(text = stringResource(id = R.string.repayment_date) + " : " + SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(repaymentDate))
+                Text(text = stringResource(id = R.string.payment_type) + " : " + paymentType)
+                Text(text = stringResource(id = R.string.amount) + " : " + amount)
+                Text(text = stringResource(id = R.string.additional_payment) + " : " + additionalPayment)
+                Text(text = stringResource(id = R.string.loan_fees) + " : " + fees)
+                Text(text = stringResource(id = R.string.total) + " : " + total)
+            }
+        }
+    )
+}
+
+/**
+ * Calculating the Total of the  Amount, Additional Payment and Fee
+ * @return Total of the Amount + Additional Payment + Fees
+ */
+fun calculateTotal(
+    fees: String,
+    amount: String,
+    additionalPayment: String
+): Double {
+    fun setValue(value: String): Double {
+        if (value.isEmpty()) {
+            return 0.0
+        }
+        return try {
+            value.toDouble()
+        } catch (e: NumberFormatException) {
+            0.0
+        }
+    }
+
+    val feesValue = setValue(fees)
+    val amountValue = setValue(amount)
+    val additionalPaymentValue = setValue(additionalPayment)
+
+    return feesValue + amountValue + additionalPaymentValue
+}
+
+fun isAllFieldsValid(
+    amount: String,
+    additionalPayment: String,
+    fees: String,
+    paymentType: String,
+    context: Context
+): Boolean {
+    return when {
+        amount.isNotEmpty() && additionalPayment.isNotEmpty() && fees.isNotEmpty() && paymentType.isNotEmpty() -> {
+            true
+        }
+
+        else -> {
+            Toast.makeText(
+                context,
+                context.resources.getString(R.string.loan_repayment_make_sure_every_field_has_a_value),
+                Toast.LENGTH_SHORT
+            ).show()
+
+            false
+        }
     }
 }
 
-
 class LoanRepaymentScreenPreviewProvider :
     PreviewParameterProvider<LoanRepaymentUiState> {
+
+    private val samplePaymentTypeOptions = mutableListOf(
+        PaymentTypeOption(
+            id = 1,
+            name = "Cash",
+            description = "Cash payment",
+            isCashPayment = true,
+            position = 1
+        )
+    )
+
+    private val sampleLoanRepaymentTemplate = LoanRepaymentTemplate(
+        loanId = 101,
+        date = mutableListOf(2024, 7, 15),
+        amount = 1000.0,
+        principalPortion = 800.0,
+        interestPortion = 150.0,
+        feeChargesPortion = 30.0,
+        penaltyChargesPortion = 20.0,
+        paymentTypeOptions = samplePaymentTypeOptions
+    )
+
     override val values: Sequence<LoanRepaymentUiState>
         get() = sequenceOf(
+            LoanRepaymentUiState.ShowLoanRepaymentExistInDatabase,
+            LoanRepaymentUiState.ShowLoanRepayTemplate(sampleLoanRepaymentTemplate),
+            LoanRepaymentUiState.ShowError(R.string.failed_to_load_loanrepayment),
+            LoanRepaymentUiState.ShowLoanRepaymentDoesNotExistInDatabase,
             LoanRepaymentUiState.ShowProgressbar,
-//            LoanRepaymentUiState.ShowLoanRepayTemplate,
-//            LoanRepaymentUiState.ShowLoanRepaymentExistInDatabase,
-//            LoanRepaymentUiState.ShowError,
-//            LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully
+            LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully(LoanRepaymentResponse()),
         )
 }
 
 @Composable
 @Preview(showSystemUi = true)
-fun PreviewLoanAccountApprovalScreen(
-    @PreviewParameter(LoanRepaymentScreenPreviewProvider::class) loanAccountApprovalUiState: LoanAccountApprovalUiState
+fun PreviewLoanRepaymentScreen(
+    @PreviewParameter(LoanRepaymentScreenPreviewProvider::class) loanRepaymentUiState: LoanRepaymentUiState
 ) {
-    LoanAccountApprovalScreen(
-        uiState = loanAccountApprovalUiState,
-        loanWithAssociations = LoanWithAssociations(),
-        navigateBack = { }) {
-    }
+    LoanRepaymentScreen(
+        loanId = 2,
+        clientName = "Ben Kiko",
+        loanProductName = "Product name",
+        amountInArrears = 23.333,
+        loanAccountNumber = 25.toString(),
+        uiState = loanRepaymentUiState,
+        navigateBack = {},
+        onRetry = {},
+        submitPayment = {},
+        onLoanRepaymentDoesNotExistInDatabase = {}
+    )
 }
