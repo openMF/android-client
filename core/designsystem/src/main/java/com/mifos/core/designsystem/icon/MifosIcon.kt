@@ -23,7 +23,6 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.PersonOutline
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Sync
-import androidx.compose.material.icons.rounded.WifiOff
 
 object MifosIcons {
     val Add = Icons.Rounded.Add

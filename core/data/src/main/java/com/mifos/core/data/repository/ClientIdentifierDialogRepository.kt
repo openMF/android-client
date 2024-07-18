@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.dialogfragments.identifierdialog
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.noncore.IdentifierCreationResponse
 import com.mifos.core.objects.noncore.IdentifierPayload
@@ -8,11 +8,11 @@ import rx.Observable
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-interface IdentifierDialogRepository {
+interface ClientIdentifierDialogRepository {
 
     fun getClientIdentifierTemplate(clientId: Int): Observable<IdentifierTemplate>
 
-    fun createClientIdentifier(
-        clientId: Int, identifierPayload: IdentifierPayload?
-    ): Observable<IdentifierCreationResponse>
+    suspend fun createClientIdentifier(
+        clientId: Int, identifierPayload: IdentifierPayload
+    ): IdentifierCreationResponse
 }

@@ -94,10 +94,10 @@ interface ClientService {
      * @return IdentifierCreationResponse
      */
     @POST(APIEndPoint.CLIENTS + "/{clientId}/identifiers")
-    fun createClientIdentifier(
+    suspend fun createClientIdentifier(
         @Path("clientId") clientId: Int,
-        @Body identifierPayload: IdentifierPayload?
-    ): Observable<IdentifierCreationResponse>
+        @Body identifierPayload: IdentifierPayload
+    ): IdentifierCreationResponse
 
     /**
      * This Service is for the Fetching the Client Identifier Template.
