@@ -264,4 +264,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.androidx.lifecycle.runtimeCompose)
+
+    androidTestImplementation(libs.fastlane.screengrab)
 }

@@ -121,6 +121,7 @@ turbine = "1.0.0"
 timberVersion = '5.0.1'
 truthVersion = '1.1.5'
 runtimeLivedata = "1.6.8"
+screengrabVersion = "2.1.1"
 
 [libraries]
 # AndroidX Libraries
@@ -365,6 +366,8 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 
 # Truth
 truth = { group = "com.google.truth", name = "truth", version.ref = "truthVersion" }
+
+fastlane-screengrab = {group = "tools.fastlane", name="screengrab", version.ref="screengrabVersion"}
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
