@@ -18,11 +18,11 @@ import com.mifos.core.data.repository.IndividualCollectionSheetDetailsRepository
 import com.mifos.core.data.repository.LoanAccountRepository
 import com.mifos.core.data.repository.LoanChargeRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
-import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.data.repository.ReportDetailRepository
+import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.data.repository_imp.ActivateRepositoryImp
 import com.mifos.core.data.repository_imp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.CenterListRepositoryImp
@@ -40,11 +40,11 @@ import com.mifos.core.data.repository_imp.IndividualCollectionSheetDetailsReposi
 import com.mifos.core.data.repository_imp.LoanAccountRepositoryImp
 import com.mifos.core.data.repository_imp.LoanChargeRepositoryImp
 import com.mifos.core.data.repository_imp.NewIndividualCollectionSheetRepositoryImp
-import com.mifos.core.data.repository_imp.SearchRepositoryImp
 import com.mifos.core.data.repository_imp.PathTrackingRepositoryImp
 import com.mifos.core.data.repository_imp.PinPointClientRepositoryImp
 import com.mifos.core.data.repository_imp.ReportCategoryRepositoryImp
 import com.mifos.core.data.repository_imp.ReportDetailRepositoryImp
+import com.mifos.core.data.repository_imp.SearchRepositoryImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

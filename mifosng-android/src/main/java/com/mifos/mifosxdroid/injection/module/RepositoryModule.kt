@@ -19,42 +19,6 @@ import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
-import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingRepository
-import com.mifos.mifosxdroid.activity.pathtracking.PathTrackingRepositoryImp
-import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepository
-import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogRepositoryImp
-import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepository
-import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepositoryImp
-import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsRepository
-import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsRepositoryImp
-import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsRepository
-import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsRepositoryImp
-import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsRepository
-import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsRepositoryImp
-import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionRepository
-import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionRepositoryImp
-import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionRepository
-import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionRepositoryImp
-import com.mifos.mifosxdroid.activity.login.LoginRepository
-import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepository
@@ -97,10 +61,6 @@ import com.mifos.mifosxdroid.online.clientlist.ClientListRepository
 import com.mifos.mifosxdroid.online.clientlist.ClientListRepositoryImp
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepositoryImp
-import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsRepository
-import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsRepositoryImp
-import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterRepository
-import com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterRepositoryImp
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepository
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepositoryImp
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupRepository
@@ -111,48 +71,24 @@ import com.mifos.mifosxdroid.online.datatabledata.DataTableDataRepository
 import com.mifos.mifosxdroid.online.datatabledata.DataTableDataRepositoryImp
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepository
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepositoryImp
-import com.mifos.mifosxdroid.online.documentlist.DocumentListRepository
-import com.mifos.mifosxdroid.online.documentlist.DocumentListRepositoryImp
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepository
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepositoryImp
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepositoryImp
-import com.mifos.mifosxdroid.online.loanaccount.LoanAccountRepository
-import com.mifos.mifosxdroid.online.loanaccount.LoanAccountRepositoryImp
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApprovalRepository
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApprovalRepositoryImp
 import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementRepository
 import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementRepositoryImp
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryRepository
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryRepositoryImp
-import com.mifos.mifosxdroid.online.loancharge.LoanChargeRepository
-import com.mifos.mifosxdroid.online.loancharge.LoanChargeRepositoryImp
 import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentRepository
 import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentRepositoryImp
 import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleRepository
 import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleRepositoryImp
 import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepository
 import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepositoryImp
-import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryRepository
-import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryRepositoryImp
-import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionRepository
-import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionRepositoryImp
-import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountRepository
-import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountRepositoryImp
-import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepository
-import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepositoryImp
-import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepository
-import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepositoryImp
-import com.mifos.mifosxdroid.online.search.SearchRepository
-import com.mifos.mifosxdroid.online.search.SearchRepositoryImp
-import com.mifos.mifosxdroid.online.note.NoteRepository
-import com.mifos.mifosxdroid.online.note.NoteRepositoryImp
-import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryRepository
-import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryRepositoryImp
-import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailRepository
-import com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailRepositoryImp
 import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryRepository
 import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryRepositoryImp
 import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionRepository
@@ -185,11 +121,6 @@ class RepositoryModule {
     @Provides
     fun providesLoginRepository(dataManagerAuth: DataManagerAuth): LoginRepository {
         return LoginRepositoryImp(dataManagerAuth)
-    }
-
-    @Provides
-    fun providesSearchRepository(dataManagerSearch: DataManagerSearch): SearchRepository {
-        return SearchRepositoryImp(dataManagerSearch)
     }
 
     @Provides
