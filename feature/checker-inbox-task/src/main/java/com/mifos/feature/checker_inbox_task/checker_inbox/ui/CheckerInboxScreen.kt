@@ -5,6 +5,7 @@
 
 package com.mifos.feature.checker_inbox_task.checker_inbox.ui
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -46,6 +47,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -68,18 +70,74 @@ import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.checker_inbox_task.R
+import com.mifos.feature.checker_inbox_task.dialog.CheckerInboxTasksFilterDialog
+import java.sql.Timestamp
 
 @Composable
 fun CheckerInboxScreen(
-    onBackPressed: () -> Unit,
-    filter: () -> Unit
+    onBackPressed: () -> Unit
 ) {
 
+    val context = LocalContext.current
     val viewModel: CheckerInboxViewModel = hiltViewModel()
     val state by viewModel.checkerInboxUiState.collectAsStateWithLifecycle()
+    var isDialogBoxActive by rememberSaveable { mutableStateOf(false) }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var checkerList by rememberSaveable { mutableStateOf(listOf<CheckerTask>()) }
+    var filterList by rememberSaveable { mutableStateOf(listOf<CheckerTask>()) }
+    var isFiltered by rememberSaveable { mutableStateOf(false) }
+    var isSearching by rememberSaveable { mutableStateOf(false) }
+
+    var fromDate by rememberSaveable { mutableStateOf<Timestamp?>(null) }
+    var toDate by rememberSaveable { mutableStateOf<Timestamp?>(null) }
+    var action: String? by rememberSaveable { mutableStateOf(null) }
+    var entity: String? by rememberSaveable { mutableStateOf(null) }
+    var resourceId: String? by rememberSaveable { mutableStateOf(null) }
 
     LaunchedEffect(key1 = true) {
         viewModel.loadCheckerTasks()
+    }
+
+    if (isDialogBoxActive) {
+        CheckerInboxTasksFilterDialog(
+            closeDialog = { isDialogBoxActive = false },
+            fromDate = fromDate,
+            toDate = toDate,
+            action = action,
+            entity = entity,
+            resourceId = resourceId,
+            filter = { newAction, newEntity, newResourceId, newFromDate, newToDate ->
+                try {
+                    action = newAction
+                    entity = newEntity
+                    resourceId = newResourceId
+                    fromDate = newFromDate
+                    toDate = newToDate
+                    isFiltered = true
+                    filterList = getFilteredList(
+                        searchQuery,
+                        fromDate,
+                        toDate,
+                        action,
+                        entity,
+                        resourceId,
+                        checkerList
+                    )
+                } catch (e: Exception) {
+                    Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                }
+                isDialogBoxActive = false
+            },
+            clearFilter = {
+                isFiltered = false
+                isDialogBoxActive = false
+                action = null
+                entity = null
+                resourceId = null
+                fromDate = null
+                toDate = null
+            }
+        )
     }
 
     CheckerInboxScreen(
@@ -104,9 +162,29 @@ fun CheckerInboxScreen(
                 viewModel.deleteCheckerEntry(it)
             }
         },
-        filter = filter
+        search = { query ->
+            isSearching = query.isNotEmpty()
+            searchQuery = query
+            filterList = getFilteredList(
+                searchQuery,
+                fromDate,
+                toDate,
+                action,
+                entity,
+                resourceId,
+                checkerList
+            )
+        },
+        filter = {
+            isDialogBoxActive = true
+        },
+        isFiltered = isFiltered,
+        isSearching = isSearching,
+        filteredList = filterList,
+        setList = { checkerList = it }
     )
 }
+
 
 @Composable
 fun CheckerInboxScreen(
@@ -119,7 +197,12 @@ fun CheckerInboxScreen(
     onApproveList: (List<Int>) -> Unit,
     onRejectList: (List<Int>) -> Unit,
     onDeleteList: (List<Int>) -> Unit,
-    filter: () -> Unit
+    search: (String) -> Unit,
+    filter: () -> Unit,
+    isFiltered: Boolean,
+    isSearching: Boolean,
+    filteredList: List<CheckerTask>,
+    setList: (List<CheckerTask>) -> Unit
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -130,10 +213,9 @@ fun CheckerInboxScreen(
     var showRejectDialog by rememberSaveable { mutableStateOf(false) }
     var deleteId by rememberSaveable { mutableIntStateOf(0) }
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
-
     var isInSelectionMode by rememberSaveable { mutableStateOf(false) }
     val selectedItems = remember { mutableStateListOf<Int>() }
-
+    var fetchedList: List<CheckerTask> = listOf()
     val resetSelectionMode = {
         isInSelectionMode = false
         selectedItems.clear()
@@ -149,7 +231,6 @@ fun CheckerInboxScreen(
             isInSelectionMode = false
         }
     }
-
 
     MifosDialogBox(
         showDialogState = showApproveDialog,
@@ -284,6 +365,7 @@ fun CheckerInboxScreen(
                         value = searchInbox,
                         onValueChange = {
                             searchInbox = it
+                            search.invoke(it)
                         },
                         placeholder = { Text(stringResource(id = R.string.feature_checker_inbox_task_search_by_user)) },
                         colors = TextFieldDefaults.colors(
@@ -293,7 +375,10 @@ fun CheckerInboxScreen(
                             unfocusedIndicatorColor = Color.White
                         )
                     )
-                    IconButton(modifier = Modifier.weight(1f), onClick = { filter() }) {
+                    IconButton(
+                        modifier = Modifier.weight(1f),
+                        onClick = { filter.invoke() }
+                    ) {
                         Icon(
                             imageVector = MifosIcons.filter,
                             contentDescription = null
@@ -304,10 +389,10 @@ fun CheckerInboxScreen(
 
             when (state) {
                 is CheckerInboxUiState.CheckerTasksList -> {
+                    fetchedList = state.checkerTasks
+                    setList.invoke(fetchedList)
                     CheckerInboxContent(
-                        checkerTaskList = state.checkerTasks.filter { checkerTask ->
-                            checkerTask.maker.contains(searchInbox)
-                        },
+                        checkerTaskList = if (isFiltered || isSearching) filteredList else fetchedList,
                         onApprove = {
                             approveId = it
                             showApproveDialog = true
@@ -546,6 +631,141 @@ fun CheckerInboxItem(
     }
 }
 
+
+private fun getFilteredList(
+    searchQuery: String,
+    fromDate: Timestamp?,
+    toDate: Timestamp?,
+    action: String?,
+    entity: String?,
+    resourceId: String?,
+    list: List<CheckerTask>
+): List<CheckerTask> {
+
+    var checkerList = list
+    if (searchQuery.isNotEmpty()) {
+        checkerList = checkerList.filter {
+            it.maker.contains(searchQuery, true)
+        }
+    }
+
+    val filteredList = mutableListOf<CheckerTask>()
+    val ALL = "ALL"
+
+    if (!resourceId.isNullOrEmpty()) {
+        // If resource id is available there is no need to check for other filter options
+        for (checkerTask in checkerList) {
+
+            if (resourceId == checkerTask.resourceId) {
+                filteredList.add(checkerTask)
+            }
+        }
+        return filteredList
+    } else {
+        // Resource Id is not available.
+        // If Clear Filter clicked
+        if (fromDate == null && toDate == null) {
+            return checkerList
+        } else if (fromDate == null) {
+            // From Date is not available
+            if (action == ALL && entity == ALL) {
+                // No need to check for Action and Entity
+                for (checkerTask in checkerList) {
+                    if (!checkerTask.getTimeStamp().after(toDate)) {
+                        filteredList.add(checkerTask)
+                    }
+                }
+                return filteredList
+            } else if (action == ALL) {
+                // Entity has a specific value
+                for (checkerTask in checkerList) {
+                    if (checkerTask.getTimeStamp().before(toDate)) {
+                        if (entity.equals(checkerTask.entityName, true)) {
+                            filteredList.add(checkerTask)
+                        }
+
+                    }
+                }
+                return filteredList
+            } else if (entity == ALL) {
+                // Action has a specific value
+                for (checkerTask in checkerList) {
+                    if (checkerTask.getTimeStamp().before(toDate)) {
+                        if (action.equals(checkerTask.actionName, true)) {
+                            filteredList.add(checkerTask)
+                        }
+                    }
+                }
+                return filteredList
+            } else {
+                // Both Action and Entity have specific values
+                for (checkerTask in checkerList) {
+                    if (checkerTask.getTimeStamp().before(toDate)) {
+                        if (action.equals(checkerTask.actionName, true) &&
+                            entity.equals(checkerTask.entityName, true)
+                        ) {
+                            filteredList.add(checkerTask)
+                        }
+                    }
+                }
+                return filteredList
+            }
+        } else {
+            // Both dates are available
+            if (action == ALL && entity == ALL) {
+                // No need to check for Action and Entity
+                for (checkerTask in checkerList) {
+                    if (checkerTask.getTimeStamp().after(fromDate)
+                        && checkerTask.getTimeStamp().before(toDate)
+                    ) {
+                        filteredList.add(checkerTask)
+                    }
+                }
+                return filteredList
+            } else if (action == ALL) {
+                // Entity has a specific value
+                for (checkerTask in checkerList) {
+                    if (checkerTask.getTimeStamp().after(fromDate)
+                        && checkerTask.getTimeStamp().before(toDate)
+                    ) {
+                        if (entity.equals(checkerTask.entityName, true)) {
+                            filteredList.add(checkerTask)
+                        }
+
+                    }
+                }
+                return filteredList
+            } else if (entity == ALL) {
+                // Action has a specific value
+                for (checkerTask in checkerList) {
+                    if (checkerTask.getTimeStamp().after(fromDate)
+                        && checkerTask.getTimeStamp().before(toDate)
+                    ) {
+                        if (action.equals(checkerTask.actionName, true)) {
+                            filteredList.add(checkerTask)
+                        }
+                    }
+                }
+                return filteredList
+            } else {
+                // Both Action and Entity have specific values
+                for (checkerTask in checkerList) {
+                    if (checkerTask.getTimeStamp().after(fromDate)
+                        && checkerTask.getTimeStamp().before(toDate)
+                    ) {
+                        if (action.equals(checkerTask.actionName, true) &&
+                            entity.equals(checkerTask.entityName, true)
+                        ) {
+                            filteredList.add(checkerTask)
+                        }
+                    }
+                }
+                return filteredList
+            }
+        }
+    }
+}
+
 class CheckerInboxUiStateProvider : PreviewParameterProvider<CheckerInboxUiState> {
 
     override val values: Sequence<CheckerInboxUiState>
@@ -599,7 +819,12 @@ private fun CheckerInboxScreenPreview(
         onApproveList = {},
         onRejectList = {},
         onDeleteList = {},
-        filter = {}
+        filter = {},
+        setList = {},
+        filteredList = sampleCheckerTaskList,
+        isFiltered = false,
+        isSearching = false,
+        search = {}
     )
 }
 
@@ -611,6 +836,6 @@ val sampleCheckerTaskList = List(10) {
         maker = "maker $it",
         actionName = "action $it",
         entityName = "entity $it",
-        resourceId = "resourceId $it"
+        resourceId = "resourceId $it",
     )
 }
