@@ -140,7 +140,7 @@
         <argument
             android:name="entityType"
             app:argType="string"
-            app:nullable="true" />
+            app:nullable="false" />
     </fragment>
 
 
@@ -175,6 +175,9 @@
         android:id="@+id/clientIdentifiersFragment"
         android:name="com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment"
         android:label="ClientIdentifiersFragment">
+        <action
+            android:id="@+id/action_clientIdentifiersFragment_to_documentListFragment"
+            app:destination="@id/documentListFragment" />
         <argument
             android:name="clientId"
             app:argType="integer" />
@@ -191,7 +194,7 @@
     </fragment>
 
 
-    <dialog
+    <fragment
         android:id="@+id/savingsAccountFragment"
         android:name="com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment"
         android:label="SavingsAccountFragment">
@@ -201,17 +204,17 @@
         <argument
             android:name="isGroupAccount"
             app:argType="boolean" />
-    </dialog>
+    </fragment>
 
 
-    <dialog
+    <fragment
         android:id="@+id/loanAccountFragment"
         android:name="com.mifos.mifosxdroid.online.loanaccount.LoanAccountFragment"
         android:label="LoanAccountFragment">
         <argument
             android:name="clientId"
             app:argType="integer" />
-    </dialog>
+    </fragment>
 
 
     <fragment
@@ -407,7 +410,13 @@
     <fragment
         android:id="@+id/individualCollectionSheetFragment"
         android:name="com.mifos.mifosxdroid.online.collectionsheetindividual.IndividualCollectionSheetFragment"
-        android:label="IndividualCollectionSheetFragment" />
+        android:label="IndividualCollectionSheetFragment">
+
+        <action
+            android:id="@+id/action_individualCollectionSheetFragment_to_individualCollectionSheetDetailsFragment"
+            app:destination="@id/individualCollectionSheetDetailsFragment" />
+
+    </fragment>
 
 
     <fragment
@@ -454,7 +463,7 @@
     <fragment
         android:id="@+id/groupDetailsFragment"
         android:name="com.mifos.mifosxdroid.online.groupdetails.GroupDetailsFragment"
-        android:label="GroupDetailsFragment" >
+        android:label="GroupDetailsFragment">
         <action
             android:id="@+id/action_groupDetailsFragment_to_documentListFragment"
             app:destination="@id/documentListFragment" />
@@ -489,18 +498,18 @@
             android:id="@+id/action_groupDetailsFragment_to_createNewClientFragment"
             app:destination="@id/createNewClientFragment" />
     </fragment>
-    <dialog
+    <fragment
         android:id="@+id/groupLoanAccountFragment"
         android:name="com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountFragment"
-        android:label="GroupLoanAccountFragment" >
+        android:label="GroupLoanAccountFragment">
         <argument
             android:name="groupId"
             app:argType="integer" />
-    </dialog>
+    </fragment>
     <fragment
         android:id="@+id/clientListFragment"
         android:name="com.mifos.mifosxdroid.online.clientlist.ClientListFragment"
-        android:label="ClientListFragment" >
+        android:label="ClientListFragment">
         <argument
             android:name="clientListArgs"
             app:argType="com.mifos.core.objects.navigation.ClientListArgs" />
@@ -514,7 +523,7 @@
     <fragment
         android:id="@+id/createNewClientFragment"
         android:name="com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment"
-        android:label="CreateNewClientFragment" >
+        android:label="CreateNewClientFragment">
         <argument
             android:name="client"
             app:argType="com.mifos.core.objects.navigation.ClientArgs" />
@@ -522,7 +531,7 @@
     <fragment
         android:id="@+id/centerDetailsFragment"
         android:name="com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment"
-        android:label="CenterDetailsFragment" >
+        android:label="CenterDetailsFragment">
         <action
             android:id="@+id/action_centerDetailsFragment_to_activateFragment"
             app:destination="@id/activateFragment" />
@@ -537,7 +546,7 @@
         android:id="@+id/groupListFragment"
         android:name="com.mifos.mifosxdroid.online.grouplist.GroupListFragment"
         android:label="fragment_group_list"
-        tools:layout="@layout/fragment_group_list" >
+        tools:layout="@layout/fragment_group_list">
         <argument
             android:name="centerId"
             app:argType="integer" />
@@ -548,7 +557,7 @@
     <activity
         android:id="@+id/clientActivity"
         android:name="com.mifos.mifosxdroid.online.ClientActivity"
-        android:label="ClientActivity" >
+        android:label="ClientActivity">
         <argument
             android:name="client"
             app:argType="com.mifos.core.objects.navigation.ClientArgs" />
@@ -556,7 +565,7 @@
     <fragment
         android:id="@+id/individualCollectionSheetDetailsFragment"
         android:name="com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsFragment"
-        android:label="IndividualCollectionSheetDetailsFragment" >
+        android:label="IndividualCollectionSheetDetailsFragment">
         <argument
             android:name="sheet"
             app:argType="com.mifos.core.objects.collectionsheet.IndividualCollectionSheet" />
@@ -571,17 +580,9 @@
             app:destination="@id/paymentDetailsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/newIndividualCollectionSheetFragment"
-        android:name="com.mifos.mifosxdroid.online.collectionsheetindividual.NewIndividualCollectionSheetFragment"
-        android:label="NewIndividualCollectionSheetFragment" >
-        <action
-            android:id="@+id/action_newIndividualCollectionSheetFragment_to_individualCollectionSheetDetailsFragment"
-            app:destination="@id/individualCollectionSheetDetailsFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/paymentDetailsFragment"
         android:name="com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment"
-        android:label="PaymentDetailsFragment" >
+        android:label="PaymentDetailsFragment">
         <argument
             android:name="position"
             app:argType="integer" />

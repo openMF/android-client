@@ -4,7 +4,6 @@ import com.mifos.core.network.BaseApiManager
 import com.mifos.core.objects.group.CenterInfo
 import com.mifos.core.objects.runreports.FullParameterListResponse
 import com.mifos.core.objects.runreports.client.ClientReportTypeItem
-import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,49 +12,49 @@ import javax.inject.Singleton
  */
 @Singleton
 class DataManagerRunReport @Inject constructor(val mBaseApiManager: BaseApiManager) {
-    fun getReportCategories(
+    suspend fun getReportCategories(
         reportCategory: String?,
         genericResultSet: Boolean,
         parameterType: Boolean
-    ): Observable<List<ClientReportTypeItem>> {
+    ): List<ClientReportTypeItem> {
         return mBaseApiManager.runReportsService.getReportCategories(
             reportCategory,
             genericResultSet, parameterType
         )
     }
 
-    fun getReportFullParameterList(
-        reportName: String?, parameterType: Boolean
-    ): Observable<FullParameterListResponse> {
+    suspend fun getReportFullParameterList(
+        reportName: String, parameterType: Boolean
+    ): FullParameterListResponse {
         return mBaseApiManager.runReportsService
             .getReportFullParameterList(reportName, parameterType)
     }
 
-    fun getReportParameterDetails(
-        parameterName: String?, parameterType: Boolean
-    ): Observable<FullParameterListResponse> {
+    suspend fun getReportParameterDetails(
+        parameterName: String, parameterType: Boolean
+    ): FullParameterListResponse {
         return mBaseApiManager.runReportsService
             .getReportParameterDetails(parameterName, parameterType)
     }
 
-    fun getRunReportWithQuery(
-        reportName: String?, options: Map<String?, String?>
-    ): Observable<FullParameterListResponse> {
+    suspend fun getRunReportWithQuery(
+        reportName: String, options: Map<String, String>
+    ): FullParameterListResponse {
         return mBaseApiManager.runReportsService
             .getRunReportWithQuery(reportName, options)
     }
 
-    fun getCenterSummaryInfo(
+    suspend fun getCenterSummaryInfo(
         centerId: Int,
         genericResultSet: Boolean
-    ): Observable<List<CenterInfo>> {
+    ): List<CenterInfo> {
         return mBaseApiManager.runReportsService
             .getCenterSummaryInfo(centerId, genericResultSet)
     }
 
-    fun getRunReportOffices(
-        parameterName: String?, officeId: Int, parameterType: Boolean
-    ): Observable<FullParameterListResponse> {
+    suspend fun getRunReportOffices(
+        parameterName: String, officeId: Int, parameterType: Boolean
+    ): FullParameterListResponse {
         return mBaseApiManager.runReportsService.getReportOffice(
             parameterName,
             officeId,
@@ -63,9 +62,9 @@ class DataManagerRunReport @Inject constructor(val mBaseApiManager: BaseApiManag
         )
     }
 
-    fun getRunReportProduct(
-        parameterName: String?, currency: String?, parameterType: Boolean
-    ): Observable<FullParameterListResponse> {
+    suspend fun getRunReportProduct(
+        parameterName: String, currency: String, parameterType: Boolean
+    ): FullParameterListResponse {
         return mBaseApiManager.runReportsService.getReportProduct(
             parameterName,
             currency,

@@ -5,5 +5,24 @@
     <string name="feature_groups_failed_to_load_db_groups">Failed to load Database Groups</string>
     <string name="feature_groups_failed_to_fetch_groups">Failed to Fetch Groups</string>
     <string name="feature_groups_no_more_groups_available">No more Groups Available</string>
+    <string name="feature_groups_group">Group</string>
+    <string name="feature_groups_add_loan_account">Add Loan Account</string>
+    <string name="feature_groups_add_savings_account">Add Savings Account</string>
+    <string name="feature_groups_documents">Documents</string>
+    <string name="feature_groups_group_clients">Group Clients</string>
+    <string name="feature_groups_more_group_info">More Group Info</string>
+    <string name="feature_groups_notes">Notes</string>
+    <string name="feature_groups_external_id">External ID</string>
+    <string name="feature_groups_activation_date">Activation Date</string>
+    <string name="feature_groups_office">Office</string>
+    <string name="feature_groups_staff">Staff</string>
+    <string name="feature_groups_loan_cycle">Loan Cycle</string>
+    <string name="feature_groups_failed_to_fetch_group_and_account">Failed to Fetch Group and Account</string>
+    <string name="feature_groups_accounts">Accounts</string>
+    <string name="feature_groups_loan_account">Loan Account</string>
+    <string name="feature_groups_savings_account">Savings Account</string>
+    <string name="feature_groups_failed_to_load_client">Failed to Load Client</string>
+    <string name="feature_groups_activate_group">Activate Group</string>
+    <string name="feature_groups_sync">Sync</string>
 
 </resources>

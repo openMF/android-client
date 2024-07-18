@@ -1,5 +1,7 @@
 package com.mifos.mifosxdroid.injection.module
 
+import com.mifos.core.data.repository.NoteRepository
+import com.mifos.core.data.repository_imp.NoteRepositoryImp
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerAuth
 import com.mifos.core.network.datamanager.DataManagerCenter
@@ -12,7 +14,6 @@ import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerNote
 import com.mifos.core.network.datamanager.DataManagerOffices
-import com.mifos.core.network.datamanager.DataManagerRunReport
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
@@ -52,18 +53,46 @@ import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepay
 import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionRepositoryImp
 import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionRepository
 import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionRepositoryImp
+import com.mifos.mifosxdroid.activity.login.LoginRepository
+import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
+import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepository
+import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepositoryImp
+import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepository
+import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepositoryImp
+import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogRepository
+import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogRepositoryImp
+import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepository
+import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepositoryImp
+import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogRepository
+import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogRepositoryImp
+import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepository
+import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepositoryImp
+import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepository
+import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepositoryImp
+import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogRepository
+import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogRepositoryImp
+import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogRepository
+import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogRepositoryImp
+import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepository
+import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepositoryImp
+import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsRepository
+import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsRepositoryImp
+import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsRepository
+import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsRepositoryImp
+import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsRepository
+import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsRepositoryImp
+import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionRepository
+import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionRepositoryImp
+import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionRepository
+import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionRepositoryImp
 import com.mifos.mifosxdroid.online.activate.ActivateRepository
 import com.mifos.mifosxdroid.online.activate.ActivateRepositoryImp
-import com.mifos.mifosxdroid.online.centerdetails.CenterDetailsRepository
-import com.mifos.mifosxdroid.online.centerdetails.CenterDetailsRepositoryImp
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepository
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepositoryImp
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeRepository
 import com.mifos.mifosxdroid.online.clientcharge.ClientChargeRepositoryImp
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsRepository
 import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsRepositoryImp
-import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersRepository
-import com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersRepositoryImp
 import com.mifos.mifosxdroid.online.clientlist.ClientListRepository
 import com.mifos.mifosxdroid.online.clientlist.ClientListRepositoryImp
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
@@ -88,10 +117,6 @@ import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSh
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepositoryImp
-import com.mifos.mifosxdroid.online.grouplist.GroupListRepository
-import com.mifos.mifosxdroid.online.grouplist.GroupListRepositoryImp
-import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountRepository
-import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountRepositoryImp
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepositoryImp
 import com.mifos.mifosxdroid.online.loanaccount.LoanAccountRepository
@@ -110,6 +135,18 @@ import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleR
 import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleRepositoryImp
 import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepository
 import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepositoryImp
+import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryRepository
+import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryRepositoryImp
+import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionRepository
+import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionRepositoryImp
+import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountRepository
+import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountRepositoryImp
+import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepository
+import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepositoryImp
+import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepository
+import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepositoryImp
+import com.mifos.mifosxdroid.online.search.SearchRepository
+import com.mifos.mifosxdroid.online.search.SearchRepositoryImp
 import com.mifos.mifosxdroid.online.note.NoteRepository
 import com.mifos.mifosxdroid.online.note.NoteRepositoryImp
 import com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryRepository
@@ -151,30 +188,18 @@ class RepositoryModule {
     }
 
     @Provides
+    fun providesSearchRepository(dataManagerSearch: DataManagerSearch): SearchRepository {
+        return SearchRepositoryImp(dataManagerSearch)
+    }
+
+    @Provides
     fun providesCenterListRepository(dataManagerCenter: DataManagerCenter): CenterListRepository {
         return CenterListRepositoryImp(dataManagerCenter)
     }
 
     @Provides
-    fun providesPathTrackingRepository(dataTable: DataManagerDataTable): PathTrackingRepository {
-        return PathTrackingRepositoryImp(dataTable)
-    }
-
-    @Provides
-    fun providesGroupListRepository(dataManager: DataManager): GroupListRepository {
-        return GroupListRepositoryImp(dataManager)
-    }
-
-    @Provides
     fun providesClientDetailsRepository(dataManagerClient: DataManagerClient): ClientDetailsRepository {
         return ClientDetailsRepositoryImp(dataManagerClient)
-    }
-
-    @Provides
-    fun providesCenterDetailsRepository(
-        dataManagerCenter: DataManagerCenter, dataManagerRunReport: DataManagerRunReport
-    ): CenterDetailsRepository {
-        return CenterDetailsRepositoryImp(dataManagerCenter, dataManagerRunReport)
     }
 
     @Provides
@@ -221,15 +246,6 @@ class RepositoryModule {
         return DataTableRepositoryImp(dataManagerDataTable)
     }
 
-    @Provides
-    fun providesPinPointClientRepository(dataManagerClient: DataManagerClient): PinPointClientRepository {
-        return PinPointClientRepositoryImp(dataManagerClient)
-    }
-
-    @Provides
-    fun providesDocumentListRepository(dataManagerDocument: DataManagerDocument): DocumentListRepository {
-        return DocumentListRepositoryImp(dataManagerDocument)
-    }
 
     @Provides
     fun providesNoteRepository(dataManagerNote: DataManagerNote): NoteRepository {
@@ -242,28 +258,13 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesLoanAccountRepository(dataManagerLoan: DataManagerLoan): LoanAccountRepository {
-        return LoanAccountRepositoryImp(dataManagerLoan)
-    }
-
-    @Provides
     fun providesSignatureRepository(dataManagerDocument: DataManagerDocument): SignatureRepository {
         return SignatureRepositoryImp(dataManagerDocument)
     }
 
     @Provides
-    fun providesClientIdentifiersRepository(dataManagerClient: DataManagerClient): ClientIdentifiersRepository {
-        return ClientIdentifiersRepositoryImp(dataManagerClient)
-    }
-
-    @Provides
     fun providesSurveyListRepository(dataManagerSurveys: DataManagerSurveys): SurveyListRepository {
         return SurveyListRepositoryImp(dataManagerSurveys)
-    }
-
-    @Provides
-    fun providesLoanChargeRepository(dataManager: DataManager): LoanChargeRepository {
-        return LoanChargeRepositoryImp(dataManager)
     }
 
     @Provides
@@ -284,16 +285,6 @@ class RepositoryModule {
     @Provides
     fun providesCollectionSheetRepository(dataManager: DataManager): CollectionSheetRepository {
         return CollectionSheetRepositoryImp(dataManager)
-    }
-
-    @Provides
-    fun providesIndividualCollectionSheetDetailsRepository(dataManagerCollection: DataManagerCollectionSheet): IndividualCollectionSheetDetailsRepository {
-        return IndividualCollectionSheetDetailsRepositoryImp(dataManagerCollection)
-    }
-
-    @Provides
-    fun providesCreateNewCenterRepository(dataManagerCenter: DataManagerCenter): CreateNewCenterRepository {
-        return CreateNewCenterRepositoryImp(dataManagerCenter)
     }
 
     @Provides
@@ -332,21 +323,6 @@ class RepositoryModule {
         collectionDataManager: DataManagerCollectionSheet
     ): GenerateCollectionSheetRepository {
         return GenerateCollectionSheetRepositoryImp(dataManager, collectionDataManager)
-    }
-
-    @Provides
-    fun providesGroupLoanAccountRepository(dataManager: DataManager): GroupLoanAccountRepository {
-        return GroupLoanAccountRepositoryImp(dataManager)
-    }
-
-    @Provides
-    fun providesReportDetailRepository(dataManager: DataManagerRunReport): ReportDetailRepository {
-        return ReportDetailRepositoryImp(dataManager)
-    }
-
-    @Provides
-    fun providesReportCategoryRepository(dataManager: DataManagerRunReport): ReportCategoryRepository {
-        return ReportCategoryRepositoryImp(dataManager)
     }
 
     @Provides

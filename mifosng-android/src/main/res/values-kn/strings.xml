@@ -170,7 +170,7 @@
     <string name="loanterm">ಸಾಲ ಅವಧಿ</string>
     <string name="loanterm_month">ಸಾಲ ಅವಧಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ</string>
     <string name="nominal">ನಾಮಮಾತ್ರ ವಾರ್ಷಿಕ ಆಸಕ್ತಿ</string>
-    <string name="submittedon">ಸಲ್ಲಿಸಲಾಗಿದೆ</string>
+    <string name="submitted_on">ಸಲ್ಲಿಸಲಾಗಿದೆ</string>
     <string name="survey">ಸಮೀಕ್ಷೆ</string>
     <string name="create_client">ಕ್ಲೈಂಟ್ ರಚಿಸಿ</string>
     <string name="create_savings_account">ಉಳಿತಾಯ ಖಾತೆ ಸೇರಿಸಿ</string>

@@ -27,6 +27,7 @@ androidxMacroBenchmark = "1.2.3"
 androidxBaselineProfile = "1.2.3"
 androidxBenchmark = "1.2.3"
 androidxBenchmarkJunit4 = "1.1.1"
+androidxMaterial = "1.6.7"
 androidxMetrics = "1.0.0-beta01"
 androidxNavigation = "2.7.7"
 androidxProfileinstaller = "1.3.1"
@@ -76,10 +77,11 @@ lifecycleExtensions = "2.2.0"
 lifecycleReactivestreamsKtx = "2.7.0"
 lint = "31.3.0"
 leakcanaryVersion = '2.10'
+mapsCompose = "4.3.3"
 material = "1.11.0"
 materialIconsExtended = "1.6.2"
 materialshowcaseview = "1.3.7"
-materialVersion = "1.6.2"
+materialVersion = "1.6.7"
 mifosAndroidSdkArchVersion = "1.06"
 mifosPasscode = "1.0.0"
 mockitoCore = "5.5.0"
@@ -117,6 +119,7 @@ textdrawable = "558677ea31"
 turbine = "1.0.0"
 timberVersion = '5.0.1'
 truthVersion = '1.1.5'
+runtimeLivedata = "1.6.8"
 
 [libraries]
 # AndroidX Libraries
@@ -152,6 +155,7 @@ android-maps-utils = { module = "com.google.maps.android:android-maps-utils", ve
 android-iconify-material = { module = "com.joanzapata.iconify:android-iconify-material", version.ref = "androidIconifyMaterial" }
 
 #RxAndroid
+maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 rxandroid = { module = "io.reactivex:rxandroid", version.ref = "rxandroidVersion" }
 rxjava = { module = "io.reactivex:rxjava", version.ref = "rxjava" }
 
@@ -368,6 +372,7 @@ firebase-performance-gradlePlugin = { group = "com.google.firebase", name = "per
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 
 [plugins]

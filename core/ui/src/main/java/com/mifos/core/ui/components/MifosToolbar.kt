@@ -1,5 +1,6 @@
 package com.mifos.core.ui.components
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Sync
@@ -20,9 +21,9 @@ import com.mifos.core.designsystem.theme.BlueSecondary
 fun SelectionModeTopAppBar(
     modifier: Modifier = Modifier,
     itemCount: Int,
-    syncClicked: () -> Unit,
     resetSelectionMode: () -> Unit,
     containerColor: Color = BlueSecondary,
+    actions : @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
         modifier = modifier,
@@ -42,19 +43,6 @@ fun SelectionModeTopAppBar(
                 )
             }
         },
-        actions = {
-            FilledTonalButton(
-                onClick = {
-                    syncClicked()
-                    resetSelectionMode()
-                },
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Sync,
-                    contentDescription = "Sync Items",
-                )
-                Text(text = "Sync")
-            }
-        }
+        actions = actions
     )
 }

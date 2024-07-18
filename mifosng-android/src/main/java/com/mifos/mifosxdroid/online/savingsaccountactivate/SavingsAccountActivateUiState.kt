@@ -7,6 +7,8 @@ import com.mifos.core.network.GenericResponse
  */
 sealed class SavingsAccountActivateUiState {
 
+    data object Initial : SavingsAccountActivateUiState()
+
     data object ShowProgressbar : SavingsAccountActivateUiState()
 
     data class ShowError(val message: String) : SavingsAccountActivateUiState()

@@ -141,9 +141,9 @@ interface ClientService {
      * @return ClientAddressResponse
      */
     @GET(APIEndPoint.DATATABLES + "/client_pinpoint_location/{clientId}")
-    fun getClientPinpointLocations(
+    suspend fun getClientPinpointLocations(
         @Path("clientId") clientId: Int
-    ): Observable<List<ClientAddressResponse>>
+    ): List<ClientAddressResponse>
 
     /**
      * This is the service for adding the new Client Pinpoint Location in dataTable
@@ -157,10 +157,10 @@ interface ClientService {
      * @return GenericResponse
      */
     @POST(APIEndPoint.DATATABLES + "/client_pinpoint_location/{clientId}")
-    fun addClientPinpointLocation(
+    suspend fun addClientPinpointLocation(
         @Path("clientId") clientId: Int,
         @Body clientAddressRequest: ClientAddressRequest?
-    ): Observable<GenericResponse>
+    ): GenericResponse
 
     /**
      * This is the service for deleting the pinpoint location from the DataTable
@@ -174,10 +174,10 @@ interface ClientService {
      * @return GenericResponse
      */
     @DELETE(APIEndPoint.DATATABLES + "/client_pinpoint_location/{apptableId}/{datatableId}")
-    fun deleteClientPinpointLocation(
+    suspend fun deleteClientPinpointLocation(
         @Path("apptableId") apptableId: Int,
         @Path("datatableId") datatableId: Int
-    ): Observable<GenericResponse>
+    ): GenericResponse
 
     /**
      * This is the service for updating the pinpoint location from DataTable
@@ -192,11 +192,11 @@ interface ClientService {
      * @return GenericResponse
      */
     @PUT(APIEndPoint.DATATABLES + "/client_pinpoint_location/{apptableId}/{datatableId}")
-    fun updateClientPinpointLocation(
+    suspend fun updateClientPinpointLocation(
         @Path("apptableId") apptableId: Int,
         @Path("datatableId") datatableId: Int,
         @Body address: ClientAddressRequest?
-    ): Observable<GenericResponse>
+    ): GenericResponse
 
     /**
      * This is the service to activate the client

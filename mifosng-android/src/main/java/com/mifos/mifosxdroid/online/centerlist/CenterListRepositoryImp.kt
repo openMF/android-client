@@ -17,7 +17,7 @@ class CenterListRepositoryImp @Inject constructor(private val dataManagerCenter:
         return dataManagerCenter.getCenters(paged, offset, limit)
     }
 
-    override fun getCentersGroupAndMeeting(id: Int): Observable<CenterWithAssociations> {
+    override suspend fun getCentersGroupAndMeeting(id: Int): CenterWithAssociations {
         return dataManagerCenter.getCentersGroupAndMeeting(id)
     }
 

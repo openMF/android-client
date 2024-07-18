@@ -127,6 +127,7 @@ secrets {
 
 dependencies {
 
+    implementation(projects.feature.note)
     implementation(projects.feature.auth)
     implementation(projects.feature.client)
     implementation(projects.feature.checkerInboxTask)
@@ -134,6 +135,13 @@ dependencies {
     implementation(projects.feature.groups)
     implementation(projects.feature.settings)
     implementation(projects.feature.search)
+    implementation(projects.feature.center)
+    implementation(projects.feature.about)
+    implementation(projects.feature.report)
+    implementation(projects.feature.pathTracking)
+    implementation(projects.feature.activate)
+    implementation(projects.feature.loan)
+    implementation(projects.feature.document)
 
     implementation(projects.core.common)
     implementation(projects.core.ui)
@@ -256,4 +264,6 @@ dependencies {
     // ViewModel utilities for Compose
     implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(libs.androidx.lifecycle.runtimeCompose)
 }

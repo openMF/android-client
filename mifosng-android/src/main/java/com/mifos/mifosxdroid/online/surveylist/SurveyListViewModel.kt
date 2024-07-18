@@ -9,6 +9,8 @@ import com.mifos.core.objects.survey.Survey
 import com.mifos.mifosxdroid.R
 import com.mifos.utils.PrefManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -21,13 +23,13 @@ import javax.inject.Inject
 class SurveyListViewModel @Inject constructor(private val repository: SurveyListRepository) :
     ViewModel() {
 
-    private val _surveyListUiState = MutableLiveData<SurveyListUiState>()
+    private val _surveyListUiState = MutableStateFlow<SurveyListUiState>(SurveyListUiState.ShowProgressbar)
+    val surveyListUiState: StateFlow<SurveyListUiState> get() = _surveyListUiState
+
 
     private var mDbSurveyList: List<Survey>? = null
     private lateinit var mSyncSurveyList: List<Survey>
 
-    val surveyListUiState: LiveData<SurveyListUiState>
-        get() = _surveyListUiState
 
     fun loadSurveyList() {
         _surveyListUiState.value = SurveyListUiState.ShowProgressbar

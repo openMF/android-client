@@ -45,7 +45,7 @@ class PathTrackingAdapter(
         val location = userLocations[position]
         userLatLngs = getLatLngList(location.latlng)
         holder.tvAddress.text =
-            location.date + " from " + location.startTime + " to " + location.stopTime
+            location.date + " from " + location.start_time + " to " + location.stop_time
         try {
             holder.mvUserLocation.tag = userLatLngs[0]
         } catch (e: IndexOutOfBoundsException) {

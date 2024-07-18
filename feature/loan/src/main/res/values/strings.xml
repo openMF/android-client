@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_loan_application">Loan Application</string>
+    <string name="feature_loan_account_created_successfully">Loan account created successfully</string>
+
+    <string name="feature_loan_product">Loan Product</string>
+    <string name="feature_loan_purpose">Loan Purpose</string>
+    <string name="feature_loan_officer">Loan Officer</string>
+    <string name="feature_loan_fund">Fund</string>
+    <string name="feature_loan_submission_date">Submission Date</string>
+    <string name="feature_loan_disbursed_date">Disbursed Date</string>
+    <string name="feature_loan_select">Select</string>
+    <string name="feature_loan_cancel">Cancel</string>
+
+    <string name="feature_loan_external_id">External ID</string>
+    <string name="feature_loan_principal">Principal</string>
+    <string name="feature_loan_number_of_repayments">Number of Repayments</string>
+    <string name="feature_loan_nominal">Nominal</string>
+    <string name="feature_loan_repaid_every">Repaid Every</string>
+    <string name="feature_loan_loan_terms">Loan Terms</string>
+
+    <string name="feature_loan_link_savings">Link Savings</string>
+    <string name="feature_loan_per_month">Per month</string>
+    <string name="feature_loan_term">Term</string>
+    <string name="feature_loan_amortization">Amortization</string>
+    <string name="feature_loan_interest_calculation_period">Interest Calculation Period</string>
+    <string name="feature_loan_repayment_strategy">Repayment Strategy</string>
+    <string name="feature_loan_interest_type_method">Interest Type Method</string>
+    <string name="feature_loan_calculate_interest_for_exact_days_in">Calculate Interest for exact days in</string>
+    <string name="feature_loan_submit">Submit</string>
+
+
+
+    <string name="feature_loan_failed_to_load_loan">Failed to load loan</string>
+    <string name="feature_loan_failed_to_load_template">Failed to load loan template</string>
+    <string name="feature_loan_failed_to_create_loan_account">Failed to create loan account</string>
+
+    <string name="feature_loan_loan_charges">Loan Charges</string>
+    <string name="feature_loan_failed_to_load_loan_charges">Failed to load loan charges</string>
+    <string name="feature_loan_no_loan_charges">No Loan Charges Available for this client</string>
+
+    <string name="feature_loan_client_id">Client ID</string>
+    <string name="feature_loan_charge_name">Charge Name</string>
+    <string name="feature_loan_charge_amount">Charge Amount</string>
+    <string name="feature_loan_charge_due_date">Charge Due Date</string>
+</resources>

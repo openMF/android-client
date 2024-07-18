@@ -6,14 +6,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -34,11 +30,15 @@ import com.mifos.core.designsystem.theme.BluePrimaryDark
 
 @Composable
 fun MifosTextFieldDropdown(
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 16.dp, end = 16.dp),
     value: String,
     onValueChanged: (String) -> Unit,
     onOptionSelected: (Int, String) -> Unit,
     label: Int,
-    options: List<String>
+    options: List<String>,
+    readOnly: Boolean = false
 ) {
     var isExpended by remember { mutableStateOf(false) }
 
@@ -50,25 +50,20 @@ fun MifosTextFieldDropdown(
             value = value,
             onValueChange = { onValueChanged(it) },
             label = { Text(text = stringResource(id = label)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp)
-                .menuAnchor(),
+            modifier = modifier.menuAnchor(),
             maxLines = 1,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
+                focusedLabelColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+                ),
             textStyle = LocalDensity.current.run {
                 TextStyle(fontSize = 18.sp)
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             trailingIcon = {
-                val image =
-                    if (isExpended) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown
-                IconButton(onClick = { isExpended = !isExpended }) {
-                    Icon(imageVector = image, null)
-                }
-            }
+                ExposedDropdownMenuDefaults.TrailingIcon(isExpended)
+            },
+            readOnly = readOnly
         )
 
         ExposedDropdownMenu(

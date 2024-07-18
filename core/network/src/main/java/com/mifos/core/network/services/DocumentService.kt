@@ -23,10 +23,10 @@ import rx.Observable
  */
 interface DocumentService {
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
-    fun getDocuments(
-        @Path("entityType") entityType: String?,
+    suspend fun getDocuments(
+        @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int
-    ): Observable<List<Document>>
+    ): List<Document>
 
     /**
      * @param entityType              - Type for which document is being uploaded (Client, Loan
@@ -59,11 +59,11 @@ interface DocumentService {
      * @return ResponseBody
      */
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}/attachment")
-    fun downloadDocument(
-        @Path("entityType") entityType: String?,
+    suspend fun downloadDocument(
+        @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Path("documentId") documentId: Int
-    ): Observable<ResponseBody>
+    ): ResponseBody
 
     /**
      * This Service is for Deleting the Document with EntityType and EntityId and Document Id.
@@ -78,11 +78,11 @@ interface DocumentService {
      * @return
      */
     @DELETE("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}")
-    fun removeDocument(
-        @Path("entityType") entityType: String?,
+    suspend fun removeDocument(
+        @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Path("documentId") documentId: Int
-    ): Observable<GenericResponse>
+    ): GenericResponse
 
     /**
      * This Service for Updating the Document with EntityType and EntityId and Document Id.

@@ -8,7 +8,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
-import rx.Observable
 
 /**
  * Created by Rajan Maurya on 05/02/17.
@@ -22,11 +21,11 @@ interface RunReportsService {
      * @return List of ClientReportTypeItem
      */
     @GET(APIEndPoint.RUN_REPORTS + "/reportCategoryList")
-    fun getReportCategories(
+    suspend fun getReportCategories(
         @Query("R_reportCategory") category: String?,
         @Query("genericResultSet") genericResultSet: Boolean,
         @Query("parameterType") parameterType: Boolean
-    ): Observable<List<ClientReportTypeItem>>
+    ): List<ClientReportTypeItem>
 
     /**
      * Endpoint to fetch FullParameter list after fetching the categories.
@@ -35,10 +34,10 @@ interface RunReportsService {
      * @return FullParameterListResponse
      */
     @GET(APIEndPoint.RUN_REPORTS + "/FullParameterList")
-    fun getReportFullParameterList(
-        @Query("R_reportListing") reportName: String?,
+    suspend fun getReportFullParameterList(
+        @Query("R_reportListing") reportName: String,
         @Query("parameterType") parameterType: Boolean
-    ): Observable<FullParameterListResponse>
+    ): FullParameterListResponse
 
     /**
      * Endpoint to fetch the details for a particular parameter.
@@ -47,24 +46,24 @@ interface RunReportsService {
      * @return
      */
     @GET(APIEndPoint.RUN_REPORTS + "/{path}")
-    fun getReportParameterDetails(
-        @Path("path") parameterName: String?,
+    suspend fun getReportParameterDetails(
+        @Path("path") parameterName: String,
         @Query("parameterType") parameterType: Boolean
-    ): Observable<FullParameterListResponse>
+    ): FullParameterListResponse
 
     @GET(APIEndPoint.RUN_REPORTS + "/{path}")
-    fun getReportOffice(
-        @Path("path") parameterName: String?,
+    suspend fun getReportOffice(
+        @Path("path") parameterName: String,
         @Query("R_officeId") office: Int,
         @Query("parameterType") parameterType: Boolean
-    ): Observable<FullParameterListResponse>
+    ): FullParameterListResponse
 
     @GET(APIEndPoint.RUN_REPORTS + "/{path}")
-    fun getReportProduct(
-        @Path("path") parameterName: String?,
-        @Query("R_currencyId") currency: String?,
+    suspend fun getReportProduct(
+        @Path("path") parameterName: String,
+        @Query("R_currencyId") currency: String,
         @Query("parameterType") parameterType: Boolean
-    ): Observable<FullParameterListResponse>
+    ): FullParameterListResponse
 
     /**
      * Endpoint to retrieve final Report based on the parameters.
@@ -73,14 +72,14 @@ interface RunReportsService {
      * @return
      */
     @GET(APIEndPoint.RUN_REPORTS + "/{path}")
-    fun getRunReportWithQuery(
-        @Path("path") reportName: String?,
-        @QueryMap options: Map<String?, String?>?
-    ): Observable<FullParameterListResponse>
+    suspend fun getRunReportWithQuery(
+        @Path("path") reportName: String,
+        @QueryMap options: Map<String, String>
+    ): FullParameterListResponse
 
     @GET(APIEndPoint.RUN_REPORTS + "/GroupSummaryCounts")
-    fun getCenterSummaryInfo(
+    suspend fun getCenterSummaryInfo(
         @Query("R_groupId") centerId: Int,
         @Query("genericResultSet") genericResultSet: Boolean
-    ): Observable<List<CenterInfo>>
+    ): List<CenterInfo>
 }

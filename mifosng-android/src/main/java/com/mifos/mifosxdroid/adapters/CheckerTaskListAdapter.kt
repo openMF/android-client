@@ -65,11 +65,11 @@ class CheckerTaskListAdapter : ListAdapter<CheckerTask,
         val currentItem = getItem(position)
         holder.tvCheckerTaskId.text = currentItem.id.toString()
         holder.tvCheckerTaskDate.text = currentItem.getDate()
-        holder.tvCheckerTaskStatus.text = currentItem.status
+        holder.tvCheckerTaskStatus.text = currentItem.processingResult
         holder.tvCheckerTaskMaker.text = currentItem.maker
-        holder.tvCheckerTaskAction.text = currentItem.action
-        holder.tvCheckerTaskEntity.text = currentItem.entity
-        holder.tvCheckerTaskOptionsEntity.text = currentItem.entity
+        holder.tvCheckerTaskAction.text = currentItem.actionName
+        holder.tvCheckerTaskEntity.text = currentItem.entityName
+        holder.tvCheckerTaskOptionsEntity.text = currentItem.entityName
         holder.tvCheckerTaskOptionsDate.text = currentItem.getDate()
 
         if (mBadgeProcessMode.isInBadgeProcessingMode()) {

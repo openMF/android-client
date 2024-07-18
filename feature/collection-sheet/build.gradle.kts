@@ -10,8 +10,9 @@ android {
 
 dependencies {
 
-    implementation(projects.core.datastore)
-    implementation(projects.core.network)
+    implementation(projects.core.domain)
+
+    implementation(libs.coil.kt.compose)
 
     //DBFlow dependencies
     kapt(libs.dbflow.processor)
