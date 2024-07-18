@@ -61,7 +61,7 @@ fun MifosScaffold(
                             Text(
                                 text = it,
                                 style = TextStyle(
-                                    fontSize = 22.sp,
+                                    fontSize = 12.sp,
                                     fontWeight = FontWeight.Medium,
                                     fontStyle = FontStyle.Normal
                                 ),
