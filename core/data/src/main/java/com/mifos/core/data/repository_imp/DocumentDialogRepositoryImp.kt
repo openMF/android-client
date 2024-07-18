@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.dialogfragments.documentdialog
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
 import okhttp3.MultipartBody
@@ -39,6 +40,4 @@ class DocumentDialogRepositoryImp @Inject constructor(private val dataManagerDoc
             file
         )
     }
-
-
 }

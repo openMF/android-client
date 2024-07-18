@@ -1,10 +1,11 @@
-package com.mifos.mifosxdroid.dialogfragments.documentdialog
+package com.mifos.feature.document.document_dialog
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.network.GenericResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -23,9 +24,9 @@ import javax.inject.Inject
 class DocumentDialogViewModel @Inject constructor(private val repository: DocumentDialogRepository) :
     ViewModel() {
 
-    private val _documentDialogUiState = MutableLiveData<DocumentDialogUiState>()
+    private val _documentDialogUiState = MutableStateFlow<DocumentDialogUiState>(DocumentDialogUiState.Initial)
 
-    val documentDialogUiState: LiveData<DocumentDialogUiState>
+    val documentDialogUiState: StateFlow<DocumentDialogUiState>
         get() = _documentDialogUiState
 
     fun createDocument(type: String?, id: Int, name: String?, desc: String?, file: File) {
@@ -47,7 +48,7 @@ class DocumentDialogViewModel @Inject constructor(private val repository: Docume
                                 DocumentDialogUiState.ShowUploadError(
                                     it
                                 )
-                            }
+                            }!!
                         } else {
                             _documentDialogUiState.value =
                                 DocumentDialogUiState.ShowError(e.message.toString())
@@ -59,8 +60,7 @@ class DocumentDialogViewModel @Inject constructor(private val repository: Docume
                 }
 
                 override fun onNext(genericResponse: GenericResponse) {
-                    _documentDialogUiState.value =
-                        DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(genericResponse)
+                    _documentDialogUiState.value = DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(genericResponse)
                 }
             })
 
