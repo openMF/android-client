@@ -37,18 +37,17 @@ import com.mifos.core.designsystem.theme.DarkGray
 
 @Composable
 fun MifosSweetError(
+    modifier: Modifier = Modifier
+        .fillMaxSize()
+        .padding(18.dp)
+        .semantics { contentDescription = "MifosSweetError" },
     message: String,
-    isRetryEnabled : Boolean  = true,
-    buttonText : String = stringResource(id = R.string.core_designsystem_try_again),
+    isRetryEnabled: Boolean = true,
+    buttonText: String = stringResource(id = R.string.core_designsystem_try_again),
     onclick: () -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(18.dp)
-            .semantics {
-                contentDescription = "MifosSweetError"
-            },
+        modifier = modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -77,7 +76,7 @@ fun MifosSweetError(
                 color = DarkGray
             )
         )
-        if (isRetryEnabled){
+        if (isRetryEnabled) {
             Spacer(modifier = Modifier.height(20.dp))
             Button(
                 onClick = { onclick() },

@@ -109,14 +109,14 @@ class DataManager {
         return mBaseApiManager.chargeApi.createCharges(clientId, payload)
     }
 
-    fun getAllChargesV3(loanId: Int): Observable<ResponseBody> {
+    suspend fun getAllChargesV3(loanId: Int): ResponseBody {
         return mBaseApiManager.chargeApi.getAllChargeV3(loanId)
     }
 
-    fun createLoanCharges(
+    suspend fun createLoanCharges(
         loanId: Int,
-        chargesPayload: ChargesPayload?
-    ): Observable<ChargeCreationResponse> {
+        chargesPayload: ChargesPayload
+    ): ChargeCreationResponse {
         return mBaseApiManager.chargeApi.createLoanCharges(loanId, chargesPayload)
     }
 

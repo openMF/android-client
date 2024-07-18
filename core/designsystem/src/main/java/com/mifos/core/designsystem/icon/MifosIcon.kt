@@ -2,9 +2,7 @@ package com.mifos.core.designsystem.icon
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
-import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CloudDownload
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Group
@@ -47,6 +45,4 @@ object MifosIcons {
     val addLocation = Icons.Rounded.AddLocation
     val cloudDownload = Icons.Default.CloudDownload
     val save = Icons.Rounded.Download
-    val cancel = Icons.Filled.Cancel
-    val error = Icons.Filled.Error
 }

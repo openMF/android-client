@@ -28,8 +28,6 @@ import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.data.repository_imp.DocumentDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepository
@@ -312,11 +310,6 @@ class RepositoryModule {
     @Provides
     fun providesIdentifierDialogRepository(dataManagerClient: DataManagerClient): IdentifierDialogRepository {
         return IdentifierDialogRepositoryImp(dataManagerClient)
-    }
-
-    @Provides
-    fun providesLoanChargeDialogRepository(dataManager: DataManager): LoanChargeDialogRepository {
-        return LoanChargeDialogRepositoryImp(dataManager)
     }
 
     @Provides
