@@ -314,6 +314,7 @@ private fun ClearIconButton(
 
 @Composable
 fun MifosDatePickerTextField(
+    modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
     value: String,
     label: Int,
     openDatePicker: () -> Unit
@@ -323,9 +324,7 @@ fun MifosDatePickerTextField(
         onValueChange = { },
         label = { Text(text = stringResource(id = label)) },
         readOnly = true,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp),
+        modifier = modifier,
         maxLines = 1,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
