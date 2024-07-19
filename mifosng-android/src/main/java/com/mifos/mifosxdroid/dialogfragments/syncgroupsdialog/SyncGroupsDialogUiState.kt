@@ -1,29 +1,28 @@
 package com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog
 
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.mifos.core.objects.group.Group
+
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
 sealed class SyncGroupsDialogUiState {
-
-    data object ShowGroupsSyncSuccessfully : SyncGroupsDialogUiState()
-
-    data object ShowNetworkIsNotAvailable : SyncGroupsDialogUiState()
-
-    data object DismissDialog : SyncGroupsDialogUiState()
-
-    data class UpdateSingleSyncGroupProgressBar(val index: Int) : SyncGroupsDialogUiState()
-
-    data class ShowSyncedFailedGroups(val size: Int) : SyncGroupsDialogUiState()
-
-    object ShowProgressbar : SyncGroupsDialogUiState()
-
-    data class SetClientSyncProgressBarMax(val size: Int) : SyncGroupsDialogUiState()
-
-    data class ShowError(val message: String) : SyncGroupsDialogUiState()
-
-    data class UpdateClientSyncProgressBar(val index: Int) : SyncGroupsDialogUiState()
-
-    data class UpdateTotalSyncGroupProgressBarAndCount(val total: Int) : SyncGroupsDialogUiState()
-
-    data class ShowSyncingGroup(val groupName: String) : SyncGroupsDialogUiState()
+    data object Loading: SyncGroupsDialogUiState()
+    data object Success: SyncGroupsDialogUiState()
+    data class Error(
+        val messageResId: Int? = null,
+        val imageVector: ImageVector? = null,
+        val message: String? = null
+    ): SyncGroupsDialogUiState()
 }
+
+data class SyncGroupDialogData(
+    val totalSyncCount: Int = 0,
+    val groupName: String = "",
+    val isSyncSuccess: Boolean = false,
+    val singleSyncCount: Int = 0,
+    val totalClientSyncCount: Int = 0,
+    val clientSyncCount: Int = 0,
+    val failedSyncGroupCount: Int = 0,
+    val groupList: List<Group> = listOf()
+)
