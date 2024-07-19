@@ -26,7 +26,7 @@ interface ChargeService {
     fun listAllCharges(): Observable<ResponseBody>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/charges/template")
-    fun getAllChargesS(@Path("clientId") clientId: Int): Observable<ChargeTemplate>
+    suspend fun getAllChargesS(@Path("clientId") clientId: Int): ChargeTemplate
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges/template")
     suspend fun getAllChargeV3(@Path("loanId") loanId: Int): ResponseBody
@@ -39,10 +39,10 @@ interface ChargeService {
     ): Observable<Page<Charges>>
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}/charges")
-    fun createCharges(
+    suspend fun createCharges(
         @Path("clientId") clientId: Int,
-        @Body chargesPayload: ChargesPayload?
-    ): Observable<ChargeCreationResponse>
+        @Body chargesPayload: ChargesPayload
+    ): ChargeCreationResponse
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges")
     fun getListOfLoanCharges(@Path("loanId") loanId: Int): Observable<Page<Charges>>

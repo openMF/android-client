@@ -50,7 +50,6 @@
     <string name="feature_client_due_date">Due Date</string>
     <string name="feature_client_no_more_charges_available">No More Charges Available!</string>
 
-
     <string name="feature_client_permission_required">Permissions Required</string>
     <string name="feature_client_approve_permission_description_location">You need to approve these permissions in order to access Location.</string>
     <string name="feature_client_proceed">Proceed</string>
@@ -67,4 +66,13 @@
     <string name="feature_client_delete_client_address">Delete Address</string>
     <string name="feature_client_no_pinpoint_found">No Pinpoint Found</string>
 
+    <string name="feature_client_charge_select">Select</string>
+    <string name="feature_client_charge_cancel">Cancel</string>
+    <string name="feature_client_charge_dialog">Create Charge</string>
+    <string name="feature_client_message_field_required">Field Required</string>
+    <string name="feature_client_charge_created_successfully">Charge Created Successfully</string>
+    <string name="feature_client_charge_submit">Submit</string>
+    <string name="feature_client_charge_locale">Locale</string>
+    <string name="feature_client_failed_to_load_charges">Failed To Load Charges</string>
+    <string name="feature_client_failed_to_create_charge">Failed To Create Charge</string>
 </resources>

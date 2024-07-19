@@ -4,6 +4,7 @@ package com.mifos.core.data.di
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.data.repository.CenterListRepository
+import com.mifos.core.data.repository.ChargeDialogRepository
 import com.mifos.core.data.repository.CheckerInboxRepository
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import com.mifos.core.data.repository.ClientChargeRepository
@@ -26,6 +27,7 @@ import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.data.repository_imp.ActivateRepositoryImp
 import com.mifos.core.data.repository_imp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.CenterListRepositoryImp
+import com.mifos.core.data.repository_imp.ChargeDialogRepositoryImp
 import com.mifos.core.data.repository_imp.CheckerInboxRepositoryImp
 import com.mifos.core.data.repository_imp.CheckerInboxTasksRepositoryImp
 import com.mifos.core.data.repository_imp.ClientChargeRepositoryImp
@@ -121,4 +123,7 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindLoanChargeDialogRepository(impl: LoanChargeDialogRepositoryImp): LoanChargeDialogRepository
+
+    @Binds
+    internal abstract fun bindChargeDialogRepository(impl: ChargeDialogRepositoryImp): ChargeDialogRepository
 }
