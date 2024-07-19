@@ -122,6 +122,8 @@ timberVersion = '5.0.1'
 truthVersion = '1.1.5'
 runtimeLivedata = "1.6.8"
 screengrabVersion = "2.1.1"
+tripletPlayVersion = "3.10.1"
+
 
 [libraries]
 # AndroidX Libraries
@@ -156,7 +158,6 @@ android-maps-utils = { module = "com.google.maps.android:android-maps-utils", ve
 android-iconify-material = { module = "com.joanzapata.iconify:android-iconify-material", version.ref = "androidIconifyMaterial" }
 
 #RxAndroid
-kotlinx-coroutines-core-v151 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCoreVersion" }
 kotlinx-coroutines-rx2 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2", version.ref = "kotlinxCoroutinesRx2" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 rxandroid = { module = "io.reactivex:rxandroid", version.ref = "rxandroidVersion" }
@@ -377,7 +378,6 @@ firebase-performance-gradlePlugin = { group = "com.google.firebase", name = "per
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
-androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 
 [plugins]
@@ -400,6 +400,7 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 realm = { id = "io.realm.kotlin", version.ref = "realmVersion" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
+triplet-play = {id = "com.github.triplet.play", version.ref = "tripletPlayVersion"}
 
 # Plugins defined by this project
 mifos-android-application = { id = "mifos.android.application", version = "unspecified" }

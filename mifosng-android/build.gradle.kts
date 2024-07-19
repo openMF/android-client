@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.secrets)
     alias(libs.plugins.androidx.navigation)
+    alias(libs.plugins.triplet.play)
 }
 
 apply(from = "../config/quality/quality.gradle")
@@ -118,6 +119,11 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
+    }
+
+    play {
+        releaseName.set("My custom release name")
+        serviceAccountCredentials.set(file("your-key.json"))
     }
 }
 
