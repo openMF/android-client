@@ -1,12 +1,17 @@
 package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.mifos.core.data.CenterPayload_Table.errorMessage
+import com.mifos.core.objects.PaymentTypeOption
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
 import com.mifos.mifosxdroid.R
+import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment.Companion.LOG_TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -20,10 +25,25 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
     ViewModel() {
 
     private val _syncLoanRepaymentTransactionUiState =
-        MutableLiveData<SyncLoanRepaymentTransactionUiState>()
+        MutableStateFlow<SyncLoanRepaymentTransactionUiState>(
+            SyncLoanRepaymentTransactionUiState.ShowProgressbar
+        )
+    val syncLoanRepaymentTransactionUiState: StateFlow<SyncLoanRepaymentTransactionUiState> =
+        _syncLoanRepaymentTransactionUiState
 
-    val syncLoanRepaymentTransactionUiState: LiveData<SyncLoanRepaymentTransactionUiState>
-        get() = _syncLoanRepaymentTransactionUiState
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
+    private var mLoanRepaymentRequests: MutableList<LoanRepaymentRequest> = mutableListOf()
+    private var mPaymentTypeOptions: List<PaymentTypeOption> = emptyList()
+    private var mClientSyncIndex = 0
+
+    fun refreshTransactions() {
+        _isRefreshing.value = true
+        loadDatabaseLoanRepaymentTransactions()
+        loanPaymentTypeOption()
+        _isRefreshing.value = false
+    }
 
     fun loadDatabaseLoanRepaymentTransactions() {
         _syncLoanRepaymentTransactionUiState.value =
@@ -39,10 +59,8 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
                 }
 
                 override fun onNext(loanRepaymentRequests: List<LoanRepaymentRequest>) {
-                    _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowLoanRepaymentTransactions(
-                            loanRepaymentRequests
-                        )
+                    mLoanRepaymentRequests = loanRepaymentRequests.toMutableList()
+                    updateUiState()
                 }
             })
 
@@ -55,22 +73,36 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
             .paymentTypeOption()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<com.mifos.core.objects.PaymentTypeOption>>() {
+            .subscribe(object : Subscriber<List<PaymentTypeOption>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncLoanRepaymentTransactionUiState.value =
                         SyncLoanRepaymentTransactionUiState.ShowError(R.string.failed_to_load_paymentoptions)
                 }
 
-                override fun onNext(paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>) {
-                    _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowPaymentTypeOption(paymentTypeOptions)
+                override fun onNext(paymentTypeOptions: List<PaymentTypeOption>) {
+                    mPaymentTypeOptions = paymentTypeOptions
+                    updateUiState()
                 }
             })
-
     }
 
-    fun syncLoanRepayment(loanId: Int, loanRepaymentRequest: LoanRepaymentRequest?) {
+    private fun updateUiState() {
+        if (mLoanRepaymentRequests.isNotEmpty()) {
+            _syncLoanRepaymentTransactionUiState.value =
+                SyncLoanRepaymentTransactionUiState.ShowLoanRepaymentTransactions(
+                    mLoanRepaymentRequests,
+                    mPaymentTypeOptions
+                )
+        } else {
+            _syncLoanRepaymentTransactionUiState.value =
+                SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments(
+                    R.string.no_loanrepayment_to_sync.toString()
+                )
+        }
+    }
+
+    private fun syncLoanRepayment(loanId: Int, loanRepaymentRequest: LoanRepaymentRequest?) {
         _syncLoanRepaymentTransactionUiState.value =
             SyncLoanRepaymentTransactionUiState.ShowProgressbar
         repository.submitPayment(loanId, loanRepaymentRequest!!)
@@ -79,13 +111,17 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
             .subscribe(object : Subscriber<LoanRepaymentResponse>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowPaymentFailed(e.message.toString())
+                    val eLoanRepaymentRequest = mLoanRepaymentRequests[mClientSyncIndex]
+                    eLoanRepaymentRequest.errorMessage = errorMessage.toString()
+                    updateLoanRepayment(eLoanRepaymentRequest)
                 }
 
                 override fun onNext(loanRepaymentResponse: LoanRepaymentResponse) {
-                    _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowPaymentSubmittedSuccessfully
+                    mLoanRepaymentRequests[mClientSyncIndex].loanId?.let {
+                        deleteAndUpdateLoanRepayments(
+                            it
+                        )
+                    }
                 }
             })
 
@@ -105,10 +141,18 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
                 }
 
                 override fun onNext(loanRepaymentRequests: List<LoanRepaymentRequest>) {
-                    _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowLoanRepaymentDeletedAndUpdateLoanRepayment(
-                            loanRepaymentRequests
-                        )
+                    mClientSyncIndex = 0
+                    mLoanRepaymentRequests =
+                        loanRepaymentRequests as MutableList<LoanRepaymentRequest>
+                    if (mLoanRepaymentRequests.isNotEmpty()) {
+                        syncGroupPayload()
+                    } else {
+                        _syncLoanRepaymentTransactionUiState.value =
+                            SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments(
+                                R.string.no_loanrepayment_to_sync.toString()
+                            )
+                    }
+                    updateUiState()
                 }
             })
 
@@ -128,12 +172,34 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
                 }
 
                 override fun onNext(loanRepaymentRequest: LoanRepaymentRequest) {
-                    _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowLoanRepaymentUpdated(
-                            loanRepaymentRequest
-                        )
+                    mLoanRepaymentRequests[mClientSyncIndex] = loanRepaymentRequest
+                    mClientSyncIndex += 1
+                    if (mLoanRepaymentRequests.size != mClientSyncIndex) {
+                        syncGroupPayload()
+                    }
+                    updateUiState()
                 }
             })
+    }
 
+    fun syncGroupPayload() {
+        for (i in mLoanRepaymentRequests.indices) {
+            if (mLoanRepaymentRequests[i].errorMessage == null) {
+                mLoanRepaymentRequests[i].loanId?.let {
+                    syncLoanRepayment(
+                        it, mLoanRepaymentRequests[i]
+                    )
+                }
+                mClientSyncIndex = i
+                break
+            } else {
+                mLoanRepaymentRequests[i].errorMessage?.let {
+                    Log.d(
+                        LOG_TAG,
+                        it
+                    )
+                }
+            }
+        }
     }
 }
