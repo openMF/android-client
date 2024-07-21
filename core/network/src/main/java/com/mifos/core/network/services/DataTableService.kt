@@ -25,10 +25,10 @@ interface DataTableService {
     fun getTableOf(@Query("apptable") table: String?): Observable<List<DataTable>>
 
     @GET(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
-    fun getDataOfDataTable(
-        @Path("dataTableName") dataTableName: String?,
+    suspend fun getDataOfDataTable(
+        @Path("dataTableName") dataTableName: String,
         @Path("entityId") entityId: Int
-    ): Observable<JsonArray>
+    ): JsonArray
 
     //TODO Improve Body Implementation with Payload
     @POST(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
