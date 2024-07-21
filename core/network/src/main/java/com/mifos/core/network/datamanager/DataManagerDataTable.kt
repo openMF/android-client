@@ -39,7 +39,7 @@ class DataManagerDataTable @Inject constructor(
         )
     }
 
-    fun getDataTableInfo(table: String?, entityId: Int): Observable<JsonArray> {
+    suspend fun getDataTableInfo(table: String, entityId: Int): JsonArray {
         return mBaseApiManager.dataTableApi.getDataOfDataTable(table, entityId)
     }
 
