@@ -62,7 +62,7 @@ class SyncClientPayloadsViewModel @Inject constructor(
 
     }
 
-    fun syncClientPayload(clientPayload: ClientPayload?) {
+    private fun syncClientPayload(clientPayload: ClientPayload?) {
         _syncClientPayloadsRepository.value = SyncClientPayloadsUiState.ShowProgressbar
         repository.createClient(clientPayload!!)
             .observeOn(AndroidSchedulers.mainThread())
@@ -72,6 +72,7 @@ class SyncClientPayloadsViewModel @Inject constructor(
                 override fun onError(e: Throwable) {
                     _syncClientPayloadsRepository.value =
                         SyncClientPayloadsUiState.ShowError(e.message.toString())
+                    updateClientPayload(clientPayload)
                 }
 
                 override fun onNext(client: Client) {
