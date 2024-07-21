@@ -22,8 +22,6 @@ import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepository
@@ -281,11 +279,6 @@ class RepositoryModule {
     @Provides
     fun providesSurveySubmitRepository(dataManagerSurveys: DataManagerSurveys): SurveySubmitRepository {
         return SurveySubmitRepositoryImp(dataManagerSurveys)
-    }
-
-    @Provides
-    fun providesDataTableRowDialogRepository(dataManagerDataTable: DataManagerDataTable): DataTableRowDialogRepository {
-        return DataTableRowDialogRepositoryImp(dataManagerDataTable)
     }
 
     @Provides

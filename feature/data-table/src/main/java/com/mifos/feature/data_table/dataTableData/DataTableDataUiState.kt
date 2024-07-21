@@ -1,4 +1,4 @@
-package com.mifos.feature.data_table
+package com.mifos.feature.data_table.dataTableData
 
 import com.google.gson.JsonArray
 

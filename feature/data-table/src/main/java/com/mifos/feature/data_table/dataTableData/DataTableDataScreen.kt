@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package com.mifos.feature.data_table
+package com.mifos.feature.data_table.dataTableData
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -64,11 +64,15 @@ import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
+import com.mifos.core.objects.noncore.DataTable
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.feature.data_table.R
+import com.mifos.feature.data_table.dataTableRowDialog.DataTableRowDialogScreen
 
 @Composable
 fun DataTableDataScreen(
     table: String,
+    dataTable: DataTable,
     entityId: Int,
     onBackPressed: () -> Unit
 ) {
@@ -82,6 +86,8 @@ fun DataTableDataScreen(
     }
 
     DataTableDataScreen(
+        dataTable = dataTable,
+        entityId = entityId,
         state = state,
         onBackPressed = onBackPressed,
         onRetry = {
@@ -100,6 +106,8 @@ fun DataTableDataScreen(
 
 @Composable
 fun DataTableDataScreen(
+    dataTable: DataTable,
+    entityId: Int,
     state: DataTableDataUiState,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
@@ -114,7 +122,22 @@ fun DataTableDataScreen(
     )
     var showOptionDialog by rememberSaveable { mutableStateOf(false) }
     var deleteDataTableId by rememberSaveable { mutableIntStateOf(0) }
+    var showAddDataTableRowDialog by rememberSaveable { mutableStateOf(false) }
 
+
+    if (showAddDataTableRowDialog) {
+        DataTableRowDialogScreen(
+            dataTable = dataTable,
+            entityId = entityId,
+            onDismiss = {
+                showAddDataTableRowDialog = false
+            },
+            onSuccess = {
+                showAddDataTableRowDialog = false
+                onRetry()
+            }
+        )
+    }
 
     if (showOptionDialog) {
         SelectOptionsDialog(
@@ -134,7 +157,7 @@ fun DataTableDataScreen(
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = {
-                // TODO Implement Create Data Table
+                showAddDataTableRowDialog = true
             }) {
                 Icon(imageVector = MifosIcons.Add, contentDescription = null)
             }
@@ -388,6 +411,8 @@ private fun DataTableDataScreenPreview(
     @PreviewParameter(DataTableDataUiStateProvider::class) state: DataTableDataUiState
 ) {
     DataTableDataScreen(
+        dataTable = DataTable(),
+        entityId = 1,
         state = state,
         onBackPressed = {},
         onRetry = {},

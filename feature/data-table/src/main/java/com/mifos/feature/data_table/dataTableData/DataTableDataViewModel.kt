@@ -1,4 +1,4 @@
-package com.mifos.feature.data_table
+package com.mifos.feature.data_table.dataTableData
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,6 +6,7 @@ import com.google.gson.JsonArray
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.use_cases.DeleteDataTableEntryUseCase
 import com.mifos.core.domain.use_cases.GetDataTableInfoUseCase
+import com.mifos.feature.data_table.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

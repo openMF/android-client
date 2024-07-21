@@ -11,6 +11,7 @@ import com.mifos.core.data.repository.ClientChargeRepository
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.DataTableDataRepository
+import com.mifos.core.data.repository.DataTableRowDialogRepository
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.data.repository.GroupListRepository
@@ -35,6 +36,7 @@ import com.mifos.core.data.repository_imp.ClientChargeRepositoryImp
 import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repository_imp.CreateNewCenterRepositoryImp
 import com.mifos.core.data.repository_imp.DataTableDataRepositoryImp
+import com.mifos.core.data.repository_imp.DataTableRowDialogRepositoryImp
 import com.mifos.core.data.repository_imp.DocumentListRepositoryImp
 import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.GroupListRepositoryImp
@@ -131,4 +133,7 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindDataTableDataRepository(impl: DataTableDataRepositoryImp): DataTableDataRepository
+
+    @Binds
+    internal abstract fun bindDataTableRowDialogRepository(impl: DataTableRowDialogRepositoryImp): DataTableRowDialogRepository
 }
