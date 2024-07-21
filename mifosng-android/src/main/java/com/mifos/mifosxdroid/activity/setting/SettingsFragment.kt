@@ -14,7 +14,7 @@ import androidx.preference.Preference.OnPreferenceChangeListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogFragment
+import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogComposeFragment
 import com.mifos.mifosxdroid.online.DashboardActivity
 import com.mifos.mifosxdroid.passcode.PassCodeActivity
 import com.mifos.mobile.passcode.utils.PasscodePreferencesHelper
@@ -47,20 +47,15 @@ class SettingsFragment : PreferenceFragmentCompat(),
     }
 
     private fun initSurveyPreferences() {
-        mEnableSyncSurvey =
-            (findPreference(requireContext().getString(R.string.sync_survey)) as SwitchPreference?)!!
-        mEnableSyncSurvey.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue ->
+
+        mEnableSyncSurvey = (findPreference(requireContext().getString(R.string.sync_survey)) as SwitchPreference?)!!
+        mEnableSyncSurvey.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             if (newValue as Boolean) {
-                val syncSurveysDialogFragment = SyncSurveysDialogFragment.newInstance()
-                val fragmentTransaction = parentFragmentManager.beginTransaction()
-                fragmentTransaction.addToBackStack(FragmentConstants.FRAG_SURVEYS_SYNC)
-                syncSurveysDialogFragment.isCancelable = false
-                fragmentTransaction.let {
-                    syncSurveysDialogFragment.show(
-                        it,
-                        requireContext().getString(R.string.sync_clients)
-                    )
-                }
+                val syncSurveysDialogFragment = SyncSurveysDialogComposeFragment.newInstance()
+                syncSurveysDialogFragment.show(
+                    requireActivity().supportFragmentManager,
+                    FragmentConstants.FRAG_SURVEYS_SYNC
+                )
             }
             true
         }
