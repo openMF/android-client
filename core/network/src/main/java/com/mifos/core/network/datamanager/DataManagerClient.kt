@@ -279,9 +279,9 @@ class DataManagerClient @Inject constructor(
      * @param identifierPayload IdentifierPayload
      * @return IdentifierCreationResponse
      */
-    fun createClientIdentifier(
-        clientId: Int, identifierPayload: IdentifierPayload?
-    ): Observable<IdentifierCreationResponse> {
+    suspend fun createClientIdentifier(
+        clientId: Int, identifierPayload: IdentifierPayload
+    ): IdentifierCreationResponse {
         return mBaseApiManager.clientsApi.createClientIdentifier(clientId, identifierPayload)
     }
 

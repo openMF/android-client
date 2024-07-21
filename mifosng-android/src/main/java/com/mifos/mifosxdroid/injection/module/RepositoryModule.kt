@@ -24,8 +24,6 @@ import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepository
@@ -293,10 +291,6 @@ class RepositoryModule {
         return DocumentDialogRepositoryImp(dataManagerDocument)
     }
 
-    @Provides
-    fun providesIdentifierDialogRepository(dataManagerClient: DataManagerClient): IdentifierDialogRepository {
-        return IdentifierDialogRepositoryImp(dataManagerClient)
-    }
 
     @Provides
     fun providesSyncSurveysDialogRepository(dataManagerSurvey: DataManagerSurveys): SyncSurveysDialogRepository {

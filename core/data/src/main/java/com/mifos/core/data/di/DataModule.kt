@@ -8,6 +8,7 @@ import com.mifos.core.data.repository.ChargeDialogRepository
 import com.mifos.core.data.repository.CheckerInboxRepository
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import com.mifos.core.data.repository.ClientChargeRepository
+import com.mifos.core.data.repository.ClientIdentifierDialogRepository
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.DataTableDataRepository
@@ -32,6 +33,7 @@ import com.mifos.core.data.repository_imp.ChargeDialogRepositoryImp
 import com.mifos.core.data.repository_imp.CheckerInboxRepositoryImp
 import com.mifos.core.data.repository_imp.CheckerInboxTasksRepositoryImp
 import com.mifos.core.data.repository_imp.ClientChargeRepositoryImp
+import com.mifos.core.data.repository_imp.ClientIdentifierDialogRepositoryImp
 import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repository_imp.CreateNewCenterRepositoryImp
 import com.mifos.core.data.repository_imp.DataTableDataRepositoryImp
@@ -129,6 +131,9 @@ abstract class DataModule {
     @Binds
     internal abstract fun bindChargeDialogRepository(impl: ChargeDialogRepositoryImp): ChargeDialogRepository
 
+    @Binds
+    internal abstract fun bindClientIdentifiersDialogRepository(impl: ClientIdentifierDialogRepositoryImp): ClientIdentifierDialogRepository
+  
     @Binds
     internal abstract fun bindDataTableDataRepository(impl: DataTableDataRepositoryImp): DataTableDataRepository
 }
