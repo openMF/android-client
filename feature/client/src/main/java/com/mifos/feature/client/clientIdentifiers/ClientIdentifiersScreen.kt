@@ -55,6 +55,7 @@ import com.mifos.core.designsystem.theme.identifierTextStyleLight
 import com.mifos.core.objects.noncore.Identifier
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.client.R
+import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen
 
 @Composable
 fun ClientIdentifiersScreen(
@@ -72,6 +73,7 @@ fun ClientIdentifiersScreen(
     }
 
     ClientIdentifiersScreen(
+        clientId = clientId,
         state = state,
         onBackPressed = onBackPressed,
         onDeleteIdentifier = { identifierId ->
@@ -84,8 +86,8 @@ fun ClientIdentifiersScreen(
         onRetry = {
             viewModel.loadIdentifiers(clientId)
         },
-        addIdentifier = {
-            // TODO Implement Add identifier
+        onIdentifierCreated = {
+            viewModel.loadIdentifiers(clientId)
         },
         onDocumentClicked = onDocumentClicked
     )
@@ -94,13 +96,14 @@ fun ClientIdentifiersScreen(
 
 @Composable
 fun ClientIdentifiersScreen(
+    clientId: Int,
     state: ClientIdentifiersUiState,
     onBackPressed: () -> Unit,
     onDeleteIdentifier: (Int) -> Unit,
     refreshState: Boolean,
     onRefresh: () -> Unit,
     onRetry: () -> Unit,
-    addIdentifier: () -> Unit,
+    onIdentifierCreated: () -> Unit,
     onDocumentClicked: (Int) -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -108,6 +111,19 @@ fun ClientIdentifiersScreen(
         refreshing = refreshState,
         onRefresh = onRefresh
     )
+    var showCreateIdentifierDialog by remember { mutableStateOf(false) }
+
+
+    if (showCreateIdentifierDialog) {
+        ClientIdentifiersDialogScreen(
+            clientId = clientId,
+            onDismiss = { showCreateIdentifierDialog = false },
+            onIdentifierCreated = {
+                showCreateIdentifierDialog = false
+                onIdentifierCreated()
+            }
+        )
+    }
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
@@ -115,7 +131,7 @@ fun ClientIdentifiersScreen(
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = {
-                addIdentifier()
+                showCreateIdentifierDialog = true
             }) {
                 Icon(
                     imageVector = MifosIcons.Add,
@@ -294,13 +310,14 @@ private fun ClientIdentifiersScreenPreview(
     @PreviewParameter(ClientIdentifiersUiStateProvider::class) state: ClientIdentifiersUiState
 ) {
     ClientIdentifiersScreen(
+        clientId = 1,
         state = state,
         onBackPressed = {},
         onDeleteIdentifier = {},
         refreshState = true,
         onRefresh = {},
         onRetry = {},
-        addIdentifier = {},
+        onIdentifierCreated = {},
         onDocumentClicked = {}
     )
 }
