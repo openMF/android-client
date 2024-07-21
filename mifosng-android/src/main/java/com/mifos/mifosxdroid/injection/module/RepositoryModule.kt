@@ -62,8 +62,6 @@ import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupRepository
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupRepositoryImp
 import com.mifos.mifosxdroid.online.datatable.DataTableRepository
 import com.mifos.mifosxdroid.online.datatable.DataTableRepositoryImp
-import com.mifos.mifosxdroid.online.datatabledata.DataTableDataRepository
-import com.mifos.mifosxdroid.online.datatabledata.DataTableDataRepositoryImp
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepository
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepositoryImp
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepository
@@ -234,11 +232,6 @@ class RepositoryModule {
         dataManagerOffices: DataManagerOffices, dataManagerGroups: DataManagerGroups
     ): CreateNewGroupRepository {
         return CreateNewGroupRepositoryImp(dataManagerOffices, dataManagerGroups)
-    }
-
-    @Provides
-    fun providesDataTableDataRepository(dataManagerDataTable: DataManagerDataTable): DataTableDataRepository {
-        return DataTableDataRepositoryImp(dataManagerDataTable)
     }
 
     @Provides

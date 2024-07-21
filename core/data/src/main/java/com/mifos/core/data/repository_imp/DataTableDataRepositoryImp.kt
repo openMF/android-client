@@ -1,6 +1,7 @@
-package com.mifos.mifosxdroid.online.datatabledata
+package com.mifos.core.data.repository_imp
 
 import com.google.gson.JsonArray
+import com.mifos.core.data.repository.DataTableDataRepository
 import com.mifos.core.network.datamanager.DataManagerDataTable
 import org.apache.fineract.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import rx.Observable
@@ -12,7 +13,7 @@ import javax.inject.Inject
 class DataTableDataRepositoryImp @Inject constructor(private val dataManagerDataTable: DataManagerDataTable) :
     DataTableDataRepository {
 
-    override fun getDataTableInfo(table: String?, entityId: Int): Observable<JsonArray> {
+    override suspend fun getDataTableInfo(table: String, entityId: Int): JsonArray {
         return dataManagerDataTable.getDataTableInfo(table, entityId)
     }
 
@@ -23,6 +24,5 @@ class DataTableDataRepositoryImp @Inject constructor(private val dataManagerData
     ): Observable<DeleteDataTablesDatatableAppTableIdDatatableIdResponse> {
         return dataManagerDataTable.deleteDataTableEntry(table, entity, rowId)
     }
-
 
 }
