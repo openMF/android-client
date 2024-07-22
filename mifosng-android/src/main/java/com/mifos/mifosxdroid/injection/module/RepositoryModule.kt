@@ -94,8 +94,6 @@ import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprova
 import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepositoryImp
 import com.mifos.mifosxdroid.online.search.SearchRepository
 import com.mifos.mifosxdroid.online.search.SearchRepositoryImp
-import com.mifos.mifosxdroid.online.sign.SignatureRepository
-import com.mifos.mifosxdroid.online.sign.SignatureRepositoryImp
 import com.mifos.mifosxdroid.online.surveylist.SurveyListRepository
 import com.mifos.mifosxdroid.online.surveylist.SurveyListRepositoryImp
 import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitRepository
@@ -186,11 +184,6 @@ class RepositoryModule {
     @Provides
     fun providesSavingAccountRepository(dataManagerSavings: DataManagerSavings): SavingsAccountRepository {
         return SavingsAccountRepositoryImp(dataManagerSavings)
-    }
-
-    @Provides
-    fun providesSignatureRepository(dataManagerDocument: DataManagerDocument): SignatureRepository {
-        return SignatureRepositoryImp(dataManagerDocument)
     }
 
     @Provides

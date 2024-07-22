@@ -3,6 +3,7 @@ package com.mifos.core.designsystem.icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.filled.CloudDownload
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.EventRepeat
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Error
+import androidx.compose.material.icons.rounded.FileUpload
 import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
@@ -47,4 +49,6 @@ object MifosIcons {
     val cloudDownload = Icons.Default.CloudDownload
     val save = Icons.Rounded.Download
     val WifiOff = Icons.Default.WifiOff
+    val upload = Icons.Rounded.FileUpload
+    val gallery = Icons.Filled.Image
 }
