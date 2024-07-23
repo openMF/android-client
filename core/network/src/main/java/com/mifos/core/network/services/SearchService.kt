@@ -8,16 +8,16 @@ import com.mifos.core.model.APIEndPoint
 import com.mifos.core.objects.SearchedEntity
 import retrofit2.http.GET
 import retrofit2.http.Query
-import rx.Observable
 
 /**
  * @author fomenkoo
  */
 interface SearchService {
+
     @GET(APIEndPoint.SEARCH)
-    fun searchResources(
-        @Query("query") clientName: String?,
-        @Query("resource") resources: String?,
+    suspend fun searchResources(
+        @Query("query") query: String,
+        @Query("resource") resource: String?,
         @Query("exactMatch") exactMatch: Boolean?
-    ): Observable<List<SearchedEntity>>
+    ): List<SearchedEntity>
 }
