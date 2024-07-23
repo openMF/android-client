@@ -1,23 +1,29 @@
 package com.mifos.mifosxdroid.dialogfragments.syncclientsdialog
 
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.mifos.core.objects.client.Client
+
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
 sealed class SyncClientsDialogUiState {
 
-    data object ShowClientsSyncSuccessfully : SyncClientsDialogUiState()
-
-    data object ShowNetworkIsNotAvailable : SyncClientsDialogUiState()
-
-    data object DismissDialog : SyncClientsDialogUiState()
-
-    data class UpdateSingleSyncClientProgressBar(val total: Int) : SyncClientsDialogUiState()
-
-    data class ShowSyncedFailedClients(val total: Int) : SyncClientsDialogUiState()
-
-    data class ShowError(val message: String) : SyncClientsDialogUiState()
-
-    data class UpdateTotalSyncClientProgressBarAndCount(val total: Int) : SyncClientsDialogUiState()
-
-    data class ShowSyncingClient(val clientName: String) : SyncClientsDialogUiState()
+    data object Loading : SyncClientsDialogUiState()
+    data object Success : SyncClientsDialogUiState()
+    data class Error(
+        val messageResId: Int? = null,
+        val imageVector: ImageVector? = null,
+        val message: String? = null
+    ) : SyncClientsDialogUiState()
 }
+
+data class SyncClientsDialogData(
+    val totalSyncCount: Int = 0,
+    val clientName: String = "",
+    val isSyncSuccess: Boolean = false,
+    val singleSyncCount: Int = 0,
+    val totalClientSyncCount: Int = 0,
+    val clientSyncCount: Int = 0,
+    val failedSyncGroupCount: Int = 0,
+    val clientList: List<Client> = listOf()
+)
