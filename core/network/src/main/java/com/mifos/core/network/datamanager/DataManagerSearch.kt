@@ -12,9 +12,10 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerSearch @Inject constructor(private val baseApiManager: BaseApiManager) {
     fun searchResources(
-        query: String?, resources: String?,
+        query: String?,
+        resources: String?,
         exactMatch: Boolean?
-    ): Observable<List<SearchedEntity>> {
+    ): List<SearchedEntity> {
         return baseApiManager.searchApi.searchResources(query, resources, exactMatch)
     }
 }

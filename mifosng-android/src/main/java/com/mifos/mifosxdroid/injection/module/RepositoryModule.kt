@@ -17,7 +17,6 @@ import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerNote
 import com.mifos.core.network.datamanager.DataManagerOffices
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.core.network.datamanager.DataManagerSearch
 import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import com.mifos.mifosxdroid.activity.login.LoginRepository
@@ -92,8 +91,6 @@ import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivat
 import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepositoryImp
 import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepository
 import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepositoryImp
-import com.mifos.mifosxdroid.online.search.SearchRepository
-import com.mifos.mifosxdroid.online.search.SearchRepositoryImp
 import com.mifos.mifosxdroid.online.surveylist.SurveyListRepository
 import com.mifos.mifosxdroid.online.surveylist.SurveyListRepositoryImp
 import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitRepository
@@ -114,11 +111,6 @@ class RepositoryModule {
     @Provides
     fun providesLoginRepository(dataManagerAuth: DataManagerAuth): LoginRepository {
         return LoginRepositoryImp(dataManagerAuth)
-    }
-
-    @Provides
-    fun providesSearchRepository(dataManagerSearch: DataManagerSearch): SearchRepository {
-        return SearchRepositoryImp(dataManagerSearch)
     }
 
     @Provides
