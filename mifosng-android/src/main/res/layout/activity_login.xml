@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/marginItemsInSectionLarge"
-                app:startIconDrawable="@drawable/ic_person_black_24dp"
+                app:startIconDrawable="@drawable/core_ui_ic_person_black_24dp"
                 app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">

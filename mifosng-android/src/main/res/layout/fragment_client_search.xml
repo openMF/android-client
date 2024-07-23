@@ -97,7 +97,7 @@
             android:visibility="invisible"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"
-            app:srcCompat="@drawable/ic_person_black_24dp" />
+            app:srcCompat="@drawable/core_ui_ic_person_black_24dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_center"
@@ -111,7 +111,7 @@
             android:visibility="invisible"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"
-            app:srcCompat="@drawable/ic_centers_24dp" />
+            app:srcCompat="@drawable/core_ui_ic_centers_24dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_group"
@@ -124,7 +124,7 @@
             android:visibility="invisible"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"
-            app:srcCompat="@drawable/ic_group_black_24dp" />
+            app:srcCompat="@drawable/core_ui_ic_group_black_24dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_create"

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_search_title">Search</string>
+    <string name="feature_search_filter">Filter Search</string>
+    <string name="feature_search_search_hint">Name or Account Number or External Id</string>
+    <string name="feature_search_no_search_result_found">No results found for entered query</string>
+    <string name="feature_search_no_search_query_entered">No Search Query Entered!</string>
+    <string name="feature_search_exact_match">Exact Match</string>
+
+    <string name="feature_search_search_options_clients_label">Clients</string>
+    <string name="feature_search_search_options_clients_value">clients</string>
+
+    <string-array name="feature_search_filter_options">
+        <item>Clients</item>
+        <item>Groups</item>
+        <item>Centers</item>
+        <item>Loan Accounts</item>
+        <item>Savings Accounts</item>
+    </string-array>
+
+    <string-array name="feature_search_filter_option_values">
+        <item>clients</item>
+        <item>groups</item>
+        <item>centers</item>
+        <item>loans</item>
+        <item>savingsaccounts</item>
+    </string-array>
+</resources>
