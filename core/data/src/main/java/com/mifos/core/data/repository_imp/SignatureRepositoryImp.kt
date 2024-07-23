@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.sign
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
 import okhttp3.MultipartBody
@@ -21,6 +22,5 @@ class SignatureRepositoryImp @Inject constructor(private val dataManagerDocument
     ): Observable<GenericResponse> {
         return dataManagerDocument.createDocument(entityType, entityId, name, desc, file)
     }
-
-
+    
 }

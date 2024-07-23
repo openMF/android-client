@@ -88,4 +88,10 @@
     <string name="feature_client_identifier_submit">Submit</string>
     <string name="feature_client_identifier_isActive">Active</string>
 
+    <string name="feature_client_failed_to_add_signature">Failed To Add Signature</string>
+    <string name="feature_client_signature_title">Signature</string>
+    <string name="feature_client_signature_uploaded_successfully">Signature uploaded successfully</string>
+    <string name="feature_client_signature_reset">Reset</string>
+    <string name="feature_client_signature_gallery">Gallery</string>
+
 </resources>

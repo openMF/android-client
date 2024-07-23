@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.sign
+package com.mifos.core.data.repository
 
 import com.mifos.core.network.GenericResponse
 import okhttp3.MultipartBody

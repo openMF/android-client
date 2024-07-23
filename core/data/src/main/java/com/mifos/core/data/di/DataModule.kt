@@ -26,6 +26,7 @@ import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.data.repository.ReportDetailRepository
+import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.data.repository_imp.ActivateRepositoryImp
 import com.mifos.core.data.repository_imp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.CenterListRepositoryImp
@@ -51,6 +52,7 @@ import com.mifos.core.data.repository_imp.PathTrackingRepositoryImp
 import com.mifos.core.data.repository_imp.PinPointClientRepositoryImp
 import com.mifos.core.data.repository_imp.ReportCategoryRepositoryImp
 import com.mifos.core.data.repository_imp.ReportDetailRepositoryImp
+import com.mifos.core.data.repository_imp.SignatureRepositoryImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -133,7 +135,10 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindClientIdentifiersDialogRepository(impl: ClientIdentifierDialogRepositoryImp): ClientIdentifierDialogRepository
-  
+
     @Binds
     internal abstract fun bindDataTableDataRepository(impl: DataTableDataRepositoryImp): DataTableDataRepository
+
+    @Binds
+    internal abstract fun bindSignatureRepository(impl: SignatureRepositoryImp): SignatureRepository
 }
