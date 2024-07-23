@@ -15,9 +15,9 @@ import retrofit2.http.Query
 interface SearchService {
 
     @GET(APIEndPoint.SEARCH)
-    fun searchResources(
-        @Query("query") clientName: String?,
-        @Query("resource") resources: String?,
+    suspend fun searchResources(
+        @Query("query") query: String,
+        @Query("resource") resource: String?,
         @Query("exactMatch") exactMatch: Boolean?
     ): List<SearchedEntity>
 }

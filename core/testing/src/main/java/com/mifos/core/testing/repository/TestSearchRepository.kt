@@ -8,29 +8,33 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import org.jetbrains.annotations.TestOnly
 
-class TestSearchRepository: SearchRepository {
+class TestSearchRepository : SearchRepository {
 
     private val sampleResults = MutableStateFlow(emptyList<SearchedEntity>())
 
     override suspend fun searchResources(
-        query: String?,
+        query: String,
         resources: String?,
         exactMatch: Boolean?
     ): Flow<List<SearchedEntity>> {
         return sampleResults.map { list ->
             when {
-                query.isNullOrBlank() && resources.isNullOrBlank() -> emptyList()
+                query.isBlank() && resources.isNullOrBlank() -> emptyList()
                 else -> {
                     list.asSequence().filter { entity ->
-                        (resources.isNullOrBlank() || entity.entityType.equals(resources, ignoreCase = true)) &&
-                                (query.isNullOrBlank() || when {
-                                    exactMatch == true -> entity.entityName.equals(query, ignoreCase = true) ||
-                                            entity.entityAccountNo.equals(query, ignoreCase = true) || entity.parentName.equals(query, true)
+                        (resources.isNullOrBlank() || entity.entityType.equals(
+                            resources,
+                            ignoreCase = true
+                        )) && (query.isBlank() || when {
+                            exactMatch == true -> entity.entityName.equals(query, ignoreCase = true) ||
+                                    entity.entityAccountNo.equals(query, ignoreCase = true) ||
+                                    entity.parentName.equals(query, true)
 
-                                    else -> entity.entityName?.contains(query, ignoreCase = true) == true ||
-                                            entity.entityAccountNo?.contains(query, ignoreCase = true) == true ||
-                                            entity.parentName?.contains(query, true) == true
-                                })
+                            else -> entity.entityName?.contains(query, ignoreCase = true) == true ||
+                                    entity.entityAccountNo?.contains(query, ignoreCase = true) == true ||
+                                    entity.parentName?.contains(query, true) == true
+                        }
+                                )
                     }.toList()
                 }
             }

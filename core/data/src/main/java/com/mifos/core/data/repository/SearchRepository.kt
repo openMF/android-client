@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface SearchRepository {
 
     suspend fun searchResources(
-        query: String?,
+        query: String,
         resources: String?,
         exactMatch: Boolean?
     ): Flow<List<SearchedEntity>>
