@@ -10,4 +10,8 @@
     <string name="feature_data_table_no_data_table_details_to_show">No data table details to show</string>
     <string name="feature_data_table_data_table_created_successfully">Data table created successfully</string>
 
+    <string name="feature_data_table_failed_to_add_data_table">Failed to add data table</string>
+    <string name="feature_data_table_added_data_table_successfully">Added data table successfully</string>
+    <string name="feature_data_table_add_data_table">Add Data Table</string>
+    <string name="feature_data_table_submit">Submit</string>
 </resources>

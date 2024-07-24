@@ -1,8 +1,8 @@
-package com.mifos.mifosxdroid.dialogfragments.datatablerowdialog
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.DataTableRowDialogRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDataTable
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -11,13 +11,11 @@ import javax.inject.Inject
 class DataTableRowDialogRepositoryImp @Inject constructor(private val dataManagerDataTable: DataManagerDataTable) :
     DataTableRowDialogRepository {
 
-    override fun addDataTableEntry(
-        table: String?,
+    override suspend fun addDataTableEntry(
+        table: String,
         entityId: Int,
         payload: Map<String, String>
-    ): Observable<GenericResponse> {
+    ): GenericResponse {
         return dataManagerDataTable.addDataTableEntry(table, entityId, payload)
     }
-
-
 }
