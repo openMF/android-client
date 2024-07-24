@@ -319,13 +319,14 @@ private fun ClearIconButton(
 fun MifosDatePickerTextField(
     modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
     value: String,
-    label: Int,
+    label: Int? = null,
+    labelString: String? = null,
     openDatePicker: () -> Unit
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = { },
-        label = { Text(text = stringResource(id = label)) },
+        label = { Text(text = labelString ?: label?.let { stringResource(id = label) } ?: "") },
         readOnly = true,
         modifier = modifier,
         maxLines = 1,

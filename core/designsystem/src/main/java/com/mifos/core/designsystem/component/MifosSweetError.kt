@@ -44,7 +44,7 @@ fun MifosSweetError(
     message: String,
     isRetryEnabled: Boolean = true,
     buttonText: String = stringResource(id = R.string.core_designsystem_try_again),
-    onclick: () -> Unit
+    onclick: () -> Unit = {}
 ) {
     Column(
         modifier = modifier,

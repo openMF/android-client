@@ -36,7 +36,8 @@ fun MifosTextFieldDropdown(
     value: String,
     onValueChanged: (String) -> Unit,
     onOptionSelected: (Int, String) -> Unit,
-    label: Int,
+    label: Int? = null,
+    labelString: String? = null,
     options: List<String>,
     readOnly: Boolean = false
 ) {
@@ -49,13 +50,13 @@ fun MifosTextFieldDropdown(
         OutlinedTextField(
             value = value,
             onValueChange = { onValueChanged(it) },
-            label = { Text(text = stringResource(id = label)) },
+            label = { Text(text = labelString ?: label?.let { stringResource(id = label) } ?: "") },
             modifier = modifier.menuAnchor(),
             maxLines = 1,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
                 focusedLabelColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
+            ),
             textStyle = LocalDensity.current.run {
                 TextStyle(fontSize = 18.sp)
             },

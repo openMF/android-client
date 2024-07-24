@@ -1,6 +1,7 @@
 package com.mifos.core.designsystem.icon
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.Image
@@ -51,4 +52,5 @@ object MifosIcons {
     val WifiOff = Icons.Default.WifiOff
     val upload = Icons.Rounded.FileUpload
     val gallery = Icons.Filled.Image
+    val ArrowDropDown = Icons.Default.ArrowDropDown
 }
