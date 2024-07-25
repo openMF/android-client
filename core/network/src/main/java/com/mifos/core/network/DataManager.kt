@@ -98,25 +98,25 @@ class DataManager {
         return mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
     }
 
-    fun getAllChargesV2(clientId: Int): Observable<ChargeTemplate> {
+    suspend fun getAllChargesV2(clientId: Int): ChargeTemplate {
         return mBaseApiManager.chargeApi.getAllChargesS(clientId)
     }
 
-    fun createCharges(
+    suspend fun createCharges(
         clientId: Int,
-        payload: ChargesPayload?
-    ): Observable<ChargeCreationResponse> {
+        payload: ChargesPayload
+    ): ChargeCreationResponse {
         return mBaseApiManager.chargeApi.createCharges(clientId, payload)
     }
 
-    fun getAllChargesV3(loanId: Int): Observable<ResponseBody> {
+    suspend fun getAllChargesV3(loanId: Int): ResponseBody {
         return mBaseApiManager.chargeApi.getAllChargeV3(loanId)
     }
 
-    fun createLoanCharges(
+    suspend fun createLoanCharges(
         loanId: Int,
-        chargesPayload: ChargesPayload?
-    ): Observable<ChargeCreationResponse> {
+        chargesPayload: ChargesPayload
+    ): ChargeCreationResponse {
         return mBaseApiManager.chargeApi.createLoanCharges(loanId, chargesPayload)
     }
 

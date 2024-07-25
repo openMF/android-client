@@ -50,7 +50,6 @@
     <string name="feature_client_due_date">Due Date</string>
     <string name="feature_client_no_more_charges_available">No More Charges Available!</string>
 
-
     <string name="feature_client_permission_required">Permissions Required</string>
     <string name="feature_client_approve_permission_description_location">You need to approve these permissions in order to access Location.</string>
     <string name="feature_client_proceed">Proceed</string>
@@ -66,5 +65,33 @@
     <string name="feature_client_update_client_address">Update Address</string>
     <string name="feature_client_delete_client_address">Delete Address</string>
     <string name="feature_client_no_pinpoint_found">No Pinpoint Found</string>
+
+    <string name="feature_client_charge_select">Select</string>
+    <string name="feature_client_charge_cancel">Cancel</string>
+    <string name="feature_client_charge_dialog">Create Charge</string>
+    <string name="feature_client_message_field_required">Field Required</string>
+    <string name="feature_client_charge_created_successfully">Charge Created Successfully</string>
+    <string name="feature_client_charge_submit">Submit</string>
+    <string name="feature_client_charge_locale">Locale</string>
+    <string name="feature_client_failed_to_load_charges">Failed To Load Charges</string>
+    <string name="feature_client_failed_to_create_charge">Failed To Create Charge</string>
+
+    <string name="feature_client_failed_to_load_identifiers">Failed To Load Identifiers</string>
+    <string name="feature_client_failed_to_create_identifier">Failed To Create Identifier</string>
+    <string name="feature_client_identifier_created_successfully">Identifier Created Successfully</string>
+    <string name="feature_client_create_identifier_dialog">Create Identifier</string>
+    <string name="feature_client_identifier_document_type">Document Type</string>
+    <string name="feature_client_identifier_status">Status</string>
+    <string name="feature_client_identifier_unique_id">Unique Id</string>
+    <string name="feature_client_identifier_description">Description</string>
+    <string name="feature_client_identifier_message_field_required">Required Field</string>
+    <string name="feature_client_identifier_submit">Submit</string>
+    <string name="feature_client_identifier_isActive">Active</string>
+
+    <string name="feature_client_failed_to_add_signature">Failed To Add Signature</string>
+    <string name="feature_client_signature_title">Signature</string>
+    <string name="feature_client_signature_uploaded_successfully">Signature uploaded successfully</string>
+    <string name="feature_client_signature_reset">Reset</string>
+    <string name="feature_client_signature_gallery">Gallery</string>
 
 </resources>

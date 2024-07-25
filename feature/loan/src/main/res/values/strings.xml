@@ -43,4 +43,16 @@
     <string name="feature_loan_charge_name">Charge Name</string>
     <string name="feature_loan_charge_amount">Charge Amount</string>
     <string name="feature_loan_charge_due_date">Charge Due Date</string>
+
+    <string name="feature_loan_charge_dialog">Loan Charge</string>
+    <string name="feature_loan_charge_select">Select</string>
+    <string name="feature_loan_charge_cancel">Cancel</string>
+    <string name="feature_loan_due_date">Due Date</string>
+    <string name="feature_loan_amount">Amount</string>
+    <string name="feature_loan_locale">Locale</string>
+    <string name="feature_loan_charge_submit">Submit</string>
+    <string name="feature_loan_charge_failed_to_load_charge">Failed to load charge</string>
+    <string name="feature_loan_failed_to_create_loan_charge">Failed to create loan charge</string>
+    <string name="feature_loan_message_field_required">Field is required</string>
+    <string name="feature_loan_charge_created_successfully">Loan charge created successfully</string>
 </resources>

@@ -78,11 +78,11 @@ fun CheckerInboxTasksFilterDialog(
         viewModel.loadSearchTemplate()
     }
     val actionList : MutableList<String> = mutableListOf()
-    actionList.add(stringResource(id = R.string.all))
+    actionList.add(stringResource(id = R.string.feature_checker_inbox_task_all))
     searchTemplate?.actionNames?.let { actionList.addAll(it) }
 
     val entityList : MutableList<String> = mutableListOf()
-    entityList.add(stringResource(id = R.string.all))
+    entityList.add(stringResource(id = R.string.feature_checker_inbox_task_all))
     searchTemplate?.entityNames?.let { entityList.addAll(it) }
 
     CheckerInboxTasksFilterDialog(
@@ -163,14 +163,14 @@ fun CheckerInboxTasksFilterDialog(
                             fromDate = it
                         }
                     }
-                ) { Text(stringResource(id = R.string.select)) }
+                ) { Text(stringResource(id = R.string.feature_checker_inbox_task_select)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         showFromDatePicker = false
                     }
-                ) { Text(stringResource(id = R.string.cancel)) }
+                ) { Text(stringResource(id = R.string.feature_checker_inbox_task_cancel)) }
             }
         )
         {
@@ -192,14 +192,14 @@ fun CheckerInboxTasksFilterDialog(
                             toDate = it
                         }
                     }
-                ) { Text(stringResource(id = R.string.select)) }
+                ) { Text(stringResource(id = R.string.feature_checker_inbox_task_select)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         showToDatePicker = false
                     }
-                ) { Text(stringResource(id = R.string.cancel)) }
+                ) { Text(stringResource(id = R.string.feature_checker_inbox_task_cancel)) }
             }
         )
         {
@@ -228,7 +228,7 @@ fun CheckerInboxTasksFilterDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = stringResource(id = R.string.filter_checkers),
+                            text = stringResource(id = R.string.feature_checker_inbox_task_filter_checkers),
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
                             color = BluePrimary
                         )
@@ -247,7 +247,7 @@ fun CheckerInboxTasksFilterDialog(
 
                     MifosDatePickerTextField(
                         value = if(fromDate == 0L) "" else formatter.format(Date(fromDate)),
-                        label = R.string.select_from_date,
+                        label = R.string.feature_checker_inbox_task_select_from_date,
                         openDatePicker = {
                             if(fromDate == 0L)
                                 fromDatePickerState.selectedDateMillis = System.currentTimeMillis()
@@ -261,7 +261,7 @@ fun CheckerInboxTasksFilterDialog(
 
                     MifosDatePickerTextField(
                         value = if(toDate == 0L) "" else formatter.format(Date(toDate)),
-                        label = R.string.select_to_date,
+                        label = R.string.feature_checker_inbox_task_select_to_date,
                         openDatePicker = {
                             if(toDate == 0L)
                                 toDatePickerState.selectedDateMillis = System.currentTimeMillis()
@@ -282,7 +282,7 @@ fun CheckerInboxTasksFilterDialog(
                         onOptionSelected = { index, value ->
                             action = value
                         },
-                        label = R.string.select_action,
+                        label = R.string.feature_checker_inbox_task_select_action,
                         options = actionList
 
                     )
@@ -298,7 +298,7 @@ fun CheckerInboxTasksFilterDialog(
                         onOptionSelected = { index, value ->
                             entity = value
                         },
-                        label = R.string.select_entity,
+                        label = R.string.feature_checker_inbox_task_select_entity,
                         options = entityList
                     )
 
@@ -310,7 +310,7 @@ fun CheckerInboxTasksFilterDialog(
                             resourceId = value
                             resourceIdError = false
                         },
-                        label = R.string.resourceId,
+                        label = R.string.feature_checker_inbox_task_resourceId,
                         error = null,
                         trailingIcon = {
                             if (resourceIdError) {
@@ -339,14 +339,14 @@ fun CheckerInboxTasksFilterDialog(
                                 disabledContentColor = White
                             )
                         ) {
-                            Text(text = stringResource(id =R.string.clear_filter))
+                            Text(text = stringResource(id =R.string.feature_checker_inbox_task_clear_filter))
                         }
 
                         Button(
                             onClick = {
                                 if(fromDate > toDate)
                                 {
-                                    Toast.makeText(context, R.string.invalid_date_range, Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, R.string.feature_checker_inbox_task_invalid_date_range, Toast.LENGTH_SHORT).show()
                                 }else {
                                     filter.invoke(
                                         action,
@@ -366,7 +366,7 @@ fun CheckerInboxTasksFilterDialog(
                                 disabledContentColor = Gray
                             )
                         ) {
-                            Text(text = stringResource(id =R.string.apply_filter))
+                            Text(text = stringResource(id =R.string.feature_checker_inbox_task_apply_filter))
                         }
 
                     }

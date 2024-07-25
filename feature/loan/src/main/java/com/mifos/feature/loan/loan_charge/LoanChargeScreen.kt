@@ -27,6 +27,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -51,6 +53,7 @@ import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.objects.client.Charges
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.loan.R
+import com.mifos.feature.loan.loan_charge_dialog.LoanChargeDialogScreen
 
 @Composable
 fun LoanChargeScreen(loanAccountNumber: Int, onBackPressed: () -> Unit) {
@@ -64,8 +67,12 @@ fun LoanChargeScreen(loanAccountNumber: Int, onBackPressed: () -> Unit) {
     }
 
     LoanChargeScreen(
+        loanAccountNumber = loanAccountNumber,
         state = state,
         onBackPressed = onBackPressed,
+        onChargeCreated = {
+            viewModel.loadLoanChargesList(loanAccountNumber)
+        },
         onRetry = {
             viewModel.loadLoanChargesList(loanAccountNumber)
         },
@@ -79,8 +86,10 @@ fun LoanChargeScreen(loanAccountNumber: Int, onBackPressed: () -> Unit) {
 
 @Composable
 fun LoanChargeScreen(
+    loanAccountNumber: Int,
     state: LoanChargeUiState,
     onBackPressed: () -> Unit,
+    onChargeCreated: () -> Unit,
     onRetry: () -> Unit,
     refreshState: Boolean,
     onRefresh: () -> Unit,
@@ -90,6 +99,18 @@ fun LoanChargeScreen(
         refreshing = refreshState,
         onRefresh = onRefresh
     )
+    var showLoanChargeDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showLoanChargeDialog) {
+        LoanChargeDialogScreen(
+            loanId = loanAccountNumber,
+            onSuccess = {
+                onChargeCreated()
+                showLoanChargeDialog = false
+            },
+            onDismiss = { showLoanChargeDialog = false }
+        )
+    }
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
@@ -97,7 +118,7 @@ fun LoanChargeScreen(
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = {
-                // TODO Implement Loan Charges Add Dialog
+                showLoanChargeDialog = true
             }) {
                 Icon(imageVector = MifosIcons.Add, contentDescription = null)
             }
@@ -234,7 +255,9 @@ private fun LoanChargeScreenPreview(
     @PreviewParameter(LoanChargeUiStateProvider::class) state: LoanChargeUiState
 ) {
     LoanChargeScreen(
+        loanAccountNumber = 1,
         state = state,
+        onChargeCreated = {},
         onBackPressed = {},
         onRetry = {},
         refreshState = false,

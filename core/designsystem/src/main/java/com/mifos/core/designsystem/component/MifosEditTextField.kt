@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.theme.BluePrimary
@@ -142,6 +143,8 @@ fun MifosOutlinedTextField(
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelMedium,
+                maxLines = maxLines,
+                overflow = TextOverflow.Ellipsis,
             )
         },
         leadingIcon = {
@@ -316,13 +319,14 @@ private fun ClearIconButton(
 fun MifosDatePickerTextField(
     modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
     value: String,
-    label: Int,
+    label: Int? = null,
+    labelString: String? = null,
     openDatePicker: () -> Unit
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = { },
-        label = { Text(text = stringResource(id = label)) },
+        label = { Text(text = labelString ?: label?.let { stringResource(id = label) } ?: "") },
         readOnly = true,
         modifier = modifier,
         maxLines = 1,

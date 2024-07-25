@@ -1,10 +1,11 @@
 package com.mifos.core.designsystem.icon
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
-import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CloudDownload
-import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Group
@@ -15,6 +16,8 @@ import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.Error
+import androidx.compose.material.icons.rounded.FileUpload
 import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
@@ -35,6 +38,8 @@ object MifosIcons {
     val sync = Icons.Rounded.Sync
     val check = Icons.Rounded.Check
     val close = Icons.Rounded.Close
+    val cancel = Icons.Rounded.Cancel
+    val error = Icons.Rounded.Error
     val delete = Icons.Rounded.Delete
     val arrowUp = Icons.Rounded.KeyboardArrowUp
     val arrowDown = Icons.Rounded.KeyboardArrowDown
@@ -43,6 +48,8 @@ object MifosIcons {
     val addLocation = Icons.Rounded.AddLocation
     val cloudDownload = Icons.Default.CloudDownload
     val save = Icons.Rounded.Download
-    val cancel = Icons.Filled.Cancel
-    val error = Icons.Filled.Error
+    val WifiOff = Icons.Default.WifiOff
+    val upload = Icons.Rounded.FileUpload
+    val gallery = Icons.Filled.Image
+    val ArrowDropDown = Icons.Default.ArrowDropDown
 }

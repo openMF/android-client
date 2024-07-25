@@ -1,4 +1,5 @@
 [versions]
+accompanistDrawablepainter = "0.34.0"
 accompanistSwiperefresh = "0.25.1"
 accompanistPermission = "0.34.0"
 adapterRxjava = "2.9.0"
@@ -127,6 +128,7 @@ tripletPlayVersion = "3.10.1"
 
 [libraries]
 # AndroidX Libraries
+accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanistDrawablepainter" }
 accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanistSwiperefresh" }
 accompanist-permission = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermission" }
 android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
