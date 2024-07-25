@@ -120,11 +120,11 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+}
 
-    play {
-        releaseName.set("My custom release name")
-        serviceAccountCredentials.set(file("your-key.json"))
-    }
+play {
+    releaseName.set("My custom release name")
+    serviceAccountCredentials.set(file("your-key.json"))
 }
 
 secrets {

@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddLocation
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
+import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete

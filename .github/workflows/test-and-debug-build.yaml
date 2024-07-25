@@ -2,24 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [main]
-
-  pull_request:
-    branches: [main]
+    branches: [ "release" ]
 
 jobs:
-  start:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v2
-
-      - name: Run sample script
-        run: echo Hello, world
-
   lint:
     name: Perform lint check
-    needs: [start]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
@@ -86,7 +73,6 @@ jobs:
         with:
           name: instrumentation_test_report
           path: app/build/reports/androidTests/connected
-
 
   debug-apk:
     name: Generate Debug APK
