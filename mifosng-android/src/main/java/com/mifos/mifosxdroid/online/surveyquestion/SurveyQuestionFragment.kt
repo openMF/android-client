@@ -4,6 +4,7 @@
  */
 package com.mifos.mifosxdroid.online.surveyquestion
 
+/*
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
@@ -106,3 +107,4 @@ class SurveyQuestionFragment : MifosBaseFragment(), RadioGroup.OnCheckedChangeLi
         }
     }
 }
+ */
