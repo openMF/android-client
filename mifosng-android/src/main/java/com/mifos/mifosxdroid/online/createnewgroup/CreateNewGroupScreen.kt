@@ -240,7 +240,7 @@ fun CreateNewGroupContent(
 
         MifosOutlinedTextField(
             value = groupName,
-            onvalueChange = { groupName = it },
+            onValueChange = { groupName = it },
             label = stringResource(id = R.string.name) + "*",
             error = null
         )
@@ -280,7 +280,7 @@ fun CreateNewGroupContent(
 
         MifosOutlinedTextField(
             value = externalId,
-            onvalueChange = { externalId = it },
+            onValueChange = { externalId = it },
             label = stringResource(id = R.string.external_id),
             error = null
         )

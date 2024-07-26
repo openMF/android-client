@@ -23,10 +23,14 @@ import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.client.ClientPayload
+import com.mifos.core.objects.noncore.DataTable
+import com.mifos.core.objects.noncore.DataTablePayload
 import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.organisation.Staff
 import com.mifos.core.objects.templates.clients.ClientsTemplate
@@ -61,10 +65,27 @@ class CreateNewClientFragment : MifosBaseFragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
+
                 CreateNewClientScreen(
-                    navigateBack = { findNavController().popBackStack() }
+                    navigateBack = { findNavController().popBackStack() },
+                    hasDatatables = { dataTables, payload ->
+                        hasDatatables(dataTables, payload)
+                    }
                 )
             }
         }
     }
+
+    private fun hasDatatables(dataTables : List<DataTable>, clientPayload: ClientPayload ){
+        val fragment = DataTableListFragment.newInstance(
+            dataTables,
+            clientPayload, Constants.CREATE_CLIENT
+        )
+        val fragmentTransaction = requireActivity().supportFragmentManager
+            .beginTransaction()
+        requireActivity().supportFragmentManager.popBackStackImmediate()
+        fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST)
+        fragmentTransaction.replace(R.id.container, fragment).commit()
+    }
+
 }
