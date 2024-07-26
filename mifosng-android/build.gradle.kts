@@ -138,8 +138,11 @@ dependencies {
     implementation(projects.feature.about)
     implementation(projects.feature.report)
     implementation(projects.feature.pathTracking)
+    implementation(projects.feature.activate)
     implementation(projects.feature.loan)
     implementation(projects.feature.document)
+    implementation(projects.feature.dataTable)
+    implementation(projects.feature.search)
 
     implementation(projects.core.common)
     implementation(projects.core.ui)

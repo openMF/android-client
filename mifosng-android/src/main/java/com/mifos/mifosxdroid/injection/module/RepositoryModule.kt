@@ -1,6 +1,8 @@
 package com.mifos.mifosxdroid.injection.module
 
+import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.data.repository.NoteRepository
+import com.mifos.core.data.repository_imp.DocumentDialogRepositoryImp
 import com.mifos.core.data.repository_imp.NoteRepositoryImp
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerAuth
@@ -15,23 +17,10 @@ import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerNote
 import com.mifos.core.network.datamanager.DataManagerOffices
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.core.network.datamanager.DataManagerSearch
 import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
-import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepository
-import com.mifos.mifosxdroid.activity.pinpointclient.PinPointClientRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.chargedialog.ChargeDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.documentdialog.DocumentDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.identifierdialog.IdentifierDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.loanchargedialog.LoanChargeDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepository
@@ -64,26 +53,18 @@ import com.mifos.mifosxdroid.online.clientlist.ClientListRepository
 import com.mifos.mifosxdroid.online.clientlist.ClientListRepositoryImp
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepositoryImp
-import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsRepository
-import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsRepositoryImp
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepository
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepositoryImp
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupRepository
 import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupRepositoryImp
 import com.mifos.mifosxdroid.online.datatable.DataTableRepository
 import com.mifos.mifosxdroid.online.datatable.DataTableRepositoryImp
-import com.mifos.mifosxdroid.online.datatabledata.DataTableDataRepository
-import com.mifos.mifosxdroid.online.datatabledata.DataTableDataRepositoryImp
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepository
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepositoryImp
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepository
 import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepositoryImp
-import com.mifos.mifosxdroid.online.grouplist.GroupListRepository
-import com.mifos.mifosxdroid.online.grouplist.GroupListRepositoryImp
-import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountRepository
-import com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountRepositoryImp
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepositoryImp
 import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApprovalRepository
@@ -92,8 +73,6 @@ import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursem
 import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementRepositoryImp
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryRepository
 import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryRepositoryImp
-import com.mifos.mifosxdroid.online.loancharge.LoanChargeRepository
-import com.mifos.mifosxdroid.online.loancharge.LoanChargeRepositoryImp
 import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentRepository
 import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentRepositoryImp
 import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleRepository
@@ -110,10 +89,6 @@ import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivat
 import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepositoryImp
 import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepository
 import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepositoryImp
-import com.mifos.mifosxdroid.online.search.SearchRepository
-import com.mifos.mifosxdroid.online.search.SearchRepositoryImp
-import com.mifos.mifosxdroid.online.sign.SignatureRepository
-import com.mifos.mifosxdroid.online.sign.SignatureRepositoryImp
 import com.mifos.mifosxdroid.online.surveylist.SurveyListRepository
 import com.mifos.mifosxdroid.online.surveylist.SurveyListRepositoryImp
 import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitRepository
@@ -137,18 +112,8 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesSearchRepository(dataManagerSearch: DataManagerSearch): SearchRepository {
-        return SearchRepositoryImp(dataManagerSearch)
-    }
-
-    @Provides
     fun providesCenterListRepository(dataManagerCenter: DataManagerCenter): CenterListRepository {
         return CenterListRepositoryImp(dataManagerCenter)
-    }
-
-    @Provides
-    fun providesGroupListRepository(dataManager: DataManager): GroupListRepository {
-        return GroupListRepositoryImp(dataManager)
     }
 
     @Provides
@@ -200,10 +165,6 @@ class RepositoryModule {
         return DataTableRepositoryImp(dataManagerDataTable)
     }
 
-    @Provides
-    fun providesPinPointClientRepository(dataManagerClient: DataManagerClient): PinPointClientRepository {
-        return PinPointClientRepositoryImp(dataManagerClient)
-    }
 
     @Provides
     fun providesNoteRepository(dataManagerNote: DataManagerNote): NoteRepository {
@@ -216,18 +177,8 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesSignatureRepository(dataManagerDocument: DataManagerDocument): SignatureRepository {
-        return SignatureRepositoryImp(dataManagerDocument)
-    }
-
-    @Provides
     fun providesSurveyListRepository(dataManagerSurveys: DataManagerSurveys): SurveyListRepository {
         return SurveyListRepositoryImp(dataManagerSurveys)
-    }
-
-    @Provides
-    fun providesLoanChargeRepository(dataManager: DataManager): LoanChargeRepository {
-        return LoanChargeRepositoryImp(dataManager)
     }
 
     @Provides
@@ -251,11 +202,6 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesIndividualCollectionSheetDetailsRepository(dataManagerCollection: DataManagerCollectionSheet): IndividualCollectionSheetDetailsRepository {
-        return IndividualCollectionSheetDetailsRepositoryImp(dataManagerCollection)
-    }
-
-    @Provides
     fun providesCreateNewClientRepository(
         dataManagerClient: DataManagerClient,
         dataManagerOffices: DataManagerOffices,
@@ -269,11 +215,6 @@ class RepositoryModule {
         dataManagerOffices: DataManagerOffices, dataManagerGroups: DataManagerGroups
     ): CreateNewGroupRepository {
         return CreateNewGroupRepositoryImp(dataManagerOffices, dataManagerGroups)
-    }
-
-    @Provides
-    fun providesDataTableDataRepository(dataManagerDataTable: DataManagerDataTable): DataTableDataRepository {
-        return DataTableDataRepositoryImp(dataManagerDataTable)
     }
 
     @Provides
@@ -291,11 +232,6 @@ class RepositoryModule {
         collectionDataManager: DataManagerCollectionSheet
     ): GenerateCollectionSheetRepository {
         return GenerateCollectionSheetRepositoryImp(dataManager, collectionDataManager)
-    }
-
-    @Provides
-    fun providesGroupLoanAccountRepository(dataManager: DataManager): GroupLoanAccountRepository {
-        return GroupLoanAccountRepositoryImp(dataManager)
     }
 
     @Provides
@@ -329,29 +265,10 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesChargeDialogRepository(dataManager: DataManager): ChargeDialogRepository {
-        return ChargeDialogRepositoryImp(dataManager)
-    }
-
-    @Provides
-    fun providesDataTableRowDialogRepository(dataManagerDataTable: DataManagerDataTable): DataTableRowDialogRepository {
-        return DataTableRowDialogRepositoryImp(dataManagerDataTable)
-    }
-
-    @Provides
     fun providesDocumentDialogRepository(dataManagerDocument: DataManagerDocument): DocumentDialogRepository {
         return DocumentDialogRepositoryImp(dataManagerDocument)
     }
 
-    @Provides
-    fun providesIdentifierDialogRepository(dataManagerClient: DataManagerClient): IdentifierDialogRepository {
-        return IdentifierDialogRepositoryImp(dataManagerClient)
-    }
-
-    @Provides
-    fun providesLoanChargeDialogRepository(dataManager: DataManager): LoanChargeDialogRepository {
-        return LoanChargeDialogRepositoryImp(dataManager)
-    }
 
     @Provides
     fun providesSyncSurveysDialogRepository(dataManagerSurvey: DataManagerSurveys): SyncSurveysDialogRepository {

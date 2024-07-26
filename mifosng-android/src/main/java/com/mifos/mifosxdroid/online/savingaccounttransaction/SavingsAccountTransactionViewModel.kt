@@ -3,10 +3,15 @@ package com.mifos.mifosxdroid.online.savingaccounttransaction
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest_Table.savingAccountId
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
 import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -19,75 +24,87 @@ import javax.inject.Inject
 class SavingsAccountTransactionViewModel @Inject constructor(private val repository: SavingsAccountTransactionRepository) :
     ViewModel() {
 
-    private val _savingsAccountTransactionUiState =
-        MutableLiveData<SavingsAccountTransactionUiState>()
+    private val _savingsAccountTransactionUiState = MutableStateFlow<SavingsAccountTransactionUiState>(SavingsAccountTransactionUiState.ShowProgressbar)
+    val savingsAccountTransactionUiState: StateFlow<SavingsAccountTransactionUiState> get() = _savingsAccountTransactionUiState
 
-    val savingsAccountTransactionUiState: LiveData<SavingsAccountTransactionUiState>
-        get() = _savingsAccountTransactionUiState
+    var transactionType : String? = null
+    var accountId : Int? = null
+    var clientName : String? = null
+    var savingsAccountNumber : Int? = null
+    var savingsAccountType: DepositType? = null
 
-    fun loadSavingAccountTemplate(type: String?, accountId: Int, transactionType: String?) {
+    fun loadSavingAccountTemplate() {
         _savingsAccountTransactionUiState.value = SavingsAccountTransactionUiState.ShowProgressbar
-        repository.getSavingsAccountTransactionTemplate(type, accountId, transactionType)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<SavingsAccountTransactionTemplate>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _savingsAccountTransactionUiState.value =
-                        SavingsAccountTransactionUiState.ShowError(e.message.toString())
-                }
+        accountId?.let {
+            repository.getSavingsAccountTransactionTemplate(savingsAccountType?.endpoint,
+                it, transactionType)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(object : Subscriber<SavingsAccountTransactionTemplate>() {
+                    override fun onCompleted() {}
+                    override fun onError(e: Throwable) {
+                        _savingsAccountTransactionUiState.value =
+                            SavingsAccountTransactionUiState.ShowError(e.message.toString())
+                    }
 
-                override fun onNext(savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate) {
-                    _savingsAccountTransactionUiState.value =
-                        SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
-                            savingsAccountTransactionTemplate
-                        )
-                }
-            })
+                    override fun onNext(savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate) {
+                        _savingsAccountTransactionUiState.value =
+                            SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
+                                savingsAccountTransactionTemplate
+                            )
+                    }
+                })
+        }
     }
 
-    fun processTransaction(
-        type: String?, accountId: Int, transactionType: String?,
-        request: SavingsAccountTransactionRequest
-    ) {
+    fun processTransaction(request: SavingsAccountTransactionRequest) {
         _savingsAccountTransactionUiState.value = SavingsAccountTransactionUiState.ShowProgressbar
-        repository
-            .processTransaction(type, accountId, transactionType, request)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<SavingsAccountTransactionResponse>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _savingsAccountTransactionUiState.value =
-                        SavingsAccountTransactionUiState.ShowError(e.message.toString())
-                }
+        accountId?.let {
+            repository
+                .processTransaction(savingsAccountType?.endpoint, it, transactionType, request)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(object : Subscriber<SavingsAccountTransactionResponse>() {
+                    override fun onCompleted() {}
+                    override fun onError(e: Throwable) {
+                        _savingsAccountTransactionUiState.value =
+                            SavingsAccountTransactionUiState.ShowError(e.message.toString())
+                    }
 
-                override fun onNext(savingsAccountTransactionResponse: SavingsAccountTransactionResponse) {
-                    _savingsAccountTransactionUiState.value =
-                        SavingsAccountTransactionUiState.ShowTransactionSuccessfullyDone(
-                            savingsAccountTransactionResponse
-                        )
-                }
-            })
+                    override fun onNext(savingsAccountTransactionResponse: SavingsAccountTransactionResponse) {
+                        _savingsAccountTransactionUiState.value =
+                            SavingsAccountTransactionUiState.ShowTransactionSuccessfullyDone(
+                                savingsAccountTransactionResponse
+                            )
+                    }
+                })
+        }
     }
 
-    fun checkInDatabaseSavingAccountTransaction(savingAccountId: Int) {
+    fun checkInDatabaseSavingAccountTransaction() {
         _savingsAccountTransactionUiState.value = SavingsAccountTransactionUiState.ShowProgressbar
-        repository.getSavingsAccountTransaction(savingAccountId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<SavingsAccountTransactionRequest>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _savingsAccountTransactionUiState.value =
-                        SavingsAccountTransactionUiState.ShowError(e.message.toString())
-                }
+        accountId?.let {
+            repository.getSavingsAccountTransaction(it)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(object : Subscriber<SavingsAccountTransactionRequest>() {
+                    override fun onCompleted() {}
+                    override fun onError(e: Throwable) {
+                        _savingsAccountTransactionUiState.value =
+                            SavingsAccountTransactionUiState.ShowError(e.message.toString())
+                    }
 
-                override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest) {
-                    _savingsAccountTransactionUiState.value =
-                        SavingsAccountTransactionUiState.ShowSavingAccountTransactionExistInDatabase
-                }
-            })
+                    override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest?) {
+                        if (savingsAccountTransactionRequest != null) {
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowSavingAccountTransactionExistInDatabase
+                        } else {
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowSavingAccountTransactionDoesNotExistInDatabase
+                        }
+                    }
+                })
+        }
 
     }
 }

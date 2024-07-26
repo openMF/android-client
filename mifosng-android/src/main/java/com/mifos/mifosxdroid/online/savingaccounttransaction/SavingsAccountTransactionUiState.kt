@@ -15,8 +15,11 @@ sealed class SavingsAccountTransactionUiState {
     data class ShowSavingAccountTemplate(val savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate) :
         SavingsAccountTransactionUiState()
 
+
     data class ShowTransactionSuccessfullyDone(val savingsAccountTransactionResponse: SavingsAccountTransactionResponse) :
         SavingsAccountTransactionUiState()
 
     data object ShowSavingAccountTransactionExistInDatabase : SavingsAccountTransactionUiState()
+
+    data object ShowSavingAccountTransactionDoesNotExistInDatabase : SavingsAccountTransactionUiState()
 }

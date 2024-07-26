@@ -7,6 +7,8 @@ import com.mifos.core.objects.survey.Scorecard
  */
 sealed class SurveySubmitUiState {
 
+    object Initial : SurveySubmitUiState()
+
     object ShowProgressbar : SurveySubmitUiState()
 
     data class ShowError(val message: String) : SurveySubmitUiState()

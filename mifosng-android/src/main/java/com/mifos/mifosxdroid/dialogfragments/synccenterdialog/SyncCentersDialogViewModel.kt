@@ -1,8 +1,7 @@
 package com.mifos.mifosxdroid.dialogfragments.synccenterdialog
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.objects.accounts.CenterAccounts
 import com.mifos.core.objects.accounts.ClientAccounts
 import com.mifos.core.objects.accounts.GroupAccounts
@@ -15,10 +14,15 @@ import com.mifos.core.objects.group.Group
 import com.mifos.core.objects.group.GroupWithAssociations
 import com.mifos.core.objects.zipmodels.LoanAndLoanRepayment
 import com.mifos.core.objects.zipmodels.SavingsAccountAndTransactionTemplate
+import com.mifos.mifosxdroid.R
 import com.mifos.utils.Constants
 import com.mifos.utils.NetworkUtilsWrapper
+import com.mifos.utils.PrefManager
 import com.mifos.utils.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
@@ -31,16 +35,20 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 16/08/23.
  */
 @HiltViewModel
-class SyncCentersDialogViewModel @Inject constructor(private val repository: SyncCentersDialogRepository) :
-    ViewModel() {
+class SyncCentersDialogViewModel @Inject constructor(
+    private val repository: SyncCentersDialogRepository,
+    private val networkUtilsWrapper: NetworkUtilsWrapper
+) : ViewModel() {
 
-    private val _syncCentersDialogUiState = MutableLiveData<SyncCentersDialogUiState>()
+    private val _syncCentersDialogUiState =
+        MutableStateFlow<SyncCentersDialogUiState>(SyncCentersDialogUiState.Loading)
+    val syncCentersDialogUiState: StateFlow<SyncCentersDialogUiState> = _syncCentersDialogUiState
 
-    val syncCentersDialogUiState: LiveData<SyncCentersDialogUiState>
-        get() = _syncCentersDialogUiState
+    private val _syncCenterData: MutableStateFlow<SyncCentersDialogData> = MutableStateFlow(
+        SyncCentersDialogData()
+    )
+    val syncCenterData: StateFlow<SyncCentersDialogData> = _syncCenterData
 
-    @Inject
-    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private var mLoanAccountList: List<LoanAccount> = ArrayList()
     private var mSavingsAccountList: List<SavingsAccount> = ArrayList()
@@ -59,18 +67,17 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
     private var mGroupSyncIndex = 0
     private var maxSingleSyncCenterProgressBar = 0
 
-    private fun checkNetworkConnection(): Boolean {
-        return networkUtilsWrapper.isNetworkConnected()
+    fun setCentersList(centersList: List<Center>) {
+        mCenterList = centersList
+        _syncCenterData.update { it.copy(centersList = centersList) }
     }
 
-    /**
-     * This Method Start Syncing Centers. Start Syncing the Centers Accounts.
-     *
-     * @param centers Selected Centers For Syncing
-     */
-    fun startSyncingCenters(centers: List<Center>) {
-        mCenterList = centers
-        checkNetworkConnectionAndSyncCenter()
+    fun syncCenter() {
+        if (PrefManager.userStatus == Constants.USER_ONLINE) {
+            checkNetworkConnection {
+                syncCenterAndUpdateUI()
+            }
+        }
     }
 
     /**
@@ -84,7 +91,7 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
             updateCenterName()
             mCenterList[mCenterSyncIndex].id?.let { syncCenterAccounts(it) }
         } else {
-            _syncCentersDialogUiState.value = SyncCentersDialogUiState.ShowCentersSyncSuccessfully
+            _syncCenterData.update { it.copy(isSyncSuccess = true) }
         }
     }
 
@@ -101,18 +108,6 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
     }
 
     /**
-     * This Method checking network connection before starting center synchronization
-     */
-    fun checkNetworkConnectionAndSyncCenter() {
-        if (checkNetworkConnection()) {
-            syncCenterAndUpdateUI()
-        } else {
-            _syncCentersDialogUiState.value = SyncCentersDialogUiState.ShowNetworkIsNotAvailable
-            _syncCentersDialogUiState.value = SyncCentersDialogUiState.DismissDialog
-        }
-    }
-
-    /**
      * This Method will be called when ever any request will be failed synced.
      *
      * @param e Throwable
@@ -121,13 +116,11 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
         try {
             if (e is HttpException) {
                 val singleSyncCenterMax = maxSingleSyncCenterProgressBar
-                _syncCentersDialogUiState.value =
-                    SyncCentersDialogUiState.UpdateSingleSyncCenterProgressBar(singleSyncCenterMax)
+                _syncCenterData.update { it.copy(singleSyncCount = singleSyncCenterMax) }
                 mFailedSyncCenter.add(mCenterList[mCenterSyncIndex])
                 mCenterSyncIndex += 1
-                _syncCentersDialogUiState.value =
-                    SyncCentersDialogUiState.ShowSyncedFailedCenters(mFailedSyncCenter.size)
-                checkNetworkConnectionAndSyncCenter()
+                _syncCenterData.update { it.copy(failedSyncGroupCount = mFailedSyncCenter.size) }
+                syncCenter()
             }
         } catch (throwable: Throwable) {
             RxJavaPlugins.getInstance().errorHandler.handleError(throwable)
@@ -154,14 +147,7 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
             .subscribe(object : Subscriber<CenterAccounts>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    _syncCentersDialogUiState.value =
-                        SyncCentersDialogUiState.ShowError(e.message.toString())
-                    //Updating UI
-                    mFailedSyncCenter.add(mCenterList[mCenterSyncIndex])
-                    _syncCentersDialogUiState.value =
-                        SyncCentersDialogUiState.ShowSyncedFailedCenters(mFailedSyncCenter.size)
-                    mCenterSyncIndex += 1
-                    checkNetworkConnectionAndSyncCenter()
+                    onAccountSyncFailed(e)
                 }
 
                 override fun onNext(centerAccounts: CenterAccounts) {
@@ -215,11 +201,8 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
      * If found no internet connection then stop syncing the Centers and dismiss the dialog.
      */
     private fun checkNetworkConnectionAndSyncLoanAndLoanRepayment() {
-        if (checkNetworkConnection()) {
+        checkNetworkConnection {
             mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let { syncLoanAndLoanRepayment(it) }
-        } else {
-            _syncCentersDialogUiState.value = SyncCentersDialogUiState.ShowNetworkIsNotAvailable
-            _syncCentersDialogUiState.value = SyncCentersDialogUiState.DismissDialog
         }
     }
 
@@ -228,15 +211,13 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
      * If found no internet connection then stop syncing the Centers and dismiss the dialog.
      */
     private fun checkNetworkConnectionAndSyncMemberLoanAndMemberLoanRepayment() {
-        if (checkNetworkConnection()) {
-            mMemberLoanAccountsList[mMemberLoanSyncIndex].id?.let {
-                syncMemberLoanAndMemberLoanRepayment(
-                    it
-                )
+        checkNetworkConnection {
+            val endPoint =
+                mMemberLoanAccountsList[mMemberLoanSyncIndex].loanType?.value
+            val id = mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
+            if (endPoint != null && id != null) {
+                syncSavingsAccountAndTemplate(endPoint, id)
             }
-        } else {
-            _syncCentersDialogUiState.value = SyncCentersDialogUiState.ShowNetworkIsNotAvailable
-            _syncCentersDialogUiState.value = SyncCentersDialogUiState.DismissDialog
         }
     }
 
@@ -245,18 +226,13 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
      * If found no internet connection then stop syncing the centers and dismiss the dialog.
      */
     private fun checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate() {
-        if (checkNetworkConnection()) {
-            mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint?.let {
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
-                    syncSavingsAccountAndTemplate(
-                        it,
-                        it1
-                    )
-                }
+        checkNetworkConnection {
+            val endPoint =
+                mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint
+            val id = mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
+            if (endPoint != null && id != null) {
+                syncSavingsAccountAndTemplate(endPoint, id)
             }
-        } else {
-            _syncCentersDialogUiState.value = SyncCentersDialogUiState.ShowNetworkIsNotAvailable
-            _syncCentersDialogUiState.value = SyncCentersDialogUiState.DismissDialog
         }
     }
 
@@ -299,10 +275,7 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
 
                 override fun onNext(loanAndLoanRepayment: LoanAndLoanRepayment) {
                     mLoanAndRepaymentSyncIndex += 1
-                    _syncCentersDialogUiState.value =
-                        SyncCentersDialogUiState.UpdateSingleSyncCenterProgressBar(
-                            mLoanAndRepaymentSyncIndex
-                        )
+                    _syncCenterData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex) }
                     if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
                         checkNetworkConnectionAndSyncLoanAndLoanRepayment()
                     } else {
@@ -332,10 +305,7 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
 
                 override fun onNext(loanAndLoanRepayment: LoanAndLoanRepayment) {
                     mMemberLoanSyncIndex += 1
-                    _syncCentersDialogUiState.value =
-                        SyncCentersDialogUiState.UpdateSingleSyncCenterProgressBar(
-                            mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex + mMemberLoanSyncIndex
-                        )
+                    _syncCenterData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex + mMemberLoanSyncIndex) }
                     if (mMemberLoanSyncIndex != mMemberLoanAccountsList.size) {
                         checkNetworkConnectionAndSyncMemberLoanAndMemberLoanRepayment()
                     } else {
@@ -363,10 +333,7 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
 
                 override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
                     mSavingsAndTransactionSyncIndex += 1
-                    _syncCentersDialogUiState.value =
-                        SyncCentersDialogUiState.UpdateSingleSyncCenterProgressBar(
-                            mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex
-                        )
+                    _syncCenterData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex) }
                     if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
                         checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
                     } else {
@@ -384,21 +351,17 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
      * @param center Center
      */
     private fun syncCenter(center: Center) {
+        center.id = mCenterList[mCenterSyncIndex].id
         center.sync = true
         repository.syncCenterInDatabase(center)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {
-                _syncCentersDialogUiState.value =
-                    SyncCentersDialogUiState.UpdateGroupSyncProgressBar(0)
-                _syncCentersDialogUiState.value =
-                    SyncCentersDialogUiState.UpdateSingleSyncCenterProgressBar(
-                        maxSingleSyncCenterProgressBar
-                    )
+                val singleSyncCenterMax = maxSingleSyncCenterProgressBar
+                _syncCenterData.update { it.copy(singleSyncCount = singleSyncCenterMax) }
                 mCenterSyncIndex += 1
-                checkNetworkConnectionAndSyncCenter()
+                syncCenter()
             }
-
     }
 
     /**
@@ -455,7 +418,7 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
      * @param centerId Center Id
      */
     private fun loadCenterAssociateGroups(centerId: Int) {
-        _syncCentersDialogUiState.value = SyncCentersDialogUiState.ShowProgressbar
+        _syncCentersDialogUiState.value = SyncCentersDialogUiState.Loading
         repository.getCenterWithAssociations(centerId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -470,8 +433,7 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
                     mGroupSyncIndex = 0
                     resetIndexes()
                     if (mGroups.isNotEmpty()) {
-                        _syncCentersDialogUiState.value =
-                            SyncCentersDialogUiState.SetGroupSyncProgressBarMax(mGroups.size)
+                        _syncCenterData.update { it.copy(totalGroupsSyncCount = mGroups.size) }
                         mGroups[mGroupSyncIndex].id?.let { syncGroupAccounts(it) }
                     } else {
                         syncCenter(mCenterList[mCenterSyncIndex])
@@ -487,7 +449,7 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
      * @param groupId Group Id
      */
     private fun loadGroupAssociateClients(groupId: Int) {
-        _syncCentersDialogUiState.value = SyncCentersDialogUiState.ShowProgressbar
+        _syncCentersDialogUiState.value = SyncCentersDialogUiState.Loading
         repository.getGroupWithAssociations(groupId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -502,8 +464,7 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
                     mClientSyncIndex = 0
                     resetIndexes()
                     if (mClients.isNotEmpty()) {
-                        _syncCentersDialogUiState.value =
-                            SyncCentersDialogUiState.SetClientSyncProgressBarMax(mClients.size)
+                        _syncCenterData.update { it.copy(totalClientSyncCount = mClients.size) }
                         syncClientAccounts(mClients[mClientSyncIndex].id)
                     } else {
                         syncGroup(mGroups[mGroupSyncIndex])
@@ -663,16 +624,12 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncCentersDialogUiState.value =
-                        SyncCentersDialogUiState.ShowError(e.message.toString())
+                        SyncCentersDialogUiState.Error(message = e.message.toString())
                 }
 
                 override fun onNext(group: Group) {
                     resetIndexes()
-                    _syncCentersDialogUiState.value =
-                        SyncCentersDialogUiState.UpdateClientSyncProgressBar(0)
                     mGroupSyncIndex += 1
-                    _syncCentersDialogUiState.value =
-                        SyncCentersDialogUiState.UpdateGroupSyncProgressBar(mGroupSyncIndex)
                     if (mGroups.size == mGroupSyncIndex) {
                         syncCenter(mCenterList[mCenterSyncIndex])
                     } else {
@@ -699,14 +656,12 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncCentersDialogUiState.value =
-                        SyncCentersDialogUiState.ShowError(e.message.toString())
+                        SyncCentersDialogUiState.Error(message = e.message.toString())
                 }
 
                 override fun onNext(client: Client) {
                     resetIndexes()
                     mClientSyncIndex += 1
-                    _syncCentersDialogUiState.value =
-                        SyncCentersDialogUiState.UpdateClientSyncProgressBar(mClientSyncIndex)
                     if (mClients.size == mClientSyncIndex) {
                         syncGroup(mGroups[mGroupSyncIndex])
                     } else {
@@ -862,14 +817,26 @@ class SyncCentersDialogViewModel @Inject constructor(private val repository: Syn
     }
 
     private fun updateTotalSyncProgressBarAndCount() {
-        _syncCentersDialogUiState.value =
-            SyncCentersDialogUiState.UpdateTotalSyncCenterProgressBarAndCount(mCenterSyncIndex)
+        _syncCenterData.update { it.copy(totalSyncCount = mCenterSyncIndex) }
     }
 
     private fun updateCenterName() {
         val centerName = mCenterList[mCenterSyncIndex].name
         if (centerName != null) {
-            _syncCentersDialogUiState.value = SyncCentersDialogUiState.ShowSyncingCenter(centerName)
+            _syncCenterData.update { it.copy(centerName = centerName) }
+        }
+    }
+
+    private fun checkNetworkConnection(
+        taskWhenOnline: () -> Unit
+    ) {
+        if (networkUtilsWrapper.isNetworkConnected()) {
+            taskWhenOnline.invoke()
+        } else {
+            _syncCentersDialogUiState.value = SyncCentersDialogUiState.Error(
+                messageResId = R.string.error_network_not_available,
+                imageVector = MifosIcons.WifiOff
+            )
         }
     }
 

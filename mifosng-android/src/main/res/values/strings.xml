@@ -47,7 +47,7 @@
     <string name="loanterm">Loan Term</string>
     <string name="loanterm_month">Select Loan Term</string>
     <string name="nominal">Nominal annual interest </string>
-    <string name="submittedon">Submitted On</string>
+    <string name="submitted_on">Submitted On</string>
     <string name="activation_date">Activation Date</string>
     <string name="office">Office</string>
     <string name="group">Group</string>
@@ -282,6 +282,8 @@
 
     <!-- Loan Related Terminologies Begin Here -->
     <string name="loan_officer">Loan Officer</string>
+    <string name="sync_loanrepayment">Sync Loan Repayment Transaction</string>
+    <string name="no_loanrepayment_to_sync">No Loan Repayment to sync</string>
     <string name="loan_purposes">Loan Purposes</string>
     <string name="loan_fund">Fund</string>
     <string name="staff">Staff</string>
@@ -323,6 +325,8 @@
     <string name="loan_rejected_message">Loan was Rejected</string>
     <string name="loan_creation_success">Loan application submitted successfully.</string>
     <string name="repayment">Repayment</string>
+    <string name="loan_repayment">Loan Repayment</string>
+    <string name="loan_repayment_make_sure_every_field_has_a_value">Please make sure every field has a value, before submitting repayment!</string>
     <string name="repayment_date">Repayment Date</string>
     <string name="complete">Complete</string>
     <string name="pending">Pending</string>
@@ -358,6 +362,8 @@
     <string name="approval_savings_date">Select Approval Date:</string>
     <string name="approval_disbursement_date">Expected disbursement on</string>
     <string name="approved_on">Approved On*</string>
+    <string name="withdrawal_successful_transaction_ID">Withdrawal Successful, Transaction ID = </string>
+    <string name="deposit_successful_transaction_ID">Deposit Successful, Transaction ID = </string>
     <string name="activated_on">Activated On*</string>
     <string name="savings_transaction_detail">Transaction Id : %1$d , Running Balance : %2$f</string>
     <string name="saving_min_required_balance">Enforce Minimum Required Balance</string>
@@ -389,6 +395,7 @@
     <string name="transaction_amount">Transaction amount*</string>
     <string name="approval_note">Note</string>
     <string name="savings_approval_reason">Reason for Approval</string>
+    <string name="savings_approved">Savings Approved</string>
     <string name="add_group">Add Group</string>
     <string name="client_active">Client Active</string>
     <string name="submit">Submit</string>
@@ -564,10 +571,12 @@
     <string name="submit_date">Submit Date</string>
     <string name="error_message">Server Sync Error</string>
     <string name="sync_clients">Clients</string>
+    <string name="sync_clients_payloads">Sync Client Payloads</string>
+    <string name="sync_centers_payloads">Sync Centers Payloads</string>
     <string name="sync_groups">Groups</string>
     <string name="sync_centers">Centers</string>
     <string name="sync_loanrepayments">LoanRepayments</string>
-    <string name="sync_savingsaccounttransactions">SavingsAccountTransaction</string>
+    <string name="sync_savingsaccounttransactions">Sync Savings Account Transactions</string>
     <string name="payloads_count">Payloads : </string>
     <string name="transactions_count">Transaction : </string>
     <string name="nothing_to_sync">Nothing To Sync :)</string>
@@ -916,6 +925,7 @@
     <string name="currency">Currency</string>
     <string name="account_number">Account Number</string>
     <string name="saving_account_id">Saving Account Id</string>
+    <string name="more_savings_account_info">More savings account info</string>
     <string name="running_balance">Running Balance</string>
     <string name="transaction_type">Transaction Type</string>
     <string name="date">Date</string>
@@ -923,6 +933,7 @@
 
 
     <string name="got_it">GOT IT</string>
+    <string name="go_back">Go Back</string>
     <string name="finish">FINISH</string>
     <string name="sp_search_intro">Filter out the results using this dropdown</string>
     <string name="cb_exactMatch_intro">To get the result matching exactly the keyword entered.\n Simply check this box</string>
@@ -935,5 +946,6 @@
     <string name="updateServerConfig">Server Config</string>
     <string name="server_config">Server Config</string>
     <string name="update_server_config">Update Server Config</string>
+    <string name="group_sync_failed">Group sync failed</string>
 
 </resources>

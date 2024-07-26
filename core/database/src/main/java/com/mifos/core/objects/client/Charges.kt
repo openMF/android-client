@@ -85,9 +85,12 @@ data class Charges(
     val formattedDueDate: String
         get() {
             val pattern = "%s-%s-%s"
-            return String.format(
-                pattern,
-                dueDate[0], dueDate[1], dueDate[2]
-            )
+            if (dueDate.size>2) {
+                return String.format(
+                    pattern,
+                    dueDate[0], dueDate[1], dueDate[2]
+                )
+            }
+            return "No Due Date"
         }
 }

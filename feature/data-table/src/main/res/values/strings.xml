@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_data_table_title">Data Table</string>
+    <string name="feature_data_table_client_id">Client ID</string>
+    <string name="feature_data_table_data_id">Data ID</string>
+    <string name="feature_data_table_select_options">Select Options</string>
+    <string name="feature_data_table_delete_data_table">Delete Data Table</string>
+    <string name="feature_data_table_failed_to_load_data_table_details">Failed to load data table details</string>
+    <string name="feature_data_table_failed_to_delete_data_table">Failed to delete data table</string>
+    <string name="feature_data_table_no_data_table_details_to_show">No data table details to show</string>
+    <string name="feature_data_table_data_table_created_successfully">Data table created successfully</string>
+
+    <string name="feature_data_table_failed_to_add_data_table">Failed to add data table</string>
+    <string name="feature_data_table_added_data_table_successfully">Added data table successfully</string>
+    <string name="feature_data_table_add_data_table">Add Data Table</string>
+    <string name="feature_data_table_submit">Submit</string>
+</resources>

@@ -39,13 +39,13 @@ class DataManagerDataTable @Inject constructor(
         )
     }
 
-    fun getDataTableInfo(table: String?, entityId: Int): Observable<JsonArray> {
+    suspend fun getDataTableInfo(table: String, entityId: Int): JsonArray {
         return mBaseApiManager.dataTableApi.getDataOfDataTable(table, entityId)
     }
 
-    fun addDataTableEntry(
-        table: String?, entityId: Int, payload: Map<String, String>
-    ): Observable<GenericResponse> {
+    suspend fun addDataTableEntry(
+        table: String, entityId: Int, payload: Map<String, String>
+    ): GenericResponse {
         return mBaseApiManager.dataTableApi
             .createEntryInDataTable(table, entityId, payload)
     }

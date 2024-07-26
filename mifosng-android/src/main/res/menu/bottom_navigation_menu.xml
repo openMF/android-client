@@ -11,21 +11,21 @@
     <item
         android:id="@+id/navigation_client_list"
         android:checked="false"
-        android:icon="@drawable/ic_person_black_24dp"
+        android:icon="@drawable/core_ui_ic_person_black_24dp"
         android:title="@string/clients"
         />
 
     <item
         android:id="@+id/navigation_center_list"
         android:checked="false"
-        android:icon="@drawable/ic_centers_24dp"
+        android:icon="@drawable/core_ui_ic_centers_24dp"
         android:title="@string/centers"
         />
 
     <item
         android:id="@+id/navigation_group_list"
         android:checked="false"
-        android:icon="@drawable/ic_group_black_24dp"
+        android:icon="@drawable/core_ui_ic_group_black_24dp"
         android:title="@string/feature_groups_groups"
         />
 

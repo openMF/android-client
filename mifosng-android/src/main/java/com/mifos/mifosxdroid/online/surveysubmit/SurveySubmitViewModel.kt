@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mifos.core.objects.survey.Scorecard
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -17,9 +19,9 @@ import javax.inject.Inject
 class SurveySubmitViewModel @Inject constructor(private val repository: SurveySubmitRepository) :
     ViewModel() {
 
-    private val _surveySubmitUiState = MutableLiveData<SurveySubmitUiState>()
+    private val _surveySubmitUiState = MutableStateFlow<SurveySubmitUiState>(SurveySubmitUiState.Initial)
 
-    val surveySubmitUiState: LiveData<SurveySubmitUiState>
+    val surveySubmitUiState: StateFlow<SurveySubmitUiState>
         get() = _surveySubmitUiState
 
     fun submitSurvey(survey: Int, scorecardPayload: Scorecard?) {

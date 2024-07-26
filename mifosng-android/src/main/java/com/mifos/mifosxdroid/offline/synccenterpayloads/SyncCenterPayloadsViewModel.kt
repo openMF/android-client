@@ -1,11 +1,14 @@
 package com.mifos.mifosxdroid.offline.synccenterpayloads
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.mifos.core.data.CenterPayload
 import com.mifos.core.objects.response.SaveResponse
+import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment.Companion.LOG_TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import rx.Observer
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -19,10 +22,20 @@ import javax.inject.Inject
 class SyncCenterPayloadsViewModel @Inject constructor(private val repository: SyncCenterPayloadsRepository) :
     ViewModel() {
 
-    private val _syncCenterPayloadsUiState = MutableLiveData<SyncCenterPayloadsUiState>()
+    private val _syncCenterPayloadsUiState = MutableStateFlow<SyncCenterPayloadsUiState>(SyncCenterPayloadsUiState.ShowProgressbar)
+    val syncCenterPayloadsUiState: StateFlow<SyncCenterPayloadsUiState> = _syncCenterPayloadsUiState
 
-    val syncCenterPayloadsUiState: LiveData<SyncCenterPayloadsUiState>
-        get() = _syncCenterPayloadsUiState
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
+    private var mCenterPayloads: MutableList<CenterPayload> = mutableListOf()
+    private var centerSyncIndex = 0
+
+    fun refreshCenterPayloads() {
+        _isRefreshing.value = true
+        loadDatabaseCenterPayload()
+        _isRefreshing.value = false
+    }
 
     fun loadDatabaseCenterPayload() {
         repository.allDatabaseCenterPayload()
@@ -36,14 +49,15 @@ class SyncCenterPayloadsViewModel @Inject constructor(private val repository: Sy
                 }
 
                 override fun onNext(centerPayloads: List<CenterPayload>) {
+                    mCenterPayloads = centerPayloads.toMutableList()
                     _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowCenters(centerPayloads)
+                        SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
                 }
             })
 
     }
 
-    fun syncCenterPayload(centerPayload: CenterPayload?) {
+    private fun syncCenterPayload(centerPayload: CenterPayload?) {
         _syncCenterPayloadsUiState.value = SyncCenterPayloadsUiState.ShowProgressbar
         repository.createCenter(centerPayload!!)
             .observeOn(AndroidSchedulers.mainThread())
@@ -52,12 +66,14 @@ class SyncCenterPayloadsViewModel @Inject constructor(private val repository: Sy
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowCenterSyncFailed(e.message.toString())
+                        SyncCenterPayloadsUiState.ShowError(e.message.toString())
+                    updateCenterPayload(centerPayload)
                 }
 
                 override fun onNext(center: SaveResponse?) {
-                    _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowCenterSyncResponse
+                    deleteAndUpdateCenterPayload(
+                        mCenterPayloads[centerSyncIndex].id
+                    )
                 }
             })
 
@@ -76,15 +92,22 @@ class SyncCenterPayloadsViewModel @Inject constructor(private val repository: Sy
                 }
 
                 override fun onNext(centerPayloads: List<CenterPayload>) {
+                    centerSyncIndex = 0
+                    mCenterPayloads = centerPayloads.toMutableList()
                     _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowPayloadDeletedAndUpdatePayloads(centerPayloads)
+                        SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
+                    if (mCenterPayloads.isNotEmpty()) {
+                        syncCenterPayload()
+                    }
                 }
             })
 
     }
 
     fun updateCenterPayload(centerPayload: CenterPayload?) {
-        _syncCenterPayloadsUiState.value = SyncCenterPayloadsUiState.ShowCenterSyncResponse
+        deleteAndUpdateCenterPayload(
+            mCenterPayloads[centerSyncIndex].id
+        )
         repository.updateCenterPayload(centerPayload!!)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -96,10 +119,33 @@ class SyncCenterPayloadsViewModel @Inject constructor(private val repository: Sy
                 }
 
                 override fun onNext(centerPayload: CenterPayload) {
+                    mCenterPayloads[centerSyncIndex] = centerPayload
                     _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowCenterPayloadUpdated(centerPayload)
+                        SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
+                    centerSyncIndex += 1
+                    if (mCenterPayloads.size != centerSyncIndex) {
+                        syncCenterPayload()
+                    }
                 }
             })
 
     }
+
+    fun syncCenterPayload() {
+        for (i in mCenterPayloads.indices) {
+            if (mCenterPayloads[i].errorMessage == null) {
+                syncCenterPayload(mCenterPayloads[i])
+                centerSyncIndex = i
+                break
+            } else {
+                mCenterPayloads[i].errorMessage?.let {
+                    Log.d(
+                        LOG_TAG,
+                        it
+                    )
+                }
+            }
+        }
+    }
+
 }

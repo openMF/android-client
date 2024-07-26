@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mifos.core.network.GenericResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -17,12 +19,14 @@ import javax.inject.Inject
 class SavingsAccountActivateViewModel @Inject constructor(private val repository: SavingsAccountActivateRepository) :
     ViewModel() {
 
-    private val _savingsAccountActivateUiState = MutableLiveData<SavingsAccountActivateUiState>()
+    private val _savingsAccountActivateUiState = MutableStateFlow<SavingsAccountActivateUiState>(SavingsAccountActivateUiState.Initial)
 
-    val savingsAccountActivateUiState: LiveData<SavingsAccountActivateUiState>
+    val savingsAccountActivateUiState: StateFlow<SavingsAccountActivateUiState>
         get() = _savingsAccountActivateUiState
 
-    fun activateSavings(savingsAccountId: Int, request: HashMap<String, String>) {
+    var savingsAccountId = 0
+
+    fun activateSavings(request: HashMap<String, String>) {
         _savingsAccountActivateUiState.value = SavingsAccountActivateUiState.ShowProgressbar
         repository.activateSavings(savingsAccountId, request)
             .observeOn(AndroidSchedulers.mainThread())

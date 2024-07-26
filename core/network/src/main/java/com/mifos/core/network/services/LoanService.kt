@@ -107,7 +107,7 @@ interface LoanService {
     ): Observable<GroupLoanTemplate>
 
     @GET(APIEndPoint.LOANS + "/{loanId}/" + APIEndPoint.CHARGES)
-    fun getListOfLoanCharges(@Path("loanId") loanId: Int): Observable<List<Charges>>
+    suspend fun getListOfLoanCharges(@Path("loanId") loanId: Int): List<Charges>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.CHARGES)
     fun getListOfCharges(@Path("clientId") clientId: Int): Observable<Page<Charges>>

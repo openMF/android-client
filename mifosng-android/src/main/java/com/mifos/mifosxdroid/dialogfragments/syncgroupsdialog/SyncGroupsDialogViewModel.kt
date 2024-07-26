@@ -1,8 +1,7 @@
 package com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.objects.accounts.ClientAccounts
 import com.mifos.core.objects.accounts.GroupAccounts
 import com.mifos.core.objects.accounts.loan.LoanAccount
@@ -12,10 +11,15 @@ import com.mifos.core.objects.group.Group
 import com.mifos.core.objects.group.GroupWithAssociations
 import com.mifos.core.objects.zipmodels.LoanAndLoanRepayment
 import com.mifos.core.objects.zipmodels.SavingsAccountAndTransactionTemplate
+import com.mifos.mifosxdroid.R
 import com.mifos.utils.Constants
 import com.mifos.utils.NetworkUtilsWrapper
+import com.mifos.utils.PrefManager
 import com.mifos.utils.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
@@ -28,11 +32,10 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 16/08/23.
  */
 @HiltViewModel
-class SyncGroupsDialogViewModel @Inject constructor(private val repository: SyncGroupsDialogRepository) :
-    ViewModel() {
-
-    @Inject
-    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+class SyncGroupsDialogViewModel @Inject constructor(
+    private val repository: SyncGroupsDialogRepository,
+    private val networkUtilsWrapper: NetworkUtilsWrapper
+) : ViewModel() {
 
     private var mGroupList: List<Group> = ArrayList()
     private val mFailedSyncGroup: MutableList<Group> = ArrayList()
@@ -46,17 +49,29 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
     private var mSavingsAndTransactionSyncIndex = 0
     private var maxSingleSyncGroupProgressBar = 0
 
+    private val _syncGroupsDialogUiState = MutableStateFlow<SyncGroupsDialogUiState>(
+        SyncGroupsDialogUiState.Loading)
+    val syncGroupsDialogUiState: StateFlow<SyncGroupsDialogUiState> = _syncGroupsDialogUiState
 
-    private val _syncGroupsDialogUiState = MutableLiveData<SyncGroupsDialogUiState>()
-    val syncGroupsDialogUiState: LiveData<SyncGroupsDialogUiState> = _syncGroupsDialogUiState
+    private val _syncGroupData: MutableStateFlow<SyncGroupDialogData> = MutableStateFlow(
+        SyncGroupDialogData()
+    )
+    val syncGroupData: StateFlow<SyncGroupDialogData> = _syncGroupData
 
-    private fun checkNetworkConnection(): Boolean {
-        return networkUtilsWrapper.isNetworkConnected()
+    fun setGroupList(groupList: List<Group>) {
+        mGroupList = groupList
+        _syncGroupData.update { it.copy(groupList = groupList) }
     }
 
-    fun startSyncingGroups(groups: List<Group>) {
-        mGroupList = groups
-        checkNetworkConnectionAndSyncGroup()
+    /**
+     * This Method checking network connection before starting group synchronization
+     */
+    fun syncGroups() {
+        if(PrefManager.userStatus == Constants.USER_ONLINE)  {
+            checkNetworkConnection {
+                syncGroupAndUpdateUI()
+            }
+        }
     }
 
     /**
@@ -70,32 +85,18 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
             updateGroupName()
             mGroupList[mGroupSyncIndex].id?.let { syncGroupAccounts(it) }
         } else {
-            _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.ShowGroupsSyncSuccessfully
+            _syncGroupData.update { it.copy(isSyncSuccess = true) }
         }
     }
 
-    /**
-     * This Method checking network connection before starting group synchronization
-     */
-    private fun checkNetworkConnectionAndSyncGroup() {
-        if (checkNetworkConnection()) {
-            syncGroupAndUpdateUI()
-        } else {
-            _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.ShowNetworkIsNotAvailable
-            _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.DismissDialog
-        }
-    }
 
     /**
      * This Method Checking network connection and  Syncing the LoanAndLoanRepayment.
      * If found no internet connection then stop syncing the groups and dismiss the dialog.
      */
     private fun checkNetworkConnectionAndSyncLoanAndLoanRepayment() {
-        if (checkNetworkConnection()) {
+        checkNetworkConnection {
             mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let { syncLoanAndLoanRepayment(it) }
-        } else {
-            _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.ShowNetworkIsNotAvailable
-            _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.DismissDialog
         }
     }
 
@@ -104,18 +105,12 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
      * If found no internet connection then stop syncing the groups and dismiss the dialog.
      */
     private fun checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate() {
-        if (checkNetworkConnection()) {
-            mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint?.let {
-                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
-                    syncSavingsAccountAndTemplate(
-                        it,
-                        it1
-                    )
-                }
+        checkNetworkConnection {
+            val endPoint = mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint
+            val id = mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
+            if(endPoint != null && id != null) {
+                syncSavingsAccountAndTemplate(endPoint, id)
             }
-        } else {
-            _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.ShowNetworkIsNotAvailable
-            _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.DismissDialog
         }
     }
 
@@ -168,13 +163,11 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
         try {
             if (e is HttpException) {
                 val singleSyncGroupMax = maxSingleSyncGroupProgressBar
-                _syncGroupsDialogUiState.value =
-                    SyncGroupsDialogUiState.UpdateSingleSyncGroupProgressBar(singleSyncGroupMax)
+                _syncGroupData.update { it.copy(singleSyncCount = singleSyncGroupMax) }
                 mFailedSyncGroup.add(mGroupList[mGroupSyncIndex])
                 mGroupSyncIndex += 1
-                _syncGroupsDialogUiState.value =
-                    SyncGroupsDialogUiState.ShowSyncedFailedGroups(mFailedSyncGroup.size)
-                checkNetworkConnectionAndSyncGroup()
+                _syncGroupData.update { it.copy(failedSyncGroupCount = mFailedSyncGroup.size) }
+                syncGroups()
             }
         } catch (throwable: Throwable) {
             RxJavaPlugins.getInstance().errorHandler.handleError(throwable)
@@ -213,8 +206,7 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
                     )
 
                     //Updating UI
-                    maxSingleSyncGroupProgressBar = mLoanAccountList.size +
-                            mSavingsAccountList.size
+                    maxSingleSyncGroupProgressBar = mLoanAccountList.size + mSavingsAccountList.size
                     checkAccountsSyncStatusAndSyncAccounts()
                 }
             })
@@ -240,10 +232,8 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
 
                 override fun onNext(loanAndLoanRepayment: LoanAndLoanRepayment) {
                     mLoanAndRepaymentSyncIndex += 1
-                    _syncGroupsDialogUiState.value =
-                        SyncGroupsDialogUiState.UpdateSingleSyncGroupProgressBar(
-                            mLoanAndRepaymentSyncIndex
-                        )
+                    _syncGroupData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex) }
+
                     if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
                         checkNetworkConnectionAndSyncLoanAndLoanRepayment()
                     } else {
@@ -272,10 +262,7 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
 
                 override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
                     mSavingsAndTransactionSyncIndex += 1
-                    _syncGroupsDialogUiState.value =
-                        SyncGroupsDialogUiState.UpdateSingleSyncGroupProgressBar(
-                            mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex
-                        )
+                    _syncGroupData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex) }
                     if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
                         checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
                     } else {
@@ -292,7 +279,7 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
      * @param groupId Group Id
      */
     private fun loadGroupAssociateClients(groupId: Int) {
-        _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.ShowProgressbar
+        _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.Loading
         repository.getGroupWithAssociations(groupId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -307,8 +294,7 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
                     mClientSyncIndex = 0
                     resetIndexes()
                     if (mClients.isNotEmpty()) {
-                        _syncGroupsDialogUiState.value =
-                            SyncGroupsDialogUiState.SetClientSyncProgressBarMax(mClients.size)
+                        _syncGroupData.update { it.copy(totalClientSyncCount = mClients.size) }
                         syncClientAccounts(mClients[mClientSyncIndex].id)
                     } else {
                         syncGroup(mGroupList[mGroupSyncIndex])
@@ -333,15 +319,13 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
             .subscribe(object : Subscriber<Client>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    _syncGroupsDialogUiState.value =
-                        SyncGroupsDialogUiState.ShowError(e.message.toString())
+                    _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.Error(message = e.message.toString())
                 }
 
                 override fun onNext(client: Client) {
                     resetIndexes()
                     mClientSyncIndex += 1
-                    _syncGroupsDialogUiState.value =
-                        SyncGroupsDialogUiState.UpdateClientSyncProgressBar(mClientSyncIndex)
+                    _syncGroupData.update { it.copy(clientSyncCount = mClientSyncIndex) }
                     if (mClients.size == mClientSyncIndex) {
                         syncGroup(mGroupList[mGroupSyncIndex])
                     } else {
@@ -362,18 +346,13 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
         if (mLoanAccountList.isNotEmpty() && !mLoanAccountSyncStatus) {
             //Sync the Active Loan and LoanRepayment
             mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let {
-                syncClientLoanAndLoanRepayment(
-                    it
-                )
+                syncClientLoanAndLoanRepayment(it)
             }
         } else if (mSavingsAccountList.isNotEmpty()) {
             //Sync the Active Savings Account
             mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint?.let {
                 mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
-                    syncClientSavingsAccountAndTemplate(
-                        it,
-                        it1
-                    )
+                    syncClientSavingsAccountAndTemplate(it, it1)
                 }
             }
         } else {
@@ -440,9 +419,7 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
                     mLoanAndRepaymentSyncIndex += 1
                     if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
                         mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let {
-                            syncClientLoanAndLoanRepayment(
-                                it
-                            )
+                            syncClientLoanAndLoanRepayment(it)
                         }
                     } else {
                         setLoanAccountSyncStatusTrue()
@@ -502,13 +479,11 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {
-                _syncGroupsDialogUiState.value =
-                    SyncGroupsDialogUiState.UpdateClientSyncProgressBar(0)
+                _syncGroupData.update { it.copy(clientSyncCount = 0) }
                 val singleSyncClientMax = maxSingleSyncGroupProgressBar
-                _syncGroupsDialogUiState.value =
-                    SyncGroupsDialogUiState.UpdateSingleSyncGroupProgressBar(singleSyncClientMax)
+                _syncGroupData.update { it.copy(singleSyncCount = singleSyncClientMax) }
                 mGroupSyncIndex += 1
-                checkNetworkConnectionAndSyncGroup()
+                syncGroups()
             }
 
     }
@@ -562,15 +537,25 @@ class SyncGroupsDialogViewModel @Inject constructor(private val repository: Sync
     }
 
     private fun updateTotalSyncProgressBarAndCount() {
-        _syncGroupsDialogUiState.value =
-            SyncGroupsDialogUiState.UpdateTotalSyncGroupProgressBarAndCount(mGroupSyncIndex)
+        _syncGroupData.update { it.copy(totalSyncCount = mGroupSyncIndex) }
     }
 
     private fun updateGroupName() {
         val groupName = mGroupList[mGroupSyncIndex].name
-        _syncGroupsDialogUiState.value = groupName?.let {
-            SyncGroupsDialogUiState.ShowSyncingGroup(
-                it
+        groupName?.let {
+            _syncGroupData.update { it.copy(groupName = groupName) }
+        }
+    }
+
+    private fun checkNetworkConnection(
+        taskWhenOnline: () -> Unit
+    ) {
+        if(networkUtilsWrapper.isNetworkConnected()) {
+            taskWhenOnline.invoke()
+        } else {
+            _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.Error(
+                messageResId = R.string.error_network_not_available,
+                imageVector = MifosIcons.WifiOff
             )
         }
     }
