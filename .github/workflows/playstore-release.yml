@@ -1,0 +1,51 @@
+name: Staging Deploy
+
+on:
+  push:
+    branches: [ "release" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.2
+          bundler-cache: true
+
+      - name: Run tests
+        run: bundle exec fastlane android test
+
+      - name: Create Google Play Service Account Key file
+        uses: timheuer/base64-to-file@v1
+        id: service_account_json_file
+        with:
+          fileName: "serviceAccount.json"
+          encodedString: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY }}
+
+      - name: Create Keystore file
+        uses: timheuer/base64-to-file@v1
+        id: android_keystore
+        with:
+          fileName: "android_keystore.keystore"
+          encodedString: ${{ secrets.STAGING_KEYSTORE_FILE }}
+
+      - name: Deploy Android release
+        run: bundle exec fastlane android deploy
+        env:
+          STAGING_PACKAGE_NAME: ${{ secrets.STAGING_PACKAGE_NAME }}
+          STAGING_KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
+          STAGING_KEYSTORE_PASSWORD: ${{ secrets.STAGING_KEYSTORE_PASSWORD }}
+          STAGING_KEY_ALIAS: ${{ secrets.STAGING_KEY_ALIAS}}
+          STAGING_KEY_PASSWORD: ${{ secrets.STAGING_KEY_PASSWORD }}
+          GPLAY_SERVICE_ACCOUNT_KEY: ${{ steps.service_account_json_file.outputs.filePath }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: assets
+          path: |
+            ${{ github.workspace }}/app/build/outputs/bundle/release

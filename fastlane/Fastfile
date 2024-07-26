@@ -1,0 +1,47 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  lane :deploy do
+    gradle(
+      task: "clean bundle",
+      flavor: "prod",
+      build_type: "Release",
+      print_command: true,
+      properties: {
+        "android.injected.signing.store.file" =>
+        	ENV["STAGING_KEYSTORE_FILE"],
+        "android.injected.signing.store.password" =>
+        	ENV["STAGING_KEYSTORE_PASSWORD"],
+        "android.injected.signing.key.alias" =>
+        	ENV["STAGING_KEY_ALIAS"],
+        "android.injected.signing.key.password" =>
+        	ENV["STAGING_KEY_PASSWORD"],
+      }
+    )
+
+    upload_to_play_store(
+      json_key: ENV["GPLAY_SERVICE_ACCOUNT_KEY"],
+      track: "internal",
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      timeout: 600,
+    )
+  end
+end
