@@ -4,6 +4,7 @@
  */
 package com.mifos.mifosxdroid.online.surveyquestion
 
+/*
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -178,3 +179,4 @@ class SurveyQuestionActivity : MifosBaseActivity(), OnAnswerSelectedListener, Di
         val LOG_TAG = SurveyQuestionActivity::class.java.simpleName
     }
 }
+*/

@@ -4,6 +4,7 @@
  */
 package com.mifos.mifosxdroid.online.surveysubmit
 
+/*
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
@@ -147,3 +148,4 @@ class SurveySubmitFragment : MifosBaseFragment(), Communicator {
         }
     }
 }
+ */
