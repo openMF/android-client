@@ -12,7 +12,7 @@ sealed class LoanRepaymentUiState {
 
     data class ShowError(val message: Int) : LoanRepaymentUiState()
 
-    data class ShowLoanRepayTemplate(val loanRepaymentTemplate: LoanRepaymentTemplate?) :
+    data class ShowLoanRepayTemplate(val loanRepaymentTemplate: LoanRepaymentTemplate) :
         LoanRepaymentUiState()
 
     data class ShowPaymentSubmittedSuccessfully(val loanRepaymentResponse: LoanRepaymentResponse?) :

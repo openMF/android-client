@@ -47,7 +47,7 @@
     <string name="loanterm">Loan Term</string>
     <string name="loanterm_month">Select Loan Term</string>
     <string name="nominal">Nominal annual interest </string>
-    <string name="submittedon">Submitted On</string>
+    <string name="submitted_on">Submitted On</string>
     <string name="activation_date">Activation Date</string>
     <string name="office">Office</string>
     <string name="group">Group</string>
@@ -283,6 +283,8 @@
 
     <!-- Loan Related Terminologies Begin Here -->
     <string name="loan_officer">Loan Officer</string>
+    <string name="sync_loanrepayment">Sync Loan Repayment Transaction</string>
+    <string name="no_loanrepayment_to_sync">No Loan Repayment to sync</string>
     <string name="loan_purposes">Loan Purposes</string>
     <string name="loan_fund">Fund</string>
     <string name="staff">Staff</string>
@@ -316,11 +318,16 @@
     <string name="break_down">Break Down</string>
     <string name="loanAccounts">Loan Accounts</string>
     <string name="loanAccountSummary">Loan Account Summary</string>
+    <string name="make_Repayment">Make Repayment</string>
+    <string name="loan_closed">Loan closed</string>
+    <string name="approve_loan">Approve Loan</string>
     <string name="loanAccountSummaryStatus">Loan Account Summary</string>
     <string name="loan_repayment_schedule">Loan Repayment Schedule</string>
     <string name="loan_rejected_message">Loan was Rejected</string>
     <string name="loan_creation_success">Loan application submitted successfully.</string>
     <string name="repayment">Repayment</string>
+    <string name="loan_repayment">Loan Repayment</string>
+    <string name="loan_repayment_make_sure_every_field_has_a_value">Please make sure every field has a value, before submitting repayment!</string>
     <string name="repayment_date">Repayment Date</string>
     <string name="complete">Complete</string>
     <string name="pending">Pending</string>
@@ -387,6 +394,7 @@
     <string name="transaction_amount">Transaction amount*</string>
     <string name="approval_note">Note</string>
     <string name="savings_approval_reason">Reason for Approval</string>
+    <string name="savings_approved">Savings Approved</string>
     <string name="add_group">Add Group</string>
     <string name="client_active">Client Active</string>
     <string name="submit">Submit</string>
@@ -495,6 +503,7 @@
     <string name="error_group_name_should_contain_only_alphabets">Group name should contain only alphabets</string>
     <string name="error_group_name_must_be_at_least_four_characters_long">Group name must be at least 4 characters long</string>
     <string name="error_invalid_amount">Invalid Amount Entered</string>
+    <string name="error_amount_can_not_be_empty">Amount can not be empty</string>
     <string name="error_select_office">Please Select an Office</string>
     <string name="error_select_group">Please Select a Group</string>
     <string name="error_select_payment">Please Select Payment Type</string>
@@ -568,10 +577,12 @@
     <string name="submit_date">Submit Date</string>
     <string name="error_message">Server Sync Error</string>
     <string name="sync_clients">Clients</string>
+    <string name="sync_clients_payloads">Sync Client Payloads</string>
+    <string name="sync_centers_payloads">Sync Centers Payloads</string>
     <string name="sync_groups">Groups</string>
     <string name="sync_centers">Centers</string>
     <string name="sync_loanrepayments">LoanRepayments</string>
-    <string name="sync_savingsaccounttransactions">SavingsAccountTransaction</string>
+    <string name="sync_savingsaccounttransactions">Sync Savings Account Transactions</string>
     <string name="payloads_count">Payloads : </string>
     <string name="transactions_count">Transaction : </string>
     <string name="nothing_to_sync">Nothing To Sync :)</string>
@@ -772,6 +783,7 @@
     <string name="no_staff">no staff</string>
     <string name="not_available">N.A</string>
     <string name="note">Notes</string>
+    <string name="disbursement_note">Note</string>
     <string name="empty_notes">Empty Notes</string>
     <string name="failed_to_fetch_notes">Failed to Fetch Notes</string>
     <string name="one">1</string>
@@ -829,6 +841,9 @@
     <string name="checker_inbox_and_pending_tasks">Checker Inbox &amp; Tasks</string>
     <string name="client_approval">Client Approval</string>
     <string name="loan_approval">Loan Approval</string>
+    <string name="loan_approval_amount_can_not_be_empty">Amount can not be empty</string>
+    <string name="loan_approved">Loan Approved</string>
+    <string name="loan_expected_disbursement_on">Expected disbursement on</string>
     <string name="loan_disbursal">Loan Disbursal</string>
     <string name="reschedule_loan">Reschedule Loan</string>
     <string name="checker_inbox">Checker Inbox</string>
@@ -916,6 +931,7 @@
     <string name="currency">Currency</string>
     <string name="account_number">Account Number</string>
     <string name="saving_account_id">Saving Account Id</string>
+    <string name="more_savings_account_info">More savings account info</string>
     <string name="running_balance">Running Balance</string>
     <string name="transaction_type">Transaction Type</string>
     <string name="date">Date</string>
@@ -923,6 +939,7 @@
 
 
     <string name="got_it">GOT IT</string>
+    <string name="go_back">Go Back</string>
     <string name="finish">FINISH</string>
     <string name="sp_search_intro">Filter out the results using this dropdown</string>
     <string name="cb_exactMatch_intro">To get the result matching exactly the keyword entered.\n Simply check this box</string>
@@ -935,5 +952,6 @@
     <string name="updateServerConfig">Server Config</string>
     <string name="server_config">Server Config</string>
     <string name="update_server_config">Update Server Config</string>
+    <string name="group_sync_failed">Group sync failed</string>
 
 </resources>

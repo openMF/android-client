@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid.dialogfragments.checkertaskfilterdialog
 
+/*
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -13,8 +14,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.databinding.DialogFragmentCheckerTaskFilterBinding
-import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxViewModel
-import com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxViewModelFactory
+import com.mifos.feature.checker_inbox_task.dialog.CheckerInboxViewModel
+import com.mifos.feature.checker_inbox_task.dialog.CheckerInboxViewModelFactory
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.utils.FragmentConstants
 import dagger.hilt.android.AndroidEntryPoint
@@ -161,7 +162,8 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
 
             selectedAction = checkerInboxSearchTemplate.actionNames[0]
             selectedEntity = checkerInboxSearchTemplate.entityNames[0]
-        })
+        }
+        )
     }
 
     override fun onAttach(context: Context) {
@@ -207,3 +209,4 @@ class CheckerTaskFilterDialogFragment : DialogFragment(), MFDatePicker.OnDatePic
         }
     }
 }
+*/

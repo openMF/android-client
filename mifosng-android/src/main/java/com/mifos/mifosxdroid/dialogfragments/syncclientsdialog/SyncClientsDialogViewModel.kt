@@ -1,18 +1,22 @@
 package com.mifos.mifosxdroid.dialogfragments.syncclientsdialog
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.objects.accounts.ClientAccounts
 import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.core.objects.accounts.savings.SavingsAccount
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.zipmodels.LoanAndLoanRepayment
 import com.mifos.core.objects.zipmodels.SavingsAccountAndTransactionTemplate
+import com.mifos.mifosxdroid.R
 import com.mifos.utils.Constants
 import com.mifos.utils.NetworkUtilsWrapper
+import com.mifos.utils.PrefManager
 import com.mifos.utils.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
@@ -25,16 +29,10 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 16/08/23.
  */
 @HiltViewModel
-class SyncClientsDialogViewModel @Inject constructor(private val repository: SyncClientsDialogRepository) :
-    ViewModel() {
-
-    @Inject
-    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-
-    private val _syncClientsDialogUiState = MutableLiveData<SyncClientsDialogUiState>()
-
-    val syncClientsDialogUiState: LiveData<SyncClientsDialogUiState>
-        get() = _syncClientsDialogUiState
+class SyncClientsDialogViewModel @Inject constructor(
+    private val repository: SyncClientsDialogRepository,
+    private val networkUtilsWrapper: NetworkUtilsWrapper
+) : ViewModel() {
 
     private var mClientList: List<Client> = ArrayList()
     private val mFailedSyncClient: MutableList<Client> = ArrayList()
@@ -46,63 +44,59 @@ class SyncClientsDialogViewModel @Inject constructor(private val repository: Syn
     private var mSavingsAndTransactionSyncIndex = 0
     private var maxSingleSyncClientProgressBar = 0
 
-    private fun checkNetworkConnection(): Boolean {
-        return networkUtilsWrapper.isNetworkConnected()
+    private val _syncClientsDialogUiState =
+        MutableStateFlow<SyncClientsDialogUiState>(SyncClientsDialogUiState.Loading)
+    val syncClientsDialogUiState: StateFlow<SyncClientsDialogUiState> = _syncClientsDialogUiState
+
+    private val _syncClientData: MutableStateFlow<SyncClientsDialogData> = MutableStateFlow(
+        SyncClientsDialogData()
+    )
+    val syncClientData: StateFlow<SyncClientsDialogData> = _syncClientData
+
+    fun setClientList(clientsList: List<Client>) {
+        mClientList = clientsList
+        _syncClientData.update { it.copy(clientList = clientsList) }
     }
 
-
-    /**
-     * This Method Start Syncing Clients. Start Syncing the Client Accounts.
-     *
-     * @param clients Selected Clients For Syncing
-     */
-    fun startSyncingClients(clients: List<Client>) {
-        mClientList = clients
-        checkNetworkConnectionAndSyncClient()
+    fun syncClient() {
+        if (PrefManager.userStatus == Constants.USER_ONLINE) {
+            checkNetworkConnection {
+                syncClientAndUpdateUI()
+            }
+        }
     }
 
     private fun syncClientAndUpdateUI() {
-        mLoanAndRepaymentSyncIndex = 0
-        mSavingsAndTransactionSyncIndex = 0
-        mLoanAccountSyncStatus = false
+        resetIndexes()
         updateTotalSyncProgressBarAndCount()
         if (mClientSyncIndex != mClientList.size) {
             updateClientName()
             syncClientAccounts(mClientList[mClientSyncIndex].id)
         } else {
-            _syncClientsDialogUiState.value = SyncClientsDialogUiState.ShowClientsSyncSuccessfully
+            _syncClientData.update { it.copy(isSyncSuccess = true) }
         }
     }
 
-    fun checkNetworkConnectionAndSyncClient() {
-        if (checkNetworkConnection()) {
-            syncClientAndUpdateUI()
-        } else {
-            _syncClientsDialogUiState.value = SyncClientsDialogUiState.ShowClientsSyncSuccessfully
-            _syncClientsDialogUiState.value = SyncClientsDialogUiState.DismissDialog
-        }
-    }
-
-    fun checkNetworkConnectionAndSyncLoanAndLoanRepayment() {
-        if (checkNetworkConnection()) {
+    private fun checkNetworkConnectionAndSyncLoanAndLoanRepayment() {
+        checkNetworkConnection {
             mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let { syncLoanAndLoanRepayment(it) }
-        } else {
-            _syncClientsDialogUiState.value = SyncClientsDialogUiState.ShowNetworkIsNotAvailable
-            _syncClientsDialogUiState.value = SyncClientsDialogUiState.DismissDialog
         }
     }
 
-    fun checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate() {
-        if (checkNetworkConnection()) {
-            mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let {
-                syncSavingsAccountAndTemplate(
-                    mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint,
-                    it
-                )
+    private fun resetIndexes() {
+        mLoanAccountSyncStatus = false
+        mLoanAndRepaymentSyncIndex = 0
+        mSavingsAndTransactionSyncIndex = 0
+    }
+
+    private fun checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate() {
+        checkNetworkConnection {
+            val endPoint =
+                mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint
+            val id = mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
+            if (endPoint != null && id != null) {
+                syncSavingsAccountAndTemplate(endPoint, id)
             }
-        } else {
-            _syncClientsDialogUiState.value = SyncClientsDialogUiState.ShowNetworkIsNotAvailable
-            _syncClientsDialogUiState.value = SyncClientsDialogUiState.DismissDialog
         }
     }
 
@@ -130,13 +124,11 @@ class SyncClientsDialogViewModel @Inject constructor(private val repository: Syn
         try {
             if (e is HttpException) {
                 val singleSyncClientMax = maxSingleSyncClientProgressBar
-                _syncClientsDialogUiState.value =
-                    SyncClientsDialogUiState.UpdateSingleSyncClientProgressBar(singleSyncClientMax)
+                _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
                 mFailedSyncClient.add(mClientList[mClientSyncIndex])
                 mClientSyncIndex += 1
-                _syncClientsDialogUiState.value =
-                    SyncClientsDialogUiState.ShowSyncedFailedClients(mFailedSyncClient.size)
-                checkNetworkConnectionAndSyncClient()
+                _syncClientData.update { it.copy(failedSyncGroupCount = mFailedSyncClient.size) }
+                syncClient()
             }
         } catch (throwable: Throwable) {
             RxJavaPlugins.getInstance().errorHandler.handleError(throwable)
@@ -163,14 +155,7 @@ class SyncClientsDialogViewModel @Inject constructor(private val repository: Syn
             .subscribe(object : Subscriber<ClientAccounts>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    _syncClientsDialogUiState.value =
-                        SyncClientsDialogUiState.ShowError(e.message.toString())
-                    //Updating UI
-                    mFailedSyncClient.add(mClientList[mClientSyncIndex])
-                    _syncClientsDialogUiState.value =
-                        SyncClientsDialogUiState.ShowSyncedFailedClients(mFailedSyncClient.size)
-                    mClientSyncIndex += 1
-                    checkNetworkConnectionAndSyncClient()
+                    onAccountSyncFailed(e)
                 }
 
                 override fun onNext(clientAccounts: ClientAccounts) {
@@ -221,10 +206,7 @@ class SyncClientsDialogViewModel @Inject constructor(private val repository: Syn
 
                 override fun onNext(loanAndLoanRepayment: LoanAndLoanRepayment) {
                     mLoanAndRepaymentSyncIndex += 1
-                    _syncClientsDialogUiState.value =
-                        SyncClientsDialogUiState.UpdateSingleSyncClientProgressBar(
-                            mLoanAndRepaymentSyncIndex
-                        )
+                    _syncClientData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex) }
                     if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
                         checkNetworkConnectionAndSyncLoanAndLoanRepayment()
                     } else {
@@ -272,10 +254,7 @@ class SyncClientsDialogViewModel @Inject constructor(private val repository: Syn
 
                 override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
                     mSavingsAndTransactionSyncIndex += 1
-                    _syncClientsDialogUiState.value =
-                        SyncClientsDialogUiState.UpdateSingleSyncClientProgressBar(
-                            mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex
-                        )
+                    _syncClientData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex) }
                     if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
                         checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
                     } else {
@@ -293,6 +272,7 @@ class SyncClientsDialogViewModel @Inject constructor(private val repository: Syn
      * @param client
      */
     fun syncClient(client: Client) {
+        client.groupId = mClientList[mClientSyncIndex].id
         client.sync = true
         repository.syncClientInDatabase(client)
             .observeOn(AndroidSchedulers.mainThread())
@@ -301,30 +281,39 @@ class SyncClientsDialogViewModel @Inject constructor(private val repository: Syn
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncClientsDialogUiState.value =
-                        SyncClientsDialogUiState.ShowError(e.message.toString())
+                        SyncClientsDialogUiState.Error(message = e.message.toString())
                 }
 
                 override fun onNext(client: Client) {
                     val singleSyncClientMax = maxSingleSyncClientProgressBar
-                    _syncClientsDialogUiState.value =
-                        SyncClientsDialogUiState.UpdateSingleSyncClientProgressBar(
-                            singleSyncClientMax
-                        )
+                    _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
                     mClientSyncIndex += 1
-                    checkNetworkConnectionAndSyncClient()
+                    syncClient()
                 }
             })
 
     }
 
     private fun updateTotalSyncProgressBarAndCount() {
-        _syncClientsDialogUiState.value =
-            SyncClientsDialogUiState.UpdateTotalSyncClientProgressBarAndCount(mClientSyncIndex)
+        _syncClientData.update { it.copy(totalSyncCount = mClientSyncIndex) }
     }
 
     private fun updateClientName() {
         val clientName = mClientList[mClientSyncIndex].firstname +
                 mClientList[mClientSyncIndex].lastname
-        _syncClientsDialogUiState.value = SyncClientsDialogUiState.ShowSyncingClient(clientName)
+        _syncClientData.update { it.copy(clientName = clientName) }
+    }
+
+    private fun checkNetworkConnection(
+        taskWhenOnline: () -> Unit
+    ) {
+        if (networkUtilsWrapper.isNetworkConnected()) {
+            taskWhenOnline.invoke()
+        } else {
+            _syncClientsDialogUiState.value = SyncClientsDialogUiState.Error(
+                messageResId = R.string.error_network_not_available,
+                imageVector = MifosIcons.WifiOff
+            )
+        }
     }
 }

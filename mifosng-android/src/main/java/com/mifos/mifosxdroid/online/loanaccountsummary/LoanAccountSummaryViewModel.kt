@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
+import com.mifos.feature.note.NoteUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -17,9 +20,9 @@ import javax.inject.Inject
 class LoanAccountSummaryViewModel @Inject constructor(private val repository: LoanAccountSummaryRepository) :
     ViewModel() {
 
-    private val _loanAccountSummaryUiState = MutableLiveData<LoanAccountSummaryUiState>()
+    private val _loanAccountSummaryUiState = MutableStateFlow<LoanAccountSummaryUiState>(LoanAccountSummaryUiState.ShowProgressbar)
 
-    val loanAccountSummaryUiState: LiveData<LoanAccountSummaryUiState>
+    val loanAccountSummaryUiState: StateFlow<LoanAccountSummaryUiState>
         get() = _loanAccountSummaryUiState
 
 
@@ -40,7 +43,7 @@ class LoanAccountSummaryViewModel @Inject constructor(private val repository: Lo
                         LoanAccountSummaryUiState.ShowLoanById(
                             it
                         )
-                    }
+                    }!!
                 }
             })
     }

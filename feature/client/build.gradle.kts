@@ -27,4 +27,6 @@ dependencies {
     androidTestImplementation(projects.core.testing)
 
     implementation(libs.androidx.material)
+
+    implementation(libs.maps.compose)
 }

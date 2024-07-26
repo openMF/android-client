@@ -13,11 +13,4 @@ sealed class SyncClientPayloadsUiState {
 
     data class ShowPayloads(val clientPayloads: List<ClientPayload>) : SyncClientPayloadsUiState()
 
-    data object ShowSyncResponse : SyncClientPayloadsUiState()
-
-    data class ShowPayloadDeletedAndUpdatePayloads(val clientPayloads: List<ClientPayload>) :
-        SyncClientPayloadsUiState()
-
-    data class ShowClientPayloadUpdated(val clientPayload: ClientPayload) :
-        SyncClientPayloadsUiState()
 }

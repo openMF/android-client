@@ -392,7 +392,7 @@
     <string name="stop_tracking">ट्रैकिंग रोकें</string>
     <string name="submit">जमा करें</string>
     <string name="submit_date">जमा करने की तारीख</string>
-    <string name="submittedon">जमा करने कि तिथी</string>
+    <string name="submitted_on">जमा करने कि तिथी</string>
     <string name="submit_survey">सर्वेक्षण जमा करें</string>
     <string name="submitting_surveys">सर्वेक्षण जमा करी जा रही है</string>
     <string name="summary_info">सारांश पर जानकारी</string>

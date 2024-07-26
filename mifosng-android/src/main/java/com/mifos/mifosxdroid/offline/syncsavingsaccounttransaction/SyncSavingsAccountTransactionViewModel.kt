@@ -1,13 +1,14 @@
 package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
 import com.mifos.mifosxdroid.R
 import com.mifos.utils.MFErrorParser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -22,13 +23,25 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
     ViewModel() {
 
     private val _syncSavingsAccountTransactionUiState =
-        MutableLiveData<SyncSavingsAccountTransactionUiState>()
-
-    val syncSavingsAccountTransactionUiState: LiveData<SyncSavingsAccountTransactionUiState>
+        MutableStateFlow<SyncSavingsAccountTransactionUiState>(SyncSavingsAccountTransactionUiState.Loading)
+    val syncSavingsAccountTransactionUiState: StateFlow<SyncSavingsAccountTransactionUiState>
         get() = _syncSavingsAccountTransactionUiState
+
+    private var mPaymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption> = emptyList()
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
+    fun refreshTransactions() {
+        _isRefreshing.value = true
+        loadDatabaseSavingsAccountTransactions()
+        loadPaymentTypeOption()
+        _isRefreshing.value = false
+    }
 
     private var mSavingsAccountTransactionRequests: MutableList<SavingsAccountTransactionRequest> =
         ArrayList()
+
     private var mTransactionIndex = 0
     private var mTransactionsFailed = 0
 
@@ -103,10 +116,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
      */
     fun showTransactionUpdatedSuccessfully(transaction: SavingsAccountTransactionRequest) {
         mSavingsAccountTransactionRequests[mTransactionIndex] = transaction
-        _syncSavingsAccountTransactionUiState.value =
-            SyncSavingsAccountTransactionUiState.ShowSavingsAccountTransactions(
-                mSavingsAccountTransactionRequests
-            )
+        updateUiState()
         mTransactionIndex += 1
         if (mSavingsAccountTransactionRequests.size != mTransactionIndex) {
             syncSavingsAccountTransactions()
@@ -123,8 +133,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
     fun showTransactionDeletedAndUpdated(transactions: MutableList<SavingsAccountTransactionRequest>) {
         mTransactionIndex = 0
         mSavingsAccountTransactionRequests = transactions
-        _syncSavingsAccountTransactionUiState.value =
-            SyncSavingsAccountTransactionUiState.ShowSavingsAccountTransactions(transactions)
+        updateUiState()
         if (mSavingsAccountTransactionRequests.size != 0) {
             syncSavingsAccountTransactions()
         } else {
@@ -146,7 +155,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
     </SavingsAccountTransactionRequest> */
     fun loadDatabaseSavingsAccountTransactions() {
         _syncSavingsAccountTransactionUiState.value =
-            SyncSavingsAccountTransactionUiState.ShowProgressbar
+            SyncSavingsAccountTransactionUiState.Loading
         repository.allSavingsAccountTransactions()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -159,12 +168,8 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
 
                 override fun onNext(transactionRequests: List<SavingsAccountTransactionRequest>) {
                     if (transactionRequests.isNotEmpty()) {
-                        _syncSavingsAccountTransactionUiState.value =
-                            SyncSavingsAccountTransactionUiState.ShowSavingsAccountTransactions(
-                                transactionRequests as MutableList<SavingsAccountTransactionRequest>
-                            )
-                        mSavingsAccountTransactionRequests =
-                            transactionRequests
+                        mSavingsAccountTransactionRequests = transactionRequests.toMutableList()
+                        updateUiState()
                     } else {
                         _syncSavingsAccountTransactionUiState.value =
                             SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(
@@ -182,7 +187,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
      */
     fun loadPaymentTypeOption() {
         _syncSavingsAccountTransactionUiState.value =
-            SyncSavingsAccountTransactionUiState.ShowProgressbar
+            SyncSavingsAccountTransactionUiState.Loading
         repository.paymentTypeOption()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -194,13 +199,24 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
                 }
 
                 override fun onNext(paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>) {
-                    _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.ShowPaymentTypeOptions(
-                            paymentTypeOptions
-                        )
+                    mPaymentTypeOptions = paymentTypeOptions
+                    updateUiState()
                 }
             })
 
+    }
+
+    private fun updateUiState() {
+        if (mSavingsAccountTransactionRequests.isNotEmpty()) {
+            _syncSavingsAccountTransactionUiState.value =
+                SyncSavingsAccountTransactionUiState.ShowSavingsAccountTransactions(
+                    mSavingsAccountTransactionRequests,
+                    mPaymentTypeOptions
+                )
+        } else {
+            _syncSavingsAccountTransactionUiState.value =
+                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.no_transaction_to_sync)
+        }
     }
 
     /**
@@ -223,7 +239,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
         request: SavingsAccountTransactionRequest?
     ) {
         _syncSavingsAccountTransactionUiState.value =
-            SyncSavingsAccountTransactionUiState.ShowProgressbar
+            SyncSavingsAccountTransactionUiState.Loading
         repository
             .processTransaction(type, accountId, transactionType, request!!)
             .observeOn(AndroidSchedulers.mainThread())
@@ -250,7 +266,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
     </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
     private fun deleteAndUpdateSavingsAccountTransaction(savingsAccountId: Int) {
         _syncSavingsAccountTransactionUiState.value =
-            SyncSavingsAccountTransactionUiState.ShowProgressbar
+            SyncSavingsAccountTransactionUiState.Loading
         repository.deleteAndUpdateTransactions(savingsAccountId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -277,7 +293,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
      */
     private fun updateSavingsAccountTransaction(request: SavingsAccountTransactionRequest?) {
         _syncSavingsAccountTransactionUiState.value =
-            SyncSavingsAccountTransactionUiState.ShowProgressbar
+            SyncSavingsAccountTransactionUiState.Loading
         repository.updateLoanRepaymentTransaction(request!!)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())

@@ -33,7 +33,7 @@
     <string name="loantype">Aina ya mkopo</string>
     <string name="principal">Cha Kimsingi</string>
     <string name="loanterm">Muda wa mkopo</string>
-    <string name="submittedon">Kiliwasilishwa siku ya</string>
+    <string name="submitted_on">Kiliwasilishwa siku ya</string>
     <string name="activation_date">Tarehe ya uanzishaji</string>
     <string name="office">Ofisi</string>
     <string name="group">Kundi</string>

@@ -279,9 +279,9 @@ class DataManagerClient @Inject constructor(
      * @param identifierPayload IdentifierPayload
      * @return IdentifierCreationResponse
      */
-    fun createClientIdentifier(
-        clientId: Int, identifierPayload: IdentifierPayload?
-    ): Observable<IdentifierCreationResponse> {
+    suspend fun createClientIdentifier(
+        clientId: Int, identifierPayload: IdentifierPayload
+    ): IdentifierCreationResponse {
         return mBaseApiManager.clientsApi.createClientIdentifier(clientId, identifierPayload)
     }
 
@@ -320,7 +320,7 @@ class DataManagerClient @Inject constructor(
      * @param clientId Client Id
      * @return ClientAddressResponse
      */
-    fun getClientPinpointLocations(clientId: Int): Observable<List<ClientAddressResponse>> {
+    suspend fun getClientPinpointLocations(clientId: Int): List<ClientAddressResponse> {
         return mBaseApiManager.clientsApi.getClientPinpointLocations(clientId)
     }
 
@@ -331,10 +331,10 @@ class DataManagerClient @Inject constructor(
      * @param address  Client Address
      * @return GenericResponse
      */
-    fun addClientPinpointLocation(
+    suspend fun addClientPinpointLocation(
         clientId: Int,
         address: ClientAddressRequest?
-    ): Observable<GenericResponse> {
+    ): GenericResponse {
         return mBaseApiManager.clientsApi.addClientPinpointLocation(clientId, address)
     }
 
@@ -345,10 +345,10 @@ class DataManagerClient @Inject constructor(
      * @param datatableId
      * @return GenericResponse
      */
-    fun deleteClientAddressPinpointLocation(
+    suspend fun deleteClientAddressPinpointLocation(
         apptableId: Int,
         datatableId: Int
-    ): Observable<GenericResponse> {
+    ): GenericResponse {
         return mBaseApiManager.clientsApi
             .deleteClientPinpointLocation(apptableId, datatableId)
     }
@@ -361,11 +361,11 @@ class DataManagerClient @Inject constructor(
      * @param address     Client Address
      * @return GenericResponse
      */
-    fun updateClientPinpointLocation(
+    suspend fun updateClientPinpointLocation(
         apptableId: Int,
         datatableId: Int,
         address: ClientAddressRequest?
-    ): Observable<GenericResponse> {
+    ): GenericResponse {
         return mBaseApiManager.clientsApi.updateClientPinpointLocation(
             apptableId, datatableId, address
         )

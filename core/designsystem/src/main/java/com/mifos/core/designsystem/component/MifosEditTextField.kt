@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.theme.BluePrimary
@@ -100,62 +101,6 @@ fun MifosOutlinedTextField(
 
 @Composable
 fun MifosOutlinedTextField(
-    value: String,
-    onvalueChange: (String) -> Unit,
-    maxLines: Int = 1,
-    singleLine: Boolean = true,
-    icon: ImageVector? = null,
-    label: String,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    error: Int?
-) {
-
-    OutlinedTextField(
-        value = value,
-        onValueChange = onvalueChange,
-        label = { Text(label) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp),
-        leadingIcon = if (icon != null) {
-            {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = if (isSystemInDarkTheme()) White else DarkGray
-                )
-            }
-        } else null,
-        trailingIcon = trailingIcon,
-        maxLines = maxLines,
-        singleLine = singleLine,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            focusedLabelColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
-        ),
-        textStyle = LocalDensity.current.run {
-            TextStyle(fontSize = 18.sp)
-        },
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-        visualTransformation = visualTransformation,
-        isError = error != null,
-        supportingText = if (error != null) {
-            {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(id = error),
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-        } else {
-            null
-        }
-    )
-}
-
-@Composable
-fun MifosOutlinedTextField(
     modifier: Modifier = Modifier,
     value: String,
     label: String,
@@ -198,6 +143,8 @@ fun MifosOutlinedTextField(
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelMedium,
+                maxLines = maxLines,
+                overflow = TextOverflow.Ellipsis,
             )
         },
         leadingIcon = {
@@ -263,13 +210,15 @@ fun MifosOutlinedTextField(
     value: String,
     onValueChange: (String) -> Unit,
     maxLines: Int = 1,
+    readOnly : Boolean = false,
     singleLine: Boolean = true,
     icon: ImageVector? = null,
     label: String,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
-    error: Int?
+    error: Int?,
+    enabled: Boolean = true
 ) {
 
     OutlinedTextField(
@@ -277,6 +226,8 @@ fun MifosOutlinedTextField(
         onValueChange = onValueChange,
         label = { Text(label) },
         modifier = modifier,
+        readOnly = readOnly,
+        enabled = enabled,
         leadingIcon = if (icon != null) {
             {
                 Icon(
@@ -366,18 +317,18 @@ private fun ClearIconButton(
 
 @Composable
 fun MifosDatePickerTextField(
+    modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
     value: String,
-    label: Int,
+    label: Int? = null,
+    labelString: String? = null,
     openDatePicker: () -> Unit
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = { },
-        label = { Text(text = stringResource(id = label)) },
+        label = { Text(text = labelString ?: label?.let { stringResource(id = label) } ?: "") },
         readOnly = true,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp),
+        modifier = modifier,
         maxLines = 1,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
