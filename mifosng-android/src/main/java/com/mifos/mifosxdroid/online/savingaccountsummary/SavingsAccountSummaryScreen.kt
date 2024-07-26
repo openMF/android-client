@@ -1,7 +1,6 @@
 package com.mifos.mifosxdroid.online.savingaccountsummary
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -25,12 +24,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MultiChoiceSegmentedButtonRow
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,12 +65,8 @@ import com.mifos.core.objects.accounts.savings.Status
 import com.mifos.core.objects.accounts.savings.Summary
 import com.mifos.core.objects.accounts.savings.Transaction
 import com.mifos.core.objects.accounts.savings.TransactionType
-import com.mifos.core.objects.response.SaveResponse
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupScreen
-import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupScreenPreviewProvider
-import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupUiState
 import com.mifos.utils.DateHelper
 
 /**
@@ -145,6 +138,7 @@ fun SavingsAccountSummaryScreen(
         onBackPressed = navigateBack,
         title = stringResource(id = R.string.savingsAccountSummary),
         icon = MifosIcons.arrowBack,
+        fontsizeInSp = 22,
         actions = {
             IconButton(onClick = { showDropdown = !showDropdown }) {
                 Icon(imageVector = MifosIcons.moreVert, contentDescription = "")
