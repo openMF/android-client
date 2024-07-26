@@ -572,9 +572,9 @@ class SavingsAccountScreenPreviewProvider : PreviewParameterProvider<SavingAccou
                 ),
                 mSavingProductsTemplate = SavingProductsTemplate()
             )),
-            SavingAccountUiState.ShowFetchingErrorString("F"),
+            SavingAccountUiState.ShowFetchingErrorString("Failed to fetch"),
             SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(Savings()),
-            SavingAccountUiState.ShowFetchingError(R.string.savings_account_submitted_for_approval)
+            SavingAccountUiState.ShowFetchingError(R.string.failed_to_fetch_savings_template)
         )
 }
 

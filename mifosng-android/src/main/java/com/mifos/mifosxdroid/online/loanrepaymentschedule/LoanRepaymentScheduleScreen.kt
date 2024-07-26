@@ -352,6 +352,3 @@ fun PreviewLoanRepaymentSchedule(
         onRetry = {}
     )
 }
-
-
-

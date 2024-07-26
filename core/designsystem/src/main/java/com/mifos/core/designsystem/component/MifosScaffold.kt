@@ -35,6 +35,7 @@ fun MifosScaffold(
     isAppBarPresent: Boolean = true,
     icon: ImageVector? = null,
     title: String? = null,
+    fontsizeInSp : Int = 24,
     onBackPressed: () -> Unit = {},
     actions: @Composable () -> Unit = {},
     snackbarHostState: SnackbarHostState?,
@@ -67,7 +68,7 @@ fun MifosScaffold(
                             Text(
                                 text = it,
                                 style = TextStyle(
-                                    fontSize = 24.sp,
+                                    fontSize = fontsizeInSp.sp,
                                     fontWeight = FontWeight.Medium,
                                     fontStyle = FontStyle.Normal
                                 ),
