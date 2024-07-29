@@ -42,13 +42,13 @@ interface CollectionSheetService {
      * @return List of CenterDetail
      */
     @GET(APIEndPoint.CENTERS)
-    fun fetchCenterDetails(
+    suspend fun fetchCenterDetails(
         @Query("dateFormat") format: String?,
         @Query("locale") locale: String?,
         @Query("meetingDate") meetingDate: String?,
         @Query("officeId") officeId: Int,
         @Query("staffId") staffId: Int
-    ): Observable<List<CenterDetail>>
+    ): List<CenterDetail>
 
     /**
      * Request Endpoint to fetch Productive CollectionSheet
@@ -57,30 +57,30 @@ interface CollectionSheetService {
      * @return CollectionSheetResponse
      */
     @POST(APIEndPoint.CENTERS + "/{centerId}" + "?command=generateCollectionSheet")
-    fun fetchProductiveSheet(
+    suspend fun fetchProductiveSheet(
         @Path("centerId") centerId: Int,
         @Body payload: CollectionSheetRequestPayload?
-    ): Observable<CollectionSheetResponse>
+    ): CollectionSheetResponse
 
     @POST(APIEndPoint.CENTERS + "/{centerId}" + "?command=saveCollectionSheet")
-    fun submitProductiveSheet(
+    suspend fun submitProductiveSheet(
         @Path("centerId") centerId: Int,
         @Body payload: ProductiveCollectionSheetPayload?
-    ): Observable<GenericResponse>
+    ): GenericResponse
 
     @POST(APIEndPoint.GROUPS + "/{groupId}" + "?command=generateCollectionSheet")
-    fun fetchCollectionSheet(
+    suspend fun fetchCollectionSheet(
         @Path("groupId") groupId: Int,
         @Body payload: CollectionSheetRequestPayload?
-    ): Observable<CollectionSheetResponse>
+    ): CollectionSheetResponse
 
     @POST(APIEndPoint.GROUPS + "/{groupId}" + "?command=saveCollectionSheet")
-    fun submitCollectionSheet(
+    suspend fun submitCollectionSheet(
         @Path("groupId") groupId: Int, @Body payload: CollectionSheetPayload?
-    ): Observable<GenericResponse>
+    ): GenericResponse
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers, collectionMeetingCalendar")
-    fun fetchGroupsAssociatedWithCenter(
+    suspend fun fetchGroupsAssociatedWithCenter(
         @Path("centerId") centerId: Int
-    ): Observable<CenterWithAssociations>
+    ): CenterWithAssociations
 }

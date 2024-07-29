@@ -9,7 +9,6 @@ import com.mifos.core.network.datamanager.DataManagerAuth
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerCharge
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.core.network.datamanager.DataManagerCollectionSheet
 import com.mifos.core.network.datamanager.DataManagerDataTable
 import com.mifos.core.network.datamanager.DataManagerDocument
 import com.mifos.core.network.datamanager.DataManagerGroups
@@ -63,8 +62,6 @@ import com.mifos.mifosxdroid.online.datatable.DataTableRepository
 import com.mifos.mifosxdroid.online.datatable.DataTableRepositoryImp
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepository
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepositoryImp
-import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepository
-import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepositoryImp
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
@@ -226,14 +223,6 @@ class RepositoryModule {
         dataManagerClient: DataManagerClient
     ): DataTableListRepository {
         return DataTableListRepositoryImp(dataManagerLoan, dataManager, dataManagerClient)
-    }
-
-    @Provides
-    fun providesGenerateCollectionSheetRepository(
-        dataManager: DataManager,
-        collectionDataManager: DataManagerCollectionSheet
-    ): GenerateCollectionSheetRepository {
-        return GenerateCollectionSheetRepositoryImp(dataManager, collectionDataManager)
     }
 
     @Provides
