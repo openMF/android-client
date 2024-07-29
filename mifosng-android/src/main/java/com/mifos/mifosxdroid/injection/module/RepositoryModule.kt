@@ -2,8 +2,8 @@ package com.mifos.mifosxdroid.injection.module
 
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.data.repository.NoteRepository
-import com.mifos.core.data.repository_imp.DocumentDialogRepositoryImp
-import com.mifos.core.data.repository_imp.NoteRepositoryImp
+import com.mifos.core.data.repositoryImp.DocumentDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.NoteRepositoryImp
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerAuth
 import com.mifos.core.network.datamanager.DataManagerCenter

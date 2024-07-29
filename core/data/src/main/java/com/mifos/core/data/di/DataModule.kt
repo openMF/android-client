@@ -1,5 +1,13 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.data.di
-
 
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.data.repository.CenterDetailsRepository
@@ -29,39 +37,40 @@ import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.data.repository.SignatureRepository
-import com.mifos.core.data.repository_imp.ActivateRepositoryImp
-import com.mifos.core.data.repository_imp.CenterDetailsRepositoryImp
-import com.mifos.core.data.repository_imp.CenterListRepositoryImp
-import com.mifos.core.data.repository_imp.ChargeDialogRepositoryImp
-import com.mifos.core.data.repository_imp.CheckerInboxRepositoryImp
-import com.mifos.core.data.repository_imp.CheckerInboxTasksRepositoryImp
-import com.mifos.core.data.repository_imp.ClientChargeRepositoryImp
-import com.mifos.core.data.repository_imp.ClientIdentifierDialogRepositoryImp
-import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
-import com.mifos.core.data.repository_imp.CreateNewCenterRepositoryImp
-import com.mifos.core.data.repository_imp.DataTableDataRepositoryImp
-import com.mifos.core.data.repository_imp.DataTableRowDialogRepositoryImp
-import com.mifos.core.data.repository_imp.DocumentListRepositoryImp
-import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
-import com.mifos.core.data.repository_imp.GroupListRepositoryImp
-import com.mifos.core.data.repository_imp.GroupLoanAccountRepositoryImp
-import com.mifos.core.data.repository_imp.GroupsListRepositoryImpl
-import com.mifos.core.data.repository_imp.IndividualCollectionSheetDetailsRepositoryImp
-import com.mifos.core.data.repository_imp.LoanAccountRepositoryImp
-import com.mifos.core.data.repository_imp.LoanChargeDialogRepositoryImp
-import com.mifos.core.data.repository_imp.LoanChargeRepositoryImp
-import com.mifos.core.data.repository_imp.NewIndividualCollectionSheetRepositoryImp
-import com.mifos.core.data.repository_imp.PathTrackingRepositoryImp
-import com.mifos.core.data.repository_imp.PinPointClientRepositoryImp
-import com.mifos.core.data.repository_imp.ReportCategoryRepositoryImp
-import com.mifos.core.data.repository_imp.ReportDetailRepositoryImp
-import com.mifos.core.data.repository_imp.SearchRepositoryImp
-import com.mifos.core.data.repository_imp.SignatureRepositoryImp
+import com.mifos.core.data.repositoryImp.ActivateRepositoryImp
+import com.mifos.core.data.repositoryImp.CenterDetailsRepositoryImp
+import com.mifos.core.data.repositoryImp.CenterListRepositoryImp
+import com.mifos.core.data.repositoryImp.ChargeDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.CheckerInboxRepositoryImp
+import com.mifos.core.data.repositoryImp.CheckerInboxTasksRepositoryImp
+import com.mifos.core.data.repositoryImp.ClientChargeRepositoryImp
+import com.mifos.core.data.repositoryImp.ClientIdentifierDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.ClientIdentifiersRepositoryImp
+import com.mifos.core.data.repositoryImp.CreateNewCenterRepositoryImp
+import com.mifos.core.data.repositoryImp.DataTableDataRepositoryImp
+import com.mifos.core.data.repositoryImp.DataTableRowDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.DocumentListRepositoryImp
+import com.mifos.core.data.repositoryImp.GroupDetailsRepositoryImp
+import com.mifos.core.data.repositoryImp.GroupListRepositoryImp
+import com.mifos.core.data.repositoryImp.GroupLoanAccountRepositoryImp
+import com.mifos.core.data.repositoryImp.GroupsListRepositoryImpl
+import com.mifos.core.data.repositoryImp.IndividualCollectionSheetDetailsRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanAccountRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanChargeDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanChargeRepositoryImp
+import com.mifos.core.data.repositoryImp.NewIndividualCollectionSheetRepositoryImp
+import com.mifos.core.data.repositoryImp.PathTrackingRepositoryImp
+import com.mifos.core.data.repositoryImp.PinPointClientRepositoryImp
+import com.mifos.core.data.repositoryImp.ReportCategoryRepositoryImp
+import com.mifos.core.data.repositoryImp.ReportDetailRepositoryImp
+import com.mifos.core.data.repositoryImp.SearchRepositoryImp
+import com.mifos.core.data.repositoryImp.SignatureRepositoryImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
+@Suppress("TooManyFunctions")
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataModule {
@@ -70,11 +79,13 @@ abstract class DataModule {
     abstract fun bindCheckerInboxTasksRepository(impl: CheckerInboxTasksRepositoryImp): CheckerInboxTasksRepository
 
     @Binds
-    abstract fun bindNewIndividualCollectionSheetRepository(impl: NewIndividualCollectionSheetRepositoryImp): NewIndividualCollectionSheetRepository
+    abstract fun bindNewIndividualCollectionSheetRepository(
+        impl: NewIndividualCollectionSheetRepositoryImp,
+    ): NewIndividualCollectionSheetRepository
 
     @Binds
     internal abstract fun provideGroupListRepository(
-        groupsListRepositoryImpl: GroupsListRepositoryImpl
+        groupsListRepositoryImpl: GroupsListRepositoryImpl,
     ): GroupsListRepository
 
     @Binds
@@ -102,7 +113,9 @@ abstract class DataModule {
     internal abstract fun bindCreateNewCenterRepository(impl: CreateNewCenterRepositoryImp): CreateNewCenterRepository
 
     @Binds
-    internal abstract fun bindClientIdentifiersRepository(impl: ClientIdentifiersRepositoryImp): ClientIdentifiersRepository
+    internal abstract fun bindClientIdentifiersRepository(
+        impl: ClientIdentifiersRepositoryImp,
+    ): ClientIdentifiersRepository
 
     @Binds
     internal abstract fun bindPinpointRepository(impl: PinPointClientRepositoryImp): PinPointClientRepository
@@ -120,19 +133,25 @@ abstract class DataModule {
     internal abstract fun bindDocumentListRepository(impl: DocumentListRepositoryImp): DocumentListRepository
 
     @Binds
-    internal abstract fun bindIndividualCollectionSheetDetailsRepositoryImp(impl: IndividualCollectionSheetDetailsRepositoryImp): IndividualCollectionSheetDetailsRepository
+    internal abstract fun bindIndividualCollectionSheetDetailsRepositoryImp(
+        impl: IndividualCollectionSheetDetailsRepositoryImp,
+    ): IndividualCollectionSheetDetailsRepository
 
     @Binds
     internal abstract fun bindGroupListRepository(impl: GroupListRepositoryImp): GroupListRepository
 
     @Binds
-    internal abstract fun bindGroupLoanAccountRepository(impl: GroupLoanAccountRepositoryImp): GroupLoanAccountRepository
+    internal abstract fun bindGroupLoanAccountRepository(
+        impl: GroupLoanAccountRepositoryImp,
+    ): GroupLoanAccountRepository
 
     @Binds
     internal abstract fun bindLoanChargeRepository(impl: LoanChargeRepositoryImp): LoanChargeRepository
 
     @Binds
-    internal abstract fun bindLoanChargeDialogRepository(impl: LoanChargeDialogRepositoryImp): LoanChargeDialogRepository
+    internal abstract fun bindLoanChargeDialogRepository(
+        impl: LoanChargeDialogRepositoryImp,
+    ): LoanChargeDialogRepository
 
     @Binds
     internal abstract fun bindChargeDialogRepository(impl: ChargeDialogRepositoryImp): ChargeDialogRepository
@@ -141,10 +160,14 @@ abstract class DataModule {
     internal abstract fun bindDataTableDataRepository(impl: DataTableDataRepositoryImp): DataTableDataRepository
 
     @Binds
-    internal abstract fun bindDataTableRowDialogRepository(impl: DataTableRowDialogRepositoryImp): DataTableRowDialogRepository
+    internal abstract fun bindDataTableRowDialogRepository(
+        impl: DataTableRowDialogRepositoryImp,
+    ): DataTableRowDialogRepository
 
     @Binds
-    internal abstract fun bindClientIdentifiersDialogRepository(impl: ClientIdentifierDialogRepositoryImp): ClientIdentifierDialogRepository
+    internal abstract fun bindClientIdentifiersDialogRepository(
+        impl: ClientIdentifierDialogRepositoryImp,
+    ): ClientIdentifierDialogRepository
 
     @Binds
     internal abstract fun bindSignatureRepository(impl: SignatureRepositoryImp): SignatureRepository
