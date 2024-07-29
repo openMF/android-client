@@ -1,3 +1,18 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.mifos.core.ui.util
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -18,7 +33,7 @@ object SearchResultPreviewData {
             entityType = "Clients",
             parentId = 0,
             parentName = null,
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 2,
@@ -27,7 +42,7 @@ object SearchResultPreviewData {
             entityType = "Clients",
             parentId = 0,
             parentName = null,
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 3,
@@ -36,7 +51,7 @@ object SearchResultPreviewData {
             entityType = "Groups",
             parentId = 0,
             parentName = null,
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 4,
@@ -45,7 +60,7 @@ object SearchResultPreviewData {
             entityType = "Clients",
             parentId = 3,
             parentName = "Acme Group",
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 5,
@@ -54,7 +69,7 @@ object SearchResultPreviewData {
             entityType = "Loans",
             parentId = 1,
             parentName = "John Doe",
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 6,
@@ -63,7 +78,7 @@ object SearchResultPreviewData {
             entityType = "Savings",
             parentId = 2,
             parentName = "Jane Smith",
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 7,
@@ -72,7 +87,7 @@ object SearchResultPreviewData {
             entityType = "Center",
             parentId = 0,
             parentName = null,
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 8,
@@ -81,7 +96,7 @@ object SearchResultPreviewData {
             entityType = "Center",
             parentId = 7,
             parentName = "Central Office",
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 9,
@@ -90,7 +105,7 @@ object SearchResultPreviewData {
             entityType = "Center",
             parentId = 7,
             parentName = "Central Office",
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 10,
@@ -99,7 +114,7 @@ object SearchResultPreviewData {
             entityType = "Loans",
             parentId = 4,
             parentName = "Bob Johnson",
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 11,
@@ -108,7 +123,7 @@ object SearchResultPreviewData {
             entityType = "Savings",
             parentId = 4,
             parentName = "Bob Johnson",
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 12,
@@ -117,7 +132,7 @@ object SearchResultPreviewData {
             entityType = "Clients",
             parentId = 0,
             parentName = null,
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 13,
@@ -126,7 +141,7 @@ object SearchResultPreviewData {
             entityType = "Groups",
             parentId = 0,
             parentName = null,
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 14,
@@ -135,7 +150,7 @@ object SearchResultPreviewData {
             entityType = "Loans",
             parentId = 12,
             parentName = "New Client",
-            entityStatus = null
+            entityStatus = null,
         ),
         SearchedEntity(
             entityId = 15,
@@ -144,7 +159,7 @@ object SearchResultPreviewData {
             entityType = "Savings",
             parentId = 13,
             parentName = "Small Group",
-            entityStatus = null
-        )
+            entityStatus = null,
+        ),
     )
 }

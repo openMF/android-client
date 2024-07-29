@@ -1,3 +1,18 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.mifos.core.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
@@ -23,7 +38,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 enum class FabType {
-    CLIENT, CENTER, GROUP
+    CLIENT,
+    CENTER,
+    GROUP,
 }
 
 sealed class FabButtonState {
@@ -47,53 +64,55 @@ data class FabButton(
 
 @Composable
 fun FabItem(
-    modifier: Modifier = Modifier,
     fabButton: FabButton,
-    onFabClick: (FabType) -> Unit
+    modifier: Modifier = Modifier,
+    onFabClick: (FabType) -> Unit,
 ) {
     FloatingActionButton(
         onClick = {
             onFabClick(fabButton.fabType)
         },
         modifier = modifier
-            .size(48.dp)
+            .size(48.dp),
     ) {
         Icon(
             painter = painterResource(id = fabButton.iconRes),
-            contentDescription = fabButton.fabType.name
+            contentDescription = fabButton.fabType.name,
         )
     }
 }
 
 @Composable
 fun MultiFloatingActionButton(
-    modifier: Modifier = Modifier,
     fabButtons: List<FabButton>,
     fabButtonState: FabButtonState,
     onFabButtonStateChange: (FabButtonState) -> Unit,
+    modifier: Modifier = Modifier,
     onFabClick: (FabType) -> Unit,
 ) {
     val rotation by animateFloatAsState(
-        if (fabButtonState.isExpanded())
+        if (fabButtonState.isExpanded()) {
             45f
-        else
-            0f, label = "mainFabRotation"
+        } else {
+            0f
+        },
+        label = "mainFabRotation",
     )
 
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         AnimatedVisibility(
             visible = fabButtonState.isExpanded(),
             enter = fadeIn() + expandVertically(),
-            exit = fadeOut() + shrinkVertically()
+            exit = fadeOut() + shrinkVertically(),
         ) {
             Column {
                 fabButtons.forEach {
                     FabItem(
                         fabButton = it,
-                        onFabClick = onFabClick
+                        onFabClick = onFabClick,
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                 }
@@ -105,11 +124,11 @@ fun MultiFloatingActionButton(
                 onFabButtonStateChange(fabButtonState.toggleValue())
             },
             modifier = Modifier
-                .rotate(rotation)
+                .rotate(rotation),
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "mainFabIcon"
+                contentDescription = "mainFabIcon",
             )
         }
     }
