@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.objects.templates.clients
 
 import android.os.Parcelable
@@ -31,20 +40,20 @@ data class ClientsTemplate(
     var clientTypeOptions: List<Options> = ArrayList(),
     var clientClassificationOptions: List<Options> = ArrayList(),
     var clientLegalFormOptions: List<InterestType> = ArrayList(),
-    var dataTables: List<DataTable> = ArrayList()
+    var dataTables: List<DataTable> = ArrayList(),
 ) : MifosBaseModel(), Parcelable {
 
     override fun toString(): String {
         return "ClientsTemplate{" +
-                "activationDate=" + activationDate.contentToString() +
-                ", officeId=" + officeId +
-                ", officeOptions=" + officeOptions +
-                ", staffOptions=" + staffOptions +
-                ", savingProductOptions=" + savingProductOptions +
-                ", genderOptions=" + genderOptions +
-                ", clientTypeOptions=" + clientTypeOptions +
-                ", clientClassificationOptions=" + clientClassificationOptions +
-                ", clientLegalFormOptions=" + clientLegalFormOptions +
-                '}'
+            "activationDate=" + activationDate.contentToString() +
+            ", officeId=" + officeId +
+            ", officeOptions=" + officeOptions +
+            ", staffOptions=" + staffOptions +
+            ", savingProductOptions=" + savingProductOptions +
+            ", genderOptions=" + genderOptions +
+            ", clientTypeOptions=" + clientTypeOptions +
+            ", clientClassificationOptions=" + clientClassificationOptions +
+            ", clientLegalFormOptions=" + clientLegalFormOptions +
+            '}'
     }
 }

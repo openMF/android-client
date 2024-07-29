@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.databasehelper
 
 import android.os.AsyncTask
@@ -44,7 +53,7 @@ class DatabaseHelperCenter @Inject constructor() {
      *
      * @return List Of Centers
      */
-    //TODO Implement Observable Transaction to load Center List
+    // TODO Implement Observable Transaction to load Center List
     fun readAllCenters(): Observable<Page<Center>> {
         return Observable.create<Page<Center>> { subscriber ->
             val centerPage = Page<Center>()
@@ -103,10 +112,11 @@ class DatabaseHelperCenter @Inject constructor() {
                         center.activationDate[1]?.let { it2 ->
                             center.activationDate[2]?.let { it3 ->
                                 CenterDate(
-                                    it.toLong(), 0,
+                                    it.toLong(),
+                                    0,
                                     it1,
                                     it2,
-                                    it3
+                                    it3,
                                 )
                             }
                         }
@@ -136,7 +146,7 @@ class DatabaseHelperCenter @Inject constructor() {
     }
 
     fun updateDatabaseCenterPayload(
-        centerPayload: CenterPayload
+        centerPayload: CenterPayload,
     ): Observable<CenterPayload> {
         return Observable.defer {
             centerPayload.update()
@@ -153,7 +163,7 @@ class DatabaseHelperCenter @Inject constructor() {
      */
     fun saveCenterAccounts(
         centerAccounts: CenterAccounts,
-        centerId: Int
+        centerId: Int,
     ): Observable<CenterAccounts> {
         return Observable.defer {
             val loanAccounts = centerAccounts.loanAccounts

@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.databasehelper
 
 import com.google.gson.Gson
@@ -57,7 +66,7 @@ class DatabaseHelperClient @Inject constructor() {
         val gsonBuilder = GsonBuilder()
         gsonBuilder.registerTypeAdapter(
             object : TypeToken<HashMap<String, Any>>() {}.type,
-            MapDeserializer()
+            MapDeserializer(),
         )
         gson = gsonBuilder.create()
         type = object : TypeToken<HashMap<String, Any>>() {}.type
@@ -70,23 +79,26 @@ class DatabaseHelperClient @Inject constructor() {
      * @return saved Client
      */
     fun saveClient(client: Client): Observable<Client> {
-        return Observable.defer(Func0 { //Saving Client in Database
-            val clientDate = client.activationDate[0]?.let {
-                client.activationDate[1]?.let { it1 ->
-                    client.activationDate[2]?.let { it2 ->
-                        ClientDate(
-                            client.id.toLong(), 0,
-                            it,
-                            it1,
-                            it2
-                        )
+        return Observable.defer(
+            Func0 { // Saving Client in Database
+                val clientDate = client.activationDate[0]?.let {
+                    client.activationDate[1]?.let { it1 ->
+                        client.activationDate[2]?.let { it2 ->
+                            ClientDate(
+                                client.id.toLong(),
+                                0,
+                                it,
+                                it1,
+                                it2,
+                            )
+                        }
                     }
                 }
-            }
-            client.clientDate = clientDate
-            client.save()
-            Observable.just(client)
-        })
+                client.clientDate = clientDate
+                client.save()
+                Observable.just(client)
+            },
+        )
     }
 
     /**
@@ -94,7 +106,7 @@ class DatabaseHelperClient @Inject constructor() {
      *
      * @return List Of Client
      */
-    //TODO Implement Observable Transaction to load Client List
+    // TODO Implement Observable Transaction to load Client List
     fun readAllClients(): Observable<Page<Client>> {
         return Observable.create<Page<Client>> { subscriber ->
             val clientPage = Page<Client>()
@@ -134,7 +146,7 @@ class DatabaseHelperClient @Inject constructor() {
                 client.activationDate = listOf(
                     client.clientDate?.day,
                     client.clientDate?.month,
-                    client.clientDate?.year
+                    client.clientDate?.year,
                 )
             }
             subscriber.onNext(client)
@@ -150,7 +162,7 @@ class DatabaseHelperClient @Inject constructor() {
      */
     fun saveClientAccounts(
         clientAccounts: ClientAccounts,
-        clientId: Int
+        clientId: Int,
     ): Observable<ClientAccounts> {
         return Observable.defer {
             val loanAccounts = clientAccounts.loanAccounts
@@ -198,7 +210,7 @@ class DatabaseHelperClient @Inject constructor() {
      * @return void
      */
     fun saveClientTemplate(clientsTemplate: ClientsTemplate): Observable<ClientsTemplate> {
-        return Observable.defer { //saving clientTemplate into DB;
+        return Observable.defer { // saving clientTemplate into DB;
             clientsTemplate.save()
             for (officeOptions: OfficeOptions in clientsTemplate.officeOptions) {
                 officeOptions.save()
@@ -228,7 +240,7 @@ class DatabaseHelperClient @Inject constructor() {
             for (dataTable: DataTable in clientsTemplate.dataTables) {
                 Delete.table(DataTable::class.java)
                 Delete.table(
-                    ColumnHeader::class.java
+                    ColumnHeader::class.java,
                 )
                 Delete.table(ColumnValue::class.java)
                 dataTable.save()
@@ -289,7 +301,7 @@ class DatabaseHelperClient @Inject constructor() {
                         .from(ColumnHeader::class.java)
                         .where(
                             ColumnHeader_Table.registeredTableName
-                                .eq(dataTable.registeredTableName)
+                                .eq(dataTable.registeredTableName),
                         )
                         .queryList()
                     for (columnHeader: ColumnHeader in columnHeaders) {
@@ -298,8 +310,8 @@ class DatabaseHelperClient @Inject constructor() {
                             .where(
                                 ColumnValue_Table.registeredTableName.eq(
                                     dataTable
-                                        .registeredTableName
-                                )
+                                        .registeredTableName,
+                                ),
                             )
                             .queryList()
                         if (columnValues.isNotEmpty()) {
@@ -340,7 +352,7 @@ class DatabaseHelperClient @Inject constructor() {
                         dataTablePayload.clientCreationTime = currentTime
                         val jsonObject = gson.toJsonTree(
                             dataTablePayload
-                                .data
+                                .data,
                         ).asJsonObject
                         dataTablePayload.dataTableString = jsonObject.toString()
                         dataTablePayload.save()
@@ -367,7 +379,7 @@ class DatabaseHelperClient @Inject constructor() {
                         .from(DataTablePayload::class.java)
                         .where(
                             DataTablePayload_Table.clientCreationTime
-                                .eq(clientPayload.clientCreationTime)
+                                .eq(clientPayload.clientCreationTime),
                         )
                         .queryList()
                     if (dataTablePayloads.isNotEmpty()) {
@@ -375,7 +387,7 @@ class DatabaseHelperClient @Inject constructor() {
                             .subscribe { dataTablePayload ->
                                 val data = gson.fromJson<HashMap<String, Any>>(
                                     dataTablePayload.dataTableString,
-                                    type
+                                    type,
                                 )
                                 dataTablePayload.data = data
                             }
@@ -396,13 +408,13 @@ class DatabaseHelperClient @Inject constructor() {
      */
     fun deleteAndUpdatePayloads(
         id: Int,
-        clientCreationTIme: Long
+        clientCreationTIme: Long,
     ): Observable<List<ClientPayload>> {
         return Observable.defer {
             Delete.table(ClientPayload::class.java, ClientPayload_Table.id.eq(id))
             Delete.table(
                 DataTablePayload::class.java,
-                DataTablePayload_Table.clientCreationTime.eq(clientCreationTIme)
+                DataTablePayload_Table.clientCreationTime.eq(clientCreationTIme),
             )
             readAllClientPayload()
         }
