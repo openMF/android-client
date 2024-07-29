@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.objects.zipmodels
 
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
@@ -14,7 +23,7 @@ class LoanAndLoanRepayment {
     constructor()
     constructor(
         loanWithAssociations: LoanWithAssociations?,
-        loanRepaymentTemplate: LoanRepaymentTemplate?
+        loanRepaymentTemplate: LoanRepaymentTemplate?,
     ) {
         this.loanWithAssociations = loanWithAssociations
         this.loanRepaymentTemplate = loanRepaymentTemplate
@@ -22,8 +31,8 @@ class LoanAndLoanRepayment {
 
     override fun toString(): String {
         return "LoanAndLoanRepayment{" +
-                "loanWithAssociations=" + loanWithAssociations +
-                ", loanRepaymentTemplate=" + loanRepaymentTemplate +
-                '}'
+            "loanWithAssociations=" + loanWithAssociations +
+            ", loanRepaymentTemplate=" + loanRepaymentTemplate +
+            '}'
     }
 }

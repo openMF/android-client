@@ -4,7 +4,6 @@
  */
 package com.mifos.utils
 
-import android.annotation.TargetApi
 import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
@@ -18,14 +17,17 @@ import android.webkit.MimeTypeMap
 import com.mifos.utils.AndroidVersionUtil.isApiVersionGreaterOrEqual
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
 /**
  * Created by ishankhanna on 03/07/14.
  */
+@Suppress("ReturnCount")
 object FileUtils {
-    val LOG_TAG = FileUtils::class.java.simpleName
+    val LOG_TAG: String = FileUtils::class.java.simpleName
+
     fun getPathReal(context: Context, uri: Uri): String? {
         return if (isApiVersionGreaterOrEqual(Build.VERSION_CODES.KITKAT)) {
             getPathRealOnKitkatAboveVersion(context, uri)
@@ -40,12 +42,15 @@ object FileUtils {
             var cursor: Cursor? = null
             try {
                 cursor = context.contentResolver.query(uri, projection, null, null, null)
-                val column_index = cursor!!.getColumnIndexOrThrow("_data")
+                val columnIndex = cursor!!.getColumnIndexOrThrow("_data")
                 if (cursor.moveToFirst()) {
-                    return cursor.getString(column_index)
+                    return cursor.getString(columnIndex)
                 }
-            } catch (e: Exception) {
-                // Eat it
+
+                cursor.close()
+            } catch (e: IOException) {
+                cursor?.close()
+                return null
             }
         } else if ("file".equals(uri.scheme, ignoreCase = true)) {
             return uri.path
@@ -53,12 +58,9 @@ object FileUtils {
         return null
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    fun getPathRealOnKitkatAboveVersion(context: Context, uri: Uri): String? {
-        val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-
+    private fun getPathRealOnKitkatAboveVersion(context: Context, uri: Uri): String? {
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+        if (DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
@@ -73,7 +75,7 @@ object FileUtils {
             } else if (isDownloadsDocument(uri)) {
                 val id = DocumentsContract.getDocumentId(uri)
                 val contentUri = ContentUris.withAppendedId(
-                    Uri.parse("content://downloads/public_downloads"), id.toLong()
+                    Uri.parse("content://downloads/public_downloads"), id.toLong(),
                 )
                 return getDataColumn(context, contentUri, null, null)
 
@@ -83,29 +85,34 @@ object FileUtils {
                 val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                 val type = split[0]
                 var contentUri: Uri? = null
-                if ("image" == type) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                } else if ("video" == type) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                } else if ("audio" == type) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                when (type) {
+                    "image" -> {
+                        contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    }
+
+                    "video" -> {
+                        contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                    }
+
+                    "audio" -> {
+                        contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    }
                 }
                 val selection = "_id=?"
                 val selectionArgs = arrayOf(
-                    split[1]
+                    split[1],
                 )
                 return getDataColumn(context, contentUri, selection, selectionArgs)
             }
 
             // MediaStore (and general)
         } else if ("content".equals(uri.scheme, ignoreCase = true)) {
-
             // Return the remote address
             return if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumn(
                 context,
                 uri,
                 null,
-                null
+                null,
             )
 
             // File
@@ -115,19 +122,19 @@ object FileUtils {
         return null
     }
 
-    fun getDataColumn(
+    private fun getDataColumn(
         context: Context, uri: Uri?, selection: String?,
-        selectionArgs: Array<String>?
+        selectionArgs: Array<String>?,
     ): String? {
         var cursor: Cursor? = null
         val column = "_data"
         val projection = arrayOf(
-            column
+            column,
         )
         try {
             cursor = context.contentResolver.query(
                 uri!!, projection, selection, selectionArgs,
-                null
+                null,
             )
             if (cursor != null && cursor.moveToFirst()) {
                 val index = cursor.getColumnIndexOrThrow(column)
@@ -143,7 +150,7 @@ object FileUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
-    fun isExternalStorageDocument(uri: Uri): Boolean {
+    private fun isExternalStorageDocument(uri: Uri): Boolean {
         return "com.android.externalstorage.documents" == uri.authority
     }
 
@@ -151,7 +158,7 @@ object FileUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
-    fun isDownloadsDocument(uri: Uri): Boolean {
+    private fun isDownloadsDocument(uri: Uri): Boolean {
         return "com.android.providers.downloads.documents" == uri.authority
     }
 
@@ -159,7 +166,7 @@ object FileUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
-    fun isMediaDocument(uri: Uri): Boolean {
+    private fun isMediaDocument(uri: Uri): Boolean {
         return "com.android.providers.media.documents" == uri.authority
     }
 
@@ -167,7 +174,7 @@ object FileUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is Google Photos.
      */
-    fun isGooglePhotosUri(uri: Uri): Boolean {
+    private fun isGooglePhotosUri(uri: Uri): Boolean {
         return "com.google.android.apps.photos.content" == uri.authority
     }
 
@@ -189,21 +196,21 @@ object FileUtils {
     /**
      * This Method for writing InputStream into File.
      *
-     * @param in   InputStream
+     * @param inputStream InputStream
      * @param file File
      */
-    fun writeInputStreamDataToFile(`in`: InputStream, file: File?) {
+    fun writeInputStreamDataToFile(inputStream: InputStream, file: File?) {
         try {
             val out: OutputStream = FileOutputStream(file)
             val buf = ByteArray(1024)
             var len: Int
-            while (`in`.read(buf).also { len = it } > 0) {
+            while (inputStream.read(buf).also { len = it } > 0) {
                 out.write(buf, 0, len)
             }
             out.close()
-            `in`.close()
-        } catch (e: Exception) {
-            Log.d(LOG_TAG, e.localizedMessage)
+            inputStream.close()
+        } catch (e: IOException) {
+            Log.d(LOG_TAG, e.message.toString())
         }
     }
 }

@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.common.utils
@@ -26,7 +31,7 @@ object Constants {
     const val ENTITY_TYPE_STAFF = "staff"
     const val ENTITY_TYPE_CLIENT_IDENTIFIERS = "client_identifiers"
 
-    //Search Entities
+    // Search Entities
     const val SEARCH_ENTITY_CLIENT = "CLIENT"
     const val SEARCH_ENTITY_GROUP = "GROUP"
     const val SEARCH_ENTITY_LOAN = "LOAN"
@@ -93,7 +98,7 @@ object Constants {
     const val SAVED = "SAVED"
     const val FILLNOW = "FillNow"
 
-    //This needs to be 8 bits because validateRequestPermissionsRequestCode
+    // This needs to be 8 bits because validateRequestPermissionsRequestCode
     // in FragmentActivity requires requestCode to be of 8 bits, meaning the range is from 0 to 255.
     const val REQUEST_PERMISSION_SETTING = 254
 

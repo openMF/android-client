@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.objects
@@ -35,7 +40,7 @@ data class PaymentTypeOption(
 
     @SerializedName("position")
     @Column
-    var position: Int? = null
+    var position: Int? = null,
 ) : MifosBaseModel(), Comparable<PaymentTypeOption>, Parcelable {
 
     override fun compareTo(another: PaymentTypeOption): Int {
@@ -44,12 +49,12 @@ data class PaymentTypeOption(
 
     override fun toString(): String {
         return "PaymentTypeOption{" +
-                "id=$id, " +
-                "name='$name', " +
-                "description='$description', " +
-                "isCashPayment=$isCashPayment, " +
-                "position=$position" +
-                '}'
+            "id=$id, " +
+            "name='$name', " +
+            "description='$description', " +
+            "isCashPayment=$isCashPayment, " +
+            "position=$position" +
+            '}'
     }
 
     constructor(parcel: Parcel) : this(
@@ -57,7 +62,7 @@ data class PaymentTypeOption(
         parcel.readString() as String,
         parcel.readString(),
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
-        parcel.readValue(Int::class.java.classLoader) as? Int
+        parcel.readValue(Int::class.java.classLoader) as? Int,
     )
 
     override fun describeContents(): Int {
@@ -82,8 +87,3 @@ data class PaymentTypeOption(
         }
     }
 }
-
-
-
-
-

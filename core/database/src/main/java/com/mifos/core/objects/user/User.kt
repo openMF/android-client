@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.objects.user
@@ -7,7 +12,7 @@ package com.mifos.core.objects.user
 import com.mifos.core.objects.client.Role
 
 class User {
-    //{"username":"User1","userId":1,"base64EncodedAuthenticationKey":"VXNlcjE6dGVjaDRtZg\u003d
+    // {"username":"User1","userId":1,"base64EncodedAuthenticationKey":"VXNlcjE6dGVjaDRtZg\u003d
     // \u003d",
     // "authenticated":true,"officeId":1,"officeName":"Office1",
     // "roles":[{"id":1,"name":"Admin","description":"Admin"}],
@@ -22,15 +27,15 @@ class User {
     var permissions: List<String> = ArrayList()
     override fun toString(): String {
         return "User{" +
-                "username='" + username + '\'' +
-                ", userId=" + userId +
-                ", base64EncodedAuthenticationKey='" + base64EncodedAuthenticationKey + '\'' +
-                ", authenticated=" + isAuthenticated +
-                ", officeId=" + officeId +
-                ", officeName='" + officeName + '\'' +
-                ", roles=" + roles +
-                ", permissions=" + permissions +
-                '}'
+            "username='" + username + '\'' +
+            ", userId=" + userId +
+            ", base64EncodedAuthenticationKey='" + base64EncodedAuthenticationKey + '\'' +
+            ", authenticated=" + isAuthenticated +
+            ", officeId=" + officeId +
+            ", officeName='" + officeName + '\'' +
+            ", roles=" + roles +
+            ", permissions=" + permissions +
+            '}'
     }
 
     companion object {

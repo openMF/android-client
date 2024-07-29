@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.databasehelper
 
 import com.mifos.core.objects.accounts.GroupAccounts
@@ -34,27 +43,30 @@ class DatabaseHelperGroups @Inject constructor() {
      * @return Observable.just(Group)
      */
     fun saveGroup(group: Group): Observable<Group> {
-        return Observable.defer(Func0 {
-            if (group.activationDate.isNotEmpty()) {
-                val groupDate = group.id?.toLong()?.let {
-                    group.activationDate[0].let { it1 ->
-                        group.activationDate[1].let { it2 ->
-                            group.activationDate[2].let { it3 ->
-                                GroupDate(
-                                    it, 0,
-                                    it1,
-                                    it2,
-                                    it3
-                                )
+        return Observable.defer(
+            Func0 {
+                if (group.activationDate.isNotEmpty()) {
+                    val groupDate = group.id?.toLong()?.let {
+                        group.activationDate[0].let { it1 ->
+                            group.activationDate[1].let { it2 ->
+                                group.activationDate[2].let { it3 ->
+                                    GroupDate(
+                                        it,
+                                        0,
+                                        it1,
+                                        it2,
+                                        it3,
+                                    )
+                                }
                             }
                         }
                     }
+                    group.groupDate = groupDate
                 }
-                group.groupDate = groupDate
-            }
-            group.save()
-            Observable.just(group)
-        })
+                group.save()
+                Observable.just(group)
+            },
+        )
     }
 
     /**
@@ -105,7 +117,7 @@ class DatabaseHelperGroups @Inject constructor() {
             if (group != null) {
                 group.activationDate = listOf(
                     group.groupDate?.day,
-                    group.groupDate?.month, group.groupDate?.year
+                    group.groupDate?.month, group.groupDate?.year,
                 ) as List<Int>
             }
             Observable.just(group)
@@ -121,7 +133,7 @@ class DatabaseHelperGroups @Inject constructor() {
      */
     fun saveGroupAccounts(
         groupAccounts: GroupAccounts,
-        groupId: Int
+        groupId: Int,
     ): Observable<GroupAccounts> {
         return Observable.defer {
             val loanAccounts = groupAccounts.loanAccounts

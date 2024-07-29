@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.objects.collectionsheet
 
 import android.os.Parcel
@@ -54,8 +63,8 @@ class LoanCollectionSheet() : Parcelable {
 
     override fun toString(): String {
         return "LoanCollectionSheet(accountId=$accountId, accountStatusId=$accountStatusId, currency=$currency, " +
-                "interestDue=$interestDue, interestPaid=$interestPaid, loanId=$loanId, principalDue=$principalDue, " +
-                "productId=$productId, totalDue=$totalDue, chargesDue=$chargesDue, productShortName=$productShortName)"
+            "interestDue=$interestDue, interestPaid=$interestPaid, loanId=$loanId, principalDue=$principalDue, " +
+            "productId=$productId, totalDue=$totalDue, chargesDue=$chargesDue, productShortName=$productShortName)"
     }
 
     companion object CREATOR : Parcelable.Creator<LoanCollectionSheet> {

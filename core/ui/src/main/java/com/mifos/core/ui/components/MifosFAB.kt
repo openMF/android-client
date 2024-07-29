@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.ui.components
 
 import androidx.compose.foundation.layout.Box
@@ -12,22 +21,22 @@ import com.mifos.core.designsystem.theme.BlueSecondary
 
 @Composable
 fun MifosFAB(
-    modifier: Modifier = Modifier,
     icon: ImageVector,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     containerColor: Color = BlueSecondary,
 ) {
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.BottomEnd
+        contentAlignment = Alignment.BottomEnd,
     ) {
         FloatingActionButton(
             onClick = onClick,
-            containerColor = containerColor
+            containerColor = containerColor,
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = "MifosFab"
+                contentDescription = "MifosFab",
             )
         }
     }

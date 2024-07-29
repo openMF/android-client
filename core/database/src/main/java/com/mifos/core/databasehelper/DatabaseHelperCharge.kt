@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.databasehelper
 
 import android.os.AsyncTask
@@ -25,23 +34,26 @@ class DatabaseHelperCharge @Inject constructor() {
      */
     fun saveClientCharges(
         chargesPage: Page<Charges>,
-        clientId: Int
+        clientId: Int,
     ): Observable<Void>? {
-        AsyncTask.THREAD_POOL_EXECUTOR.execute(Runnable {
-            for (charges: Charges in chargesPage.pageItems) {
-                charges.clientId = clientId
-                val clientDate = charges.id?.toLong()?.let {
-                    ClientDate(
-                        0, it,
-                        charges.dueDate[2],
-                        charges.dueDate[1],
-                        charges.dueDate[0]
-                    )
+        AsyncTask.THREAD_POOL_EXECUTOR.execute(
+            Runnable {
+                for (charges: Charges in chargesPage.pageItems) {
+                    charges.clientId = clientId
+                    val clientDate = charges.id?.toLong()?.let {
+                        ClientDate(
+                            0,
+                            it,
+                            charges.dueDate[2],
+                            charges.dueDate[1],
+                            charges.dueDate[0],
+                        )
+                    }
+                    charges.chargeDueDate = clientDate
+                    charges.save()
                 }
-                charges.chargeDueDate = clientDate
-                charges.save()
-            }
-        })
+            },
+        )
         return null
     }
 
@@ -53,18 +65,19 @@ class DatabaseHelperCharge @Inject constructor() {
      * @return Page of Charges
      */
     fun readClientCharges(clientId: Int): Observable<Page<Charges>> {
-        return Observable.create<Page<Charges>> { subscriber -> //Loading All charges from Charges_Table as reference to client id
+        // Loading All charges from Charges_Table as reference to client id
+        return Observable.create<Page<Charges>> { subscriber ->
             val chargesList = SQLite.select()
                 .from(Charges::class.java)
                 .where(Charges_Table.clientId.eq(clientId))
                 .queryList()
 
-            //Setting the Charge Due Date
+            // Setting the Charge Due Date
             for (i in chargesList.indices) {
                 chargesList[i].dueDate = listOf(
                     chargesList[i].chargeDueDate!!.year,
                     chargesList[i].chargeDueDate!!.month,
-                    chargesList[i].chargeDueDate!!.day
+                    chargesList[i].chargeDueDate!!.day,
                 )
             }
             val chargePage = Page<Charges>()

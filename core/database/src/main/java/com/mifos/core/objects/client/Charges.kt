@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.objects.client
 
 import android.os.Parcelable
@@ -79,16 +88,18 @@ data class Charges(
     var paid: Boolean? = null,
 
     @Column
-    var waived: Boolean? = null
+    var waived: Boolean? = null,
 ) : MifosBaseModel(), Parcelable {
 
     val formattedDueDate: String
         get() {
             val pattern = "%s-%s-%s"
-            if (dueDate.size>2) {
+            if (dueDate.size > 2) {
                 return String.format(
                     pattern,
-                    dueDate[0], dueDate[1], dueDate[2]
+                    dueDate[0],
+                    dueDate[1],
+                    dueDate[2],
                 )
             }
             return "No Due Date"

@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.objects.collectionsheet
 
 import android.os.Parcelable
@@ -9,7 +18,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class MeetingFallCalendar(
-    //It's not a mistake. This AccountNo field DOES expect a String.
+    // It's not a mistake. This AccountNo field DOES expect a String.
     var accountNo: String? = null,
 
     var activationDate: IntArray,
@@ -38,5 +47,5 @@ data class MeetingFallCalendar(
 
     var totalOverdue: Int = 0,
 
-    var totaldue: Int = 0
+    var totaldue: Int = 0,
 ) : Parcelable

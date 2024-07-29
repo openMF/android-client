@@ -112,6 +112,9 @@ rxandroidVersion = "1.1.0"
 rxjava = "1.3.8"
 rxjava3 = "3.1.8" # 1.3.8
 rxandroid = "3.0.2" # 1.1.0
+detekt = "1.23.5"
+kode-detekt-compose = "1.3.0"
+twitter-detekt-compose = "0.0.26"
 
 secrets = "2.0.1"
 stetho = "1.3.1"
@@ -368,6 +371,12 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 # Truth
 truth = { group = "com.google.truth", name = "truth", version.ref = "truthVersion" }
 
+# Detekt
+detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name="detekt-gradle-plugin", version.ref="detekt"}
+detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name="detekt-formatting", version.ref="detekt"}
+kode-detekt-compose = { group="ru.kode", name="detekt-rules-compose", version.ref="kode-detekt-compose" }
+twitter-detekt-compose = { group="com.twitter.compose.rules", name="detekt", version.ref="twitter-detekt-compose" }
+
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
@@ -377,7 +386,6 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -399,6 +407,9 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 realm = { id = "io.realm.kotlin", version.ref = "realmVersion" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
+detekt = {id = "io.gitlab.arturbosch.detekt", version.ref = "detekt"}
+detekt-compiler = {id = "io.github.detekt.gradle.compiler-plugin", version.ref="detekt"}
+
 
 # Plugins defined by this project
 mifos-android-application = { id = "mifos.android.application", version = "unspecified" }
