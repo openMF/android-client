@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.generatecollectionsheet
+package com.mifos.core.data.repository
 
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.collectionsheet.CenterDetail
@@ -9,39 +9,38 @@ import com.mifos.core.objects.collectionsheet.ProductiveCollectionSheetPayload
 import com.mifos.core.objects.group.Center
 import com.mifos.core.objects.group.CenterWithAssociations
 import com.mifos.core.objects.group.Group
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
 interface GenerateCollectionSheetRepository {
 
-    fun getCentersInOffice(id: Int, params: Map<String, String>): Observable<List<Center>>
+    suspend fun getCentersInOffice(id: Int, params: Map<String, String>): List<Center>
 
-    fun getGroupsByOffice(
+    suspend fun getGroupsByOffice(
         office: Int,
         params: Map<String, String>
-    ): Observable<List<Group>>
+    ): List<Group>
 
-    fun fetchGroupsAssociatedWithCenter(centerId: Int): Observable<CenterWithAssociations>
+    suspend fun fetchGroupsAssociatedWithCenter(centerId: Int): CenterWithAssociations
 
-    fun fetchCenterDetails(
+    suspend fun fetchCenterDetails(
         format: String?, locale: String?, meetingDate: String?, officeId: Int, staffId: Int
-    ): Observable<List<CenterDetail>>
+    ): List<CenterDetail>
 
-    fun fetchProductiveCollectionSheet(
+    suspend fun fetchProductiveCollectionSheet(
         centerId: Int, payload: CollectionSheetRequestPayload?
-    ): Observable<CollectionSheetResponse>
+    ): CollectionSheetResponse
 
-    fun fetchCollectionSheet(
+    suspend fun fetchCollectionSheet(
         groupId: Int, payload: CollectionSheetRequestPayload?
-    ): Observable<CollectionSheetResponse>
+    ): CollectionSheetResponse
 
-    fun submitProductiveSheet(
+    suspend fun submitProductiveSheet(
         centerId: Int, payload: ProductiveCollectionSheetPayload?
-    ): Observable<GenericResponse>
+    ): GenericResponse
 
-    fun submitCollectionSheet(
+    suspend fun submitCollectionSheet(
         groupId: Int, payload: CollectionSheetPayload?
-    ): Observable<GenericResponse>
+    ): GenericResponse
 }

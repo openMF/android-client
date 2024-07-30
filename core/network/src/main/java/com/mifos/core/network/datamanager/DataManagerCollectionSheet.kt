@@ -40,45 +40,45 @@ class DataManagerCollectionSheet @Inject constructor(
     /**
      * Productive CollectionSheet API
      */
-    fun fetchCenterDetails(
+    suspend fun fetchCenterDetails(
         format: String?, locale: String?, meetingDate: String?, officeId: Int, staffId: Int
-    ): Observable<List<CenterDetail>> {
+    ): List<CenterDetail> {
         return mBaseApiManager.collectionSheetApi.fetchCenterDetails(
             format, locale, meetingDate, officeId, staffId
         )
     }
 
-    fun fetchProductiveCollectionSheet(
+    suspend fun fetchProductiveCollectionSheet(
         centerId: Int, payload: CollectionSheetRequestPayload?
-    ): Observable<CollectionSheetResponse> {
+    ): CollectionSheetResponse {
         return mBaseApiManager.collectionSheetApi.fetchProductiveSheet(centerId, payload)
     }
 
-    fun submitProductiveSheet(
+    suspend fun submitProductiveSheet(
         centerId: Int, payload: ProductiveCollectionSheetPayload?
-    ): Observable<GenericResponse> {
+    ): GenericResponse {
         return mBaseApiManager.collectionSheetApi.submitProductiveSheet(centerId, payload)
     }
 
     /**
      * CollectionSheet API
      */
-    fun fetchCollectionSheet(
+    suspend fun fetchCollectionSheet(
         groupId: Int, payload: CollectionSheetRequestPayload?
-    ): Observable<CollectionSheetResponse> {
+    ): CollectionSheetResponse {
         return mBaseApiManager.collectionSheetApi.fetchCollectionSheet(groupId, payload)
     }
 
-    fun submitCollectionSheet(
+    suspend fun submitCollectionSheet(
         groupId: Int, payload: CollectionSheetPayload?
-    ): Observable<GenericResponse> {
+    ): GenericResponse {
         return mBaseApiManager.collectionSheetApi.submitCollectionSheet(groupId, payload)
     }
 
     /**
      * Associated groups API
      */
-    fun fetchGroupsAssociatedWithCenter(centerId: Int): Observable<CenterWithAssociations> {
+    suspend fun fetchGroupsAssociatedWithCenter(centerId: Int): CenterWithAssociations {
         return mBaseApiManager.collectionSheetApi.fetchGroupsAssociatedWithCenter(centerId)
     }
 }

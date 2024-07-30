@@ -25,4 +25,25 @@
     <string name="feature_collection_sheet_total_due">Total due</string>
     <string name="feature_collection_sheet_individual_collection_details">Collection Details</string>
 
+    <string name="feature_collection_sheet_attendance_type">Attendance Type</string>
+    <string name="feature_collection_sheet_payment_type">Payment Type</string>
+    <string name="feature_collection_sheet_failed_to_load_office">Failed to Load Office</string>
+    <string name="feature_collection_sheet_failed_to_load_staff">Failed to Load Staff</string>
+    <string name="feature_collection_sheet_failed_to_load_center">Failed to Load Center</string>
+    <string name="feature_collection_sheet_failed_to_load_group">Failed to Load Group</string>
+    <string name="feature_collection_sheet_failed_to_load_center_details">Failed to Load Center Details</string>
+    <string name="feature_collection_sheet_failed_to_load_productive_sheet">Failed to Load Productive Sheet</string>
+    <string name="feature_collection_sheet_failed_to_load_collection_sheet">Failed to Load Collection Sheet</string>
+    <string name="feature_collection_sheet_failed_to_submit_productive_sheet">Failed to Submit Productive Sheet</string>
+    <string name="feature_collection_sheet_failed_to_submit_collection_sheet">Failed to Submit Collection Sheet</string>
+    <string name="feature_collection_sheet_center">Center</string>
+    <string name="feature_collection_sheet_group">Group</string>
+
+    <string name="feature_collection_sheet_submit_productive_sheet">Submit Productive Sheet</string>
+    <string name="feature_collection_sheet_submit_collection_sheet">Submit Collection Sheet</string>
+    <string name="feature_collection_sheet_generate_collection_sheet">Generate Collection Sheet</string>
+    <string name="feature_collection_sheet_productive_collection_sheet">Productive Collection Sheet</string>
+    <string name="feature_collection_sheet_productive_sheet_submitted">Productive Sheet Submitted Successfully</string>
+    <string name="feature_collection_sheet_collection_sheet_submitted">Collection Sheet Submitted Successfully</string>
+
 </resources>

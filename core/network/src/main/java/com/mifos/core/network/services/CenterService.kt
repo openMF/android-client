@@ -43,10 +43,10 @@ interface CenterService {
     suspend fun getCenterWithGroupMembersAndCollectionMeetingCalendar(@Path("centerId") centerId: Int): CenterWithAssociations
 
     @GET(APIEndPoint.CENTERS)
-    fun getAllCentersInOffice(
+    suspend fun getAllCentersInOffice(
         @Query("officeId") officeId: Int,
         @QueryMap additionalParams: Map<String, String>
-    ): Observable<List<Center>>
+    ): List<Center>
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")
     fun getAllGroupsForCenter(@Path("centerId") centerId: Int): Observable<CenterWithAssociations>

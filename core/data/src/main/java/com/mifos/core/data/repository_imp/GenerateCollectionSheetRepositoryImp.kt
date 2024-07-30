@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.generatecollectionsheet
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerCollectionSheet
@@ -11,7 +12,6 @@ import com.mifos.core.objects.collectionsheet.ProductiveCollectionSheetPayload
 import com.mifos.core.objects.group.Center
 import com.mifos.core.objects.group.CenterWithAssociations
 import com.mifos.core.objects.group.Group
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -22,31 +22,31 @@ class GenerateCollectionSheetRepositoryImp @Inject constructor(
     private val collectionDataManager: DataManagerCollectionSheet
 ) : GenerateCollectionSheetRepository {
 
-    override fun getCentersInOffice(
+    override suspend fun getCentersInOffice(
         id: Int,
         params: Map<String, String>
-    ): Observable<List<Center>> {
+    ): List<Center> {
         return dataManager.getCentersInOffice(id, params)
     }
 
-    override fun getGroupsByOffice(
+    override suspend fun getGroupsByOffice(
         office: Int,
         params: Map<String, String>
-    ): Observable<List<Group>> {
+    ): List<Group> {
         return dataManager.getGroupsByOffice(office, params)
     }
 
-    override fun fetchGroupsAssociatedWithCenter(centerId: Int): Observable<CenterWithAssociations> {
+    override suspend fun fetchGroupsAssociatedWithCenter(centerId: Int): CenterWithAssociations {
         return collectionDataManager.fetchGroupsAssociatedWithCenter(centerId)
     }
 
-    override fun fetchCenterDetails(
+    override suspend fun fetchCenterDetails(
         format: String?,
         locale: String?,
         meetingDate: String?,
         officeId: Int,
         staffId: Int
-    ): Observable<List<CenterDetail>> {
+    ): List<CenterDetail> {
         return collectionDataManager.fetchCenterDetails(
             format,
             locale,
@@ -56,31 +56,31 @@ class GenerateCollectionSheetRepositoryImp @Inject constructor(
         )
     }
 
-    override fun fetchProductiveCollectionSheet(
+    override suspend fun fetchProductiveCollectionSheet(
         centerId: Int,
         payload: CollectionSheetRequestPayload?
-    ): Observable<CollectionSheetResponse> {
+    ): CollectionSheetResponse {
         return collectionDataManager.fetchProductiveCollectionSheet(centerId, payload)
     }
 
-    override fun fetchCollectionSheet(
+    override suspend fun fetchCollectionSheet(
         groupId: Int,
         payload: CollectionSheetRequestPayload?
-    ): Observable<CollectionSheetResponse> {
+    ): CollectionSheetResponse {
         return collectionDataManager.fetchCollectionSheet(groupId, payload)
     }
 
-    override fun submitProductiveSheet(
+    override suspend fun submitProductiveSheet(
         centerId: Int,
         payload: ProductiveCollectionSheetPayload?
-    ): Observable<GenericResponse> {
+    ): GenericResponse {
         return collectionDataManager.submitProductiveSheet(centerId, payload)
     }
 
-    override fun submitCollectionSheet(
+    override suspend fun submitCollectionSheet(
         groupId: Int,
         payload: CollectionSheetPayload?
-    ): Observable<GenericResponse> {
+    ): GenericResponse {
         return collectionDataManager.submitCollectionSheet(groupId, payload)
     }
 }

@@ -14,6 +14,7 @@ import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.DataTableDataRepository
 import com.mifos.core.data.repository.DataTableRowDialogRepository
 import com.mifos.core.data.repository.DocumentListRepository
+import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.core.data.repository.GroupLoanAccountRepository
@@ -42,6 +43,7 @@ import com.mifos.core.data.repository_imp.CreateNewCenterRepositoryImp
 import com.mifos.core.data.repository_imp.DataTableDataRepositoryImp
 import com.mifos.core.data.repository_imp.DataTableRowDialogRepositoryImp
 import com.mifos.core.data.repository_imp.DocumentListRepositoryImp
+import com.mifos.core.data.repository_imp.GenerateCollectionSheetRepositoryImp
 import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.GroupListRepositoryImp
 import com.mifos.core.data.repository_imp.GroupLoanAccountRepositoryImp
@@ -151,4 +153,7 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun provideSearchRepository(repository: SearchRepositoryImp): SearchRepository
+
+    @Binds
+    internal abstract fun bindGenerateCollectionSheetRepository(impl: GenerateCollectionSheetRepositoryImp): GenerateCollectionSheetRepository
 }
