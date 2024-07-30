@@ -12,6 +12,8 @@ dependencies {
 
     implementation(projects.core.datastore)
     implementation(projects.core.domain)
+    implementation(projects.core.ui)
+    implementation(libs.appcompat)
 
     androidTestImplementation(libs.androidx.compose.ui.test)
     debugApi(libs.androidx.compose.ui.testManifest)
