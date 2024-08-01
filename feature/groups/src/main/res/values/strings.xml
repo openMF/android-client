@@ -5,7 +5,6 @@
     <string name="feature_groups_failed_to_load_db_groups">Failed to load Database Groups</string>
     <string name="feature_groups_failed_to_fetch_groups">Failed to Fetch Groups</string>
     <string name="feature_groups_no_more_groups_available">No more Groups Available</string>
-    <string name="feature_groups_group">Group</string>
     <string name="feature_groups_add_loan_account">Add Loan Account</string>
     <string name="feature_groups_add_savings_account">Add Savings Account</string>
     <string name="feature_groups_documents">Documents</string>
@@ -24,5 +23,26 @@
     <string name="feature_groups_failed_to_load_client">Failed to Load Client</string>
     <string name="feature_groups_activate_group">Activate Group</string>
     <string name="feature_groups_sync">Sync</string>
-
+    <string name="feature_groups_group">Group</string>
+    <string name="feature_groups_name">Name</string>
+    <string name="feature_groups_error_not_connected_internet">Not connected to Network</string>
+    <string name="feature_groups_office_name_mandatory">Office*</string>
+    <string name="feature_groups_submit_date">Submit Date</string>
+    <string name="feature_groups_submit">Submit</string>
+    <string name="feature_groups_all_groups_synced">All Groups have been Synced</string>
+    <string name="feature_groups_no_group_payload_to_sync">There is No Group Payload to Sync</string>
+    <string name="feature_groups_active">Active</string>
+    <string name="feature_groups_error_group_name_cannot_be_empty">Group name can not be empty</string>
+    <string name="feature_groups_error_group_name_must_be_at_least_four_characters_long">Group name must be at least 4 characters long</string>
+    <string name="feature_groups_error_group_name_should_contain_only_alphabets">Group name should contain only alphabets</string>
+    <string name="feature_groups_error_office_not_selected">Office not selected</string>
+    <string name="feature_groups_select_date">Select Date</string>
+    <string name="feature_groups_sync_groups">Groups</string>
+    <string name="feature_groups_dismiss">Dismiss</string>
+    <string name="feature_groups_create_new_group">Create New Group</string>
+    <string name="feature_groups_click_to_refresh">Click to Refresh</string>
+    <string name="feature_groups_office_id">Office Id</string>
+    <string name="feature_groups_error_group_sync_failed">Group sync failed</string>
+    <string name="feature_groups_error_failed_to_load_groupPayload">Failed to load GroupPayload</string>
+    <string name="feature_groups_error_failed_to_update_list">Failed to Update List</string>
 </resources>

@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.feature.groups.sync_group_payloads.GroupPayloadField
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.offline.syncgrouppayloads.GroupPayloadField
 
 @Composable
 fun SyncGroupDialogScreen(

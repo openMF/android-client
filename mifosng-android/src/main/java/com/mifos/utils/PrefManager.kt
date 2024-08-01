@@ -18,8 +18,7 @@ object PrefManager : UserPreferences<User>() {
     private const val AUTH_USERNAME = "auth_username"
     private const val AUTH_PASSWORD = "auth_password"
 
-    override val preference: SharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(App.instance?.applicationContext)
+    override val preference: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.instance?.applicationContext)
 
     override fun getUser(): User {
         return get(Key.Custom(USER_DETAILS))

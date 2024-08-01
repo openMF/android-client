@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.navigation.findNavController
 import com.mifos.core.common.utils.Constants
-import com.mifos.feature.groupsList.group_list.GroupsListRoute
+import com.mifos.feature.groups.group_list.GroupsListRoute
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.core.MifosBaseFragment

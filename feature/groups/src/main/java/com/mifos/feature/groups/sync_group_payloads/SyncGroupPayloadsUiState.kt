@@ -1,7 +1,8 @@
-package com.mifos.mifosxdroid.offline.syncgrouppayloads
+package com.mifos.feature.groups.sync_group_payloads
 
 import com.mifos.core.objects.group.GroupPayload
-import com.mifos.mifosxdroid.R
+import com.mifos.feature.groups.R
+
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -17,12 +18,12 @@ enum class GroupPayloadEmptyState(
     val iconResId: Int
 ) {
     ALL_SYNCED(
-        messageResId = R.string.all_groups_synced,
-        iconResId = R.drawable.ic_assignment_turned_in_black_24dp
+        messageResId = R.string.feature_groups_all_groups_synced,
+        iconResId = R.drawable.feature_groups_ic_assignment_turned_in_black_24dp
     ),
     NOTHING_TO_SYNC (
-        messageResId = R.string.no_group_payload_to_sync,
-        iconResId = R.drawable.ic_assignment_turned_in_black_24dp
+        messageResId = R.string.feature_groups_no_group_payload_to_sync,
+        iconResId = R.drawable.feature_groups_ic_assignment_turned_in_black_24dp
     )
 }
 

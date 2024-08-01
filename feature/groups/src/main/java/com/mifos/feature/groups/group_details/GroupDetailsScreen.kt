@@ -1,4 +1,4 @@
-package com.mifos.feature.groupsList.group_details
+package com.mifos.feature.groups.group_details
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing

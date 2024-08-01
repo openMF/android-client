@@ -1,4 +1,4 @@
-package com.mifos.feature.groupsList.group_list
+package com.mifos.feature.groups.group_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

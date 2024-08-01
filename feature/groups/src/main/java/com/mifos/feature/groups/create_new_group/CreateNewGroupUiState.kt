@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.createnewgroup
+package com.mifos.feature.groups.create_new_group
 
 import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.response.SaveResponse

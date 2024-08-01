@@ -11,6 +11,7 @@ import com.mifos.core.data.repository.ClientChargeRepository
 import com.mifos.core.data.repository.ClientIdentifierDialogRepository
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.CreateNewCenterRepository
+import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.data.repository.DataTableDataRepository
 import com.mifos.core.data.repository.DataTableRowDialogRepository
 import com.mifos.core.data.repository.DocumentListRepository
@@ -30,6 +31,7 @@ import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.data.repository.SignatureRepository
+import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.data.repository_imp.ActivateRepositoryImp
 import com.mifos.core.data.repository_imp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.CenterListRepositoryImp
@@ -40,6 +42,7 @@ import com.mifos.core.data.repository_imp.ClientChargeRepositoryImp
 import com.mifos.core.data.repository_imp.ClientIdentifierDialogRepositoryImp
 import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repository_imp.CreateNewCenterRepositoryImp
+import com.mifos.core.data.repository_imp.CreateNewGroupRepositoryImp
 import com.mifos.core.data.repository_imp.DataTableDataRepositoryImp
 import com.mifos.core.data.repository_imp.DataTableRowDialogRepositoryImp
 import com.mifos.core.data.repository_imp.DocumentListRepositoryImp
@@ -59,6 +62,7 @@ import com.mifos.core.data.repository_imp.ReportCategoryRepositoryImp
 import com.mifos.core.data.repository_imp.ReportDetailRepositoryImp
 import com.mifos.core.data.repository_imp.SearchRepositoryImp
 import com.mifos.core.data.repository_imp.SignatureRepositoryImp
+import com.mifos.core.data.repository_imp.SyncGroupPayloadsRepositoryImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -75,9 +79,7 @@ abstract class DataModule {
     abstract fun bindNewIndividualCollectionSheetRepository(impl: NewIndividualCollectionSheetRepositoryImp): NewIndividualCollectionSheetRepository
 
     @Binds
-    internal abstract fun provideGroupListRepository(
-        groupsListRepositoryImpl: GroupsListRepositoryImpl
-    ): GroupsListRepository
+    internal abstract fun provideGroupListRepository(groupsListRepositoryImpl: GroupsListRepositoryImpl): GroupsListRepository
 
     @Binds
     internal abstract fun provideGroupDetailsRepository(impl: GroupDetailsRepositoryImp): GroupDetailsRepository
@@ -105,6 +107,9 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindClientIdentifiersRepository(impl: ClientIdentifiersRepositoryImp): ClientIdentifiersRepository
+
+    @Binds
+    internal abstract fun bindCreateNewGroupRepository(impl: CreateNewGroupRepositoryImp): CreateNewGroupRepository
 
     @Binds
     internal abstract fun bindPinpointRepository(impl: PinPointClientRepositoryImp): PinPointClientRepository
