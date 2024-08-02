@@ -122,6 +122,7 @@ turbine = "1.0.0"
 timberVersion = '5.0.1'
 truthVersion = '1.1.5'
 runtimeLivedata = "1.6.8"
+appcompat = "1.7.0"
 
 [libraries]
 # AndroidX Libraries
@@ -377,6 +378,7 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 
 [plugins]

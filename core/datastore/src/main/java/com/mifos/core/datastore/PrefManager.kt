@@ -9,6 +9,8 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.asServerConfig
 import com.mifos.core.model.ServerConfig
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.apache.fineract.client.models.PostAuthenticationResponse
 import org.mifos.core.sharedpreference.Key
 import org.mifos.core.sharedpreference.UserPreferences
@@ -74,5 +76,13 @@ class PrefManager @Inject constructor(
 
     fun updateServerConfig(config: ServerConfig?) {
         this.put(serverConfigKey, config)
+    }
+
+    fun getStringValue(key: String): Flow<String?> = flow {
+        emit(preference.getString(key, ""))
+    }
+
+    fun setStringValue(key: String,value: String) {
+        preference.edit().putString(key, value).apply()
     }
 }

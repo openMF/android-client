@@ -2,4 +2,10 @@
 <resources>
     <string name="core_designsystem_unable_to_load">Sorry we weren\'t able to load</string>
     <string name="core_designsystem_try_again">Try Again</string>
+    <string name="core_designsystem_pref_base_url_title">Please enter a base URL</string>
+    <string name="core_designsystem_enter_base_url">Enter a base URL</string>
+    <string name="core_designsystem_enter_tenant">Enter a tenant</string>
+    <string name="core_designsystem_cancel">Cancel</string>
+    <string name="core_designsystem_dialog_action_ok">Save</string>
+
 </resources>

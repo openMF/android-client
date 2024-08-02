@@ -36,10 +36,10 @@ interface GroupService {
     fun getGroupWithAssociations(@Path("groupId") groupId: Int): Observable<GroupWithAssociations>
 
     @GET(APIEndPoint.GROUPS)
-    fun getAllGroupsInOffice(
+    suspend fun getAllGroupsInOffice(
         @Query("officeId") officeId: Int,
         @QueryMap params: Map<String, String>
-    ): Observable<List<Group>>
+    ): List<Group>
 
     @POST(APIEndPoint.GROUPS)
     fun createGroup(@Body groupPayload: GroupPayload?): Observable<SaveResponse>

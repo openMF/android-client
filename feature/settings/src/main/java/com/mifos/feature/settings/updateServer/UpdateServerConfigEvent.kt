@@ -1,4 +1,4 @@
-package com.mifos.feature.settings
+package com.mifos.feature.settings.updateServer
 
 sealed interface UpdateServerConfigEvent {
 

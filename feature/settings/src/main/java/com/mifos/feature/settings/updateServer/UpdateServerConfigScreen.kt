@@ -1,4 +1,4 @@
-package com.mifos.feature.settings
+package com.mifos.feature.settings.updateServer
 
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.background
@@ -47,6 +47,7 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.model.ServerConfig
 import com.mifos.core.ui.util.DevicePreviews
+import com.mifos.feature.settings.R
 
 @Composable
 fun UpdateServerConfigScreenRoute(

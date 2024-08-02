@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mifos.core.objects.noncore.DataTable
-import com.mifos.feature.data_table.DataTableDataScreen
+import com.mifos.feature.data_table.dataTableData.DataTableDataScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -42,6 +42,7 @@ class DataTableDataFragment : Fragment() {
             setContent {
                 DataTableDataScreen(
                     table = dataTable.registeredTableName.toString(),
+                    dataTable = dataTable,
                     entityId = entityId,
                     onBackPressed = {
                         findNavController().popBackStack()

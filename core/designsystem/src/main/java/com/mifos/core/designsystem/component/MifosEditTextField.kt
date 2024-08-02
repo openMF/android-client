@@ -242,7 +242,8 @@ fun MifosOutlinedTextField(
         singleLine = singleLine,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            focusedLabelColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
+            focusedLabelColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+            cursorColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
         ),
         textStyle = LocalDensity.current.run {
             TextStyle(fontSize = 18.sp)

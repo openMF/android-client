@@ -237,7 +237,7 @@ fun SavingsAccountActivateContent(
                 } else {
                     Toast.makeText(
                         context,
-                        context.resources.getString(R.string.interestPostingPeriodTypeId),
+                        context.resources.getString(R.string.error_not_connected_internet),
                         Toast.LENGTH_SHORT
                     ).show()
                 }

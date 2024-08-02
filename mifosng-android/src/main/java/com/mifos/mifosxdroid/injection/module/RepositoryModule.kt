@@ -9,7 +9,6 @@ import com.mifos.core.network.datamanager.DataManagerAuth
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerCharge
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.core.network.datamanager.DataManagerCollectionSheet
 import com.mifos.core.network.datamanager.DataManagerDataTable
 import com.mifos.core.network.datamanager.DataManagerDocument
 import com.mifos.core.network.datamanager.DataManagerGroups
@@ -21,16 +20,14 @@ import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.datatablerowdialog.DataTableRowDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogRepositoryImp
+import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepository
+import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepositoryImp
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepository
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepositoryImp
 import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsRepository
@@ -63,8 +60,6 @@ import com.mifos.mifosxdroid.online.datatable.DataTableRepository
 import com.mifos.mifosxdroid.online.datatable.DataTableRepositoryImp
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepository
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepositoryImp
-import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepository
-import com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepositoryImp
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
@@ -229,14 +224,6 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesGenerateCollectionSheetRepository(
-        dataManager: DataManager,
-        collectionDataManager: DataManagerCollectionSheet
-    ): GenerateCollectionSheetRepository {
-        return GenerateCollectionSheetRepositoryImp(dataManager, collectionDataManager)
-    }
-
-    @Provides
     fun providesLoanRepaymentScheduleRepository(dataManager: DataManager): LoanRepaymentScheduleRepository {
         return LoanRepaymentScheduleRepositoryImp(dataManager)
     }
@@ -264,11 +251,6 @@ class RepositoryModule {
     @Provides
     fun providesSurveySubmitRepository(dataManagerSurveys: DataManagerSurveys): SurveySubmitRepository {
         return SurveySubmitRepositoryImp(dataManagerSurveys)
-    }
-
-    @Provides
-    fun providesDataTableRowDialogRepository(dataManagerDataTable: DataManagerDataTable): DataTableRowDialogRepository {
-        return DataTableRowDialogRepositoryImp(dataManagerDataTable)
     }
 
     @Provides

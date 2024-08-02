@@ -12,7 +12,9 @@ import com.mifos.core.data.repository.ClientIdentifierDialogRepository
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.DataTableDataRepository
+import com.mifos.core.data.repository.DataTableRowDialogRepository
 import com.mifos.core.data.repository.DocumentListRepository
+import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.core.data.repository.GroupLoanAccountRepository
@@ -39,7 +41,9 @@ import com.mifos.core.data.repository_imp.ClientIdentifierDialogRepositoryImp
 import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repository_imp.CreateNewCenterRepositoryImp
 import com.mifos.core.data.repository_imp.DataTableDataRepositoryImp
+import com.mifos.core.data.repository_imp.DataTableRowDialogRepositoryImp
 import com.mifos.core.data.repository_imp.DocumentListRepositoryImp
+import com.mifos.core.data.repository_imp.GenerateCollectionSheetRepositoryImp
 import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.GroupListRepositoryImp
 import com.mifos.core.data.repository_imp.GroupLoanAccountRepositoryImp
@@ -136,14 +140,20 @@ abstract class DataModule {
     internal abstract fun bindChargeDialogRepository(impl: ChargeDialogRepositoryImp): ChargeDialogRepository
 
     @Binds
-    internal abstract fun bindClientIdentifiersDialogRepository(impl: ClientIdentifierDialogRepositoryImp): ClientIdentifierDialogRepository
+    internal abstract fun bindDataTableDataRepository(impl: DataTableDataRepositoryImp): DataTableDataRepository
 
     @Binds
-    internal abstract fun bindDataTableDataRepository(impl: DataTableDataRepositoryImp): DataTableDataRepository
+    internal abstract fun bindDataTableRowDialogRepository(impl: DataTableRowDialogRepositoryImp): DataTableRowDialogRepository
+
+    @Binds
+    internal abstract fun bindClientIdentifiersDialogRepository(impl: ClientIdentifierDialogRepositoryImp): ClientIdentifierDialogRepository
 
     @Binds
     internal abstract fun bindSignatureRepository(impl: SignatureRepositoryImp): SignatureRepository
 
     @Binds
     internal abstract fun provideSearchRepository(repository: SearchRepositoryImp): SearchRepository
+
+    @Binds
+    internal abstract fun bindGenerateCollectionSheetRepository(impl: GenerateCollectionSheetRepositoryImp): GenerateCollectionSheetRepository
 }

@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog
+package com.mifos.feature.settings.syncSurvey
 
 import com.mifos.core.objects.survey.QuestionDatas
 import com.mifos.core.objects.survey.ResponseDatas

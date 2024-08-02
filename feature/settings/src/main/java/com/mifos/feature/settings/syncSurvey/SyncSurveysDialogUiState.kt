@@ -1,6 +1,4 @@
-package com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog
-
-import com.mifos.core.objects.survey.Survey
+package com.mifos.feature.settings.syncSurvey
 
 /**
  * Created by Aditya Gupta on 16/08/23.
