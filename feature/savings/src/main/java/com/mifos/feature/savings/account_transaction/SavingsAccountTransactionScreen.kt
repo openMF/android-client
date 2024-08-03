@@ -152,7 +152,8 @@ fun SavingsAccountTransactionScreen(
                         navigateBack = navigateBack,
                         savingsAccountTransactionTemplate = uiState.savingsAccountTransactionTemplate,
                         savingsAccountNumber = savingsAccountNumber,
-                        onProcessTransaction = onProcessTransaction
+                        onProcessTransaction = onProcessTransaction,
+                        setUserOffline = setUserOffline
                     )
                 }
 
@@ -212,7 +213,8 @@ fun SavingsAccountTransactionContent(
     savingsAccountNumber: Int?,
     navigateBack: () -> Unit,
     savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate,
-    onProcessTransaction: (savingsAccountTransactionRequest: SavingsAccountTransactionRequest) -> Unit
+    onProcessTransaction: (savingsAccountTransactionRequest: SavingsAccountTransactionRequest) -> Unit,
+    setUserOffline: () -> Unit
 ) {
     var amount by rememberSaveable {
         mutableStateOf("")
@@ -412,7 +414,7 @@ fun SavingsAccountTransactionContent(
                         if (Network.isOnline(context = context)) {
                             showReviewTransactionDialog = true
                         } else {
-                            PrefManager.userStatus = Constants.USER_OFFLINE
+                            setUserOffline.invoke()
 
                             Toast.makeText(
                                 context,
@@ -512,7 +514,7 @@ class SavingsAccountTransactionScreenPreviewProvider :
 @Composable
 @Preview(showSystemUi = true)
 fun PreviewSavingsAccountTransactionScreen(
-    @PreviewParameter(SavingsAccountTransactionScreenPreviewProvider::class) savingsAccountTransactionUiState: com.mifos.feature.savings.account_transaction.SavingsAccountTransactionUiState
+    @PreviewParameter(SavingsAccountTransactionScreenPreviewProvider::class) savingsAccountTransactionUiState: SavingsAccountTransactionUiState
 ) {
     SavingsAccountTransactionScreen(
         clientName = "Jean Charles",
@@ -522,8 +524,8 @@ fun PreviewSavingsAccountTransactionScreen(
         onRetry = { },
         transactionType = "type",
         loadSavingAccountTemplate = { },
-        setUserStatus = {}
-    ) {
-    }
+        setUserOffline = {},
+        onProcessTransaction = { }
+    )
 }
 

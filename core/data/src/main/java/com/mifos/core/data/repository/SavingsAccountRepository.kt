@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.savingsaccount
+package com.mifos.core.data.repository
 
 import com.mifos.core.data.SavingsPayload
 import com.mifos.core.objects.client.Savings

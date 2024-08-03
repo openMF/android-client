@@ -1,22 +1,16 @@
-package com.mifos.mifosxdroid.online.savingsaccount
+package com.mifos.feature.savings.account
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.SavingsPayload
-import com.mifos.core.objects.accounts.savings.FieldOfficerOptions
+import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.objects.client.Savings
-import com.mifos.core.objects.common.InterestType
-import com.mifos.core.objects.organisation.ProductSavings
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import com.mifos.core.objects.zipmodels.SavingProductsAndTemplate
-import com.mifos.mifosxdroid.R
+import com.mifos.feature.savings.R
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -60,7 +54,7 @@ class SavingAccountViewModel @Inject constructor(private val repository: Savings
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _savingAccountUiState.value =
-                        SavingAccountUiState.ShowFetchingError(R.string.failed_to_load_savings_products_and_template)
+                        SavingAccountUiState.ShowFetchingError(R.string.feature_savings_failed_to_load_savings_products_and_template)
                 }
 
                 override fun onNext(productsAndTemplate: SavingProductsAndTemplate?) {
@@ -82,7 +76,7 @@ class SavingAccountViewModel @Inject constructor(private val repository: Savings
 
                 override fun onError(e: Throwable) {
                     _savingAccountUiState.value =
-                        SavingAccountUiState.ShowFetchingError(R.string.failed_to_load_savings_products_and_template)
+                        SavingAccountUiState.ShowFetchingError(R.string.feature_savings_failed_to_load_savings_products_and_template)
                 }
 
                 override fun onNext(savingProductsTemplate: SavingProductsTemplate?) {
@@ -102,7 +96,7 @@ class SavingAccountViewModel @Inject constructor(private val repository: Savings
 
                 override fun onError(e: Throwable) {
                     _savingAccountUiState.value =
-                        SavingAccountUiState.ShowFetchingError(R.string.failed_to_load_savings_products_and_template)
+                        SavingAccountUiState.ShowFetchingError(R.string.feature_savings_failed_to_load_savings_products_and_template)
                 }
 
                 override fun onNext(savingProductsTemplate: SavingProductsTemplate?) {

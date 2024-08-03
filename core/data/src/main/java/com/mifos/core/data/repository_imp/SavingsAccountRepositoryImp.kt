@@ -1,6 +1,7 @@
-package com.mifos.mifosxdroid.online.savingsaccount
+package com.mifos.core.data.repository_imp
 
 import com.mifos.core.data.SavingsPayload
+import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.objects.client.Savings
 import com.mifos.core.objects.organisation.ProductSavings

@@ -80,8 +80,8 @@ import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.core.data.repository_imp.SavingsAccountSummaryRepositoryImp
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.data.repository_imp.SavingsAccountTransactionRepositoryImp
-import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountRepository
-import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountRepositoryImp
+import com.mifos.core.data.repository.SavingsAccountRepository
+import com.mifos.core.data.repository_imp.SavingsAccountRepositoryImp
 import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepository
 import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepositoryImp
 import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepository

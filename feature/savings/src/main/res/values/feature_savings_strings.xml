@@ -24,7 +24,6 @@
     <string name="feature_savings_activate_savings">Activate Savings</string>
     <string name="feature_savings_savings_account_closed">Savings Account Closed</string>
     <string name="feature_savings_failed_to_fetch_savingsaccount">Failed To Fetch SavingsAccount</string>
-
     <string name="feature_savings_savingsAccount">Savings Account</string>
     <string name="feature_savings_deposit">Deposit</string>
     <string name="feature_savings_sync_previous_transaction">Sync Previous Transaction</string>
@@ -48,7 +47,27 @@
     <string name="feature_savings_message_field_required"> is mandatory and cannot be left blank</string>
     <string name="feature_savings_error_amount_can_not_be_empty">Amount can not be empty</string>
     <string name="feature_savings_error_invalid_amount">Invalid Amount Entered</string>
-
+    <string name="feature_savings_go_back">Go Back</string>
+    <string name="feature_savings_product">Savings Products</string>
+    <string name="feature_savings_submit">Submit</string>
+    <string name="feature_savings_create_savings_account">Add Savings Account</string>
+    <string name="feature_savings_savings_account_submitted_for_approval">The Savings Account has been submitted forApproval</string>
+    <string name="feature_savings_field_officer">Field Officer</string>
+    <string name="feature_savings_external_id">External ID</string>
+    <string name="feature_savings_submitted_on">Submitted On</string>
+    <string name="feature_savings_nominal">Nominal annual interest </string>
+    <string name="feature_savings_interest_calc">Interest calculated using</string>
+    <string name="feature_savings_interest_comp">Interest Compounding Period</string>
+    <string name="feature_savings_interest_p_period">Interest Posting Period</string>
+    <string name="feature_savings_days_in_year">Days in year</string>
+    <string name="feature_savings_min_required_balance">Enforce Minimum Required Balance</string>
+    <string name="feature_savings_overdraft_allowed">Overdraft Allowed</string>
+    <string name="feature_savings_maxoverdraft">Maximum overdraft amount </string>
+    <string name="feature_savings_nominal_overdraft">Nominal annual interest for overdraft </string>
+    <string name="feature_savings_min_overdraft">Minimum Overdraft for Interest Calculation </string>
+    <string name="feature_savings_failed_to_fetch_savings_template">Failed to load Saving Template</string>
+    <string name="feature_savings_failed_to_load_savings_products_and_template">Failed to load SavingProducts and
+        Template</string>
 
 </resources>
 

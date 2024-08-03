@@ -1,8 +1,6 @@
-package com.mifos.mifosxdroid.online.savingsaccount
+package com.mifos.feature.savings.account
 
 import com.mifos.core.objects.client.Savings
-import com.mifos.core.objects.organisation.ProductSavings
-import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import com.mifos.core.objects.zipmodels.SavingProductsAndTemplate
 
 /**
