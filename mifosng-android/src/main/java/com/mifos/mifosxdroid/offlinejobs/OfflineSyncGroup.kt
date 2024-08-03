@@ -5,7 +5,6 @@ import com.evernote.android.job.JobRequest
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.objects.group.GroupPayload
 import com.mifos.core.objects.response.SaveResponse
-import com.mifos.utils.MFErrorParser.errorMessage
 import com.mifos.utils.PrefManager.userStatus
 import com.mifos.utils.Tags
 import rx.Subscriber
@@ -76,7 +75,7 @@ class OfflineSyncGroup : Job() {
                 .subscribe(object : Subscriber<SaveResponse>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        showGroupSyncFailed(errorMessage(e))
+                        showGroupSyncFailed(e.message.toString())
                     }
 
                     override fun onNext(group: SaveResponse) {
