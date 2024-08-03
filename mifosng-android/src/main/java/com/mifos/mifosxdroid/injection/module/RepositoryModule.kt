@@ -76,10 +76,10 @@ import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleR
 import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleRepositoryImp
 import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepository
 import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepositoryImp
-import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryRepository
-import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryRepositoryImp
-import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionRepository
-import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionRepositoryImp
+import com.mifos.core.data.repository.SavingsAccountSummaryRepository
+import com.mifos.core.data.repository_imp.SavingsAccountSummaryRepositoryImp
+import com.mifos.core.data.repository.SavingsAccountTransactionRepository
+import com.mifos.core.data.repository_imp.SavingsAccountTransactionRepositoryImp
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountRepository
 import com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountRepositoryImp
 import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepository

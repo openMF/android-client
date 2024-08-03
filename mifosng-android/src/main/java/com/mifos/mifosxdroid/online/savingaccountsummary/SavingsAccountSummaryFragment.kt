@@ -17,14 +17,13 @@ import androidx.navigation.fragment.navArgs
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SavingsAccountSummaryFragment : MifosBaseFragment() {
 
-    private val viewModel: SavingsAccountSummaryViewModel by viewModels()
+    private val viewModel: com.mifos.feature.savings.savings_account_summary.SavingsAccountSummaryViewModel by viewModels()
     private val arg: SavingsAccountSummaryFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {

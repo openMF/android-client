@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.savingaccountsummary
+package com.mifos.feature.savings.account_summary
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -49,6 +49,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -66,8 +67,7 @@ import com.mifos.core.objects.accounts.savings.Summary
 import com.mifos.core.objects.accounts.savings.Transaction
 import com.mifos.core.objects.accounts.savings.TransactionType
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.mifosxdroid.R
-import com.mifos.utils.DateHelper
+import com.mifos.feature.savings.R
 
 /**
  * Created by Pronay Sarker on 10/07/2024 (6:21 PM)
@@ -136,7 +136,7 @@ fun SavingsAccountSummaryScreen(
     MifosScaffold(
         snackbarHostState = snackbarHostState,
         onBackPressed = navigateBack,
-        title = stringResource(id = R.string.savingsAccountSummary),
+        title = stringResource(id = R.string.feature_savings_savingsAccountSummary),
         icon = MifosIcons.arrowBack,
         fontsizeInSp = 22,
         actions = {
@@ -146,11 +146,11 @@ fun SavingsAccountSummaryScreen(
 
             if (showDropdown) {
                 DropdownMenu(expanded = showDropdown, onDismissRequest = { showDropdown = false }) {
-                    MifosMenuDropDownItem(option = stringResource(id = R.string.more_savings_account_info)) {
+                    MifosMenuDropDownItem(option = stringResource(id = R.string.feature_savings_more_savings_account_info)) {
                         showDropdown = false
                         loadMoreSavingsAccountInfo.invoke()
                     }
-                    MifosMenuDropDownItem(option = stringResource(id = R.string.documents)) {
+                    MifosMenuDropDownItem(option = stringResource(id = R.string.feature_savings_documents)) {
                         showDropdown = false
                         loadDocuments.invoke()
                     }
@@ -214,7 +214,7 @@ fun SavingsAccountSummaryContent(
                     .fillMaxWidth()
                     .padding(top = 8.dp, bottom = 8.dp),
                 text = savingsAccountWithAssociations.clientName
-                    ?: stringResource(id = R.string.client_name),
+                    ?: stringResource(id = R.string.feature_savings_client_name),
                 style = MaterialTheme.typography.bodyLarge,
             )
 
@@ -222,32 +222,32 @@ fun SavingsAccountSummaryContent(
 
             FarApartTextItem(
                 title = savingsAccountWithAssociations.savingsProductName
-                    ?: stringResource(id = R.string.product_name),
+                    ?: stringResource(id = R.string.feature_savings_product_name),
                 value = savingsAccountWithAssociations.accountNo?.toString() ?: ""
             )
 
             HorizontalDivider(modifier = Modifier.padding(top = 6.dp), color = DarkGray)
 
             FarApartTextItem(
-                title = stringResource(id = R.string.savings_account_balance),
+                title = stringResource(id = R.string.feature_savings_account_balance),
                 value = savingsAccountWithAssociations.summary?.accountBalance?.toString()
                     ?: "0.0"
             )
 
             FarApartTextItem(
-                title = stringResource(id = R.string.savings_total_deposits),
+                title = stringResource(id = R.string.feature_savings_total_deposits),
                 value = savingsAccountWithAssociations.summary?.totalDeposits?.toString()
                     ?: "0.0"
             )
 
             FarApartTextItem(
-                title = stringResource(id = R.string.savings_total_withdrawals),
+                title = stringResource(id = R.string.feature_savings_total_withdrawals),
                 value = savingsAccountWithAssociations.summary?.totalWithdrawals?.toString()
                     ?: "0.0"
             )
 
             FarApartTextItem(
-                title = stringResource(id = R.string.savings_interest_earned),
+                title = stringResource(id = R.string.feature_savings_interest_earned),
                 value = savingsAccountWithAssociations.summary?.totalInterestEarned?.toString()
                     ?: "0.0"
             )
@@ -258,11 +258,11 @@ fun SavingsAccountSummaryContent(
             )
 
             if (savingsAccountWithAssociations.transactions.isEmpty()) {
-                MifosEmptyUi(text = stringResource(id = R.string.no_transactions))
+                MifosEmptyUi(text = stringResource(id = R.string.feature_savings_no_transactions))
             } else {
                 Text(
                     style = MaterialTheme.typography.bodyLarge,
-                    text = stringResource(id = R.string.transactions),
+                    text = stringResource(id = R.string.feature_savings_transactions),
                     color = MaterialTheme.colorScheme.onBackground,
                 )
 
@@ -296,7 +296,7 @@ fun SavingsAccountSummaryContent(
                             containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
                         ),
                         onClick = { onWithdrawButtonClicked.invoke(savingsAccountWithAssociations) }) {
-                        Text(text = stringResource(id = R.string.withdrawal))
+                        Text(text = stringResource(id = R.string.feature_savings_withdrawal))
                     }
 
                     Button(
@@ -308,7 +308,7 @@ fun SavingsAccountSummaryContent(
                             containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
                         ),
                         onClick = { onDepositButtonClicked.invoke(savingsAccountWithAssociations) }) {
-                        Text(text = stringResource(id = R.string.savings_make_deposit))
+                        Text(text = stringResource(id = R.string.feature_savings_make_deposit))
                     }
                 }
 
@@ -432,43 +432,43 @@ fun SummaryDialogBox(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 DialogBoxRowItem(
-                    title = stringResource(id = R.string.transaction_id),
+                    title = stringResource(id = R.string.feature_savings_transaction_id),
                     value = transaction.id?.toString() ?: ""
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 DialogBoxRowItem(
-                    title = stringResource(id = R.string.date),
+                    title = stringResource(id = R.string.feature_savings_date),
                     value = DateHelper.getDateAsString(transaction.date as List<Int>)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 DialogBoxRowItem(
-                    title = stringResource(id = R.string.transaction_type),
+                    title = stringResource(id = R.string.feature_savings_transaction_type),
                     value = transaction.transactionType?.value ?: ""
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 DialogBoxRowItem(
-                    title = stringResource(id = R.string.running_balance),
+                    title = stringResource(id = R.string.feature_savings_running_balance),
                     value = transaction.runningBalance.toString()
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 DialogBoxRowItem(
-                    title = stringResource(id = R.string.saving_account_id),
+                    title = stringResource(id = R.string.feature_savings_saving_account_id),
                     value = transaction.accountId.toString()
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 DialogBoxRowItem(
-                    title = stringResource(id = R.string.account_number),
+                    title = stringResource(id = R.string.feature_savings_account_number),
                     value = transaction.accountNo ?: ""
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 DialogBoxRowItem(
-                    title = stringResource(id = R.string.currency),
+                    title = stringResource(id = R.string.feature_savings_currency),
                     value = transaction.currency?.name ?: ""
                 )
             }
@@ -537,15 +537,15 @@ private fun FarApartTextItem(title: String, value: String) {
 fun getSavingsButtonText(context: Context, status: Status?): String {
     return when {
         status?.submittedAndPendingApproval == true -> {
-            context.resources.getString(R.string.approve_savings)
+            context.resources.getString(R.string.feature_savings_approve_savings)
         }
 
         !status?.active!! -> {
-            context.resources.getString(R.string.activate_savings)
+            context.resources.getString(R.string.feature_savings_activate_savings)
         }
 
         status?.closed == true -> {
-            context.resources.getString(R.string.savings_account_closed)
+            context.resources.getString(R.string.feature_savings_savings_account_closed)
         }
 
         else -> {
@@ -618,7 +618,7 @@ class SavingsAccountSummaryScreenPreviewProvider :
     override val values: Sequence<SavingsAccountSummaryUiState>
         get() = sequenceOf(
             SavingsAccountSummaryUiState.ShowProgressbar,
-            SavingsAccountSummaryUiState.ShowFetchingError(R.string.failed_to_fetch_savingsaccount),
+            SavingsAccountSummaryUiState.ShowFetchingError(R.string.feature_savings_failed_to_fetch_savingsaccount),
             SavingsAccountSummaryUiState.ShowSavingAccount(
                 SavingsAccountWithAssociations(
                     clientId = 343434343,

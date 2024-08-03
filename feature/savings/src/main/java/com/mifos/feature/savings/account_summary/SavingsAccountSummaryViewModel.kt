@@ -1,12 +1,11 @@
-package com.mifos.mifosxdroid.online.savingaccountsummary
+package com.mifos.feature.savings.account_summary
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.mifosxdroid.R
+import com.mifos.feature.savings.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,7 +37,7 @@ class SavingsAccountSummaryViewModel @Inject constructor(private val repository:
                 }
 
                 override fun onError(e: Throwable) {
-                    val error = R.string.failed_to_fetch_savingsaccount
+                    val error = R.string.feature_savings_failed_to_fetch_savingsaccount
                     _savingsAccountSummaryUiState.value =
                         SavingsAccountSummaryUiState.ShowFetchingError(error)
                 }

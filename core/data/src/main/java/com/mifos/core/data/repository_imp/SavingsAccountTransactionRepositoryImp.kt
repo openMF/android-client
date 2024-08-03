@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.savingaccounttransaction
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse

@@ -1,14 +1,13 @@
-package com.mifos.mifosxdroid.online.savingaccounttransaction
+package com.mifos.feature.savings.account_transaction
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.data.repository.SavingsAccountTransactionRepository
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest_Table.savingAccountId
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
 import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
-import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +20,10 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 13/08/23.
  */
 @HiltViewModel
-class SavingsAccountTransactionViewModel @Inject constructor(private val repository: SavingsAccountTransactionRepository) :
+class SavingsAccountTransactionViewModel @Inject constructor(
+    private val repository: SavingsAccountTransactionRepository,
+    private val prefManager: PrefManager
+) :
     ViewModel() {
 
     private val _savingsAccountTransactionUiState = MutableStateFlow<SavingsAccountTransactionUiState>(SavingsAccountTransactionUiState.ShowProgressbar)
@@ -32,6 +34,10 @@ class SavingsAccountTransactionViewModel @Inject constructor(private val reposit
     var clientName : String? = null
     var savingsAccountNumber : Int? = null
     var savingsAccountType: DepositType? = null
+
+    fun setUserOffline(){
+        prefManager.userStatus = Constants.USER_OFFLINE
+    }
 
     fun loadSavingAccountTemplate() {
         _savingsAccountTransactionUiState.value = SavingsAccountTransactionUiState.ShowProgressbar

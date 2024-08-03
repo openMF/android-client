@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.savingaccountsummary
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
 import rx.Observable

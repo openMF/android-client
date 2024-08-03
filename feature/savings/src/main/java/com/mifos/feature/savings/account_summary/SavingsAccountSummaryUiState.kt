@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.savingaccountsummary
+package com.mifos.feature.savings.account_summary
 
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
 

@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.savingaccountsummary
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
 import rx.Observable

@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.savingaccounttransaction
+package com.mifos.feature.savings.account_transaction
 
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
 import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
