@@ -1,14 +1,10 @@
 package com.mifos.mifosxdroid.online.savingaccounttransaction
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest_Table.savingAccountId
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
 import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
-import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
