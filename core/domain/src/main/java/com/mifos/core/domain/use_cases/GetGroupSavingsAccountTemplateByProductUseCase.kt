@@ -1,11 +1,7 @@
 package com.mifos.core.domain.use_cases
 
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.data.repository.DataTableDataRepository
-import com.mifos.core.data.repository.SavingsAccountActivateRepository
 import com.mifos.core.data.repository.SavingsAccountRepository
-import com.mifos.core.data.repository_imp.SavingsAccountActivateRepositoryImp
-import com.mifos.core.objects.group.CenterWithAssociations
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -16,14 +12,15 @@ import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
- * Created by Pronay Sarker on 04/08/2024 (11:59 AM)
+ * Created by Pronay Sarker on 04/08/2024 (12:13 PM)
  */
-class GetClientSavingsAccountTemplateByProductUseCase @Inject constructor(private val repository: SavingsAccountRepository) {
+class GetGroupSavingsAccountTemplateByProductUseCase @Inject constructor(private val repository: SavingsAccountRepository) {
 
-    suspend operator fun invoke(clientId: Int, productId: Int): Flow<Resource<SavingProductsTemplate?>> = callbackFlow {
+    suspend operator fun invoke(groupId: Int, productId: Int): Flow<Resource<SavingProductsTemplate?>> = callbackFlow {
         try {
             trySend(Resource.Loading())
-            repository.getClientSavingsAccountTemplateByProduct(clientId, productId)
+
+            repository.getGroupSavingsAccountTemplateByProduct(groupId, productId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(object : Subscriber<SavingProductsTemplate?>() {

@@ -1,11 +1,9 @@
 package com.mifos.core.domain.use_cases
 
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.data.repository.DataTableDataRepository
-import com.mifos.core.data.repository.SavingsAccountActivateRepository
 import com.mifos.core.data.repository.SavingsAccountRepository
-import com.mifos.core.data.repository_imp.SavingsAccountActivateRepositoryImp
-import com.mifos.core.objects.group.CenterWithAssociations
+import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -16,17 +14,18 @@ import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
- * Created by Pronay Sarker on 04/08/2024 (11:59 AM)
+ * Created by Pronay Sarker on 04/08/2024 (4:55 PM)
  */
-class GetClientSavingsAccountTemplateByProductUseCase @Inject constructor(private val repository: SavingsAccountRepository) {
+class UpdateLoanRepaymentTransactionUseCase @Inject constructor(private val repository: SyncSavingsAccountTransactionRepository) {
 
-    suspend operator fun invoke(clientId: Int, productId: Int): Flow<Resource<SavingProductsTemplate?>> = callbackFlow {
+    suspend operator fun invoke(request: SavingsAccountTransactionRequest?): Flow<Resource<SavingsAccountTransactionRequest>> = callbackFlow {
         try {
             trySend(Resource.Loading())
-            repository.getClientSavingsAccountTemplateByProduct(clientId, productId)
+
+            repository.updateLoanRepaymentTransaction(request!!)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<SavingProductsTemplate?>() {
+                .subscribe(object : Subscriber<SavingsAccountTransactionRequest>() {
                     override fun onCompleted() {
                     }
 
@@ -34,8 +33,8 @@ class GetClientSavingsAccountTemplateByProductUseCase @Inject constructor(privat
                         trySend(Resource.Error(e.message.toString()))
                     }
 
-                    override fun onNext(savingProductsTemplate: SavingProductsTemplate?) {
-                        trySend(Resource.Success(savingProductsTemplate))
+                    override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest?) {
+                        trySend(Resource.Success(savingsAccountTransactionRequest))
                     }
                 })
 

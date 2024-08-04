@@ -1,15 +1,24 @@
 package com.mifos.feature.savings.sync_account_transaction
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.MFErrorParser
+import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
+import com.mifos.core.domain.use_cases.AllSavingsAccountTransactionsUseCase
+import com.mifos.core.domain.use_cases.DeleteAndUpdateTransactionsUseCase
+import com.mifos.core.domain.use_cases.PaymentTypeOptionUseCase
+import com.mifos.core.domain.use_cases.ProcessTransactionUseCase
+import com.mifos.core.domain.use_cases.UpdateLoanRepaymentTransactionUseCase
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
 import com.mifos.feature.savings.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -20,8 +29,13 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 16/08/23.
  */
 @HiltViewModel
-class SyncSavingsAccountTransactionViewModel @Inject constructor(private val repository: SyncSavingsAccountTransactionRepository) :
-    ViewModel() {
+class SyncSavingsAccountTransactionViewModel @Inject constructor(
+    private val paymentTypeOptionUseCase: PaymentTypeOptionUseCase,
+    private val processTransactionUseCase: ProcessTransactionUseCase,
+    private val allSavingsAccountTransactionsUseCase: AllSavingsAccountTransactionsUseCase,
+    private val updateLoanRepaymentTransactionUseCase: UpdateLoanRepaymentTransactionUseCase,
+    private val deleteAndUpdateTransactionsUseCase: DeleteAndUpdateTransactionsUseCase
+) : ViewModel() {
 
     private val _syncSavingsAccountTransactionUiState =
         MutableStateFlow<SyncSavingsAccountTransactionUiState>(SyncSavingsAccountTransactionUiState.Loading)
@@ -154,22 +168,19 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
      * This Method Load the List<SavingsAccountTransactionRequest> from
      * SavingsAccountTransactionRequest_Table and Update the UI
     </SavingsAccountTransactionRequest> */
-    fun loadDatabaseSavingsAccountTransactions() {
-        _syncSavingsAccountTransactionUiState.value =
-            SyncSavingsAccountTransactionUiState.Loading
-        repository.allSavingsAccountTransactions()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<SavingsAccountTransactionRequest>>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_load_savingaccounttransaction)
-                }
+    fun loadDatabaseSavingsAccountTransactions() = viewModelScope.launch(Dispatchers.IO) {
+        allSavingsAccountTransactionsUseCase().collect { result ->
+            when (result) {
+                is Resource.Error -> _syncSavingsAccountTransactionUiState.value =
+                    SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_load_savingaccounttransaction)
 
-                override fun onNext(transactionRequests: List<SavingsAccountTransactionRequest>) {
-                    if (transactionRequests.isNotEmpty()) {
-                        mSavingsAccountTransactionRequests = transactionRequests.toMutableList()
+                is Resource.Loading -> _syncSavingsAccountTransactionUiState.value =
+                    SyncSavingsAccountTransactionUiState.Loading
+
+                is Resource.Success -> {
+                    val r = result.data ?: emptyList()
+                    if (r.isNotEmpty()) {
+                        mSavingsAccountTransactionRequests = r.toMutableList()
                         updateUiState()
                     } else {
                         _syncSavingsAccountTransactionUiState.value =
@@ -178,33 +189,29 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
                             )
                     }
                 }
-            })
-
+            }
+        }
     }
 
     /**
      * THis Method Load the Payment Type Options from Database PaymentTypeOption_Table
      * and update the UI.
      */
-    fun loadPaymentTypeOption() {
-        _syncSavingsAccountTransactionUiState.value =
-            SyncSavingsAccountTransactionUiState.Loading
-        repository.paymentTypeOption()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<com.mifos.core.objects.PaymentTypeOption>>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_load_paymentoptions)
-                }
+    fun loadPaymentTypeOption() = viewModelScope.launch(Dispatchers.IO) {
+        paymentTypeOptionUseCase().collect { result ->
+            when (result) {
+                is Resource.Error -> _syncSavingsAccountTransactionUiState.value =
+                    SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_load_paymentoptions)
 
-                override fun onNext(paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>) {
-                    mPaymentTypeOptions = paymentTypeOptions
+                is Resource.Loading -> _syncSavingsAccountTransactionUiState.value =
+                    SyncSavingsAccountTransactionUiState.Loading
+
+                is Resource.Success -> {
+                    mPaymentTypeOptions = result.data ?: emptyList()
                     updateUiState()
                 }
-            })
-
+            }
+        }
     }
 
     private fun updateUiState() {
@@ -238,24 +245,17 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
     private fun processTransaction(
         type: String?, accountId: Int, transactionType: String?,
         request: SavingsAccountTransactionRequest?
-    ) {
-        _syncSavingsAccountTransactionUiState.value =
-            SyncSavingsAccountTransactionUiState.Loading
-        repository
-            .processTransaction(type, accountId, transactionType, request!!)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<SavingsAccountTransactionResponse>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    showTransactionSyncFailed(MFErrorParser.errorMessage(e))
-                }
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        processTransactionUseCase(type, accountId, transactionType, request!!).collect { result ->
+            when (result) {
+                is Resource.Error -> showTransactionSyncFailed(MFErrorParser.errorMessage(result))
 
-                override fun onNext(savingsAccountTransactionResponse: SavingsAccountTransactionResponse) {
-                    showTransactionSyncSuccessfully()
-                }
-            })
+                is Resource.Loading -> _syncSavingsAccountTransactionUiState.value =
+                    SyncSavingsAccountTransactionUiState.Loading
 
+                is Resource.Success -> showTransactionSyncSuccessfully()
+            }
+        }
     }
 
     /**
@@ -265,25 +265,22 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
      *
      * @param savingsAccountId SavingsAccountTransactionRequest's SavingsAccount Id
     </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
-    private fun deleteAndUpdateSavingsAccountTransaction(savingsAccountId: Int) {
-        _syncSavingsAccountTransactionUiState.value =
-            SyncSavingsAccountTransactionUiState.Loading
-        repository.deleteAndUpdateTransactions(savingsAccountId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<SavingsAccountTransactionRequest>>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _syncSavingsAccountTransactionUiState.value =
+    private fun deleteAndUpdateSavingsAccountTransaction(savingsAccountId: Int) =
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteAndUpdateTransactionsUseCase(savingsAccountId).collect { result ->
+                when (result) {
+                    is Resource.Error -> _syncSavingsAccountTransactionUiState.value =
                         SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_update_list)
-                }
 
-                override fun onNext(savingsAccountTransactionRequests: List<SavingsAccountTransactionRequest>) {
-                    showTransactionDeletedAndUpdated(savingsAccountTransactionRequests as MutableList<SavingsAccountTransactionRequest>)
-                }
-            })
+                    is Resource.Loading -> _syncSavingsAccountTransactionUiState.value =
+                        SyncSavingsAccountTransactionUiState.Loading
 
-    }
+                    is Resource.Success -> showTransactionDeletedAndUpdated(
+                        result.data as MutableList<SavingsAccountTransactionRequest>
+                    )
+                }
+            }
+        }
 
     /**
      * This Method Update the SavingsAccountTransactionRequest in the Database. This will be called
@@ -292,23 +289,21 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
      *
      * @param request SavingsAccountTransactionRequest
      */
-    private fun updateSavingsAccountTransaction(request: SavingsAccountTransactionRequest?) {
-        _syncSavingsAccountTransactionUiState.value =
-            SyncSavingsAccountTransactionUiState.Loading
-        repository.updateLoanRepaymentTransaction(request!!)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<SavingsAccountTransactionRequest>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _syncSavingsAccountTransactionUiState.value =
+    private fun updateSavingsAccountTransaction(request: SavingsAccountTransactionRequest?) =
+        viewModelScope.launch(Dispatchers.IO) {
+            updateLoanRepaymentTransactionUseCase(request).collect { result ->
+                when (result) {
+                    is Resource.Error -> _syncSavingsAccountTransactionUiState.value =
                         SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_update_savingsaccount)
-                }
 
-                override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest) {
-                    showTransactionUpdatedSuccessfully(savingsAccountTransactionRequest)
-                }
-            })
+                    is Resource.Loading -> _syncSavingsAccountTransactionUiState.value =
+                        SyncSavingsAccountTransactionUiState.Loading
 
-    }
+                    is Resource.Success -> result.data?.let {
+                        showTransactionUpdatedSuccessfully(it)
+                    }
+
+                }
+            }
+        }
 }

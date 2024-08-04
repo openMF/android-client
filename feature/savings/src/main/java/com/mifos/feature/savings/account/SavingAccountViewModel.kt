@@ -1,16 +1,24 @@
 package com.mifos.feature.savings.account
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.SavingsPayload
 import com.mifos.core.data.repository.SavingsAccountRepository
+import com.mifos.core.domain.use_cases.CreateSavingsAccountUseCase
+import com.mifos.core.domain.use_cases.GetClientSavingsAccountTemplateByProductUseCase
+import com.mifos.core.domain.use_cases.GetGroupSavingsAccountTemplateByProductUseCase
+import com.mifos.core.domain.use_cases.LoadSavingsAccountsAndTemplateUseCase
 import com.mifos.core.objects.client.Savings
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import com.mifos.core.objects.zipmodels.SavingProductsAndTemplate
 import com.mifos.feature.savings.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -21,10 +29,15 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 08/08/23.
  */
 @HiltViewModel
-class SavingAccountViewModel @Inject constructor(private val repository: SavingsAccountRepository) :
-    ViewModel() {
+class SavingAccountViewModel @Inject constructor(
+    private val loadSavingsAccountsAndTemplateUseCase: LoadSavingsAccountsAndTemplateUseCase,
+    private val createSavingsAccountUseCase: CreateSavingsAccountUseCase,
+    private val getGroupSavingsAccountTemplateByProductUseCase: GetGroupSavingsAccountTemplateByProductUseCase,
+    private val getClientSavingsAccountTemplateByProductUseCase: GetClientSavingsAccountTemplateByProductUseCase
+) : ViewModel() {
 
-    private val _savingAccountUiState = MutableStateFlow<SavingAccountUiState>(SavingAccountUiState.ShowProgress)
+    private val _savingAccountUiState =
+        MutableStateFlow<SavingAccountUiState>(SavingAccountUiState.ShowProgress)
     val savingAccountUiState: StateFlow<SavingAccountUiState> get() = _savingAccountUiState
 
     var clientId = 0
@@ -42,86 +55,68 @@ class SavingAccountViewModel @Inject constructor(private val repository: Savings
         }
     }
 
-    fun loadSavingsAccountsAndTemplate() {
-        _savingAccountUiState.value = SavingAccountUiState.ShowProgress
-        Observable.combineLatest(
-            repository.savingsAccounts(),
-            repository.savingsAccountTemplate()
-        ) { productSavings, template -> SavingProductsAndTemplate(productSavings, template) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<SavingProductsAndTemplate?>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _savingAccountUiState.value =
+    fun loadSavingsAccountsAndTemplate() =
+        viewModelScope.launch(Dispatchers.IO) {
+            loadSavingsAccountsAndTemplateUseCase().collect { result ->
+                when (result) {
+                    is Resource.Error -> _savingAccountUiState.value =
                         SavingAccountUiState.ShowFetchingError(R.string.feature_savings_failed_to_load_savings_products_and_template)
-                }
 
-                override fun onNext(productsAndTemplate: SavingProductsAndTemplate?) {
-                    if (productsAndTemplate != null) {
+                    is Resource.Loading -> _savingAccountUiState.value =
+                        SavingAccountUiState.ShowProgress
+
+                    is Resource.Success -> if (result.data != null) {
                         _savingAccountUiState.value =
-                            SavingAccountUiState.LoadAllSavings(productsAndTemplate)
+                            SavingAccountUiState.LoadAllSavings(result.data!!)
                     }
                 }
-            })
-    }
+            }
+        }
 
-    private fun loadClientSavingAccountTemplateByProduct(clientId: Int, productId: Int) {
-        repository.getClientSavingsAccountTemplateByProduct(clientId, productId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<SavingProductsTemplate?>() {
-                override fun onCompleted() {
-                }
-
-                override fun onError(e: Throwable) {
-                    _savingAccountUiState.value =
+    private fun loadClientSavingAccountTemplateByProduct(clientId: Int, productId: Int) =
+        viewModelScope.launch(Dispatchers.IO) {
+            getClientSavingsAccountTemplateByProductUseCase(clientId, productId).collect { result ->
+                when (result) {
+                    is Resource.Error -> _savingAccountUiState.value =
                         SavingAccountUiState.ShowFetchingError(R.string.feature_savings_failed_to_load_savings_products_and_template)
-                }
 
-                override fun onNext(savingProductsTemplate: SavingProductsTemplate?) {
-                    _savingProductsTemplate.value =
-                        savingProductsTemplate ?: SavingProductsTemplate()
-                }
-            })
-    }
+                    is Resource.Loading -> Unit
 
-    private fun loadGroupSavingAccountTemplateByProduct(groupId: Int, productId: Int) {
-        repository.getGroupSavingsAccountTemplateByProduct(groupId, productId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<SavingProductsTemplate?>() {
-                override fun onCompleted() {
+                    is Resource.Success -> _savingProductsTemplate.value =
+                        result.data ?: SavingProductsTemplate()
                 }
+            }
+        }
 
-                override fun onError(e: Throwable) {
-                    _savingAccountUiState.value =
+    private fun loadGroupSavingAccountTemplateByProduct(groupId: Int, productId: Int) =
+        viewModelScope.launch(Dispatchers.IO) {
+            getGroupSavingsAccountTemplateByProductUseCase(groupId, productId).collect { result ->
+                when (result) {
+                    is Resource.Error -> _savingAccountUiState.value =
                         SavingAccountUiState.ShowFetchingError(R.string.feature_savings_failed_to_load_savings_products_and_template)
-                }
 
-                override fun onNext(savingProductsTemplate: SavingProductsTemplate?) {
-                    _savingProductsTemplate.value =
-                        savingProductsTemplate ?: SavingProductsTemplate()
-                }
-            })
-    }
+                    is Resource.Loading -> Unit
 
-    fun createSavingsAccount(savingsPayload: SavingsPayload?) {
-        _savingAccountUiState.value = SavingAccountUiState.ShowProgress
-        repository.createSavingsAccount(savingsPayload)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Savings?>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _savingAccountUiState.value =
-                        SavingAccountUiState.ShowFetchingErrorString(e.message.toString())
+                    is Resource.Success -> _savingProductsTemplate.value =
+                        result.data ?: SavingProductsTemplate()
                 }
+            }
+        }
 
-                override fun onNext(savings: Savings?) {
-                    _savingAccountUiState.value =
-                        SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(savings)
+    fun createSavingsAccount(savingsPayload: SavingsPayload?) =
+        viewModelScope.launch(Dispatchers.IO) {
+            createSavingsAccountUseCase(savingsPayload).collect { result ->
+                when (result) {
+                    is Resource.Error -> _savingAccountUiState.value =
+                        SavingAccountUiState.ShowFetchingErrorString(result.message.toString())
+
+                    is Resource.Loading -> _savingAccountUiState.value =
+                        SavingAccountUiState.ShowProgress
+
+                    is Resource.Success -> _savingAccountUiState.value =
+                        SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(result.data)
                 }
-            })
-    }
+            }
+        }
+
 }
