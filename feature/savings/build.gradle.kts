@@ -13,4 +13,9 @@ dependencies {
     testImplementation(projects.core.testing)
 
     androidTestImplementation(projects.core.testing)
+
+    //material
+    implementation (libs.androidx.material.v168)
+
+
 }

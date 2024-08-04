@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.savingsaccountactivate
+package com.mifos.feature.savings.account_activate
 
 import com.mifos.core.network.GenericResponse
 

@@ -1,10 +1,11 @@
-package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction
+package com.mifos.feature.savings.sync_account_transaction
 
 import androidx.lifecycle.ViewModel
+import com.mifos.core.common.utils.MFErrorParser
+import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
-import com.mifos.mifosxdroid.R
-import com.mifos.utils.MFErrorParser
+import com.mifos.feature.savings.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -51,7 +52,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
             checkErrorAndSync()
         } else {
             _syncSavingsAccountTransactionUiState.value =
-                SyncSavingsAccountTransactionUiState.ShowError(R.string.nothing_to_sync)
+                SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_nothing_to_sync)
         }
     }
 
@@ -78,7 +79,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
                 break
             } else if (checkTransactionsSyncBeforeOrNot()) {
                 _syncSavingsAccountTransactionUiState.value =
-                    SyncSavingsAccountTransactionUiState.ShowError(R.string.error_fix_before_sync)
+                    SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_error_fix_before_sync)
             }
         }
     }
@@ -138,7 +139,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
             syncSavingsAccountTransactions()
         } else {
             _syncSavingsAccountTransactionUiState.value =
-                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.nothing_to_sync)
+                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.feature_savings_nothing_to_sync)
         }
     }
 
@@ -163,7 +164,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.ShowError(R.string.failed_to_load_savingaccounttransaction)
+                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_load_savingaccounttransaction)
                 }
 
                 override fun onNext(transactionRequests: List<SavingsAccountTransactionRequest>) {
@@ -173,7 +174,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
                     } else {
                         _syncSavingsAccountTransactionUiState.value =
                             SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(
-                                R.string.no_transaction_to_sync
+                                R.string.feature_savings_no_transaction_to_sync
                             )
                     }
                 }
@@ -195,7 +196,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.ShowError(R.string.failed_to_load_paymentoptions)
+                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_load_paymentoptions)
                 }
 
                 override fun onNext(paymentTypeOptions: List<com.mifos.core.objects.PaymentTypeOption>) {
@@ -215,7 +216,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
                 )
         } else {
             _syncSavingsAccountTransactionUiState.value =
-                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.no_transaction_to_sync)
+                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.feature_savings_no_transaction_to_sync)
         }
     }
 
@@ -274,7 +275,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.ShowError(R.string.failed_to_update_list)
+                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_update_list)
                 }
 
                 override fun onNext(savingsAccountTransactionRequests: List<SavingsAccountTransactionRequest>) {
@@ -301,7 +302,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(private val rep
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.ShowError(R.string.failed_to_update_savingsaccount)
+                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_update_savingsaccount)
                 }
 
                 override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest) {

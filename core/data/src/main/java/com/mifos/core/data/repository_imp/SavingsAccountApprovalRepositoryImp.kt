@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.savingsaccountapproval
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.SavingsAccountApprovalRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.objects.accounts.loan.SavingsApproval

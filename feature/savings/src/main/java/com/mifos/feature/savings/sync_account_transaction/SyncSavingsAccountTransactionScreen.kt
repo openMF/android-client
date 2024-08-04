@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction
+package com.mifos.feature.savings.sync_account_transaction
 
 import android.content.Context
 import android.widget.Toast

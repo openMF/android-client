@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.savingsaccountactivate
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.SavingsAccountActivateRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerSavings
 import rx.Observable

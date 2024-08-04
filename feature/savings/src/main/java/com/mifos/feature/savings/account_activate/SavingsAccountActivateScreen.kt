@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.savingsaccountactivate
+package com.mifos.feature.savings.account_activate
 
 import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -15,7 +15,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -50,8 +49,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.network.GenericResponse
-import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalUiState
+import com.mifos.feature.savings.R
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -86,7 +84,7 @@ fun SavingsAccountActivateScreen(
 
     MifosScaffold(
         snackbarHostState = snackBarHostState,
-        title = stringResource(id = R.string.activate_savings),
+        title = stringResource(id = R.string.feature_savings_activate_savings),
         onBackPressed = navigateBack,
         icon = MifosIcons.arrowBack
     ) {
@@ -117,7 +115,7 @@ fun SavingsAccountActivateScreen(
                 is SavingsAccountActivateUiState.ShowSavingAccountActivatedSuccessfully -> {
                     Toast.makeText(
                         context,
-                        context.resources.getString(R.string.savings_account_activated),
+                        context.resources.getString(R.string.feature_savings_savings_account_activated),
                         Toast.LENGTH_LONG
                     ).show()
 
@@ -166,14 +164,14 @@ fun SavingsAccountActivateContent(
                         }
                         showDatePickerDialog = false
                     }
-                ) { Text(stringResource(id = R.string.select_date)) }
+                ) { Text(stringResource(id = R.string.feature_savings_select_date)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         showDatePickerDialog = false
                     }
-                ) { Text(stringResource(id = R.string.cancel)) }
+                ) { Text(stringResource(id = R.string.feature_savings_cancel)) }
             }
         )
         {
@@ -190,7 +188,7 @@ fun SavingsAccountActivateContent(
 
         Text(
             style = MaterialTheme.typography.bodyLarge,
-            text = stringResource(id = R.string.approved_on),
+            text = stringResource(id = R.string.feature_savings_approved_on),
             modifier = Modifier.padding(start = 16.dp)
         )
 
@@ -200,7 +198,7 @@ fun SavingsAccountActivateContent(
             value = SimpleDateFormat(
                 "dd-MMMM-yyyy",
                 Locale.getDefault()
-            ).format(approvalDate), label = R.string.approval_savings_date
+            ).format(approvalDate), label = R.string.feature_savings_approval_savings_date
         ) {
             showDatePickerDialog = true
         }
@@ -210,7 +208,7 @@ fun SavingsAccountActivateContent(
         MifosOutlinedTextField(
             value = approvalReason,
             onValueChange = { approvalReason = it },
-            label = stringResource(id = R.string.savings_approval_reason),
+            label = stringResource(id = R.string.feature_savings_savings_approval_reason),
             error = null
         )
 
@@ -237,12 +235,12 @@ fun SavingsAccountActivateContent(
                 } else {
                     Toast.makeText(
                         context,
-                        context.resources.getString(R.string.error_not_connected_internet),
+                        context.resources.getString(R.string.feature_savings_error_not_connected_internet),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
             }) {
-            Text(text = stringResource(id = R.string.save))
+            Text(text = stringResource(id = R.string.feature_savings_save))
         }
     }
 }

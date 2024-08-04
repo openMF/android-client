@@ -1,12 +1,9 @@
-package com.mifos.mifosxdroid.online.savingsaccountapproval
+package com.mifos.feature.savings.account_approval
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.data.repository.SavingsAccountApprovalRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.accounts.loan.SavingsApproval
-import com.mifos.core.objects.accounts.savings.DepositType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.savingsaccountapproval
+package com.mifos.feature.savings.account_approval
 
 import com.mifos.core.network.GenericResponse
 

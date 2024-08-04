@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest

@@ -1,7 +1,6 @@
-package com.mifos.mifosxdroid.online.savingsaccountapproval
+package com.mifos.feature.savings.account_approval
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,7 +50,7 @@ import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.accounts.loan.SavingsApproval
-import com.mifos.mifosxdroid.R
+import com.mifos.feature.savings.R
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -86,7 +85,7 @@ fun SavingsAccountApprovalScreen(
 
     MifosScaffold(
         snackbarHostState = snackbarHostState,
-        title = stringResource(id = R.string.approve_savings),
+        title = stringResource(id = R.string.feature_savings_approve_savings),
         onBackPressed = navigateBack,
         icon = MifosIcons.arrowBack
     ) {
@@ -115,7 +114,7 @@ fun SavingsAccountApprovalScreen(
                 is SavingsAccountApprovalUiState.ShowSavingAccountApprovedSuccessfully -> {
                     Toast.makeText(
                         context,
-                        stringResource(id = R.string.savings_approved),
+                        stringResource(id = R.string.feature_savings_savings_approved),
                         Toast.LENGTH_LONG
                     ).show()
                     navigateBack.invoke()
@@ -162,14 +161,14 @@ fun SavingsAccountApprovalContent(
                         }
                         showDatePickerDialog = false
                     }
-                ) { Text(stringResource(id = R.string.select_date)) }
+                ) { Text(stringResource(id = R.string.feature_savings_select_date)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         showDatePickerDialog = false
                     }
-                ) { Text(stringResource(id = R.string.cancel)) }
+                ) { Text(stringResource(id = R.string.feature_savings_cancel)) }
             }
         )
         {
@@ -186,7 +185,7 @@ fun SavingsAccountApprovalContent(
 
         Text(
             style = MaterialTheme.typography.bodyLarge,
-            text = stringResource(id = R.string.approved_on),
+            text = stringResource(id = R.string.feature_savings_approved_on),
             modifier = Modifier.padding(start = 16.dp)
         )
 
@@ -195,7 +194,7 @@ fun SavingsAccountApprovalContent(
         MifosDatePickerTextField(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 approvalDate
-            ), label = R.string.approval_savings_date
+            ), label = R.string.feature_savings_approval_savings_date
         ) {
             showDatePickerDialog = true
         }
@@ -205,7 +204,7 @@ fun SavingsAccountApprovalContent(
         MifosOutlinedTextField(
             value = reasonForApproval,
             onValueChange = { reasonForApproval = it },
-            label = stringResource(id = R.string.savings_approval_reason),
+            label = stringResource(id = R.string.feature_savings_savings_approval_reason),
             error = null
         )
 
@@ -231,12 +230,12 @@ fun SavingsAccountApprovalContent(
                 } else {
                     Toast.makeText(
                         context,
-                        context.resources.getString(R.string.error_network_not_available),
+                        context.resources.getString(R.string.feature_savings_error_not_connected_internet),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
             }) {
-            Text(text = stringResource(id = R.string.save))
+            Text(text = stringResource(id = R.string.feature_savings_save))
         }
     }
 }

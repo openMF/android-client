@@ -38,8 +38,8 @@ import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsReposito
 import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsRepositoryImp
 import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionRepository
 import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionRepositoryImp
-import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionRepository
-import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionRepositoryImp
+import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
+import com.mifos.core.data.repository_imp.SyncSavingsAccountTransactionRepositoryImp
 import com.mifos.mifosxdroid.online.activate.ActivateRepository
 import com.mifos.mifosxdroid.online.activate.ActivateRepositoryImp
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepository
@@ -82,10 +82,10 @@ import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.data.repository_imp.SavingsAccountTransactionRepositoryImp
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.data.repository_imp.SavingsAccountRepositoryImp
-import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepository
-import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepositoryImp
-import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepository
-import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepositoryImp
+import com.mifos.core.data.repository.SavingsAccountActivateRepository
+import com.mifos.core.data.repository_imp.SavingsAccountActivateRepositoryImp
+import com.mifos.core.data.repository.SavingsAccountApprovalRepository
+import com.mifos.core.data.repository_imp.SavingsAccountApprovalRepositoryImp
 import com.mifos.mifosxdroid.online.surveylist.SurveyListRepository
 import com.mifos.mifosxdroid.online.surveylist.SurveyListRepositoryImp
 import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitRepository

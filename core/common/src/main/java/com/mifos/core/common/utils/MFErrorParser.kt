@@ -2,7 +2,7 @@
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.utils
+package com.mifos.core.common.utils
 
 import android.os.Parcelable
 import com.google.gson.Gson
@@ -37,3 +37,15 @@ object MFErrorParser {
     }
 }
 
+@Parcelize
+data class MifosError(
+    var developerMessage: String = "",
+
+    var httpStatusCode: String = "",
+
+    var defaultUserMessage: String = "",
+
+    var userMessageGlobalisationCode: String? = null,
+
+    var errors: List<Errors> = ArrayList()
+) : Parcelable

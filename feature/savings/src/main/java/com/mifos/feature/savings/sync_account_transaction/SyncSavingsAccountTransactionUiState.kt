@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction
+package com.mifos.feature.savings.sync_account_transaction
 
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 

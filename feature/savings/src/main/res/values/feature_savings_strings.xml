@@ -68,6 +68,22 @@
     <string name="feature_savings_failed_to_fetch_savings_template">Failed to load Saving Template</string>
     <string name="feature_savings_failed_to_load_savings_products_and_template">Failed to load SavingProducts and
         Template</string>
+    <string name="feature_savings_savings_account_activated">Savings Account Activated</string>
+    <string name="feature_savings_approved_on">Approved On*</string>
+    <string name="feature_savings_approval_savings_date">Select Approval Date:</string>
+    <string name="feature_savings_savings_approval_reason">Reason for Approval</string>
+    <string name="feature_savings_save">Save</string>
+    <string name="feature_savings_savings_approved">Savings Approved</string>
+    <string name="feature_savings_failed_to_update_savingsaccount">Failed to update Savings Accounts</string>
+    <string name="feature_savings_failed_to_update_list">Failed to Update List</string>
+    <string name="feature_savings_no_transaction_to_sync">There is No Transaction to Sync</string>
+    <string name="feature_savings_failed_to_load_paymentoptions">Failed to Load PaymentTypeOptions</string>
+    <string name="feature_savings_failed_to_load_savingaccounttransaction">Failed to loadSavingsAccountTransaction</string>
+    <string name="feature_savings_nothing_to_sync">Nothing To Sync :)</string>
+    <string name="feature_savings_error_fix_before_sync">Please Fix the Error before sync</string>
+    <string name="feature_savings_retry">Retry</string>
+    <string name="feature_savings_transaction_amount">Transaction amount*</string>
+    <string name="feature_savings_savings_account_id">Savings Account Id</string>
 
 </resources>
 
