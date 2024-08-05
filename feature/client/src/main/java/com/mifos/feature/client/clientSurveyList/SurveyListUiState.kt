@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.surveylist
+package com.mifos.feature.client.clientSurveyList
 
 import com.mifos.core.objects.survey.Survey
 

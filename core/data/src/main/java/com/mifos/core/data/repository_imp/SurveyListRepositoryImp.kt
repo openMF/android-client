@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.surveylist
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import com.mifos.core.objects.survey.QuestionDatas
 import com.mifos.core.objects.survey.ResponseDatas

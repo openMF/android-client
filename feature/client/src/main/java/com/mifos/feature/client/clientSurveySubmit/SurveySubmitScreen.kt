@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.surveysubmit
+package com.mifos.feature.client.clientSurveySubmit
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
@@ -32,7 +32,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.survey.Scorecard
-import com.mifos.mifosxdroid.R
+import com.mifos.feature.client.R
 
 
 @Composable
@@ -57,13 +57,14 @@ fun SurveySubmitScreen(
 
             SurveySubmitContent(
                 showButton = false,
-                displayText = stringResource(id = R.string.survey_successfully_submitted),
+                displayText = stringResource(id = R.string.feature_client_survey_successfully_submitted),
                 submitSurvey = submitSurvey
             )
 
             LaunchedEffect(key1 = true) {
                 Toast.makeText(
-                    context, context.getString(R.string.scorecard_created_successfully),
+                    context,
+                    context.getString(R.string.feature_client_scorecard_created_successfully),
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -72,7 +73,7 @@ fun SurveySubmitScreen(
         is SurveySubmitUiState.ShowError -> {
             SurveySubmitContent(
                 showButton = false,
-                displayText = stringResource(id = R.string.error_submitting_survey),
+                displayText = stringResource(id = R.string.feature_client_failed_to_submit_survey),
                 submitSurvey = submitSurvey
             )
             LaunchedEffect(key1 = true) {
@@ -86,7 +87,7 @@ fun SurveySubmitScreen(
         SurveySubmitUiState.ShowProgressbar -> {
             SurveySubmitContent(
                 showButton = false,
-                displayText = stringResource(id = R.string.survey_successfully_submitted),
+                displayText = stringResource(id = R.string.feature_client_survey_successfully_submitted),
                 submitSurvey = submitSurvey
             )
             MifosCircularProgress()
@@ -156,7 +157,7 @@ fun SurveySubmitContent(
                         disabledContentColor = White
                     ),
                 ) {
-                    Text(text = stringResource(id = R.string.submit_survey))
+                    Text(text = stringResource(id = R.string.feature_client_submit_survey))
                 }
             }
         }

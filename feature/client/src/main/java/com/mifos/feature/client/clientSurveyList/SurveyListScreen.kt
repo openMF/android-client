@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.surveylist
+package com.mifos.feature.client.clientSurveyList
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -38,12 +36,9 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.objects.survey.Survey
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.online.datatable.DataTablePreviewProvider
-import com.mifos.mifosxdroid.online.datatable.DataTableUiState
+import com.mifos.feature.client.R
 
 /**
  * Created by Pronay Sarker on 03/07/2024 (6:05 AM)
@@ -54,7 +49,6 @@ fun SurveyListScreen(
     viewModel: SurveyListViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
     onCardClicked: (index: Int, surveys: List<Survey>) -> Unit
-
 ) {
     val uiState by viewModel.surveyListUiState.collectAsStateWithLifecycle()
 
@@ -85,14 +79,14 @@ fun SurveyListScreen(
         snackbarHostState = snackbarHostState,
         icon = MifosIcons.arrowBack,
         onBackPressed = navigateBack,
-        title = stringResource(id = R.string.surveys)
+        title = stringResource(id = R.string.feature_client_surveys)
     ) {
         Box(modifier = Modifier.padding(it)) {
             when (uiState) {
 
                 is SurveyListUiState.ShowAllSurvey -> {
                     if (uiState.syncSurvey.isEmpty()) {
-                        MifosEmptyUi(text = stringResource(id = R.string.no_survey_available_for_client))
+                        MifosEmptyUi(text = stringResource(id = R.string.feature_client_no_survey_available_for_client))
                     } else {
                         SurveyListContent(
                             surveyList = uiState.syncSurvey,
@@ -128,7 +122,7 @@ fun SurveyListContent(
             modifier = Modifier
                 .padding(horizontal = 18.dp)
                 .padding(top = 16.dp, bottom = 8.dp),
-            text = stringResource(id = R.string.select_one_survey),
+            text = stringResource(id = R.string.feature_client_select_one_survey),
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Normal,
@@ -207,7 +201,7 @@ class SurveyListPreviewProvider : PreviewParameterProvider<SurveyListUiState> {
     override val values: Sequence<SurveyListUiState>
         get() = sequenceOf(
             SurveyListUiState.ShowProgressbar,
-            SurveyListUiState.ShowFetchingError(R.string.failed_to_fetch_datatable),
+            SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_fetch_datatable),
             SurveyListUiState.ShowAllSurvey(demoSurvey)
         )
 }

@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.surveysubmit
+package com.mifos.feature.client.clientSurveySubmit
 
 import com.mifos.core.objects.survey.Scorecard
 
@@ -7,9 +7,9 @@ import com.mifos.core.objects.survey.Scorecard
  */
 sealed class SurveySubmitUiState {
 
-    object Initial : SurveySubmitUiState()
+    data object Initial : SurveySubmitUiState()
 
-    object ShowProgressbar : SurveySubmitUiState()
+    data object ShowProgressbar : SurveySubmitUiState()
 
     data class ShowError(val message: String) : SurveySubmitUiState()
 

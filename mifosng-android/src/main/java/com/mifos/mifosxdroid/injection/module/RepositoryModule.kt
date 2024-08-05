@@ -2,8 +2,10 @@ package com.mifos.mifosxdroid.injection.module
 
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.data.repository.NoteRepository
+import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.data.repository_imp.DocumentDialogRepositoryImp
 import com.mifos.core.data.repository_imp.NoteRepositoryImp
+import com.mifos.core.data.repository_imp.SyncGroupPayloadsRepositoryImp
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerAuth
 import com.mifos.core.network.datamanager.DataManagerCenter
@@ -18,6 +20,8 @@ import com.mifos.core.network.datamanager.DataManagerOffices
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
+import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepository
+import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepositoryImp
 import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepository
@@ -26,16 +30,12 @@ import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialog
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogRepositoryImp
-import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepository
-import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepositoryImp
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepository
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepositoryImp
 import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsRepository
 import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsRepositoryImp
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsRepository
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsRepositoryImp
-import com.mifos.core.data.repository.SyncGroupPayloadsRepository
-import com.mifos.core.data.repository_imp.SyncGroupPayloadsRepositoryImp
 import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionRepository
 import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionRepositoryImp
 import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionRepository
@@ -44,12 +44,6 @@ import com.mifos.mifosxdroid.online.activate.ActivateRepository
 import com.mifos.mifosxdroid.online.activate.ActivateRepositoryImp
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepository
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepositoryImp
-import com.mifos.mifosxdroid.online.clientcharge.ClientChargeRepository
-import com.mifos.mifosxdroid.online.clientcharge.ClientChargeRepositoryImp
-import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsRepository
-import com.mifos.mifosxdroid.online.clientdetails.ClientDetailsRepositoryImp
-import com.mifos.mifosxdroid.online.clientlist.ClientListRepository
-import com.mifos.mifosxdroid.online.clientlist.ClientListRepositoryImp
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepository
@@ -84,10 +78,6 @@ import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivat
 import com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateRepositoryImp
 import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepository
 import com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalRepositoryImp
-import com.mifos.mifosxdroid.online.surveylist.SurveyListRepository
-import com.mifos.mifosxdroid.online.surveylist.SurveyListRepositoryImp
-import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitRepository
-import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitRepositoryImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -112,11 +102,6 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesClientDetailsRepository(dataManagerClient: DataManagerClient): ClientDetailsRepository {
-        return ClientDetailsRepositoryImp(dataManagerClient)
-    }
-
-    @Provides
     fun providesGroupDetailsRepository(dataManagerGroups: DataManagerGroups): GroupDetailsRepository {
         return GroupDetailsRepositoryImp(dataManagerGroups)
     }
@@ -131,18 +116,8 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesClientListRepository(dataManagerClient: DataManagerClient): ClientListRepository {
-        return ClientListRepositoryImp(dataManagerClient)
-    }
-
-    @Provides
     fun providesGroupsListRepository(dataManagerGroups: DataManagerGroups): GroupsListRepository {
         return GroupsListRepositoryImp(dataManagerGroups)
-    }
-
-    @Provides
-    fun providesClientChargeRepository(dataManagerCharge: DataManagerCharge): ClientChargeRepository {
-        return ClientChargeRepositoryImp(dataManagerCharge)
     }
 
     @Provides
@@ -169,11 +144,6 @@ class RepositoryModule {
     @Provides
     fun providesSavingAccountRepository(dataManagerSavings: DataManagerSavings): SavingsAccountRepository {
         return SavingsAccountRepositoryImp(dataManagerSavings)
-    }
-
-    @Provides
-    fun providesSurveyListRepository(dataManagerSurveys: DataManagerSurveys): SurveyListRepository {
-        return SurveyListRepositoryImp(dataManagerSurveys)
     }
 
     @Provides
@@ -238,11 +208,6 @@ class RepositoryModule {
     @Provides
     fun providesSavingsAccountApprovalRepository(dataManagerSavings: DataManagerSavings): SavingsAccountApprovalRepository {
         return SavingsAccountApprovalRepositoryImp(dataManagerSavings)
-    }
-
-    @Provides
-    fun providesSurveySubmitRepository(dataManagerSurveys: DataManagerSurveys): SurveySubmitRepository {
-        return SurveySubmitRepositoryImp(dataManagerSurveys)
     }
 
     @Provides

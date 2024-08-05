@@ -31,7 +31,8 @@ import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.data.repository.SignatureRepository
-import com.mifos.core.data.repository.SyncGroupPayloadsRepository
+import com.mifos.core.data.repository.SurveyListRepository
+import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.data.repository_imp.ActivateRepositoryImp
 import com.mifos.core.data.repository_imp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.CenterListRepositoryImp
@@ -62,7 +63,8 @@ import com.mifos.core.data.repository_imp.ReportCategoryRepositoryImp
 import com.mifos.core.data.repository_imp.ReportDetailRepositoryImp
 import com.mifos.core.data.repository_imp.SearchRepositoryImp
 import com.mifos.core.data.repository_imp.SignatureRepositoryImp
-import com.mifos.core.data.repository_imp.SyncGroupPayloadsRepositoryImp
+import com.mifos.core.data.repository_imp.SurveyListRepositoryImp
+import com.mifos.core.data.repository_imp.SurveySubmitRepositoryImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -161,4 +163,10 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindGenerateCollectionSheetRepository(impl: GenerateCollectionSheetRepositoryImp): GenerateCollectionSheetRepository
+
+    @Binds
+    internal abstract fun bindSurveyListRepository(impl: SurveyListRepositoryImp): SurveyListRepository
+
+    @Binds
+    internal abstract fun bindSurveySubmitRepository(impl: SurveySubmitRepositoryImp): SurveySubmitRepository
 }

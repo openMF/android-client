@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.surveylist
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.survey.QuestionDatas
 import com.mifos.core.objects.survey.ResponseDatas
