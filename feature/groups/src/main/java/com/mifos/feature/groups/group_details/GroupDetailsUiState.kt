@@ -1,4 +1,4 @@
-package com.mifos.feature.groupsList.group_details
+package com.mifos.feature.groups.group_details
 
 import com.mifos.core.objects.group.Group
 

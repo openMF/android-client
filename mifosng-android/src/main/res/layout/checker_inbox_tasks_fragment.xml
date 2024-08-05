@@ -110,7 +110,7 @@
                 android:layout_height="@dimen/dimension_32_dp"
                 android:layout_centerVertical="true"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/ic_assignment_turned_in_black_24dp" />
+                app:srcCompat="@drawable/feature_groups_ic_assignment_turned_in_black_24dp" />
 
             <TextView
                 android:id="@+id/tv_loan_approval"

@@ -34,8 +34,8 @@ import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsReposi
 import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsRepositoryImp
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsRepository
 import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsRepositoryImp
-import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsRepository
-import com.mifos.mifosxdroid.offline.syncgrouppayloads.SyncGroupPayloadsRepositoryImp
+import com.mifos.core.data.repository.SyncGroupPayloadsRepository
+import com.mifos.core.data.repository_imp.SyncGroupPayloadsRepositoryImp
 import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionRepository
 import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionRepositoryImp
 import com.mifos.mifosxdroid.offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionRepository
@@ -54,8 +54,6 @@ import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepository
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepositoryImp
-import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupRepository
-import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupRepositoryImp
 import com.mifos.mifosxdroid.online.datatable.DataTableRepository
 import com.mifos.mifosxdroid.online.datatable.DataTableRepositoryImp
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepository
@@ -207,12 +205,6 @@ class RepositoryModule {
         return CreateNewClientRepositoryImp(dataManagerClient, dataManagerOffices, dataManagerStaff)
     }
 
-    @Provides
-    fun providesCreateNewGroupRepository(
-        dataManagerOffices: DataManagerOffices, dataManagerGroups: DataManagerGroups
-    ): CreateNewGroupRepository {
-        return CreateNewGroupRepositoryImp(dataManagerOffices, dataManagerGroups)
-    }
 
     @Provides
     fun providesDataTableListRepository(

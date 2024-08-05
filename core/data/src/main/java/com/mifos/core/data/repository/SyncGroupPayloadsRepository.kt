@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.offline.syncgrouppayloads
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.group.GroupPayload
 import com.mifos.core.objects.response.SaveResponse

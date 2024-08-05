@@ -1,7 +1,14 @@
-package com.mifos.mifosxdroid.online.createnewgroup
+package com.mifos.feature.groups.create_new_group
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +20,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -22,10 +28,7 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -40,20 +43,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -61,14 +60,10 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.group.GroupPayload
 import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.response.SaveResponse
-import com.mifos.mifosxdroid.R
-import com.mifos.utils.MifosResponseHandler
-import com.mifos.utils.Network
+import com.mifos.feature.groups.R
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -93,9 +88,9 @@ fun CreateNewGroupScreen(
         invokeGroupCreation = { groupPayload ->
             viewModel.createGroup(groupPayload)
         },
-        onGroupCreated = onGroupCreated
+        onGroupCreated = onGroupCreated,
+        getResponse = { viewModel.getResponse() }
     )
-
 }
 
 @Composable
@@ -103,7 +98,8 @@ fun CreateNewGroupScreen(
     uiState: CreateNewGroupUiState,
     onRetry: () -> Unit,
     invokeGroupCreation: (GroupPayload) -> Unit,
-    onGroupCreated: (group: SaveResponse?) -> Unit
+    onGroupCreated: (group: SaveResponse?) -> Unit,
+    getResponse: () -> String
 ) {
     val context = LocalContext.current
 
@@ -119,7 +115,7 @@ fun CreateNewGroupScreen(
             }
 
             is CreateNewGroupUiState.ShowGroupCreatedSuccessfully -> {
-                Toast.makeText(context, "Group " + MifosResponseHandler.response, Toast.LENGTH_LONG)
+                Toast.makeText(context, "Group " +  getResponse() , Toast.LENGTH_LONG)
                     .show()
                 onGroupCreated.invoke(uiState.saveResponse)
             }
@@ -164,10 +160,12 @@ fun CreateNewGroupContent(
     }
 
     val context = LocalContext.current
+    val density = LocalDensity.current
     val scrollState = rememberScrollState()
     var officeId by rememberSaveable { mutableIntStateOf(0) }
     var activationDate by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
     var submittedOnDate by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
+
     val activateDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = activationDate,
         selectableDates = object : SelectableDates {
@@ -206,7 +204,7 @@ fun CreateNewGroupContent(
                         submitDatePicker = false
                         activationDatePicker = false
                     }
-                ) { Text(stringResource(id = R.string.select_date)) }
+                ) { Text(stringResource(id = R.string.feature_groups_select_date)) }
             },
             dismissButton = {
                 TextButton(
@@ -214,7 +212,7 @@ fun CreateNewGroupContent(
                         activationDatePicker = false
                         submitDatePicker = false
                     }
-                ) { Text(stringResource(id = R.string.cancel)) }
+                ) { Text(stringResource(id = R.string.feature_groups_dismiss)) }
             }
         )
         {
@@ -232,7 +230,7 @@ fun CreateNewGroupContent(
 
         Text(
             style = MaterialTheme.typography.headlineSmall,
-            text = stringResource(id = R.string.create_new_group),
+            text = stringResource(id = R.string.feature_groups_create_new_group),
             modifier = Modifier.padding(start = 16.dp)
         )
 
@@ -241,7 +239,7 @@ fun CreateNewGroupContent(
         MifosOutlinedTextField(
             value = groupName,
             onValueChange = { groupName = it },
-            label = stringResource(id = R.string.name) + "*",
+            label = stringResource(id = R.string.feature_groups_name),
             error = null
         )
 
@@ -259,7 +257,7 @@ fun CreateNewGroupContent(
                 }
 
             },
-            label = R.string.office_name_mandatory,
+            label = R.string.feature_groups_office_name_mandatory,
             options = officeList.map { it.name.toString() },
             readOnly = true
         )
@@ -270,7 +268,7 @@ fun CreateNewGroupContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 submittedOnDate
             ),
-            label = R.string.submit_date,
+            label = R.string.feature_groups_submit_date,
             openDatePicker = {
                 submitDatePicker = true
             }
@@ -281,7 +279,7 @@ fun CreateNewGroupContent(
         MifosOutlinedTextField(
             value = externalId,
             onValueChange = { externalId = it },
-            label = stringResource(id = R.string.external_id),
+            label = stringResource(id = R.string.feature_groups_external_id),
             error = null
         )
 
@@ -298,17 +296,27 @@ fun CreateNewGroupContent(
                 checked = isActive,
                 onCheckedChange = { isActive = !isActive }
             )
-            Text(text = stringResource(id = R.string.active))
+            Text(text = stringResource(id = R.string.feature_groups_active))
         }
 
-        if (isActive) {
+        AnimatedVisibility(
+            visible = isActive,
+            enter = slideInVertically {
+                with(density) { -40.dp.roundToPx() }
+            } + expandVertically(
+                expandFrom = Alignment.Top
+            ) + fadeIn(
+                initialAlpha = 0.3f
+            ),
+            exit = slideOutVertically() + shrinkVertically() + fadeOut()
+        ) {
             Spacer(modifier = Modifier.height(16.dp))
 
             MifosDatePickerTextField(
                 value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                     activationDate
                 ),
-                label = R.string.activation_date,
+                label = R.string.feature_groups_activation_date,
                 openDatePicker = {
                     activationDatePicker = true
                 }
@@ -357,13 +365,13 @@ fun CreateNewGroupContent(
                     } else {
                         Toast.makeText(
                             context,
-                            context.resources.getString(R.string.error_not_connected_internet),
+                            context.resources.getString(R.string.feature_groups_error_not_connected_internet),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
             }) {
-            Text(text = stringResource(id = R.string.submit))
+            Text(text = stringResource(id = R.string.feature_groups_submit))
         }
     }
 }
@@ -373,7 +381,7 @@ fun validateFields(groupName: String, officeName: String, context: Context): Boo
         groupName.isEmpty() -> {
             Toast.makeText(
                 context,
-                context.resources.getString(R.string.error_group_name_cannot_be_empty),
+                context.resources.getString(R.string.feature_groups_error_group_name_cannot_be_empty),
                 Toast.LENGTH_SHORT
             ).show()
             return false
@@ -382,7 +390,7 @@ fun validateFields(groupName: String, officeName: String, context: Context): Boo
         groupName.trim().length < 4 -> {
             Toast.makeText(
                 context,
-                context.resources.getString(R.string.error_group_name_must_be_at_least_four_characters_long),
+                context.resources.getString(R.string.feature_groups_error_group_name_must_be_at_least_four_characters_long),
                 Toast.LENGTH_SHORT
             ).show()
             return false
@@ -391,7 +399,7 @@ fun validateFields(groupName: String, officeName: String, context: Context): Boo
         groupName.contains("[^a-zA-Z ]".toRegex()) -> {
             Toast.makeText(
                 context,
-                context.resources.getString(R.string.error_group_name_should_contain_only_alphabets),
+                context.resources.getString(R.string.feature_groups_error_group_name_should_contain_only_alphabets),
                 Toast.LENGTH_SHORT
             ).show()
             return false
@@ -400,7 +408,7 @@ fun validateFields(groupName: String, officeName: String, context: Context): Boo
         officeName.isEmpty() -> {
             Toast.makeText(
                 context,
-                context.resources.getString(R.string.error_office_not_selected),
+                context.resources.getString(R.string.feature_groups_error_office_not_selected),
                 Toast.LENGTH_SHORT
             ).show()
             return false
@@ -431,6 +439,7 @@ fun PreviewCreateNewGroupScreen(
         invokeGroupCreation = {},
         onGroupCreated = { _ ->
 
-        }
+        },
+        getResponse = { "" }
     )
 }
