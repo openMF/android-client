@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.use_cases.AllSavingsAccountTransactionsUseCase
 import com.mifos.core.domain.use_cases.DeleteAndUpdateTransactionsUseCase
 import com.mifos.core.domain.use_cases.PaymentTypeOptionUseCase
@@ -34,7 +35,8 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
     private val processTransactionUseCase: ProcessTransactionUseCase,
     private val allSavingsAccountTransactionsUseCase: AllSavingsAccountTransactionsUseCase,
     private val updateLoanRepaymentTransactionUseCase: UpdateLoanRepaymentTransactionUseCase,
-    private val deleteAndUpdateTransactionsUseCase: DeleteAndUpdateTransactionsUseCase
+    private val deleteAndUpdateTransactionsUseCase: DeleteAndUpdateTransactionsUseCase,
+    private val prefManager: PrefManager
 ) : ViewModel() {
 
     private val _syncSavingsAccountTransactionUiState =
@@ -59,6 +61,10 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
 
     private var mTransactionIndex = 0
     private var mTransactionsFailed = 0
+
+    fun getUserStatus() : Boolean {
+        return prefManager.userStatus
+    }
 
     fun syncSavingsAccountTransactions() {
         if (mSavingsAccountTransactionRequests.size != 0) {
