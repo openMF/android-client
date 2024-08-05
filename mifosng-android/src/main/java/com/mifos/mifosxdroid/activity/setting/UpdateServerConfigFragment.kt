@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.mifos.feature.settings.UpdateServerConfigScreenRoute
+import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

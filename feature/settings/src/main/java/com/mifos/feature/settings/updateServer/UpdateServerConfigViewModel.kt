@@ -1,4 +1,4 @@
-package com.mifos.feature.settings
+package com.mifos.feature.settings.updateServer
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.mifos.core.apimanager.BaseApiManager
 import javax.inject.Inject
 
 @HiltViewModel

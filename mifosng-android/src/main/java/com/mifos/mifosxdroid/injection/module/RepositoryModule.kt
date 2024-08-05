@@ -26,8 +26,8 @@ import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialog
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog.SyncSurveysDialogRepositoryImp
+import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepository
+import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepositoryImp
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepository
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepositoryImp
 import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsRepository

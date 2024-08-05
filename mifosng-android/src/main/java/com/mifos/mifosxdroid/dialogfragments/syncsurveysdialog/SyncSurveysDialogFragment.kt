@@ -1,5 +1,6 @@
 package com.mifos.mifosxdroid.dialogfragments.syncsurveysdialog
 
+/*
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -112,6 +113,8 @@ class SyncSurveysDialogFragment : DialogFragment() {
                     showProgressbar(false)
                     updateTotalSyncSurveyProgressBarAndCount(it.total)
                 }
+
+                SyncSurveysDialogUiState.Initial -> Unit
             }
         }
 
@@ -242,3 +245,4 @@ class SyncSurveysDialogFragment : DialogFragment() {
         }
     }
 }
+ */
