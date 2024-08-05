@@ -1,8 +1,8 @@
-package com.mifos.mifosxdroid.online.surveysubmit
+package com.mifos.feature.client.clientSurveySubmit
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.data.repository.SurveySubmitRepository
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.objects.survey.Scorecard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,13 +16,18 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 13/08/23.
  */
 @HiltViewModel
-class SurveySubmitViewModel @Inject constructor(private val repository: SurveySubmitRepository) :
-    ViewModel() {
+class SurveySubmitViewModel @Inject constructor(
+    private val repository: SurveySubmitRepository,
+    private val prefManager: PrefManager
+) : ViewModel() {
 
-    private val _surveySubmitUiState = MutableStateFlow<SurveySubmitUiState>(SurveySubmitUiState.Initial)
+    private val _surveySubmitUiState =
+        MutableStateFlow<SurveySubmitUiState>(SurveySubmitUiState.Initial)
 
     val surveySubmitUiState: StateFlow<SurveySubmitUiState>
         get() = _surveySubmitUiState
+
+    val userId = MutableStateFlow(prefManager.getUserId())
 
     fun submitSurvey(survey: Int, scorecardPayload: Scorecard?) {
         _surveySubmitUiState.value = SurveySubmitUiState.ShowProgressbar

@@ -1,8 +1,7 @@
-package com.mifos.mifosxdroid.online.surveyquestion
+package com.mifos.feature.client.clientSurveyQuestion
 
 import android.annotation.SuppressLint
 import android.widget.Toast
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -29,6 +28,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -40,7 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -60,11 +59,10 @@ import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.survey.Scorecard
 import com.mifos.core.objects.survey.ScorecardValues
 import com.mifos.core.objects.survey.Survey
-import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitScreen
-import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitUiState
-import com.mifos.mifosxdroid.online.surveysubmit.SurveySubmitViewModel
-import com.mifos.utils.PrefManager
+import com.mifos.feature.client.R
+import com.mifos.feature.client.clientSurveySubmit.SurveySubmitScreen
+import com.mifos.feature.client.clientSurveySubmit.SurveySubmitUiState
+import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
 import java.util.Date
 
 
@@ -78,6 +76,7 @@ fun SurveyQuestionScreen(
 ) {
     val context = LocalContext.current
     val uiState by viewModel.surveySubmitUiState.collectAsStateWithLifecycle()
+    val userId by viewModel.userId.collectAsStateWithLifecycle()
     val questionData: MutableList<String> = mutableListOf()
     val optionsData: MutableList<MutableList<String>> = mutableListOf()
     val scoreCardData: MutableList<ScorecardValues> by rememberSaveable {
@@ -132,7 +131,7 @@ fun SurveyQuestionScreen(
                         survey = survey.id,
                         scorecardPayload =
                         Scorecard(
-                            userId = PrefManager.getUserId(),
+                            userId = userId,
                             clientId = clientId,
                             createdOn = Date(),
                             scorecardValues = scoreCardData
@@ -141,7 +140,7 @@ fun SurveyQuestionScreen(
                 } else {
                     Toast.makeText(
                         context,
-                        context.getString(R.string.please_attempt_atleast_one_question),
+                        context.getString(R.string.feature_client_please_attempt_at_least_one_question),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -225,7 +224,7 @@ fun SurveyQuestionContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(colorResource(id = R.color.primary))
+                .background(BluePrimary)
                 .padding(24.dp)
         ) {
             Text(
@@ -266,7 +265,7 @@ fun SurveyQuestionContent(
                 disabledContentColor = White
             ),
         ) {
-            Text(text = stringResource(id = R.string.next))
+            Text(text = stringResource(id = R.string.feature_client_next))
         }
     }
 }
@@ -281,7 +280,7 @@ fun RadioGroup(options: List<String>, selectedOptionIndex: Int, onOptionSelected
                 RadioButton(
                     selected = index == selectedOptionIndex,
                     onClick = { onOptionSelected(index) },
-                    colors = RadioButtonDefaults.colors(selectedColor = colorResource(id = R.color.primary))
+                    colors = RadioButtonDefaults.colors(BluePrimary)
                 )
                 Text(
                     text = option,
@@ -316,7 +315,7 @@ fun SurveyQuestionTopBar(
         title = {
             Column {
                 Text(
-                    text = stringResource(id = R.string.survey),
+                    text = stringResource(id = R.string.feature_client_survey),
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium,

@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.surveysubmit
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import com.mifos.core.objects.survey.Scorecard
 import rx.Observable

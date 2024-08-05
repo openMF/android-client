@@ -13,6 +13,7 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.survey.Scorecard
 import com.mifos.core.objects.survey.ScorecardValues
 import com.mifos.core.objects.survey.Survey
+import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.utils.PrefManager
 import dagger.hilt.android.AndroidEntryPoint

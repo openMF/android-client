@@ -1,13 +1,12 @@
-package com.mifos.mifosxdroid.online.surveylist
+package com.mifos.feature.client.clientSurveyList
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mifos.core.data.repository.SurveyListRepository
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.objects.survey.QuestionDatas
 import com.mifos.core.objects.survey.ResponseDatas
 import com.mifos.core.objects.survey.Survey
-import com.mifos.mifosxdroid.R
-import com.mifos.utils.PrefManager
+import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,10 +19,13 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 08/08/23.
  */
 @HiltViewModel
-class SurveyListViewModel @Inject constructor(private val repository: SurveyListRepository) :
-    ViewModel() {
+class SurveyListViewModel @Inject constructor(
+    private val repository: SurveyListRepository,
+    private val prefManager: PrefManager
+) : ViewModel() {
 
-    private val _surveyListUiState = MutableStateFlow<SurveyListUiState>(SurveyListUiState.ShowProgressbar)
+    private val _surveyListUiState =
+        MutableStateFlow<SurveyListUiState>(SurveyListUiState.ShowProgressbar)
     val surveyListUiState: StateFlow<SurveyListUiState> get() = _surveyListUiState
 
 
@@ -41,7 +43,7 @@ class SurveyListViewModel @Inject constructor(private val repository: SurveyList
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _surveyListUiState.value =
-                        SurveyListUiState.ShowFetchingError(R.string.failed_to_fetch_surveys_list)
+                        SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_fetch_surveys_list)
                 }
 
                 override fun onNext(surveys: List<Survey>) {
@@ -64,12 +66,12 @@ class SurveyListViewModel @Inject constructor(private val repository: SurveyList
 
                 override fun onError(e: Throwable) {
                     _surveyListUiState.value =
-                        SurveyListUiState.ShowFetchingError(R.string.failed_to_load_db_surveys)
+                        SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_fetch_datatable)
                 }
 
                 override fun onNext(surveyList: List<Survey>) {
                     mDbSurveyList = surveyList
-                    if (PrefManager.userStatus) {
+                    if (prefManager.userStatus) {
                         for (survey in mSyncSurveyList) {
                             loadDatabaseQuestionData(survey.id, survey)
                         }
@@ -88,7 +90,7 @@ class SurveyListViewModel @Inject constructor(private val repository: SurveyList
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _surveyListUiState.value =
-                        SurveyListUiState.ShowFetchingError(R.string.failed_to_load_db_question_datas)
+                        SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_load_db_question_data)
                 }
 
                 override fun onNext(questionDatasList: List<QuestionDatas>) {
@@ -110,7 +112,7 @@ class SurveyListViewModel @Inject constructor(private val repository: SurveyList
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _surveyListUiState.value =
-                        SurveyListUiState.ShowFetchingError(R.string.failed_to_load_db_response_datas)
+                        SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_load_db_question_data)
                 }
 
                 override fun onNext(responseDatas: List<ResponseDatas>) {
