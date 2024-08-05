@@ -36,16 +36,3 @@ object MFErrorParser {
         return errorMessage
     }
 }
-
-@Parcelize
-data class MifosError(
-    var developerMessage: String = "",
-
-    var httpStatusCode: String = "",
-
-    var defaultUserMessage: String = "",
-
-    var userMessageGlobalisationCode: String? = null,
-
-    var errors: List<Errors> = ArrayList()
-) : Parcelable

@@ -1,9 +1,11 @@
 package com.mifos.core.domain.use_cases
 
+import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
+import com.mifos.core.objects.mifoserror.MifosError
 import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -36,7 +38,7 @@ class ProcessTransactionUseCase @Inject constructor(private val repository: Savi
                     }
 
                     override fun onError(e: Throwable) {
-                        trySend(Resource.Error(e.message.toString()))
+                        trySend(Resource.Error(MFErrorParser.errorMessage(e)!!))
                     }
 
                     override fun onNext(savingsAccountTransactionResponse: SavingsAccountTransactionResponse) {

@@ -254,7 +254,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
     ) = viewModelScope.launch(Dispatchers.IO) {
         processTransactionUseCase(type, accountId, transactionType, request!!).collect { result ->
             when (result) {
-                is Resource.Error -> showTransactionSyncFailed(MFErrorParser.errorMessage(result))
+                is Resource.Error -> showTransactionSyncFailed(result.message)
 
                 is Resource.Loading -> _syncSavingsAccountTransactionUiState.value =
                     SyncSavingsAccountTransactionUiState.Loading
