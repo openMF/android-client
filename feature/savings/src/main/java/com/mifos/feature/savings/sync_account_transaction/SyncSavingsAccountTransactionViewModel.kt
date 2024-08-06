@@ -2,9 +2,7 @@ package com.mifos.feature.savings.sync_account_transaction
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.use_cases.AllSavingsAccountTransactionsUseCase
 import com.mifos.core.domain.use_cases.DeleteAndUpdateTransactionsUseCase
@@ -12,7 +10,6 @@ import com.mifos.core.domain.use_cases.PaymentTypeOptionUseCase
 import com.mifos.core.domain.use_cases.ProcessTransactionUseCase
 import com.mifos.core.domain.use_cases.UpdateLoanRepaymentTransactionUseCase
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
 import com.mifos.feature.savings.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,9 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**

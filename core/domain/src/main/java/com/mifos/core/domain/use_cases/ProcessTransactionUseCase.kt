@@ -1,6 +1,5 @@
 package com.mifos.core.domain.use_cases
 
-import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
@@ -38,8 +37,7 @@ class ProcessTransactionUseCase @Inject constructor(private val repository: Savi
                     }
 
                     override fun onError(e: Throwable) {
-//                        trySend(Resource.Error(e))
-                        trySend(Resource.Error(MFErrorParser.errorMessage(e)!!))
+                        trySend(Resource.Error(e.message.toString()))
                     }
 
                     override fun onNext(savingsAccountTransactionResponse: SavingsAccountTransactionResponse) {

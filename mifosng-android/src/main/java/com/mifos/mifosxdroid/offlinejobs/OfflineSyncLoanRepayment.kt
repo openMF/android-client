@@ -5,7 +5,6 @@ import com.evernote.android.job.JobRequest
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
-import com.mifos.utils.MFErrorParser.errorMessage
 import com.mifos.utils.PrefManager.userStatus
 import com.mifos.utils.Tags
 import rx.Subscriber
@@ -81,7 +80,7 @@ class OfflineSyncLoanRepayment : Job() {
                 .subscribe(object : Subscriber<LoanRepaymentResponse>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        showPaymentFailed(errorMessage(e))
+                        showPaymentFailed(e.message.toString())
                     }
 
                     override fun onNext(loanRepaymentResponse: LoanRepaymentResponse) {

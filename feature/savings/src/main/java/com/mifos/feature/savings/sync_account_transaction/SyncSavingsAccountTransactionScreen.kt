@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Network
-import com.mifos.core.common.utils.Utils.getPaymentTypeName
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -177,10 +176,20 @@ fun SavingsAccountTransactionItem(
             )
             TransactionRow(
                 label = stringResource(R.string.feature_savings_payment_type),
-                value = transaction.paymentTypeId?.toInt()?.let {
+                value =   transaction.paymentTypeId?.toInt()?.let {
                     getPaymentTypeName(it, paymentTypeOptions)
                 } ?: ""
             )
+
+            fun getPaymentTypeName(
+                paymentId: Int,
+                paymentTypeOptions: List<PaymentTypeOption>?
+            ): String? {
+                return paymentTypeOptions
+                    ?.firstOrNull { it.id == paymentId }
+                    ?.name
+            }
+
             TransactionRow(
                 label = stringResource(R.string.feature_savings_transaction_type),
                 value = transaction.transactionType ?: ""
@@ -244,6 +253,15 @@ fun ErrorStateScreen(message: String, onRefresh: () -> Unit) {
             Text(stringResource(id = R.string.feature_savings_retry))
         }
     }
+}
+
+fun getPaymentTypeName(
+    paymentId: Int,
+    paymentTypeOptions: List<PaymentTypeOption>?
+): String? {
+    return paymentTypeOptions
+        ?.firstOrNull { it.id == paymentId }
+        ?.name
 }
 
 fun checkNetworkConnectionAndSync(

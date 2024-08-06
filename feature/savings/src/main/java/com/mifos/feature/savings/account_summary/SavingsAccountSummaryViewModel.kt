@@ -25,7 +25,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SavingsAccountSummaryViewModel @Inject constructor(
     private val getSavingsAccountUseCase: GetSavingsAccountUseCase
-//    private val repository: SavingsAccountSummaryRepository
 ) : ViewModel() {
 
     private val _savingsAccountSummaryUiState =

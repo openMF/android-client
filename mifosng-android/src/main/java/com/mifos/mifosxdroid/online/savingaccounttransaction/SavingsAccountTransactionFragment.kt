@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mifos.feature.savings.account_transaction.SavingsAccountTransactionScreen
+import com.mifos.feature.savings.account_transaction.SavingsAccountTransactionViewModel
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class SavingsAccountTransactionFragment : MifosBaseFragment() {
 
     private val arg: SavingsAccountTransactionFragmentArgs by navArgs()
-    val viewModel: com.mifos.feature.savings.account_transaction.SavingsAccountTransactionViewModel by viewModels()
+    val viewModel: SavingsAccountTransactionViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

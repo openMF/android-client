@@ -161,6 +161,7 @@ dependencies {
 
     // Kotlin standard library
     implementation(libs.kotlin.stdlib)
+    implementation(project(":core:domain"))
 
     //DBFlow dependencies
     kapt(libs.dbflow.processor)
