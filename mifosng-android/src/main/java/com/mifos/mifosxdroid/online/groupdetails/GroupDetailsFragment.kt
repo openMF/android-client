@@ -12,7 +12,7 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.navigation.ClientListArgs
-import com.mifos.feature.groupsList.group_details.GroupDetailsScreen
+import com.mifos.feature.groups.group_details.GroupDetailsScreen
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 

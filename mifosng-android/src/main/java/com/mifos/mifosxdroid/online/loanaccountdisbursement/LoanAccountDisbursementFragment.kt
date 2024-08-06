@@ -8,46 +8,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
-import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.loan.LoanDisbursement
-import com.mifos.core.objects.templates.loans.LoanTransactionTemplate
-import com.mifos.exceptions.RequiredFieldException
-import com.mifos.mifosxdroid.R
+import com.mifos.feature.loan.loan_disbursement.LoanAccountDisbursementScreen
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.mifosxdroid.core.util.Toaster
-import com.mifos.mifosxdroid.databinding.DialogFragmentDisburseLoanBinding
-import com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupScreen
-import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleViewModel
-import com.mifos.mifosxdroid.uihelpers.MFDatePicker
-import com.mifos.mifosxdroid.uihelpers.MFDatePicker.OnDatePickListener
-import com.mifos.utils.DateHelper
-import com.mifos.utils.FragmentConstants
-import com.mifos.utils.Network
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Created by nellyk on 1/22/2016.
  */
 @AndroidEntryPoint
-class LoanAccountDisbursementFragment : MifosBaseFragment(){
+class LoanAccountDisbursementFragment : MifosBaseFragment() {
 
     private val arg: LoanAccountDisbursementFragmentArgs by navArgs()
-    private val viewModel: LoanAccountDisbursementViewModel by viewModels()
+    private var loanId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.loanId = arg.loanAccountNumber
+        loanId = arg.loanAccountNumber
     }
 
     override fun onCreateView(
@@ -58,7 +38,8 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(){
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                LoanAccountDisbursementScreen (
+                LoanAccountDisbursementScreen(
+                    loanId = loanId,
                     navigateBack = { findNavController().popBackStack() }
                 )
             }

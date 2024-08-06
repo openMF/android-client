@@ -15,6 +15,7 @@ import androidx.navigation.fragment.navArgs
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import com.mifos.core.objects.client.Charges
+import com.mifos.feature.loan.loan_account_summary.LoanAccountSummaryScreen
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
