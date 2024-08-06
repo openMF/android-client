@@ -126,7 +126,7 @@ secrets {
 }
 
 dependencies {
-
+    implementation(projects.feature.savings)
     implementation(projects.feature.note)
     implementation(projects.feature.auth)
     implementation(projects.feature.client)
@@ -161,7 +161,6 @@ dependencies {
 
     // Kotlin standard library
     implementation(libs.kotlin.stdlib)
-    implementation(project(":feature:savings"))
 
     //DBFlow dependencies
     kapt(libs.dbflow.processor)

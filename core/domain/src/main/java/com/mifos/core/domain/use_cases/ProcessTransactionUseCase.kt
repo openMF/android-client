@@ -38,6 +38,7 @@ class ProcessTransactionUseCase @Inject constructor(private val repository: Savi
                     }
 
                     override fun onError(e: Throwable) {
+//                        trySend(Resource.Error(e))
                         trySend(Resource.Error(MFErrorParser.errorMessage(e)!!))
                     }
 

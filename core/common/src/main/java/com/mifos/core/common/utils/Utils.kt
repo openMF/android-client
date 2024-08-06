@@ -27,9 +27,10 @@ object Utils {
         paymentId: Int,
         paymentTypeOptions: List<PaymentTypeOption>?
     ): String? {
-        return paymentTypeOptions
-            ?.firstOrNull { it.id == paymentId }
-            ?.name
+        return ""
+//        return paymentTypeOptions
+//            ?.firstOrNull { it.id == paymentId }
+//            ?.name
     }
 
     fun getStringOfDate(dateObj: List<Int?>): String {

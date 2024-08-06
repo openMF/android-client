@@ -20,12 +20,13 @@ secrets {
 dependencies {
     implementation(projects.core.model)
     implementation(project(":core:database"))
-
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
+
+    implementation(libs.converter.gson)
 
     implementation(libs.javax.inject)
 
@@ -33,12 +34,10 @@ dependencies {
 
     //DBFlow dependencies
     kapt(libs.dbflow.processor)
-    implementation(libs.dbflow)
-    kapt(libs.github.dbflow.processor)
+//    implementation(libs.dbflow)
+//    kapt(libs.github.dbflow.processor)
 
     //rxJava
     implementation(libs.rxjava)
-    //Json converter
-    implementation(libs.converter.gson)
 
 }

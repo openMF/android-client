@@ -17,6 +17,4 @@ dependencies {
 
     //material
     implementation (libs.androidx.material.v168)
-
-
 }
