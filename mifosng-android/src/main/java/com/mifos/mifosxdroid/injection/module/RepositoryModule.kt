@@ -9,7 +9,6 @@ import com.mifos.core.data.repository_imp.SyncGroupPayloadsRepositoryImp
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerAuth
 import com.mifos.core.network.datamanager.DataManagerCenter
-import com.mifos.core.network.datamanager.DataManagerCharge
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerDataTable
 import com.mifos.core.network.datamanager.DataManagerDocument
@@ -56,18 +55,6 @@ import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepositoryImp
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepositoryImp
-import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApprovalRepository
-import com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApprovalRepositoryImp
-import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementRepository
-import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementRepositoryImp
-import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryRepository
-import com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryRepositoryImp
-import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentRepository
-import com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentRepositoryImp
-import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleRepository
-import com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleRepositoryImp
-import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepository
-import com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsRepositoryImp
 import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryRepository
 import com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryRepositoryImp
 import com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionRepository
@@ -121,11 +108,6 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesLoanAccountSummary(dataManagerLoan: DataManagerLoan): LoanAccountSummaryRepository {
-        return LoanAccountSummaryRepositoryImp(dataManagerLoan)
-    }
-
-    @Provides
     fun providesSavingsAccountSummaryRepository(dataManagerSavings: DataManagerSavings): SavingsAccountSummaryRepository {
         return SavingsAccountSummaryRepositoryImp(dataManagerSavings)
     }
@@ -144,21 +126,6 @@ class RepositoryModule {
     @Provides
     fun providesSavingAccountRepository(dataManagerSavings: DataManagerSavings): SavingsAccountRepository {
         return SavingsAccountRepositoryImp(dataManagerSavings)
-    }
-
-    @Provides
-    fun providesLoanAccountApprovalRepository(dataManager: DataManager): LoanAccountApprovalRepository {
-        return LoanAccountApprovalRepositoryImp(dataManager)
-    }
-
-    @Provides
-    fun providesLoanAccountDisbursementRepository(dataManagerLoan: DataManagerLoan): LoanAccountDisbursementRepository {
-        return LoanAccountDisbursementRepositoryImp(dataManagerLoan)
-    }
-
-    @Provides
-    fun providesLoanRepaymentRepository(dataManagerLoan: DataManagerLoan): LoanRepaymentRepository {
-        return LoanRepaymentRepositoryImp(dataManagerLoan)
     }
 
     @Provides
@@ -183,16 +150,6 @@ class RepositoryModule {
         dataManagerClient: DataManagerClient
     ): DataTableListRepository {
         return DataTableListRepositoryImp(dataManagerLoan, dataManager, dataManagerClient)
-    }
-
-    @Provides
-    fun providesLoanRepaymentScheduleRepository(dataManager: DataManager): LoanRepaymentScheduleRepository {
-        return LoanRepaymentScheduleRepositoryImp(dataManager)
-    }
-
-    @Provides
-    fun providesLoanTransactionsRepository(dataManager: DataManager): LoanTransactionsRepository {
-        return LoanTransactionsRepositoryImp(dataManager)
     }
 
     @Provides

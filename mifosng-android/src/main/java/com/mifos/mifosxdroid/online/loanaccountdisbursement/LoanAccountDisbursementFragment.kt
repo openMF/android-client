@@ -10,9 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.mifos.feature.loan.loan_disbursement.LoanAccountDisbursementScreen
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,14 +20,14 @@ import dagger.hilt.android.AndroidEntryPoint
  * Created by nellyk on 1/22/2016.
  */
 @AndroidEntryPoint
-class LoanAccountDisbursementFragment : MifosBaseFragment(){
+class LoanAccountDisbursementFragment : MifosBaseFragment() {
 
     private val arg: LoanAccountDisbursementFragmentArgs by navArgs()
-    private val viewModel: LoanAccountDisbursementViewModel by viewModels()
+    private var loanId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.loanId = arg.loanAccountNumber
+        loanId = arg.loanAccountNumber
     }
 
     override fun onCreateView(
@@ -38,7 +38,8 @@ class LoanAccountDisbursementFragment : MifosBaseFragment(){
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                LoanAccountDisbursementScreen (
+                LoanAccountDisbursementScreen(
+                    loanId = loanId,
                     navigateBack = { findNavController().popBackStack() }
                 )
             }

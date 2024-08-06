@@ -67,13 +67,9 @@ import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.objects.accounts.savings.FieldOfficerOptions
 import com.mifos.core.objects.client.Savings
 import com.mifos.core.objects.organisation.ProductSavings
-import com.mifos.core.objects.templates.loans.LoanTransactionTemplate
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import com.mifos.core.objects.zipmodels.SavingProductsAndTemplate
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementScreen
-import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementScreenPreviewProvider
-import com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementUiState
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -537,7 +533,8 @@ fun SavingsAccountContent(
                     savingsPayload.fieldOfficerId = fieldOfficerId
                     savingsPayload.nominalAnnualInterestRate = nominalAnnualInterest
                     savingsPayload.allowOverdraft = overDraftAllowed
-                    savingsPayload.nominalAnnualInterestRateOverdraft = nominalAnnualInterestOverdraft
+                    savingsPayload.nominalAnnualInterestRateOverdraft =
+                        nominalAnnualInterestOverdraft
                     savingsPayload.overdraftLimit = maximumOverdraftAmount
                     savingsPayload.minOverdraftForInterestCalculation = minimumOverdraftAmount
                     savingsPayload.enforceMinRequiredBalance = enforceMinimumBalance
@@ -563,15 +560,17 @@ class SavingsAccountScreenPreviewProvider : PreviewParameterProvider<SavingAccou
     override val values: Sequence<SavingAccountUiState>
         get() = sequenceOf(
             SavingAccountUiState.ShowProgress,
-            SavingAccountUiState.LoadAllSavings(SavingProductsAndTemplate(
-                mProductSavings = listOf(
-                    ProductSavings(
-                        id = 0,
-                        name = "Product"
-                    )
-                ),
-                mSavingProductsTemplate = SavingProductsTemplate()
-            )),
+            SavingAccountUiState.LoadAllSavings(
+                SavingProductsAndTemplate(
+                    mProductSavings = listOf(
+                        ProductSavings(
+                            id = 0,
+                            name = "Product"
+                        )
+                    ),
+                    mSavingProductsTemplate = SavingProductsTemplate()
+                )
+            ),
             SavingAccountUiState.ShowFetchingErrorString("Failed to fetch"),
             SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(Savings()),
             SavingAccountUiState.ShowFetchingError(R.string.failed_to_fetch_savings_template)
@@ -586,7 +585,7 @@ fun PreviewSavingsAccountScreen(
     SavingsAccountScreen(
         uiState = savingAccountUiState,
         savingProductsTemplate = SavingProductsTemplate(),
-        onSavingsProductSelected = { } ,
+        onSavingsProductSelected = { },
         navigateBack = { },
         onRetry = { },
         fetchTemplate = { },

@@ -21,9 +21,15 @@ import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.core.data.repository.GroupLoanAccountRepository
 import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.data.repository.IndividualCollectionSheetDetailsRepository
+import com.mifos.core.data.repository.LoanAccountApprovalRepository
+import com.mifos.core.data.repository.LoanAccountDisbursementRepository
 import com.mifos.core.data.repository.LoanAccountRepository
+import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.data.repository.LoanChargeDialogRepository
 import com.mifos.core.data.repository.LoanChargeRepository
+import com.mifos.core.data.repository.LoanRepaymentRepository
+import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
+import com.mifos.core.data.repository.LoanTransactionsRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.data.repository.PinPointClientRepository
@@ -53,9 +59,15 @@ import com.mifos.core.data.repository_imp.GroupListRepositoryImp
 import com.mifos.core.data.repository_imp.GroupLoanAccountRepositoryImp
 import com.mifos.core.data.repository_imp.GroupsListRepositoryImpl
 import com.mifos.core.data.repository_imp.IndividualCollectionSheetDetailsRepositoryImp
+import com.mifos.core.data.repository_imp.LoanAccountApprovalRepositoryImp
+import com.mifos.core.data.repository_imp.LoanAccountDisbursementRepositoryImp
 import com.mifos.core.data.repository_imp.LoanAccountRepositoryImp
+import com.mifos.core.data.repository_imp.LoanAccountSummaryRepositoryImp
 import com.mifos.core.data.repository_imp.LoanChargeDialogRepositoryImp
 import com.mifos.core.data.repository_imp.LoanChargeRepositoryImp
+import com.mifos.core.data.repository_imp.LoanRepaymentRepositoryImp
+import com.mifos.core.data.repository_imp.LoanRepaymentScheduleRepositoryImp
+import com.mifos.core.data.repository_imp.LoanTransactionsRepositoryImp
 import com.mifos.core.data.repository_imp.NewIndividualCollectionSheetRepositoryImp
 import com.mifos.core.data.repository_imp.PathTrackingRepositoryImp
 import com.mifos.core.data.repository_imp.PinPointClientRepositoryImp
@@ -169,4 +181,22 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindSurveySubmitRepository(impl: SurveySubmitRepositoryImp): SurveySubmitRepository
+
+    @Binds
+    internal abstract fun bindLoanAccountApprovalRepository(impl: LoanAccountApprovalRepositoryImp): LoanAccountApprovalRepository
+
+    @Binds
+    internal abstract fun bindLoanAccountDisbursementRepository(impl: LoanAccountDisbursementRepositoryImp): LoanAccountDisbursementRepository
+
+    @Binds
+    internal abstract fun bindLoanAccountSummaryRepository(impl: LoanAccountSummaryRepositoryImp): LoanAccountSummaryRepository
+
+    @Binds
+    internal abstract fun bindLoanRepaymentRepository(impl: LoanRepaymentRepositoryImp): LoanRepaymentRepository
+
+    @Binds
+    internal abstract fun bindLoanRepaymentSchedule(impl: LoanRepaymentScheduleRepositoryImp): LoanRepaymentScheduleRepository
+
+    @Binds
+    internal abstract fun bindLoanTransactionsRepository(impl: LoanTransactionsRepositoryImp): LoanTransactionsRepository
 }
