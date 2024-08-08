@@ -1,7 +1,6 @@
-package com.mifos.mifosxdroid.online.datatablelistfragment
+package com.mifos.feature.data_table.dataTableList
 
 import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.noncore.DataTable
 
 /**
  * Created by Aditya Gupta on 10/08/23.

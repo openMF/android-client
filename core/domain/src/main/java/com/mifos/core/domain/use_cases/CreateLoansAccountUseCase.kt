@@ -2,7 +2,8 @@ package com.mifos.core.domain.use_cases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.GroupLoanPayload
-import com.mifos.core.data.repository.GroupLoanAccountRepository
+import com.mifos.core.data.LoansPayload
+import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.objects.accounts.loan.Loans
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -12,13 +13,17 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 
-class CreateGroupLoansAccountUseCase @Inject constructor(private val repository: GroupLoanAccountRepository) {
+/**
+ * Created by Pronay Sarker on 08/08/2024 (10:15 AM)
+ */
+class CreateLoansAccountUseCase @Inject constructor(private val repository: DataTableListRepository) {
 
-    suspend operator fun invoke(loansPayload: GroupLoanPayload): Flow<Resource<Loans>> =
+    suspend operator fun invoke(loansPayload: LoansPayload?): Flow<Resource<Loans>> =
         callbackFlow {
             try {
                 trySend(Resource.Loading())
-                repository.createGroupLoansAccount(loansPayload)
+
+                repository.createLoansAccount(loansPayload)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(object : Subscriber<Loans>() {
@@ -28,8 +33,8 @@ class CreateGroupLoansAccountUseCase @Inject constructor(private val repository:
                             trySend(Resource.Error(exception.message.toString()))
                         }
 
-                        override fun onNext(response: Loans) {
-                            trySend(Resource.Success(response))
+                        override fun onNext(loans: Loans) {
+                            trySend(Resource.Success(loans))
                         }
                     })
                 awaitClose { channel.close() }

@@ -1,7 +1,6 @@
-package com.mifos.mifosxdroid.online.datatablelistfragment
+package com.mifos.feature.data_table.dataTableList
 
 import android.app.DatePickerDialog
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,10 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
@@ -39,17 +36,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.feature.data_table.dataTableList.formwidgets.FormWidget
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.icon.MifosIcons.ArrowDropDown
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.noncore.DataTable
-import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.formwidgets.FormWidget
+import com.mifos.feature.data_table.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -83,7 +79,7 @@ fun DataTableListScreen(
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
-        title = stringResource(id = R.string.associated_datatables),
+        title = stringResource(id = R.string.feature_data_table_associated_datatables),
         onBackPressed = onBackPressed,
         snackbarHostState = snackBarHostState
     ) { paddingValues ->
@@ -102,7 +98,7 @@ fun DataTableListScreen(
                     val message = when {
                         uiState.messageResId != null -> stringResource(id = uiState.messageResId)
                         uiState.message != null -> uiState.message
-                        else -> stringResource(id = R.string.something_went_wrong)
+                        else -> stringResource(id = R.string.feature_data_table_something_went_wrong)
                     }
                     LaunchedEffect(key1 = message) {
                         snackBarHostState.showSnackbar(message = message)
@@ -116,7 +112,7 @@ fun DataTableListScreen(
                     } ?: run {
                         val message = when {
                             uiState.messageResId != null -> stringResource(id = uiState.messageResId)
-                            else -> stringResource(id = R.string.something_went_wrong)
+                            else -> stringResource(id = R.string.feature_data_table_something_went_wrong)
                         }
                         LaunchedEffect(key1 = message) {
                             snackBarHostState.showSnackbar(message = message)
@@ -162,7 +158,7 @@ fun DataTableListContent(
                 .padding(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
-            Text(text = stringResource(id = R.string.save), color = Color.White)
+            Text(text = stringResource(id = R.string.feature_data_table_save), color = Color.White)
         }
     }
 }

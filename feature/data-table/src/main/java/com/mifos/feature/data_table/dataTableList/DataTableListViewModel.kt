@@ -1,43 +1,42 @@
-package com.mifos.mifosxdroid.online.datatablelistfragment
+package com.mifos.feature.data_table.dataTableList
 
-import android.graphics.Typeface
-import android.util.TypedValue
-import android.view.Gravity
-import android.widget.TextView
-import androidx.compose.runtime.MutableState
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.Resource
+import com.mifos.feature.data_table.dataTableList.formwidgets.FormSpinner
+import com.mifos.feature.data_table.dataTableList.formwidgets.FormWidget
 import com.mifos.core.data.GroupLoanPayload
 import com.mifos.core.data.LoansPayload
+import com.mifos.core.data.repository.DataTableListRepository
+import com.mifos.core.domain.use_cases.CreateClientUseCase
+import com.mifos.core.domain.use_cases.CreateGroupLoansAccountDBListUseCase
+import com.mifos.core.domain.use_cases.CreateLoansAccountUseCase
 import com.mifos.core.objects.accounts.loan.Loans
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
 import com.mifos.core.objects.noncore.DataTable
 import com.mifos.core.objects.noncore.DataTablePayload
-import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.formwidgets.FormEditText
-import com.mifos.mifosxdroid.formwidgets.FormNumericEditText
-import com.mifos.mifosxdroid.formwidgets.FormSpinner
-import com.mifos.mifosxdroid.formwidgets.FormToggleButton
-import com.mifos.mifosxdroid.formwidgets.FormWidget
+import com.mifos.feature.data_table.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.util.ArrayList
-import java.util.HashMap
 import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
 @HiltViewModel
-class DataTableListViewModel @Inject constructor(private val repository: DataTableListRepository) :
-    ViewModel() {
+class DataTableListViewModel @Inject constructor(
+    private val createLoansAccountUseCase: CreateLoansAccountUseCase,
+    private val createGroupLoansAccountUseCase: CreateGroupLoansAccountDBListUseCase,
+    private val createClientUseCase: CreateClientUseCase
+) : ViewModel() {
 
     private val _dataTableListUiState: MutableStateFlow<DataTableListUiState> =
         MutableStateFlow(DataTableListUiState.Loading)
@@ -94,73 +93,60 @@ class DataTableListViewModel @Inject constructor(private val repository: DataTab
         }
     }
 
-    private fun createLoansAccount(loansPayload: LoansPayload?) {
-        _dataTableListUiState.value = DataTableListUiState.Loading
-        repository.createLoansAccount(loansPayload)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Loans>() {
-                override fun onCompleted() {
+    private fun createLoansAccount(loansPayload: LoansPayload?) =
+        viewModelScope.launch(Dispatchers.IO) {
+            createLoansAccountUseCase(loansPayload).collect { result ->
+                when (result) {
+                    is Resource.Error -> _dataTableListUiState.value =
+                        DataTableListUiState.ShowMessage(R.string.feature_data_table_generic_failure_message)
+
+                    is Resource.Loading -> _dataTableListUiState.value =
+                        DataTableListUiState.Loading
+
+                    is Resource.Success -> _dataTableListUiState.value =
+                        DataTableListUiState.ShowMessage(R.string.feature_data_table_loan_creation_success)
                 }
+            }
+        }
 
-                override fun onError(e: Throwable) {
-                    _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(R.string.generic_failure_message)
+    private fun createGroupLoanAccount(loansPayload: GroupLoanPayload?) =
+        viewModelScope.launch(Dispatchers.IO) {
+            createGroupLoansAccountUseCase(loansPayload).collect { result ->
+                when (result) {
+                    is Resource.Error -> _dataTableListUiState.value =
+                        DataTableListUiState.ShowMessage(R.string.feature_data_table_generic_failure_message)
+
+                    is Resource.Loading -> _dataTableListUiState.value =
+                        DataTableListUiState.Loading
+
+                    is Resource.Success -> _dataTableListUiState.value =
+                        DataTableListUiState.ShowMessage(R.string.feature_data_table_loan_creation_success)
                 }
+            }
+        }
 
-                override fun onNext(loans: Loans) {
-                    _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(R.string.loan_creation_success)
-                }
-            })
-    }
+    private fun createClient(clientPayload: ClientPayload) =
+        viewModelScope.launch(Dispatchers.IO) {
+            createClientUseCase(clientPayload).collect { result ->
+                when (result) {
+                    is Resource.Error -> _dataTableListUiState.value =
+                        DataTableListUiState.ShowMessage(message = result.message.toString())
 
-    private fun createGroupLoanAccount(loansPayload: GroupLoanPayload?) {
-        _dataTableListUiState.value = DataTableListUiState.Loading
-        repository.createGroupLoansAccount(loansPayload)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Loans?>() {
-                override fun onCompleted() {
-                }
+                    is Resource.Loading -> _dataTableListUiState.value =
+                        DataTableListUiState.Loading
 
-                override fun onError(e: Throwable) {
-                    _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(R.string.generic_failure_message)
-                }
-
-                override fun onNext(loans: Loans?) {
-                    _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(R.string.loan_creation_success)
-                }
-            })
-
-    }
-
-    private fun createClient(clientPayload: ClientPayload) {
-        _dataTableListUiState.value = DataTableListUiState.Loading
-        repository.createClient(clientPayload)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Client>() {
-                override fun onCompleted() {
-                }
-
-                override fun onError(e: Throwable) {
-                    _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(message = e.message.toString())
-                }
-
-                override fun onNext(client: Client) {
-                    if (client.clientId != null) {
-                        _dataTableListUiState.value = DataTableListUiState.Success(client = client)
-                    } else {
-                        _dataTableListUiState.value =
-                            DataTableListUiState.Success(messageResId = R.string.waiting_for_checker_approval)
+                    is Resource.Success -> {
+                        if (result.data!!.clientId != null) {
+                            _dataTableListUiState.value =
+                                DataTableListUiState.Success(client = result.data)
+                        } else {
+                            _dataTableListUiState.value =
+                                DataTableListUiState.Success(messageResId = R.string.feature_data_table_waiting_for_checker_approval)
+                        }
                     }
                 }
-            })
-    }
+            }
+        }
 
     private fun addDataTableInput(formWidgets: List<FormWidget>): HashMap<String, Any> {
         val payload = HashMap<String, Any>()

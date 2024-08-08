@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.datatable
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.network.datamanager.DataManagerDataTable
 import com.mifos.core.objects.noncore.DataTable
 import rx.Observable

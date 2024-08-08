@@ -1,18 +1,18 @@
-package com.mifos.mifosxdroid.online.datatable
+package com.mifos.feature.data_table.dataTable
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Resource
+import com.mifos.core.data.repository.DataTableRepository
+import com.mifos.core.domain.use_cases.GetDataTableUseCase
 import com.mifos.core.objects.noncore.DataTable
-import com.mifos.feature.note.NoteUiState
-import com.mifos.mifosxdroid.R
+import com.mifos.feature.data_table.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -22,8 +22,9 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 08/08/23.
  */
 @HiltViewModel
-class DataTableViewModel @Inject constructor(private val repository: DataTableRepository) :
-    ViewModel() {
+class DataTableViewModel @Inject constructor(
+    private val getDataTableUseCase: GetDataTableUseCase
+) : ViewModel() {
 
     private val _dataTableUiState =
         MutableStateFlow<DataTableUiState>(DataTableUiState.ShowProgressbar)
@@ -40,25 +41,24 @@ class DataTableViewModel @Inject constructor(private val repository: DataTableRe
         }
     }
 
-    fun loadDataTable(tableName: String?) {
-        _dataTableUiState.value = DataTableUiState.ShowProgressbar
-        repository.getDataTable(tableName).observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io()).subscribe(object : Subscriber<List<DataTable>>() {
-                override fun onCompleted() {}
+    fun loadDataTable(tableName: String?) = viewModelScope.launch(Dispatchers.IO) {
+        getDataTableUseCase(tableName).collect { result ->
+            when (result) {
+                is Resource.Error -> _dataTableUiState.value =
+                    DataTableUiState.ShowError(R.string.feature_data_table_failed_to_fetch_datatable)
 
-                override fun onError(e: Throwable) {
-                    _dataTableUiState.value =
-                        DataTableUiState.ShowError(R.string.failed_to_fetch_datatable)
-                }
+                is Resource.Loading -> _dataTableUiState.value = DataTableUiState.ShowProgressbar
 
-                override fun onNext(dataTables: List<DataTable>) {
+                is Resource.Success -> {
+                    val dataTables = result.data ?: emptyList()
                     if (dataTables.isNotEmpty()) {
                         _dataTableUiState.value = DataTableUiState.ShowDataTables(dataTables)
                     } else {
                         _dataTableUiState.value = DataTableUiState.ShowEmptyDataTables
                     }
                 }
-            })
+            }
+        }
     }
 
 }

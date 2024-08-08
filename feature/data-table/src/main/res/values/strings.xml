@@ -14,4 +14,15 @@
     <string name="feature_data_table_added_data_table_successfully">Added data table successfully</string>
     <string name="feature_data_table_add_data_table">Add Data Table</string>
     <string name="feature_data_table_submit">Submit</string>
+    <string name="feature_data_table_datatables">DataTable</string>
+    <string name="feature_data_table_error_not_connected_internet">Not connected to Network</string>
+    <string name="feature_data_table_failed_to_fetch_datatable">Failed To Fetch DataTable</string>
+    <string name="feature_data_table_generic_failure_message">Request failed. Please try again.</string>
+    <string name="feature_data_table_loan_creation_success">Loan application submitted successfully.</string>
+    <string name="feature_data_table_waiting_for_checker_approval">Waiting for Checker\'s Approval</string>
+    <string name="feature_data_table_associated_datatables">Associated Datatables</string>
+    <string name="feature_data_table_something_went_wrong">Something went wrong</string>
+    <string name="feature_data_table_save">Save</string>
+    <string name="feature_data_table_empty_data_table">Empty DataTable</string>
+
 </resources>

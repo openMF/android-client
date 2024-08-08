@@ -1,7 +1,8 @@
-package com.mifos.mifosxdroid.online.datatablelistfragment
+package com.mifos.core.data.repository_imp
 
 import com.mifos.core.data.GroupLoanPayload
 import com.mifos.core.data.LoansPayload
+import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerLoan
