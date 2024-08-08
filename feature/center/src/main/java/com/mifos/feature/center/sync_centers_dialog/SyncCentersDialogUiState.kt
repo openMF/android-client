@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.dialogfragments.synccenterdialog
+package com.mifos.feature.center.sync_centers_dialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.objects.group.Center

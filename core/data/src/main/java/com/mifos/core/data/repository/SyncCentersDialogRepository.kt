@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.dialogfragments.synccenterdialog
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.accounts.CenterAccounts
 import com.mifos.core.objects.accounts.ClientAccounts
