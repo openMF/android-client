@@ -1,6 +1,7 @@
-package com.mifos.mifosxdroid.offline.synccenterpayloads
+package com.mifos.core.data.repository_imp
 
 import com.mifos.core.data.CenterPayload
+import com.mifos.core.data.repository.SyncCenterPayloadsRepository
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.objects.response.SaveResponse
 import rx.Observable

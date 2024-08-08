@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.offline.synccenterpayloads
+package com.mifos.feature.center.sync_center_payloads
 
 import com.mifos.core.data.CenterPayload
 

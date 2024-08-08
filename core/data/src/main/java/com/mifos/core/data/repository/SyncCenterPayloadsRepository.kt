@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.offline.synccenterpayloads
+package com.mifos.core.data.repository
 
 import com.mifos.core.data.CenterPayload
 import com.mifos.core.objects.response.SaveResponse

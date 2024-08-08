@@ -1,5 +1,4 @@
-package com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog
-
+package com.mifos.feature.center.sync_centers_dialog
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,23 +25,23 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.feature.groups.sync_group_payloads.GroupPayloadField
-import com.mifos.mifosxdroid.R
+import com.mifos.feature.center.R
+import com.mifos.feature.center.sync_center_payloads.PayloadField
 
 @Composable
-fun SyncGroupDialogScreen(
-    viewModel: SyncGroupsDialogViewModel = hiltViewModel(),
+fun SyncCenterDialogScreen(
+    viewModel: SyncCentersDialogViewModel = hiltViewModel(),
     dismiss: () -> Unit,
     hide: () -> Unit,
 ) {
-    val uiState by viewModel.syncGroupsDialogUiState.collectAsStateWithLifecycle()
-    val uiData by viewModel.syncGroupData.collectAsStateWithLifecycle()
+    val uiState by viewModel.syncCentersDialogUiState.collectAsStateWithLifecycle()
+    val uiData by viewModel.syncCenterData.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.syncGroups()
+        viewModel.syncCenter()
     }
 
-    SyncGroupDialogScreen(
+    SyncCenterDialogScreen(
         uiState = uiState,
         uiData = uiData,
         dismiss = dismiss,
@@ -51,9 +50,9 @@ fun SyncGroupDialogScreen(
 }
 
 @Composable
-fun SyncGroupDialogScreen(
-    uiState: SyncGroupsDialogUiState,
-    uiData: SyncGroupDialogData,
+fun SyncCenterDialogScreen(
+    uiState: SyncCentersDialogUiState,
+    uiData: SyncCentersDialogData,
     dismiss: () -> Unit,
     hide: () -> Unit
 ) {
@@ -68,14 +67,14 @@ fun SyncGroupDialogScreen(
         )
 
         when (uiState) {
-            is SyncGroupsDialogUiState.Success -> Unit
+            is SyncCentersDialogUiState.Success -> Unit
 
-            is SyncGroupsDialogUiState.Loading -> MifosCircularProgress()
+            is SyncCentersDialogUiState.Loading -> MifosCircularProgress()
 
-            is SyncGroupsDialogUiState.Error -> {
+            is SyncCentersDialogUiState.Error -> {
                 val message = uiState.message
                     ?: uiState.messageResId?.let { stringResource(uiState.messageResId) }
-                    ?: stringResource(id = R.string.something_went_wrong)
+                    ?: stringResource(id = R.string.feature_center_something_went_wrong)
                 LaunchedEffect(key1 = message) {
                     snackBarHostState.showSnackbar(message = message)
                 }
@@ -87,7 +86,7 @@ fun SyncGroupDialogScreen(
 
 @Composable
 fun SyncGroupDialogContent(
-    uiData: SyncGroupDialogData,
+    uiData: SyncCentersDialogData,
     okClicked: () -> Unit,
     hideClicked: () -> Unit,
     cancelClicked: () -> Unit
@@ -101,26 +100,28 @@ fun SyncGroupDialogContent(
         Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
-            text = stringResource(id = R.string.sync_groups_full_information)
+            text = stringResource(id = R.string.feature_center_sync_centers_full_information)
         )
 
-        GroupPayloadField(
-            label = stringResource(id = R.string.name),
-            value = uiData.groupName,
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        GroupPayloadField(
-            label = stringResource(id = R.string.total),
-            value = uiData.groupList.size.toString() + stringResource(R.string.space) + stringResource(R.string.feature_groups_groups),
+        PayloadField(
+            label = stringResource(id = R.string.feature_center_name),
+            value = uiData.centerName,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        GroupPayloadField(
-            label = stringResource(id = R.string.syncing_group),
-            value = uiData.groupName,
+        PayloadField(
+            label = stringResource(id = R.string.feature_center_total),
+            value = uiData.centersList.size.toString() + stringResource(R.string.feature_center_space) + stringResource(
+                com.mifos.feature.center.R.string.feature_center_center
+            ),
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        PayloadField(
+            label = stringResource(id = R.string.feature_center_syncing_center),
+            value = uiData.centerName,
         )
 
         LinearProgressIndicator(
@@ -129,8 +130,19 @@ fun SyncGroupDialogContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        GroupPayloadField(
-            label = stringResource(id = R.string.syncing_client),
+        PayloadField(
+            label = stringResource(id = R.string.feature_center_syncing_group),
+            value = "syncing_group",
+        )
+
+        LinearProgressIndicator(
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        PayloadField(
+            label = stringResource(id = R.string.feature_center_syncing_client),
             value = "syncing_client",
         )
 
@@ -140,9 +152,9 @@ fun SyncGroupDialogContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        GroupPayloadField(
-            label = stringResource(id = R.string.total_sync_progress),
-            value = stringResource(R.string.space) + uiData.totalSyncCount + stringResource(id = R.string.slash) + uiData.groupList.size,
+        PayloadField(
+            label = stringResource(id = R.string.feature_center_total_sync_progress),
+            value = stringResource(R.string.feature_center_space) + uiData.totalSyncCount + stringResource(id = R.string.feature_center_slash) + uiData.centersList.size,
         )
 
         LinearProgressIndicator(
@@ -151,8 +163,8 @@ fun SyncGroupDialogContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        GroupPayloadField(
-            label = stringResource(id = R.string.failed_sync),
+        PayloadField(
+            label = stringResource(id = R.string.feature_center_failed_sync),
             value = uiData.failedSyncGroupCount.toString(),
         )
 
@@ -161,19 +173,19 @@ fun SyncGroupDialogContent(
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-            if(uiData.isSyncSuccess) {
+            if (uiData.isSyncSuccess) {
                 FilledTonalButton(
                     onClick = { okClicked() },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = stringResource(id = R.string.dialog_action_ok))
+                    Text(text = stringResource(id = R.string.feature_center_dialog_action_ok))
                 }
             } else {
                 FilledTonalButton(
                     onClick = { cancelClicked() },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = stringResource(id = R.string.cancel))
+                    Text(text = stringResource(id = R.string.feature_center_cancel))
                 }
 
                 Spacer(modifier = Modifier.width(10.dp))
@@ -182,7 +194,7 @@ fun SyncGroupDialogContent(
                     onClick = { hideClicked() },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = stringResource(id = R.string.hide))
+                    Text(text = stringResource(id = R.string.feature_center_hide))
                 }
             }
         }
@@ -191,11 +203,11 @@ fun SyncGroupDialogContent(
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-fun SyncGroupDialogScreenPreview() {
-    SyncGroupDialogScreen(
+fun SyncCenterDialogScreenPreview() {
+    SyncCenterDialogScreen(
         dismiss = { },
-        uiState = SyncGroupsDialogUiState.Success,
-        uiData = SyncGroupDialogData(),
+        uiState = SyncCentersDialogUiState.Success,
+        uiData = SyncCentersDialogData(),
         hide = { }
     )
 }

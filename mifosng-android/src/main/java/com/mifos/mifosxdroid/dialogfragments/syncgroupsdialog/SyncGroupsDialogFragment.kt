@@ -9,6 +9,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.DialogFragment
 import com.mifos.core.objects.group.Group
+import com.mifos.feature.groups.sync_group_dialog.SyncGroupDialogScreen
+import com.mifos.feature.groups.sync_group_dialog.SyncGroupsDialogViewModel
 import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 

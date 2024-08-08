@@ -267,4 +267,8 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.androidx.lifecycle.runtimeCompose)
+
+    //coil
+    implementation(libs.coil.kt.compose)
+
 }

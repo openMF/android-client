@@ -1,6 +1,10 @@
-package com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog
+package com.mifos.feature.groups.sync_group_dialog
 
 import androidx.lifecycle.ViewModel
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.NetworkUtilsWrapper
+import com.mifos.core.data.repository.SyncGroupsDialogRepository
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.objects.accounts.ClientAccounts
 import com.mifos.core.objects.accounts.GroupAccounts
@@ -11,11 +15,7 @@ import com.mifos.core.objects.group.Group
 import com.mifos.core.objects.group.GroupWithAssociations
 import com.mifos.core.objects.zipmodels.LoanAndLoanRepayment
 import com.mifos.core.objects.zipmodels.SavingsAccountAndTransactionTemplate
-import com.mifos.mifosxdroid.R
-import com.mifos.utils.Constants
-import com.mifos.utils.NetworkUtilsWrapper
-import com.mifos.utils.PrefManager
-import com.mifos.utils.Utils
+import com.mifos.feature.groups.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,7 +34,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SyncGroupsDialogViewModel @Inject constructor(
     private val repository: SyncGroupsDialogRepository,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val prefManager: PrefManager
 ) : ViewModel() {
 
     private var mGroupList: List<Group> = ArrayList()
@@ -67,7 +68,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
      * This Method checking network connection before starting group synchronization
      */
     fun syncGroups() {
-        if(PrefManager.userStatus == Constants.USER_ONLINE)  {
+        if(prefManager.userStatus == Constants.USER_ONLINE)  {
             checkNetworkConnection {
                 syncGroupAndUpdateUI()
             }
@@ -198,10 +199,10 @@ class SyncGroupsDialogViewModel @Inject constructor(
                 }
 
                 override fun onNext(groupAccounts: GroupAccounts) {
-                    mLoanAccountList = Utils.getActiveLoanAccounts(
+                    mLoanAccountList = getActiveLoanAccounts(
                         groupAccounts.loanAccounts
                     )
-                    mSavingsAccountList = Utils.getActiveSavingsAccounts(
+                    mSavingsAccountList = getActiveSavingsAccounts(
                         groupAccounts.savingsAccounts
                     )
 
@@ -384,11 +385,11 @@ class SyncGroupsDialogViewModel @Inject constructor(
                 }
 
                 override fun onNext(clientAccounts: ClientAccounts) {
-                    mLoanAccountList = Utils.getActiveLoanAccounts(
+                    mLoanAccountList = getActiveLoanAccounts(
                         clientAccounts
                             .loanAccounts
                     )
-                    mSavingsAccountList = Utils.getSyncableSavingsAccounts(
+                    mSavingsAccountList = getSyncableSavingsAccounts(
                         clientAccounts
                             .savingsAccounts
                     )
@@ -554,9 +555,40 @@ class SyncGroupsDialogViewModel @Inject constructor(
             taskWhenOnline.invoke()
         } else {
             _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.Error(
-                messageResId = R.string.error_network_not_available,
+                messageResId = R.string.feature_groups_error_not_connected_internet,
                 imageVector = MifosIcons.WifiOff
             )
         }
+    }
+
+    fun getActiveLoanAccounts(loanAccountList: List<LoanAccount>?): List<LoanAccount> {
+        val loanAccounts: MutableList<LoanAccount> = ArrayList()
+        Observable.from(loanAccountList)
+            .filter { loanAccount -> loanAccount.status?.active }
+            .subscribe { loanAccount -> loanAccounts.add(loanAccount) }
+        return loanAccounts
+    }
+
+    fun getActiveSavingsAccounts(savingsAccounts: List<SavingsAccount>?): List<SavingsAccount> {
+        val accounts: MutableList<SavingsAccount> = ArrayList()
+        Observable.from(savingsAccounts)
+            .filter { savingsAccount ->
+                savingsAccount.status?.active == true &&
+                        !savingsAccount.depositType!!.isRecurring
+            }
+            .subscribe { savingsAccount -> accounts.add(savingsAccount) }
+        return accounts
+    }
+
+    fun getSyncableSavingsAccounts(savingsAccounts: List<SavingsAccount>?): List<SavingsAccount> {
+        val accounts: MutableList<SavingsAccount> = ArrayList()
+        Observable.from(savingsAccounts)
+            .filter { savingsAccount ->
+                savingsAccount.depositType?.value == "Savings" &&
+                        savingsAccount.status?.active == true &&
+                        !savingsAccount.depositType!!.isRecurring
+            }
+            .subscribe { savingsAccount -> accounts.add(savingsAccount) }
+        return accounts
     }
 }
