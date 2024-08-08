@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-feature android:name="android.hardware.camera.any"/>
 
     <uses-sdk tools:overrideLibrary="androidx.core.splashscreen" />
     <uses-feature
@@ -28,7 +31,7 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${GEO_API_KEY}" />
@@ -159,6 +162,7 @@
         <service
             android:name=".activity.pathtracking.PathTrackingService"
             android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.mifos.mifosxdroid.provider"
