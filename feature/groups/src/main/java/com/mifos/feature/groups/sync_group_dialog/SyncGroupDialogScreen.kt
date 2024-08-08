@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog
+package com.mifos.feature.groups.sync_group_dialog
 
 
 import androidx.compose.foundation.layout.Box
@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.feature.groups.R
 import com.mifos.feature.groups.sync_group_payloads.GroupPayloadField
-import com.mifos.mifosxdroid.R
 
 @Composable
 fun SyncGroupDialogScreen(
@@ -75,7 +75,7 @@ fun SyncGroupDialogScreen(
             is SyncGroupsDialogUiState.Error -> {
                 val message = uiState.message
                     ?: uiState.messageResId?.let { stringResource(uiState.messageResId) }
-                    ?: stringResource(id = R.string.something_went_wrong)
+                    ?: stringResource(id = R.string.feature_groups_something_went_wrong)
                 LaunchedEffect(key1 = message) {
                     snackBarHostState.showSnackbar(message = message)
                 }
@@ -101,25 +101,25 @@ fun SyncGroupDialogContent(
         Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
-            text = stringResource(id = R.string.sync_groups_full_information)
+            text = stringResource(id = R.string.feature_groups_sync_groups_full_information)
         )
 
         GroupPayloadField(
-            label = stringResource(id = R.string.name),
+            label = stringResource(id = R.string.feature_groups_name),
             value = uiData.groupName,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         GroupPayloadField(
-            label = stringResource(id = R.string.total),
-            value = uiData.groupList.size.toString() + stringResource(R.string.space) + stringResource(R.string.feature_groups_groups),
+            label = stringResource(id = R.string.feature_groups_total),
+            value = uiData.groupList.size.toString() + stringResource(R.string.feature_groups_space) + stringResource(R.string.feature_groups_groups),
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         GroupPayloadField(
-            label = stringResource(id = R.string.syncing_group),
+            label = stringResource(id = R.string.feature_groups_syncing_group),
             value = uiData.groupName,
         )
 
@@ -130,7 +130,7 @@ fun SyncGroupDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         GroupPayloadField(
-            label = stringResource(id = R.string.syncing_client),
+            label = stringResource(id = R.string.feature_groups_syncing_client),
             value = "syncing_client",
         )
 
@@ -141,8 +141,8 @@ fun SyncGroupDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         GroupPayloadField(
-            label = stringResource(id = R.string.total_sync_progress),
-            value = stringResource(R.string.space) + uiData.totalSyncCount + stringResource(id = R.string.slash) + uiData.groupList.size,
+            label = stringResource(id = R.string.feature_groups_total_sync_progress),
+            value = stringResource(R.string.feature_groups_space) + uiData.totalSyncCount + stringResource(id = R.string.feature_groups_slash) + uiData.groupList.size,
         )
 
         LinearProgressIndicator(
@@ -152,7 +152,7 @@ fun SyncGroupDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         GroupPayloadField(
-            label = stringResource(id = R.string.failed_sync),
+            label = stringResource(id = R.string.feature_groups_failed_sync),
             value = uiData.failedSyncGroupCount.toString(),
         )
 
@@ -166,14 +166,14 @@ fun SyncGroupDialogContent(
                     onClick = { okClicked() },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = stringResource(id = R.string.dialog_action_ok))
+                    Text(text = stringResource(id = R.string.feature_groups_dialog_action_ok))
                 }
             } else {
                 FilledTonalButton(
                     onClick = { cancelClicked() },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = stringResource(id = R.string.cancel))
+                    Text(text = stringResource(id = R.string.feature_groups_cancel))
                 }
 
                 Spacer(modifier = Modifier.width(10.dp))
@@ -182,7 +182,7 @@ fun SyncGroupDialogContent(
                     onClick = { hideClicked() },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = stringResource(id = R.string.hide))
+                    Text(text = stringResource(id = R.string.feature_groups_hide))
                 }
             }
         }

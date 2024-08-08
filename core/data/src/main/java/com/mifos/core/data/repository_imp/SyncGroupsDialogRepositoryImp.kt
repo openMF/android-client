@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan

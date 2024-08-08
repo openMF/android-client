@@ -45,4 +45,20 @@
     <string name="feature_groups_error_group_sync_failed">Group sync failed</string>
     <string name="feature_groups_error_failed_to_load_groupPayload">Failed to load GroupPayload</string>
     <string name="feature_groups_error_failed_to_update_list">Failed to Update List</string>
+    <string name="feature_groups_something_went_wrong">Something went wrong</string>
+    <string name="feature_groups_sync_groups_full_information">Sync Groups All Information</string>
+    <string name="feature_groups_total">Total</string>
+    <string name="feature_groups_space" translatable="false">" "</string>
+    <string name="feature_groups_syncing_group">Syncing Group</string>
+    <string name="feature_groups_syncing_client">Syncing Client</string>
+    <string name="feature_groups_total_sync_progress">Total Sync Progress</string>
+    <string name="feature_groups_slash" translatable="false">/</string>
+    <string name="feature_groups_failed_sync">Sync Failed</string>
+    <string name="feature_groups_dialog_action_ok">OK</string>
+    <string name="feature_groups_cancel">Cancel</string>
+    <string name="feature_groups_hide">Hide</string>
+    <string name="feature_groups_error_network_not_available">Network is not Available</string>
+
+
+
 </resources>
