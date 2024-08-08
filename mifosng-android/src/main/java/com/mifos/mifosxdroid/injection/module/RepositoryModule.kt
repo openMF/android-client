@@ -27,8 +27,8 @@ import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogR
 import com.mifos.mifosxdroid.dialogfragments.synccenterdialog.SyncCentersDialogRepositoryImp
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepository
 import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog.SyncGroupsDialogRepositoryImp
+import com.mifos.core.data.repository.SyncGroupsDialogRepository
+import com.mifos.core.data.repository_imp.SyncGroupsDialogRepositoryImp
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepository
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepositoryImp
 import com.mifos.mifosxdroid.offline.synccenterpayloads.SyncCenterPayloadsRepository

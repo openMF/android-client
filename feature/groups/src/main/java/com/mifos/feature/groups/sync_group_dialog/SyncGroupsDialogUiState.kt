@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.dialogfragments.syncgroupsdialog
+package com.mifos.feature.groups.sync_group_dialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.objects.group.Group
