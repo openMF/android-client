@@ -1,6 +1,5 @@
 @file:OptIn(
-    ExperimentalMaterialApi::class,
-    ExperimentalPermissionsApi::class
+    ExperimentalMaterialApi::class
 )
 
 package com.mifos.feature.path_tracking
@@ -53,7 +52,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.registerReceiver
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
@@ -75,7 +73,6 @@ import com.mifos.feature.path.tracking.R
 
 @Composable
 fun PathTrackingScreen(
-    userId: Int,
     onBackPressed: () -> Unit,
     onPathTrackingClick: (List<UserLatLng>) -> Unit
 ) {
@@ -92,7 +89,7 @@ fun PathTrackingScreen(
             override fun onReceive(context: Context, intent: Intent) {
                 val action = intent.action
                 if (Constants.STOP_TRACKING == action) {
-                    viewModel.loadPathTracking(userId)
+                    viewModel.loadPathTracking()
                 }
             }
         }
@@ -109,18 +106,18 @@ fun PathTrackingScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.loadPathTracking(userId)
+        viewModel.loadPathTracking()
     }
 
     PathTrackingScreen(
         state = state,
         onBackPressed = onBackPressed,
         onRetry = {
-            viewModel.loadPathTracking(userId)
+            viewModel.loadPathTracking()
         },
         onPathTrackingClick = onPathTrackingClick,
         onRefresh = {
-            viewModel.refreshCenterList(userId)
+            viewModel.refreshCenterList()
         },
         refreshState = refreshState,
         userStatus = userStatus,

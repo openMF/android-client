@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.widget.NestedScrollView
+import com.mifos.mifosxdroid.DashboardActivity
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.activity.splashscreen.SplashScreenActivity
@@ -48,7 +49,7 @@ class PassCodeActivity : MifosPassCodeActivity() {
     }
 
     override fun startNextActivity() {
-        startActivity(Intent(this, HomeActivity::class.java))
+        startActivity(Intent(this, DashboardActivity::class.java))
     }
 
     override fun onBackPressed() {

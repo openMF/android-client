@@ -9,6 +9,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -79,6 +80,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun GroupsListRoute(
+    paddingValues: PaddingValues,
     onAddGroupClick: () -> Unit,
     onGroupClick: (Group) -> Unit,
     onSyncClick: (List<Group>) -> Unit,
@@ -103,7 +105,8 @@ fun GroupsListRoute(
 
     GroupsListScreen(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(paddingValues),
         lazyListState = lazyListState,
         swipeRefreshState = swipeRefreshState,
         selectedItems = selectedItems,
@@ -275,7 +278,7 @@ private fun LazyListScope.successState(
     isSelected: (Group) -> Boolean,
     onGroupClick: (Group) -> Unit,
     onSelectItem: (Group) -> Unit
-){
+) {
     items(
         count = pagingItems.itemCount
     ) { index ->

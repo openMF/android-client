@@ -9,6 +9,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -75,6 +76,7 @@ import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun CenterListScreen(
+    paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
     syncClicked: (List<Center>) -> Unit,
     onCenterSelect: (Center) -> Unit
@@ -89,6 +91,7 @@ fun CenterListScreen(
     }
 
     CenterListScreen(
+        paddingValues = paddingValues,
         state = state,
         createNewCenter = createNewCenter,
         onRefresh = {
@@ -102,6 +105,7 @@ fun CenterListScreen(
 
 @Composable
 fun CenterListScreen(
+    paddingValues : PaddingValues,
     state: CenterListUiState,
     createNewCenter: () -> Unit,
     onRefresh: () -> Unit,
@@ -136,7 +140,7 @@ fun CenterListScreen(
     }
 
     Scaffold(
-        modifier = Modifier,
+        modifier = Modifier.padding(paddingValues),
         topBar = {
             if (isInSelectionMode) {
                 SelectionModeTopAppBar(
@@ -568,6 +572,7 @@ private fun CenterListScreenPreview(
     @PreviewParameter(CenterListUiStateProvider::class) centerListUiState: CenterListUiState
 ) {
     CenterListScreen(
+        paddingValues = PaddingValues(),
         state = centerListUiState,
         createNewCenter = {},
         onRefresh = {},
