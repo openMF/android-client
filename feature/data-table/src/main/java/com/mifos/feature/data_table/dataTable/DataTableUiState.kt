@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.datatable
+package com.mifos.feature.data_table.dataTable
 
 import com.mifos.core.objects.noncore.DataTable
 

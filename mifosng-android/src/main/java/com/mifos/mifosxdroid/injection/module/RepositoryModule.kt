@@ -47,10 +47,10 @@ import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepositoryImp
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepository
 import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepositoryImp
-import com.mifos.mifosxdroid.online.datatable.DataTableRepository
-import com.mifos.mifosxdroid.online.datatable.DataTableRepositoryImp
-import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepository
-import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepositoryImp
+import com.mifos.core.data.repository.DataTableRepository
+import com.mifos.core.data.repository_imp.DataTableRepositoryImp
+import com.mifos.core.data.repository.DataTableListRepository
+import com.mifos.core.data.repository_imp.DataTableListRepositoryImp
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepositoryImp
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository

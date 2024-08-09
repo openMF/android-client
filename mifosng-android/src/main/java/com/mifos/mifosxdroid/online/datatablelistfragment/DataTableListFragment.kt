@@ -5,40 +5,25 @@
 package com.mifos.mifosxdroid.online.datatablelistfragment
 
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
-import android.util.TypedValue
 import android.view.*
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.data.GroupLoanPayload
-import com.mifos.core.data.LoansPayload
 import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.ClientPayload
 import com.mifos.core.objects.noncore.ColumnHeader
 import com.mifos.core.objects.noncore.DataTable
-import com.mifos.core.objects.noncore.DataTablePayload
-import com.mifos.exceptions.RequiredFieldException
+import com.mifos.feature.data_table.dataTableList.DataTableListScreen
+import com.mifos.feature.data_table.dataTableList.DataTableListViewModel
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.util.Toaster
-import com.mifos.mifosxdroid.databinding.DialogFragmentAddEntryToDatatableBinding
 import com.mifos.mifosxdroid.formwidgets.*
 import com.mifos.mifosxdroid.online.ClientActivity
-import com.mifos.mifosxdroid.online.datatable.DataTableScreen
 import com.mifos.utils.MifosResponseHandler
 import com.mifos.utils.PrefManager
-import com.mifos.utils.SafeUIBlockingUtility
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 /**
  * A generic fragment to show the DataTables at the runtime.

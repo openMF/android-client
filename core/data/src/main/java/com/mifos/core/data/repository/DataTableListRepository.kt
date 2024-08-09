@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.datatablelistfragment
+package com.mifos.core.data.repository
 
 import com.mifos.core.data.GroupLoanPayload
 import com.mifos.core.data.LoansPayload
