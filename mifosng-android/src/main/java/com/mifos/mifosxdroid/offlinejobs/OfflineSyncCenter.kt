@@ -5,7 +5,6 @@ import com.evernote.android.job.JobRequest
 import com.mifos.core.data.CenterPayload
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.objects.response.SaveResponse
-import com.mifos.utils.MFErrorParser.errorMessage
 import com.mifos.utils.PrefManager.userStatus
 import com.mifos.utils.Tags
 import rx.Observer
@@ -78,7 +77,7 @@ class OfflineSyncCenter : Job() {
                 .subscribe(object : Observer<SaveResponse?> {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        showCenterSyncFailed(errorMessage(e))
+                        showCenterSyncFailed(e.message.toString())
                     }
 
                     override fun onNext(center: SaveResponse?) {

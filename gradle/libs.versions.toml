@@ -28,6 +28,7 @@ androidxBaselineProfile = "1.2.3"
 androidxBenchmark = "1.2.3"
 androidxBenchmarkJunit4 = "1.1.1"
 androidxMaterial = "1.6.7"
+androidxMaterialVersion = "1.6.8"
 androidxMetrics = "1.0.0-beta01"
 androidxNavigation = "2.7.7"
 androidxProfileinstaller = "1.3.1"
@@ -138,6 +139,7 @@ androidx-benchmark-macro = { group = "androidx.benchmark", name = "benchmark-mac
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 
 #Androidx Multidex
+androidx-material-v168 = { module = "androidx.compose.material:material", version.ref = "androidxMaterialVersion" }
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 
 # Androidx Preference

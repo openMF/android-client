@@ -5,7 +5,6 @@ import java.util.Calendar
 import java.util.TimeZone
 
 object Utils {
-
     fun getStringOfDate(dateObj: List<Int?>): String {
         val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         dateObj.getOrNull(0)?.let { year ->
@@ -20,5 +19,4 @@ object Utils {
         val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
         return dateFormat.format(calendar.time)
     }
-
 }
