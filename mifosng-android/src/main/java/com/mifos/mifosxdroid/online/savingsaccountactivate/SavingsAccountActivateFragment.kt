@@ -13,6 +13,8 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.mifos.feature.savings.account_activate.SavingsAccountActivateScreen
+import com.mifos.feature.savings.account_activate.SavingsAccountActivateViewModel
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 

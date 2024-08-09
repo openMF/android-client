@@ -17,7 +17,8 @@ import androidx.navigation.fragment.navArgs
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.mifosxdroid.R
+import com.mifos.feature.savings.account_summary.SavingsAccountSummaryScreen
+import com.mifos.feature.savings.account_summary.SavingsAccountSummaryViewModel
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 

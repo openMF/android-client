@@ -6,7 +6,6 @@ import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
-import com.mifos.utils.MFErrorParser
 import com.mifos.utils.PrefManager.userStatus
 import com.mifos.utils.Tags
 import rx.Subscriber
@@ -99,7 +98,7 @@ class OfflineSyncSavingsAccount : Job() {
                 .subscribe(object : Subscriber<SavingsAccountTransactionResponse>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        showTransactionSyncFailed(MFErrorParser.errorMessage(e))
+                        showTransactionSyncFailed(e.message.toString())
                     }
 
                     override fun onNext(savingsAccountTransactionResponse: SavingsAccountTransactionResponse) {

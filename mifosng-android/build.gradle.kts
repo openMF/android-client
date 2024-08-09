@@ -126,7 +126,7 @@ secrets {
 }
 
 dependencies {
-
+    implementation(projects.feature.savings)
     implementation(projects.feature.note)
     implementation(projects.feature.auth)
     implementation(projects.feature.client)

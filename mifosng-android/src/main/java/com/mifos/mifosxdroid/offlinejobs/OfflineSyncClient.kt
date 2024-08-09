@@ -5,7 +5,6 @@ import com.evernote.android.job.JobRequest
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
-import com.mifos.utils.MFErrorParser.errorMessage
 import com.mifos.utils.PrefManager.userStatus
 import com.mifos.utils.Tags
 import rx.Observer
@@ -76,7 +75,7 @@ class OfflineSyncClient : Job() {
                 .subscribe(object : Observer<Client> {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
-                        showClientSyncFailed(errorMessage(e))
+                        showClientSyncFailed(e.message.toString())
                     }
 
                     override fun onNext(client: Client) {

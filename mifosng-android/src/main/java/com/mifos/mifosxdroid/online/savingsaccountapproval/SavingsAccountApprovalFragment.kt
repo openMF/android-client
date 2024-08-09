@@ -13,6 +13,8 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.mifos.feature.savings.account_approval.SavingsAccountApprovalScreen
+import com.mifos.feature.savings.account_approval.SavingsAccountApprovalViewModel
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * @author nellyk
  */
 @AndroidEntryPoint
-class SavingsAccountApprovalFragment : MifosBaseFragment() {
+class SavingsAccountApprovalFragment : MifosBaseFragment(){
 
     private val arg: SavingsAccountApprovalFragmentArgs by navArgs()
     private val viewmodel: SavingsAccountApprovalViewModel by viewModels()

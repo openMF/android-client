@@ -14,7 +14,6 @@ android {
 }
 
 dependencies {
-
     api(projects.core.common)
     api(projects.core.model)
     api(projects.core.datastore)
