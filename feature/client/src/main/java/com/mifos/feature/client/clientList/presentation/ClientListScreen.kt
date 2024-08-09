@@ -8,6 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -75,6 +76,7 @@ import com.mifos.feature.client.R
 
 @Composable
 fun ClientListScreen(
+    paddingValues: PaddingValues,
     createNewClient: () -> Unit,
     syncClicked: (List<Client>) -> Unit,
     onClientSelect: (Client) -> Unit,
@@ -113,7 +115,7 @@ fun ClientListScreen(
 
     Scaffold(
         modifier = Modifier
-            .padding(),
+            .padding(paddingValues),
         topBar = {
             if (isInSelectionMode.value) {
                 SelectionModeTopAppBar(

@@ -29,15 +29,15 @@ class PathTrackingViewModel @Inject constructor(
     private val _userStatus = MutableStateFlow(prefManager.userStatus)
     val userStatus = _userStatus.asStateFlow()
 
-    fun refreshCenterList(userId: Int) {
+    fun refreshCenterList() {
         _isRefreshing.value = true
-        loadPathTracking(userId)
+        loadPathTracking()
         _isRefreshing.value = false
     }
 
 
-    fun loadPathTracking(userId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        getUserPathTrackingUseCase(userId).collect { result ->
+    fun loadPathTracking() = viewModelScope.launch(Dispatchers.IO) {
+        getUserPathTrackingUseCase(prefManager.getUserId()).collect { result ->
             when (result) {
                 is Resource.Error -> _pathTrackingUiState.value =
                     PathTrackingUiState.Error(R.string.feature_path_tracking_failed_to_load_path_tracking)

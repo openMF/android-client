@@ -36,6 +36,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${GEO_API_KEY}" />
 
+        <activity android:name=".DashboardActivity"
+            android:exported="true"
+            />
+
         <activity
             android:name=".activity.splashscreen.SplashScreenActivity"
             android:exported="true"

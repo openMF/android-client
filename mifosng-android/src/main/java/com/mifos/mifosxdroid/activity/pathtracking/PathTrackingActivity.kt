@@ -26,7 +26,6 @@ class PathTrackingActivity : MifosBaseActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PathTrackingScreen(
-                userId = PrefManager.getUserId(),
                 onBackPressed = { finish() },
                 onPathTrackingClick = { userLatLngs ->
                     onUserLocationClick(userLatLngs)

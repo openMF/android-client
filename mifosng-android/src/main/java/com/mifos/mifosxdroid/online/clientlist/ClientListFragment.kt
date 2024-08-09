@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.platform.ComposeView
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
@@ -52,7 +53,9 @@ class ClientListFragment : MifosBaseFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                ClientListScreen(createNewClient = {
+                ClientListScreen(
+                    paddingValues = PaddingValues(),
+                    createNewClient = {
                     if (!isParentFragment) {
                         findNavController().navigate(R.id.action_navigation_client_list_to_createNewClientFragment)
                     } else {
