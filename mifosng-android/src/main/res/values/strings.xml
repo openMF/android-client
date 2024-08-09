@@ -52,6 +52,7 @@
     <string name="office">Office</string>
     <string name="group">Group</string>
     <string name="cancel">Cancel</string>
+    <string name="proceed">Proceed</string>
     <string name="review_payment">Review Payment</string>
     <string name="survey">Survey</string>
     <string name="center_name">Center Name</string>
@@ -66,6 +67,7 @@
     <string name="create_identifier">Create Identifier</string>
     <string name="staff_id">Staff Id</string>
     <string name="office_id">Office Id</string>
+    <string name="create_new_client">Create New Client</string>
     <string name="id">ID</string>
     <string name="charge_id">Charge Id</string>
     <string name="transactions">Transactions</string>
@@ -221,6 +223,9 @@
 
 
     <!--RunTime User Permission Here-->
+    <string name="permissions_required">Permissions Required</string>
+    <string name="please_grant_us_permission_in_settings">Please grant us permission from settings</string>
+    <string name="please_grant_us_the_following_permission">Please grant us the following permission.</string>
     <string name="permission_denied">Permission Denied</string>
     <string name="permission_denied_to_read_external_document">Permission Denied to Read
         External Document</string>
@@ -472,6 +477,13 @@
     <string name="add_charge">Add Charges</string>
 
     <!-- Error Messages -->
+
+    <string name="image_not_selected">Image not selected</string>
+    <string name="error_first_name_can_not_be_empty">First name can not be empty</string>
+    <string name="error_last_name_can_not_be_empty">Last name can not be empty</string>
+    <string name="error_first_name_should_contain_only_alphabets">First name should contain only alphabets</string>
+    <string name="error_last_name_should_contain_only_alphabets">Last name should contain only alphabets</string>
+    <string name="error_middle_name_should_contain_only_alphabets">Middle name should contain only alphabets</string>
     <string name="error_office_not_selected">Office not selected</string>
     <string name="error_invalid_url">Invalid URL</string>
     <string name="error_invalid_connection">Invalid connection Data</string>
@@ -825,6 +837,7 @@
     <string name="sync_success">Successfully Synced</string>
 
     <string name="Image_Upload_Successful">Image Upload Successful</string>
+    <string name="please_select_action">Please select action</string>
     <string name="Image_Upload_Failed">Image Upload Failed</string>
     <string name="upload_photo">Upload Photo</string>
     <string name="take_a_photo">Take a Photo</string>

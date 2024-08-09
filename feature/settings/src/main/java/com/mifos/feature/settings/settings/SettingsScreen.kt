@@ -39,6 +39,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.settings.R
+import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import java.util.Locale
 
 @Composable
@@ -104,6 +105,7 @@ fun SettingsScreen(
     var showLanguageUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showEndpointUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showThemeUpdateDialog by rememberSaveable { mutableStateOf(false) }
+    var showSyncSurveyDialog by rememberSaveable { mutableStateOf(false) }
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
@@ -117,9 +119,7 @@ fun SettingsScreen(
             SettingsCards(
                 settingsCardClicked = { item ->
                     when (item) {
-                        SettingsCardItem.SYNC_SURVEY -> {
-                            // TODO Implement Survey dialog
-                        }
+                        SettingsCardItem.SYNC_SURVEY -> showSyncSurveyDialog = true
 
                         SettingsCardItem.LANGUAGE -> showLanguageUpdateDialog = true
 
@@ -137,6 +137,14 @@ fun SettingsScreen(
                 }
             )
         }
+    }
+
+    if( showSyncSurveyDialog ) {
+        SyncSurveysDialog(
+            closeDialog = {
+                showSyncSurveyDialog = false
+            }
+        )
     }
 
     if (showLanguageUpdateDialog) {

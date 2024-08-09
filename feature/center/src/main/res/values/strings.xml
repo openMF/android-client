@@ -48,4 +48,26 @@
     <string name="feature_center_inactive">InActive</string>
     <string name="feature_center_groups">Groups</string>
     <string name="feature_center_no_group_list_to_show">No Group List to Show</string>
+    <string name="feature_center_sync_centers_payloads">Sync Centers Payloads</string>
+    <string name="feature_center_sync_centers">Centers</string>
+    <string name="feature_center_name">Name</string>
+    <string name="feature_center_office_id">Office Id</string>
+    <string name="feature_center_click_to_refresh">\n Click to Refresh</string>
+    <string name="feature_center_no_center_payload_to_sync">There is No Center Payload to Sync</string>
+    <string name="feature_center_error_not_connected_internet">Not connected to Network</string>
+
+    <string name="feature_center_something_went_wrong">Something went wrong</string>
+    <string name="feature_center_sync_centers_full_information">Sync Centers All Information</string>
+    <string name="feature_center_total">Total</string>
+    <string name="feature_center_space" translatable="false">" "</string>
+    <string name="feature_center_feature_center_center">Center</string>
+    <string name="feature_center_syncing_center">Syncing Center</string>
+    <string name="feature_center_syncing_group">Syncing Group</string>
+    <string name="feature_center_total_sync_progress">Total Sync Progress</string>
+    <string name="feature_center_failed_sync">Sync Failed</string>
+    <string name="feature_center_dialog_action_ok">OK</string>
+    <string name="feature_center_hide">Hide</string>
+    <string name="feature_center_error_network_not_available">Network is not Available</string>
+    <string name="feature_center_slash" translatable="false">/</string>
+    <string name="feature_center_syncing_client">Syncing Client</string>
 </resources>

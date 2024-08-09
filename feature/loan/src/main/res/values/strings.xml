@@ -55,4 +55,70 @@
     <string name="feature_loan_failed_to_create_loan_charge">Failed to create loan charge</string>
     <string name="feature_loan_message_field_required">Field is required</string>
     <string name="feature_loan_charge_created_successfully">Loan charge created successfully</string>
+
+    <string name="feature_loan_approve_loan">Approve Loan</string>
+    <string name="feature_loan_loan_approved">Loan Approved</string>
+    <string name="feature_loan_select_date">Select Date</string>
+    <string name="feature_loan_approved_on">Approved On</string>
+    <string name="feature_loan_expected_disbursement_on">Expected Disbursement On</string>
+    <string name="feature_loan_approved_amount">Approved Amount</string>
+    <string name="feature_loan_transaction_amount">Transaction Amount</string>
+    <string name="feature_loan_approval_note">Approval Note</string>
+    <string name="feature_loan_error_not_connected_internet">Not connected to internet</string>
+    <string name="feature_loan_approval_amount_can_not_be_empty">Loan approval amount can not be empty</string>
+    <string name="feature_loan_error_invalid_amount">Invalid amount</string>
+
+    <string name="feature_loan_disburse_loan">Disburse Loan</string>
+    <string name="feature_loan_loan_disburse_successfully">Loan disburse successfully</string>
+    <string name="feature_loan_approval_disbursement_date">Approval Disbursement Date</string>
+    <string name="feature_loan_loan_amount_disbursed">Loan Amount Disbursed</string>
+    <string name="feature_loan_payment_type">Payment Type</string>
+    <string name="feature_loan_disbursement_note">Disbursement Note</string>
+    <string name="feature_loan_error_network_not_available">Network not available</string>
+    <string name="feature_loan_error_amount_can_not_be_empty">Amount can not be empty</string>
+
+    <string name="feature_loan_loan_account_summary">Loan Account Summary</string>
+    <string name="feature_loan_transactions">Transactions</string>
+    <string name="feature_loan_repayment_schedule">Loan Repayment Schedule</string>
+    <string name="feature_loan_documents">Documents</string>
+    <string name="feature_loan_loan_rejected_message">Loan Rejected</string>
+    <string name="feature_loan_loan_in_arrears">Loan in arrears</string>
+    <string name="feature_loan_staff">Staff</string>
+    <string name="feature_loan_summary">Summary</string>
+    <string name="feature_loan">Loan</string>
+    <string name="feature_loan_amount_paid">Amount Paid</string>
+    <string name="feature_loan_balance">Balance</string>
+    <string name="feature_loan_loan_principal">Loan Principal</string>
+    <string name="feature_loan_loan_interest">Loan Interest</string>
+    <string name="feature_loan_loan_fees">Loan Fees</string>
+    <string name="feature_loan_loan_penalty">Loan Penalty</string>
+    <string name="feature_loan_total">Total</string>
+    <string name="feature_loan_make_Repayment">Make Repayment</string>
+    <string name="feature_loan_closed">Loan Closed</string>
+
+    <string name="feature_loan_failed_to_load_loan_repayment">Failed to load loan repayment</string>
+    <string name="feature_loan_repayment_make_sure_every_field_has_a_value">Make sure every field has a value</string>
+    <string name="feature_loan_additional_payment">Additional Payment</string>
+    <string name="feature_loan_account_number">Account Number</string>
+    <string name="feature_loan_repayment_date">Repayment Date</string>
+    <string name="feature_loan_review_payment">Review Payment</string>
+    <string name="feature_loan_dialog_action_pay_now">Pay Now</string>
+    <string name="feature_loan_loan_amount_due">Amount Due</string>
+    <string name="feature_loan_dialog_message_sync_transaction">Dialog message sync transaction</string>
+    <string name="feature_loan_sync_previous_transaction">Sync Previous Transaction</string>
+    <string name="feature_loan_dialog_action_ok">Ok</string>
+    <string name="feature_loan_loan_repayment">Repayment</string>
+    <string name="feature_loan_payment_failed">Payment Failed</string>
+
+    <string name="feature_loan_overdue">Overdue</string>
+    <string name="feature_loan_pending">Pending</string>
+    <string name="feature_loan_complete">Complete</string>
+    <string name="feature_loan_date">Date</string>
+    <string name="feature_loan_status">Status</string>
+    <string name="feature_loan_loan_repayment_schedule">Loan Repayment Schedule</string>
+    <string name="feature_loan_loan_transactions">Loan Transactions</string>
+    <string name="feature_loan_no_transactions">No Transactions</string>
+    <string name="feature_loan_id">Id</string>
+    <string name="feature_loan_office">Office</string>
+    <string name="feature_loan_break_down">Break Down</string>
 </resources>

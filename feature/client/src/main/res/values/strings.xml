@@ -94,4 +94,17 @@
     <string name="feature_client_signature_reset">Reset</string>
     <string name="feature_client_signature_gallery">Gallery</string>
 
+    <string name="feature_client_surveys">Surveys</string>
+    <string name="feature_client_no_survey_available_for_client">No survey available for client</string>
+    <string name="feature_client_select_one_survey">Select one survey</string>
+    <string name="feature_client_failed_to_fetch_datatable">Failed to fetch datatable</string>
+    <string name="feature_client_failed_to_fetch_surveys_list">Failed to fetch surveys list</string>
+    <string name="feature_client_failed_to_load_db_question_data">Failed to load db question data</string>
+    <string name="feature_client_survey_successfully_submitted">Survey successfully submitted</string>
+    <string name="feature_client_failed_to_submit_survey">Failed to submit survey</string>
+    <string name="feature_client_scorecard_created_successfully">Scorecard created successfully</string>
+    <string name="feature_client_submit_survey">Submit Survey</string>
+    <string name="feature_client_next">Next</string>
+    <string name="feature_client_please_attempt_at_least_one_question">Please attempt at least one question</string>
+
 </resources>

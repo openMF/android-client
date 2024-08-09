@@ -1,7 +1,5 @@
 package com.mifos.mifosxdroid.online.createnewclient
 
-import com.mifos.core.objects.organisation.Office
-import com.mifos.core.objects.organisation.Staff
 import com.mifos.core.objects.templates.clients.ClientsTemplate
 
 /**
@@ -9,17 +7,17 @@ import com.mifos.core.objects.templates.clients.ClientsTemplate
  */
 sealed class CreateNewClientUiState {
 
-    object ShowProgressbar : CreateNewClientUiState()
+    data object ShowProgressbar : CreateNewClientUiState()
 
-    data class ShowMessage(val message: Int) : CreateNewClientUiState()
+    data class ShowProgress(val message: String) : CreateNewClientUiState()
 
-    data class ShowClientTemplate(val clientsTemplate: ClientsTemplate?) : CreateNewClientUiState()
+    data class ShowError(val message: Int) : CreateNewClientUiState()
 
-    data class ShowOffices(val officeList: List<Office>) : CreateNewClientUiState()
+    data class ShowStringError(val message: String) : CreateNewClientUiState()
 
-    data class ShowStaffInOffices(val staffList: List<Staff>) : CreateNewClientUiState()
-
-    data class ShowMessageString(val message: String) : CreateNewClientUiState()
+    data class OnImageUploadSuccess(val message: Int) : CreateNewClientUiState()
+    
+    data class ShowClientTemplate(val clientsTemplate: ClientsTemplate) : CreateNewClientUiState()
 
     data class ShowClientCreatedSuccessfully(val message: Int) : CreateNewClientUiState()
 
@@ -27,5 +25,4 @@ sealed class CreateNewClientUiState {
 
     data class ShowWaitingForCheckerApproval(val message: Int) : CreateNewClientUiState()
 
-    data class ShowProgress(val message: String) : CreateNewClientUiState()
 }

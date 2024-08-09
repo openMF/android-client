@@ -19,6 +19,21 @@
     <string name="feature_settings_server_config_desc">Update Server Config</string>
     <string name="feature_settings_choose_language">Choose Language</string>
     <string name="feature_settings_change_app_theme">Change App Theme</string>
+    <string name="feature_settings_error_network_not_available">Network is not Available</string>
+    <string name="feature_settings_sync_success">Successfully Synced</string>
+    <string name="feature_settings_space" translatable="false">" "</string>
+    <string name="feature_settings_surveys">Surveys</string>
+    <string name="feature_settings_slash" translatable="false">/</string>
+    <string name="feature_settings_cancel">Cancel</string>
+    <string name="feature_settings_failed_sync">Sync Failed</string>
+    <string name="feature_settings_hide">Hide</string>
+    <string name="feature_settings_total_sync_progress">Total Sync Progress</string>
+    <string name="feature_settings_syncing_response">Syncing Response</string>
+    <string name="feature_settings_syncing_question">Syncing Question</string>
+    <string name="feature_settings_syncing_survey">Syncing Surveys</string>
+    <string name="feature_settings_total">Total</string>
+    <string name="feature_settings_name">Name</string>
+    <string name="feature_settings_sync_surveys_full_information">Sync Surveys All Information</string>
 
 
     <string-array name="feature_settings_languages" translatable="false">

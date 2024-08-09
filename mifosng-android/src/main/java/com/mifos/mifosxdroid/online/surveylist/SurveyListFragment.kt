@@ -11,20 +11,14 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mifos.core.objects.survey.Survey
+import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.adapters.SurveyListAdapter
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.mifosxdroid.core.ProgressableFragment
-import com.mifos.mifosxdroid.core.util.Toaster
-import com.mifos.mifosxdroid.databinding.FragmentSurveyListBinding
-import com.mifos.mifosxdroid.online.datatable.DataTableScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -37,7 +31,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SurveyListFragment : MifosBaseFragment() {
 
-    private lateinit var binding: FragmentSurveyListBinding
     private val arg: SurveyListFragmentArgs by navArgs()
 
     private var mListener: OnFragmentInteractionListener? = null
@@ -83,7 +76,7 @@ class SurveyListFragment : MifosBaseFragment() {
         super.onStop()
         toolbar?.visibility = View.VISIBLE
     }
-    
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.mItem_search) requireActivity().finish()
         return super.onOptionsItemSelected(item)

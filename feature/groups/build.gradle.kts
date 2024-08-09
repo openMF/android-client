@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.mifos.android.library.jacoco)
 }
 
+
 android {
     namespace = "com.mifos.feature.groups"
 }
