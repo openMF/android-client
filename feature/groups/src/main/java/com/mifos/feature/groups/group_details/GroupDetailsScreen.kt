@@ -92,7 +92,6 @@ fun GroupDetailsScreen(
     savingsAccountSelected: (Int, DepositType) -> Unit,
     activateGroup: (Int) -> Unit
 ) {
-
     val viewModel: GroupDetailsViewModel = hiltViewModel()
     val state by viewModel.groupDetailsUiState.collectAsStateWithLifecycle()
     val loanAccounts by viewModel.loanAccount.collectAsStateWithLifecycle()
