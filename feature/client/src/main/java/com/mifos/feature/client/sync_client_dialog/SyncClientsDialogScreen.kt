@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.dialogfragments.syncclientsdialog
+package com.mifos.feature.client.sync_client_dialog
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,14 +20,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.offline.syncclientpayloads.PayloadField
+import com.mifos.feature.client.R
 
 @Composable
 fun SyncClientsDialogScreen(
@@ -74,7 +75,7 @@ fun SyncClientsDialogScreen(
             is SyncClientsDialogUiState.Error -> {
                 val message = uiState.message
                     ?: uiState.messageResId?.let { stringResource(uiState.messageResId) }
-                    ?: stringResource(id = R.string.something_went_wrong)
+                    ?: stringResource(id = R.string.feature_client_something_went_wrong)
                 LaunchedEffect(key1 = message) {
                     snackBarHostState.showSnackbar(message = message)
                 }
@@ -100,27 +101,27 @@ fun SyncClientsDialogContent(
         Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
-            text = stringResource(id = R.string.sync_clients_full_information)
+            text = stringResource(id = R.string.feature_client_sync_clients_full_information)
         )
 
         PayloadField(
-            label = stringResource(id = R.string.name),
+            label = stringResource(id = R.string.feature_client_name),
             value = uiData.clientName,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.total),
-            value = uiData.clientList.size.toString() + stringResource(R.string.space) + stringResource(
-                R.string.clients
+            label = stringResource(id = R.string.feature_client_total),
+            value = uiData.clientList.size.toString() + stringResource(R.string.feature_client_space) + stringResource(
+                R.string.feature_client_clients
             ),
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.syncing_client),
+            label = stringResource(id = R.string.feature_client_syncing_client),
             value = uiData.clientName,
         )
 
@@ -131,8 +132,8 @@ fun SyncClientsDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.total_sync_progress),
-            value = stringResource(R.string.space) + uiData.totalSyncCount + stringResource(id = R.string.slash) + uiData.clientList.size,
+            label = stringResource(id = R.string.feature_client_total_sync_progress),
+            value = stringResource(R.string.feature_client_space) + uiData.totalSyncCount + stringResource(id = R.string.feature_client_slash) + uiData.clientList.size,
         )
 
         LinearProgressIndicator(
@@ -142,7 +143,7 @@ fun SyncClientsDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         PayloadField(
-            label = stringResource(id = R.string.failed_sync),
+            label = stringResource(id = R.string.feature_client_failed_sync),
             value = uiData.failedSyncGroupCount.toString(),
         )
 
@@ -156,14 +157,14 @@ fun SyncClientsDialogContent(
                     onClick = { okClicked() },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = stringResource(id = R.string.dialog_action_ok))
+                    Text(text = stringResource(id = R.string.feature_client_dialog_action_ok))
                 }
             } else {
                 FilledTonalButton(
                     onClick = { cancelClicked() },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = stringResource(id = R.string.cancel))
+                    Text(text = stringResource(id = R.string.feature_client_cancel))
                 }
 
                 Spacer(modifier = Modifier.width(10.dp))
@@ -172,10 +173,31 @@ fun SyncClientsDialogContent(
                     onClick = { hideClicked() },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = stringResource(id = R.string.hide))
+                    Text(text = stringResource(id = R.string.feature_client_hide))
                 }
             }
         }
+    }
+}
+
+@Composable
+fun PayloadField(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1f)
+        )
     }
 }
 

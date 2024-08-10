@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.createnewclient
+package com.mifos.feature.client.createNewClient
 
 import com.mifos.core.objects.templates.clients.ClientsTemplate
 

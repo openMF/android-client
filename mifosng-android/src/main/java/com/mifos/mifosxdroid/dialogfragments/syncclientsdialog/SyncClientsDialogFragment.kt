@@ -8,6 +8,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.DialogFragment
 import com.mifos.core.objects.client.Client
+import com.mifos.feature.client.sync_client_dialog.SyncClientsDialogScreen
+import com.mifos.feature.client.sync_client_dialog.SyncClientsDialogViewModel
 import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 

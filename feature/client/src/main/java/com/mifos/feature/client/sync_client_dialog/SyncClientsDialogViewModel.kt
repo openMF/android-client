@@ -1,6 +1,10 @@
-package com.mifos.mifosxdroid.dialogfragments.syncclientsdialog
+package com.mifos.feature.client.sync_client_dialog
 
 import androidx.lifecycle.ViewModel
+import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.NetworkUtilsWrapper
+import com.mifos.core.data.repository.SyncClientsDialogRepository
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.objects.accounts.ClientAccounts
 import com.mifos.core.objects.accounts.loan.LoanAccount
@@ -8,11 +12,7 @@ import com.mifos.core.objects.accounts.savings.SavingsAccount
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.zipmodels.LoanAndLoanRepayment
 import com.mifos.core.objects.zipmodels.SavingsAccountAndTransactionTemplate
-import com.mifos.mifosxdroid.R
-import com.mifos.utils.Constants
-import com.mifos.utils.NetworkUtilsWrapper
-import com.mifos.utils.PrefManager
-import com.mifos.utils.Utils
+import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +31,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SyncClientsDialogViewModel @Inject constructor(
     private val repository: SyncClientsDialogRepository,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val prefManager: PrefManager
 ) : ViewModel() {
 
     private var mClientList: List<Client> = ArrayList()
@@ -59,7 +60,7 @@ class SyncClientsDialogViewModel @Inject constructor(
     }
 
     fun syncClient() {
-        if (PrefManager.userStatus == Constants.USER_ONLINE) {
+        if (prefManager.userStatus == Constants.USER_ONLINE) {
             checkNetworkConnection {
                 syncClientAndUpdateUI()
             }
@@ -159,11 +160,11 @@ class SyncClientsDialogViewModel @Inject constructor(
                 }
 
                 override fun onNext(clientAccounts: ClientAccounts) {
-                    mLoanAccountList = Utils.getActiveLoanAccounts(
+                    mLoanAccountList = getActiveLoanAccounts(
                         clientAccounts
                             .loanAccounts
                     )
-                    mSavingsAccountList = Utils.getSyncableSavingsAccounts(
+                    mSavingsAccountList = getSyncableSavingsAccounts(
                         clientAccounts
                             .savingsAccounts
                     )
@@ -311,9 +312,29 @@ class SyncClientsDialogViewModel @Inject constructor(
             taskWhenOnline.invoke()
         } else {
             _syncClientsDialogUiState.value = SyncClientsDialogUiState.Error(
-                messageResId = R.string.error_network_not_available,
+                messageResId = R.string.feature_client_error_network_not_available,
                 imageVector = MifosIcons.WifiOff
             )
         }
+    }
+
+    fun getActiveLoanAccounts(loanAccountList: List<LoanAccount>?): List<LoanAccount> {
+        val loanAccounts: MutableList<LoanAccount> = ArrayList()
+        Observable.from(loanAccountList)
+            .filter { loanAccount -> loanAccount.status?.active }
+            .subscribe { loanAccount -> loanAccounts.add(loanAccount) }
+        return loanAccounts
+    }
+
+    fun getSyncableSavingsAccounts(savingsAccounts: List<SavingsAccount>?): List<SavingsAccount> {
+        val accounts: MutableList<SavingsAccount> = ArrayList()
+        Observable.from(savingsAccounts)
+            .filter { savingsAccount ->
+                savingsAccount.depositType?.value == "Savings" &&
+                        savingsAccount.status?.active == true &&
+                        !savingsAccount.depositType!!.isRecurring
+            }
+            .subscribe { savingsAccount -> accounts.add(savingsAccount) }
+        return accounts
     }
 }

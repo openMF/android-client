@@ -107,4 +107,55 @@
     <string name="feature_client_next">Next</string>
     <string name="feature_client_please_attempt_at_least_one_question">Please attempt at least one question</string>
 
+    <string name="feature_client_something_went_wrong">Something went wrong</string>
+    <string name="feature_client_sync_clients_full_information"> Sync Clients All Information </string>
+    <string name="feature_client_name">Name</string>
+    <string name="feature_client_total">Total</string>
+    <string name="feature_client_clients">Clients</string>
+    <string name="feature_client_space" translatable="false">" "</string>
+    <string name="feature_client_syncing_client">Syncing Client</string>
+    <string name="feature_client_total_sync_progress">Total Sync Progress</string>
+    <string name="feature_client_slash" translatable="false">/</string>
+    <string name="feature_client_failed_sync">Sync Failed</string>
+    <string name="feature_client_dialog_action_ok">OK</string>
+    <string name="feature_client_cancel">Cancel</string>
+    <string name="feature_client_hide">Hide</string>
+    <string name="feature_client_go_back">Go Back</string>
+    <string name="feature_client_no_staff_associated_with_office">No Staff associated with this Office</string>
+    <string name="feature_client_error_network_not_available">Network is not Available</string>
+    <string name="feature_client_permissions_required">Permissions Required</string>
+    <string name="feature_client_please_grant_us_the_following_permission">Please grant us the following permission.</string>
+    <string name="feature_client_skip">Skip</string>
+    <string name="feature_client_select_date">Select Date</string>
+    <string name="feature_client_create_new_client">Create New Client</string>
+    <string name="feature_client_first_name_mandatory">First Name*</string>
+    <string name="feature_client_middle_name">Middle name</string>
+    <string name="feature_client_last_name_mandatory">Last Name*</string>
+    <string name="feature_client_gender">Gender</string>
+    <string name="feature_client_dob">Date of Birth</string>
+    <string name="feature_client_client">Client</string>
+    <string name="feature_client_client_classification">Client Classification</string>
+    <string name="feature_client_office_name_mandatory">Office*</string>
+    <string name="feature_client_staff">Staff</string>
+    <string name="feature_client_client_active">Client Active</string>
+    <string name="feature_client_center_submission_date">Submitted On</string>
+    <string name="feature_client_submit">Submit</string>
+    <string name="feature_client_please_select_action">Please select action</string>
+    <string name="feature_client_take_a_photo">Take a Photo</string>
+    <string name="feature_client_upload_photo">Upload Photo</string>
+    <string name="feature_client_remove_existing_photo">Remove Existing Photo</string>
+    <string name="feature_client_error_first_name_can_not_be_empty">First name can not be empty</string>
+    <string name="feature_client_error_first_name_should_contain_only_alphabets">First name should contain only alphabets</string>
+    <string name="feature_client_error_last_name_can_not_be_empty">Last name can not be empty</string>
+    <string name="feature_client_error_last_name_should_contain_only_alphabets">Last name should contain only alphabets</string>
+    <string name="feature_client_error_middle_name_should_contain_only_alphabets">Middle name should contain only alphabets</string>
+    <string name="feature_client_client_created_successfully">Client Created Successfully</string>
+    <string name="feature_client_waiting_for_checker_approval">Waiting for Checker\'s Approval</string>
+    <string name="feature_client_failed_to_fetch_client_template">Failed to fetch clientTemplate</string>
+    <string name="feature_client_failed_to_fetch_offices">Failed to fetch Offices</string>
+    <string name="feature_client_failed_to_fetch_staffs">Failed to fetch Staffs</string>
+    <string name="feature_client_Image_Upload_Failed">Image Upload Failed</string>
+    <string name="feature_client_Image_Upload_Successful">Image Upload Successful</string>
+    <string name="feature_client_error_not_connected_internet">Not connected to Network</string>
+
 </resources>

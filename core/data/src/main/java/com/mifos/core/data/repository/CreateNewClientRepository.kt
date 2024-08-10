@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.createnewclient
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload

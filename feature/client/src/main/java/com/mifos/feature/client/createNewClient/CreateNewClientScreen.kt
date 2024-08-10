@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.createnewclient
+package com.mifos.feature.client.createNewClient
 
 import android.Manifest
 import android.content.Context
@@ -99,7 +99,7 @@ import com.mifos.core.objects.noncore.DataTable
 import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.organisation.Staff
 import com.mifos.core.objects.templates.clients.ClientsTemplate
-import com.mifos.mifosxdroid.R
+import com.mifos.feature.client.R
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
@@ -215,7 +215,7 @@ fun CreateNewClientScreen(
                 MifosSweetError(
                     message = uiState.message,
                     onclick = { onRetry() },
-                    buttonText = stringResource(id = R.string.go_back)
+                    buttonText = stringResource(id = R.string.feature_client_go_back)
                 )
             }
         }
@@ -305,8 +305,9 @@ private fun CreateNewClientContent(
     }
     LaunchedEffect(key1 = staffInOffices) {
         if(staffInOffices.isEmpty()){
-            Toast.makeText(context, context.resources.getString(R.string.no_staff_associated_with_office), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.resources.getString(R.string.feature_client_no_staff_associated_with_office), Toast.LENGTH_SHORT).show()
             staff = ""
+            selectedStaffId = 0
         }
     }
 
@@ -330,10 +331,10 @@ private fun CreateNewClientContent(
     if (handleImageSelection) {
         PermissionBox(
             requiredPermissions = permissionList,
-            title = R.string.permissions_required,
-            description = R.string.please_grant_us_the_following_permission,
-            confirmButtonText = R.string.proceed,
-            dismissButtonText = R.string.skip,
+            title = R.string.feature_client_permissions_required,
+            description = R.string.feature_client_please_grant_us_the_following_permission,
+            confirmButtonText = R.string.feature_client_proceed,
+            dismissButtonText = R.string.feature_client_skip,
             onGranted = {
                 LaunchedEffect(key1 = Unit) {
                     if (imagePickerActionType == ImagePickerType.GALLERY) {
@@ -403,7 +404,7 @@ private fun CreateNewClientContent(
                         showActivateDatepicker = false
                         showDateOfBirthDatepicker = false
                     }
-                ) { Text(stringResource(id = R.string.select_date)) }
+                ) { Text(stringResource(id = R.string.feature_client_select_date)) }
             },
             dismissButton = {
                 TextButton(
@@ -411,7 +412,7 @@ private fun CreateNewClientContent(
                         showActivateDatepicker = false
                         showDateOfBirthDatepicker = false
                     }
-                ) { Text(stringResource(id = R.string.cancel)) }
+                ) { Text(stringResource(id = R.string.feature_client_cancel)) }
             }
         )
         {
@@ -428,7 +429,7 @@ private fun CreateNewClientContent(
 
         Text(
             style = MaterialTheme.typography.headlineSmall,
-            text = stringResource(id = R.string.create_new_client),
+            text = stringResource(id = R.string.feature_client_create_new_client),
             modifier = Modifier.padding(start = 16.dp)
         )
 
@@ -443,7 +444,7 @@ private fun CreateNewClientContent(
                 painter = if (selectedImageUri.path?.isNotEmpty() == true) rememberAsyncImagePainter(
                     selectedImageUri
                 ) else painterResource(
-                    id = R.drawable.ic_dp_placeholder
+                    id = R.drawable.feature_client_ic_dp_placeholder
                 ),
                 contentDescription = null,
                 modifier = Modifier
@@ -462,7 +463,7 @@ private fun CreateNewClientContent(
         MifosOutlinedTextField(
             value = firstName,
             onValueChange = { firstName = it },
-            label = stringResource(id = R.string.first_name_mandatory),
+            label = stringResource(id = R.string.feature_client_first_name_mandatory),
             error = null
         )
 
@@ -471,7 +472,7 @@ private fun CreateNewClientContent(
         MifosOutlinedTextField(
             value = middleName,
             onValueChange = { middleName = it },
-            label = stringResource(id = R.string.middle_name),
+            label = stringResource(id = R.string.feature_client_middle_name),
             error = null
         )
 
@@ -480,7 +481,7 @@ private fun CreateNewClientContent(
         MifosOutlinedTextField(
             value = lastName,
             onValueChange = { lastName = it },
-            label = stringResource(id = R.string.last_name_mandatory),
+            label = stringResource(id = R.string.feature_client_last_name_mandatory),
             error = null
         )
 
@@ -489,7 +490,7 @@ private fun CreateNewClientContent(
         MifosOutlinedTextField(
             value = mobileNumber,
             onValueChange = { mobileNumber = it },
-            label = stringResource(id = R.string.mobile_no),
+            label = stringResource(id = R.string.feature_client_mobile_no),
             error = null,
             keyboardType = KeyboardType.Number
         )
@@ -499,7 +500,7 @@ private fun CreateNewClientContent(
         MifosOutlinedTextField(
             value = externalId,
             onValueChange = { externalId = it },
-            label = stringResource(id = R.string.external_id),
+            label = stringResource(id = R.string.feature_client_external_id),
             error = null
         )
 
@@ -512,7 +513,7 @@ private fun CreateNewClientContent(
                 gender = value
                 genderId = clientTemplate.genderOptions[index].id
             },
-            label = R.string.gender,
+            label = R.string.feature_client_gender,
             options = clientTemplate.genderOptions.map { it.name },
             readOnly = true
         )
@@ -523,7 +524,7 @@ private fun CreateNewClientContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 dateOfBirth
             ),
-            label = R.string.dob,
+            label = R.string.feature_client_dob,
             openDatePicker = { showDateOfBirthDatepicker = !showDateOfBirthDatepicker }
         )
 
@@ -536,7 +537,7 @@ private fun CreateNewClientContent(
                 client = value
                 selectedClientId = clientTemplate.clientTypeOptions[index].id
             },
-            label = R.string.client,
+            label = R.string.feature_client_client,
             options = clientTemplate.clientTypeOptions.sortedBy { it.name }.map { it.name },
             readOnly = true
         )
@@ -551,7 +552,7 @@ private fun CreateNewClientContent(
                 selectedClientClassificationId =
                     clientTemplate.clientClassificationOptions[index].id
             },
-            label = R.string.client_classification,
+            label = R.string.feature_client_client_classification,
             options = clientTemplate.clientClassificationOptions.sortedBy { it.name }
                 .map { it.name },
             readOnly = true
@@ -572,7 +573,7 @@ private fun CreateNewClientContent(
                     }
                 }
             },
-            label = R.string.office_name_mandatory,
+            label = R.string.feature_client_office_name_mandatory,
             options = officeList.sortedBy { it.name }.map { it.name.toString() },
             readOnly = true
         )
@@ -586,7 +587,7 @@ private fun CreateNewClientContent(
                 staff = value
                 selectedStaffId = staffInOffices[index].id
             },
-            label = R.string.staff,
+            label = R.string.feature_client_staff,
             options = staffInOffices.sortedBy { it.displayName }.map { it.displayName.toString() },
             readOnly = true
         )
@@ -604,7 +605,7 @@ private fun CreateNewClientContent(
                     if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
                 )
             )
-            Text(text = stringResource(id = R.string.client_active))
+            Text(text = stringResource(id = R.string.feature_client_client_active))
         }
 
 
@@ -625,7 +626,7 @@ private fun CreateNewClientContent(
                 value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                     activationDate
                 ),
-                label = R.string.center_submission_date,
+                label = R.string.feature_client_center_submission_date,
                 openDatePicker = { showActivateDatepicker = !showActivateDatepicker }
             )
         }
@@ -700,14 +701,14 @@ private fun CreateNewClientContent(
                     } else {
                         Toast.makeText(
                             context,
-                            context.resources.getString(R.string.error_not_connected_internet),
+                            context.resources.getString(R.string.feature_client_error_not_connected_internet),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
             }
         ) {
-            Text(text = stringResource(id = R.string.submit))
+            Text(text = stringResource(id = R.string.feature_client_submit))
         }
     }
 }
@@ -737,7 +738,7 @@ fun MifosSelectImageDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(id = R.string.please_select_action),
+                    text = stringResource(id = R.string.feature_client_please_select_action),
                     modifier = Modifier.fillMaxWidth(),
                     style = TextStyle(
                         fontSize = 18.sp,
@@ -754,7 +755,7 @@ fun MifosSelectImageDialog(
                     colors = ButtonDefaults.buttonColors(BlueSecondary)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.take_a_photo),
+                        text = stringResource(id = R.string.feature_client_take_a_photo),
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 18.sp,
@@ -770,7 +771,7 @@ fun MifosSelectImageDialog(
                     colors = ButtonDefaults.buttonColors(BlueSecondary)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.upload_photo),
+                        text = stringResource(id = R.string.feature_client_upload_photo),
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 18.sp,
@@ -786,7 +787,7 @@ fun MifosSelectImageDialog(
                     colors = ButtonDefaults.buttonColors(BlueSecondary)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.remove_existing_photo),
+                        text = stringResource(id = R.string.feature_client_remove_existing_photo),
                         modifier = Modifier.fillMaxWidth(),
                         style = TextStyle(
                             fontSize = 18.sp,
@@ -845,7 +846,7 @@ fun isFirstNameValid(name: String, context: Context): Boolean {
         name.isEmpty() -> {
             Toast.makeText(
                 context,
-                context.resources.getString(R.string.error_first_name_can_not_be_empty),
+                context.resources.getString(R.string.feature_client_error_first_name_can_not_be_empty),
                 Toast.LENGTH_SHORT
             ).show()
             return false
@@ -854,7 +855,7 @@ fun isFirstNameValid(name: String, context: Context): Boolean {
         name.contains("[^a-zA-Z ]".toRegex()) -> {
             Toast.makeText(
                 context,
-                context.resources.getString(R.string.error_first_name_should_contain_only_alphabets),
+                context.resources.getString(R.string.feature_client_error_first_name_should_contain_only_alphabets),
                 Toast.LENGTH_SHORT
             ).show()
             return false
@@ -869,7 +870,7 @@ fun isLastNameValid(name: String, context: Context): Boolean {
         name.isEmpty() -> {
             Toast.makeText(
                 context,
-                context.resources.getString(R.string.error_last_name_can_not_be_empty),
+                context.resources.getString(R.string.feature_client_error_last_name_can_not_be_empty),
                 Toast.LENGTH_SHORT
             ).show()
             return false
@@ -878,7 +879,7 @@ fun isLastNameValid(name: String, context: Context): Boolean {
         name.contains("[^a-zA-Z ]".toRegex()) -> {
             Toast.makeText(
                 context,
-                context.resources.getString(R.string.error_last_name_should_contain_only_alphabets),
+                context.resources.getString(R.string.feature_client_error_last_name_should_contain_only_alphabets),
                 Toast.LENGTH_SHORT
             ).show()
             return false
@@ -897,7 +898,7 @@ fun isMiddleNameValid(name: String, context: Context): Boolean {
         name.contains("[^a-zA-Z ]".toRegex()) -> {
             Toast.makeText(
                 context,
-                context.resources.getString(R.string.error_middle_name_should_contain_only_alphabets),
+                context.resources.getString(R.string.feature_client_error_middle_name_should_contain_only_alphabets),
                 Toast.LENGTH_SHORT
             ).show()
             return false
@@ -923,9 +924,9 @@ class CreateNewClientScreenPreviewProvider : PreviewParameterProvider<CreateNewC
                 )
             ),
             CreateNewClientUiState.ShowProgressbar,
-            CreateNewClientUiState.ShowClientCreatedSuccessfully(R.string.client_created_successfully),
-            CreateNewClientUiState.OnImageUploadSuccess(R.string.failed_to_load_client),
-            CreateNewClientUiState.ShowWaitingForCheckerApproval(R.string.waiting_for_checker_approval)
+            CreateNewClientUiState.ShowClientCreatedSuccessfully(R.string.feature_client_client_created_successfully),
+            CreateNewClientUiState.OnImageUploadSuccess(R.string.feature_client_Image_Upload_Successful),
+            CreateNewClientUiState.ShowWaitingForCheckerApproval(R.string.feature_client_waiting_for_checker_approval)
         )
 }
 

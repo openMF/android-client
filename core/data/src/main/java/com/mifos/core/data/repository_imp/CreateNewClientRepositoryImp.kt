@@ -1,5 +1,6 @@
-package com.mifos.mifosxdroid.online.createnewclient
+package com.mifos.core.data.repository_imp
 
+import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerOffices
 import com.mifos.core.network.datamanager.DataManagerStaff
