@@ -6,103 +6,101 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.mifos.feature.about.AboutScreen
-import com.mifos.feature.center.center_list.ui.CenterListScreen
-import com.mifos.feature.checker_inbox_task.checker_inbox_tasks.ui.CheckerInboxTasksScreen
-import com.mifos.feature.client.clientList.presentation.ClientListScreen
-import com.mifos.feature.groups.group_list.GroupsListRoute
-import com.mifos.feature.individual_collection_sheet.generate_collection_sheet.GenerateCollectionSheetScreen
-import com.mifos.feature.individual_collection_sheet.individual_collection_sheet.ui.IndividualCollectionSheetScreen
-import com.mifos.feature.path_tracking.PathTrackingScreen
-import com.mifos.feature.report.run_report.RunReportScreen
-import com.mifos.feature.search.SearchScreenRoute
-import com.mifos.feature.settings.settings.SettingsScreen
-import com.mifos.mifosxdroid.Screens
+import com.mifos.feature.about.navigation.aboutScreen
+import com.mifos.feature.center.navigation.centerListScreen
+import com.mifos.feature.center.navigation.navigateToCenterList
+import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTasksScreen
+import com.mifos.feature.client.navigation.clientListScreen
+import com.mifos.feature.client.navigation.navigateToClientListScreen
+import com.mifos.feature.groups.navigation.groupListScreen
+import com.mifos.feature.groups.navigation.navigateToGroupList
+import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
+import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetScreen
+import com.mifos.feature.path_tracking.navigation.pathTrackingScreen
+import com.mifos.feature.report.navigation.runReportsScreen
+import com.mifos.feature.search.Navigation.SEARCH_SCREEN_ROUTE
+import com.mifos.feature.search.Navigation.searchScreen
+import com.mifos.feature.settings.navigation.settingsScreen
 
 @Composable
-fun Navigation(navController: NavHostController, padding: PaddingValues) {
+fun Navigation(
+    navController: NavHostController,
+    padding: PaddingValues,
+    modifier: Modifier = Modifier,
+    startDestination: String = SEARCH_SCREEN_ROUTE
+) {
+    NavHost(
+        navController = navController,
+        startDestination = startDestination,
+        modifier = modifier,
+    ) {
+        searchScreen(
+            modifier = Modifier.padding(padding),
+            centerListScreen = { navController.navigateToCenterList() },
+            groupListScreen = { navController.navigateToGroupList() },
+            clientListScreen = { navController.navigateToClientListScreen() }
+        )
 
-    NavHost(navController = navController, startDestination = Screens.SearchScreen.route) {
-        composable(Screens.SearchScreen.route) {
-            SearchScreenRoute(
-                modifier = Modifier.padding(padding),
-                onFabClick = {},
-                onSearchOptionClick = {}
-            )
-        }
-        composable(Screens.ClientListScreen.route) {
-            ClientListScreen(
-                paddingValues = padding,
-                createNewClient = {},
-                syncClicked = {},
-                onClientSelect = {}
-            )
-        }
-        composable(Screens.CenterListScreen.route) {
-            CenterListScreen(
-                paddingValues = padding,
-                createNewCenter = {},
-                syncClicked = {},
-                onCenterSelect = {}
-            )
-        }
-        composable(Screens.GroupListScreen.route) {
-            GroupsListRoute(
-                paddingValues = padding,
-                onAddGroupClick = {},
-                onGroupClick = {},
-                onSyncClick = {}
-            )
-        }
-        composable(Screens.CheckerInboxAndTasksScreen.route) {
-            CheckerInboxTasksScreen(
-                onBackPressed = {},
-                checkerInbox = {}
-            )
-        }
-        composable(Screens.IndividualCollectionSheetScreen.route) {
-            IndividualCollectionSheetScreen(
-                onBackPressed = {},
-                onDetail = { String, IndividualCollectionSheet ->
+        clientListScreen(
+            paddingValues = padding,
+            createNewClient = {},
+            syncClicked = {},
+            onClientSelect = {}
+        )
 
-                }
-            )
-        }
-        composable(Screens.CollectionSheetScreen.route) {
-            GenerateCollectionSheetScreen(
-                onBackPressed = {}
-            )
-        }
-        composable(Screens.RunReportsScreen.route) {
-            RunReportScreen(
-                onBackPressed = {},
-                onReportClick = {}
-            )
-        }
-        composable(Screens.PathTrackerScreen.route) {
-            PathTrackingScreen(
-                onBackPressed = {},
-                onPathTrackingClick = {}
-            )
-        }
-        composable(Screens.SettingsScreen.route) {
-            SettingsScreen(
-                onBackPressed = { },
-                navigateToLoginScreen = { },
-                changePasscode = {},
-                languageChanged = { },
-                serverConfig = {}
-            )
-        }
-        composable(Screens.AboutScreen.route) {
-            AboutScreen(
-                onBackPressed = {}
-            )
-        }
-        composable(Screens.OfflineSyncScreen.route) {
+        centerListScreen(
+            paddingValues = padding,
+            createNewCenter = {},
+            syncClicked = {},
+            onCenterSelect = {}
+        )
 
-        }
+        groupListScreen(
+            paddingValues = padding,
+            onAddGroupClick = {},
+            onGroupClick = { group ->
+
+            },
+            onSyncClick = { groupLists ->
+
+            }
+        )
+
+        checkerInboxTasksScreen(
+            onBackPressed = { navController.popBackStack() },
+        )
+
+        individualCollectionSheetScreen(
+            onBackClicked = { navController.popBackStack() },
+            onDetail = { String, IndividualCollectionSheet ->
+
+            }
+        )
+
+        generateCollectionSheetScreen (
+            onBackPressed = { navController.popBackStack() }
+        )
+
+        runReportsScreen(
+            onBackPressed = { navController.popBackStack() },
+            onReportClick = { }
+        )
+
+        pathTrackingScreen(
+            onBackPressed = { navController.popBackStack() }
+        )
+
+        settingsScreen(
+            navigateBack = { navController.popBackStack() },
+            navigateToLoginScreen = {},
+            changePasscode = {},
+            languageChanged = { },
+            serverConfig = {}
+        )
+
+        aboutScreen (
+            onBackPressed = { navController.popBackStack() }
+        )
+
     }
-
 }

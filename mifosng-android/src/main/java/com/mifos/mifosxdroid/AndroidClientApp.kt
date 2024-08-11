@@ -70,14 +70,14 @@ fun AndroidClientApp() {
 
     val navigationDrawerTabs = remember {
         listOf(
-            Screens.CheckerInboxAndTasksScreen,
-            Screens.IndividualCollectionSheetScreen,
-            Screens.CollectionSheetScreen,
-            Screens.RunReportsScreen,
-            Screens.PathTrackerScreen,
-            Screens.SettingsScreen,
-            Screens.AboutScreen,
-            Screens.OfflineSyncScreen
+            HomeDestinationsScreen.CheckerInboxAndTasksScreen,
+            HomeDestinationsScreen.IndividualCollectionSheetScreen,
+            HomeDestinationsScreen.CollectionSheetScreen,
+            HomeDestinationsScreen.RunReportsScreen,
+            HomeDestinationsScreen.PathTrackerScreen,
+            HomeDestinationsScreen.SettingsScreen,
+            HomeDestinationsScreen.AboutScreen,
+            HomeDestinationsScreen.OfflineSyncScreen
         )
     }
 
@@ -157,7 +157,7 @@ fun AndroidClientApp() {
                                         restoreState = true
                                         launchSingleTop = true
                                         graph.startDestinationRoute?.let {
-                                            popUpTo(route = Screens.SearchScreen.route) {
+                                            popUpTo(route = HomeDestinationsScreen.SearchScreen.route) {
                                                 saveState = true
                                             }
                                         }
@@ -230,7 +230,7 @@ fun AndroidClientApp() {
                                         restoreState = true
                                         launchSingleTop = true
                                         graph.startDestinationRoute?.let {
-                                            popUpTo(route = Screens.SearchScreen.route) {
+                                            popUpTo(route = HomeDestinationsScreen.SearchScreen.route) {
                                                 saveState = true
                                             }
                                         }
@@ -245,5 +245,4 @@ fun AndroidClientApp() {
             Navigation(navController = navController, padding = paddingValues)
         }
     }
-
 }

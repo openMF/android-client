@@ -9,7 +9,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import com.mifos.mifosxdroid.Screens
+import com.mifos.mifosxdroid.HomeDestinationsScreen
 
 @Composable
 fun MifosNavigationBar(
@@ -18,10 +18,10 @@ fun MifosNavigationBar(
 ) {
     val tabs = rememberSaveable {
         listOf(
-            Screens.SearchScreen,
-            Screens.ClientListScreen,
-            Screens.CenterListScreen,
-            Screens.GroupListScreen
+            HomeDestinationsScreen.SearchScreen,
+            HomeDestinationsScreen.ClientListScreen,
+            HomeDestinationsScreen.CenterListScreen,
+            HomeDestinationsScreen.GroupListScreen
         )
     }
 
