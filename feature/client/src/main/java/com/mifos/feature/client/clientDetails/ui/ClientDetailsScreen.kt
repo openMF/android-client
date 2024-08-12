@@ -112,7 +112,6 @@ import java.util.Objects
 @Composable
 fun ClientDetailsScreen(
     clientDetailsViewModel: ClientDetailsViewModel = hiltViewModel(),
-    clientId: Int,
     onBackPressed: () -> Unit,
     addLoanAccount: (Int) -> Unit,
     addSavingsAccount: (Int) -> Unit,
@@ -128,6 +127,7 @@ fun ClientDetailsScreen(
     savingsAccountSelected: (Int, DepositType) -> Unit,
     activateClient: (Int) -> Unit
 ) {
+    val clientId by clientDetailsViewModel.clientId.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -946,7 +946,6 @@ fun MifosClientDetailsText(icon: ImageVector, field: String, value: String) {
 @Composable
 private fun ClientDetailsScreenPreview() {
     ClientDetailsScreen(
-        clientId = 1,
         onBackPressed = {},
         addLoanAccount = {},
         addSavingsAccount = {},

@@ -79,7 +79,7 @@ fun ClientListScreen(
     paddingValues: PaddingValues,
     createNewClient: () -> Unit,
     syncClicked: (List<Client>) -> Unit,
-    onClientSelect: (Client) -> Unit,
+    onClientSelect: (Int) -> Unit,
 ) {
 
     val viewModel: ClientListViewModel = hiltViewModel()
@@ -234,7 +234,7 @@ fun LazyColumnForClientListApi(
     isInSelectionMode: MutableState<Boolean>,
     selectedItems: SnapshotStateList<Client>,
     failedRefresh : () ->Unit,
-    onClientSelect: (Client) -> Unit
+    onClientSelect: (Int) -> Unit
 ) {
 
     when (clientPagingList.loadState.refresh) {
@@ -270,7 +270,7 @@ fun LazyColumnForClientListApi(
                                     LightGray
                                 }
                             } else {
-                                clientPagingList[index]?.let { onClientSelect(it) }
+                                clientPagingList[index]?.clientId?.let { onClientSelect(it) }
                             }
                         },
                         onLongClick = {

@@ -11,6 +11,7 @@ import com.mifos.feature.center.navigation.centerListScreen
 import com.mifos.feature.center.navigation.navigateToCenterList
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTasksScreen
 import com.mifos.feature.client.navigation.clientListScreen
+import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.client.navigation.navigateToClientListScreen
 import com.mifos.feature.groups.navigation.groupListScreen
 import com.mifos.feature.groups.navigation.navigateToGroupList
@@ -45,7 +46,9 @@ fun Navigation(
             paddingValues = padding,
             createNewClient = {},
             syncClicked = {},
-            onClientSelect = {}
+            onClientSelect = {
+                navController.navigateClientDetailsScreen(it)
+            }
         )
 
         centerListScreen(
