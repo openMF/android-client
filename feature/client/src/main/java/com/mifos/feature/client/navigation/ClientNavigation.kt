@@ -99,6 +99,32 @@ fun NavGraphBuilder.clientListScreenRoute(
     }
 }
 
+fun NavGraphBuilder.clientNavGraph(
+    navController: NavController
+) {
+    navigation(
+        startDestination = ClientScreens.ClientListScreen.route,
+        route = ""
+    ) {
+        clientDetailRoute(
+            onBackPressed = navController::popBackStack,
+            addLoanAccount = {},
+            addSavingsAccount = {},
+            charges = {},
+            documents = {},
+            identifiers = {},
+            moreClientInfo = {},
+            notes = {},
+            pinpointLocation = {},
+            survey = {},
+            uploadSignature = {},
+            loanAccountSelected = {},
+            savingsAccountSelected = { _, _ -> },
+            activateClient = {}
+        )
+    }
+}
+
 fun NavGraphBuilder.clientDetailRoute(
     onBackPressed: () -> Unit,
     addLoanAccount: (Int) -> Unit,
