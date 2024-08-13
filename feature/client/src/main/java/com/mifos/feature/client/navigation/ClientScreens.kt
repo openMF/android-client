@@ -10,15 +10,25 @@ sealed class ClientScreens(val route : String) {
         fun argument(clientId : Int) = "client_detail_screen/${clientId}"
     }
 
-    data object ClientChargesScreen : ClientScreens("client_charges_screen")
+    data object ClientChargesScreen : ClientScreens("client_charges_screen/{${Constants.CLIENT_ID}}") {
+        fun argument(clientId : Int) = "client_charges_screen/${clientId}"
+    }
 
-    data object ClientIdentifierScreen : ClientScreens("client_identifier_screen")
+    data object ClientIdentifierScreen : ClientScreens("client_identifier_screen/{${Constants.CLIENT_ID}}") {
+        fun argument(clientId: Int) = "client_identifier_screen/${clientId}"
+    }
 
-    data object ClientPinPointScreen : ClientScreens("client_pin_point_screen")
+    data object ClientPinPointScreen : ClientScreens("client_pin_point_screen/{${Constants.CLIENT_ID}}") {
+        fun argument(clientId: Int) = "client_pin_point_screen/${clientId}"
+    }
 
-    data object ClientSignatureScreen : ClientScreens("client_signature_screen")
+    data object ClientSignatureScreen : ClientScreens("client_signature_screen/{${Constants.CLIENT_ID}}") {
+        fun argument(clientId: Int) = "client_signature_screen/${clientId}"
+    }
 
-    data object ClientSurveyListScreen : ClientScreens("client_survey_list_screen")
+    data object ClientSurveyListScreen : ClientScreens("client_survey_list_screen/{${Constants.CLIENT_ID}}") {
+        fun argument(clientId: Int) = "client_survey_list_screen/${clientId}"
+    }
 
     data object ClientSurveyQuestionScreen : ClientScreens("client_survey_question_screen")
 }

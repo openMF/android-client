@@ -1,5 +1,6 @@
 package com.mifos.feature.client.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -8,35 +9,121 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.accounts.savings.DepositType
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.survey.Survey
+import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientDetails.ui.ClientDetailsScreen
+import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
+import com.mifos.feature.client.clientList.presentation.ClientListScreen
+import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
+import com.mifos.feature.client.clientSignature.SignatureScreen
+import com.mifos.feature.client.clientSurveyList.SurveyListScreen
+import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
 
 fun NavController.navigateClientDetailsScreen(clientId: Int) {
     navigate(ClientScreens.ClientDetailScreen.argument(clientId))
 }
 
+fun NavController.navigateClientIdentifierScreen(clientId: Int) {
+    navigate(ClientScreens.ClientIdentifierScreen.argument(clientId))
+}
+
+fun NavController.navigateClientChargesScreen(clientId: Int) {
+    navigate(ClientScreens.ClientChargesScreen.argument(clientId))
+}
+
+fun NavController.navigateClientPinPointScreen(clientId: Int) {
+    navigate(ClientScreens.ClientPinPointScreen.argument(clientId))
+}
+
+fun NavController.navigateClientSignatureScreen(clientId: Int) {
+    navigate(ClientScreens.ClientSignatureScreen.argument(clientId))
+}
+
+fun NavController.navigateClientSurveyListScreen(clientId: Int) {
+    navigate(ClientScreens.ClientSurveyListScreen.argument(clientId))
+}
+
+//fun NavController.navigateClientSurveyQuestionScreen(clientId: Int) {
+//    navigate(ClientScreens.ClientSurveyQuestionScreen.argument(clientId))
+//}
+
 
 fun NavGraphBuilder.clientNavGraph(
-    navController: NavController
+    navController: NavController,
+    paddingValues: PaddingValues,
+    addLoanAccount: (Int) -> Unit,
+    addSavingsAccount: (Int) -> Unit,
+    documents: (Int) -> Unit,
+    moreClientInfo: (Int) -> Unit,
+    notes: (Int) -> Unit,
+    loanAccountSelected: (Int) -> Unit,
+    savingsAccountSelected: (Int, DepositType) -> Unit,
+    activateClient: (Int) -> Unit
 ) {
     navigation(
         startDestination = ClientScreens.ClientListScreen.route,
-        route = ""
+        route = "client_screen_route"
     ) {
+        clientListScreenRoute(
+            paddingValues = paddingValues,
+            onClientSelect = navController::navigateClientDetailsScreen,
+            createNewClient = {},
+            syncClicked = {}
+        )
         clientDetailRoute(
             onBackPressed = navController::popBackStack,
-            addLoanAccount = {},
-            addSavingsAccount = {},
-            charges = {},
-            documents = {},
-            identifiers = {},
-            moreClientInfo = {},
-            notes = {},
-            pinpointLocation = {},
-            survey = {},
-            uploadSignature = {},
-            loanAccountSelected = {},
-            savingsAccountSelected = { _, _ -> },
-            activateClient = {}
+            addLoanAccount = addLoanAccount,
+            addSavingsAccount = addSavingsAccount,
+            charges = { navController.navigateClientChargesScreen(it) },
+            documents = documents,
+            identifiers = navController::navigateClientIdentifierScreen,
+            moreClientInfo = moreClientInfo,
+            notes = notes,
+            pinpointLocation = navController::navigateClientPinPointScreen,
+            survey = navController::navigateClientSurveyListScreen,
+            uploadSignature = navController::navigateClientSignatureScreen,
+            loanAccountSelected = loanAccountSelected,
+            savingsAccountSelected = savingsAccountSelected,
+            activateClient = activateClient
+        )
+        clientChargesRoute(
+            onBackPressed = {}
+        )
+        clientIdentifierRoute(
+            onDocumentClicked = {},
+            onBackPressed = {}
+        )
+        clientPinPointRoute(
+            onBackPressed = {}
+        )
+        clientSignatureRoute(
+            onBackPressed = {}
+        )
+        clientSurveyListRoute(
+            onBackPressed = {},
+            onCardClicked = { _, _ -> }
+        )
+        clientSurveyQuestionRoute(
+            onBackPressed = {}
+        )
+    }
+}
+
+fun NavGraphBuilder.clientListScreenRoute(
+    paddingValues: PaddingValues,
+    onClientSelect: (Int) -> Unit,
+    createNewClient: () -> Unit,
+    syncClicked: (List<Client>) -> Unit
+) {
+    composable(
+        route = ClientScreens.ClientListScreen.route
+    ) {
+        ClientListScreen(
+            paddingValues = paddingValues,
+            createNewClient = createNewClient,
+            syncClicked = syncClicked,
+            onClientSelect = onClientSelect
         )
     }
 }
@@ -76,6 +163,89 @@ fun NavGraphBuilder.clientDetailRoute(
             loanAccountSelected = loanAccountSelected,
             savingsAccountSelected = savingsAccountSelected,
             activateClient = activateClient
+        )
+    }
+}
+
+fun NavGraphBuilder.clientIdentifierRoute(
+    onDocumentClicked: (Int) -> Unit,
+    onBackPressed: () -> Unit
+) {
+    composable(
+        route = ClientScreens.ClientIdentifierScreen.route,
+        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType }))
+    ) {
+        ClientIdentifiersScreen(
+            onBackPressed = onBackPressed,
+            onDocumentClicked = onDocumentClicked
+        )
+    }
+}
+
+fun NavGraphBuilder.clientChargesRoute(
+    onBackPressed: () -> Unit
+) {
+    composable(
+        route = ClientScreens.ClientChargesScreen.route,
+        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType }))
+    ) {
+        ClientChargesScreen(
+            onBackPressed = onBackPressed
+        )
+    }
+}
+
+fun NavGraphBuilder.clientPinPointRoute(
+    onBackPressed: () -> Unit
+) {
+    composable(
+        route = ClientScreens.ClientPinPointScreen.route,
+        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType }))
+    ) {
+        PinpointClientScreen(
+            onBackPressed = onBackPressed
+        )
+    }
+}
+
+fun NavGraphBuilder.clientSignatureRoute(
+    onBackPressed: () -> Unit
+) {
+    composable(
+        route = ClientScreens.ClientSignatureScreen.route,
+        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType }))
+    ) {
+        SignatureScreen(
+            onBackPressed = onBackPressed
+        )
+    }
+}
+
+fun NavGraphBuilder.clientSurveyListRoute(
+    onBackPressed: () -> Unit,
+    onCardClicked: (Int, List<Survey>) -> Unit
+) {
+    composable(
+        route = ClientScreens.ClientSurveyListScreen.route,
+        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType }))
+    ) {
+        SurveyListScreen(
+            navigateBack = onBackPressed,
+            onCardClicked = onCardClicked
+        )
+    }
+}
+
+fun NavGraphBuilder.clientSurveyQuestionRoute(
+    onBackPressed: () -> Unit
+) {
+    composable(
+        route = ClientScreens.ClientSurveyQuestionScreen.route,
+        arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType }))
+    ) {
+        SurveyQuestionScreen(
+            navigateBack = onBackPressed,
+            survey = Survey()
         )
     }
 }

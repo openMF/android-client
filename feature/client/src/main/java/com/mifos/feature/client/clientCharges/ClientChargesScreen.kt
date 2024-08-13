@@ -61,11 +61,11 @@ import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun ClientChargesScreen(
-    clientId: Int,
     onBackPressed: () -> Unit
 ) {
 
     val viewModel: ClientChargesViewModel = hiltViewModel()
+    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val clientChargeUiState by viewModel.clientChargesUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 

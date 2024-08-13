@@ -59,12 +59,11 @@ import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogS
 
 @Composable
 fun ClientIdentifiersScreen(
-    clientId: Int,
     onBackPressed: () -> Unit,
     onDocumentClicked: (Int) -> Unit
 ) {
-
     val viewModel: ClientIdentifiersViewModel = hiltViewModel()
+    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val state by viewModel.clientIdentifiersUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 

@@ -1,7 +1,9 @@
 package com.mifos.feature.client.clientIdentifiers
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.use_cases.DeleteIdentifierUseCase
 import com.mifos.core.domain.use_cases.GetClientIdentifiersUseCase
@@ -16,8 +18,11 @@ import javax.inject.Inject
 @HiltViewModel
 class ClientIdentifiersViewModel @Inject constructor(
     private val getClientIdentifiersUseCase: GetClientIdentifiersUseCase,
-    private val deleteIdentifierUseCase: DeleteIdentifierUseCase
+    private val deleteIdentifierUseCase: DeleteIdentifierUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = 0)
 
     private val _clientIdentifiersUiState =
         MutableStateFlow<ClientIdentifiersUiState>(ClientIdentifiersUiState.Loading)

@@ -233,7 +233,7 @@ fun LazyColumnForClientListApi(
     clientPagingList: LazyPagingItems<Client>,
     isInSelectionMode: MutableState<Boolean>,
     selectedItems: SnapshotStateList<Client>,
-    failedRefresh : () ->Unit,
+    failedRefresh: () -> Unit,
     onClientSelect: (Int) -> Unit
 ) {
 
@@ -270,7 +270,7 @@ fun LazyColumnForClientListApi(
                                     LightGray
                                 }
                             } else {
-                                clientPagingList[index]?.clientId?.let { onClientSelect(it) }
+                                clientPagingList[index]?.id?.let { onClientSelect(it) }
                             }
                         },
                         onLongClick = {

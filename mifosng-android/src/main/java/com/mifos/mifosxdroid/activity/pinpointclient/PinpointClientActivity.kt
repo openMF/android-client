@@ -21,7 +21,6 @@ class PinpointClientActivity : MifosBaseActivity() {
         clientId = arg.clientId
         setContent {
             PinpointClientScreen(
-                clientId = clientId,
                 onBackPressed = {
                     finish()
                 }
