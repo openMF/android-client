@@ -53,15 +53,6 @@ fun Navigation(
             clientListScreen = { }
         )
 
-//        clientListScreen(
-//            paddingValues = padding,
-//            createNewClient = {},
-//            syncClicked = {},
-//            onClientSelect = {
-//                navController.navigateClientDetailsScreen(it)
-//            }
-//        )
-
         centerListScreen(
             paddingValues = padding,
             createNewCenter = {},

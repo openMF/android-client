@@ -31,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -53,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mifos.core.designsystem.theme.Black
+import com.mifos.core.designsystem.theme.White
 import com.mifos.mifosxdroid.components.MifosNavigationBar
 import com.mifos.mifosxdroid.components.Navigation
 import com.mifos.mifosxdroid.components.NavigationConstants
@@ -109,24 +111,28 @@ fun AndroidClientApp() {
                             painter = painterResource(id = R.drawable.ic_dp_placeholder),
                             contentDescription = null
                         )
-                        Text(text = "Mifos", color = Color.White,
+                        Text(
+                            text = "Mifos", color = Color.White,
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium,
                                 fontStyle = FontStyle.Normal
-                            ))
+                            )
+                        )
                         Spacer(modifier = Modifier.height(16.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = "Offline Mode", color = Color.White,
+                            Text(
+                                text = "Offline Mode", color = Color.White,
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Medium,
                                     fontStyle = FontStyle.Normal
-                                ))
+                                )
+                            )
                             Switch(
                                 checked = offline,
                                 onCheckedChange = {
@@ -140,14 +146,16 @@ fun AndroidClientApp() {
                 navigationDrawerTabs.forEachIndexed { index, item ->
                     NavigationDrawerItem(
                         label = {
-                            Text(text = item.title,
+                            Text(
+                                text = item.title,
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Medium,
                                     fontStyle = FontStyle.Normal
                                 ),
-                                color = Black,)
-                                },
+                                color = Black,
+                            )
+                        },
                         selected = index == selectedItemIndex,
                         onClick = {
                             selectedItemIndex = index
@@ -186,7 +194,7 @@ fun AndroidClientApp() {
                 }
             }
         },
-        gesturesEnabled = true
+        gesturesEnabled = isNavScreen
     ) {
         Scaffold(
             topBar = {
@@ -216,7 +224,8 @@ fun AndroidClientApp() {
                                     contentDescription = null
                                 )
                             }
-                        }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(White)
                     )
                 }
             },
@@ -240,7 +249,8 @@ fun AndroidClientApp() {
                         }
                     }
                 }
-            }
+            },
+            containerColor = White
         ) { paddingValues ->
             Navigation(navController = navController, padding = paddingValues)
         }

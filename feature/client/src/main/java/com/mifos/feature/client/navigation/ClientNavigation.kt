@@ -20,35 +20,6 @@ import com.mifos.feature.client.clientSignature.SignatureScreen
 import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
 
-fun NavController.navigateClientDetailsScreen(clientId: Int) {
-    navigate(ClientScreens.ClientDetailScreen.argument(clientId))
-}
-
-fun NavController.navigateClientIdentifierScreen(clientId: Int) {
-    navigate(ClientScreens.ClientIdentifierScreen.argument(clientId))
-}
-
-fun NavController.navigateClientChargesScreen(clientId: Int) {
-    navigate(ClientScreens.ClientChargesScreen.argument(clientId))
-}
-
-fun NavController.navigateClientPinPointScreen(clientId: Int) {
-    navigate(ClientScreens.ClientPinPointScreen.argument(clientId))
-}
-
-fun NavController.navigateClientSignatureScreen(clientId: Int) {
-    navigate(ClientScreens.ClientSignatureScreen.argument(clientId))
-}
-
-fun NavController.navigateClientSurveyListScreen(clientId: Int) {
-    navigate(ClientScreens.ClientSurveyListScreen.argument(clientId))
-}
-
-//fun NavController.navigateClientSurveyQuestionScreen(clientId: Int) {
-//    navigate(ClientScreens.ClientSurveyQuestionScreen.argument(clientId))
-//}
-
-
 fun NavGraphBuilder.clientNavGraph(
     navController: NavController,
     paddingValues: PaddingValues,
@@ -75,7 +46,7 @@ fun NavGraphBuilder.clientNavGraph(
             onBackPressed = navController::popBackStack,
             addLoanAccount = addLoanAccount,
             addSavingsAccount = addSavingsAccount,
-            charges = { navController.navigateClientChargesScreen(it) },
+            charges = navController::navigateClientChargesScreen,
             documents = documents,
             identifiers = navController::navigateClientIdentifierScreen,
             moreClientInfo = moreClientInfo,
@@ -88,24 +59,24 @@ fun NavGraphBuilder.clientNavGraph(
             activateClient = activateClient
         )
         clientChargesRoute(
-            onBackPressed = {}
+            onBackPressed = navController::popBackStack
         )
         clientIdentifierRoute(
             onDocumentClicked = {},
-            onBackPressed = {}
+            onBackPressed = navController::popBackStack
         )
         clientPinPointRoute(
-            onBackPressed = {}
+            onBackPressed = navController::popBackStack
         )
         clientSignatureRoute(
-            onBackPressed = {}
+            onBackPressed = navController::popBackStack
         )
         clientSurveyListRoute(
-            onBackPressed = {},
+            onBackPressed = navController::popBackStack,
             onCardClicked = { _, _ -> }
         )
         clientSurveyQuestionRoute(
-            onBackPressed = {}
+            onBackPressed = navController::popBackStack
         )
     }
 }
@@ -248,4 +219,28 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
             survey = Survey()
         )
     }
+}
+
+fun NavController.navigateClientDetailsScreen(clientId: Int) {
+    navigate(ClientScreens.ClientDetailScreen.argument(clientId))
+}
+
+fun NavController.navigateClientIdentifierScreen(clientId: Int) {
+    navigate(ClientScreens.ClientIdentifierScreen.argument(clientId))
+}
+
+fun NavController.navigateClientChargesScreen(clientId: Int) {
+    navigate(ClientScreens.ClientChargesScreen.argument(clientId))
+}
+
+fun NavController.navigateClientPinPointScreen(clientId: Int) {
+    navigate(ClientScreens.ClientPinPointScreen.argument(clientId))
+}
+
+fun NavController.navigateClientSignatureScreen(clientId: Int) {
+    navigate(ClientScreens.ClientSignatureScreen.argument(clientId))
+}
+
+fun NavController.navigateClientSurveyListScreen(clientId: Int) {
+    navigate(ClientScreens.ClientSurveyListScreen.argument(clientId))
 }
