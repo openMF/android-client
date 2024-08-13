@@ -99,26 +99,6 @@ fun NavGraphBuilder.clientListScreenRoute(
     }
 }
 
-fun NavController.navigateClientIdentifierScreen(clientId: Int) {
-    navigate(ClientScreens.ClientIdentifierScreen.argument(clientId))
-}
-
-fun NavController.navigateClientChargesScreen(clientId: Int) {
-    navigate(ClientScreens.ClientChargesScreen.argument(clientId))
-}
-
-fun NavController.navigateClientPinPointScreen(clientId: Int) {
-    navigate(ClientScreens.ClientPinPointScreen.argument(clientId))
-}
-
-fun NavController.navigateClientSignatureScreen(clientId: Int) {
-    navigate(ClientScreens.ClientSignatureScreen.argument(clientId))
-}
-
-fun NavController.navigateClientSurveyListScreen(clientId: Int) {
-    navigate(ClientScreens.ClientSurveyListScreen.argument(clientId))
-}
-
 fun NavGraphBuilder.clientDetailRoute(
     onBackPressed: () -> Unit,
     addLoanAccount: (Int) -> Unit,
@@ -243,4 +223,24 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
 
 fun NavController.navigateClientDetailsScreen(clientId: Int) {
     navigate(ClientScreens.ClientDetailScreen.argument(clientId))
+}
+
+fun NavController.navigateClientIdentifierScreen(clientId: Int) {
+    navigate(ClientScreens.ClientIdentifierScreen.argument(clientId))
+}
+
+fun NavController.navigateClientChargesScreen(clientId: Int) {
+    navigate(ClientScreens.ClientChargesScreen.argument(clientId))
+}
+
+fun NavController.navigateClientPinPointScreen(clientId: Int) {
+    navigate(ClientScreens.ClientPinPointScreen.argument(clientId))
+}
+
+fun NavController.navigateClientSignatureScreen(clientId: Int) {
+    navigate(ClientScreens.ClientSignatureScreen.argument(clientId))
+}
+
+fun NavController.navigateClientSurveyListScreen(clientId: Int) {
+    navigate(ClientScreens.ClientSurveyListScreen.argument(clientId))
 }
