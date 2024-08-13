@@ -9,9 +9,7 @@ import androidx.navigation.compose.NavHost
 import com.mifos.feature.about.navigation.aboutScreen
 import com.mifos.feature.center.navigation.centerListScreen
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTasksScreen
-import com.mifos.feature.client.navigation.clientListScreen
 import com.mifos.feature.client.navigation.clientNavGraph
-import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.groups.navigation.groupListScreen
 import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
 import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetScreen
@@ -51,15 +49,6 @@ fun Navigation(
             centerListScreen = { },
             groupListScreen = { },
             clientListScreen = { }
-        )
-
-        clientListScreen(
-            paddingValues = padding,
-            createNewClient = {},
-            syncClicked = {},
-            onClientSelect = {
-                navController.navigateClientDetailsScreen(it)
-            }
         )
 
         centerListScreen(

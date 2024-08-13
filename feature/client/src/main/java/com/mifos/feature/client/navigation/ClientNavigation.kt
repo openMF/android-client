@@ -99,30 +99,24 @@ fun NavGraphBuilder.clientListScreenRoute(
     }
 }
 
-fun NavGraphBuilder.clientNavGraph(
-    navController: NavController
-) {
-    navigation(
-        startDestination = ClientScreens.ClientListScreen.route,
-        route = ""
-    ) {
-        clientDetailRoute(
-            onBackPressed = navController::popBackStack,
-            addLoanAccount = {},
-            addSavingsAccount = {},
-            charges = {},
-            documents = {},
-            identifiers = {},
-            moreClientInfo = {},
-            notes = {},
-            pinpointLocation = {},
-            survey = {},
-            uploadSignature = {},
-            loanAccountSelected = {},
-            savingsAccountSelected = { _, _ -> },
-            activateClient = {}
-        )
-    }
+fun NavController.navigateClientIdentifierScreen(clientId: Int) {
+    navigate(ClientScreens.ClientIdentifierScreen.argument(clientId))
+}
+
+fun NavController.navigateClientChargesScreen(clientId: Int) {
+    navigate(ClientScreens.ClientChargesScreen.argument(clientId))
+}
+
+fun NavController.navigateClientPinPointScreen(clientId: Int) {
+    navigate(ClientScreens.ClientPinPointScreen.argument(clientId))
+}
+
+fun NavController.navigateClientSignatureScreen(clientId: Int) {
+    navigate(ClientScreens.ClientSignatureScreen.argument(clientId))
+}
+
+fun NavController.navigateClientSurveyListScreen(clientId: Int) {
+    navigate(ClientScreens.ClientSurveyListScreen.argument(clientId))
 }
 
 fun NavGraphBuilder.clientDetailRoute(
@@ -249,24 +243,4 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
 
 fun NavController.navigateClientDetailsScreen(clientId: Int) {
     navigate(ClientScreens.ClientDetailScreen.argument(clientId))
-}
-
-fun NavController.navigateClientIdentifierScreen(clientId: Int) {
-    navigate(ClientScreens.ClientIdentifierScreen.argument(clientId))
-}
-
-fun NavController.navigateClientChargesScreen(clientId: Int) {
-    navigate(ClientScreens.ClientChargesScreen.argument(clientId))
-}
-
-fun NavController.navigateClientPinPointScreen(clientId: Int) {
-    navigate(ClientScreens.ClientPinPointScreen.argument(clientId))
-}
-
-fun NavController.navigateClientSignatureScreen(clientId: Int) {
-    navigate(ClientScreens.ClientSignatureScreen.argument(clientId))
-}
-
-fun NavController.navigateClientSurveyListScreen(clientId: Int) {
-    navigate(ClientScreens.ClientSurveyListScreen.argument(clientId))
 }
