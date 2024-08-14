@@ -59,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.common.utils.Utils
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
@@ -80,7 +81,6 @@ import com.mifos.feature.groups.R
 
 @Composable
 fun GroupDetailsScreen(
-    groupId: Int,
     onBackPressed: () -> Unit,
     addLoanAccount: (Int) -> Unit,
     addSavingsAccount: (Int) -> Unit,
@@ -93,6 +93,7 @@ fun GroupDetailsScreen(
     activateGroup: (Int) -> Unit
 ) {
     val viewModel: GroupDetailsViewModel = hiltViewModel()
+    val groupId by viewModel.groupId.collectAsStateWithLifecycle()
     val state by viewModel.groupDetailsUiState.collectAsStateWithLifecycle()
     val loanAccounts by viewModel.loanAccount.collectAsStateWithLifecycle()
     val savingsAccounts by viewModel.savingsAccounts.collectAsStateWithLifecycle()
