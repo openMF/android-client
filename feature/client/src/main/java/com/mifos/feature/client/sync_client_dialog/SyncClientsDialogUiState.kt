@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.dialogfragments.syncclientsdialog
+package com.mifos.feature.client.sync_client_dialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.objects.client.Client

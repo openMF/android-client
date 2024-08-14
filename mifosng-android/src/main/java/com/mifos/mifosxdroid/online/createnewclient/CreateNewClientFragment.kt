@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.client.ClientPayload
 import com.mifos.core.objects.noncore.DataTable
+import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment

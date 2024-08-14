@@ -174,7 +174,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/path_provider" />
+                android:resource="@xml/feature_client_path_provider" />
         </provider>
     </application>
 

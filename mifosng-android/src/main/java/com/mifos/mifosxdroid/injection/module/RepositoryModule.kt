@@ -30,8 +30,8 @@ import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
 import com.mifos.core.data.repository.SyncCentersDialogRepository
 import com.mifos.core.data.repository_imp.SyncCentersDialogRepositoryImp
-import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepository
-import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogRepositoryImp
+import com.mifos.core.data.repository.SyncClientsDialogRepository
+import com.mifos.core.data.repository_imp.SyncClientsDialogRepositoryImp
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.data.repository_imp.SyncGroupsDialogRepositoryImp
 import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepository
@@ -55,8 +55,8 @@ import com.mifos.mifosxdroid.online.centerlist.CenterListRepository
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepositoryImp
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepositoryImp
-import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepository
-import com.mifos.mifosxdroid.online.createnewclient.CreateNewClientRepositoryImp
+import com.mifos.core.data.repository.CreateNewClientRepository
+import com.mifos.core.data.repository_imp.CreateNewClientRepositoryImp
 import com.mifos.mifosxdroid.online.datatable.DataTableRepository
 import com.mifos.mifosxdroid.online.datatable.DataTableRepositoryImp
 import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepository
