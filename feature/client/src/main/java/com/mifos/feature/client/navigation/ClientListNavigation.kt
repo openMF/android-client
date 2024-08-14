@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.mifos.core.objects.client.Client
 import com.mifos.feature.client.clientList.presentation.ClientListScreen
 
 /**
@@ -19,14 +20,14 @@ fun NavGraphBuilder.clientListScreen(
     paddingValues: PaddingValues,
     createNewClient : () -> Unit,
     syncClicked : () -> Unit,
-    onClientSelect : () -> Unit
+    onClientSelect : (Int) -> Unit
 ) {
     composable(CLIENT_LIST_SCREEN_ROUTE) {
         ClientListScreen(
             paddingValues = paddingValues,
             createNewClient = { },
             syncClicked = { },
-            onClientSelect = { }
+            onClientSelect = onClientSelect
         )
     }
 }

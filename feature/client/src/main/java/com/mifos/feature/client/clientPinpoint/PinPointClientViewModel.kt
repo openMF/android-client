@@ -1,5 +1,6 @@
 package com.mifos.feature.client.clientPinpoint
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
@@ -24,8 +25,11 @@ class PinPointClientViewModel @Inject constructor(
     private val getClientPinpointLocationsUseCase: GetClientPinpointLocationsUseCase,
     private val addClientPinpointLocationUseCase: AddClientPinpointLocationUseCase,
     private val deleteClientAddressPinpointUseCase: DeleteClientAddressPinpointUseCase,
-    private val updateClientPinpointUseCase: UpdateClientPinpointUseCase
+    private val updateClientPinpointUseCase: UpdateClientPinpointUseCase,
+    private val stateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val clientId = stateHandle.getStateFlow(key = "clientId", initialValue = 0)
 
     private val _pinPointClientUiState =
         MutableStateFlow<PinPointClientUiState>(PinPointClientUiState.Loading)

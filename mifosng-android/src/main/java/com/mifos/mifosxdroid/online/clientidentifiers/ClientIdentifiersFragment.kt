@@ -37,7 +37,6 @@ class ClientIdentifiersFragment : MifosBaseFragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 ClientIdentifiersScreen(
-                    clientId = clientId,
                     onBackPressed = {
                         findNavController().popBackStack()
                     },

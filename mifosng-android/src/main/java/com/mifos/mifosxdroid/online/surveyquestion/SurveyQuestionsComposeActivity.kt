@@ -42,8 +42,7 @@ class SurveyQuestionActivity : MifosBaseActivity() {
                 setContent {
                     SurveyQuestionScreen(
                         navigateBack = { this@SurveyQuestionActivity.finish() },
-                        survey = survey,
-                        clientId = clientId
+                        survey = survey
                     )
                 }
             }

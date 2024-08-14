@@ -56,11 +56,11 @@ import kotlin.math.roundToInt
 
 @Composable
 fun SignatureScreen(
-    clientId: Int,
     onBackPressed: () -> Unit
 ) {
 
     val viewmodel: SignatureViewModel = hiltViewModel()
+    val clientId by viewmodel.clientId.collectAsStateWithLifecycle()
     val state by viewmodel.signatureUiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 

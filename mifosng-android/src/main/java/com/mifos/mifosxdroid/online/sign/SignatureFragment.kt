@@ -38,7 +38,6 @@ class SignatureFragment : MifosBaseFragment() {
             )
             setContent {
                 SignatureScreen(
-                    clientId = mClientId,
                     onBackPressed = {
                         findNavController().popBackStack()
                     }

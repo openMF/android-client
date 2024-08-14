@@ -40,7 +40,6 @@ class ClientChargeFragment : MifosBaseFragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 ClientChargesScreen(
-                    clientId = clientId,
                     onBackPressed = {
                         findNavController().popBackStack()
                     }

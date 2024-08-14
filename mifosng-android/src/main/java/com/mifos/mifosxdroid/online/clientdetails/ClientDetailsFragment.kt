@@ -33,7 +33,6 @@ class ClientDetailsFragment : MifosBaseFragment() {
             )
             setContent {
                 ClientDetailsScreen(
-                    clientId = requireArguments().getInt(Constants.CLIENT_ID),
                     onBackPressed = {
                         requireActivity().onBackPressed()
                     },

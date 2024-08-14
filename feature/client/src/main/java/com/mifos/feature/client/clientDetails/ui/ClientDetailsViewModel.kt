@@ -2,9 +2,11 @@ package com.mifos.feature.client.clientDetails.ui
 
 import android.graphics.Bitmap
 import android.os.Environment
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.request.ImageResult
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.use_cases.DeleteClientImageUseCase
 import com.mifos.core.domain.use_cases.GetClientDetailsUseCase
@@ -31,8 +33,11 @@ class ClientDetailsViewModel @Inject constructor(
     private val uploadClientImageUseCase: UploadClientImageUseCase,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
     private val deleteClientImageUseCase: DeleteClientImageUseCase,
-    private val imageLoaderUtils: ImageLoaderUtils
+    private val imageLoaderUtils: ImageLoaderUtils,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = 0)
 
     private val _clientDetailsUiState =
         MutableStateFlow<ClientDetailsUiState>(ClientDetailsUiState.Empty)

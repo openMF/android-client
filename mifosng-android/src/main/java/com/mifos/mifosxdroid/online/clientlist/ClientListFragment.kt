@@ -78,7 +78,7 @@ class ClientListFragment : MifosBaseFragment() {
 
                     val action =
                         ClientListFragmentDirections.actionClientListFragmentToClientActivity(
-                            ClientArgs(clientId = client.id)
+                            ClientArgs(clientId = client)
                         )
                     findNavController().navigate(action)
                 })

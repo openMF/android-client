@@ -73,11 +73,11 @@ import com.mifos.feature.client.R
 
 @Composable
 fun PinpointClientScreen(
-    clientId: Int,
     onBackPressed: () -> Unit,
 ) {
 
     val viewModel: PinPointClientViewModel = hiltViewModel()
+    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val state by viewModel.pinPointClientUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 

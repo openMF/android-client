@@ -1,7 +1,9 @@
 package com.mifos.feature.client.clientSignature
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.use_cases.CreateDocumentUseCase
 import com.mifos.feature.client.R
@@ -18,8 +20,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignatureViewModel @Inject constructor(
-    private val createDocumentUseCase: CreateDocumentUseCase
+    private val createDocumentUseCase: CreateDocumentUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = 0)
 
     private val _signatureUiState = MutableStateFlow<SignatureUiState>(SignatureUiState.Initial)
     val signatureUiState = _signatureUiState.asStateFlow()

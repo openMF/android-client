@@ -10,8 +10,7 @@ import com.mifos.feature.about.navigation.aboutScreen
 import com.mifos.feature.center.navigation.centerListScreen
 import com.mifos.feature.center.navigation.navigateToCenterList
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTasksScreen
-import com.mifos.feature.client.navigation.clientListScreen
-import com.mifos.feature.client.navigation.navigateToClientListScreen
+import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.groups.navigation.groupListScreen
 import com.mifos.feature.groups.navigation.navigateToGroupList
 import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
@@ -34,18 +33,24 @@ fun Navigation(
         startDestination = startDestination,
         modifier = modifier,
     ) {
+        clientNavGraph(
+            navController = navController,
+            paddingValues = padding,
+            addLoanAccount = {},
+            addSavingsAccount = {},
+            documents = {},
+            moreClientInfo = {},
+            notes = {},
+            loanAccountSelected = {},
+            savingsAccountSelected = { _, _ -> },
+            activateClient = {}
+        )
+
         searchScreen(
             modifier = Modifier.padding(padding),
             centerListScreen = { navController.navigateToCenterList() },
             groupListScreen = { navController.navigateToGroupList() },
-            clientListScreen = { navController.navigateToClientListScreen() }
-        )
-
-        clientListScreen(
-            paddingValues = padding,
-            createNewClient = {},
-            syncClicked = {},
-            onClientSelect = {}
+            clientListScreen = { }
         )
 
         centerListScreen(
@@ -77,7 +82,7 @@ fun Navigation(
             }
         )
 
-        generateCollectionSheetScreen (
+        generateCollectionSheetScreen(
             onBackPressed = { navController.popBackStack() }
         )
 
@@ -98,7 +103,7 @@ fun Navigation(
             serverConfig = {}
         )
 
-        aboutScreen (
+        aboutScreen(
             onBackPressed = { navController.popBackStack() }
         )
 

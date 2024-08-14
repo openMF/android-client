@@ -71,11 +71,11 @@ import java.util.Date
 fun SurveyQuestionScreen(
     viewModel: SurveySubmitViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
-    survey: Survey?,
-    clientId: Int = 1
+    survey: Survey?
 ) {
     val context = LocalContext.current
     val uiState by viewModel.surveySubmitUiState.collectAsStateWithLifecycle()
+    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val userId by viewModel.userId.collectAsStateWithLifecycle()
     val questionData: MutableList<String> = mutableListOf()
     val optionsData: MutableList<MutableList<String>> = mutableListOf()
