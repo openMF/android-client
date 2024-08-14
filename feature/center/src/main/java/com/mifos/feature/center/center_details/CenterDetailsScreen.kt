@@ -42,8 +42,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.common.utils.Utils
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
@@ -61,14 +61,14 @@ import com.mifos.feature.center.R
 
 @Composable
 fun CenterDetailsScreen(
-    centerId: Int,
     onBackPressed: () -> Unit,
-    onActivateCenter: () -> Unit,
+    onActivateCenter: (Int) -> Unit,
     addSavingsAccount: (Int) -> Unit,
     groupList: (Int) -> Unit
 ) {
 
-    val viewModel: CenterDetailsViewModel = viewModel()
+    val viewModel: CenterDetailsViewModel = hiltViewModel()
+    val centerId by viewModel.centerId.collectAsStateWithLifecycle()
     val state by viewModel.centerDetailsUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -88,7 +88,7 @@ fun CenterDetailsScreen(
         onRetryClick = {
             viewModel.loadClientDetails(centerId)
         },
-        onActivateCenter = onActivateCenter
+        onActivateCenter = { onActivateCenter(centerId) }
     )
 }
 

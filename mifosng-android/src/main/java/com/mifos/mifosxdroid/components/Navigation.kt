@@ -7,12 +7,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.mifos.feature.about.navigation.aboutScreen
-import com.mifos.feature.center.navigation.centerListScreen
-import com.mifos.feature.center.navigation.navigateToCenterList
+import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTasksScreen
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.groups.navigation.groupListScreen
-import com.mifos.feature.groups.navigation.navigateToGroupList
 import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
 import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetScreen
 import com.mifos.feature.path_tracking.navigation.pathTrackingScreen
@@ -48,16 +46,16 @@ fun Navigation(
 
         searchScreen(
             modifier = Modifier.padding(padding),
-            centerListScreen = { navController.navigateToCenterList() },
-            groupListScreen = { navController.navigateToGroupList() },
+            centerListScreen = { },
+            groupListScreen = { },
             clientListScreen = { }
         )
 
-        centerListScreen(
+        centerNavGraph(
+            navController = navController,
             paddingValues = padding,
-            createNewCenter = {},
-            syncClicked = {},
-            onCenterSelect = {}
+            onActivateCenter = { _, _ -> },
+            addSavingsAccount = { }
         )
 
         groupListScreen(

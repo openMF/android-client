@@ -39,7 +39,6 @@ class GroupListFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 GroupListScreen(
-                    centerId = centerId,
                     onBackPressed = {
                         findNavController().popBackStack()
                     },
