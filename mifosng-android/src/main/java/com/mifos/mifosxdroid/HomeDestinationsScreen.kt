@@ -14,9 +14,7 @@ import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Task
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.feature.about.navigation.ABOUT_SCREEN_ROUTE
-import com.mifos.feature.center.navigation.CENTER_LIST_SCREEN_ROUTE
 import com.mifos.feature.checker_inbox_task.navigation.CHECKER_INBOX_TASK_SCREEN_ROUTE
-import com.mifos.feature.client.navigation.CLIENT_LIST_SCREEN_ROUTE
 import com.mifos.feature.groups.navigation.GROUP_LIST_SCREEN_ROUTE
 import com.mifos.feature.individual_collection_sheet.navigation.GENERATE_COLLECTION_SHEET_SCREEN_ROUTE
 import com.mifos.feature.individual_collection_sheet.navigation.INDIVIDUAL_COLLECTION_SHEET_SCREEN_ROUTE
@@ -38,13 +36,13 @@ sealed class HomeDestinationsScreen(
 
     data object ClientListScreen : HomeDestinationsScreen(
         title = "Clients",
-        route = CLIENT_LIST_SCREEN_ROUTE,
+        route = "client_list_screen",
         icon = Icons.Rounded.Person
     )
 
     data object CenterListScreen : HomeDestinationsScreen(
         title = "Centers",
-        route = CENTER_LIST_SCREEN_ROUTE,
+        route = "center_list_screen",
         icon = Icons.Rounded.Business
     )
 

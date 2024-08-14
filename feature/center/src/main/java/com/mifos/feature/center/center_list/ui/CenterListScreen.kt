@@ -79,7 +79,7 @@ fun CenterListScreen(
     paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
     syncClicked: (List<Center>) -> Unit,
-    onCenterSelect: (Center) -> Unit
+    onCenterSelect: (Int) -> Unit
 ) {
 
     val viewModel: CenterListViewModel = hiltViewModel()
@@ -111,7 +111,7 @@ fun CenterListScreen(
     onRefresh: () -> Unit,
     refreshState: Boolean,
     syncClicked: (List<Center>) -> Unit,
-    onCenterSelect: (Center) -> Unit
+    onCenterSelect: (Int) -> Unit
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -226,7 +226,7 @@ fun CenterListContent(
     isInSelectionMode: Boolean,
     selectedItems: SnapshotStateList<Center>,
     onRefresh: () -> Unit,
-    onCenterSelect: (Center) -> Unit,
+    onCenterSelect: (Int) -> Unit,
     selectedMode: () -> Unit
 
 ) {
@@ -263,7 +263,7 @@ fun CenterListContent(
                                     LightGray
                                 }
                             } else {
-                                centerPagingList[index]?.let { onCenterSelect(it) }
+                                centerPagingList[index]?.id?.let { onCenterSelect(it) }
                             }
                         },
                         onLongClick = {
