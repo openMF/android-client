@@ -35,7 +35,6 @@ class CenterDetailsFragment : MifosBaseFragment() {
         return ComposeView(requireActivity()).apply {
             setContent {
                 CenterDetailsScreen(
-                    centerId = centerId,
                     onBackPressed = {
                         requireActivity().onBackPressed()
                     },

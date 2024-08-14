@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.mifos.feature.about.navigation.aboutScreen
-import com.mifos.feature.center.navigation.centerListScreen
+import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTasksScreen
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.groups.navigation.groupListScreen
@@ -51,11 +51,11 @@ fun Navigation(
             clientListScreen = { }
         )
 
-        centerListScreen(
+        centerNavGraph(
+            navController = navController,
             paddingValues = padding,
-            createNewCenter = {},
-            syncClicked = {},
-            onCenterSelect = {}
+            onActivateCenter = { _, _ -> },
+            addSavingsAccount = { }
         )
 
         groupListScreen(

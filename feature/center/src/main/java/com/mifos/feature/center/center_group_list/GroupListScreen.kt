@@ -45,12 +45,12 @@ import com.mifos.feature.center.R
 
 @Composable
 fun GroupListScreen(
-    centerId: Int,
     onBackPressed: () -> Unit,
     loadClientsOfGroup: (List<Client>) -> Unit
 ) {
 
     val viewModel: GroupListViewModel = hiltViewModel()
+    val centerId by viewModel.centerId.collectAsStateWithLifecycle()
     val state by viewModel.groupListUiState.collectAsStateWithLifecycle()
     val groupAssociationState by viewModel.groupAssociationState.collectAsStateWithLifecycle()
     var groupClicked by remember { mutableStateOf(false) }

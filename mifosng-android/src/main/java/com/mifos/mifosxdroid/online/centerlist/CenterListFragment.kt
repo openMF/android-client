@@ -36,18 +36,18 @@ class CenterListFragment : MifosBaseFragment() {
             (activity as HomeActivity).supportActionBar?.title = getString(R.string.centers)
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                CenterListScreen(
-                    paddingValues = PaddingValues(),
-                    createNewCenter = {
-                        onClickCreateNewCenter()
-                    },
-                    onCenterSelect = { center ->
-                        selectedCenters(center)
-                    },
-                    syncClicked = { selectedCenters ->
-                        syncCenters(selectedCenters)
-                    }
-                )
+//                CenterListScreen(
+//                    paddingValues = PaddingValues(),
+//                    createNewCenter = {
+//                        onClickCreateNewCenter()
+//                    },
+//                    onCenterSelect = { center ->
+//                        selectedCenters(center)
+//                    },
+//                    syncClicked = { selectedCenters ->
+//                        syncCenters(selectedCenters)
+//                    }
+//                )
             }
         }
     }
