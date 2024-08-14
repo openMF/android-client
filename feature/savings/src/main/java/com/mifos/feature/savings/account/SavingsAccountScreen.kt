@@ -84,6 +84,9 @@ fun SavingsAccountScreen(
     val viewModel: SavingAccountViewModel = hiltViewModel()
     val uiState by viewModel.savingAccountUiState.collectAsStateWithLifecycle()
     val savingProductsTemplate by viewModel.savingProductsTemplate.collectAsStateWithLifecycle()
+    val groupId by viewModel.groupId.collectAsStateWithLifecycle()
+    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
+    val isGroupAccount by viewModel.isGroupAccount.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.loadSavingsAccountsAndTemplate()
@@ -96,15 +99,19 @@ fun SavingsAccountScreen(
         onRetry = {
             viewModel.loadSavingsAccountsAndTemplate()
         },
-        onSavingsProductSelected = {
-            viewModel.loadLoanTemplateByProduct(it)
+        onSavingsProductSelected = { productId ->
+            if(isGroupAccount){
+                viewModel.loadGroupSavingAccountTemplateByProduct(groupId, productId)
+            } else viewModel.loadClientSavingAccountTemplateByProduct(clientId, productId)
         },
-        fetchTemplate = {
-            viewModel.loadLoanTemplateByProduct(it)
+        fetchTemplate = { productId ->
+            if(isGroupAccount){
+                viewModel.loadGroupSavingAccountTemplateByProduct(groupId, productId)
+            } else viewModel.loadClientSavingAccountTemplateByProduct(clientId, productId)
         },
-        clientId = viewModel.clientId,
-        groupId = viewModel.groupId,
-        isGroupAccount = viewModel.isGroupAccount,
+        clientId = clientId,
+        groupId = groupId,
+        isGroupAccount = isGroupAccount,
         createSavingsAccount = { savingsPayload ->
             viewModel.createSavingsAccount(savingsPayload)
         }
