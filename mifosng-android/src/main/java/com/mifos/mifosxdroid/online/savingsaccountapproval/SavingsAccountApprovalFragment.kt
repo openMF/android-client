@@ -24,12 +24,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SavingsAccountApprovalFragment : MifosBaseFragment(){
 
-    private val arg: SavingsAccountApprovalFragmentArgs by navArgs()
+//    private val arg: SavingsAccountApprovalFragmentArgs by navArgs()
     private val viewmodel: SavingsAccountApprovalViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewmodel.savingsAccountId = arg.savingsAccountNumber
+//        viewmodel.savingsAccountId = arg.savingsAccountNumber
     }
 
     override fun onCreateView(

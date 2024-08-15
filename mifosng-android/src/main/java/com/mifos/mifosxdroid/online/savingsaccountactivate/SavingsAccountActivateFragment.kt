@@ -29,7 +29,7 @@ class SavingsAccountActivateFragment : MifosBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewmodel.savingsAccountId = arg.savingsAccountNumber
+//        viewmodel.savingsAccountId = arg.savingsAccountNumber
     }
 
     override fun onCreateView(

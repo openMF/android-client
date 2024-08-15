@@ -37,7 +37,7 @@ class SavingAccountViewModel @Inject constructor(
     private val createSavingsAccountUseCase: CreateSavingsAccountUseCase,
     private val getGroupSavingsAccountTemplateByProductUseCase: GetGroupSavingsAccountTemplateByProductUseCase,
     private val getClientSavingsAccountTemplateByProductUseCase: GetClientSavingsAccountTemplateByProductUseCase,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     val groupId = savedStateHandle.getStateFlow(key = Constants.GROUP_ID, initialValue = 0)

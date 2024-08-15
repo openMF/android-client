@@ -64,11 +64,12 @@ fun SavingsAccountApprovalScreen(
 ) {
     val viewModel: SavingsAccountApprovalViewModel = hiltViewModel()
     val uiState by viewModel.savingsAccountApprovalUiState.collectAsStateWithLifecycle()
+    val savingsAccountId by viewModel.savingsAccountId.collectAsStateWithLifecycle()
 
     SavingsAccountApprovalScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        approveLoan = { viewModel.approveSavingsApplication(it) }
+        approveLoan = { viewModel.approveSavingsApplication(savingsAccountId, it) }
     )
 }
 

@@ -3,6 +3,7 @@ package com.mifos.feature.savings.account_transaction
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
@@ -13,6 +14,9 @@ import com.mifos.core.domain.use_cases.ProcessTransactionUseCase
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
+import com.mifos.core.objects.accounts.savings.SavingsSummaryData
+import com.mifos.core.objects.accounts.savings.SavingsTransactionData
+import com.mifos.core.objects.client.Savings
 import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -34,18 +38,17 @@ class SavingsAccountTransactionViewModel @Inject constructor(
     private val processTransactionUseCase: ProcessTransactionUseCase,
     private val getSavingsAccountTransactionUseCase: GetSavingsAccountTransactionUseCase,
     private val prefManager: PrefManager,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    val accountId: StateFlow<Int?> =
-        savedStateHandle.getStateFlow(key = Constants.SAVINGS_ACCOUNT_ID, initialValue = null)
-    val clientName: StateFlow<String?> =
-        savedStateHandle.getStateFlow(key = Constants.CLIENT_NAME, initialValue = null)
-    val savingsAccountNumber: StateFlow<Int?> =
-        savedStateHandle.getStateFlow(key = Constants.SAVINGS_ACCOUNT_NUMBER, initialValue = null)
-    val transactionType: StateFlow<String?> =
-        savedStateHandle.getStateFlow(key = Constants.SAVINGS_ACCOUNT_TRANSACTION_TYPE , initialValue = null)
-    val savingsAccountType: StateFlow<DepositType?> =
-        savedStateHandle.getStateFlow(key = Constants.SAVINGS_ACCOUNT_TYPE, initialValue = null)
+
+    private val arg = savedStateHandle.getStateFlow(key = "arg", initialValue = "")
+    private val savingsTransactionData: SavingsTransactionData = Gson().fromJson(arg.value, SavingsTransactionData::class.java)
+
+    val accountId = savingsTransactionData.savingsAccountWithAssociations.id 
+    val savingsAccountNumber = savingsTransactionData.savingsAccountWithAssociations.accountNo
+    val clientName = savingsTransactionData.savingsAccountWithAssociations.clientName
+    val transactionType = savingsTransactionData.transactionType
+    private val savingsAccountType = savingsTransactionData.depositType
 
     private val _savingsAccountTransactionUiState =
         MutableStateFlow<SavingsAccountTransactionUiState>(SavingsAccountTransactionUiState.ShowProgressbar)
@@ -56,12 +59,12 @@ class SavingsAccountTransactionViewModel @Inject constructor(
     }
 
     fun loadSavingAccountTemplate() =
-        accountId.value?.let {
+        accountId?.let {
             viewModelScope.launch(Dispatchers.IO) {
                 getSavingsAccountTransactionTemplateUseCase(
-                    savingsAccountType.value?.endpoint,
+                    savingsAccountType?.endpoint,
                     it,
-                    transactionType.value
+                    transactionType
                 ).collect { result ->
                     when (result) {
                         is Resource.Error -> _savingsAccountTransactionUiState.value =
@@ -80,12 +83,12 @@ class SavingsAccountTransactionViewModel @Inject constructor(
         }
 
     fun processTransaction(request: SavingsAccountTransactionRequest) =
-        accountId.value?.let {
+        accountId?.let {
             viewModelScope.launch(Dispatchers.IO) {
                 processTransactionUseCase(
-                    savingsAccountType.value?.endpoint,
+                    savingsAccountType?.endpoint,
                     it,
-                    transactionType.value,
+                    transactionType,
                     request
                 ).collect { result ->
                     when (result) {
@@ -106,7 +109,7 @@ class SavingsAccountTransactionViewModel @Inject constructor(
 
     fun checkInDatabaseSavingAccountTransaction() =
         viewModelScope.launch(Dispatchers.IO) {
-            accountId.value?.let {
+            accountId?.let {
                 getSavingsAccountTransactionUseCase(it).collect { result ->
                     when (result) {
                         is Resource.Error -> _savingsAccountTransactionUiState.value =

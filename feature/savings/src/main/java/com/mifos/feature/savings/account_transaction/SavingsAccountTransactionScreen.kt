@@ -79,9 +79,10 @@ fun SavingsAccountTransactionScreen(
 ) {
     val viewmodel: SavingsAccountTransactionViewModel = hiltViewModel()
     val uiState by viewmodel.savingsAccountTransactionUiState.collectAsStateWithLifecycle()
-    val savingsAccountNumber by viewmodel.savingsAccountNumber.collectAsStateWithLifecycle()
-    val clientName by viewmodel.clientName.collectAsStateWithLifecycle()
-    val transactionType by viewmodel.transactionType.collectAsStateWithLifecycle()
+
+    val savingsAccountNumber = viewmodel.savingsAccountNumber
+    val clientName = viewmodel.clientName
+    val transactionType = viewmodel.transactionType
 
     LaunchedEffect(key1 = Unit) {
         viewmodel.checkInDatabaseSavingAccountTransaction()
@@ -94,7 +95,7 @@ fun SavingsAccountTransactionScreen(
         onRetry = {
             viewmodel.checkInDatabaseSavingAccountTransaction()
         },
-        transactionType = transactionType ?: "",
+        transactionType = transactionType,
         loadSavingAccountTemplate = {
             viewmodel.loadSavingAccountTemplate()
         },

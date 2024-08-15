@@ -10,11 +10,14 @@ import com.mifos.feature.about.navigation.aboutScreen
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTasksScreen
 import com.mifos.feature.client.navigation.clientNavGraph
-import com.mifos.feature.groups.navigation.groupListScreen
 import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
 import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetScreen
 import com.mifos.feature.path_tracking.navigation.pathTrackingScreen
 import com.mifos.feature.report.navigation.runReportsScreen
+import com.mifos.feature.savings.navigation.addSavingsAccountScreen
+import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
+import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
+import com.mifos.feature.savings.navigation.savingsSummaryNavGraph
 import com.mifos.feature.search.Navigation.SEARCH_SCREEN_ROUTE
 import com.mifos.feature.search.Navigation.searchScreen
 import com.mifos.feature.settings.navigation.settingsScreen
@@ -35,13 +38,26 @@ fun Navigation(
             navController = navController,
             paddingValues = padding,
             addLoanAccount = {},
-            addSavingsAccount = {},
+            addSavingsAccount = { navController.navigateToAddSavingsAccount(it, 0, false) },
             documents = {},
             moreClientInfo = {},
             notes = {},
             loanAccountSelected = {},
-            savingsAccountSelected = { _, _ -> },
-            activateClient = {}
+            savingsAccountSelected = { id, type ->
+                navController.navigateToSavingsAccountSummaryScreen(id, type)
+            },
+            activateClient = { }
+        )
+
+        savingsSummaryNavGraph(
+            navController = navController,
+            onBackPressed = navController::popBackStack,
+            loadMoreSavingsAccountInfo = { },
+            loadDocuments = { },
+        )
+
+        addSavingsAccountScreen(
+            onBackPressed = navController::popBackStack
         )
 
         searchScreen(
@@ -56,17 +72,6 @@ fun Navigation(
             paddingValues = padding,
             onActivateCenter = { _, _ -> },
             addSavingsAccount = { }
-        )
-
-        groupListScreen(
-            paddingValues = padding,
-            onAddGroupClick = {},
-            onGroupClick = { group ->
-
-            },
-            onSyncClick = { groupLists ->
-
-            }
         )
 
         checkerInboxTasksScreen(
