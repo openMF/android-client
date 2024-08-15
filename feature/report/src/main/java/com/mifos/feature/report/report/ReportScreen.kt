@@ -44,11 +44,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ReportScreen(
-    report: FullParameterListResponse,
     onBackPressed: () -> Unit
 ) {
 
     val viewModel: ReportViewModel = hiltViewModel()
+    val report = viewModel.report
     val state by viewModel.reportUiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
@@ -147,7 +147,7 @@ fun ReportScreen(
                             )
                         )
                         report.data.map { it.row }.forEach {
-                            Text(text = it[index] ?: "-", modifier = Modifier.padding(8.dp))
+                            Text(text = it[index], modifier = Modifier.padding(8.dp))
                         }
                     }
                 }

@@ -1,7 +1,10 @@
 package com.mifos.feature.report.report
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.runreports.FullParameterListResponse
 import com.mifos.feature.report.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +17,14 @@ import java.io.FileWriter
 import javax.inject.Inject
 
 @HiltViewModel
-class ReportViewModel @Inject constructor() : ViewModel() {
+class ReportViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    private val reportParameterString =
+        savedStateHandle.getStateFlow(key = Constants.REPORT_PARAMETER_RESPONSE, initialValue = "")
+    val report: FullParameterListResponse =
+        Gson().fromJson(reportParameterString.value, FullParameterListResponse::class.java)
 
     private val _reportUiState = MutableStateFlow<ReportUiState>(ReportUiState.Initial)
     val reportUiState = _reportUiState.asStateFlow()

@@ -57,12 +57,12 @@ import com.mifos.feature.report.R
 
 @Composable
 fun ReportDetailScreen(
-    reportItem: ClientReportTypeItem,
     onBackPressed: () -> Unit,
     runReport: (FullParameterListResponse) -> Unit
 ) {
 
     val viewModel: ReportDetailViewModel = hiltViewModel()
+    val reportItem = viewModel.reportItem
     val state by viewModel.reportDetailUiState.collectAsStateWithLifecycle()
     val reportParameterList by viewModel.reportParameterList.collectAsStateWithLifecycle()
     val reportDetail by viewModel.reportDetail.collectAsStateWithLifecycle()
