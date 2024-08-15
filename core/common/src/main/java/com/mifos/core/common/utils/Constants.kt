@@ -211,4 +211,8 @@ object Constants {
     const val PASSCODE = "preferences_mifos_passcode_string"
     const val THEME = "theme"
     const val LANGUAGE = "language_type"
+
+    // Compose Navigation KEY
+    const val REPORT_TYPE_ITEM = "report_type_item"
+    const val REPORT_PARAMETER_RESPONSE = "report_parameter_response"
 }

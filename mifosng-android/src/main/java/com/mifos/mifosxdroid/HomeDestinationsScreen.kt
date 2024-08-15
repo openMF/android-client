@@ -19,7 +19,6 @@ import com.mifos.feature.groups.navigation.GROUP_LIST_SCREEN_ROUTE
 import com.mifos.feature.individual_collection_sheet.navigation.GENERATE_COLLECTION_SHEET_SCREEN_ROUTE
 import com.mifos.feature.individual_collection_sheet.navigation.INDIVIDUAL_COLLECTION_SHEET_SCREEN_ROUTE
 import com.mifos.feature.path_tracking.navigation.PATH_TRACKING_SCREEN_ROUTE
-import com.mifos.feature.report.navigation.RUN_REPORTS_SCREEN_ROUTE
 import com.mifos.feature.search.Navigation.SEARCH_SCREEN_ROUTE
 import com.mifos.feature.settings.navigation.SETTINGS_SCREEN_ROUTE
 
@@ -72,7 +71,7 @@ sealed class HomeDestinationsScreen(
 
     data object RunReportsScreen : HomeDestinationsScreen(
         title = "Run Reports",
-        route = RUN_REPORTS_SCREEN_ROUTE,
+        route = "run_report_screen",
         icon = Icons.Rounded.Task
     )
 
