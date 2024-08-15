@@ -1,22 +1,20 @@
 package com.mifos.feature.savings.account_summary
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.core.domain.use_cases.GetSavingsAccountUseCase
-import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.objects.accounts.savings.SavingsSummaryData
 import com.mifos.feature.savings.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -24,18 +22,19 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SavingsAccountSummaryViewModel @Inject constructor(
-    private val getSavingsAccountUseCase: GetSavingsAccountUseCase
-//    private val repository: SavingsAccountSummaryRepository
+    private val getSavingsAccountUseCase: GetSavingsAccountUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val arg = savedStateHandle.getStateFlow(key = "arg", initialValue = "")
+    val savingsNavigationData: SavingsSummaryData = Gson().fromJson(arg.value, SavingsSummaryData::class.java)
 
     private val _savingsAccountSummaryUiState =
         MutableStateFlow<SavingsAccountSummaryUiState>(SavingsAccountSummaryUiState.ShowProgressbar)
     val savingsAccountSummaryUiState: StateFlow<SavingsAccountSummaryUiState> get() = _savingsAccountSummaryUiState
 
-    var accountId = 0
-    var savingsAccountType: DepositType? = null
 
-    fun loadSavingAccount(type: String?) = viewModelScope.launch(Dispatchers.IO) {
+    fun loadSavingAccount(type: String?, accountId : Int) = viewModelScope.launch(Dispatchers.IO) {
         getSavingsAccountUseCase(type, accountId, Constants.TRANSACTIONS).collect { result ->
             when (result) {
                 is Resource.Error -> _savingsAccountSummaryUiState.value =

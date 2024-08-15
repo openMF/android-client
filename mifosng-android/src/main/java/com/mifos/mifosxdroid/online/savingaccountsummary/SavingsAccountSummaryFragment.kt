@@ -30,8 +30,8 @@ class SavingsAccountSummaryFragment : MifosBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.accountId = arg.savingsAccountNumber
-        viewModel.savingsAccountType = arg.accountType
+//        viewModel.accountId = arg.savingsAccountNumber
+        val v  = arg.accountType
     }
 
     override fun onCreateView(

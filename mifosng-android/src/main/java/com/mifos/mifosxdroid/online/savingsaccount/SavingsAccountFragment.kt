@@ -32,9 +32,9 @@ class SavingsAccountFragment : MifosBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewmodel.clientId = arg.id
-        viewmodel.groupId = arg.id
-        viewmodel.isGroupAccount = arg.isGroupAccount
+//        viewmodel.clientId = arg.id
+//        viewmodel.groupId = arg.id
+//        viewmodel.isGroupAccount = arg.isGroupAccount
     }
 
     override fun onCreateView(

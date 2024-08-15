@@ -1,7 +1,9 @@
 package com.mifos.feature.savings.account_approval
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.use_cases.ApproveSavingsApplicationUseCase
 import com.mifos.core.network.GenericResponse
@@ -21,19 +23,20 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SavingsAccountApprovalViewModel @Inject constructor(
-    private val approveSavingsApplicationUseCase: ApproveSavingsApplicationUseCase
+    private val approveSavingsApplicationUseCase: ApproveSavingsApplicationUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val savingsAccountId = savedStateHandle.getStateFlow(key = Constants.SAVINGS_ACCOUNT_ID, initialValue = 0)
 
     private val _savingsAccountApprovalUiState =
         MutableStateFlow<SavingsAccountApprovalUiState>(SavingsAccountApprovalUiState.Initial)
     val savingsAccountApprovalUiState: StateFlow<SavingsAccountApprovalUiState>
         get() = _savingsAccountApprovalUiState
 
-    var savingsAccountId = 0
-
-    fun approveSavingsApplication(savingsApproval: SavingsApproval?) =
+    fun approveSavingsApplication(accountId : Int, savingsApproval: SavingsApproval?) =
         viewModelScope.launch(Dispatchers.IO) {
-            approveSavingsApplicationUseCase(savingsAccountId, savingsApproval).collect { result ->
+            approveSavingsApplicationUseCase(accountId, savingsApproval).collect { result ->
                 when (result) {
                     is Resource.Error -> _savingsAccountApprovalUiState.value =
                         SavingsAccountApprovalUiState.ShowError(
