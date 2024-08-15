@@ -14,7 +14,7 @@ import com.mifos.feature.groups.navigation.groupListScreen
 import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
 import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetScreen
 import com.mifos.feature.path_tracking.navigation.pathTrackingScreen
-import com.mifos.feature.report.navigation.runReportsScreen
+import com.mifos.feature.report.navigation.reportNavGraph
 import com.mifos.feature.search.Navigation.SEARCH_SCREEN_ROUTE
 import com.mifos.feature.search.Navigation.searchScreen
 import com.mifos.feature.settings.navigation.settingsScreen
@@ -58,6 +58,10 @@ fun Navigation(
             addSavingsAccount = { }
         )
 
+        reportNavGraph(
+            navController = navController
+        )
+
         groupListScreen(
             paddingValues = padding,
             onAddGroupClick = {},
@@ -82,11 +86,6 @@ fun Navigation(
 
         generateCollectionSheetScreen(
             onBackPressed = { navController.popBackStack() }
-        )
-
-        runReportsScreen(
-            onBackPressed = { navController.popBackStack() },
-            onReportClick = { }
         )
 
         pathTrackingScreen(
