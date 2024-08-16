@@ -56,11 +56,12 @@ import com.mifos.feature.loan.R
 import com.mifos.feature.loan.loan_charge_dialog.LoanChargeDialogScreen
 
 @Composable
-fun LoanChargeScreen(loanAccountNumber: Int, onBackPressed: () -> Unit) {
+fun LoanChargeScreen(onBackPressed: () -> Unit) {
 
     val viewModel: LoanChargeViewModel = hiltViewModel()
     val state by viewModel.loanChargeUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val loanAccountNumber by viewModel.loanAccountNumber.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.loadLoanChargesList(loanAccountNumber)

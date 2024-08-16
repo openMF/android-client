@@ -67,12 +67,12 @@ import java.util.Locale
 
 @Composable
 fun GroupLoanAccountScreen(
-    groupId: Int,
     onBackPressed: () -> Unit
 ) {
     val viewModel: GroupLoanAccountViewModel = hiltViewModel()
     val state by viewModel.groupLoanAccountUiState.collectAsStateWithLifecycle()
     val loanProducts by viewModel.loanProducts.collectAsStateWithLifecycle()
+    val groupId by viewModel.groupId.collectAsStateWithLifecycle()
 
     LaunchedEffect(loanProducts) {
         if (loanProducts.isNotEmpty()) {

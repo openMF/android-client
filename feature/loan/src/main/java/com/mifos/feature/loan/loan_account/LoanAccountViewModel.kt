@@ -1,7 +1,9 @@
 package com.mifos.feature.loan.loan_account
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.LoansPayload
 import com.mifos.core.domain.use_cases.CreateLoanAccountUseCase
@@ -20,8 +22,11 @@ import javax.inject.Inject
 class LoanAccountViewModel @Inject constructor(
     private val getAllLoanUseCase: GetAllLoanUseCase,
     private val getLoansAccountTemplateUseCase: GetLoansAccountTemplateUseCase,
-    private val createLoanAccountUseCase: CreateLoanAccountUseCase
+    private val createLoanAccountUseCase: CreateLoanAccountUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = 0)
 
     private val _loanAccountUiState =
         MutableStateFlow<LoanAccountUiState>(LoanAccountUiState.Loading)

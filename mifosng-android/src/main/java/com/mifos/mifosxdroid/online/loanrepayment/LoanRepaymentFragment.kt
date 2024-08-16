@@ -19,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoanRepaymentFragment : MifosBaseFragment() {
 
-    private val arg: LoanRepaymentFragmentArgs by navArgs()
+//    private val arg: LoanRepaymentFragmentArgs by navArgs()
     private var loanId: Int = 0
     private lateinit var clientName: String
     private lateinit var loanAccountNumber: String
@@ -28,11 +28,11 @@ class LoanRepaymentFragment : MifosBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loanId = arg.loanWithAssociations.id
-        clientName = arg.loanWithAssociations.clientName
-        loanAccountNumber = arg.loanWithAssociations.accountNo
-        amountInArrears = arg.loanWithAssociations.summary.totalOverdue
-        loanProductName = arg.loanWithAssociations.loanProductName
+//        loanId = arg.loanWithAssociations.id
+//        clientName = arg.loanWithAssociations.clientName
+//        loanAccountNumber = arg.loanWithAssociations.accountNo
+//        amountInArrears = arg.loanWithAssociations.summary.totalOverdue
+//        loanProductName = arg.loanWithAssociations.loanProductName
     }
 
     override fun onCreateView(
@@ -44,11 +44,11 @@ class LoanRepaymentFragment : MifosBaseFragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 LoanRepaymentScreen(
-                    loanId = loanId,
-                    clientName = clientName,
-                    loanAccountNumber = loanAccountNumber,
-                    amountInArrears = amountInArrears,
-                    loanProductName = loanProductName,
+//                    loanId = loanId,
+//                    clientName = clientName,
+//                    loanAccountNumber = loanAccountNumber,
+//                    amountInArrears = amountInArrears,
+//                    loanProductName = loanProductName,
                     navigateBack = { findNavController().popBackStack() }
                 )
             }

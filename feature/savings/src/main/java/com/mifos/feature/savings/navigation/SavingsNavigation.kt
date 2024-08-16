@@ -9,7 +9,6 @@ import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.objects.accounts.savings.Transaction_Table.savingsAccountId
 import com.mifos.feature.savings.account.SavingsAccountScreen
 import com.mifos.feature.savings.account_activate.SavingsAccountActivateScreen
 import com.mifos.feature.savings.account_approval.SavingsAccountApprovalScreen
@@ -21,7 +20,7 @@ import com.mifos.feature.savings.sync_account_transaction.SyncSavingsAccountTran
  * Created by Pronay Sarker on 14/08/2024 (1:10 PM)
  */
 
-fun NavGraphBuilder.savingsSummaryNavGraph(
+fun NavGraphBuilder.savingsNavGraph(
     navController: NavController,
     onBackPressed: () -> Unit,
     loadMoreSavingsAccountInfo: (Int) -> Unit,
@@ -82,7 +81,6 @@ fun NavGraphBuilder.savingsSummaryNavGraph(
         }
     }
 }
-
 
 fun NavGraphBuilder.addSavingsAccountScreen(
     onBackPressed: () -> Unit

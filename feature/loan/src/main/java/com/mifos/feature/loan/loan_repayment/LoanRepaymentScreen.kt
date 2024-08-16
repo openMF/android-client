@@ -1,6 +1,7 @@
 package com.mifos.feature.loan.loan_repayment
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -62,6 +63,7 @@ import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.objects.PaymentTypeOption
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.objects.accounts.loan.LoanWithAssociations_Table.loanProductName
 import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
 import com.mifos.feature.loan.R
 import java.text.SimpleDateFormat
@@ -72,22 +74,13 @@ import java.util.Locale
  */
 @Composable
 fun LoanRepaymentScreen(
-    loanId: Int,
-    clientName: String,
-    loanAccountNumber: String,
-    amountInArrears: Double?,
-    loanProductName: String,
     navigateBack: () -> Unit
 ) {
     val viewmodel: LoanRepaymentViewModel = hiltViewModel()
     val uiState by viewmodel.loanRepaymentUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewmodel.loanId = loanId
-        viewmodel.clientName = clientName
-        viewmodel.loanAccountNumber = loanAccountNumber
-        viewmodel.amountInArrears = amountInArrears
-        viewmodel.loanProductName = loanProductName
+        Log.d("debugPrint", "LoanId: ${viewmodel.loanId}")
         viewmodel.checkDatabaseLoanRepaymentByLoanId()
     }
 

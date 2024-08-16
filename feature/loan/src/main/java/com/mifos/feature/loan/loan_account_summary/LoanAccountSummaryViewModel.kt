@@ -1,8 +1,11 @@
 package com.mifos.feature.loan.loan_account_summary
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
+import com.mifos.feature.loan.loan_account.sampleLoanList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,8 +18,12 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 08/08/23.
  */
 @HiltViewModel
-class LoanAccountSummaryViewModel @Inject constructor(private val repository: LoanAccountSummaryRepository) :
-    ViewModel() {
+class LoanAccountSummaryViewModel @Inject constructor(
+    private val repository: LoanAccountSummaryRepository,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    val loanAccountNumber = savedStateHandle.getStateFlow(key = Constants.LOAN_ACCOUNT_NUMBER, initialValue = 0)
 
     private val _loanAccountSummaryUiState =
         MutableStateFlow<LoanAccountSummaryUiState>(LoanAccountSummaryUiState.ShowProgressbar)

@@ -1,8 +1,11 @@
 package com.mifos.feature.loan.loan_disbursement
 
+import androidx.compose.ui.res.stringArrayResource
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanAccountDisbursementRepository
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
@@ -20,18 +23,19 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 10/08/23.
  */
 @HiltViewModel
-class LoanAccountDisbursementViewModel @Inject constructor(private val repository: LoanAccountDisbursementRepository) :
-    ViewModel() {
+class LoanAccountDisbursementViewModel @Inject constructor(
+    private val repository: LoanAccountDisbursementRepository,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
+    val loadId = savedStateHandle.getStateFlow(key = Constants.LOAN_ACCOUNT_NUMBER, initialValue = 0)
 
     private val _loanAccountDisbursementUiState = MutableStateFlow<LoanAccountDisbursementUiState>(LoanAccountDisbursementUiState.ShowProgressbar)
 
     val loanAccountDisbursementUiState: StateFlow<LoanAccountDisbursementUiState>
         get() = _loanAccountDisbursementUiState
 
-    var loanId : Int = 0
-
-    fun loadLoanTemplate() {
+    fun loadLoanTemplate(loanId : Int) {
         _loanAccountDisbursementUiState.value = LoanAccountDisbursementUiState.ShowProgressbar
         repository.getLoanTransactionTemplate(loanId, APIEndPoint.DISBURSE)
             .observeOn(AndroidSchedulers.mainThread())
@@ -52,7 +56,7 @@ class LoanAccountDisbursementViewModel @Inject constructor(private val repositor
             })
     }
 
-    fun disburseLoan(loanDisbursement: LoanDisbursement?) {
+    fun disburseLoan(loanId : Int, loanDisbursement: LoanDisbursement?) {
         _loanAccountDisbursementUiState.value = LoanAccountDisbursementUiState.ShowProgressbar
         repository.disburseLoan(loanId, loanDisbursement)
             .observeOn(AndroidSchedulers.mainThread())

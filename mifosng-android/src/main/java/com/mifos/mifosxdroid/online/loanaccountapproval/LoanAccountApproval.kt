@@ -29,8 +29,8 @@ class LoanAccountApproval : MifosBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loanId = arg.loanAccountNumber
-        loanWithAssociations = arg.loanWithAssociations
+//        loanId = arg.loanAccountNumber
+//        loanWithAssociations = arg.loanWithAssociations
     }
 
     override fun onCreateView(
@@ -42,8 +42,8 @@ class LoanAccountApproval : MifosBaseFragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 LoanAccountApprovalScreen(
-                    loanId = loanId,
-                    loanWithAssociations = loanWithAssociations,
+//                    loanId = loanId,
+//                    loanWithAssociations = loanWithAssociations,
                     navigateBack = { findNavController().popBackStack() },
                 )
             }

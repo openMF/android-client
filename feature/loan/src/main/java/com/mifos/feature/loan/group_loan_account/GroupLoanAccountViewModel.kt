@@ -1,7 +1,9 @@
 package com.mifos.feature.loan.group_loan_account
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.GroupLoanPayload
 import com.mifos.core.domain.use_cases.CreateGroupLoansAccountUseCase
@@ -21,8 +23,11 @@ import javax.inject.Inject
 class GroupLoanAccountViewModel @Inject constructor(
     private val getAllLoanUseCase: GetAllLoanUseCase,
     private val getGroupLoansAccountTemplateUseCase: GetGroupLoansAccountTemplateUseCase,
-    private val createGroupLoansAccountUseCase: CreateGroupLoansAccountUseCase
+    private val createGroupLoansAccountUseCase: CreateGroupLoansAccountUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val groupId = savedStateHandle.getStateFlow(key = Constants.GROUP_ID, initialValue = 0)
 
     private val _groupLoanAccountUiState =
         MutableStateFlow<GroupLoanAccountUiState>(GroupLoanAccountUiState.Loading)

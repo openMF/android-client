@@ -30,7 +30,7 @@ class GroupLoanAccountFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        groupId = arg.groupId
+//        groupId = arg.groupId
     }
 
     override fun onCreateView(
@@ -41,7 +41,7 @@ class GroupLoanAccountFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 GroupLoanAccountScreen(
-                    groupId = groupId,
+//                    groupId = groupId,
                     onBackPressed = {
                         findNavController().popBackStack()
                     }
