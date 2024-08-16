@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.mifos.core.common.utils.Constants
 import com.mifos.feature.about.navigation.aboutScreen
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTasksScreen
@@ -17,6 +18,8 @@ import com.mifos.feature.loan.navigation.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
 import com.mifos.feature.loan.navigation.navigateToLoanAccountScreen
 import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
+import com.mifos.feature.note.navigation.navigateToNoteScreen
+import com.mifos.feature.note.navigation.noteScreen
 import com.mifos.feature.path_tracking.navigation.pathTrackingScreen
 import com.mifos.feature.report.navigation.reportNavGraph
 import com.mifos.feature.savings.navigation.addSavingsAccountScreen
@@ -46,10 +49,8 @@ fun Navigation(
             addSavingsAccount = { navController.navigateToAddSavingsAccount(it, 0, false) },
             documents = {},
             moreClientInfo = {},
-            notes = {},
-            loanAccountSelected = {
-                navController.navigateToLoanAccountSummaryScreen(it)
-                                  },
+            notes = { navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_CLIENTS)},
+            loanAccountSelected = { navController.navigateToLoanAccountSummaryScreen(it) },
             savingsAccountSelected = { id, type ->
                 navController.navigateToSavingsAccountSummaryScreen(id, type)
             },
@@ -67,6 +68,10 @@ fun Navigation(
             navController = navController,
             onMoreInfoClicked = { },
             onDocumentsClicked = { _, _ -> }
+        )
+
+        noteScreen(
+            onBackPressed = navController::popBackStack
         )
 
         addLoanAccountScreen(

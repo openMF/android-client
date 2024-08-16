@@ -1,5 +1,6 @@
 package com.mifos.feature.note
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,25 +43,20 @@ import com.mifos.core.ui.components.MifosEmptyUi
 
 @Composable
 fun NoteScreen(
-    entityId: Int,
-    entityType: String?,
-    viewModel: NoteViewModel = hiltViewModel(),
     onBackPressed: () -> Unit
 ) {
+    val viewModel: NoteViewModel = hiltViewModel()
     val uiState by viewModel.noteUiState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.loadNote(
-            type = entityType,
-            id = entityId
-        )
+            viewModel.loadNote()
     }
 
     NoteScreen(
         uiState = uiState,
         onBackPressed = onBackPressed,
-        refresh = { viewModel.refresh(entityType, entityId) },
+        refresh = { viewModel.refresh() },
         isRefreshing = isRefreshing
     )
 }

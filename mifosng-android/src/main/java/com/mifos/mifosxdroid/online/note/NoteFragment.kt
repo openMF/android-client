@@ -17,15 +17,15 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class NoteFragment : MifosBaseFragment() {
 
-    private val arg: NoteFragmentArgs by navArgs()
+//    private val arg: NoteFragmentArgs by navArgs()
 
-    private var entityType: String? = null
-    private var entityId = 0
+//    private var entityType: String? = null
+//    private var entityId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        entityId = arg.entiyId
-        entityType = arg.entityType
+//        entityId = arg.entiyId
+//        entityType = arg.entityType
     }
 
     override fun onCreateView(
@@ -38,8 +38,8 @@ class NoteFragment : MifosBaseFragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 NoteScreen(
-                    entityType = entityType,
-                    entityId = entityId,
+//                    entityType = entityType,
+//                    entityId = entityId,
                     onBackPressed = { activity?.supportFragmentManager?.popBackStack() }
                 )
             }
