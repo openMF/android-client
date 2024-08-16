@@ -36,7 +36,7 @@ class LoanAccountFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        clientId = arg.clientId
+//        clientId = arg.clientId
     }
 
     override fun onCreateView(
@@ -47,7 +47,7 @@ class LoanAccountFragment : Fragment() {
         return ComposeView(requireActivity()).apply {
             setContent {
                 LoanAccountScreen(
-                    clientId = clientId,
+//                    clientId = clientId,
                     onBackPressed = {
                         findNavController().popBackStack()
                     }, dataTable = { dataTables, loansPayload ->

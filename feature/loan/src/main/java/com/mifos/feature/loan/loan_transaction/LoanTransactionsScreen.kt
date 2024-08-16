@@ -1,5 +1,6 @@
 package com.mifos.feature.loan.loan_transaction
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -66,21 +67,21 @@ import com.mifos.feature.loan.R
 
 @Composable
 fun LoanTransactionsScreen(
-    loanId: Int,
     navigateBack: () -> Unit
 ) {
     val viewModel: LoanTransactionsViewModel = hiltViewModel()
     val uiState by viewModel.loanTransactionsUiState.collectAsStateWithLifecycle()
+    val loanId by viewModel.loanId.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.loanId = loanId
-        viewModel.loadLoanTransaction()
+        Log.d("debugPrint", "LoanId: $loanId")
+        viewModel.loadLoanTransaction(loanId)
     }
 
     LoanTransactionsScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        onRetry = { viewModel.loadLoanTransaction() }
+        onRetry = { viewModel.loadLoanTransaction(loanId) }
     )
 }
 

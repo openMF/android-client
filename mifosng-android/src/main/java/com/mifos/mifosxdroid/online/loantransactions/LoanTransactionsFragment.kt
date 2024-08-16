@@ -26,7 +26,7 @@ class LoanTransactionsFragment : MifosBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loanId = arg.loanId
+//        loanId = arg.loanId
     }
 
     override fun onCreateView(
@@ -38,7 +38,7 @@ class LoanTransactionsFragment : MifosBaseFragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 LoanTransactionsScreen(
-                    loanId = loanId,
+//                    loanId = loanId,
                     navigateBack = { findNavController().popBackStack() })
             }
         }

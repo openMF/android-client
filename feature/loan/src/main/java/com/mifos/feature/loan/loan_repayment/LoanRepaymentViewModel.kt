@@ -1,10 +1,15 @@
 package com.mifos.feature.loan.loan_repayment
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.google.gson.Gson
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanRepaymentRepository
+import com.mifos.core.objects.accounts.loan.LoanApprovalData
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
 import com.mifos.feature.loan.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,18 +24,23 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 10/08/23.
  */
 @HiltViewModel
-class LoanRepaymentViewModel @Inject constructor(private val repository: LoanRepaymentRepository) :
-    ViewModel() {
+class LoanRepaymentViewModel @Inject constructor(
+    private val repository: LoanRepaymentRepository,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    val arg = savedStateHandle.getStateFlow(key = Constants.LOAN_WITH_ASSOCIATIONS, initialValue = "")
+    val loanWithAssociations: LoanWithAssociations = Gson().fromJson(arg.value, LoanWithAssociations::class.java)
 
     private val _loanRepaymentUiState =
         MutableStateFlow<LoanRepaymentUiState>(LoanRepaymentUiState.ShowProgressbar)
     val loanRepaymentUiState: StateFlow<LoanRepaymentUiState> get() = _loanRepaymentUiState
 
-    var clientName = ""
-    var loanId = 0
-    var loanAccountNumber = ""
-    var loanProductName = ""
-    var amountInArrears: Double? = null
+    var clientName = loanWithAssociations.clientName
+    var loanId = loanWithAssociations.id
+    var loanAccountNumber = loanWithAssociations.accountNo
+    var loanProductName = loanWithAssociations.loanProductName
+    var amountInArrears = loanWithAssociations.summary.totalOverdue
 
     fun loanLoanRepaymentTemplate() {
         _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar

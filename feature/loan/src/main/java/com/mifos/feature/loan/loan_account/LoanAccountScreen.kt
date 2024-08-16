@@ -68,13 +68,13 @@ import java.util.Locale
 
 @Composable
 fun LoanAccountScreen(
-    clientId: Int,
     onBackPressed: () -> Unit,
     dataTable: (List<DataTable>, LoansPayload) -> Unit
 ) {
     val viewModel: LoanAccountViewModel = hiltViewModel()
     val state by viewModel.loanAccountUiState.collectAsStateWithLifecycle()
     val loanAccountTemplateState by viewModel.loanAccountTemplateUiState.collectAsStateWithLifecycle()
+    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.loadAllLoans()

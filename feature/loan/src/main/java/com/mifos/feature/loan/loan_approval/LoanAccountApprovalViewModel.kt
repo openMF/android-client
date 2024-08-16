@@ -1,10 +1,14 @@
 package com.mifos.feature.loan.loan_approval
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.google.gson.Gson
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.accounts.loan.LoanApproval
+import com.mifos.core.objects.accounts.loan.LoanApprovalData
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
+import com.mifos.core.objects.accounts.savings.SavingsSummaryData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,16 +24,19 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class LoanAccountApprovalViewModel @Inject constructor(
-    private val repository: LoanAccountApprovalRepository
-) :
-    ViewModel() {
+    private val repository: LoanAccountApprovalRepository,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    private val arg = savedStateHandle.getStateFlow(key = "arg", initialValue = "")
+    private val loanAccountData: LoanApprovalData = Gson().fromJson(arg.value, LoanApprovalData::class.java)
 
     private val _loanAccountApprovalUiState =
         MutableStateFlow<LoanAccountApprovalUiState>(LoanAccountApprovalUiState.Initial)
     val loanAccountApprovalUiState: StateFlow<LoanAccountApprovalUiState> get() = _loanAccountApprovalUiState
 
-    var loanId = 0
-    var loanWithAssociations: LoanWithAssociations? = null
+    var loanId = loanAccountData.loanID
+    var loanWithAssociations = loanAccountData.loanWithAssociations
 
     fun approveLoan(loanApproval: LoanApproval?) {
         _loanAccountApprovalUiState.value = LoanAccountApprovalUiState.ShowProgressbar

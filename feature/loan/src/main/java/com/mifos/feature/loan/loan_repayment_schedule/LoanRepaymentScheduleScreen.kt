@@ -47,21 +47,20 @@ import com.mifos.feature.loan.R
 
 @Composable
 fun LoanRepaymentScheduleScreen(
-    loanId: Int,
     viewModel: LoanRepaymentScheduleViewModel = hiltViewModel(),
     navigateBack: () -> Unit
 ) {
     val uiState by viewModel.loanRepaymentScheduleUiState.collectAsStateWithLifecycle()
+    val loanId by viewModel.loanId.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.loanId = loanId
-        viewModel.loadLoanRepaySchedule()
+        viewModel.loadLoanRepaySchedule(loanId)
     }
 
     LoanRepaymentScheduleScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        onRetry = { viewModel.loadLoanRepaySchedule() }
+        onRetry = { viewModel.loadLoanRepaySchedule(loanId) }
     )
 }
 

@@ -13,12 +13,16 @@ import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.groups.navigation.groupListScreen
 import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
 import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetScreen
+import com.mifos.feature.loan.navigation.addLoanAccountScreen
+import com.mifos.feature.loan.navigation.loanNavGraph
+import com.mifos.feature.loan.navigation.navigateToLoanAccountScreen
+import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.path_tracking.navigation.pathTrackingScreen
 import com.mifos.feature.report.navigation.reportNavGraph
 import com.mifos.feature.savings.navigation.addSavingsAccountScreen
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
-import com.mifos.feature.savings.navigation.savingsSummaryNavGraph
+import com.mifos.feature.savings.navigation.savingsNavGraph
 import com.mifos.feature.search.Navigation.SEARCH_SCREEN_ROUTE
 import com.mifos.feature.search.Navigation.searchScreen
 import com.mifos.feature.settings.navigation.settingsScreen
@@ -38,23 +42,36 @@ fun Navigation(
         clientNavGraph(
             navController = navController,
             paddingValues = padding,
-            addLoanAccount = {},
+            addLoanAccount = { navController.navigateToLoanAccountScreen(it) },
             addSavingsAccount = { navController.navigateToAddSavingsAccount(it, 0, false) },
             documents = {},
             moreClientInfo = {},
             notes = {},
-            loanAccountSelected = {},
+            loanAccountSelected = {
+                navController.navigateToLoanAccountSummaryScreen(it)
+                                  },
             savingsAccountSelected = { id, type ->
                 navController.navigateToSavingsAccountSummaryScreen(id, type)
             },
             activateClient = { }
         )
 
-        savingsSummaryNavGraph(
+        savingsNavGraph(
             navController = navController,
             onBackPressed = navController::popBackStack,
             loadMoreSavingsAccountInfo = { },
             loadDocuments = { },
+        )
+
+        loanNavGraph(
+            navController = navController,
+            onMoreInfoClicked = { },
+            onDocumentsClicked = { _, _ -> }
+        )
+
+        addLoanAccountScreen(
+            onBackPressed = navController::popBackStack,
+            dataTable = { _, _ -> }
         )
 
         addSavingsAccountScreen(
@@ -72,7 +89,9 @@ fun Navigation(
             navController = navController,
             paddingValues = padding,
             onActivateCenter = { _, _ -> },
-            addSavingsAccount = { }
+            addSavingsAccount = {
+//                navController.navigateToAddSavingsAccount(0, it, true)
+            }
         )
 
         reportNavGraph(

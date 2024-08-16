@@ -1,6 +1,8 @@
 package com.mifos.feature.loan.loan_transaction
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanTransactionsRepository
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,16 +17,18 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 12/08/23.
  */
 @HiltViewModel
-class LoanTransactionsViewModel @Inject constructor(private val repository: LoanTransactionsRepository) :
-    ViewModel() {
+class LoanTransactionsViewModel @Inject constructor(
+    private val repository: LoanTransactionsRepository,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    val loanId = savedStateHandle.getStateFlow( key = Constants.LOAN_ACCOUNT_NUMBER , initialValue = 0)
 
     private val _loanTransactionsUiState =
         MutableStateFlow<LoanTransactionsUiState>(LoanTransactionsUiState.ShowProgressBar)
     val loanTransactionsUiState: StateFlow<LoanTransactionsUiState> get() = _loanTransactionsUiState
 
-    var loanId = 0
-
-    fun loadLoanTransaction() {
+    fun loadLoanTransaction(loanId : Int) {
         _loanTransactionsUiState.value = LoanTransactionsUiState.ShowProgressBar
         repository.getLoanTransactions(loanId)
             .observeOn(AndroidSchedulers.mainThread())

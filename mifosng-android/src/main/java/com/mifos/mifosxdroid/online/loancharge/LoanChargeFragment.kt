@@ -28,7 +28,7 @@ class LoanChargeFragment : MifosBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loanAccountNumber = arg.loanAccountNumber
+//        loanAccountNumber = arg.loanAccountNumber
     }
 
     override fun onCreateView(
@@ -39,9 +39,11 @@ class LoanChargeFragment : MifosBaseFragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                LoanChargeScreen(loanAccountNumber = loanAccountNumber, onBackPressed = {
-                    findNavController().popBackStack()
-                })
+                LoanChargeScreen(
+//                    loanAccountNumber = loanAccountNumber,
+                    onBackPressed = {
+                        findNavController().popBackStack()
+                    })
             }
         }
     }
