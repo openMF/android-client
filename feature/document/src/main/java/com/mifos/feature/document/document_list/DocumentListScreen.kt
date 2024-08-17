@@ -2,6 +2,7 @@
 
 package com.mifos.feature.document.document_list
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -69,8 +70,6 @@ import com.mifos.feature.document.document_dialog.DocumentDialogScreen
 @Composable
 fun DocumentListScreen(
     viewModel: DocumentListViewModel = hiltViewModel(),
-    entityType: String,
-    entityId: Int,
     onBackPressed: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -81,6 +80,8 @@ fun DocumentListScreen(
     var isDialogBoxActive by rememberSaveable { mutableStateOf(false) }
     var dialogBoxAction by rememberSaveable { mutableStateOf("") }
     var dialogDocument by rememberSaveable { mutableStateOf(Document()) }
+    val entityId by viewModel.entityId.collectAsStateWithLifecycle()
+    val entityType by viewModel.entityType.collectAsStateWithLifecycle()
 
 
     if(isDialogBoxActive)
@@ -99,6 +100,7 @@ fun DocumentListScreen(
     }
 
     LaunchedEffect(Unit) {
+        Log.d("documentListDebugLog", "id : $entityId, type : $entityType" )
         viewModel.loadDocumentList(entityType, entityId)
     }
 

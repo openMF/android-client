@@ -11,6 +11,8 @@ import com.mifos.feature.about.navigation.aboutScreen
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTasksScreen
 import com.mifos.feature.client.navigation.clientNavGraph
+import com.mifos.feature.document.navigation.documentListScreen
+import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupListScreen
 import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
 import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetScreen
@@ -47,7 +49,7 @@ fun Navigation(
             paddingValues = padding,
             addLoanAccount = { navController.navigateToLoanAccountScreen(it) },
             addSavingsAccount = { navController.navigateToAddSavingsAccount(it, 0, false) },
-            documents = {},
+            documents = { navController.navigateToDocumentListScreen(it, Constants.ENTITY_TYPE_CLIENTS) },
             moreClientInfo = {},
             notes = { navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_CLIENTS)},
             loanAccountSelected = { navController.navigateToLoanAccountSummaryScreen(it) },
@@ -61,13 +63,17 @@ fun Navigation(
             navController = navController,
             onBackPressed = navController::popBackStack,
             loadMoreSavingsAccountInfo = { },
-            loadDocuments = { },
+            loadDocuments = { navController.navigateToDocumentListScreen(it, Constants.ENTITY_TYPE_SAVINGS) },
         )
 
         loanNavGraph(
             navController = navController,
             onMoreInfoClicked = { },
-            onDocumentsClicked = { _, _ -> }
+            onDocumentsClicked = navController::navigateToDocumentListScreen
+        )
+
+        documentListScreen(
+            onBackPressed = navController::popBackStack
         )
 
         noteScreen(
