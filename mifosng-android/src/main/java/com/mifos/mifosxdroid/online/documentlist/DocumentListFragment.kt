@@ -26,8 +26,8 @@ class DocumentListFragment : MifosBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        entityId = arg.entiyId
-        entityType = arg.entityType
+//        entityId = arg.entiyId
+//        entityType = arg.entityType
     }
 
     override fun onCreateView(
@@ -41,8 +41,8 @@ class DocumentListFragment : MifosBaseFragment() {
             )
             setContent {
                 DocumentListScreen(
-                    entityType = entityType,
-                    entityId = entityId,
+//                    entityType = entityType,
+//                    entityId = entityId,
                     onBackPressed = { requireActivity().supportFragmentManager.popBackStack() }
                 )
             }
