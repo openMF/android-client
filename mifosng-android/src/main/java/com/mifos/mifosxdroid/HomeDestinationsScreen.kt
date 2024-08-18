@@ -18,7 +18,7 @@ import com.mifos.feature.checker_inbox_task.navigation.CHECKER_INBOX_TASK_SCREEN
 import com.mifos.feature.groups.navigation.GROUP_LIST_SCREEN_ROUTE
 import com.mifos.feature.individual_collection_sheet.navigation.GENERATE_COLLECTION_SHEET_SCREEN_ROUTE
 import com.mifos.feature.individual_collection_sheet.navigation.INDIVIDUAL_COLLECTION_SHEET_SCREEN_ROUTE
-import com.mifos.feature.path_tracking.navigation.PATH_TRACKING_SCREEN_ROUTE
+import com.mifos.feature.path_tracking.navigation.PathTrackingScreens
 import com.mifos.feature.search.Navigation.SEARCH_SCREEN_ROUTE
 import com.mifos.feature.settings.navigation.SETTINGS_SCREEN_ROUTE
 
@@ -77,7 +77,7 @@ sealed class HomeDestinationsScreen(
 
     data object PathTrackerScreen : HomeDestinationsScreen(
         title = "Path Tracker",
-        route = PATH_TRACKING_SCREEN_ROUTE,
+        route = PathTrackingScreens.PathTrackingScreen.route,
         icon = Icons.Rounded.PersonPinCircle
     )
 
