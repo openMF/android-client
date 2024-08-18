@@ -3,7 +3,7 @@ package com.mifos.mifosxdroid.online.checkerinbox
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mifos.core.network.datamanager.DataManagerCheckerInbox
-import com.mifos.feature.checker_inbox_task.dialog.CheckerInboxViewModel
+import com.mifos.feature.checker_inbox_task.checker_inbox_dialog.CheckerInboxViewModel
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 

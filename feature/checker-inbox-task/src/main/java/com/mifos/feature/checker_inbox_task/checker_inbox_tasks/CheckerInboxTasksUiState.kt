@@ -1,4 +1,4 @@
-package com.mifos.feature.checker_inbox_task.checker_inbox_tasks.ui
+package com.mifos.feature.checker_inbox_task.checker_inbox_tasks
 
 
 /**

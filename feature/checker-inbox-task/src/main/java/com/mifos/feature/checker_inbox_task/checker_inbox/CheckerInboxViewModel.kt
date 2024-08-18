@@ -1,4 +1,4 @@
-package com.mifos.feature.checker_inbox_task.checker_inbox.ui
+package com.mifos.feature.checker_inbox_task.checker_inbox
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,4 +1,4 @@
-package com.mifos.feature.checker_inbox_task.dialog
+package com.mifos.feature.checker_inbox_task.checker_inbox_dialog
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf

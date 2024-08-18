@@ -9,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.about.navigation.aboutScreen
 import com.mifos.feature.center.navigation.centerNavGraph
-import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTasksScreen
+import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTaskGraph
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
@@ -120,8 +120,8 @@ fun Navigation(
             }
         )
 
-        checkerInboxTasksScreen(
-            onBackPressed = { navController.popBackStack() },
+        checkerInboxTaskGraph(
+            navController = navController
         )
 
         individualCollectionSheetScreen(

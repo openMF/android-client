@@ -3,7 +3,7 @@
     ExperimentalFoundationApi::class
 )
 
-package com.mifos.feature.checker_inbox_task.checker_inbox.ui
+package com.mifos.feature.checker_inbox_task.checker_inbox
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -70,7 +70,7 @@ import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.checker_inbox_task.R
-import com.mifos.feature.checker_inbox_task.dialog.CheckerInboxTasksFilterDialog
+import com.mifos.feature.checker_inbox_task.checker_inbox_dialog.CheckerInboxTasksFilterDialog
 import java.sql.Timestamp
 
 @Composable
