@@ -1,4 +1,4 @@
-package com.mifos.feature.auth.login.presentation
+package com.mifos.feature.auth.login
 
 /**
  * Created by Aditya Gupta on 06/08/23.
