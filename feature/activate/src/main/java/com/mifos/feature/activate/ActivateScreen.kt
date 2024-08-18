@@ -52,13 +52,13 @@ import java.util.Locale
 
 @Composable
 fun ActivateScreen(
-    id: Int,
-    activateType: String,
     onBackPressed: () -> Unit
 ) {
 
     val viewModel: ActivateViewModel = hiltViewModel()
     val state by viewModel.activateUiState.collectAsStateWithLifecycle()
+    val id by viewModel.id.collectAsStateWithLifecycle()
+    val activateType by viewModel.activateType.collectAsStateWithLifecycle()
 
     ActivateScreen(
         state = state,

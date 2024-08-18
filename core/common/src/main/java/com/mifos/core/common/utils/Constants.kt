@@ -79,6 +79,7 @@ object Constants {
     const val ACTIVATE_CENTER = "activate_center"
     const val ACTIVATE_GROUP = "activate_group"
     const val ACTIVATE_TYPE = "activation_type"
+    const val ACTIVATE_ID = "activation_id"
     const val INTIAL_LOGIN = "initial_login"
     const val INDIVIDUAL_SHEET = "collection_sheet"
     const val DISBURSEMENT_DATE = "disbursement_date"
