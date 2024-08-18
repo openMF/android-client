@@ -11,7 +11,7 @@ import com.mifos.feature.activate.ActivateScreen
 /**
  * Created by Pronay Sarker on 18/08/2024 (1:40 PM)
  */
-fun NavGraphBuilder.activateNavGraph(
+fun NavGraphBuilder.activateScreen(
     onBackPressed: () -> Unit
 ) {
     composable(
