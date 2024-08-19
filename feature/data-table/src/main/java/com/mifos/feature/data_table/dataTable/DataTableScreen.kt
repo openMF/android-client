@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.datatable
+package com.mifos.feature.data_table.dataTable
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,7 +15,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,10 +37,9 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.objects.noncore.ColumnHeader
 import com.mifos.core.objects.noncore.DataTable
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.mifosxdroid.R
+import com.mifos.feature.data_table.R
 
 /**
  * Created on 27/06/2024 (11:38 PM) by Pronay Sarker
@@ -86,7 +83,7 @@ fun DataTableScreen(
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
-        title = stringResource(id = R.string.datatables),
+        title = stringResource(id = R.string.feature_data_table_title),
         onBackPressed = navigateBack,
         snackbarHostState = snackbarHostState
     ) {
@@ -105,7 +102,7 @@ fun DataTableScreen(
                 }
 
                 DataTableUiState.ShowEmptyDataTables -> {
-                    MifosEmptyUi(text = stringResource(id = R.string.empty_data_table))
+                    MifosEmptyUi(text = stringResource(id = R.string.feature_data_table_empty_data_table))
                 }
 
                 is DataTableUiState.ShowError -> {
@@ -137,7 +134,7 @@ fun DataTableScreen(
                 } else {
                     Toast.makeText(
                         context,
-                        context.resources.getText(R.string.error_not_connected_internet),
+                        context.resources.getText(R.string.feature_data_table_error_not_connected_internet),
                         Toast.LENGTH_SHORT,
                     ).show()
                 }
@@ -218,7 +215,7 @@ class DataTablePreviewProvider : PreviewParameterProvider<DataTableUiState> {
             DataTableUiState.ShowEmptyDataTables,
             DataTableUiState.ShowProgressbar,
             DataTableUiState.ShowDataTables(dataTable),
-            DataTableUiState.ShowError(R.string.failed_to_fetch_datatable)
+            DataTableUiState.ShowError(R.string.feature_data_table_failed_to_fetch_data_table)
         )
 }
 

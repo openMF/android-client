@@ -1,18 +1,15 @@
-package com.mifos.mifosxdroid.online.datatable
+package com.mifos.feature.data_table.dataTable
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.objects.noncore.DataTable
-import com.mifos.feature.note.NoteUiState
-import com.mifos.mifosxdroid.R
+import com.mifos.feature.data_table.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -48,7 +45,7 @@ class DataTableViewModel @Inject constructor(private val repository: DataTableRe
 
                 override fun onError(e: Throwable) {
                     _dataTableUiState.value =
-                        DataTableUiState.ShowError(R.string.failed_to_fetch_datatable)
+                        DataTableUiState.ShowError(R.string.feature_data_table_failed_to_fetch_data_table)
                 }
 
                 override fun onNext(dataTables: List<DataTable>) {

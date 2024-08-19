@@ -1,7 +1,8 @@
-package com.mifos.mifosxdroid.online.datatablelistfragment
+package com.mifos.core.data.repository_imp
 
 import com.mifos.core.data.GroupLoanPayload
 import com.mifos.core.data.LoansPayload
+import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerLoan
@@ -15,7 +16,8 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 10/08/23.
  */
 class DataTableListRepositoryImp @Inject constructor(
-    private val dataManagerLoan: DataManagerLoan, private val dataManager: DataManager,
+    private val dataManagerLoan: DataManagerLoan,
+    private val dataManager: DataManager,
     private val dataManagerClient: DataManagerClient
 ) : DataTableListRepository {
 
