@@ -16,8 +16,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.feature.about.navigation.ABOUT_SCREEN_ROUTE
 import com.mifos.feature.checker_inbox_task.navigation.CHECKER_INBOX_TASK_SCREEN_ROUTE
 import com.mifos.feature.groups.navigation.GROUP_LIST_SCREEN_ROUTE
-import com.mifos.feature.individual_collection_sheet.navigation.GENERATE_COLLECTION_SHEET_SCREEN_ROUTE
-import com.mifos.feature.individual_collection_sheet.navigation.INDIVIDUAL_COLLECTION_SHEET_SCREEN_ROUTE
 import com.mifos.feature.path_tracking.navigation.PATH_TRACKING_SCREEN_ROUTE
 import com.mifos.feature.search.Navigation.SEARCH_SCREEN_ROUTE
 import com.mifos.feature.settings.navigation.SETTINGS_SCREEN_ROUTE
@@ -59,13 +57,13 @@ sealed class HomeDestinationsScreen(
 
     data object IndividualCollectionSheetScreen : HomeDestinationsScreen(
         title = "Individual Collection Sheet",
-        route = INDIVIDUAL_COLLECTION_SHEET_SCREEN_ROUTE,
+        route = "individual_collection_sheet_route",
         icon = Icons.AutoMirrored.Rounded.Assignment
     )
 
     data object CollectionSheetScreen : HomeDestinationsScreen(
         title = "Collection Sheet",
-        route = GENERATE_COLLECTION_SHEET_SCREEN_ROUTE,
+        route = "generate_collection_sheet",
         icon = Icons.AutoMirrored.Rounded.Assignment
     )
 

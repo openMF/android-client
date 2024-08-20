@@ -15,7 +15,7 @@ import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupListScreen
 import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
-import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetScreen
+import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.loan.navigation.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
 import com.mifos.feature.loan.navigation.navigateToLoanAccountScreen
@@ -123,18 +123,6 @@ fun Navigation(
         checkerInboxTasksScreen(
             onBackPressed = { navController.popBackStack() },
         )
-
-        individualCollectionSheetScreen(
-            onBackClicked = { navController.popBackStack() },
-            onDetail = { String, IndividualCollectionSheet ->
-
-            }
-        )
-
-        generateCollectionSheetScreen(
-            onBackPressed = { navController.popBackStack() }
-        )
-
         pathTrackingScreen(
             onBackPressed = { navController.popBackStack() }
         )
@@ -151,5 +139,13 @@ fun Navigation(
             onBackPressed = { navController.popBackStack() }
         )
 
+        individualCollectionSheetNavGraph(
+            onBackPressed = { navController.popBackStack() }  ,
+            navController = navController,
+            navigateToPaymentDetails = {  _, _, _, _, _, _ ->
+//                TODO() navigate to payment details
+            }
+        )
+        generateCollectionSheetScreen ( onBackPressed = navController::popBackStack )
     }
 }
