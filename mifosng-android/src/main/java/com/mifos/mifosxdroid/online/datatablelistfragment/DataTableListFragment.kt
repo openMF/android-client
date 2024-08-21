@@ -5,40 +5,23 @@
 package com.mifos.mifosxdroid.online.datatablelistfragment
 
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
-import android.util.TypedValue
-import android.view.*
-import android.widget.Button
-import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.data.GroupLoanPayload
-import com.mifos.core.data.LoansPayload
 import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.noncore.ColumnHeader
 import com.mifos.core.objects.noncore.DataTable
-import com.mifos.core.objects.noncore.DataTablePayload
-import com.mifos.exceptions.RequiredFieldException
+import com.mifos.feature.data_table.dataTableList.DataTableListScreen
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.util.Toaster
-import com.mifos.mifosxdroid.databinding.DialogFragmentAddEntryToDatatableBinding
-import com.mifos.mifosxdroid.formwidgets.*
 import com.mifos.mifosxdroid.online.ClientActivity
-import com.mifos.mifosxdroid.online.datatable.DataTableScreen
 import com.mifos.utils.MifosResponseHandler
 import com.mifos.utils.PrefManager
-import com.mifos.utils.SafeUIBlockingUtility
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 /**
  * A generic fragment to show the DataTables at the runtime.
@@ -54,8 +37,6 @@ import java.util.*
 @AndroidEntryPoint
 class DataTableListFragment : Fragment() {
 
-    private val viewModel: DataTableListViewModel by viewModels()
-
     private var dataTables: List<DataTable>? = null
     private var payload: Any? = null
     private var requestType = 0
@@ -65,51 +46,19 @@ class DataTableListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel.initArgs(
-            dataTables = dataTables ?: listOf(),
-            requestType = requestType,
-            payload = payload,
-            formWidgetsList = createFormWidgetList(),
-        )
 
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 DataTableListScreen(
+                    dataTables = dataTables ?: listOf(),
+                    requestType = requestType,
+                    payload = payload,
+                    formWidgetsList = mutableListOf(), // TODO remove FormWidget after api fix
                     onBackPressed = { requireActivity().supportFragmentManager.popBackStack() },
                     clientCreated = { showClientCreatedSuccessfully(it) }
                 )
             }
-        }
-    }
-
-    private fun createFormWidgetList(): MutableList<List<FormWidget>> {
-        return dataTables?.map { createForm(it) }?.toMutableList() ?: mutableListOf()
-    }
-
-    private fun createForm(table: DataTable): List<FormWidget> {
-        return table.columnHeaderData
-            .filterNot { it.columnPrimaryKey == true }
-            .map { createFormWidget(it) }
-    }
-
-    private fun createFormWidget(columnHeader: ColumnHeader): FormWidget {
-        return when (columnHeader.columnDisplayType) {
-            FormWidget.SCHEMA_KEY_STRING, FormWidget.SCHEMA_KEY_TEXT -> FormEditText(activity, columnHeader.dataTableColumnName)
-            FormWidget.SCHEMA_KEY_INT -> FormNumericEditText(activity, columnHeader.dataTableColumnName).apply { returnType = FormWidget.SCHEMA_KEY_INT }
-            FormWidget.SCHEMA_KEY_DECIMAL -> FormNumericEditText(activity, columnHeader.dataTableColumnName).apply { returnType = FormWidget.SCHEMA_KEY_DECIMAL }
-            FormWidget.SCHEMA_KEY_CODELOOKUP, FormWidget.SCHEMA_KEY_CODEVALUE -> createFormSpinner(columnHeader)
-            FormWidget.SCHEMA_KEY_DATE -> FormEditText(activity, columnHeader.dataTableColumnName).apply { setIsDateField(true, requireActivity().supportFragmentManager) }
-            FormWidget.SCHEMA_KEY_BOOL -> FormToggleButton(activity, columnHeader.dataTableColumnName)
-            else -> FormEditText(activity, columnHeader.dataTableColumnName)
-        }
-    }
-
-    private fun createFormSpinner(columnHeader: ColumnHeader): FormSpinner {
-        val columnValueStrings = columnHeader.columnValues.mapNotNull { it.value }
-        val columnValueIds = columnHeader.columnValues.mapNotNull { it.id }
-        return FormSpinner(activity, columnHeader.dataTableColumnName, columnValueStrings, columnValueIds).apply {
-            returnType = FormWidget.SCHEMA_KEY_CODEVALUE
         }
     }
 

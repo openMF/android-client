@@ -127,7 +127,7 @@ fun Navigation(
         checkerInboxTaskGraph(
             navController = navController
         )
-        
+
         pathTrackingNavGraph(
             navController = navController
         )

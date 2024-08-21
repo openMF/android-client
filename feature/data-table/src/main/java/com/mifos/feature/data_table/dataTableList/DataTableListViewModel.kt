@@ -1,35 +1,22 @@
-package com.mifos.mifosxdroid.online.datatablelistfragment
+package com.mifos.feature.data_table.dataTableList
 
-import android.graphics.Typeface
-import android.util.TypedValue
-import android.view.Gravity
-import android.widget.TextView
-import androidx.compose.runtime.MutableState
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.GroupLoanPayload
 import com.mifos.core.data.LoansPayload
+import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.objects.accounts.loan.Loans
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
 import com.mifos.core.objects.noncore.DataTable
 import com.mifos.core.objects.noncore.DataTablePayload
-import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.formwidgets.FormEditText
-import com.mifos.mifosxdroid.formwidgets.FormNumericEditText
-import com.mifos.mifosxdroid.formwidgets.FormSpinner
-import com.mifos.mifosxdroid.formwidgets.FormToggleButton
-import com.mifos.mifosxdroid.formwidgets.FormWidget
+import com.mifos.feature.data_table.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.util.ArrayList
-import java.util.HashMap
 import javax.inject.Inject
 
 /**
@@ -105,12 +92,12 @@ class DataTableListViewModel @Inject constructor(private val repository: DataTab
 
                 override fun onError(e: Throwable) {
                     _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(R.string.generic_failure_message)
+                        DataTableListUiState.ShowMessage(R.string.feature_data_table_generic_failure_message)
                 }
 
                 override fun onNext(loans: Loans) {
                     _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(R.string.loan_creation_success)
+                        DataTableListUiState.ShowMessage(R.string.feature_data_table_loan_creation_success)
                 }
             })
     }
@@ -126,12 +113,12 @@ class DataTableListViewModel @Inject constructor(private val repository: DataTab
 
                 override fun onError(e: Throwable) {
                     _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(R.string.generic_failure_message)
+                        DataTableListUiState.ShowMessage(R.string.feature_data_table_generic_failure_message)
                 }
 
                 override fun onNext(loans: Loans?) {
                     _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(R.string.loan_creation_success)
+                        DataTableListUiState.ShowMessage(R.string.feature_data_table_loan_creation_success)
                 }
             })
 
@@ -156,7 +143,7 @@ class DataTableListViewModel @Inject constructor(private val repository: DataTab
                         _dataTableListUiState.value = DataTableListUiState.Success(client = client)
                     } else {
                         _dataTableListUiState.value =
-                            DataTableListUiState.Success(messageResId = R.string.waiting_for_checker_approval)
+                            DataTableListUiState.Success(messageResId = R.string.feature_data_table_waiting_for_checker_approval)
                     }
                 }
             })

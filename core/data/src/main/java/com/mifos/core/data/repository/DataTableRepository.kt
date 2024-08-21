@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.online.datatable
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.noncore.DataTable
 import rx.Observable

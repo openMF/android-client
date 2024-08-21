@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mifos.core.objects.noncore.DataTable
+import com.mifos.feature.data_table.dataTable.DataTableScreen
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,7 +41,8 @@ class DataTableFragment : MifosBaseFragment() {
                 DataTableScreen(
                     tableName = tableName,
                     navigateBack = {
-                        findNavController().popBackStack()                    },
+                        findNavController().popBackStack()
+                    },
                     onClick = {
                         navigateToDatatableData(dataTable = it)
                     }

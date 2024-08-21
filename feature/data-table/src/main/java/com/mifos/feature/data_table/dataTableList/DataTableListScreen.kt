@@ -1,7 +1,6 @@
-package com.mifos.mifosxdroid.online.datatablelistfragment
+package com.mifos.feature.data_table.dataTableList
 
 import android.app.DatePickerDialog
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,10 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
@@ -45,22 +42,28 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.icon.MifosIcons.ArrowDropDown
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.noncore.DataTable
-import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.formwidgets.FormWidget
+import com.mifos.feature.data_table.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun DataTableListScreen(
+    dataTables : List<DataTable>,
+    requestType :Int,
+    payload : Any?,
+    formWidgetsList : MutableList<List<FormWidget>>,
     viewModel: DataTableListViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
     clientCreated: (Client) -> Unit
 ) {
     val uiState by viewModel.dataTableListUiState.collectAsStateWithLifecycle()
     val dataTableList by viewModel.dataTableList.collectAsStateWithLifecycle()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.initArgs(dataTables, requestType, formWidgetsList,payload)
+    }
 
     DataTableListScreen(
         uiState = uiState,
@@ -83,7 +86,7 @@ fun DataTableListScreen(
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
-        title = stringResource(id = R.string.associated_datatables),
+        title = stringResource(id = R.string.feature_data_table_associated_datatables),
         onBackPressed = onBackPressed,
         snackbarHostState = snackBarHostState
     ) { paddingValues ->
@@ -102,7 +105,7 @@ fun DataTableListScreen(
                     val message = when {
                         uiState.messageResId != null -> stringResource(id = uiState.messageResId)
                         uiState.message != null -> uiState.message
-                        else -> stringResource(id = R.string.something_went_wrong)
+                        else -> stringResource(id = R.string.feature_data_table_something_went_wrong)
                     }
                     LaunchedEffect(key1 = message) {
                         snackBarHostState.showSnackbar(message = message)
@@ -116,7 +119,7 @@ fun DataTableListScreen(
                     } ?: run {
                         val message = when {
                             uiState.messageResId != null -> stringResource(id = uiState.messageResId)
-                            else -> stringResource(id = R.string.something_went_wrong)
+                            else -> stringResource(id = R.string.feature_data_table_something_went_wrong)
                         }
                         LaunchedEffect(key1 = message) {
                             snackBarHostState.showSnackbar(message = message)
@@ -162,7 +165,7 @@ fun DataTableListContent(
                 .padding(16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
-            Text(text = stringResource(id = R.string.save), color = Color.White)
+            Text(text = stringResource(id = R.string.feature_data_table_save), color = Color.White)
         }
     }
 }
@@ -288,3 +291,76 @@ fun DataTableListScreenPreview() {
         onSaveClicked = { }
     )
 }
+
+
+//private fun createFormWidgetList(): MutableList<List<FormWidget>> {
+//    return dataTables?.map { createForm(it) }?.toMutableList() ?: mutableListOf()
+//}
+//
+//private fun createForm(table: DataTable): List<FormWidget> {
+//    return table.columnHeaderData
+//        .filterNot { it.columnPrimaryKey == true }
+//        .map { createFormWidget(it) }
+//}
+//
+//private fun createFormWidget(columnHeader: ColumnHeader): FormWidget {
+//    return when (columnHeader.columnDisplayType) {
+//        FormWidget.SCHEMA_KEY_STRING, FormWidget.SCHEMA_KEY_TEXT -> FormEditText(
+//            activity,
+//            columnHeader.dataTableColumnName
+//        )
+//
+//        FormWidget.SCHEMA_KEY_INT -> FormNumericEditText(
+//            activity,
+//            columnHeader.dataTableColumnName
+//        ).apply { returnType = FormWidget.SCHEMA_KEY_INT }
+//
+//        FormWidget.SCHEMA_KEY_DECIMAL -> FormNumericEditText(
+//            activity,
+//            columnHeader.dataTableColumnName
+//        ).apply { returnType = FormWidget.SCHEMA_KEY_DECIMAL }
+//
+//        FormWidget.SCHEMA_KEY_CODELOOKUP, FormWidget.SCHEMA_KEY_CODEVALUE -> createFormSpinner(
+//            columnHeader
+//        )
+//
+//        FormWidget.SCHEMA_KEY_DATE -> FormEditText(
+//            activity,
+//            columnHeader.dataTableColumnName
+//        ).apply { setIsDateField(true, requireActivity().supportFragmentManager) }
+//
+//        FormWidget.SCHEMA_KEY_BOOL -> FormToggleButton(
+//            activity,
+//            columnHeader.dataTableColumnName
+//        )
+//
+//        else -> FormEditText(activity, columnHeader.dataTableColumnName)
+//    }
+//}
+//
+//private fun createFormSpinner(columnHeader: ColumnHeader): FormSpinner {
+//    val columnValueStrings = columnHeader.columnValues.mapNotNull { it.value }
+//    val columnValueIds = columnHeader.columnValues.mapNotNull { it.id }
+//    return FormSpinner(
+//        activity,
+//        columnHeader.dataTableColumnName,
+//        columnValueStrings,
+//        columnValueIds
+//    ).apply {
+//        returnType = FormWidget.SCHEMA_KEY_CODEVALUE
+//    }
+//}
+//
+//private fun showClientCreatedSuccessfully(client: Client) {
+//    requireActivity().supportFragmentManager.popBackStack()
+//    requireActivity().supportFragmentManager.popBackStack()
+//    Toast.makeText(
+//        activity, getString(R.string.client) +
+//                MifosResponseHandler.response, Toast.LENGTH_SHORT
+//    ).show()
+//    if (PrefManager.userStatus == Constants.USER_ONLINE) {
+//        val clientActivityIntent = Intent(activity, ClientActivity::class.java)
+//        clientActivityIntent.putExtra(Constants.CLIENT_ID, client.clientId)
+//        startActivity(clientActivityIntent)
+//    }
+//}

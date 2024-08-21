@@ -15,7 +15,6 @@ import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerAuth
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.core.network.datamanager.DataManagerDataTable
 import com.mifos.core.network.datamanager.DataManagerDocument
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
@@ -57,10 +56,6 @@ import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepositoryImp
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.data.repository_imp.CreateNewClientRepositoryImp
-import com.mifos.mifosxdroid.online.datatable.DataTableRepository
-import com.mifos.mifosxdroid.online.datatable.DataTableRepositoryImp
-import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepository
-import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListRepositoryImp
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
 import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepositoryImp
 import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
@@ -112,11 +107,6 @@ class RepositoryModule {
         return SavingsAccountSummaryRepositoryImp(dataManagerSavings)
     }
 
-    @Provides
-    fun providesDataTableRepository(dataManagerDataTable: DataManagerDataTable): DataTableRepository {
-        return DataTableRepositoryImp(dataManagerDataTable)
-    }
-
 
     @Provides
     fun providesNoteRepository(dataManagerNote: DataManagerNote): NoteRepository {
@@ -140,16 +130,6 @@ class RepositoryModule {
         dataManagerStaff: DataManagerStaff
     ): CreateNewClientRepository {
         return CreateNewClientRepositoryImp(dataManagerClient, dataManagerOffices, dataManagerStaff)
-    }
-
-
-    @Provides
-    fun providesDataTableListRepository(
-        dataManagerLoan: DataManagerLoan,
-        dataManager: DataManager,
-        dataManagerClient: DataManagerClient
-    ): DataTableListRepository {
-        return DataTableListRepositoryImp(dataManagerLoan, dataManager, dataManagerClient)
     }
 
     @Provides
