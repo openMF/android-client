@@ -1,4 +1,4 @@
-package com.mifos.feature.checker_inbox_task.checker_inbox.ui
+package com.mifos.feature.checker_inbox_task.checker_inbox
 
 import com.mifos.core.objects.checkerinboxandtasks.CheckerInboxSearchTemplate
 import com.mifos.core.objects.checkerinboxandtasks.CheckerTask

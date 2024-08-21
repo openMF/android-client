@@ -13,7 +13,12 @@ import androidx.compose.material.icons.rounded.PowerSettingsNew
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Task
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.feature.checker_inbox_task.navigation.CHECKER_INBOX_TASK_SCREEN_ROUTE
+
+import com.mifos.feature.about.navigation.ABOUT_SCREEN_ROUTE
+import com.mifos.feature.checker_inbox_task.navigation.CheckerInboxTaskScreens
+
+
+
 import com.mifos.feature.groups.navigation.GROUP_LIST_SCREEN_ROUTE
 import com.mifos.feature.path_tracking.navigation.PATH_TRACKING_SCREEN_ROUTE
 import com.mifos.feature.search.Navigation.SEARCH_SCREEN_ROUTE
@@ -50,7 +55,7 @@ sealed class HomeDestinationsScreen(
 
     data object CheckerInboxAndTasksScreen : HomeDestinationsScreen(
         title = "Checker Inbox & Tasks",
-        route = CHECKER_INBOX_TASK_SCREEN_ROUTE,
+        route = CheckerInboxTaskScreens.CheckerInboxTaskScreen.route,
         icon = Icons.Rounded.CheckBox
     )
 
