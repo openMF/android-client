@@ -216,4 +216,5 @@ object Constants {
     const val REPORT_TYPE_ITEM = "report_type_item"
     const val REPORT_PARAMETER_RESPONSE = "report_parameter_response"
     const val LOAN_WITH_ASSOCIATIONS = "loanWithAssociation"
+    const val PASSCODE_INITIAL_LOGIN = "passcode_initial_login"
 }

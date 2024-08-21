@@ -1,4 +1,4 @@
-package com.mifos.feature.auth.login.presentation
+package com.mifos.feature.auth.login
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

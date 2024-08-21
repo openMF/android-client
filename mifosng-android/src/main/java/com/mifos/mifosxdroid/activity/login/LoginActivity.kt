@@ -6,12 +6,8 @@ package com.mifos.mifosxdroid.activity.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import com.mifos.feature.auth.login.presentation.LoginScreen
-import com.mifos.mifosxdroid.R
+import com.mifos.feature.auth.login.LoginScreen
 import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.activity.setting.UpdateServerConfigFragment
 import com.mifos.mifosxdroid.core.MifosBaseActivity

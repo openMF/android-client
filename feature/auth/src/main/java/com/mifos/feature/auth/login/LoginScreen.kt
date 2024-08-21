@@ -1,4 +1,4 @@
-package com.mifos.feature.auth.login.presentation
+package com.mifos.feature.auth.login
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
