@@ -8,6 +8,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.about.navigation.aboutScreen
+import com.mifos.feature.activate.navigation.activateScreen
+import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTasksScreen
 import com.mifos.feature.client.navigation.clientNavGraph
@@ -56,7 +58,7 @@ fun Navigation(
             savingsAccountSelected = { id, type ->
                 navController.navigateToSavingsAccountSummaryScreen(id, type)
             },
-            activateClient = { }
+            activateClient = { navController.navigateToActivateScreen(it, Constants.ACTIVATE_CLIENT) }
         )
 
         savingsNavGraph(
@@ -89,6 +91,8 @@ fun Navigation(
             onBackPressed = navController::popBackStack
         )
 
+        activateScreen ( onBackPressed = navController::popBackStack )
+
         searchScreen(
             modifier = Modifier.padding(padding),
             centerListScreen = { },
@@ -99,7 +103,7 @@ fun Navigation(
         centerNavGraph(
             navController = navController,
             paddingValues = padding,
-            onActivateCenter = { _, _ -> },
+            onActivateCenter = navController::navigateToActivateScreen,
             addSavingsAccount = {
 //                navController.navigateToAddSavingsAccount(0, it, true)
             }
