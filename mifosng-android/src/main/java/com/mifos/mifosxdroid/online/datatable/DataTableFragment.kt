@@ -39,12 +39,11 @@ class DataTableFragment : MifosBaseFragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 DataTableScreen(
-                    tableName = tableName,
                     navigateBack = {
                         findNavController().popBackStack()
                     },
-                    onClick = {
-                        navigateToDatatableData(dataTable = it)
+                    onClick = {_,_,_->
+//                        navigateToDatatableData(dataTable = _)
                     }
                 )
             }
