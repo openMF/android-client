@@ -37,4 +37,6 @@ sealed class ClientScreens(val route: String) {
     }
 
     data object ClientSurveyQuestionScreen : ClientScreens("client_survey_question_screen")
+
+    data object CreateClientScreen : ClientScreens("create_client_screen")
 }

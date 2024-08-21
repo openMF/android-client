@@ -55,7 +55,7 @@ internal fun SearchScreenContent(
     searchResultState: SearchResultState,
     onEvent: (SearchScreenEvent) -> Unit,
     onFabClick: (FabType) -> Unit,
-    onResultItemClick: (SearchedEntity) -> Unit,
+    onResultItemClick: (SearchedEntity) -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var fabButtonState by remember { mutableStateOf<FabButtonState>(FabButtonState.Collapsed) }
