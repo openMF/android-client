@@ -195,6 +195,7 @@ fun GenerateCollectionSheetScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GenerateCollectionSheetContent(
     centerDetailsState: List<CenterDetail>?,

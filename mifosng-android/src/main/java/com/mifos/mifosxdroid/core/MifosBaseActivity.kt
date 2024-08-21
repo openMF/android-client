@@ -15,8 +15,8 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.mifos.mifosxdroid.AndroidClientActivity
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.activity.splashscreen.SplashScreenActivity
 import com.mifos.mifosxdroid.passcode.PassCodeActivity
 import com.mifos.mobile.passcode.BasePassCodeActivity
 import com.mifos.utils.Constants
@@ -117,7 +117,7 @@ open class MifosBaseActivity : BasePassCodeActivity(), BaseActivityCallback {
                 startActivity(
                     Intent(
                         this@MifosBaseActivity,
-                        SplashScreenActivity::class.java
+                        AndroidClientActivity::class.java
                     )
                 )
                 Toast.makeText(

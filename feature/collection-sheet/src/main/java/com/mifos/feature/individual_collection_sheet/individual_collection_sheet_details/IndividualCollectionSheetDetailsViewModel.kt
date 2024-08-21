@@ -1,11 +1,15 @@
 package com.mifos.feature.individual_collection_sheet.individual_collection_sheet_details
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.use_cases.SaveIndividualCollectionSheetUseCase
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.objects.collectionsheet.ClientCollectionSheet
+import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.core.objects.collectionsheet.LoanAndClientName
 import com.mifos.feature.collection_sheet.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,8 +22,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IndividualCollectionSheetDetailsViewModel @Inject constructor(
-    private val saveIndividualCollectionSheetUseCase: SaveIndividualCollectionSheetUseCase
+    private val saveIndividualCollectionSheetUseCase: SaveIndividualCollectionSheetUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val arg = savedStateHandle.getStateFlow(key = Constants.INDIVIDUAL_SHEET, initialValue = "" )
+    val sheet : IndividualCollectionSheet = Gson().fromJson(arg.value, IndividualCollectionSheet::class.java)
 
     private val _individualCollectionSheetDetailsUiState =
         MutableStateFlow<IndividualCollectionSheetDetailsUiState>(
