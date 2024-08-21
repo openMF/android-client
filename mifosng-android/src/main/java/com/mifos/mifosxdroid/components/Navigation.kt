@@ -1,7 +1,6 @@
 package com.mifos.mifosxdroid.components
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -11,8 +10,12 @@ import com.mifos.feature.about.navigation.aboutScreen
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
+import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
+import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTaskGraph
 import com.mifos.feature.client.navigation.clientNavGraph
+import com.mifos.feature.client.navigation.navigateClientDetailsScreen
+import com.mifos.feature.client.navigation.navigateCreateClientScreen
 import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupListScreen
@@ -30,8 +33,8 @@ import com.mifos.feature.savings.navigation.addSavingsAccountScreen
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsNavGraph
-import com.mifos.feature.search.Navigation.SEARCH_SCREEN_ROUTE
-import com.mifos.feature.search.Navigation.searchScreen
+import com.mifos.feature.search.navigation.SearchScreens
+import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
 
 @Composable
@@ -39,7 +42,7 @@ fun Navigation(
     navController: NavHostController,
     padding: PaddingValues,
     modifier: Modifier = Modifier,
-    startDestination: String = SEARCH_SCREEN_ROUTE
+    startDestination: String = SearchScreens.SearchScreenRoute.route
 ) {
     NavHost(
         navController = navController,
@@ -51,21 +54,36 @@ fun Navigation(
             paddingValues = padding,
             addLoanAccount = { navController.navigateToLoanAccountScreen(it) },
             addSavingsAccount = { navController.navigateToAddSavingsAccount(it, 0, false) },
-            documents = { navController.navigateToDocumentListScreen(it, Constants.ENTITY_TYPE_CLIENTS) },
+            documents = {
+                navController.navigateToDocumentListScreen(
+                    it,
+                    Constants.ENTITY_TYPE_CLIENTS
+                )
+            },
             moreClientInfo = {},
-            notes = { navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_CLIENTS)},
+            notes = { navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_CLIENTS) },
             loanAccountSelected = { navController.navigateToLoanAccountSummaryScreen(it) },
             savingsAccountSelected = { id, type ->
                 navController.navigateToSavingsAccountSummaryScreen(id, type)
             },
-            activateClient = { navController.navigateToActivateScreen(it, Constants.ACTIVATE_CLIENT) }
+            activateClient = {
+                navController.navigateToActivateScreen(
+                    it,
+                    Constants.ACTIVATE_CLIENT
+                )
+            }
         )
 
         savingsNavGraph(
             navController = navController,
             onBackPressed = navController::popBackStack,
             loadMoreSavingsAccountInfo = { },
-            loadDocuments = { navController.navigateToDocumentListScreen(it, Constants.ENTITY_TYPE_SAVINGS) },
+            loadDocuments = {
+                navController.navigateToDocumentListScreen(
+                    it,
+                    Constants.ENTITY_TYPE_SAVINGS
+                )
+            },
         )
 
         loanNavGraph(
@@ -91,13 +109,18 @@ fun Navigation(
             onBackPressed = navController::popBackStack
         )
 
-        activateScreen ( onBackPressed = navController::popBackStack )
+        activateScreen(onBackPressed = navController::popBackStack)
 
-        searchScreen(
-            modifier = Modifier.padding(padding),
-            centerListScreen = { },
-            groupListScreen = { },
-            clientListScreen = { }
+        searchNavGraph(
+            paddingValues = padding,
+            onCreateCenter = navController::navigateCreateCenterScreenRoute,
+            onCreateClient = navController::navigateCreateClientScreen,
+            onCreateGroup = {},
+            onCenter = navController::navigateCenterDetailsScreenRoute,
+            onClient = navController::navigateClientDetailsScreen,
+            onLoan = {},
+            onGroup = {},
+            onSavings = {}
         )
 
         centerNavGraph(
@@ -145,12 +168,12 @@ fun Navigation(
         )
 
         individualCollectionSheetNavGraph(
-            onBackPressed = { navController.popBackStack() }  ,
+            onBackPressed = { navController.popBackStack() },
             navController = navController,
-            navigateToPaymentDetails = {  _, _, _, _, _, _ ->
+            navigateToPaymentDetails = { _, _, _, _, _, _ ->
 //                TODO() navigate to payment details
             }
         )
-        generateCollectionSheetScreen ( onBackPressed = navController::popBackStack )
+        generateCollectionSheetScreen(onBackPressed = navController::popBackStack)
     }
 }
