@@ -27,7 +27,6 @@ fun IndividualCollectionSheetScreen(
     onBackPressed: () -> Unit,
     onDetail: (String, IndividualCollectionSheet) -> Unit,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
 
     val pagerState = rememberPagerState(

@@ -19,14 +19,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ActivateFragment : Fragment() {
 
-    private val arg: ActivateFragmentArgs by navArgs()
+//    private val arg: ActivateFragmentArgs by navArgs()
     private var id = 0
     private lateinit var activateType: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        id = arg.clientId
-        activateType = arg.activationType
+//        id = arg.clientId
+//        activateType = arg.activationType
     }
 
     override fun onCreateView(
@@ -38,8 +38,8 @@ class ActivateFragment : Fragment() {
             )
             setContent {
                 ActivateScreen(
-                    id = id,
-                    activateType = activateType,
+//                    id = id,
+//                    activateType = activateType,
                     onBackPressed = {
                         findNavController().popBackStack()
                     }

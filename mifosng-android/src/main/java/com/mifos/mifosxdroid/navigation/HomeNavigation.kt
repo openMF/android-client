@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.mifos.mifosxdroid
+package com.mifos.mifosxdroid.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -51,17 +51,47 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.White
+import com.mifos.feature.splash.navigation.SplashScreens
+import com.mifos.mifosxdroid.HomeDestinationsScreen
+import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.components.MifosNavigationBar
 import com.mifos.mifosxdroid.components.Navigation
 import com.mifos.mifosxdroid.components.NavigationConstants
 import kotlinx.coroutines.launch
 
+fun NavGraphBuilder.homeGraph() {
+    navigation(
+        startDestination = HomeScreens.HomeScreen.route,
+        route = "home_screen_route"
+    ) {
+        homeNavigate()
+    }
+}
+
+fun NavGraphBuilder.homeNavigate() {
+    composable(
+        route = HomeScreens.HomeScreen.route
+    ) {
+        HomeNavigation()
+    }
+}
+
+fun NavController.navigateHome() {
+    navigate(HomeScreens.HomeScreen.route) {
+        popBackStack(route = SplashScreens.SplashScreenRoute.route, inclusive = true)
+    }
+}
+
 @Composable
-fun AndroidClientApp() {
+fun HomeNavigation() {
 
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
