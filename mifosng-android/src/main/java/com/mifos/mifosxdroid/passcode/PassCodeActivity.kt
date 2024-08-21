@@ -4,10 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.widget.NestedScrollView
-import com.mifos.mifosxdroid.DashboardActivity
+import com.mifos.mifosxdroid.AndroidClientActivity
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.activity.home.HomeActivity
-import com.mifos.mifosxdroid.activity.splashscreen.SplashScreenActivity
 import com.mifos.mifosxdroid.core.util.Toaster
 import com.mifos.mobile.passcode.MifosPassCodeActivity
 import com.mifos.mobile.passcode.utils.EncryptionUtil
@@ -36,7 +34,7 @@ class PassCodeActivity : MifosPassCodeActivity() {
     }
 
     override fun startLoginActivity() {
-        startActivity(Intent(this, SplashScreenActivity::class.java))
+        startActivity(Intent(this, AndroidClientActivity::class.java))
         finish()
     }
 
@@ -49,7 +47,7 @@ class PassCodeActivity : MifosPassCodeActivity() {
     }
 
     override fun startNextActivity() {
-        startActivity(Intent(this, DashboardActivity::class.java))
+        startActivity(Intent(this, AndroidClientActivity::class.java))
     }
 
     override fun onBackPressed() {

@@ -1,7 +1,9 @@
 package com.mifos.feature.activate
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.use_cases.ActivateCenterUseCase
 import com.mifos.core.domain.use_cases.ActivateClientUseCase
@@ -18,8 +20,12 @@ import javax.inject.Inject
 class ActivateViewModel @Inject constructor(
     private val activateClientUseCase: ActivateClientUseCase,
     private val activateCenterUseCase: ActivateCenterUseCase,
-    private val activateGroupUseCase: ActivateGroupUseCase
+    private val activateGroupUseCase: ActivateGroupUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val id = savedStateHandle.getStateFlow(key = Constants.ACTIVATE_ID, initialValue = 0)
+    val activateType = savedStateHandle.getStateFlow(key = Constants.ACTIVATE_TYPE, initialValue = "")
 
     private val _activateUiState = MutableStateFlow<ActivateUiState>(ActivateUiState.Initial)
     val activateUiState = _activateUiState.asStateFlow()

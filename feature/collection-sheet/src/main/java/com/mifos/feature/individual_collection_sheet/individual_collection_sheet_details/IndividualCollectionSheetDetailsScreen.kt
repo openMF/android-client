@@ -65,17 +65,16 @@ import com.mifos.feature.collection_sheet.R
 
 @Composable
 fun IndividualCollectionSheetDetailsScreen(
-    sheet: IndividualCollectionSheet,
     onBackPressed: () -> Unit,
     submit: (Int, IndividualCollectionSheetPayload, List<String>, LoanAndClientName, List<PaymentTypeOptions>, Int) -> Unit
 ) {
 
     val viewModel: IndividualCollectionSheetDetailsViewModel = hiltViewModel()
     val state by viewModel.individualCollectionSheetDetailsUiState.collectAsStateWithLifecycle()
-    val loansAndClientNames = viewModel.filterLoanAndClientNames(sheet.clients ?: emptyList())
+    val loansAndClientNames = viewModel.filterLoanAndClientNames(viewModel.sheet.clients ?: emptyList())
 
     IndividualCollectionSheetDetailsScreen(
-        sheet = sheet,
+        sheet = viewModel.sheet,
         loansAndClientNames = loansAndClientNames,
         state = state,
         onBackPressed = onBackPressed,

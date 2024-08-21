@@ -8,14 +8,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.about.navigation.aboutScreen
+import com.mifos.feature.activate.navigation.activateScreen
+import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
-import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTasksScreen
+import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTaskGraph
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupListScreen
 import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
-import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetScreen
+import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.loan.navigation.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
 import com.mifos.feature.loan.navigation.navigateToLoanAccountScreen
@@ -56,7 +58,7 @@ fun Navigation(
             savingsAccountSelected = { id, type ->
                 navController.navigateToSavingsAccountSummaryScreen(id, type)
             },
-            activateClient = { }
+            activateClient = { navController.navigateToActivateScreen(it, Constants.ACTIVATE_CLIENT) }
         )
 
         savingsNavGraph(
@@ -89,6 +91,8 @@ fun Navigation(
             onBackPressed = navController::popBackStack
         )
 
+        activateScreen ( onBackPressed = navController::popBackStack )
+
         searchScreen(
             modifier = Modifier.padding(padding),
             centerListScreen = { },
@@ -99,7 +103,7 @@ fun Navigation(
         centerNavGraph(
             navController = navController,
             paddingValues = padding,
-            onActivateCenter = { _, _ -> },
+            onActivateCenter = navController::navigateToActivateScreen,
             addSavingsAccount = {
 //                navController.navigateToAddSavingsAccount(0, it, true)
             }
@@ -120,21 +124,10 @@ fun Navigation(
             }
         )
 
-        checkerInboxTasksScreen(
-            onBackPressed = { navController.popBackStack() },
+        checkerInboxTaskGraph(
+            navController = navController
         )
-
-        individualCollectionSheetScreen(
-            onBackClicked = { navController.popBackStack() },
-            onDetail = { String, IndividualCollectionSheet ->
-
-            }
-        )
-
-        generateCollectionSheetScreen(
-            onBackPressed = { navController.popBackStack() }
-        )
-
+        
         pathTrackingNavGraph(
             navController = navController
         )
@@ -151,5 +144,13 @@ fun Navigation(
             onBackPressed = { navController.popBackStack() }
         )
 
+        individualCollectionSheetNavGraph(
+            onBackPressed = { navController.popBackStack() }  ,
+            navController = navController,
+            navigateToPaymentDetails = {  _, _, _, _, _, _ ->
+//                TODO() navigate to payment details
+            }
+        )
+        generateCollectionSheetScreen ( onBackPressed = navController::popBackStack )
     }
 }

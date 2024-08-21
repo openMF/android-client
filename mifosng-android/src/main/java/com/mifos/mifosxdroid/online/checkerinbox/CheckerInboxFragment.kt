@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
-import com.mifos.feature.checker_inbox_task.checker_inbox.ui.CheckerInboxScreen
+import com.mifos.feature.checker_inbox_task.checker_inbox.CheckerInboxScreen
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import java.sql.Timestamp
 
 
 @AndroidEntryPoint
