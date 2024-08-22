@@ -17,7 +17,7 @@ import com.mifos.feature.checker_inbox_task.navigation.CheckerInboxTaskScreens
 import com.mifos.feature.groups.navigation.GROUP_LIST_SCREEN_ROUTE
 import com.mifos.feature.path_tracking.navigation.PathTrackingScreens
 import com.mifos.feature.search.navigation.SearchScreens
-import com.mifos.feature.settings.navigation.SETTINGS_SCREEN_ROUTE
+import com.mifos.feature.settings.navigation.SettingsScreens
 
 sealed class HomeDestinationsScreen(
     val title: String = "",
@@ -80,7 +80,7 @@ sealed class HomeDestinationsScreen(
 
     data object SettingsScreen : HomeDestinationsScreen(
         title = "Settings",
-        route = SETTINGS_SCREEN_ROUTE,
+        route = SettingsScreens.SettingsScreen.route,
         icon = Icons.Rounded.Settings
     )
 

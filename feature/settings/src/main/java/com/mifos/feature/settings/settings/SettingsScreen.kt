@@ -1,9 +1,15 @@
 package com.mifos.feature.settings.settings
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.CountDownTimer
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,10 +17,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,11 +34,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalAutofill
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.enums.MifosAppLanguage
@@ -40,6 +51,7 @@ import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.settings.R
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
+import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import java.util.Locale
 
 @Composable
@@ -48,7 +60,6 @@ fun SettingsScreen(
     navigateToLoginScreen: () -> Unit,
     changePasscode: (String) -> Unit,
     languageChanged: () -> Unit,
-    serverConfig: () -> Unit
 ) {
     val viewModel: SettingsViewModel = hiltViewModel()
     val baseURL by viewModel.baseUrl.collectAsStateWithLifecycle()
@@ -82,11 +93,11 @@ fun SettingsScreen(
             )
             languageChanged()
         },
-        serverConfig = serverConfig
     )
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     onBackPressed: () -> Unit,
@@ -98,7 +109,6 @@ fun SettingsScreen(
     handleEndpointUpdate: (baseURL: String, tenant: String) -> Unit,
     updateTheme: (theme: AppTheme) -> Unit,
     updateLanguage: (language: MifosAppLanguage) -> Unit,
-    serverConfig: () -> Unit
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -106,6 +116,10 @@ fun SettingsScreen(
     var showEndpointUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showThemeUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showSyncSurveyDialog by rememberSaveable { mutableStateOf(false) }
+    var showServerConfig by rememberSaveable { mutableStateOf(false) }
+
+    val sheetState = rememberModalBottomSheetState()
+    val context = LocalContext.current
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
@@ -129,22 +143,34 @@ fun SettingsScreen(
 
                         SettingsCardItem.ENDPOINT -> showEndpointUpdateDialog = true
 
-                        SettingsCardItem.SERVER_CONFIG -> {
-                            serverConfig()
-
-                        }
+                        SettingsCardItem.SERVER_CONFIG -> showServerConfig = true
                     }
                 }
             )
         }
     }
 
-    if( showSyncSurveyDialog ) {
+    if (showSyncSurveyDialog) {
         SyncSurveysDialog(
             closeDialog = {
                 showSyncSurveyDialog = false
             }
         )
+    }
+
+    if (showServerConfig) {
+        ModalBottomSheet(
+            onDismissRequest = { showServerConfig = false },
+            sheetState = sheetState,
+        ) {
+            UpdateServerConfigScreenRoute(
+                onCloseClick = { showServerConfig = false },
+                onSuccessful = {
+                    showServerConfig = false
+                    showRestartCountdownToast(context, 2)
+                }
+            )
+        }
     }
 
     if (showLanguageUpdateDialog) {
@@ -254,6 +280,33 @@ fun updateLanguageLocale(context: Context, language: String, isSystemLanguage: B
     }
 }
 
+private fun showRestartCountdownToast(context: Context, seconds: Int) {
+    val countDownTimer = object : CountDownTimer((seconds * 1000).toLong(), 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+            val secondsRemaining = millisUntilFinished / 1000
+            Toast.makeText(
+                context,
+                "Restarting app in $secondsRemaining seconds",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        override fun onFinish() {
+            context.restartApplication()
+        }
+    }
+    countDownTimer.start()
+}
+
+fun Context.restartApplication() {
+    val packageManager: PackageManager = this.packageManager
+    val intent: Intent = packageManager.getLaunchIntentForPackage(this.packageName)!!
+    val componentName: ComponentName = intent.component!!
+    val restartIntent: Intent = Intent.makeRestartActivityTask(componentName)
+    this.startActivity(restartIntent)
+    Runtime.getRuntime().exit(0)
+}
+
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
 fun PreviewSettingsScreen() {
@@ -267,7 +320,6 @@ fun PreviewSettingsScreen() {
         updateLanguage = {},
         updateTheme = {},
         changePasscode = {},
-        serverConfig = {}
     )
 
 }

@@ -39,7 +39,7 @@ class UpdateServerConfigFragment : BottomSheetDialogFragment() {
                     onSuccessful = {
                         this@UpdateServerConfigFragment.dismiss()
 
-                        showRestartCountdownToast(requireContext(), 2)
+//                        showRestartCountdownToast(requireContext(), 2)
                     }
                 )
             }
@@ -47,29 +47,3 @@ class UpdateServerConfigFragment : BottomSheetDialogFragment() {
     }
 }
 
-private fun showRestartCountdownToast(context: Context, seconds: Int) {
-    val countDownTimer = object : CountDownTimer((seconds * 1000).toLong(), 1000) {
-        override fun onTick(millisUntilFinished: Long) {
-            val secondsRemaining = millisUntilFinished / 1000
-            Toast.makeText(
-                context,
-                "Restarting app in $secondsRemaining seconds",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
-        override fun onFinish() {
-            context.restartApplication()
-        }
-    }
-    countDownTimer.start()
-}
-
-fun Context.restartApplication() {
-    val packageManager: PackageManager = this.packageManager
-    val intent: Intent = packageManager.getLaunchIntentForPackage(this.packageName)!!
-    val componentName: ComponentName = intent.component!!
-    val restartIntent: Intent = Intent.makeRestartActivityTask(componentName)
-    this.startActivity(restartIntent)
-    Runtime.getRuntime().exit(0)
-}

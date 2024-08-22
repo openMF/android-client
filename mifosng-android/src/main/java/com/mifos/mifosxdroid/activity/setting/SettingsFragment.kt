@@ -55,9 +55,9 @@ class SettingsFragment : Fragment() {
                         startActivity(intent)
                         activity?.finish()
                     },
-                    serverConfig = {
-                        findNavController().navigate(R.id.updateServerConfigFragment)
-                    }
+//                    serverConfig = {
+//                        findNavController().navigate(R.id.updateServerConfigFragment)
+//                    }
                 )
             }
         }
