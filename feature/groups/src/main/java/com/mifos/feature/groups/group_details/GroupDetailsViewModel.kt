@@ -1,7 +1,10 @@
 package com.mifos.feature.groups.group_details
 
+import androidx.compose.ui.unit.Constraints
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.use_cases.GetGroupAssociateClientsUseCase
 import com.mifos.core.domain.use_cases.GetGroupDetailsUseCase
@@ -19,8 +22,11 @@ import javax.inject.Inject
 @HiltViewModel
 class GroupDetailsViewModel @Inject constructor(
     private val getGroupDetailsUseCase: GetGroupDetailsUseCase,
-    private val getGroupAssociateClientsUseCase: GetGroupAssociateClientsUseCase
+    private val getGroupAssociateClientsUseCase: GetGroupAssociateClientsUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val groupId = savedStateHandle.getStateFlow(key = Constants.GROUP_ID, initialValue = 0)
 
     private val _groupDetailsUiState =
         MutableStateFlow<GroupDetailsUiState>(GroupDetailsUiState.Loading)

@@ -82,7 +82,7 @@ import kotlinx.coroutines.flow.Flow
 fun GroupsListRoute(
     paddingValues: PaddingValues,
     onAddGroupClick: () -> Unit,
-    onGroupClick: (Group) -> Unit,
+    onGroupClick: (groupId : Int) -> Unit,
     onSyncClick: (List<Group>) -> Unit,
     viewModel: GroupsListViewModel = hiltViewModel()
 ) {
@@ -135,14 +135,13 @@ fun GroupsListScreen(
     selectedItems: List<Group>,
     data: LazyPagingItems<Group>,
     onAddGroupClick: () -> Unit,
-    onGroupClick: (Group) -> Unit,
+    onGroupClick: (groupId : Int) -> Unit,
     onSyncClick: (List<Group>) -> Unit,
     onSelectItem: (Group) -> Unit,
     resetSelectionMode: () -> Unit,
 ) {
     Scaffold(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier,
         floatingActionButton = {
             MifosFAB(icon = Icons.Default.Add, onClick = onAddGroupClick)
         },
@@ -276,7 +275,7 @@ private fun LazyListScope.successState(
     pagingItems: LazyPagingItems<Group>,
     isInSelectionMode: Boolean,
     isSelected: (Group) -> Boolean,
-    onGroupClick: (Group) -> Unit,
+    onGroupClick: (groupId : Int) -> Unit,
     onSelectItem: (Group) -> Unit
 ) {
     items(
@@ -288,7 +287,7 @@ private fun LazyListScope.successState(
                 doesSelected = isSelected(group),
                 inSelectionMode = isInSelectionMode,
                 onGroupClick = {
-                    onGroupClick(group)
+                    group.id?.let { onGroupClick(it) }
                 },
                 onSelectItem = {
                     onSelectItem(group)

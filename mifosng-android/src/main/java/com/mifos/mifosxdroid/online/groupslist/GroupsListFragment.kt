@@ -74,13 +74,13 @@ class GroupsListFragment : MifosBaseFragment() {
                         findNavController().navigate(R.id.action_navigation_group_list_to_createNewGroupFragment)
                     },
                     onGroupClick = { group ->
-                        group.id?.let { id ->
-                            group.name?.let { name ->
-                                val action =
-                                    GroupsListFragmentDirections.actionNavigationGroupListToGroupsActivity(id, name)
-                                findNavController().navigate(action)
-                            }
-                        }
+//                        group.id?.let { id ->
+//                            group.name?.let { name ->
+//                                val action =
+//                                    GroupsListFragmentDirections.actionNavigationGroupListToGroupsActivity(id, name)
+//                                findNavController().navigate(action)
+//                            }
+//                        }
                     },
                     onSyncClick = { selectedGroups ->
                         val syncGroupsDialogFragment =
