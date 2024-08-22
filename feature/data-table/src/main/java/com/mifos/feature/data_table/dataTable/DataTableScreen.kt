@@ -47,11 +47,12 @@ import com.mifos.feature.data_table.R
 
 @Composable
 fun DataTableScreen(
-    tableName: String?,
     viewModel: DataTableViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
-    onClick: (dataTable: DataTable) -> Unit
+    onClick: (table: String, entityId: Int, dataTable: DataTable) -> Unit
 ) {
+    val tableName = viewModel.args.tableName
+    val entityId = viewModel.args.entityId
     val uiState by viewModel.dataTableUiState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
@@ -64,7 +65,9 @@ fun DataTableScreen(
         navigateBack = navigateBack,
         onRefresh = { viewModel.refresh(tableName) },
         isRefreshing = isRefreshing,
-        onClick = onClick
+        onClick = {
+            onClick(tableName, entityId, it)
+        }
     )
 }
 

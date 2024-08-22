@@ -1,11 +1,15 @@
 package com.mifos.feature.data_table.dataTableData
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.google.gson.JsonArray
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.use_cases.DeleteDataTableEntryUseCase
 import com.mifos.core.domain.use_cases.GetDataTableInfoUseCase
+import com.mifos.core.objects.navigation.DataTableDataNavigationArg
 import com.mifos.feature.data_table.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,8 +21,14 @@ import javax.inject.Inject
 @HiltViewModel
 class DataTableDataViewModel @Inject constructor(
     private val getDataTableInfoUseCase: GetDataTableInfoUseCase,
-    private val deleteDataTableEntryUseCase: DeleteDataTableEntryUseCase
+    private val deleteDataTableEntryUseCase: DeleteDataTableEntryUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val args =
+        savedStateHandle.getStateFlow(key = Constants.DATA_TABLE_DATA_NAV_DATA, initialValue = "")
+    val arg: DataTableDataNavigationArg =
+        Gson().fromJson(args.value, DataTableDataNavigationArg::class.java)
 
     private val _dataTableDataUiState =
         MutableStateFlow<DataTableDataUiState>(DataTableDataUiState.Loading)

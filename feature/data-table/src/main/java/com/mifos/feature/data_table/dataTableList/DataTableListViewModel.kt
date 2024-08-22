@@ -1,6 +1,8 @@
 package com.mifos.feature.data_table.dataTableList
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.GroupLoanPayload
 import com.mifos.core.data.LoansPayload
@@ -23,8 +25,14 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 10/08/23.
  */
 @HiltViewModel
-class DataTableListViewModel @Inject constructor(private val repository: DataTableListRepository) :
-    ViewModel() {
+class DataTableListViewModel @Inject constructor(
+    private val repository: DataTableListRepository,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    private val args =
+        savedStateHandle.getStateFlow(key = Constants.DATA_TABLE_LIST_NAV_DATA, initialValue = "")
+    val arg: DataTableListNavArgs = Gson().fromJson(args.value, DataTableListNavArgs::class.java)
 
     private val _dataTableListUiState: MutableStateFlow<DataTableListUiState> =
         MutableStateFlow(DataTableListUiState.Loading)

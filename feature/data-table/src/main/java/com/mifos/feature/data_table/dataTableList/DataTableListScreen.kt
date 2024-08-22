@@ -50,19 +50,19 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun DataTableListScreen(
-    dataTables : List<DataTable>,
-    requestType :Int,
-    payload : Any?,
-    formWidgetsList : MutableList<List<FormWidget>>,
     viewModel: DataTableListViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
     clientCreated: (Client) -> Unit
 ) {
+    val dataTables = viewModel.arg.dataTableList
+    val requestType = viewModel.arg.requestType
+    val formWidgetsList = viewModel.arg.formWidget
+    val payload = viewModel.arg.payload
     val uiState by viewModel.dataTableListUiState.collectAsStateWithLifecycle()
     val dataTableList by viewModel.dataTableList.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.initArgs(dataTables, requestType, formWidgetsList,payload)
+        viewModel.initArgs(dataTables, requestType, formWidgetsList, payload)
     }
 
     DataTableListScreen(

@@ -51,10 +51,6 @@ class DataTableListFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 DataTableListScreen(
-                    dataTables = dataTables ?: listOf(),
-                    requestType = requestType,
-                    payload = payload,
-                    formWidgetsList = mutableListOf(), // TODO remove FormWidget after api fix
                     onBackPressed = { requireActivity().supportFragmentManager.popBackStack() },
                     clientCreated = { showClientCreatedSuccessfully(it) }
                 )
