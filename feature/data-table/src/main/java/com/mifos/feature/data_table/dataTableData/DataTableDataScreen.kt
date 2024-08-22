@@ -71,13 +71,13 @@ import com.mifos.feature.data_table.dataTableRowDialog.DataTableRowDialogScreen
 
 @Composable
 fun DataTableDataScreen(
-    table: String,
-    dataTable: DataTable,
-    entityId: Int,
     onBackPressed: () -> Unit
 ) {
 
     val viewmodel: DataTableDataViewModel = hiltViewModel()
+    val dataTable = viewmodel.arg.dataTable
+    val entityId = viewmodel.arg.entityId
+    val table = viewmodel.arg.tableName
     val state by viewmodel.tableDataUiState.collectAsStateWithLifecycle()
     val isRefreshing by viewmodel.isRefreshing.collectAsStateWithLifecycle()
 

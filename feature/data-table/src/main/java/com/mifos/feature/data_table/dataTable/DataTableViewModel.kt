@@ -1,8 +1,12 @@
 package com.mifos.feature.data_table.dataTable
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.DataTableRepository
+import com.mifos.core.objects.navigation.DataTableNavigationArg
 import com.mifos.core.objects.noncore.DataTable
 import com.mifos.feature.data_table.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +23,14 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 08/08/23.
  */
 @HiltViewModel
-class DataTableViewModel @Inject constructor(private val repository: DataTableRepository) :
-    ViewModel() {
+class DataTableViewModel @Inject constructor(
+    private val repository: DataTableRepository,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    private val arg =
+        savedStateHandle.getStateFlow(Constants.DATA_TABLE_NAV_DATA, initialValue = "")
+    val args = Gson().fromJson(arg.value, DataTableNavigationArg::class.java)
 
     private val _dataTableUiState =
         MutableStateFlow<DataTableUiState>(DataTableUiState.ShowProgressbar)

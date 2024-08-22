@@ -41,9 +41,6 @@ class DataTableDataFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 DataTableDataScreen(
-                    table = dataTable.registeredTableName.toString(),
-                    dataTable = dataTable,
-                    entityId = entityId,
                     onBackPressed = {
                         findNavController().popBackStack()
                     }
