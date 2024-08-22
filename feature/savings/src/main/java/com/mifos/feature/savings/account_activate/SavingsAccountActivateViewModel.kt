@@ -1,7 +1,9 @@
 package com.mifos.feature.savings.account_activate
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountActivateRepository
 import com.mifos.core.domain.use_cases.ActivateSavingsUseCase
@@ -23,7 +25,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SavingsAccountActivateViewModel @Inject constructor(
     private val activateSavingsUseCase: ActivateSavingsUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val savingsAccountId = savedStateHandle.getStateFlow(Constants.SAVINGS_ACCOUNT_ID, 0)
 
     private val _savingsAccountActivateUiState =
         MutableStateFlow<SavingsAccountActivateUiState>(SavingsAccountActivateUiState.Initial)
@@ -31,9 +36,8 @@ class SavingsAccountActivateViewModel @Inject constructor(
     val savingsAccountActivateUiState: StateFlow<SavingsAccountActivateUiState>
         get() = _savingsAccountActivateUiState
 
-    var savingsAccountId = 0
 
-    fun activateSavings(request: HashMap<String, String>) =
+    fun activateSavings(savingsAccountId: Int, request: HashMap<String, String>) =
         viewModelScope.launch(Dispatchers.IO) {
             activateSavingsUseCase(savingsAccountId, request).collect { result ->
                 when (result) {

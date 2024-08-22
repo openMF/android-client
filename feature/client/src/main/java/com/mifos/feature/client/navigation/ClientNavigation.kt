@@ -10,6 +10,8 @@ import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.ClientPayload
+import com.mifos.core.objects.noncore.DataTable
 import com.mifos.core.objects.survey.Survey
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientDetails.ui.ClientDetailsScreen
@@ -19,6 +21,7 @@ import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientSignature.SignatureScreen
 import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
+import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 
 fun NavGraphBuilder.clientNavGraph(
     navController: NavController,
@@ -77,6 +80,10 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientSurveyQuestionRoute(
             onBackPressed = navController::popBackStack
+        )
+        createClientRoute(
+            onBackPressed = navController::popBackStack,
+            hasDatatables = { _, _ -> }
         )
     }
 }
@@ -221,6 +228,20 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
     }
 }
 
+fun NavGraphBuilder.createClientRoute(
+    onBackPressed: () -> Unit,
+    hasDatatables: (List<DataTable>, ClientPayload) -> Unit
+) {
+    composable(
+        route = ClientScreens.CreateClientScreen.route
+    ) {
+        CreateNewClientScreen(
+            navigateBack = onBackPressed,
+            hasDatatables = hasDatatables
+        )
+    }
+}
+
 fun NavController.navigateClientDetailsScreen(clientId: Int) {
     navigate(ClientScreens.ClientDetailScreen.argument(clientId))
 }
@@ -243,4 +264,8 @@ fun NavController.navigateClientSignatureScreen(clientId: Int) {
 
 fun NavController.navigateClientSurveyListScreen(clientId: Int) {
     navigate(ClientScreens.ClientSurveyListScreen.argument(clientId))
+}
+
+fun NavController.navigateCreateClientScreen() {
+    navigate(ClientScreens.CreateClientScreen.route)
 }

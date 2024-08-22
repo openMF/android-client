@@ -27,9 +27,9 @@ class PathTrackingActivity : MifosBaseActivity() {
         setContent {
             PathTrackingScreen(
                 onBackPressed = { finish() },
-                onPathTrackingClick = { userLatLngs ->
-                    onUserLocationClick(userLatLngs)
-                }
+//                onPathTrackingClick = { userLatLngs ->
+//                    onUserLocationClick(userLatLngs)
+//                }
             )
         }
     }

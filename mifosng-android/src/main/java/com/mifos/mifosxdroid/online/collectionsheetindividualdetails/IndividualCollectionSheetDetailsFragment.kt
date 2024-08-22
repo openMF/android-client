@@ -24,14 +24,14 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment() {
     private val arg: IndividualCollectionSheetDetailsFragmentArgs by navArgs()
 
     private lateinit var sheet: IndividualCollectionSheet
-    private lateinit var actualDisbursementDate: String
-    private lateinit var transactionDate: String
+//    private lateinit var actualDisbursementDate: String
+//    private lateinit var transactionDate: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sheet = arg.sheet
-        actualDisbursementDate = arg.actualDisbursementDate
-        transactionDate = arg.transactionDate
+//        actualDisbursementDate = arg.actualDisbursementDate
+//        transactionDate = arg.transactionDate
     }
 
     override fun onCreateView(
@@ -41,7 +41,7 @@ class IndividualCollectionSheetDetailsFragment : MifosBaseFragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 IndividualCollectionSheetDetailsScreen(
-                    sheet = sheet,
+//                    sheet = sheet,
                     onBackPressed = {
                         findNavController().popBackStack()
                     },

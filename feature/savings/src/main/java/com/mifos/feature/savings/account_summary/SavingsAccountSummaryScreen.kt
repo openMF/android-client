@@ -66,6 +66,7 @@ import com.mifos.core.objects.accounts.savings.Status
 import com.mifos.core.objects.accounts.savings.Summary
 import com.mifos.core.objects.accounts.savings.Transaction
 import com.mifos.core.objects.accounts.savings.TransactionType
+import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate_Table.accountId
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.savings.R
 
@@ -85,31 +86,33 @@ fun SavingsAccountSummaryScreen(
 ) {
     val viewmodel: SavingsAccountSummaryViewModel = hiltViewModel()
     val uiState by viewmodel.savingsAccountSummaryUiState.collectAsStateWithLifecycle()
+    val accountId = viewmodel.savingsNavigationData.id
+    val savingsAccountType =  viewmodel.savingsNavigationData.type
 
     LaunchedEffect(key1 = Unit) {
-        viewmodel.loadSavingAccount(viewmodel.savingsAccountType?.endpoint)
+        viewmodel.loadSavingAccount(savingsAccountType?.endpoint, accountId)
     }
 
     SavingsAccountSummaryScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        onRetry = { viewmodel.loadSavingAccount(viewmodel.savingsAccountType?.endpoint) },
-        loadMoreSavingsAccountInfo = { loadMoreSavingsAccountInfo.invoke(viewmodel.accountId) },
-        loadDocuments = { loadDocuments.invoke(viewmodel.accountId) },
-        onDepositButtonClicked = { savingsAccountWithAssociations: SavingsAccountWithAssociations ->
-            onDepositClick.invoke(savingsAccountWithAssociations, viewmodel.savingsAccountType)
+        onRetry = { viewmodel.loadSavingAccount(savingsAccountType?.endpoint, accountId) },
+        loadMoreSavingsAccountInfo = { loadMoreSavingsAccountInfo.invoke(accountId) },
+        loadDocuments = { loadDocuments.invoke(accountId) },
+        onDepositButtonClicked = {
+            onDepositClick.invoke( it, savingsAccountType)
         },
-        onWithdrawButtonClicked = { savingsAccountWithAssociations: SavingsAccountWithAssociations ->
+        onWithdrawButtonClicked = {
             onWithdrawButtonClicked.invoke(
-                savingsAccountWithAssociations,
-                viewmodel.savingsAccountType
+                it,
+                savingsAccountType
             )
         },
         approveSavings = {
-            approveSavings.invoke(viewmodel.savingsAccountType, viewmodel.accountId)
+            approveSavings.invoke(savingsAccountType, accountId)
         },
         activateSavings = {
-            activateSavings.invoke(viewmodel.savingsAccountType, viewmodel.accountId)
+            activateSavings.invoke(savingsAccountType, accountId)
         }
     )
 }

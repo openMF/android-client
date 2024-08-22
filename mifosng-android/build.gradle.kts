@@ -143,6 +143,8 @@ dependencies {
     implementation(projects.feature.document)
     implementation(projects.feature.dataTable)
     implementation(projects.feature.search)
+    implementation(projects.feature.splash)
+    implementation(projects.feature.passcode)
 
     implementation(projects.core.common)
     implementation(projects.core.ui)

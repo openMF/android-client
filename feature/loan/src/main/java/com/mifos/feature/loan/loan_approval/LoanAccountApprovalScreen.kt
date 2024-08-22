@@ -63,15 +63,10 @@ import java.util.Locale
 
 @Composable
 fun LoanAccountApprovalScreen(
-    loanId: Int,
-    loanWithAssociations : LoanWithAssociations,
     navigateBack: () -> Unit,
 ) {
     val viewModel: LoanAccountApprovalViewModel = hiltViewModel()
     val uiState by viewModel.loanAccountApprovalUiState.collectAsStateWithLifecycle()
-
-    viewModel.loanId = loanId
-    viewModel.loanWithAssociations = loanWithAssociations
 
     LoanAccountApprovalScreen(
         uiState = uiState,

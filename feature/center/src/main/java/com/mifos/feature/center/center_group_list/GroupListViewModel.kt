@@ -1,7 +1,9 @@
 package com.mifos.feature.center.center_group_list
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.use_cases.GetGroupsByCenterUseCase
 import com.mifos.core.domain.use_cases.GetGroupsUseCase
@@ -18,8 +20,11 @@ import javax.inject.Inject
 @HiltViewModel
 class GroupListViewModel @Inject constructor(
     private val getGroupsUseCase: GetGroupsUseCase,
-    private val getGroupsByCenterUseCase: GetGroupsByCenterUseCase
+    private val getGroupsByCenterUseCase: GetGroupsByCenterUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val centerId = savedStateHandle.getStateFlow(key = Constants.CENTER_ID, initialValue = 0)
 
     private val _groupListUiState = MutableStateFlow<GroupListUiState>(GroupListUiState.Loading)
     val groupListUiState = _groupListUiState.asStateFlow()

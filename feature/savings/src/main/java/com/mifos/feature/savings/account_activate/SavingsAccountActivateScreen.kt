@@ -63,11 +63,12 @@ fun SavingsAccountActivateScreen(
 ) {
     val viewModel: SavingsAccountActivateViewModel = hiltViewModel()
     val uiState by viewModel.savingsAccountActivateUiState.collectAsStateWithLifecycle()
+    val savingsAccountId by viewModel.savingsAccountId.collectAsStateWithLifecycle()
 
     SavingsAccountActivateScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        activateSavings = { viewModel.activateSavings(it) }
+        activateSavings = { viewModel.activateSavings(savingsAccountId, it) }
     )
 }
 

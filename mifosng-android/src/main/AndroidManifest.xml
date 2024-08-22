@@ -36,16 +36,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${GEO_API_KEY}" />
 
-        <activity android:name=".DashboardActivity"
-            android:exported="true"
-            />
-
         <activity
-            android:name=".activity.splashscreen.SplashScreenActivity"
+            android:name=".AndroidClientActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/SplashScreen">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

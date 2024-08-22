@@ -1,7 +1,9 @@
 package com.mifos.feature.savings.account_transaction
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
@@ -12,6 +14,9 @@ import com.mifos.core.domain.use_cases.ProcessTransactionUseCase
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
+import com.mifos.core.objects.accounts.savings.SavingsSummaryData
+import com.mifos.core.objects.accounts.savings.SavingsTransactionData
+import com.mifos.core.objects.client.Savings
 import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -32,18 +37,22 @@ class SavingsAccountTransactionViewModel @Inject constructor(
     private val getSavingsAccountTransactionTemplateUseCase: GetSavingsAccountTransactionTemplateUseCase,
     private val processTransactionUseCase: ProcessTransactionUseCase,
     private val getSavingsAccountTransactionUseCase: GetSavingsAccountTransactionUseCase,
-    private val prefManager: PrefManager
+    private val prefManager: PrefManager,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val arg = savedStateHandle.getStateFlow(key = "arg", initialValue = "")
+    private val savingsTransactionData: SavingsTransactionData = Gson().fromJson(arg.value, SavingsTransactionData::class.java)
+
+    val accountId = savingsTransactionData.savingsAccountWithAssociations.id 
+    val savingsAccountNumber = savingsTransactionData.savingsAccountWithAssociations.accountNo
+    val clientName = savingsTransactionData.savingsAccountWithAssociations.clientName
+    val transactionType = savingsTransactionData.transactionType
+    private val savingsAccountType = savingsTransactionData.depositType
 
     private val _savingsAccountTransactionUiState =
         MutableStateFlow<SavingsAccountTransactionUiState>(SavingsAccountTransactionUiState.ShowProgressbar)
     val savingsAccountTransactionUiState: StateFlow<SavingsAccountTransactionUiState> get() = _savingsAccountTransactionUiState
-
-    var transactionType: String? = null
-    var accountId: Int? = null
-    var clientName: String? = null
-    var savingsAccountNumber: Int? = null
-    var savingsAccountType: DepositType? = null
 
     fun setUserOffline() {
         prefManager.userStatus = Constants.USER_OFFLINE
@@ -57,19 +66,19 @@ class SavingsAccountTransactionViewModel @Inject constructor(
                     it,
                     transactionType
                 ).collect { result ->
-                        when (result) {
-                            is Resource.Error -> _savingsAccountTransactionUiState.value =
-                                SavingsAccountTransactionUiState.ShowError(result.message.toString())
+                    when (result) {
+                        is Resource.Error -> _savingsAccountTransactionUiState.value =
+                            SavingsAccountTransactionUiState.ShowError(result.message.toString())
 
-                            is Resource.Loading -> _savingsAccountTransactionUiState.value =
-                                SavingsAccountTransactionUiState.ShowProgressbar
+                        is Resource.Loading -> _savingsAccountTransactionUiState.value =
+                            SavingsAccountTransactionUiState.ShowProgressbar
 
-                            is Resource.Success -> _savingsAccountTransactionUiState.value =
-                                SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
-                                    result.data ?: SavingsAccountTransactionTemplate()
-                                )
-                        }
+                        is Resource.Success -> _savingsAccountTransactionUiState.value =
+                            SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
+                                result.data ?: SavingsAccountTransactionTemplate()
+                            )
                     }
+                }
             }
         }
 

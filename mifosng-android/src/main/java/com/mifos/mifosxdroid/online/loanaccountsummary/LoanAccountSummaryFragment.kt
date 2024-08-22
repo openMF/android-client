@@ -41,16 +41,16 @@ class LoanAccountSummaryFragment : MifosBaseFragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 LoanAccountSummaryScreen(
-                    loanAccountNumber = loanAccountNumber,
+//                    loanAccountNumber = loanAccountNumber,
                     navigateBack = { findNavController().popBackStack() },
                     onTransactionsClicked = { loadLoanTransactions(it) },
                     onDocumentsClicked = { loadDocuments() },
                     onChargesClicked = { loadLoanCharges() },
                     onRepaymentScheduleClicked = { loadRepaymentSchedule(it) },
                     onMoreInfoClicked = { loadLoanDataTables() },
-                    approveLoan = { approveLoan(it) },
+                    approveLoan = { id, it -> approveLoan(it) },
                     disburseLoan = { disburseLoan() },
-                    onRepaymentClick = { makeRepayment(it) }
+                    onRepaymentClick = { makeRepayment(it) },
                 )
             }
         }

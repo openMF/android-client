@@ -65,26 +65,22 @@ import java.util.Locale
 
 @Composable
 fun LoanAccountDisbursementScreen(
-    loanId: Int,
     navigateBack: () -> Unit,
 ) {
     val viewmodel: LoanAccountDisbursementViewModel = hiltViewModel()
     val uiState by viewmodel.loanAccountDisbursementUiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(loanId) {
-        viewmodel.loanId = loanId
-    }
+    val loanId by viewmodel.loadId.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewmodel.loadLoanTemplate()
+        viewmodel.loadLoanTemplate(loanId)
     }
 
     LoanAccountDisbursementScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        onRetry = { viewmodel.loadLoanTemplate() },
+        onRetry = { viewmodel.loadLoanTemplate(loanId) },
         onDisburseLoan = {
-            viewmodel.disburseLoan(it)
+            viewmodel.disburseLoan(loanId, it)
         }
     )
 }

@@ -30,7 +30,7 @@ class ReportFragment : MifosBaseFragment() {
         report = arg.respose
         return ComposeView(requireContext()).apply {
             setContent {
-                ReportScreen(report = report, onBackPressed = {
+                ReportScreen(onBackPressed = {
                     findNavController().popBackStack()
                 })
             }

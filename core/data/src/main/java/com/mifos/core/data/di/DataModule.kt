@@ -13,6 +13,8 @@ import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.data.repository.DataTableDataRepository
+import com.mifos.core.data.repository.DataTableListRepository
+import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.data.repository.DataTableRowDialogRepository
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
@@ -51,6 +53,8 @@ import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repository_imp.CreateNewCenterRepositoryImp
 import com.mifos.core.data.repository_imp.CreateNewGroupRepositoryImp
 import com.mifos.core.data.repository_imp.DataTableDataRepositoryImp
+import com.mifos.core.data.repository_imp.DataTableListRepositoryImp
+import com.mifos.core.data.repository_imp.DataTableRepositoryImp
 import com.mifos.core.data.repository_imp.DataTableRowDialogRepositoryImp
 import com.mifos.core.data.repository_imp.DocumentListRepositoryImp
 import com.mifos.core.data.repository_imp.GenerateCollectionSheetRepositoryImp
@@ -199,4 +203,10 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindLoanTransactionsRepository(impl: LoanTransactionsRepositoryImp): LoanTransactionsRepository
+
+    @Binds
+    internal abstract fun bindDataTableRepository(impl: DataTableRepositoryImp): DataTableRepository
+
+    @Binds
+    internal abstract fun bindDataTableListRepository(impl: DataTableListRepositoryImp): DataTableListRepository
 }

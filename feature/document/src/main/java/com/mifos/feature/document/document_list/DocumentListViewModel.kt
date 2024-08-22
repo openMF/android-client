@@ -1,7 +1,10 @@
 package com.mifos.feature.document.document_list
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.use_cases.DownloadDocumentUseCase
 import com.mifos.core.domain.use_cases.GetDocumentsListUseCase
@@ -18,11 +21,14 @@ import javax.inject.Inject
 class DocumentListViewModel @Inject constructor(
     private val getDocumentsListUseCase: GetDocumentsListUseCase,
     private val downloadDocumentUseCase: DownloadDocumentUseCase,
-    private val removeDocumentUseCase: RemoveDocumentUseCase
+    private val removeDocumentUseCase: RemoveDocumentUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _documentListUiState =
-        MutableStateFlow<DocumentListUiState>(DocumentListUiState.Loading)
+    val entityId = savedStateHandle.getStateFlow(key = Constants.ENTITY_ID, initialValue = 0)
+    val entityType = savedStateHandle.getStateFlow(key = Constants.ENTITY_TYPE, initialValue = "")
+
+    private val _documentListUiState = MutableStateFlow<DocumentListUiState>(DocumentListUiState.Loading)
     val documentListUiState = _documentListUiState.asStateFlow()
 
     private val _removeDocumentState = MutableStateFlow(false)

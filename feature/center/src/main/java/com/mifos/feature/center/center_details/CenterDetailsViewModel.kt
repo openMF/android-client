@@ -1,7 +1,9 @@
 package com.mifos.feature.center.center_details
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.use_cases.GetCenterDetailsUseCase
 import com.mifos.core.objects.group.CenterInfo
@@ -16,8 +18,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CenterDetailsViewModel @Inject constructor(
-    private val getCenterDetailsUseCase: GetCenterDetailsUseCase
+    private val getCenterDetailsUseCase: GetCenterDetailsUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    val centerId = savedStateHandle.getStateFlow(key = Constants.CENTER_ID, initialValue = 0)
 
     private val _centerDetailsUiState =
         MutableStateFlow<CenterDetailsUiState>(CenterDetailsUiState.Loading)

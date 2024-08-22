@@ -66,23 +66,21 @@ import com.mifos.feature.loan.R
 /**
  * Created by Pronay Sarker on 01/07/2024 (5:50 AM)
  */
-
-
 @Composable
 fun LoanAccountSummaryScreen(
-    viewModel: LoanAccountSummaryViewModel = hiltViewModel(),
-    loanAccountNumber: Int,
     navigateBack: () -> Unit,
-    onMoreInfoClicked: () -> Unit,
+    onMoreInfoClicked: (loanId : Int) -> Unit,
     onTransactionsClicked: (loadId: Int) -> Unit,
     onRepaymentScheduleClicked: (loanId: Int) -> Unit,
-    onDocumentsClicked: () -> Unit,
-    onChargesClicked: () -> Unit,
-    approveLoan: (loanWithAssociations: LoanWithAssociations) -> Unit,
-    disburseLoan: () -> Unit,
+    onDocumentsClicked: (loanId : Int) -> Unit,
+    onChargesClicked: (loanId : Int) -> Unit,
+    approveLoan: (loadId : Int, loanWithAssociations: LoanWithAssociations) -> Unit,
+    disburseLoan: (loanId : Int) -> Unit,
     onRepaymentClick: (loanWithAssociations: LoanWithAssociations) -> Unit
 ) {
+    val viewModel: LoanAccountSummaryViewModel = hiltViewModel()
     val uiState by viewModel.loanAccountSummaryUiState.collectAsStateWithLifecycle()
+    val loanAccountNumber by viewModel.loanAccountNumber.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.loadLoanById(loanAccountNumber)
@@ -92,13 +90,13 @@ fun LoanAccountSummaryScreen(
         uiState = uiState,
         navigateBack = navigateBack,
         onRetry = { viewModel.loadLoanById(loanAccountNumber) },
-        onMoreInfoClicked = onMoreInfoClicked,
+        onMoreInfoClicked = { onMoreInfoClicked.invoke(loanAccountNumber) },
         onTransactionsClicked = { onTransactionsClicked.invoke(loanAccountNumber) },
         onRepaymentScheduleClicked = { onRepaymentScheduleClicked.invoke(loanAccountNumber) },
-        onDocumentsClicked = onDocumentsClicked,
-        onChargesClicked = onChargesClicked,
-        approveLoan = approveLoan,
-        disburseLoan = disburseLoan,
+        onDocumentsClicked = { onDocumentsClicked(loanAccountNumber) },
+        onChargesClicked = { onChargesClicked(loanAccountNumber) },
+        approveLoan = { approveLoan(loanAccountNumber, it )},
+        disburseLoan = { disburseLoan(loanAccountNumber) },
         makeRepayment = onRepaymentClick
     )
 }
@@ -586,7 +584,7 @@ class LoanAccountSummaryPreviewProvider : PreviewParameterProvider<LoanAccountSu
                         closedObligationsMet = true
                     ),
                     clientName = "Pronay sarker",
-                    loanOfficerName = "MR. Ching chong",
+                    loanOfficerName = "MR. Ching",
                     loanProductName = "Group Loan",
                     summary = demoSummary
                 )

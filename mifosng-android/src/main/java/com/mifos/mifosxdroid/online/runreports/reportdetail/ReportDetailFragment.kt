@@ -33,7 +33,6 @@ class ReportDetailFragment : MifosBaseFragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 ReportDetailScreen(
-                    reportItem = reportItem,
                     onBackPressed = {
                         findNavController().popBackStack()
                     },

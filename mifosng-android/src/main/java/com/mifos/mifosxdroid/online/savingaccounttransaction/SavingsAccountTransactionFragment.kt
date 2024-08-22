@@ -20,16 +20,16 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SavingsAccountTransactionFragment : MifosBaseFragment() {
 
-    private val arg: SavingsAccountTransactionFragmentArgs by navArgs()
+//    private val arg: SavingsAccountTransactionFragmentArgs by navArgs()
     val viewModel: com.mifos.feature.savings.account_transaction.SavingsAccountTransactionViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.accountId = arg.savingsAccountWithAssociations.id
-        viewModel.transactionType = arg.transactionType
-        viewModel.clientName = arg.savingsAccountWithAssociations.clientName
-        viewModel.savingsAccountNumber = arg.savingsAccountWithAssociations.accountNo
-        viewModel.savingsAccountType = arg.accountType
+//        viewModel.accountId = arg.savingsAccountWithAssociations.id
+//        viewModel.transactionType = arg.transactionType
+//        viewModel.clientName = arg.savingsAccountWithAssociations.clientName
+//        viewModel.savingsAccountNumber = arg.savingsAccountWithAssociations.accountNo
+//        viewModel.savingsAccountType = arg.accountType
     }
 
     override fun onCreateView(

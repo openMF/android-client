@@ -79,6 +79,7 @@ object Constants {
     const val ACTIVATE_CENTER = "activate_center"
     const val ACTIVATE_GROUP = "activate_group"
     const val ACTIVATE_TYPE = "activation_type"
+    const val ACTIVATE_ID = "activation_id"
     const val INTIAL_LOGIN = "initial_login"
     const val INDIVIDUAL_SHEET = "collection_sheet"
     const val DISBURSEMENT_DATE = "disbursement_date"
@@ -211,4 +212,10 @@ object Constants {
     const val PASSCODE = "preferences_mifos_passcode_string"
     const val THEME = "theme"
     const val LANGUAGE = "language_type"
+
+    // Compose Navigation KEY
+    const val REPORT_TYPE_ITEM = "report_type_item"
+    const val REPORT_PARAMETER_RESPONSE = "report_parameter_response"
+    const val LOAN_WITH_ASSOCIATIONS = "loanWithAssociation"
+    const val PASSCODE_INITIAL_LOGIN = "passcode_initial_login"
 }

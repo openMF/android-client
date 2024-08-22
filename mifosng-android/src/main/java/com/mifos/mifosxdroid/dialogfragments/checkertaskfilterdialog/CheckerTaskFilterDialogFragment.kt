@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.databinding.DialogFragmentCheckerTaskFilterBinding
-import com.mifos.feature.checker_inbox_task.dialog.CheckerInboxViewModel
+import com.mifos.feature.checker_inbox_task.checker_inbox_dialog.CheckerInboxViewModel
 import com.mifos.feature.checker_inbox_task.dialog.CheckerInboxViewModelFactory
 import com.mifos.mifosxdroid.uihelpers.MFDatePicker
 import com.mifos.utils.FragmentConstants

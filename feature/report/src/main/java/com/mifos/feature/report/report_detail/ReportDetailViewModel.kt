@@ -1,7 +1,10 @@
 package com.mifos.feature.report.report_detail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.use_cases.GetReportFullParameterListUseCase
 import com.mifos.core.domain.use_cases.GetReportParameterDetailsUseCase
@@ -10,6 +13,7 @@ import com.mifos.core.domain.use_cases.GetRunReportProductUseCase
 import com.mifos.core.domain.use_cases.GetRunReportWithQueryUseCase
 import com.mifos.core.objects.runreports.DataRow
 import com.mifos.core.objects.runreports.FullParameterListResponse
+import com.mifos.core.objects.runreports.client.ClientReportTypeItem
 import com.mifos.feature.report.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,8 +28,14 @@ class ReportDetailViewModel @Inject constructor(
     private val getReportParameterDetailsUseCase: GetReportParameterDetailsUseCase,
     private val getRunReportProductUseCase: GetRunReportProductUseCase,
     private val getRunReportWithQueryUseCase: GetRunReportWithQueryUseCase,
-    private val getRunReportOfficesUseCase: GetRunReportOfficesUseCase
+    private val getRunReportOfficesUseCase: GetRunReportOfficesUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val reportName =
+        savedStateHandle.getStateFlow(key = Constants.REPORT_TYPE_ITEM, initialValue = "")
+    val reportItem: ClientReportTypeItem =
+        Gson().fromJson(reportName.value, ClientReportTypeItem::class.java)
 
     private val _reportDetailUiState =
         MutableStateFlow<ReportDetailUiState>(ReportDetailUiState.Loading)
