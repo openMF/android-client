@@ -177,11 +177,10 @@ fun Navigation(
         )
 
         settingsScreen(
-            navigateBack = { navController.popBackStack() },
+            navigateBack = navController::popBackStack,
             navigateToLoginScreen = {},
             changePasscode = {},
             languageChanged = { },
-            serverConfig = {}
         )
 
         aboutScreen(
