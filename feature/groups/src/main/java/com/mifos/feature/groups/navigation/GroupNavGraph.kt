@@ -36,7 +36,7 @@ fun NavGraphBuilder.groupNavGraph(
 ) {
     navigation(
         startDestination = GroupScreen.GroupListScreen.route,
-        route = "group_list_route"
+        route = "group_list_routes"
     ) {
         groupListScreenRoute(
             paddingValues = paddingValues,
@@ -146,6 +146,7 @@ fun NavController.navigateToGroupDetailsScreen(groupId: Int) {
 }
 
 fun NavController.navigateToSyncGroupPayloadScreen() {
+    // TODO()
     navigate(GroupScreen.SyncGroupPayloadScreen.route)
 }
 

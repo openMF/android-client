@@ -14,7 +14,7 @@ import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Task
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.feature.checker_inbox_task.navigation.CheckerInboxTaskScreens
-import com.mifos.feature.groups.navigation.GROUP_LIST_SCREEN_ROUTE
+import com.mifos.feature.groups.navigation.GroupScreen
 import com.mifos.feature.path_tracking.navigation.PathTrackingScreens
 import com.mifos.feature.search.navigation.SearchScreens
 import com.mifos.feature.settings.navigation.SETTINGS_SCREEN_ROUTE
@@ -44,7 +44,7 @@ sealed class HomeDestinationsScreen(
 
     data object GroupListScreen : HomeDestinationsScreen(
         title = "Groups",
-        route = GROUP_LIST_SCREEN_ROUTE,
+        route = GroupScreen.GroupListScreen.route,
         icon = Icons.Rounded.Group
     )
 

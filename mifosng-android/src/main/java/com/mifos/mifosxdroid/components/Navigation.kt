@@ -15,6 +15,7 @@ import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTaskGraph
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
+import com.mifos.feature.client.navigation.navigateClientSurveyListScreen
 import com.mifos.feature.client.navigation.navigateCreateClientScreen
 
 import com.mifos.feature.data_table.navigation.dataTableNavGraph
@@ -23,11 +24,16 @@ import com.mifos.feature.data_table.navigation.navigateDataTable
 
 import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
-import com.mifos.feature.groups.navigation.groupListScreen
+import com.mifos.feature.groups.navigation.groupListScreenRoute
+import com.mifos.feature.groups.navigation.groupNavGraph
+import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
 import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetNavGraph
+import com.mifos.feature.loan.group_loan_account.GroupLoanAccountScreen
 import com.mifos.feature.loan.navigation.addLoanAccountScreen
+import com.mifos.feature.loan.navigation.groupLoanScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
+import com.mifos.feature.loan.navigation.navigateToGroupLoanScreen
 import com.mifos.feature.loan.navigation.navigateToLoanAccountScreen
 import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.note.navigation.navigateToNoteScreen
@@ -58,23 +64,19 @@ fun Navigation(
             navController = navController,
             paddingValues = padding,
             addLoanAccount = { navController.navigateToLoanAccountScreen(it) },
-            addSavingsAccount = { navController.navigateToAddSavingsAccount(it, 0, false) },
+            addSavingsAccount = { navController.navigateToAddSavingsAccount(0, it, false) },
             documents = {
                 navController.navigateToDocumentListScreen(
                     it,
                     Constants.ENTITY_TYPE_CLIENTS
                 )
             },
-
             moreClientInfo = {
                 navController.navigateDataTable(
                     Constants.DATA_TABLE_NAME_CLIENT,
                     it
                 )
             },
-
-
-
             notes = { navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_CLIENTS) },
             loanAccountSelected = { navController.navigateToLoanAccountSummaryScreen(it) },
             savingsAccountSelected = { id, type ->
@@ -87,6 +89,22 @@ fun Navigation(
                 )
             }
         )
+        
+        groupNavGraph(
+            paddingValues = padding,
+            navController = navController,
+            addGroupLoanAccount = navController::navigateToGroupLoanScreen,
+            addSavingsAccount = { navController.navigateToAddSavingsAccount(it, 0, true) },
+            loadDocumentList = { navController.navigateToDocumentListScreen(it, Constants.ENTITY_TYPE_GROUPS)},
+            clientListFragment = { TODO() },
+            loadGroupDataTables = { TODO() },
+            loadNotes = { navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_GROUPS)},
+            loadLoanAccountSummary = navController::navigateToLoanAccountSummaryScreen,
+            loadSavingsAccountSummary = navController::navigateToSavingsAccountSummaryScreen,
+            activateGroup = { navController.navigateToActivateScreen(it, Constants.ACTIVATE_GROUP)}
+        )
+
+        groupLoanScreen { navController.popBackStack() }
 
         savingsNavGraph(
             navController = navController,
@@ -148,17 +166,6 @@ fun Navigation(
 
         reportNavGraph(
             navController = navController
-        )
-
-        groupListScreen(
-            paddingValues = padding,
-            onAddGroupClick = {},
-            onGroupClick = { group ->
-
-            },
-            onSyncClick = { groupLists ->
-
-            }
         )
 
         checkerInboxTaskGraph(
