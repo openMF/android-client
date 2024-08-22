@@ -16,8 +16,11 @@ import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTaskGraph
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.client.navigation.navigateCreateClientScreen
+
 import com.mifos.feature.data_table.navigation.dataTableNavGraph
 import com.mifos.feature.data_table.navigation.navigateDataTable
+
+
 import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupListScreen
@@ -62,12 +65,16 @@ fun Navigation(
                     Constants.ENTITY_TYPE_CLIENTS
                 )
             },
+
             moreClientInfo = {
                 navController.navigateDataTable(
                     Constants.DATA_TABLE_NAME_CLIENT,
                     it
                 )
             },
+
+
+
             notes = { navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_CLIENTS) },
             loanAccountSelected = { navController.navigateToLoanAccountSummaryScreen(it) },
             savingsAccountSelected = { id, type ->
@@ -183,9 +190,12 @@ fun Navigation(
         )
         generateCollectionSheetScreen(onBackPressed = navController::popBackStack)
 
+
         dataTableNavGraph(
             navController = navController,
             clientCreated = {}
         )
+
+
     }
 }
