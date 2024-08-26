@@ -34,6 +34,7 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginTop="16dp"
                         android:textSize="24sp"
+                        android:text="This is tv size"
                         android:textStyle="bold" />
 
                     <TextView
@@ -43,6 +44,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginLeft="16dp"
                         android:layout_marginTop="16dp"
+                        android:text="this is product"
                         android:textColor="@color/gray_dark"
                         android:textStyle="bold" />
 
@@ -148,7 +150,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TableRow>
 
@@ -198,6 +200,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
                             android:hint="@string/cheque_number"
+                            android:text="24343"
                             android:imeOptions="actionNext"
                             android:tag="cheque_number" />
                     </TableRow>
@@ -244,6 +247,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
+                            text="@string/bank_number" />
                             android:text="@string/bank_number" />
 
                         <EditText

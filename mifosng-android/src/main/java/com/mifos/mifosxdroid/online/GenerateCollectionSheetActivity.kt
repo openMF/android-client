@@ -12,11 +12,13 @@ import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import com.mifos.mifosxdroid.databinding.ActivityToolbarContainerBinding
-import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment.OnPayloadSelectedListener
+//import com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment.OnPayloadSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class GenerateCollectionSheetActivity : MifosBaseActivity(), OnPayloadSelectedListener {
+class GenerateCollectionSheetActivity : MifosBaseActivity()
+//    OnPayloadSelectedListener
+{
 
     private lateinit var binding: ActivityToolbarContainerBinding
 
@@ -48,7 +50,7 @@ class GenerateCollectionSheetActivity : MifosBaseActivity(), OnPayloadSelectedLi
         return true
     }
 
-    override fun onPayloadSelected(payload: IndividualCollectionSheetPayload?) {
-        this.payload = payload
-    }
+//    override fun onPayloadSelected(payload: IndividualCollectionSheetPayload?) {
+//        this.payload = payload
+//    }
 }

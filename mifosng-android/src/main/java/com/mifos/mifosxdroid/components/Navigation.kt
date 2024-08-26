@@ -190,9 +190,9 @@ fun Navigation(
         individualCollectionSheetNavGraph(
             onBackPressed = { navController.popBackStack() },
             navController = navController,
-            navigateToPaymentDetails = { _, _, _, _, _, _ ->
-//                TODO() navigate to payment details
-            }
+//            navigateToPaymentDetails = { _, _, _, _, _, _ ->
+////                TODO() navigate to payment details
+//            }
         )
         generateCollectionSheetScreen(onBackPressed = navController::popBackStack)
 
