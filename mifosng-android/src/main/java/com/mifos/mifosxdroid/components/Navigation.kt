@@ -38,6 +38,8 @@ import com.mifos.feature.loan.navigation.navigateToLoanAccountScreen
 import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteScreen
+import com.mifos.feature.offline.dashboard.navigation.navigateToOfflineDashboardScreen
+import com.mifos.feature.offline.dashboard.navigation.offlineNavGraph
 import com.mifos.feature.path_tracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.report.navigation.reportNavGraph
 import com.mifos.feature.savings.navigation.addSavingsAccountScreen
@@ -196,12 +198,13 @@ fun Navigation(
         )
         generateCollectionSheetScreen(onBackPressed = navController::popBackStack)
 
-
         dataTableNavGraph(
             navController = navController,
             clientCreated = {}
         )
 
-
+        offlineNavGraph( // TODO() call it
+            navController = navController
+        )
     }
 }

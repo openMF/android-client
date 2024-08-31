@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_offline_nothing_to_sync">Nothing To Sync :)</string>
+    <string name="feature_offline_offline_Sync">Offline Sync *</string>
+    <string name="feature_offline_sync_loanRepayments">LoanRepayments</string>
+    <string name="feature_offline_sync_groups">Groups</string>
+    <string name="feature_offline_sync_clients">Clients</string>
+    <string name="feature_offline_sync_centers">Centers</string>
+    <string name="feature_offline_sync_savingsAccountTransactions">Sync Savings Account Transactions</string>
+
+</resources>

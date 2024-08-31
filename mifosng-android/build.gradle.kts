@@ -126,6 +126,7 @@ secrets {
 }
 
 dependencies {
+    implementation(projects.feature.offline)
     implementation(projects.feature.savings)
     implementation(projects.feature.note)
     implementation(projects.feature.auth)

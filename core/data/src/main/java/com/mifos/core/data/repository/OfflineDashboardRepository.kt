@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.offline.offlinedashbarod
+package com.mifos.core.data.repository
 
 import com.mifos.core.data.CenterPayload
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest

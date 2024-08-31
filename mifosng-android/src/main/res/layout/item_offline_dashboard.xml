@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:maxLines="3"
+        android:text="Payload name"
         android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/white" />
@@ -31,6 +32,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="28dp"
         android:textAlignment="center"
+        android:text="0"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/white" />
 
