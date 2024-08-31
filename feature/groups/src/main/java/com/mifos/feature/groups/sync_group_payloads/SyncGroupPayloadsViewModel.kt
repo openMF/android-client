@@ -35,8 +35,7 @@ class SyncGroupPayloadsViewModel @Inject constructor(
 ) : ViewModel() {
 
     val syncGroupPayloadsUiState get() = _syncGroupPayloadsUiState
-    private val _syncGroupPayloadsUiState =
-        MutableStateFlow<SyncGroupPayloadsUiState>(SyncGroupPayloadsUiState.Loading)
+    private val _syncGroupPayloadsUiState = MutableStateFlow<SyncGroupPayloadsUiState>(SyncGroupPayloadsUiState.Loading)
 
     val groupPayloadsList get() = _groupPayloadsList
     private val _groupPayloadsList = MutableStateFlow<List<GroupPayload>>(listOf())

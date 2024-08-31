@@ -33,8 +33,8 @@ import com.mifos.core.data.repository.SyncClientsDialogRepository
 import com.mifos.core.data.repository_imp.SyncClientsDialogRepositoryImp
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.data.repository_imp.SyncGroupsDialogRepositoryImp
-import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepository
-import com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardRepositoryImp
+import com.mifos.core.data.repository.OfflineDashboardRepository
+import com.mifos.core.data.repository_imp.OfflineDashboardRepositoryImp
 import com.mifos.core.data.repository.SyncCenterPayloadsRepository
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.data.repository_imp.SavingsAccountActivateRepositoryImp

@@ -585,11 +585,11 @@
     <string name="sync_clients">Clients</string>
     <string name="sync_clients_payloads">Sync Client Payloads</string>
     <string name="sync_centers_payloads">Sync Centers Payloads</string>
-    <string name="sync_groups">Groups</string>
     <string name="sync_centers">Centers</string>
     <string name="sync_loanrepayments">LoanRepayments</string>
     <string name="sync_savingsaccounttransactions">Sync Savings Account Transactions</string>
     <string name="payloads_count">Payloads : </string>
+    <string name="sync_groups">S : </string>
     <string name="transactions_count">Transaction : </string>
     <string name="nothing_to_sync">Nothing To Sync :)</string>
     <string name="no_repayment_to_sync">There is No LoanRepayment to Sync</string>

@@ -59,4 +59,5 @@ object MifosIcons {
     val upload = Icons.Rounded.FileUpload
     val gallery = Icons.Filled.Image
     val ArrowDropDown = Icons.Default.ArrowDropDown
+    val assignmentTurnedIn = Icons.Default.AssignmentTurnedIn
 }
