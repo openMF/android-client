@@ -40,10 +40,9 @@ class IndividualCollectionSheetFragment : MifosBaseFragment() {
         repaymentDate: String,
         individualCollectionSheet: IndividualCollectionSheet
     ) {
-        val action =
-            IndividualCollectionSheetFragmentDirections.actionIndividualCollectionSheetFragmentToIndividualCollectionSheetDetailsFragment(
+        val action = IndividualCollectionSheetFragmentDirections.actionIndividualCollectionSheetFragmentToIndividualCollectionSheetDetailsFragment(
                 individualCollectionSheet, SimpleDateFormat(
-                    "dd MMMM yyyy",
+                    "dd MM yyyy",
                     Locale.getDefault()
                 ).format(System.currentTimeMillis()), repaymentDate
             )

@@ -274,7 +274,7 @@ fun NewIndividualCollectionSheetScreen(
                             .weight(1f)
                             .padding(16.dp),
                         contentPadding = PaddingValues(),
-                        enabled = selectedStaff != "" && selectedOffice != "",
+//                        enabled =  selectedOffice != "",
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
                         )

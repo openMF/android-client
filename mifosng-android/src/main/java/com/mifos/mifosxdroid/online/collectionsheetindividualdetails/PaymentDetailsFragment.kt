@@ -1,3 +1,4 @@
+
 package com.mifos.mifosxdroid.online.collectionsheetindividualdetails
 
 import android.app.Activity
@@ -8,11 +9,15 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.fragment.navArgs
 import com.mifos.core.model.BulkRepaymentTransactions
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.objects.accounts.loan.PaymentTypeOptions
 import com.mifos.core.objects.collectionsheet.LoanAndClientName
+import com.mifos.feature.individual_collection_sheet.generate_collection_sheet.GenerateCollectionSheetScreen
+import com.mifos.feature.individual_collection_sheet.payment_details.PaymentDetailsScreenContent
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import com.mifos.mifosxdroid.databinding.AddPaymentDetailBinding
@@ -85,10 +90,14 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
                 String.format(Locale.getDefault(), "%.2f", it)
             }
         )
+        /**
+         * problem1
+         */
         ImageLoaderUtils.loadImage(
             requireContext(), clientId,
             binding.ivUserPicture
         )
+
         val defaultBulkRepaymentTransaction = BulkRepaymentTransactions()
         if (loanCollectionSheetItem != null) {
             defaultBulkRepaymentTransaction.loanId = loanCollectionSheetItem.loanId
@@ -123,13 +132,12 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
     }
 
     private fun cancelAdditional() {
-        bulkRepaymentTransaction.loanId = loanAndClientNameItem
-            ?.loan!!.loanId
-        val charge1: Double = if (binding.tvTotalCharges.text
-                .toString().isNotEmpty()
-        ) binding.tvTotalCharges.text.toString().toDouble() else 0.0
+        bulkRepaymentTransaction.loanId = loanAndClientNameItem?.loan!!.loanId
+        val charge1: Double = if (binding.tvTotalCharges.text.toString().isNotEmpty())
+            binding.tvTotalCharges.text.toString().toDouble() else 0.0
         val charge2: Double = if (binding.etTotalDue.text.toString().isNotEmpty()
         ) binding.etTotalDue.text.toString().toDouble() else 0.0
+
         bulkRepaymentTransaction.transactionAmount = charge1 + charge2
         binding.tableAdditionalDetails.visibility = View.GONE
         bulkRepaymentTransaction.paymentTypeId = null
@@ -143,8 +151,7 @@ class PaymentDetailsFragment : MifosBaseFragment(), View.OnClickListener, OnItem
 
     private fun saveAdditional() {
         var isAnyDetailNull = false
-        bulkRepaymentTransaction.loanId = loanAndClientNameItem
-            ?.loan!!.loanId
+        bulkRepaymentTransaction.loanId = loanAndClientNameItem?.loan!!.loanId
         val charge1: Double = if (binding.tvTotalCharges.text.toString().isNotEmpty())
             binding.tvTotalCharges.text.toString().toDouble() else 0.0
         val charge2: Double = if (binding.etTotalDue.text.toString().isNotEmpty()) {
