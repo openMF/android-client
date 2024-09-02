@@ -80,11 +80,9 @@
     <string name="feature_savings_failed_to_load_paymentoptions">Failed to Load PaymentTypeOptions</string>
     <string name="feature_savings_failed_to_load_savingaccounttransaction">Failed to loadSavingsAccountTransaction</string>
     <string name="feature_savings_nothing_to_sync">Nothing To Sync :)</string>
-    <string name="feature_savings_error_fix_before_sync">Please Fix the Error before sync</string>
     <string name="feature_savings_retry">Retry</string>
     <string name="feature_savings_transaction_amount">Transaction amount*</string>
     <string name="feature_savings_savings_account_id">Savings Account Id</string>
-    <string name="feature_savings_sync_savingsaccounttransactions">Sync Savings Account Transactions</string>
 
 </resources>
 

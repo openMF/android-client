@@ -1,4 +1,4 @@
-package com.mifos.feature.offline.dashboard.navigation
+package com.mifos.feature.offline.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

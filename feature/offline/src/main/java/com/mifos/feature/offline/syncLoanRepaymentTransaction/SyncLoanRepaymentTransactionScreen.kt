@@ -1,4 +1,4 @@
-package com.mifos.feature.savings.sync_account_transaction
+package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
 import android.content.Context
 import android.widget.Toast
@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,8 +17,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -31,13 +33,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -49,67 +51,67 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.objects.PaymentTypeOption
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.feature.savings.R
+import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.feature.offline.R
+import com.mifos.feature.offline.sync_savings_account_transaction.getPaymentTypeName
 
 @Composable
-fun SyncSavingsAccountTransactionScreenRoute(
-    viewModel: SyncSavingsAccountTransactionViewModel = hiltViewModel(),
+fun SyncLoanRepaymentTransactionScreenRoute(
+    viewModel: SyncLoanRepaymentTransactionViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
 ) {
-    val uiState by viewModel.syncSavingsAccountTransactionUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.syncLoanRepaymentTransactionUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.loadDatabaseSavingsAccountTransactions()
-        viewModel.loadPaymentTypeOption()
+        viewModel.loadDatabaseLoanRepaymentTransactions()
+        viewModel.loanPaymentTypeOption()
     }
 
-    SyncSavingsAccountTransactionScreen(
+    SyncLoanRepaymentTransactionScreen(
         uiState = uiState,
         onBackPressed = onBackPressed,
         refreshState = refreshState,
         onRefresh = {
             viewModel.refreshTransactions()
         },
-        syncSavingsAccountTransactions = {
-            viewModel.syncSavingsAccountTransactions()
+        syncLoanRepaymentTransactions = {
+            viewModel.syncGroupPayload()
         },
-        getUserStatus = {viewModel.getUserStatus()}
+        userStatus = viewModel.getUserStatus()
     )
 }
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SyncSavingsAccountTransactionScreen(
-    uiState: SyncSavingsAccountTransactionUiState,
+fun SyncLoanRepaymentTransactionScreen(
+    uiState: SyncLoanRepaymentTransactionUiState,
     onBackPressed: () -> Unit,
     refreshState: Boolean,
     onRefresh: () -> Unit,
-    syncSavingsAccountTransactions: () -> Unit,
-    getUserStatus: () -> Boolean
+    syncLoanRepaymentTransactions: () -> Unit,
+    userStatus : Boolean
 ) {
-    val snackbarHostState by remember { mutableStateOf(SnackbarHostState()) }
+    val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = refreshState,
-        onRefresh = onRefresh
-    )
+    val pullRefreshState =
+        rememberPullRefreshState(refreshing = refreshState, onRefresh = onRefresh)
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
-        title = stringResource(id = R.string.feature_savings_sync_savingsaccounttransactions),
+        title = stringResource(id = R.string.feature_offline_sync_loanrepayment),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = {
-                when (getUserStatus()) {
-                    false -> checkNetworkConnectionAndSync(context, syncSavingsAccountTransactions)
-                    true -> TODO()//Implement OfflineModeDialog()
+                when (userStatus) {
+                    false -> checkNetworkConnectionAndSync(context, syncLoanRepaymentTransactions)
+                    true -> TODO("Implement OfflineModeDialog()")
                 }
             }) {
-                Icon(Icons.Default.Sync, contentDescription = "Sync")
+                Icon(
+                    MifosIcons.sync,
+                    contentDescription = stringResource(id = R.string.feature_offline_sync_loanrepayment)
+                )
             }
         },
         snackbarHostState = snackbarHostState
@@ -117,30 +119,23 @@ fun SyncSavingsAccountTransactionScreen(
         Column(modifier = Modifier.padding(paddingValues)) {
             Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
                 when (uiState) {
-                    is SyncSavingsAccountTransactionUiState.Loading -> {
+                    is SyncLoanRepaymentTransactionUiState.ShowProgressbar -> {
                         MifosCircularProgress()
                     }
 
-                    is SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions -> {
-                        MifosEmptyUi(
-                            text = stringResource(id = R.string.feature_savings_nothing_to_sync),
-                            icon = MifosIcons.sync
+                    is SyncLoanRepaymentTransactionUiState.ShowError -> {
+                        ErrorStateScreen(uiState.message.toString(), onRefresh)
+                    }
+
+                    is SyncLoanRepaymentTransactionUiState.ShowLoanRepaymentTransactions -> {
+                        LoanRepaymentTransactionsList(
+                            uiState.loanRepaymentRequests,
+                            uiState.paymentTypeOptions
                         )
                     }
 
-                    is SyncSavingsAccountTransactionUiState.ShowError -> {
-                        val message = uiState.message
-                        ErrorStateScreen(message.toString(), onRefresh)
-                    }
-
-                    is SyncSavingsAccountTransactionUiState.ShowSavingsAccountTransactions -> {
-                        val transactions = uiState.savingsList
-                        val paymentTypeOptions = uiState.paymentTypeOptions
-                        LazyColumn {
-                            items(transactions) { transaction ->
-                                SavingsAccountTransactionItem(transaction, paymentTypeOptions)
-                            }
-                        }
+                    is SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments -> {
+                        EmptyLoanRepaymentsScreen(uiState.message)
                     }
                 }
                 PullRefreshIndicator(
@@ -154,8 +149,20 @@ fun SyncSavingsAccountTransactionScreen(
 }
 
 @Composable
-fun SavingsAccountTransactionItem(
-    transaction: SavingsAccountTransactionRequest,
+fun LoanRepaymentTransactionsList(
+    loanRepaymentRequests: List<LoanRepaymentRequest>,
+    paymentTypeOptions: List<PaymentTypeOption>
+) {
+    LazyColumn {
+        items(loanRepaymentRequests) { request ->
+            LoanRepaymentTransactionItem(request, paymentTypeOptions)
+        }
+    }
+}
+
+@Composable
+fun LoanRepaymentTransactionItem(
+    request: LoanRepaymentRequest,
     paymentTypeOptions: List<PaymentTypeOption>
 ) {
     Card(
@@ -170,33 +177,27 @@ fun SavingsAccountTransactionItem(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
+            TransactionRow(stringResource(R.string.feature_offline_loan_id), request.loanId.toString())
+            TransactionRow(stringResource(R.string.feature_offline_account_number), request.accountNumber ?: "")
             TransactionRow(
-                label = stringResource(R.string.feature_savings_savings_account_id),
-                value = transaction.savingAccountId.toString()
+                stringResource(R.string.feature_offline_payment_type),
+                request.paymentTypeId?.let { getPaymentTypeName(it.toInt(), paymentTypeOptions) }
+                    ?: ""
             )
             TransactionRow(
-                label = stringResource(R.string.feature_savings_payment_type),
-                value = transaction.paymentTypeId?.toInt()?.let {
-                    getPaymentTypeName(it, paymentTypeOptions)
-                } ?: ""
+                stringResource(R.string.feature_offline_transaction_amount),
+                request.transactionAmount ?: ""
             )
             TransactionRow(
-                label = stringResource(R.string.feature_savings_transaction_type),
-                value = transaction.transactionType ?: ""
-            )
-            TransactionRow(
-                label = stringResource(R.string.feature_savings_transaction_amount),
-                value = transaction.transactionAmount ?: ""
-            )
-            TransactionRow(
-                label = stringResource(R.string.feature_savings_transaction_date),
-                value = transaction.transactionDate ?: ""
+                stringResource(R.string.feature_offline_loan_transaction_date),
+                request.transactionDate ?: ""
             )
 
-            if (transaction.errorMessage != null) {
+            if (request.errorMessage != null) {
                 Text(
-                    text = transaction.errorMessage!!,
+                    text = request.errorMessage!!,
                     style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
@@ -220,7 +221,6 @@ fun TransactionRow(label: String, value: String) {
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f)
         )
     }
@@ -238,46 +238,61 @@ fun ErrorStateScreen(message: String, onRefresh: () -> Unit) {
             contentDescription = null,
             modifier = Modifier.size(48.dp)
         )
-        Text(text = message, modifier = Modifier.padding(vertical = 8.dp))
+        Text(text = message, modifier = Modifier.padding(vertical = 6.dp))
         Button(onClick = onRefresh) {
-            Text(stringResource(id = R.string.feature_savings_retry))
+            Text(stringResource(id = R.string.feature_offline_click_to_refresh))
         }
     }
 }
 
-fun getPaymentTypeName(
-    paymentId: Int,
-    paymentTypeOptions: List<PaymentTypeOption>?
-): String? {
-    return paymentTypeOptions
-        ?.firstOrNull { it.id == paymentId }
-        ?.name
+@Composable
+fun EmptyLoanRepaymentsScreen(message: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = Icons.Default.AssignmentTurnedIn,
+            contentDescription = null,
+            modifier = Modifier.size(72.dp),
+            tint = MaterialTheme.colorScheme.primary
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
 }
 
 fun checkNetworkConnectionAndSync(
     context: Context,
-    syncSavingsAccountTransactions: () -> Unit
+    syncLoanRepaymentTransactions: () -> Unit
 ) {
     if (Network.isOnline(context)) {
-        syncSavingsAccountTransactions()
+        syncLoanRepaymentTransactions()
     } else {
         Toast.makeText(
             context,
-            context.resources.getString(R.string.feature_savings_error_not_connected_internet),
+            context.getString(R.string.feature_offline_error_not_connected_internet),
             Toast.LENGTH_SHORT
         ).show()
     }
 }
 
-
-class SyncSavingsAccountTransactionUiStateProvider :
-    PreviewParameterProvider<SyncSavingsAccountTransactionUiState> {
+class SyncLoanRepaymentTransactionUiStateProvider :
+    PreviewParameterProvider<SyncLoanRepaymentTransactionUiState> {
     override val values = sequenceOf(
-        SyncSavingsAccountTransactionUiState.Loading,
-        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_load_savingaccounttransaction),
-        SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.feature_savings_no_transaction_to_sync),
-        SyncSavingsAccountTransactionUiState.ShowSavingsAccountTransactions(
-            sampleSavingsAccountTransactions.toMutableList(),
+        SyncLoanRepaymentTransactionUiState.ShowProgressbar,
+        SyncLoanRepaymentTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_loanrepayment),
+        SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments("No loan repayments to sync"),
+        SyncLoanRepaymentTransactionUiState.ShowLoanRepaymentTransactions(
+            sampleLoanRepaymentRequests,
             samplePaymentTypeOptions
         )
     )
@@ -285,32 +300,28 @@ class SyncSavingsAccountTransactionUiStateProvider :
 
 @Preview(showBackground = true)
 @Composable
-private fun SyncSavingsAccountTransactionScreenPreview(
-    @PreviewParameter(SyncSavingsAccountTransactionUiStateProvider::class) state: SyncSavingsAccountTransactionUiState
+private fun SyncLoanRepaymentTransactionScreenPreview(
+    @PreviewParameter(SyncLoanRepaymentTransactionUiStateProvider::class) uiState: SyncLoanRepaymentTransactionUiState
 ) {
-    SyncSavingsAccountTransactionScreen(
-        uiState = state,
+    SyncLoanRepaymentTransactionScreen(
+        uiState = uiState,
         onBackPressed = {},
         refreshState = false,
         onRefresh = {},
-        syncSavingsAccountTransactions = {},
-        getUserStatus = { true }
+        syncLoanRepaymentTransactions = {},
+        userStatus = true
     )
 }
 
 // Sample data for previews
-val sampleSavingsAccountTransactions = List(5) { index ->
-    SavingsAccountTransactionRequest(
-        savingAccountId = index,
+val sampleLoanRepaymentRequests = List(5) { index ->
+    LoanRepaymentRequest(
+        loanId = index,
+        accountNumber = "LOAN-$index",
+        paymentTypeId = index.toString(),
+        transactionAmount = "${1000 + index * 100}",
         transactionDate = "2023-07-${15 + index}",
-        transactionAmount = "${100 + index * 10}",
-        paymentTypeId = index.toLong().toString(),
-        transactionType = if (index % 2 == 0) "deposit" else "withdrawal",
-        accountNumber = "ACC-$index",
-        checkNumber = "CHK-$index",
-        routingCode = "RTG-$index",
-        receiptNumber = "RCP-$index",
-        bankNumber = "BNK-$index"
+        errorMessage = if (index % 2 == 0) null else "Error in transaction"
     )
 }
 
@@ -324,12 +335,12 @@ val samplePaymentTypeOptions = List(3) { index ->
     )
 }
 
-// Individual preview for SavingsAccountTransactionItem
+// Individual preview for LoanRepaymentTransactionItem
 @Preview(showBackground = true)
 @Composable
-fun SavingsAccountTransactionItemPreview() {
-    SavingsAccountTransactionItem(
-        transaction = sampleSavingsAccountTransactions[0],
+fun LoanRepaymentTransactionItemPreview() {
+    LoanRepaymentTransactionItem(
+        request = sampleLoanRepaymentRequests[0],
         paymentTypeOptions = samplePaymentTypeOptions
     )
 }

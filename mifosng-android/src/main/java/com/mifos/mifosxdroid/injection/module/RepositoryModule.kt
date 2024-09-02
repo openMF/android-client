@@ -44,10 +44,10 @@ import com.mifos.core.data.repository_imp.SavingsAccountSummaryRepositoryImp
 import com.mifos.core.data.repository_imp.SavingsAccountTransactionRepositoryImp
 import com.mifos.core.data.repository_imp.SyncCenterPayloadsRepositoryImp
 import com.mifos.core.data.repository_imp.SyncSavingsAccountTransactionRepositoryImp
-import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsRepository
-import com.mifos.mifosxdroid.offline.syncclientpayloads.SyncClientPayloadsRepositoryImp
-import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionRepository
-import com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionRepositoryImp
+import com.mifos.core.data.repository.SyncClientPayloadsRepository
+import com.mifos.core.data.repository_imp.SyncClientPayloadsRepositoryImp
+import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
+import com.mifos.core.data.repository_imp.SyncLoanRepaymentTransactionRepositoryImp
 import com.mifos.mifosxdroid.online.activate.ActivateRepository
 import com.mifos.mifosxdroid.online.activate.ActivateRepositoryImp
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepository

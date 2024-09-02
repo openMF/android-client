@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.offline.syncclientpayloads
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload

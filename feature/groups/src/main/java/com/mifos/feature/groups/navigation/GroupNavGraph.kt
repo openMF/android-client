@@ -15,7 +15,6 @@ import com.mifos.core.objects.response.SaveResponse
 import com.mifos.feature.groups.create_new_group.CreateNewGroupScreen
 import com.mifos.feature.groups.group_details.GroupDetailsScreen
 import com.mifos.feature.groups.group_list.GroupsListRoute
-import com.mifos.feature.groups.sync_group_payloads.SyncGroupPayloadsScreenRoute
 
 /**
  * Created by Pronay Sarker on 13/08/2024
@@ -60,10 +59,6 @@ fun NavGraphBuilder.groupNavGraph(
 
         addNewGroupRoute(
             onGroupCreated = { }
-        )
-
-        syncGroupPayloadsRoute(
-            onBackPressed = navController::popBackStack
         )
     }
 }
@@ -127,27 +122,12 @@ fun NavGraphBuilder.addNewGroupRoute(
     }
 }
 
-fun NavGraphBuilder.syncGroupPayloadsRoute(
-    onBackPressed: () -> Unit
-) {
-    composable(route = GroupScreen.SyncGroupPayloadScreen.route) {
-        SyncGroupPayloadsScreenRoute(
-            onBackPressed = onBackPressed
-        )
-    }
-}
-
 fun NavController.navigateToCreateNewGroupScreen() {
     navigate(GroupScreen.CreateNewGroupScreen.route)
 }
 
 fun NavController.navigateToGroupDetailsScreen(groupId: Int) {
     navigate(GroupScreen.GroupDetailsScreen.argument(groupId))
-}
-
-fun NavController.navigateToSyncGroupPayloadScreen() {
-    // TODO()
-    navigate(GroupScreen.SyncGroupPayloadScreen.route)
 }
 
 

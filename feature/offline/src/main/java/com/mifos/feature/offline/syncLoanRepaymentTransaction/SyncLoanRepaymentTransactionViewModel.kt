@@ -1,13 +1,15 @@
-package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition
+package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.mifos.core.common.utils.FileUtils.LOG_TAG
 import com.mifos.core.data.CenterPayload_Table.errorMessage
+import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.objects.PaymentTypeOption
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
-import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment.Companion.LOG_TAG
+import com.mifos.feature.offline.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,8 +23,10 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 16/08/23.
  */
 @HiltViewModel
-class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repository: SyncLoanRepaymentTransactionRepository) :
-    ViewModel() {
+class SyncLoanRepaymentTransactionViewModel @Inject constructor(
+    private val repository: SyncLoanRepaymentTransactionRepository,
+    private val prefManager : PrefManager
+) : ViewModel() {
 
     private val _syncLoanRepaymentTransactionUiState =
         MutableStateFlow<SyncLoanRepaymentTransactionUiState>(
@@ -37,6 +41,10 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
     private var mLoanRepaymentRequests: MutableList<LoanRepaymentRequest> = mutableListOf()
     private var mPaymentTypeOptions: List<PaymentTypeOption> = emptyList()
     private var mClientSyncIndex = 0
+
+    fun getUserStatus() : Boolean {
+        return prefManager.userStatus
+    }
 
     fun refreshTransactions() {
         _isRefreshing.value = true
@@ -55,7 +63,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowError(R.string.failed_to_load_loanrepayment)
+                        SyncLoanRepaymentTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_loanrepayment)
                 }
 
                 override fun onNext(loanRepaymentRequests: List<LoanRepaymentRequest>) {
@@ -77,7 +85,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowError(R.string.failed_to_load_paymentoptions)
+                        SyncLoanRepaymentTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_paymentoptions)
                 }
 
                 override fun onNext(paymentTypeOptions: List<PaymentTypeOption>) {
@@ -97,7 +105,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
         } else {
             _syncLoanRepaymentTransactionUiState.value =
                 SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments(
-                    R.string.no_loanrepayment_to_sync.toString()
+                    R.string.feature_offline_no_loanrepayment_to_sync.toString()
                 )
         }
     }
@@ -137,7 +145,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowError(R.string.failed_to_update_list)
+                        SyncLoanRepaymentTransactionUiState.ShowError(R.string.feature_offline_failed_to_update_list)
                 }
 
                 override fun onNext(loanRepaymentRequests: List<LoanRepaymentRequest>) {
@@ -149,7 +157,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
                     } else {
                         _syncLoanRepaymentTransactionUiState.value =
                             SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments(
-                                R.string.no_loanrepayment_to_sync.toString()
+                                R.string.feature_offline_no_loanrepayment_to_sync.toString()
                             )
                     }
                     updateUiState()
@@ -168,7 +176,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(private val repo
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowError(R.string.failed_to_load_loanrepayment)
+                        SyncLoanRepaymentTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_loanrepayment)
                 }
 
                 override fun onNext(loanRepaymentRequest: LoanRepaymentRequest) {

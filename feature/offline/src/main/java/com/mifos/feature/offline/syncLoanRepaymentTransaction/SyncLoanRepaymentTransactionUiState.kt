@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition
+package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
 import com.mifos.core.objects.PaymentTypeOption
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest

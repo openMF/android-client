@@ -14,7 +14,6 @@ import com.mifos.feature.center.center_details.CenterDetailsScreen
 import com.mifos.feature.center.center_group_list.GroupListScreen
 import com.mifos.feature.center.center_list.ui.CenterListScreen
 import com.mifos.feature.center.create_center.CreateNewCenterScreen
-import com.mifos.feature.center.sync_center_payloads.SyncCenterPayloadsScreenRoute
 
 fun NavGraphBuilder.centerNavGraph(
     navController: NavController,
@@ -44,9 +43,6 @@ fun NavGraphBuilder.centerNavGraph(
         )
         createCenterScreenRoute(
             onCreateSuccess = navController::popBackStack
-        )
-        syncCenterPayloadsScreenRoute(
-            onBackPressed = navController::popBackStack
         )
     }
 }
@@ -115,18 +111,6 @@ fun NavGraphBuilder.createCenterScreenRoute(
     }
 }
 
-fun NavGraphBuilder.syncCenterPayloadsScreenRoute(
-    onBackPressed: () -> Unit
-) {
-    composable(
-        route = CenterScreens.SyncCenterPayloadsScreen.route
-    ) {
-        SyncCenterPayloadsScreenRoute(
-            onBackPressed = onBackPressed
-        )
-    }
-}
-
 fun NavController.navigateCenterListScreenRoute() {
     navigate(CenterScreens.CenterListScreen.route)
 }
@@ -141,8 +125,4 @@ fun NavController.navigateCreateCenterScreenRoute() {
 
 fun NavController.navigateCenterGroupListScreenRoute(centerId: Int) {
     navigate(CenterScreens.CenterGroupListScreen.arguments(centerId))
-}
-
-fun NavController.navigateCenterSyncPayloadsScreenRoute() {
-    navigate(CenterScreens.SyncCenterPayloadsScreen.route)
 }

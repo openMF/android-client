@@ -1,4 +1,4 @@
-package com.mifos.feature.offline.dashboard.navigation
+package com.mifos.feature.offline.navigation
 
 /**
  * Created by Pronay Sarker on 31/08/2024 (4:24 PM)

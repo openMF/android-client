@@ -1,7 +1,7 @@
-package com.mifos.feature.groups.sync_group_payloads
+package com.mifos.feature.offline.sync_group_payloads
 
 import com.mifos.core.objects.group.GroupPayload
-import com.mifos.feature.groups.R
+import com.mifos.feature.offline.R
 
 
 /**
@@ -18,12 +18,12 @@ enum class GroupPayloadEmptyState(
     val iconResId: Int
 ) {
     ALL_SYNCED(
-        messageResId = R.string.feature_groups_all_groups_synced,
-        iconResId = R.drawable.feature_groups_ic_assignment_turned_in_black_24dp
+        messageResId = R.string.feature_offline_all_groups_synced,
+        iconResId = R.drawable.feature_offline_ic_assignment_turned_in_black_24dp
     ),
     NOTHING_TO_SYNC (
-        messageResId = R.string.feature_groups_no_group_payload_to_sync,
-        iconResId = R.drawable.feature_groups_ic_assignment_turned_in_black_24dp
+        messageResId = R.string.feature_offline_no_group_payload_to_sync,
+        iconResId = R.drawable.feature_offline_ic_assignment_turned_in_black_24dp
     )
 }
 
