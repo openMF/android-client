@@ -1,8 +1,15 @@
-package com.mifos.mifosxdroid.offline.syncclientpayloads
+package com.mifos.feature.offline.sync_client_payload
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
@@ -11,8 +18,18 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,13 +41,12 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.objects.client.ClientPayload
-import com.mifos.mifosxdroid.R
-import com.mifos.utils.Network
-import com.mifos.utils.PrefManager.userStatus
+import com.mifos.feature.offline.R
 
 @Composable
 fun SyncClientPayloadsScreenRoute(
@@ -53,7 +69,8 @@ fun SyncClientPayloadsScreenRoute(
         },
         syncClientPayloads = {
             viewModel.syncClientPayload()
-        }
+        },
+        userStatus = viewModel.getUserStatus()
     )
 }
 
@@ -65,6 +82,7 @@ fun SyncClientPayloadsScreen(
     refreshState: Boolean,
     onRefresh: () -> Unit,
     syncClientPayloads: () -> Unit,
+    userStatus : Boolean
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
@@ -72,7 +90,7 @@ fun SyncClientPayloadsScreen(
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
-        title = stringResource(id = R.string.sync_clients_payloads),
+        title = stringResource(id = R.string.feature_offline_sync_clients_payloads),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = {
@@ -83,7 +101,7 @@ fun SyncClientPayloadsScreen(
             }) {
                 Icon(
                     MifosIcons.sync,
-                    contentDescription = stringResource(id = R.string.sync_clients)
+                    contentDescription = stringResource(id = R.string.feature_offline_sync_clients)
                 )
             }
         },
@@ -150,16 +168,16 @@ fun ClientPayloadItem(payload: ClientPayload) {
                 }
             }
 
-            PayloadField(stringResource(id = R.string.first_name), payload.firstname ?: "")
-            PayloadField(stringResource(id = R.string.middle_name), payload.middlename ?: "")
-            PayloadField(stringResource(id = R.string.last_name), payload.lastname ?: "")
-            PayloadField(stringResource(id = R.string.mobile_no), payload.mobileNo ?: "")
-            PayloadField(stringResource(id = R.string.external_id), payload.externalId ?: "")
-            PayloadField(stringResource(id = R.string.gender), gender)
-            PayloadField(stringResource(id = R.string.dob), payload.dateOfBirth ?: "")
-            PayloadField(stringResource(id = R.string.office_id), payload.officeId?.toString() ?: "")
-            PayloadField(stringResource(id = R.string.activation_date), payload.activationDate ?: "")
-            PayloadField(stringResource(id = R.string.active), payloadStatus)
+            PayloadField(stringResource(id = R.string.feature_offline_first_name), payload.firstname ?: "")
+            PayloadField(stringResource(id = R.string.feature_offline_middle_name), payload.middlename ?: "")
+            PayloadField(stringResource(id = R.string.feature_offline_last_name), payload.lastname ?: "")
+            PayloadField(stringResource(id = R.string.feature_offline_mobile_no), payload.mobileNo ?: "")
+            PayloadField(stringResource(id = R.string.feature_offline_external_id), payload.externalId ?: "")
+            PayloadField(stringResource(id = R.string.feature_offline_gender), gender)
+            PayloadField(stringResource(id = R.string.feature_offline_dob), payload.dateOfBirth ?: "")
+            PayloadField(stringResource(id = R.string.feature_offline_office_id), payload.officeId?.toString() ?: "")
+            PayloadField(stringResource(id = R.string.feature_offline_activation_date), payload.activationDate ?: "")
+            PayloadField(stringResource(id = R.string.feature_offline_active), payloadStatus)
 
             if (payload.errorMessage != null) {
                 Text(
@@ -208,7 +226,7 @@ fun ErrorStateScreen(message: String, onRefresh: () -> Unit) {
         )
         Text(text = message, modifier = Modifier.padding(vertical = 16.dp))
         Button(onClick = onRefresh) {
-            Text(stringResource(id = R.string.click_to_refresh))
+            Text(stringResource(id = R.string.feature_offline_click_to_refresh))
         }
     }
 }
@@ -222,7 +240,7 @@ fun checkNetworkConnectionAndSync(
     } else {
         Toast.makeText(
             context,
-            context.getString(R.string.error_not_connected_internet),
+            context.getString(R.string.feature_offline_error_not_connected_internet),
             Toast.LENGTH_SHORT
         ).show()
     }
@@ -246,7 +264,8 @@ private fun SyncClientPayloadsScreenPreview(
         onBackPressed = {},
         refreshState = false,
         onRefresh = {},
-        syncClientPayloads = {}
+        syncClientPayloads = {},
+        userStatus = true
     )
 }
 

@@ -1,25 +1,20 @@
-package com.mifos.feature.groups.sync_group_payloads
+package com.mifos.feature.offline.sync_group_payloads
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.use_cases.AllDatabaseGroupPayloadUseCase
 import com.mifos.core.domain.use_cases.CreateGroupUseCase
 import com.mifos.core.domain.use_cases.DeleteAndUpdateGroupPayloadUseCase
 import com.mifos.core.domain.use_cases.UpdateGroupPayloadUseCase
 import com.mifos.core.objects.group.GroupPayload
-import com.mifos.core.objects.response.SaveResponse
-import com.mifos.feature.groups.R
+import com.mifos.feature.offline.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -35,7 +30,9 @@ class SyncGroupPayloadsViewModel @Inject constructor(
 ) : ViewModel() {
 
     val syncGroupPayloadsUiState get() = _syncGroupPayloadsUiState
-    private val _syncGroupPayloadsUiState = MutableStateFlow<SyncGroupPayloadsUiState>(SyncGroupPayloadsUiState.Loading)
+    private val _syncGroupPayloadsUiState = MutableStateFlow<SyncGroupPayloadsUiState>(
+        SyncGroupPayloadsUiState.Loading
+    )
 
     val groupPayloadsList get() = _groupPayloadsList
     private val _groupPayloadsList = MutableStateFlow<List<GroupPayload>>(listOf())
@@ -62,7 +59,7 @@ class SyncGroupPayloadsViewModel @Inject constructor(
         allDatabaseGroupPayloadUseCase().collect { result ->
             when (result) {
                 is Resource.Error -> _syncGroupPayloadsUiState.value =
-                    SyncGroupPayloadsUiState.Error(R.string.feature_groups_error_failed_to_load_groupPayload)
+                    SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_load_groupPayload)
 
                 is Resource.Loading -> _syncGroupPayloadsUiState.value =
                     SyncGroupPayloadsUiState.Loading
@@ -98,7 +95,7 @@ class SyncGroupPayloadsViewModel @Inject constructor(
             when (result) {
                 is Resource.Error -> {
                     _syncGroupPayloadsUiState.value =
-                        SyncGroupPayloadsUiState.Error(R.string.feature_groups_error_group_sync_failed)
+                        SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_group_sync_failed)
                     updateGroupPayload()
                 }
 
@@ -116,7 +113,7 @@ class SyncGroupPayloadsViewModel @Inject constructor(
         deleteAndUpdateGroupPayloadUseCase(id).collect { result ->
             when (result) {
                 is Resource.Error -> _syncGroupPayloadsUiState.value =
-                    SyncGroupPayloadsUiState.Error(R.string.feature_groups_error_failed_to_update_list)
+                    SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_update_list)
 
                 is Resource.Loading -> Unit
 
@@ -139,7 +136,7 @@ class SyncGroupPayloadsViewModel @Inject constructor(
         updateGroupPayloadUseCase(groupPayload).collect { result ->
             when (result) {
                 is Resource.Error -> _syncGroupPayloadsUiState.value =
-                    SyncGroupPayloadsUiState.Error(R.string.feature_groups_error_failed_to_load_groupPayload)
+                    SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_load_groupPayload)
 
                 is Resource.Loading -> _syncGroupPayloadsUiState.value =
                     SyncGroupPayloadsUiState.Loading

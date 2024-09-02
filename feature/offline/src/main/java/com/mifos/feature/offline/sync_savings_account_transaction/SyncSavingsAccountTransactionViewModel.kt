@@ -12,7 +12,7 @@ import com.mifos.core.domain.use_cases.ProcessTransactionUseCase
 import com.mifos.core.domain.use_cases.UpdateLoanRepaymentTransactionUseCase
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
-import com.mifos.feature.savings.R
+import com.mifos.feature.offline.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -71,7 +71,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
             checkErrorAndSync()
         } else {
             _syncSavingsAccountTransactionUiState.value =
-                SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_nothing_to_sync)
+                SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_nothing_to_sync)
         }
     }
 
@@ -98,7 +98,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
                 break
             } else if (checkTransactionsSyncBeforeOrNot()) {
                 _syncSavingsAccountTransactionUiState.value =
-                    SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_error_fix_before_sync)
+                    SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_error_fix_before_sync)
             }
         }
     }
@@ -158,7 +158,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
             syncSavingsAccountTransactions()
         } else {
             _syncSavingsAccountTransactionUiState.value =
-                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.feature_savings_nothing_to_sync)
+                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.feature_offline_nothing_to_sync)
         }
     }
 
@@ -177,7 +177,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
         allSavingsAccountTransactionsUseCase().collect { result ->
             when (result) {
                 is Resource.Error -> _syncSavingsAccountTransactionUiState.value =
-                    SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_load_savingaccounttransaction)
+                    SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_savingaccounttransaction)
 
                 is Resource.Loading -> _syncSavingsAccountTransactionUiState.value =
                     SyncSavingsAccountTransactionUiState.Loading
@@ -190,7 +190,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
                     } else {
                         _syncSavingsAccountTransactionUiState.value =
                             SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(
-                                R.string.feature_savings_no_transaction_to_sync
+                                R.string.feature_offline_no_transaction_to_sync
                             )
                     }
                 }
@@ -206,7 +206,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
         paymentTypeOptionUseCase().collect { result ->
             when (result) {
                 is Resource.Error -> _syncSavingsAccountTransactionUiState.value =
-                    SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_load_paymentoptions)
+                    SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_paymentoptions)
 
                 is Resource.Loading -> _syncSavingsAccountTransactionUiState.value =
                     SyncSavingsAccountTransactionUiState.Loading
@@ -228,7 +228,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
                 )
         } else {
             _syncSavingsAccountTransactionUiState.value =
-                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.feature_savings_no_transaction_to_sync)
+                SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.feature_offline_no_transaction_to_sync)
         }
     }
 
@@ -275,7 +275,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
             deleteAndUpdateTransactionsUseCase(savingsAccountId).collect { result ->
                 when (result) {
                     is Resource.Error -> _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_update_list)
+                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_update_list)
 
                     is Resource.Loading -> _syncSavingsAccountTransactionUiState.value =
                         SyncSavingsAccountTransactionUiState.Loading
@@ -299,7 +299,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
             updateLoanRepaymentTransactionUseCase(request).collect { result ->
                 when (result) {
                     is Resource.Error -> _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_savings_failed_to_update_savingsaccount)
+                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_update_savingsaccount)
 
                     is Resource.Loading -> _syncSavingsAccountTransactionUiState.value =
                         SyncSavingsAccountTransactionUiState.Loading

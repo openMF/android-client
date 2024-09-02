@@ -1,4 +1,4 @@
-package com.mifos.feature.center.sync_center_payloads
+package com.mifos.feature.offline.sync_center_payloads
 
 import android.content.Context
 import android.widget.Toast
@@ -29,7 +29,9 @@ import com.mifos.core.common.utils.Network
 import com.mifos.core.data.CenterPayload
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.center.R
+import com.mifos.feature.center.sync_center_payloads.SyncCenterPayloadsUiState
+import com.mifos.feature.center.sync_center_payloads.SyncCenterPayloadsViewModel
+import com.mifos.feature.offline.R
 
 
 @Composable
@@ -70,7 +72,7 @@ fun SyncCenterPayloadsScreen(
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
-        title = stringResource(id = R.string.feature_center_sync_centers_payloads),
+        title = stringResource(id = R.string.feature_offline_sync_centers_payloads),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = {
@@ -81,7 +83,7 @@ fun SyncCenterPayloadsScreen(
             }) {
                 Icon(
                     MifosIcons.sync,
-                    contentDescription = stringResource(id = R.string.feature_center_sync_centers)
+                    contentDescription = stringResource(id = R.string.feature_offline_sync_centers)
                 )
             }
         },
@@ -135,19 +137,19 @@ fun CenterPayloadItem(payload: CenterPayload) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             PayloadField(
-                label = stringResource(R.string.feature_center_name),
+                label = stringResource(R.string.feature_offline_name),
                 value = payload.name ?: ""
             )
             PayloadField(
-                label = stringResource(R.string.feature_center_office_id),
+                label = stringResource(R.string.feature_offline_office_id),
                 value = payload.officeId?.toString() ?: ""
             )
             PayloadField(
-                label = stringResource(R.string.feature_center_activation_date),
+                label = stringResource(R.string.feature_offline_activation_date),
                 value = payload.activationDate ?: ""
             )
             PayloadField(
-                label = stringResource(R.string.feature_center_active),
+                label = stringResource(R.string.feature_offline_active),
                 value = if (payload.active) true.toString() else false.toString()
             )
             payload.errorMessage?.let {
@@ -196,7 +198,7 @@ fun ErrorState(message: String, onRefresh: () -> Unit) {
         )
         Text(text = message, modifier = Modifier.padding(vertical = 16.dp))
         Button(onClick = onRefresh) {
-            Text(stringResource(id = R.string.feature_center_click_to_refresh))
+            Text(stringResource(id = R.string.feature_offline_click_to_refresh))
         }
     }
 }
@@ -214,7 +216,7 @@ fun EmptyState() {
             modifier = Modifier.size(48.dp)
         )
         Text(
-            text = stringResource(id = R.string.feature_center_no_center_payload_to_sync),
+            text = stringResource(id = R.string.feature_offline_no_center_payload_to_sync),
             modifier = Modifier.padding(top = 16.dp)
         )
     }
@@ -229,7 +231,7 @@ fun checkNetworkConnectionAndSync(
     } else {
         Toast.makeText(
             context,
-            context.getString(R.string.feature_center_error_not_connected_internet),
+            context.getString(R.string.feature_offline_error_not_connected_internet),
             Toast.LENGTH_SHORT
         ).show()
     }

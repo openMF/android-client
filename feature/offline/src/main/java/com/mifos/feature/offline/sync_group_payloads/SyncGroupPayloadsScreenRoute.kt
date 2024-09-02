@@ -1,4 +1,4 @@
-package com.mifos.feature.groups.sync_group_payloads
+package com.mifos.feature.offline.sync_group_payloads
 
 import android.content.Context
 import android.widget.Toast
@@ -41,7 +41,7 @@ import com.mifos.core.designsystem.component.MifosErrorContent
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.objects.group.GroupPayload
-import com.mifos.feature.groups.R
+import com.mifos.feature.offline.R
 
 @Composable
 fun SyncGroupPayloadsScreenRoute(
@@ -88,7 +88,7 @@ fun SyncGroupPayloadsScreen(
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
-        title = stringResource(id = R.string.feature_groups_sync_groups),
+        title = stringResource(id = R.string.feature_offline_sync_groups),
         onBackPressed = onBackPressed,
         actions = {
             IconButton(onClick = {
@@ -103,7 +103,7 @@ fun SyncGroupPayloadsScreen(
             }) {
                 Icon(
                     MifosIcons.sync,
-                    contentDescription = stringResource(id = R.string.feature_groups_sync)
+                    contentDescription = stringResource(id = R.string.feature_offline_sync)
                 )
             }
         },
@@ -123,7 +123,7 @@ fun SyncGroupPayloadsScreen(
                     MifosErrorContent(
                         message = stringResource(id = uiState.messageResId),
                         onRefresh = onRefresh,
-                        refreshButtonText = stringResource(id = R.string.feature_groups_click_to_refresh)
+                        refreshButtonText = stringResource(id = R.string.feature_offline_click_to_refresh)
                     )
                 }
 
@@ -156,7 +156,7 @@ fun SyncGroupPayloadsScreen(
                 if (Network.isOnline(context)) {
                     onRefresh()
                 } else {
-                    Toast.makeText(context, context.resources.getText(R.string.feature_groups_error_not_connected_internet), Toast.LENGTH_SHORT,).show()
+                    Toast.makeText(context, context.resources.getText(R.string.feature_offline_error_not_connected_internet), Toast.LENGTH_SHORT,).show()
                 }
                 pullRefreshState.endRefresh()
             }
@@ -188,21 +188,21 @@ fun GroupPayloadItem(payload: GroupPayload) {
                 false.toString()
             }
 
-            GroupPayloadField(stringResource(id = R.string.feature_groups_name), payload.name ?: "")
-            GroupPayloadField(stringResource(id = R.string.feature_groups_external_id), payload.externalId ?: "")
+            GroupPayloadField(stringResource(id = R.string.feature_offline_name), payload.name ?: "")
+            GroupPayloadField(stringResource(id = R.string.feature_offline_external_id), payload.externalId ?: "")
             GroupPayloadField(
-                stringResource(id = R.string.feature_groups_office_id),
-                payload.officeId.toString() ?: ""
+                stringResource(id = R.string.feature_offline_office_id),
+                payload.officeId.toString()
             )
             GroupPayloadField(
-                stringResource(id = R.string.feature_groups_submit_date),
+                stringResource(id = R.string.feature_offline_submit_date),
                 payload.submittedOnDate ?: ""
             )
             GroupPayloadField(
-                stringResource(id = R.string.feature_groups_activation_date),
+                stringResource(id = R.string.feature_offline_activation_date),
                 payload.activationDate ?: ""
             )
-            GroupPayloadField(stringResource(id = R.string.feature_groups_active), status)
+            GroupPayloadField(stringResource(id = R.string.feature_offline_active), status)
 
             if (payload.errorMessage != null) {
                 Text(
@@ -246,7 +246,7 @@ fun checkNetworkConnectionAndSync(
     } else {
         Toast.makeText(
             context,
-            context.getString(R.string.feature_groups_error_not_connected_internet),
+            context.getString(R.string.feature_offline_error_not_connected_internet),
             Toast.LENGTH_SHORT
         ).show()
     }

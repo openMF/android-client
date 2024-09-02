@@ -11,4 +11,6 @@ android {
 dependencies {
     implementation(projects.core.domain)
 
+    //material
+    implementation (libs.androidx.material.v168)
 }

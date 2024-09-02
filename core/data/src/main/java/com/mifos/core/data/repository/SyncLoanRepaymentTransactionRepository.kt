@@ -1,4 +1,4 @@
-package com.mifos.mifosxdroid.offline.syncloanrepaymenttransacition
+package com.mifos.core.data.repository
 
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse

@@ -14,7 +14,6 @@ import com.mifos.feature.savings.account_activate.SavingsAccountActivateScreen
 import com.mifos.feature.savings.account_approval.SavingsAccountApprovalScreen
 import com.mifos.feature.savings.account_summary.SavingsAccountSummaryScreen
 import com.mifos.feature.savings.account_transaction.SavingsAccountTransactionScreen
-import com.mifos.feature.savings.sync_account_transaction.SyncSavingsAccountTransactionScreenRoute
 
 /**
  * Created by Pronay Sarker on 14/08/2024 (1:10 PM)
@@ -73,10 +72,6 @@ fun NavGraphBuilder.savingsNavGraph(
         }
 
         savingsAccountTransactionScreen {
-            onBackPressed()
-        }
-
-        syncSavingsAccountTransactionScreen {
             onBackPressed()
         }
     }
@@ -171,18 +166,6 @@ fun NavGraphBuilder.savingsAccountTransactionScreen(
     }
 }
 
-fun NavGraphBuilder.syncSavingsAccountTransactionScreen(
-    onBackPressed: () -> Unit
-) {
-    composable(
-        route = SavingsScreens.SavingsSyncAccountTransaction.route
-    ) {
-        SyncSavingsAccountTransactionScreenRoute(
-            onBackPressed = onBackPressed
-        )
-    }
-}
-
 fun NavController.navigateToAddSavingsAccount(
     groupId: Int,
     clientId: Int,
@@ -215,8 +198,4 @@ fun NavController.navigateToSavingsAccountTransactionScreen(
             depositType
         )
     )
-}
-
-fun NavController.navigateToSyncSavingsAccountTransactionScreen() {
-    navigate(SavingsScreens.SavingsSyncAccountTransaction.route)
 }

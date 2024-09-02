@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.fragment.findNavController
+import com.mifos.feature.offline.sync_client_payload.SyncClientPayloadsScreenRoute
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -1,10 +1,12 @@
-package com.mifos.mifosxdroid.offline.syncclientpayloads
+package com.mifos.feature.offline.sync_client_payload
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.mifos.core.common.utils.FileUtils.LOG_TAG
+import com.mifos.core.data.repository.SyncClientPayloadsRepository
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
-import com.mifos.mifosxdroid.dialogfragments.syncclientsdialog.SyncClientsDialogFragment.Companion.LOG_TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +22,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SyncClientPayloadsViewModel @Inject constructor(
-    private val repository: SyncClientPayloadsRepository
+    private val repository: SyncClientPayloadsRepository,
+    private val prefManager: PrefManager
 ) : ViewModel() {
 
     private val _syncClientPayloadsRepository =
@@ -34,6 +37,10 @@ class SyncClientPayloadsViewModel @Inject constructor(
 
     private var mClientPayloads: MutableList<ClientPayload> = mutableListOf()
     private var mClientSyncIndex = 0
+
+    fun getUserStatus() : Boolean{
+        return prefManager.userStatus
+    }
 
     fun refreshClientPayloads() {
         _isRefreshing.value = true
