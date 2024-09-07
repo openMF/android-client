@@ -7,6 +7,7 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.GroupLoanPayload
 import com.mifos.core.data.LoansPayload
 import com.mifos.core.data.repository.DataTableListRepository
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.objects.accounts.loan.Loans
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
@@ -27,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DataTableListViewModel @Inject constructor(
     private val repository: DataTableListRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val prefManager: PrefManager,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val args =
@@ -47,6 +49,10 @@ class DataTableListViewModel @Inject constructor(
     private var groupLoanPayload: GroupLoanPayload? = null
     private var clientPayload: ClientPayload? = null
     private var formWidgetsList: MutableList<List<FormWidget>> = ArrayList()
+
+    fun getUserStatus() : Boolean {
+        return prefManager.userStatus
+    }
 
     fun initArgs(
         dataTables: List<DataTable>,

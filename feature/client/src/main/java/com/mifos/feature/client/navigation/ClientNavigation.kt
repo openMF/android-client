@@ -269,3 +269,7 @@ fun NavController.navigateClientSurveyListScreen(clientId: Int) {
 fun NavController.navigateCreateClientScreen() {
     navigate(ClientScreens.CreateClientScreen.route)
 }
+
+fun NavController.navigateToClientListScreen(){
+    navigate(ClientScreens.ClientListScreen.route)
+}

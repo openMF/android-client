@@ -52,7 +52,7 @@ class DataTableListFragment : Fragment() {
             setContent {
                 DataTableListScreen(
                     onBackPressed = { requireActivity().supportFragmentManager.popBackStack() },
-                    clientCreated = { showClientCreatedSuccessfully(it) }
+                    clientCreated = { it, it2 -> showClientCreatedSuccessfully(it) }
                 )
             }
         }
