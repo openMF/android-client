@@ -20,7 +20,7 @@ import com.mifos.feature.data_table.dataTableList.FormWidget
 
 fun NavGraphBuilder.dataTableNavGraph(
     navController: NavController,
-    clientCreated: (Client) -> Unit
+    clientCreated: (Client, Boolean) -> Unit
 ) {
     navigation(
         startDestination = DataTableScreens.DataTableScreen.route,
@@ -81,7 +81,7 @@ fun NavGraphBuilder.dataTableDataRoute(
 
 fun NavGraphBuilder.dataTableListRoute(
     onBackPressed: () -> Unit,
-    clientCreated: (Client) -> Unit
+    clientCreated: (Client, Boolean) -> Unit
 ) {
     composable(
         route = DataTableScreens.DataTableListScreen.route,

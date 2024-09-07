@@ -31,20 +31,20 @@ import dagger.hilt.android.AndroidEntryPoint
 class ClientListFragment : MifosBaseFragment() {
 
     private val arg: ClientListFragmentArgs by navArgs()
-    private lateinit var clientList: List<Client>
-    private var isParentFragment = false
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        if (arguments != null) {
-            clientList = arg.clientListArgs.clientsList
-            isParentFragment = arg.clientListArgs.isParentFragment
-        }
-
-        if (!isParentFragment) (activity as HomeActivity).supportActionBar?.title =
-            getString(R.string.clients)
-    }
+//    private lateinit var clientList: List<Client>
+//    private var isParentFragment = false
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//        if (arguments != null) {
+//            clientList = arg.clientListArgs.clientsList
+//            isParentFragment = arg.clientListArgs.isParentFragment
+//        }
+//
+//        if (!isParentFragment) (activity as HomeActivity).supportActionBar?.title =
+//            getString(R.string.clients)
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,11 +56,11 @@ class ClientListFragment : MifosBaseFragment() {
                 ClientListScreen(
                     paddingValues = PaddingValues(),
                     createNewClient = {
-                    if (!isParentFragment) {
-                        findNavController().navigate(R.id.action_navigation_client_list_to_createNewClientFragment)
-                    } else {
-                        findNavController().navigate(R.id.action_clientListFragment_to_createNewClientFragment)
-                    }
+//                    if (!isParentFragment) {
+//                        findNavController().navigate(R.id.action_navigation_client_list_to_createNewClientFragment)
+//                    } else {
+//                        findNavController().navigate(R.id.action_clientListFragment_to_createNewClientFragment)
+//                    }
                 }, syncClicked = { clientList ->
                     val syncClientsDialogFragment =
                         SyncClientsDialogFragment.newInstance(ArrayList(clientList))

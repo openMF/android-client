@@ -52,7 +52,7 @@ import java.time.format.DateTimeFormatter
 fun DataTableListScreen(
     viewModel: DataTableListViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
-    clientCreated: (Client) -> Unit
+    clientCreated: (Client, Boolean) -> Unit
 ) {
     val dataTables = viewModel.arg.dataTableList
     val requestType = viewModel.arg.requestType
@@ -69,7 +69,7 @@ fun DataTableListScreen(
         uiState = uiState,
         dataTableList = dataTableList ?: listOf(),
         onBackPressed = onBackPressed,
-        clientCreated = clientCreated,
+        clientCreated = { client -> clientCreated(client, viewModel.getUserStatus() ) },
         onSaveClicked = { viewModel.processDataTable() }
     )
 }

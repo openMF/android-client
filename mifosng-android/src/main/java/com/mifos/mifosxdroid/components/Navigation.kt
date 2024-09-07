@@ -1,8 +1,10 @@
 package com.mifos.mifosxdroid.components
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.mifos.core.common.utils.Constants
@@ -13,13 +15,16 @@ import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTaskGraph
+import com.mifos.feature.client.navigation.ClientScreens
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.client.navigation.navigateClientSurveyListScreen
 import com.mifos.feature.client.navigation.navigateCreateClientScreen
+import com.mifos.feature.client.navigation.navigateToClientListScreen
 
 import com.mifos.feature.data_table.navigation.dataTableNavGraph
 import com.mifos.feature.data_table.navigation.navigateDataTable
+import com.mifos.feature.data_table.navigation.navigateDataTableList
 
 
 import com.mifos.feature.document.navigation.documentListScreen
@@ -27,6 +32,7 @@ import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupListScreenRoute
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
+import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
 import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
 import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.loan.group_loan_account.GroupLoanAccountScreen
@@ -49,6 +55,8 @@ import com.mifos.feature.savings.navigation.savingsNavGraph
 import com.mifos.feature.search.navigation.SearchScreens
 import com.mifos.feature.search.navigation.searchNavGraph
 import com.mifos.feature.settings.navigation.settingsScreen
+import com.mifos.mifosxdroid.R
+import com.mifos.utils.MifosResponseHandler
 
 @Composable
 fun Navigation(
@@ -57,6 +65,8 @@ fun Navigation(
     modifier: Modifier = Modifier,
     startDestination: String = SearchScreens.SearchScreenRoute.route
 ) {
+    val context = LocalContext.current
+
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -91,19 +101,19 @@ fun Navigation(
                 )
             }
         )
-        
+
         groupNavGraph(
             paddingValues = padding,
             navController = navController,
             addGroupLoanAccount = navController::navigateToGroupLoanScreen,
             addSavingsAccount = { navController.navigateToAddSavingsAccount(it, 0, true) },
-            loadDocumentList = { navController.navigateToDocumentListScreen(it, Constants.ENTITY_TYPE_GROUPS)},
-            clientListFragment = { TODO() },
-            loadGroupDataTables = { TODO() },
-            loadNotes = { navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_GROUPS)},
+            loadDocumentList = { navController.navigateToDocumentListScreen(it, Constants.ENTITY_TYPE_GROUPS) },
+            clientListFragment = { _ -> navController.navigateToClientListScreen() },
+            loadGroupDataTables = { navController.navigateDataTable(Constants.DATA_TABLE_NAME_GROUP, it) },
+            loadNotes = { navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_GROUPS) },
             loadLoanAccountSummary = navController::navigateToLoanAccountSummaryScreen,
             loadSavingsAccountSummary = navController::navigateToSavingsAccountSummaryScreen,
-            activateGroup = { navController.navigateToActivateScreen(it, Constants.ACTIVATE_GROUP)}
+            activateGroup = { navController.navigateToActivateScreen(it, Constants.ACTIVATE_GROUP) }
         )
 
         groupLoanScreen { navController.popBackStack() }
@@ -111,7 +121,7 @@ fun Navigation(
         savingsNavGraph(
             navController = navController,
             onBackPressed = navController::popBackStack,
-            loadMoreSavingsAccountInfo = { },
+            loadMoreSavingsAccountInfo = { navController.navigateDataTable(Constants.DATA_TABLE_NAME_SAVINGS, it) },
             loadDocuments = {
                 navController.navigateToDocumentListScreen(
                     it,
@@ -122,7 +132,7 @@ fun Navigation(
 
         loanNavGraph(
             navController = navController,
-            onMoreInfoClicked = { },
+            onMoreInfoClicked = { navController.navigateDataTable(Constants.DATA_TABLE_NAME_LOANS, it) },
             onDocumentsClicked = navController::navigateToDocumentListScreen
         )
 
@@ -136,7 +146,10 @@ fun Navigation(
 
         addLoanAccountScreen(
             onBackPressed = navController::popBackStack,
-            dataTable = { _, _ -> }
+            dataTable = { dataTable, payload ->
+//                navController.navigateDataTableList(dataTable, payload, Constants.CLIENT_LOAN)
+//                TODO()
+            }
         )
 
         addSavingsAccountScreen(
@@ -149,12 +162,12 @@ fun Navigation(
             paddingValues = padding,
             onCreateCenter = navController::navigateCreateCenterScreenRoute,
             onCreateClient = navController::navigateCreateClientScreen,
-            onCreateGroup = {},
+            onCreateGroup = navController::navigateToCreateNewGroupScreen,
             onCenter = navController::navigateCenterDetailsScreenRoute,
             onClient = navController::navigateClientDetailsScreen,
-            onLoan = {},
-            onGroup = {},
-            onSavings = {}
+            onLoan = navController::navigateToLoanAccountSummaryScreen,
+            onGroup = navController::navigateToGroupDetailsScreen,
+            onSavings = navController::navigateClientDetailsScreen
         )
 
         centerNavGraph(
@@ -162,7 +175,8 @@ fun Navigation(
             paddingValues = padding,
             onActivateCenter = navController::navigateToActivateScreen,
             addSavingsAccount = {
-//                navController.navigateToAddSavingsAccount(0, it, true)
+//                TODO() check this logic
+                navController.navigateToAddSavingsAccount(it, 0, true)
             }
         )
 
@@ -181,7 +195,7 @@ fun Navigation(
         settingsScreen(
             navigateBack = navController::popBackStack,
             navigateToLoginScreen = {},
-            changePasscode = {},
+            changePasscode = { },
             languageChanged = { },
         )
 
@@ -192,18 +206,24 @@ fun Navigation(
         individualCollectionSheetNavGraph(
             onBackPressed = { navController.popBackStack() },
             navController = navController,
-//            navigateToPaymentDetails = { _, _, _, _, _, _ ->
-////                TODO() navigate to payment details
-//            }
         )
+
         generateCollectionSheetScreen(onBackPressed = navController::popBackStack)
 
         dataTableNavGraph(
             navController = navController,
-            clientCreated = {}
+            clientCreated = { client , userStatus ->
+                navController.popBackStack()
+                navController.popBackStack()
+                Toast.makeText(context, context.resources.getString(R.string.client) + MifosResponseHandler.response, Toast.LENGTH_LONG).show()
+
+                if(userStatus == Constants.USER_ONLINE){
+                    client.clientId?.let { navController.navigateClientDetailsScreen(it) }
+                }
+            }
         )
 
-        offlineNavGraph( // TODO() call it
+        offlineNavGraph(
             navController = navController
         )
     }
