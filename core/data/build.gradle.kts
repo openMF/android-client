@@ -27,7 +27,7 @@ dependencies {
     api(libs.rxjava)
 
     api(libs.dbflow)
-    api(libs.okhttp)
+    api(libs.squareup.okhttp)
 
     // sdk client
     api(libs.fineract.client)

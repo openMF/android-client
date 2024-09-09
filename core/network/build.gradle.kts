@@ -48,7 +48,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.converter.scalars)
     implementation(libs.adapter.rxjava)
-    implementation(libs.okhttp)
+    implementation(libs.squareup.okhttp)
     implementation(libs.logging.interceptor)
 
     implementation(libs.fliptables)

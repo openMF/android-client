@@ -11,8 +11,6 @@ import com.mifos.feature.auth.login.LoginScreen
 import com.mifos.mifosxdroid.activity.home.HomeActivity
 import com.mifos.mifosxdroid.activity.setting.UpdateServerConfigFragment
 import com.mifos.mifosxdroid.core.MifosBaseActivity
-import com.mifos.mifosxdroid.passcode.PassCodeActivity
-import com.mifos.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -30,9 +28,7 @@ class LoginActivity : MifosBaseActivity() {
                     startActivity(Intent(this, HomeActivity::class.java))
                     finish()
                 }, passcodeIntent = {
-                    val intent = Intent(this, PassCodeActivity::class.java)
-                    intent.putExtra(Constants.INTIAL_LOGIN, true)
-                    startActivity(intent)
+                    startActivity(Intent(this, HomeActivity::class.java))
                     finish()
                 },
                 onClickToUpdateServerConfig = {

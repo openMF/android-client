@@ -20,7 +20,7 @@ enum class MifosFlavor(val dimension: FlavorDimension, val applicationIdSuffix: 
 }
 
 fun configureFlavors(
-    commonExtension: CommonExtension<*, *, *, *, *>,
+    commonExtension: CommonExtension<*, *, *, *, *, *>,
     flavorConfigurationBlock: ProductFlavor.(flavor: MifosFlavor) -> Unit = {}
 ) {
     commonExtension.apply {

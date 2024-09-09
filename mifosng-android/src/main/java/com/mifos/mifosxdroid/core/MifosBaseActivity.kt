@@ -11,14 +11,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.mifos.mifosxdroid.AndroidClientActivity
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.passcode.PassCodeActivity
-import com.mifos.mobile.passcode.BasePassCodeActivity
 import com.mifos.utils.Constants
 import com.mifos.utils.LanguageHelper
 import com.mifos.utils.PrefManager
@@ -26,7 +25,7 @@ import com.mifos.utils.PrefManager
 /**
  * @author fomenkoo
  */
-open class MifosBaseActivity : BasePassCodeActivity(), BaseActivityCallback {
+open class MifosBaseActivity :  BaseActivityCallback, AppCompatActivity() {
     var toolbar: Toolbar? = null
     private var progress: ProgressDialog? = null
     override fun setContentView(layoutResID: Int) {
@@ -158,9 +157,5 @@ open class MifosBaseActivity : BasePassCodeActivity(), BaseActivityCallback {
             val backStackId = supportFragmentManager.getBackStackEntryAt(i).id
             fm.popBackStack(backStackId, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
-    }
-
-    override fun getPassCodeClass(): Class<*> {
-        return PassCodeActivity::class.java
     }
 }

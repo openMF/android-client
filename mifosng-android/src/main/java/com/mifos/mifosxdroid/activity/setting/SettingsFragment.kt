@@ -12,10 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.settings.settings.SettingsScreen
-import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.activity.login.LoginActivity
-import com.mifos.mifosxdroid.passcode.PassCodeActivity
-import com.mifos.mobile.passcode.utils.PasscodePreferencesHelper
 
 /**
  * Created by mayankjindal on 22/07/17.
@@ -40,14 +37,7 @@ class SettingsFragment : Fragment() {
                         }
                     },
                     changePasscode = {
-                        val passCodePreferencesHelper = PasscodePreferencesHelper(activity)
-                        val currPassCode = passCodePreferencesHelper.passCode
-                        passCodePreferencesHelper.savePassCode("")
-                        val intent = Intent(requireContext(), PassCodeActivity::class.java).apply {
-                            putExtra(Constants.CURR_PASSWORD, currPassCode)
-                            putExtra(Constants.IS_TO_UPDATE_PASS_CODE, true)
-                        }
-                        startActivity(intent)
+
                     },
                     languageChanged = {
                         val intent = Intent(activity, activity?.javaClass)

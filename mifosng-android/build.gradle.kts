@@ -1,11 +1,6 @@
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.mifos.MifosBuildType
 
-/*
- * This project is licensed under the open source MPL V2.
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
-
 plugins {
     alias(libs.plugins.mifos.android.application)
     alias(libs.plugins.mifos.android.application.compose)
@@ -16,8 +11,6 @@ plugins {
     alias(libs.plugins.secrets)
     alias(libs.plugins.androidx.navigation)
 }
-
-apply(from = "../config/quality/quality.gradle")
 
 android {
     namespace = "com.mifos.mifosxdroid"
@@ -68,13 +61,6 @@ android {
                 "proguardTest-rules.pro"
             )
         }
-    }
-
-    lint {
-        abortOnError = false
-        disable += "InvalidPackage"
-        disable += "MissingTranslation"
-        disable += "OutdatedLibrary"
     }
 
     // Exclude duplicated Hamcrest LICENSE.txt from being packaged into the apk.
@@ -145,7 +131,8 @@ dependencies {
     implementation(projects.feature.dataTable)
     implementation(projects.feature.search)
     implementation(projects.feature.splash)
-    implementation(projects.feature.passcode)
+
+    implementation(projects.libs.mifosPasscode)
 
     implementation(projects.core.common)
     implementation(projects.core.ui)
@@ -194,7 +181,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.converter.scalars)
     implementation(libs.adapter.rxjava)
-    implementation(libs.okhttp)
+    implementation(libs.squareup.okhttp)
     implementation(libs.logging.interceptor)
 
     implementation(libs.fliptables)
@@ -218,9 +205,6 @@ dependencies {
 
     //glide dependency
     implementation(libs.glide)
-
-    //mifos passcode dependency
-    implementation(libs.mifos.passcode)
 
     // Mockito and jUnit dependencies
     testImplementation(libs.junit4)
