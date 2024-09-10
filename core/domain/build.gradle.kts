@@ -22,7 +22,7 @@ dependencies {
     implementation(libs.rxandroid)
     implementation(libs.rxjava)
 
-    implementation(libs.okhttp)
+    implementation(libs.squareup.okhttp)
 
     implementation(libs.androidx.paging.runtime.ktx)
 

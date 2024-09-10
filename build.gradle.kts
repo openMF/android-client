@@ -10,4 +10,8 @@ plugins {
     alias(libs.plugins.androidx.navigation) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.secrets) apply false
+    alias(libs.plugins.dependencyGuard) apply false
+    alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.spotless) apply false
+    alias(libs.plugins.ktlint) apply false
 }

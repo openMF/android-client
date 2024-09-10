@@ -24,8 +24,12 @@ dependencies {
     compileOnly(libs.firebase.crashlytics.gradlePlugin)
     compileOnly(libs.firebase.performance.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
+//    compileOnly(libs.compose.gradlePlugin)
     compileOnly(libs.ksp.gradlePlugin)
     compileOnly(libs.room.gradlePlugin)
+    compileOnly(libs.detekt.gradlePlugin)
+    compileOnly(libs.ktlint.gradlePlugin)
+    compileOnly(libs.spotless.gradlePlugin)
     implementation(libs.truth)
 }
 
@@ -93,6 +97,26 @@ gradlePlugin {
         register("jvmLibrary") {
             id = "mifos.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"
+        }
+        register("detekt") {
+            id = "mifos.detekt.plugin"
+            implementationClass = "MifosDetektConventionPlugin"
+            description = "Configures detekt for the project"
+        }
+        register("spotless") {
+            id = "mifos.spotless.plugin"
+            implementationClass = "MifosSpotlessConventionPlugin"
+            description = "Configures spotless for the project"
+        }
+        register("ktlint") {
+            id = "mifos.ktlint.plugin"
+            implementationClass = "MifosKtlintConventionPlugin"
+            description = "Configures kotlinter for the project"
+        }
+        register("gitHooks") {
+            id = "mifos.git.hooks"
+            implementationClass = "MifosGitHooksConventionPlugin"
+            description = "Installs git hooks for the project"
         }
     }
 }

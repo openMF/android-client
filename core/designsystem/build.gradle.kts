@@ -13,6 +13,7 @@ android {
 }
 
 dependencies {
+    lintPublish(projects.lint)
 
     api(libs.androidx.compose.foundation)
     api(libs.androidx.compose.foundation.layout)
@@ -26,7 +27,7 @@ dependencies {
     implementation(libs.coil.kt.compose)
 
     testImplementation(libs.androidx.compose.ui.test)
-    testImplementation(libs.androidx.compose.ui.testManifest)
+    testImplementation(libs.androidx.compose.ui.test.manifest)
     testImplementation(libs.hilt.android.testing)
     testImplementation(projects.core.testing)
 

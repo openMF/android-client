@@ -10,6 +10,7 @@
     <dimen name="login_margin_top">24dp</dimen>
     <dimen name="default_margin">8dp</dimen>
     <dimen name="default_padding">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
     <dimen name="default_horizontal_padding">8dp</dimen>
     <dimen name="default_vertical_padding">8dp</dimen>
     <dimen name="login_padding_top">56dp</dimen>

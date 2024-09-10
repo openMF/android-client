@@ -147,10 +147,6 @@
             android:name=".offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionActivity"
             android:label="@string/sync_savingsaccounttransactions"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".passcode.PassCodeActivity"
-            android:label="@string/pass_code"
-            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activity.about.AboutActivity"

@@ -15,7 +15,6 @@ import com.facebook.stetho.Stetho
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.MaterialModule
 import com.mifos.mifosxdroid.offlinejobs.OfflineJobCreator
-import com.mifos.mobile.passcode.utils.ForegroundChecker
 import com.mifos.utils.LanguageHelper.onAttach
 import com.mifos.utils.ThemeHelper
 import com.raizlabs.android.dbflow.config.FlowConfig
@@ -44,7 +43,6 @@ class App : MultiDexApplication() {
             .detectFileUriExposure()
             .build()
         StrictMode.setVmPolicy(policy)
-        ForegroundChecker.init(this)
     }
 
 
