@@ -99,7 +99,7 @@ fun NavGraphBuilder.dataTableListRoute(
     }
 }
 
-fun NavController.navigateDataTable(
+fun NavController.navigateToDataTable(
     tableName: String, entityId: Int
 ) {
     val arg = Gson().toJson(DataTableNavigationArg(tableName, entityId))

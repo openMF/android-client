@@ -15,27 +15,22 @@ import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTaskGraph
-import com.mifos.feature.client.navigation.ClientScreens
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
-import com.mifos.feature.client.navigation.navigateClientSurveyListScreen
 import com.mifos.feature.client.navigation.navigateCreateClientScreen
 import com.mifos.feature.client.navigation.navigateToClientListScreen
 
 import com.mifos.feature.data_table.navigation.dataTableNavGraph
-import com.mifos.feature.data_table.navigation.navigateDataTable
-import com.mifos.feature.data_table.navigation.navigateDataTableList
+import com.mifos.feature.data_table.navigation.navigateToDataTable
 
 
 import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
-import com.mifos.feature.groups.navigation.groupListScreenRoute
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
 import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
 import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetNavGraph
-import com.mifos.feature.loan.group_loan_account.GroupLoanAccountScreen
 import com.mifos.feature.loan.navigation.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.groupLoanScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
@@ -44,7 +39,6 @@ import com.mifos.feature.loan.navigation.navigateToLoanAccountScreen
 import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteScreen
-import com.mifos.feature.offline.navigation.navigateToOfflineDashboardScreen
 import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.path_tracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.report.navigation.reportNavGraph
@@ -84,7 +78,7 @@ fun Navigation(
                 )
             },
             moreClientInfo = {
-                navController.navigateDataTable(
+                navController.navigateToDataTable(
                     Constants.DATA_TABLE_NAME_CLIENT,
                     it
                 )
@@ -109,7 +103,7 @@ fun Navigation(
             addSavingsAccount = { navController.navigateToAddSavingsAccount(it, 0, true) },
             loadDocumentList = { navController.navigateToDocumentListScreen(it, Constants.ENTITY_TYPE_GROUPS) },
             clientListFragment = { _ -> navController.navigateToClientListScreen() },
-            loadGroupDataTables = { navController.navigateDataTable(Constants.DATA_TABLE_NAME_GROUP, it) },
+            loadGroupDataTables = { navController.navigateToDataTable(Constants.DATA_TABLE_NAME_GROUP, it) },
             loadNotes = { navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_GROUPS) },
             loadLoanAccountSummary = navController::navigateToLoanAccountSummaryScreen,
             loadSavingsAccountSummary = navController::navigateToSavingsAccountSummaryScreen,
@@ -121,7 +115,7 @@ fun Navigation(
         savingsNavGraph(
             navController = navController,
             onBackPressed = navController::popBackStack,
-            loadMoreSavingsAccountInfo = { navController.navigateDataTable(Constants.DATA_TABLE_NAME_SAVINGS, it) },
+            loadMoreSavingsAccountInfo = { navController.navigateToDataTable(Constants.DATA_TABLE_NAME_SAVINGS, it) },
             loadDocuments = {
                 navController.navigateToDocumentListScreen(
                     it,
@@ -132,7 +126,7 @@ fun Navigation(
 
         loanNavGraph(
             navController = navController,
-            onMoreInfoClicked = { navController.navigateDataTable(Constants.DATA_TABLE_NAME_LOANS, it) },
+            onMoreInfoClicked = navController::navigateToDataTable,
             onDocumentsClicked = navController::navigateToDocumentListScreen
         )
 

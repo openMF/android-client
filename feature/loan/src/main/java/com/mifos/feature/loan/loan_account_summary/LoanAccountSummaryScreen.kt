@@ -69,7 +69,7 @@ import com.mifos.feature.loan.R
 @Composable
 fun LoanAccountSummaryScreen(
     navigateBack: () -> Unit,
-    onMoreInfoClicked: (loanId : Int) -> Unit,
+    onMoreInfoClicked: (String, loanId : Int) -> Unit,
     onTransactionsClicked: (loadId: Int) -> Unit,
     onRepaymentScheduleClicked: (loanId: Int) -> Unit,
     onDocumentsClicked: (loanId : Int) -> Unit,
@@ -90,7 +90,7 @@ fun LoanAccountSummaryScreen(
         uiState = uiState,
         navigateBack = navigateBack,
         onRetry = { viewModel.loadLoanById(loanAccountNumber) },
-        onMoreInfoClicked = { onMoreInfoClicked.invoke(loanAccountNumber) },
+        onMoreInfoClicked = { onMoreInfoClicked.invoke( Constants.DATA_TABLE_NAME_LOANS, loanAccountNumber) },
         onTransactionsClicked = { onTransactionsClicked.invoke(loanAccountNumber) },
         onRepaymentScheduleClicked = { onRepaymentScheduleClicked.invoke(loanAccountNumber) },
         onDocumentsClicked = { onDocumentsClicked(loanAccountNumber) },

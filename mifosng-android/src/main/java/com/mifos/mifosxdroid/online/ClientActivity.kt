@@ -58,7 +58,7 @@ class ClientActivity : MifosBaseActivity(),
             loanAccountNumber?.let { bundle.putInt(Constants.LOAN_ACCOUNT_NUMBER, it) }
             findNavController(R.id.container_nav_host_fragment).apply {
                 popBackStack()
-                navigate(R.id.loanAccountSummaryFragment, bundle)
+//                navigate(R.id.loanAccountSummaryFragment, bundle)
             }
         } else if (savingsAccountNumber != 0) {
             val bundle = Bundle()
