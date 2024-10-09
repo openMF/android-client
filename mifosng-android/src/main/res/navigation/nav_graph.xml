@@ -13,9 +13,6 @@
         android:name="com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment"
         android:label="ClientDetailsFragment">
         <action
-            android:id="@+id/action_clientDetailsFragment_to_loanAccountSummaryFragment"
-            app:destination="@id/loanAccountSummaryFragment" />
-        <action
             android:id="@+id/action_clientDetailsFragment_to_savingsAccountSummaryFragment"
             app:destination="@id/savingsAccountSummaryFragment" />
         <action
@@ -36,12 +33,7 @@
         <action
             android:id="@+id/action_clientDetailsFragment_to_savingsAccountFragment"
             app:destination="@id/savingsAccountFragment" />
-        <action
-            android:id="@+id/action_clientDetailsFragment_to_loanAccountFragment"
-            app:destination="@id/loanAccountFragment" />
-        <action
-            android:id="@+id/action_clientDetailsFragment_to_activateFragment"
-            app:destination="@id/activateFragment" />
+
         <action
             android:id="@+id/action_clientDetailsFragment_to_dataTableFragment"
             app:destination="@id/dataTableFragment" />
@@ -55,44 +47,6 @@
             android:id="@+id/action_clientDetailsFragment_to_pinpointClientActivity"
             app:destination="@id/pinpointClientActivity" />
     </fragment>
-
-
-    <fragment
-        android:id="@+id/loanAccountSummaryFragment"
-        android:name="com.mifos.mifosxdroid.online.loanaccountsummary.LoanAccountSummaryFragment"
-        android:label="LoanAccountSummaryFragment">
-        <argument
-            android:name="loanAccountNumber"
-            app:argType="integer" />
-        <argument
-            android:name="parentFragment"
-            app:argType="boolean" />
-        <action
-            android:id="@+id/action_loanAccountSummaryFragment_to_documentListFragment"
-            app:destination="@id/documentListFragment" />
-        <action
-            android:id="@+id/action_loanAccountSummaryFragment_to_loanChargeFragment"
-            app:destination="@id/loanChargeFragment" />
-        <action
-            android:id="@+id/action_loanAccountSummaryFragment_to_loanAccountApproval"
-            app:destination="@id/loanAccountApproval" />
-        <action
-            android:id="@+id/action_loanAccountSummaryFragment_to_loanAccountDisbursementFragment"
-            app:destination="@id/loanAccountDisbursementFragment" />
-        <action
-            android:id="@+id/action_loanAccountSummaryFragment_to_dataTableFragment"
-            app:destination="@id/dataTableFragment" />
-        <action
-            android:id="@+id/action_loanAccountSummaryFragment_to_loanRepaymentFragment"
-            app:destination="@id/loanRepaymentFragment" />
-        <action
-            android:id="@+id/action_loanAccountSummaryFragment_to_loanRepaymentScheduleFragment"
-            app:destination="@id/loanRepaymentScheduleFragment" />
-        <action
-            android:id="@+id/action_loanAccountSummaryFragment_to_loanTransactionsFragment"
-            app:destination="@id/loanTransactionsFragment" />
-    </fragment>
-
 
     <fragment
         android:id="@+id/savingsAccountSummaryFragment"
@@ -206,17 +160,6 @@
             app:argType="boolean" />
     </fragment>
 
-
-    <fragment
-        android:id="@+id/loanAccountFragment"
-        android:name="com.mifos.mifosxdroid.online.loanaccount.LoanAccountFragment"
-        android:label="LoanAccountFragment">
-        <argument
-            android:name="clientId"
-            app:argType="integer" />
-    </fragment>
-
-
     <fragment
         android:id="@+id/activateFragment"
         android:name="com.mifos.mifosxdroid.online.activate.ActivateFragment"
@@ -279,73 +222,6 @@
             app:argType="integer" />
     </activity>
 
-
-    <fragment
-        android:id="@+id/loanChargeFragment"
-        android:name="com.mifos.mifosxdroid.online.loancharge.LoanChargeFragment"
-        android:label="LoanChargeFragment">
-        <argument
-            android:name="loanAccountNumber"
-            app:argType="integer" />
-        <argument
-            android:name="chargesList"
-            app:argType="com.mifos.core.objects.client.Charges[]" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/loanAccountApproval"
-        android:name="com.mifos.mifosxdroid.online.loanaccountapproval.LoanAccountApproval"
-        android:label="LoanAccountApproval">
-        <argument
-            android:name="loanAccountNumber"
-            app:argType="integer" />
-        <argument
-            android:name="loanWithAssociations"
-            app:argType="com.mifos.core.objects.accounts.loan.LoanWithAssociations" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/loanAccountDisbursementFragment"
-        android:name="com.mifos.mifosxdroid.online.loanaccountdisbursement.LoanAccountDisbursementFragment"
-        android:label="LoanAccountDisbursementFragment">
-        <argument
-            android:name="loanAccountNumber"
-            app:argType="integer" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/loanRepaymentFragment"
-        android:name="com.mifos.mifosxdroid.online.loanrepayment.LoanRepaymentFragment"
-        android:label="LoanRepaymentFragment">
-        <argument
-            android:name="loanWithAssociations"
-            app:argType="com.mifos.core.objects.accounts.loan.LoanWithAssociations" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/loanRepaymentScheduleFragment"
-        android:name="com.mifos.mifosxdroid.online.loanrepaymentschedule.LoanRepaymentScheduleFragment"
-        android:label="fragment_loan_repayment_schedule"
-        tools:layout="@layout/fragment_loan_repayment_schedule">
-        <argument
-            android:name="loanId"
-            app:argType="integer" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/loanTransactionsFragment"
-        android:name="com.mifos.mifosxdroid.online.loantransactions.LoanTransactionsFragment"
-        android:label="fragment_loan_transactions"
-        tools:layout="@layout/fragment_loan_transactions">
-        <argument
-            android:name="loanId"
-            app:argType="integer" />
-    </fragment>
 
 
     <fragment
@@ -473,9 +349,7 @@
         <action
             android:id="@+id/action_groupDetailsFragment_to_savingsAccountFragment"
             app:destination="@id/savingsAccountFragment" />
-        <action
-            android:id="@+id/action_groupDetailsFragment_to_groupLoanAccountFragment"
-            app:destination="@id/groupLoanAccountFragment" />
+
         <action
             android:id="@+id/action_groupDetailsFragment_to_dataTableFragment"
             app:destination="@id/dataTableFragment" />
@@ -488,9 +362,7 @@
         <action
             android:id="@+id/action_groupDetailsFragment_to_clientListFragment"
             app:destination="@id/clientListFragment" />
-        <action
-            android:id="@+id/action_groupDetailsFragment_to_loanAccountSummaryFragment"
-            app:destination="@id/loanAccountSummaryFragment" />
+
         <action
             android:id="@+id/action_groupDetailsFragment_to_savingsAccountSummaryFragment"
             app:destination="@id/savingsAccountSummaryFragment" />
@@ -498,14 +370,7 @@
             android:id="@+id/action_groupDetailsFragment_to_createNewClientFragment"
             app:destination="@id/createNewClientFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/groupLoanAccountFragment"
-        android:name="com.mifos.mifosxdroid.online.grouploanaccount.GroupLoanAccountFragment"
-        android:label="GroupLoanAccountFragment">
-        <argument
-            android:name="groupId"
-            app:argType="integer" />
-    </fragment>
+
     <fragment
         android:id="@+id/clientListFragment"
         android:name="com.mifos.mifosxdroid.online.clientlist.ClientListFragment"

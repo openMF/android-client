@@ -122,13 +122,7 @@ class GroupDetailsFragment : MifosBaseFragment() {
         findNavController().navigate(action)
     }
 
-    private fun addGroupLoanAccount(groupId: Int) {
-        val action =
-            GroupDetailsFragmentDirections.actionGroupDetailsFragmentToGroupLoanAccountFragment(
-                groupId
-            )
-        findNavController().navigate(action)
-    }
+    private fun addGroupLoanAccount(groupId: Int) {}
 
     private fun loadGroupDataTables(groupId: Int) {
         val action = GroupDetailsFragmentDirections.actionGroupDetailsFragmentToDataTableFragment(
@@ -146,12 +140,6 @@ class GroupDetailsFragment : MifosBaseFragment() {
     }
 
     private fun loadLoanAccountSummary(loanAccountNumber: Int) {
-        val action =
-            GroupDetailsFragmentDirections.actionGroupDetailsFragmentToLoanAccountSummaryFragment(
-                loanAccountNumber,
-                true
-            )
-        findNavController().navigate(action)
     }
 
     private fun loadSavingsAccountSummary(savingsAccountNumber: Int, accountType: DepositType?) {

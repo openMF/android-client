@@ -31,7 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoanAccountFragment : Fragment() {
 
-    private val arg: LoanAccountFragmentArgs by navArgs()
+//    private val arg: LoanAccountFragmentArgs by navArgs()
     private var clientId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {

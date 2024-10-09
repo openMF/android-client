@@ -141,19 +141,9 @@ class ClientDetailsFragment : MifosBaseFragment() {
     }
 
     private fun addLoanAccount(clientId: Int) {
-        val action =
-            ClientDetailsFragmentDirections.actionClientDetailsFragmentToLoanAccountFragment(
-                clientId
-            )
-        findNavController().navigate(action)
     }
 
     private fun activateClient(clientId: Int) {
-        val action = ClientDetailsFragmentDirections.actionClientDetailsFragmentToActivateFragment(
-            clientId,
-            Constants.ACTIVATE_CLIENT
-        )
-        findNavController().navigate(action)
     }
 
     private fun loadClientDataTables(clientId: Int) {
@@ -179,12 +169,7 @@ class ClientDetailsFragment : MifosBaseFragment() {
     }
 
     private fun loadLoanAccountSummary(loanAccountNumber: Int) {
-        val action =
-            ClientDetailsFragmentDirections.actionClientDetailsFragmentToLoanAccountSummaryFragment(
-                loanAccountNumber,
-                true
-            )
-        findNavController().navigate(action)
+
     }
 
     private fun loadSavingsAccountSummary(savingsAccountNumber: Int, accountType: DepositType) {

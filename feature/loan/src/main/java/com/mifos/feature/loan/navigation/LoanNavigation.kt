@@ -27,7 +27,7 @@ import com.mifos.feature.loan.loan_transaction.LoanTransactionsScreen
 fun NavGraphBuilder.loanNavGraph(
     navController: NavController,
     onDocumentsClicked: (Int, String) -> Unit,
-    onMoreInfoClicked: (Int) -> Unit
+    onMoreInfoClicked: (String, Int) -> Unit
 ) {
     navigation(
         startDestination = LoanScreens.LoanAccountSummaryScreen.route,
@@ -76,7 +76,7 @@ fun NavGraphBuilder.groupLoanScreen(
         )
     ) {
         GroupLoanAccountScreen(
-            onBackPressed = {},
+            onBackPressed = onBackPressed,
         )
     }
 }
@@ -100,7 +100,7 @@ fun NavGraphBuilder.addLoanAccountScreen(
 
 fun NavGraphBuilder.loanAccountSummary(
     onBackPressed: () -> Unit,
-    onMoreInfoClicked: (Int) -> Unit,
+    onMoreInfoClicked: (String, Int) -> Unit,
     onTransactionsClicked: (loadId: Int) -> Unit,
     onRepaymentScheduleClicked: (loanId: Int) -> Unit,
     onDocumentsClicked: (Int) -> Unit,
