@@ -32,8 +32,12 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -76,6 +80,7 @@ import com.mifos.core.ui.util.GroupListItemPreviewParameterProvider
 import com.mifos.core.ui.util.GroupListLoadingPreviewParameterProvider
 import com.mifos.core.ui.util.GroupListSuccessPreviewParameterProvider
 import com.mifos.feature.groups.R
+import com.mifos.feature.groups.sync_group_dialog.SyncGroupDialogScreen
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -83,7 +88,6 @@ fun GroupsListRoute(
     paddingValues: PaddingValues,
     onAddGroupClick: () -> Unit,
     onGroupClick: (groupId : Int) -> Unit,
-    onSyncClick: (List<Group>) -> Unit,
     viewModel: GroupsListViewModel = hiltViewModel()
 ) {
     val data = viewModel.data.collectAsLazyPagingItems()
@@ -113,7 +117,6 @@ fun GroupsListRoute(
         data = data,
         onAddGroupClick = onAddGroupClick,
         onGroupClick = onGroupClick,
-        onSyncClick = onSyncClick,
         onSelectItem = {
             if (selectedItems.contains(it)) {
                 selectedItems.remove(it)
@@ -136,10 +139,19 @@ fun GroupsListScreen(
     data: LazyPagingItems<Group>,
     onAddGroupClick: () -> Unit,
     onGroupClick: (groupId : Int) -> Unit,
-    onSyncClick: (List<Group>) -> Unit,
     onSelectItem: (Group) -> Unit,
     resetSelectionMode: () -> Unit,
 ) {
+    var syncGroups by rememberSaveable { mutableStateOf(false) }
+    if (syncGroups){
+        SyncGroupDialogScreen(
+            dismiss = { syncGroups = false },
+            hide = {
+                // TODO implement hide
+            }
+        )
+    }
+
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
@@ -162,7 +174,7 @@ fun GroupsListScreen(
                     actions = {
                         FilledTonalButton(
                             onClick = {
-                                onSyncClick(selectedItems.toList())
+                                syncGroups = true
                                 resetSelectionMode()
                             },
                         ) {
@@ -371,7 +383,6 @@ fun GroupListScreenLoadingState(
         data = data.collectAsLazyPagingItems(),
         onAddGroupClick = {},
         onGroupClick = {},
-        onSyncClick = {},
         onSelectItem = {},
         resetSelectionMode = {},
     )
@@ -390,7 +401,6 @@ fun GroupListScreenEmptyState(
         data = data.collectAsLazyPagingItems(),
         onAddGroupClick = {},
         onGroupClick = {},
-        onSyncClick = {},
         onSelectItem = {},
         resetSelectionMode = {},
     )
@@ -409,7 +419,6 @@ fun GroupListScreenErrorState(
         data = data.collectAsLazyPagingItems(),
         onAddGroupClick = {},
         onGroupClick = {},
-        onSyncClick = {},
         onSelectItem = {},
         resetSelectionMode = {},
     )
@@ -428,7 +437,6 @@ fun GroupListScreenPopulatedAndSuccessState(
         data = data.collectAsLazyPagingItems(),
         onAddGroupClick = {},
         onGroupClick = {},
-        onSyncClick = {},
         onSelectItem = {},
         resetSelectionMode = {},
     )
@@ -447,7 +455,6 @@ fun GroupListScreenPopulatedAndSelectedItem(
         data = data.collectAsLazyPagingItems(),
         onAddGroupClick = {},
         onGroupClick = {},
-        onSyncClick = {},
         onSelectItem = {},
         resetSelectionMode = {},
     )

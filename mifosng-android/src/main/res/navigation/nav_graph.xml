@@ -336,40 +336,6 @@
         android:id="@+id/settingsFragment"
         android:name="com.mifos.mifosxdroid.activity.setting.SettingsFragment"
         android:label="SettingsFragment" />
-    <fragment
-        android:id="@+id/groupDetailsFragment"
-        android:name="com.mifos.mifosxdroid.online.groupdetails.GroupDetailsFragment"
-        android:label="GroupDetailsFragment">
-        <action
-            android:id="@+id/action_groupDetailsFragment_to_documentListFragment"
-            app:destination="@id/documentListFragment" />
-        <action
-            android:id="@+id/action_groupDetailsFragment_to_noteFragment"
-            app:destination="@id/noteFragment" />
-        <action
-            android:id="@+id/action_groupDetailsFragment_to_savingsAccountFragment"
-            app:destination="@id/savingsAccountFragment" />
-
-        <action
-            android:id="@+id/action_groupDetailsFragment_to_dataTableFragment"
-            app:destination="@id/dataTableFragment" />
-        <action
-            android:id="@+id/action_groupDetailsFragment_to_savingsAccountActivateFragment"
-            app:destination="@id/savingsAccountActivateFragment" />
-        <action
-            android:id="@+id/action_groupDetailsFragment_to_activateFragment"
-            app:destination="@id/activateFragment" />
-        <action
-            android:id="@+id/action_groupDetailsFragment_to_clientListFragment"
-            app:destination="@id/clientListFragment" />
-
-        <action
-            android:id="@+id/action_groupDetailsFragment_to_savingsAccountSummaryFragment"
-            app:destination="@id/savingsAccountSummaryFragment" />
-        <action
-            android:id="@+id/action_groupDetailsFragment_to_createNewClientFragment"
-            app:destination="@id/createNewClientFragment" />
-    </fragment>
 
     <fragment
         android:id="@+id/clientListFragment"
@@ -403,22 +369,8 @@
         <action
             android:id="@+id/action_centerDetailsFragment_to_savingsAccountFragment"
             app:destination="@id/savingsAccountFragment" />
-        <action
-            android:id="@+id/action_centerDetailsFragment_to_groupListFragment"
-            app:destination="@id/groupListFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/groupListFragment"
-        android:name="com.mifos.mifosxdroid.online.grouplist.GroupListFragment"
-        android:label="fragment_group_list"
-        tools:layout="@layout/fragment_group_list">
-        <argument
-            android:name="centerId"
-            app:argType="integer" />
-        <action
-            android:id="@+id/action_groupListFragment_to_clientListFragment"
-            app:destination="@id/clientListFragment" />
-    </fragment>
+
     <activity
         android:id="@+id/clientActivity"
         android:name="com.mifos.mifosxdroid.online.ClientActivity"

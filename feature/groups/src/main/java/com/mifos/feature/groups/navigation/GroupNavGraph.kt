@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.group.Group
@@ -24,14 +25,14 @@ fun NavGraphBuilder.groupNavGraph(
     paddingValues: PaddingValues,
     navController: NavController,
     addGroupLoanAccount: (Int) -> Unit,
-    addSavingsAccount: (Int) -> Unit,
-    loadDocumentList: (Int) -> Unit,
+    addSavingsAccount: (Int, Int, Boolean) -> Unit,
+    loadDocumentList: (Int, String) -> Unit,
     clientListFragment: (List<Client>) -> Unit,
-    loadGroupDataTables: (Int) -> Unit,
-    loadNotes: (Int) -> Unit,
+    loadGroupDataTables: (String, Int) -> Unit,
+    loadNotes: (Int, String) -> Unit,
     loadLoanAccountSummary: (Int) -> Unit,
     loadSavingsAccountSummary: (Int, DepositType) -> Unit,
-    activateGroup: (Int) -> Unit
+    activateGroup: (Int, String) -> Unit
 ) {
     navigation(
         startDestination = GroupScreen.GroupListScreen.route,
@@ -41,7 +42,6 @@ fun NavGraphBuilder.groupNavGraph(
             paddingValues = paddingValues,
             onAddGroupClick = navController::navigateToCreateNewGroupScreen,
             onGroupClick = navController::navigateToGroupDetailsScreen,
-            onSyncClick = { }
         )
 
         groupDetailsRoute(
@@ -58,7 +58,12 @@ fun NavGraphBuilder.groupNavGraph(
         )
 
         addNewGroupRoute(
-            onGroupCreated = { }
+            onGroupCreated = { groups, userStatus ->
+                navController.popBackStack()
+                if (userStatus == Constants.USER_ONLINE) {
+                    groups?.groupId?.let { navController.navigateToGroupDetailsScreen(it) }
+                }
+            }
         )
     }
 }
@@ -67,14 +72,12 @@ fun NavGraphBuilder.groupListScreenRoute(
     paddingValues: PaddingValues,
     onAddGroupClick: () -> Unit,
     onGroupClick: (groupId: Int) -> Unit,
-    onSyncClick: (List<Group>) -> Unit
 ) {
     composable(route = GroupScreen.GroupListScreen.route) {
         GroupsListRoute(
             paddingValues = paddingValues,
             onAddGroupClick = onAddGroupClick,
             onGroupClick = onGroupClick,
-            onSyncClick = onSyncClick
         )
     }
 }
@@ -82,14 +85,14 @@ fun NavGraphBuilder.groupListScreenRoute(
 fun NavGraphBuilder.groupDetailsRoute(
     onBackPressed: () -> Unit,
     addGroupLoanAccount: (Int) -> Unit,
-    addSavingsAccount: (Int) -> Unit,
-    loadDocumentList: (Int) -> Unit,
+    addSavingsAccount: (Int, Int, Boolean) -> Unit,
+    loadDocumentList: (Int, String) -> Unit,
     clientListFragment: (List<Client>) -> Unit,
-    loadGroupDataTables: (Int) -> Unit,
-    loadNotes: (Int) -> Unit,
+    loadGroupDataTables: (String, Int) -> Unit,
+    loadNotes: (Int, String) -> Unit,
     loadLoanAccountSummary: (Int) -> Unit,
     loadSavingsAccountSummary: (Int, DepositType) -> Unit,
-    activateGroup: (Int) -> Unit
+    activateGroup: (Int, String) -> Unit
 ) {
     composable(
         route = GroupScreen.GroupDetailsScreen.route,
@@ -113,7 +116,7 @@ fun NavGraphBuilder.groupDetailsRoute(
 }
 
 fun NavGraphBuilder.addNewGroupRoute(
-    onGroupCreated: (group: SaveResponse?) -> Unit,
+    onGroupCreated: (group: SaveResponse?, userStatus: Boolean) -> Unit,
 ) {
     composable(route = GroupScreen.CreateNewGroupScreen.route) {
         CreateNewGroupScreen(
@@ -129,8 +132,6 @@ fun NavController.navigateToCreateNewGroupScreen() {
 fun NavController.navigateToGroupDetailsScreen(groupId: Int) {
     navigate(GroupScreen.GroupDetailsScreen.argument(groupId))
 }
-
-
 
 
 

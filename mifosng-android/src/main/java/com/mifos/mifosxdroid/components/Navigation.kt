@@ -100,14 +100,14 @@ fun Navigation(
             paddingValues = padding,
             navController = navController,
             addGroupLoanAccount = navController::navigateToGroupLoanScreen,
-            addSavingsAccount = { navController.navigateToAddSavingsAccount(it, 0, true) },
-            loadDocumentList = { navController.navigateToDocumentListScreen(it, Constants.ENTITY_TYPE_GROUPS) },
+            addSavingsAccount = navController::navigateToAddSavingsAccount,
+            loadDocumentList = navController::navigateToDocumentListScreen,
             clientListFragment = { _ -> navController.navigateToClientListScreen() },
-            loadGroupDataTables = { navController.navigateToDataTable(Constants.DATA_TABLE_NAME_GROUP, it) },
-            loadNotes = { navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_GROUPS) },
+            loadGroupDataTables = navController::navigateToDataTable,
+            loadNotes = navController::navigateToNoteScreen,
             loadLoanAccountSummary = navController::navigateToLoanAccountSummaryScreen,
             loadSavingsAccountSummary = navController::navigateToSavingsAccountSummaryScreen,
-            activateGroup = { navController.navigateToActivateScreen(it, Constants.ACTIVATE_GROUP) }
+            activateGroup = navController::navigateToActivateScreen
         )
 
         groupLoanScreen { navController.popBackStack() }

@@ -74,7 +74,7 @@ import java.util.Locale
 @Composable
 fun CreateNewGroupScreen(
     viewModel: CreateNewGroupViewModel = hiltViewModel(),
-    onGroupCreated: (group: SaveResponse?) -> Unit,
+    onGroupCreated: (group: SaveResponse?, userStatus: Boolean) -> Unit,
 ) {
     val uiState by viewModel.createNewGroupUiState.collectAsStateWithLifecycle()
 
@@ -88,7 +88,7 @@ fun CreateNewGroupScreen(
         invokeGroupCreation = { groupPayload ->
             viewModel.createGroup(groupPayload)
         },
-        onGroupCreated = onGroupCreated,
+        onGroupCreated = { onGroupCreated( it, viewModel.getUserStatus() ) },
         getResponse = { viewModel.getResponse() }
     )
 }
@@ -115,7 +115,7 @@ fun CreateNewGroupScreen(
             }
 
             is CreateNewGroupUiState.ShowGroupCreatedSuccessfully -> {
-                Toast.makeText(context, "Group " +  getResponse() , Toast.LENGTH_LONG)
+                Toast.makeText(context, "Group " + getResponse(), Toast.LENGTH_LONG)
                     .show()
                 onGroupCreated.invoke(uiState.saveResponse)
             }

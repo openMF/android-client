@@ -79,9 +79,6 @@ class CenterDetailsFragment : MifosBaseFragment() {
     }
 
     private fun loadGroupsOfCenter(centerId: Int) {
-        val action =
-            CenterDetailsFragmentDirections.actionCenterDetailsFragmentToGroupListFragment(centerId)
-        findNavController().navigate(action)
     }
 
 }

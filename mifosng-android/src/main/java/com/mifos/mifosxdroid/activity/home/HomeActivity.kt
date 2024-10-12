@@ -83,7 +83,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
             }
 
             R.id.item_offline -> {
-                findNavController(R.id.nav_host_fragment).navigate(R.id.offlineDashboardFragment)
+//                findNavController(R.id.nav_host_fragment).navigate(R.id.offlineDashboardFragment)
             }
 
             R.id.individual_collection_sheet -> {
