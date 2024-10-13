@@ -114,12 +114,6 @@
 
 
     <activity
-        android:id="@+id/aboutActivity"
-        android:name="com.mifos.mifosxdroid.activity.about.AboutActivity"
-        android:label="AboutActivity" />
-
-
-    <activity
         android:id="@+id/generateCollectionSheetActivity"
         android:name="com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity"
         android:label="activity_generate_collection_sheet"

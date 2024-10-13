@@ -17,7 +17,3 @@ fun NavGraphBuilder.aboutScreen(
         )
     }
 }
-
-fun NavController.navigateToAboutScreen() {
-    navigate(AboutScreens.AboutScreen.route)
-}

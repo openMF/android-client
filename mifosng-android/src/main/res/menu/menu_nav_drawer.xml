@@ -44,12 +44,6 @@
             android:title="@string/settings"
             />
 
-        <item
-            android:id="@+id/about"
-            android:checked="false"
-            android:icon="@drawable/ic_about"
-            android:title="@string/about"
-            />
 
     </group>
     <group android:checkableBehavior="single"

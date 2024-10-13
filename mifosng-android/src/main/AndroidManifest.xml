@@ -144,11 +144,6 @@
             android:label="@string/sync_savingsaccounttransactions"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".activity.about.AboutActivity"
-            android:label="@string/about"
-            android:screenOrientation="portrait" />
-
         <service
             android:name=".activity.pathtracking.PathTrackingService"
             android:exported="false" />
