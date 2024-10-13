@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Utils
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
@@ -83,14 +84,14 @@ import com.mifos.feature.groups.R
 fun GroupDetailsScreen(
     onBackPressed: () -> Unit,
     addLoanAccount: (Int) -> Unit,
-    addSavingsAccount: (Int) -> Unit,
-    documents: (Int) -> Unit,
+    addSavingsAccount: (groupId : Int, clientId : Int, isGroupAccount : Boolean) -> Unit,
+    documents: (Int, String) -> Unit,
     groupClients: (List<Client>) -> Unit,
-    moreGroupInfo: (Int) -> Unit,
-    notes: (Int) -> Unit,
+    moreGroupInfo: (String, Int) -> Unit,
+    notes: (Int, String) -> Unit,
     loanAccountSelected: (Int) -> Unit,
     savingsAccountSelected: (Int, DepositType) -> Unit,
-    activateGroup: (Int) -> Unit
+    activateGroup: (Int, String) -> Unit
 ) {
     val viewModel: GroupDetailsViewModel = hiltViewModel()
     val groupId by viewModel.groupId.collectAsStateWithLifecycle()
@@ -121,18 +122,18 @@ fun GroupDetailsScreen(
         onMenuClick = { menu ->
             when (menu) {
                 MenuItems.ADD_LOAN_ACCOUNT -> addLoanAccount(groupId)
-                MenuItems.ADD_SAVINGS_ACCOUNT -> addSavingsAccount(groupId)
-                MenuItems.DOCUMENTS -> documents(groupId)
+                MenuItems.ADD_SAVINGS_ACCOUNT -> addSavingsAccount(groupId, 0,true )
+                MenuItems.DOCUMENTS -> documents(groupId, Constants.ENTITY_TYPE_GROUPS)
                 MenuItems.GROUP_CLIENTS -> {
                     groupClientEnable = true
                     viewModel.getGroupAssociateClients(groupId)
                 }
 
-                MenuItems.MORE_GROUP_INFO -> moreGroupInfo(groupId)
-                MenuItems.NOTES -> notes(groupId)
+                MenuItems.MORE_GROUP_INFO -> moreGroupInfo(Constants.DATA_TABLE_NAME_GROUP, groupId)
+                MenuItems.NOTES -> notes(groupId, Constants.ENTITY_TYPE_GROUPS)
             }
         },
-        activateGroup = { activateGroup(groupId) }
+        activateGroup = { activateGroup(groupId, Constants.ACTIVATE_GROUP) }
     )
 
 }

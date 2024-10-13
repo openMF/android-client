@@ -71,10 +71,6 @@
         </activity>
 
         <activity
-            android:name=".online.GroupsActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".online.ClientActivity"
             android:screenOrientation="portrait" />
         <activity

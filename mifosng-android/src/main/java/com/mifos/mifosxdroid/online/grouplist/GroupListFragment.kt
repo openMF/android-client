@@ -22,12 +22,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class GroupListFragment : Fragment() {
 
-    private val arg: GroupListFragmentArgs by navArgs()
+//    private val arg: GroupListFragmentArgs by navArgs()
     private var centerId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        centerId = arg.centerId
+//        centerId = arg.centerId
     }
 
     override fun onCreateView(
@@ -61,9 +61,9 @@ class GroupListFragment : Fragment() {
     }
 
     private fun loadClientsOfGroup(clientList: List<Client>) {
-        val action = GroupListFragmentDirections.actionGroupListFragmentToClientListFragment(
-            ClientListArgs(clientList, true)
-        )
-        findNavController().navigate(action)
+//        val action = GroupListFragmentDirections.actionGroupListFragmentToClientListFragment(
+//            ClientListArgs(clientList, true)
+//        )
+//        findNavController().navigate(action)
     }
 }

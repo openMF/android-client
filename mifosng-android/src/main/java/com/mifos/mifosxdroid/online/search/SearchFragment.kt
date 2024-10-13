@@ -54,7 +54,6 @@ class SearchFragment : MifosBaseFragment() {
                 findNavController().navigate(R.id.action_navigation_dashboard_to_createNewCenterFragment)
             }
             FabType.GROUP -> {
-                findNavController().navigate(R.id.action_navigation_dashboard_to_createNewGroupFragment)
             }
         }
     }
@@ -76,13 +75,7 @@ class SearchFragment : MifosBaseFragment() {
             }
 
             Constants.SEARCH_ENTITY_GROUP -> {
-                val action = searchedEntity.entityName?.let {
-                    SearchFragmentDirections.actionNavigationDashboardToGroupsActivity(
-                        searchedEntity.entityId,
-                        it
-                    )
-                }
-                action?.let { findNavController().navigate(it) }
+                
             }
 
             Constants.SEARCH_ENTITY_SAVING -> {

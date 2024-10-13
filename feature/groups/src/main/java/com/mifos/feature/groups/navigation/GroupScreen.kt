@@ -14,7 +14,5 @@ sealed class GroupScreen(val route: String) {
     data object GroupDetailsScreen : GroupScreen("group_details_screen/{${Constants.GROUP_ID}}"){
         fun argument(groupId : Int) = "group_details_screen/${groupId}"
     }
-
-    data object SyncGroupPayloadScreen : GroupScreen("sync_group_payload_screen")
 }
 

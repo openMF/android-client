@@ -35,6 +35,8 @@ class CreateNewGroupViewModel @Inject constructor(
     val createNewGroupUiState: StateFlow<CreateNewGroupUiState>
         get() = _createNewGroupUiState
 
+    fun getUserStatus ( ) = prefManager.userStatus
+
     fun getResponse() : String  {
         return when(prefManager.userStatus){
                 false -> "created successfully"

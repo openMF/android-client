@@ -1,16 +1,42 @@
 package com.mifos.mifosxdroid.injection.module
 
+import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.data.repository.DocumentDialogRepository
+import com.mifos.core.data.repository.GroupDetailsRepository
+import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.data.repository.NoteRepository
+import com.mifos.core.data.repository.OfflineDashboardRepository
 import com.mifos.core.data.repository.SavingsAccountActivateRepository
 import com.mifos.core.data.repository.SavingsAccountApprovalRepository
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
+import com.mifos.core.data.repository.SyncCenterPayloadsRepository
+import com.mifos.core.data.repository.SyncCentersDialogRepository
+import com.mifos.core.data.repository.SyncClientPayloadsRepository
+import com.mifos.core.data.repository.SyncClientsDialogRepository
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
+import com.mifos.core.data.repository.SyncGroupsDialogRepository
+import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
+import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
+import com.mifos.core.data.repository_imp.CreateNewClientRepositoryImp
 import com.mifos.core.data.repository_imp.DocumentDialogRepositoryImp
+import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.NoteRepositoryImp
+import com.mifos.core.data.repository_imp.OfflineDashboardRepositoryImp
+import com.mifos.core.data.repository_imp.SavingsAccountActivateRepositoryImp
+import com.mifos.core.data.repository_imp.SavingsAccountApprovalRepositoryImp
+import com.mifos.core.data.repository_imp.SavingsAccountRepositoryImp
+import com.mifos.core.data.repository_imp.SavingsAccountSummaryRepositoryImp
+import com.mifos.core.data.repository_imp.SavingsAccountTransactionRepositoryImp
+import com.mifos.core.data.repository_imp.SyncCenterPayloadsRepositoryImp
+import com.mifos.core.data.repository_imp.SyncCentersDialogRepositoryImp
+import com.mifos.core.data.repository_imp.SyncClientPayloadsRepositoryImp
+import com.mifos.core.data.repository_imp.SyncClientsDialogRepositoryImp
 import com.mifos.core.data.repository_imp.SyncGroupPayloadsRepositoryImp
+import com.mifos.core.data.repository_imp.SyncGroupsDialogRepositoryImp
+import com.mifos.core.data.repository_imp.SyncLoanRepaymentTransactionRepositoryImp
+import com.mifos.core.data.repository_imp.SyncSavingsAccountTransactionRepositoryImp
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerAuth
 import com.mifos.core.network.datamanager.DataManagerCenter
@@ -27,39 +53,12 @@ import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepository
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepositoryImp
 import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
-import com.mifos.core.data.repository.SyncCentersDialogRepository
-import com.mifos.core.data.repository_imp.SyncCentersDialogRepositoryImp
-import com.mifos.core.data.repository.SyncClientsDialogRepository
-import com.mifos.core.data.repository_imp.SyncClientsDialogRepositoryImp
-import com.mifos.core.data.repository.SyncGroupsDialogRepository
-import com.mifos.core.data.repository_imp.SyncGroupsDialogRepositoryImp
-import com.mifos.core.data.repository.OfflineDashboardRepository
-import com.mifos.core.data.repository_imp.OfflineDashboardRepositoryImp
-import com.mifos.core.data.repository.SyncCenterPayloadsRepository
-import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
-import com.mifos.core.data.repository_imp.SavingsAccountActivateRepositoryImp
-import com.mifos.core.data.repository_imp.SavingsAccountApprovalRepositoryImp
-import com.mifos.core.data.repository_imp.SavingsAccountRepositoryImp
-import com.mifos.core.data.repository_imp.SavingsAccountSummaryRepositoryImp
-import com.mifos.core.data.repository_imp.SavingsAccountTransactionRepositoryImp
-import com.mifos.core.data.repository_imp.SyncCenterPayloadsRepositoryImp
-import com.mifos.core.data.repository_imp.SyncSavingsAccountTransactionRepositoryImp
-import com.mifos.core.data.repository.SyncClientPayloadsRepository
-import com.mifos.core.data.repository_imp.SyncClientPayloadsRepositoryImp
-import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
-import com.mifos.core.data.repository_imp.SyncLoanRepaymentTransactionRepositoryImp
 import com.mifos.mifosxdroid.online.activate.ActivateRepository
 import com.mifos.mifosxdroid.online.activate.ActivateRepositoryImp
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepository
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepositoryImp
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepositoryImp
-import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.core.data.repository_imp.CreateNewClientRepositoryImp
-import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepository
-import com.mifos.mifosxdroid.online.groupdetails.GroupDetailsRepositoryImp
-import com.mifos.mifosxdroid.online.groupslist.GroupsListRepository
-import com.mifos.mifosxdroid.online.groupslist.GroupsListRepositoryImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -84,22 +83,12 @@ class RepositoryModule {
     }
 
     @Provides
-    fun providesGroupDetailsRepository(dataManagerGroups: DataManagerGroups): GroupDetailsRepository {
-        return GroupDetailsRepositoryImp(dataManagerGroups)
-    }
-
-    @Provides
     fun providesActivateRepository(
         dataManagerClient: DataManagerClient,
         dataManagerCenter: DataManagerCenter,
         dataManagerGroups: DataManagerGroups
     ): ActivateRepository {
         return ActivateRepositoryImp(dataManagerClient, dataManagerCenter, dataManagerGroups)
-    }
-
-    @Provides
-    fun providesGroupsListRepository(dataManagerGroups: DataManagerGroups): GroupsListRepository {
-        return GroupsListRepositoryImp(dataManagerGroups)
     }
 
     @Provides

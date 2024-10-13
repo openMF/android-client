@@ -20,12 +20,6 @@
             android:id="@+id/action_navigation_dashboard_to_createNewCenterFragment"
             app:destination="@id/createNewCenterFragment" />
         <action
-            android:id="@+id/action_navigation_dashboard_to_createNewGroupFragment"
-            app:destination="@id/createNewGroupFragment" />
-        <action
-            android:id="@+id/action_navigation_dashboard_to_groupsActivity"
-            app:destination="@id/groupsActivity" />
-        <action
             android:id="@+id/action_navigation_dashboard_to_centersActivity"
             app:destination="@id/centersActivity" />
         <action
@@ -59,18 +53,6 @@
             app:destination="@id/centersActivity" />
     </fragment>
 
-    <!--    GroupsListFragment-->
-    <fragment
-        android:id="@+id/navigation_group_list"
-        android:name="com.mifos.mifosxdroid.online.groupslist.GroupsListFragment"
-        android:label="GroupsListFragment">
-        <action
-            android:id="@+id/action_navigation_group_list_to_createNewGroupFragment"
-            app:destination="@id/createNewGroupFragment" />
-        <action
-            android:id="@+id/action_navigation_group_list_to_groupsActivity"
-            app:destination="@id/groupsActivity" />
-    </fragment>
 
     <!--    CreateNewClientFragment-->
     <fragment
@@ -83,12 +65,6 @@
         android:id="@+id/createNewCenterFragment"
         android:name="com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment"
         android:label="CreateNewCenterFragment" />
-
-    <!--    CreateNewGroupFragment-->
-    <fragment
-        android:id="@+id/createNewGroupFragment"
-        android:name="com.mifos.mifosxdroid.online.createnewgroup.CreateNewGroupFragment"
-        android:label="CreateNewGroupFragment" />
 
     <!--    ClientActivity-->
     <activity
@@ -112,17 +88,6 @@
     </activity>
 
     <!--    GroupsActivity-->
-    <activity
-        android:id="@+id/groupsActivity"
-        android:name="com.mifos.mifosxdroid.online.GroupsActivity"
-        android:label="GroupsActivity">
-        <argument
-            android:name="groupId"
-            app:argType="integer" />
-        <argument
-            android:name="groupName"
-            app:argType="string" />
-    </activity>
 
     <activity
         android:id="@+id/checkerInboxPendingTasksActivity"
@@ -134,12 +99,6 @@
         android:id="@+id/pathTrackingActivity"
         android:name="com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity"
         android:label="PathTrackingActivity" />
-
-
-    <fragment
-        android:id="@+id/offlineDashboardFragment"
-        android:name="com.mifos.mifosxdroid.offline.offlinedashbarod.OfflineDashboardFragment"
-        android:label="OfflineDashboardFragment" />
 
 
     <activity
