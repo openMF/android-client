@@ -123,12 +123,12 @@ class SavingsAccountSummaryFragment : MifosBaseFragment() {
     }
 
     private fun loadSavingsDataTables(savingsAccountNumber: Int) {
-        val action =
-            SavingsAccountSummaryFragmentDirections.actionSavingsAccountSummaryFragmentToDataTableFragment(
-                Constants.DATA_TABLE_NAME_SAVINGS,
-                savingsAccountNumber
-            )
-        findNavController().navigate(action)
+//        val action =
+//            SavingsAccountSummaryFragmentDirections.actionSavingsAccountSummaryFragmentToDataTableFragment(
+//                Constants.DATA_TABLE_NAME_SAVINGS,
+//                savingsAccountNumber
+//            )
+//        findNavController().navigate(action)
     }
 
     private fun doTransaction(

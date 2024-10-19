@@ -33,16 +33,9 @@
         <action
             android:id="@+id/action_clientDetailsFragment_to_savingsAccountFragment"
             app:destination="@id/savingsAccountFragment" />
-
-        <action
-            android:id="@+id/action_clientDetailsFragment_to_dataTableFragment"
-            app:destination="@id/dataTableFragment" />
         <action
             android:id="@+id/action_clientDetailsFragment_to_signatureFragment"
             app:destination="@id/signatureFragment" />
-        <action
-            android:id="@+id/action_clientDetailsFragment_to_dataTableDataFragment"
-            app:destination="@id/dataTableDataFragment" />
         <action
             android:id="@+id/action_clientDetailsFragment_to_pinpointClientActivity"
             app:destination="@id/pinpointClientActivity" />
@@ -64,9 +57,6 @@
         <action
             android:id="@+id/action_savingsAccountSummaryFragment_to_documentListFragment"
             app:destination="@id/documentListFragment" />
-        <action
-            android:id="@+id/action_savingsAccountSummaryFragment_to_dataTableFragment"
-            app:destination="@id/dataTableFragment" />
         <action
             android:id="@+id/action_savingsAccountSummaryFragment_to_savingsAccountApprovalFragment"
             app:destination="@id/savingsAccountApprovalFragment" />
@@ -174,41 +164,11 @@
 
 
     <fragment
-        android:id="@+id/dataTableFragment"
-        android:name="com.mifos.mifosxdroid.online.datatable.DataTableFragment"
-        android:label="DataTableFragment">
-        <argument
-            android:name="tableName"
-            app:argType="string" />
-        <argument
-            android:name="entityId"
-            app:argType="integer" />
-        <action
-            android:id="@+id/action_dataTableFragment_to_dataTableDataFragment"
-            app:destination="@id/dataTableDataFragment" />
-
-    </fragment>
-
-
-    <fragment
         android:id="@+id/signatureFragment"
         android:name="com.mifos.mifosxdroid.online.sign.SignatureFragment"
         android:label="SignatureFragment">
         <argument
             android:name="clientId"
-            app:argType="integer" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/dataTableDataFragment"
-        android:name="com.mifos.mifosxdroid.online.datatabledata.DataTableDataFragment"
-        android:label="DataTableDataFragment">
-        <argument
-            android:name="dataTable"
-            app:argType="com.mifos.core.objects.noncore.DataTable" />
-        <argument
-            android:name="entityId"
             app:argType="integer" />
     </fragment>
 

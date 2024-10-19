@@ -18,7 +18,6 @@ import com.mifos.core.data.LoansPayload
 import com.mifos.core.objects.noncore.DataTable
 import com.mifos.feature.loan.loan_account.LoanAccountScreen
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment
 import com.mifos.utils.FragmentConstants
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -69,14 +68,14 @@ class LoanAccountFragment : Fragment() {
     }
 
     private fun dataTables(dataTables: List<DataTable>, loansPayload: LoansPayload) {
-        val fragment = DataTableListFragment.newInstance(
-            dataTables,
-            loansPayload, Constants.CLIENT_LOAN
-        )
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST)
-        fragmentTransaction.replace(R.id.container, fragment).commit()
+//        val fragment = DataTableListFragment.newInstance(
+//            dataTables,
+//            loansPayload, Constants.CLIENT_LOAN
+//        )
+//        val fragmentTransaction = requireActivity().supportFragmentManager
+//            .beginTransaction()
+//        fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST)
+//        fragmentTransaction.replace(R.id.container, fragment).commit()
     }
 
 //    private fun submit() {
