@@ -14,7 +14,6 @@ import com.evernote.android.job.JobManager
 import com.facebook.stetho.Stetho
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.MaterialModule
-import com.mifos.mifosxdroid.offlinejobs.OfflineJobCreator
 import com.mifos.utils.LanguageHelper.onAttach
 import com.mifos.utils.ThemeHelper
 import com.raizlabs.android.dbflow.config.FlowConfig
@@ -35,7 +34,7 @@ class App : MultiDexApplication() {
         }
         instance = this
         Iconify.with(MaterialModule())
-        JobManager.create(this).addJobCreator(OfflineJobCreator())
+//        JobManager.create(this).addJobCreator(OfflineJobCreator())
         //Initializing the DBFlow and SQL Cipher Encryption
         FlowManager.init(FlowConfig.Builder(this).build())
         Stetho.initializeWithDefaults(this)

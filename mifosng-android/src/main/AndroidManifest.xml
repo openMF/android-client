@@ -55,10 +55,6 @@
             android:label="home_activity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".online.DashboardActivity"
-            android:label="@string/dashboard"
-            android:screenOrientation="portrait" />
 
         <activity
             android:name=".online.surveyquestion.SurveyQuestionActivity"
@@ -115,22 +111,6 @@
             android:label="@string/track_path"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".offline.syncclientpayloads.SyncClientPayloadActivity"
-            android:label="@string/sync_clients"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".offline.syncgrouppayloads.SyncGroupPayloadsActivity"
-            android:label="@string/sync_groups"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".offline.synccenterpayloads.SyncCenterPayloadActivity"
-            android:label="@string/sync_centers"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".offline.syncloanrepaymenttransacition.SyncLoanRepaymentTransactionActivity"
-            android:label="@string/sync_loanrepayments"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.setting.SettingsActivity"
             android:label="@string/settings"
             android:parentActivityName=".activity.home.HomeActivity"
@@ -139,10 +119,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.home.HomeActivity" />
         </activity>
-        <activity
-            android:name=".offline.syncsavingsaccounttransaction.SyncSavingsAccountTransactionActivity"
-            android:label="@string/sync_savingsaccounttransactions"
-            android:screenOrientation="portrait" />
 
         <service
             android:name=".activity.pathtracking.PathTrackingService"

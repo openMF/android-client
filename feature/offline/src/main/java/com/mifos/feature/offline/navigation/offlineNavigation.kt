@@ -122,10 +122,6 @@ fun NavGraphBuilder.syncLoanRepaymentScreen(
     }
 }
 
-fun NavController.navigateToOfflineDashboardScreen() {
-    navigate(OfflineScreens.OfflineDashboardScreens.route)
-}
-
 fun NavController.navigateToSyncCenterPayloadsScreen(){
     navigate(OfflineScreens.SyncCenterPayloadsScreens.route)
 }
