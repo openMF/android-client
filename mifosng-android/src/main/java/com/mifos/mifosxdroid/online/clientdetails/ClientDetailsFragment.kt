@@ -147,11 +147,6 @@ class ClientDetailsFragment : MifosBaseFragment() {
     }
 
     private fun loadClientDataTables(clientId: Int) {
-        val action = ClientDetailsFragmentDirections.actionClientDetailsFragmentToDataTableFragment(
-            Constants.DATA_TABLE_NAME_CLIENT,
-            clientId
-        )
-        findNavController().navigate(action)
     }
 
     private fun loadSignUpload(clientId: Int) {

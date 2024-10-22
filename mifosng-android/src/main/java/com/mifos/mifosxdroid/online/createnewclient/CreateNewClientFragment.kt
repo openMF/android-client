@@ -17,7 +17,6 @@ import com.mifos.core.objects.noncore.DataTable
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.core.MifosBaseFragment
-import com.mifos.mifosxdroid.online.datatablelistfragment.DataTableListFragment
 import com.mifos.utils.FragmentConstants
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -44,15 +43,15 @@ class CreateNewClientFragment : MifosBaseFragment() {
     }
 
     private fun hasDatatables(dataTables : List<DataTable>, clientPayload: ClientPayload ){
-        val fragment = DataTableListFragment.newInstance(
-            dataTables,
-            clientPayload, Constants.CREATE_CLIENT
-        )
-        val fragmentTransaction = requireActivity().supportFragmentManager
-            .beginTransaction()
-        requireActivity().supportFragmentManager.popBackStackImmediate()
-        fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST)
-        fragmentTransaction.replace(R.id.container, fragment).commit()
+//        val fragment = DataTableListFragment.newInstance(
+//            dataTables,
+//            clientPayload, Constants.CREATE_CLIENT
+//        )
+//        val fragmentTransaction = requireActivity().supportFragmentManager
+//            .beginTransaction()
+//        requireActivity().supportFragmentManager.popBackStackImmediate()
+//        fragmentTransaction.addToBackStack(FragmentConstants.DATA_TABLE_LIST)
+//        fragmentTransaction.replace(R.id.container, fragment).commit()
     }
 
 }
