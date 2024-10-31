@@ -142,7 +142,9 @@ fun HomeNavigation() {
                             contentDescription = null
                         )
                         Text(
-                            text = "Mifos", color = Color.White,
+                            text = "Mifos",
+                            modifier = Modifier.padding(top = 12.dp, start = 4.dp),
+                            color = Color.White,
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium,
@@ -157,6 +159,7 @@ fun HomeNavigation() {
                         ) {
                             Text(
                                 text = "Offline Mode", color = Color.White,
+                                modifier = Modifier.padding(start = 4.dp),
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Medium,
