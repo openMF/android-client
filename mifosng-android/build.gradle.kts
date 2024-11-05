@@ -258,3 +258,18 @@ dependencies {
     implementation(libs.coil.kt.compose)
 
 }
+configurations {
+    create("dependencyGuardRuntimeClasspath") {
+        extendsFrom(configurations.getByName("releaseImplementation"))
+        isCanBeResolved = true // Make it resolvable
+    }
+}
+dependencyGuard {
+    // All dependencies included in Production Release APK
+    configuration("dependencyGuardRuntimeClasspath"){
+        allowedFilter = {
+            // Disallow dependencies with a name containing "junit"
+            !it.contains("junit")
+        }
+    }
+}

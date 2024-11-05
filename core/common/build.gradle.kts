@@ -21,7 +21,7 @@ dependencies {
     implementation(projects.core.model)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
-
+  //  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
 

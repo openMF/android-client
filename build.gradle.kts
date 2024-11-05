@@ -15,3 +15,15 @@ plugins {
     alias(libs.plugins.spotless) apply false
     alias(libs.plugins.ktlint) apply false
 }
+buildscript {
+    repositories {
+        mavenCentral()
+        google()
+        gradlePluginPortal()
+        // SNAPSHOT Versions of Dependency Guard
+        maven { url = uri( "https://s01.oss.sonatype.org/content/repositories/snapshots") }
+    }
+    dependencies {
+        classpath(libs.dependency.guard)
+    }
+}

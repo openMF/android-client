@@ -49,6 +49,7 @@ coreTesting = "2.2.0"
 coil-compose = "2.5.0"
 dbflow = "3.1.1"
 dbflowProcessor = "4.2.4"
+dependencyGuardVersion = "0.5.0"
 espressoIdlingResource = "3.5.1"
 espressoIntents = "3.5.1"
 fineractClientVersion = "2.0.3"
@@ -166,6 +167,7 @@ android-maps-utils = { module = "com.google.maps.android:android-maps-utils", ve
 android-iconify-material = { module = "com.joanzapata.iconify:android-iconify-material", version.ref = "androidIconifyMaterial" }
 
 #RxAndroid
+dependency-guard = { module = "com.dropbox.dependency-guard:dependency-guard", version.ref = "dependencyGuardVersion" }
 kotlinx-coroutines-core-v151 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCoreVersion" }
 kotlinx-coroutines-rx2 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2", version.ref = "kotlinxCoroutinesRx2" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
