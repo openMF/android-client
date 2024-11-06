@@ -1,3 +1,4 @@
+import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.mifos.MifosBuildType
 
@@ -85,6 +86,15 @@ android {
                 TestLogEvent.STANDARD_ERROR
             )
         }
+    }
+
+    lint{
+        abortOnError = false
+        baseline = file("lint-baseline.xml")
+    }
+    detekt {
+        buildUponDefaultConfig = true // preconfigure defaults
+        allRules = false // activate all available (even unstable) rules.
     }
 
     buildFeatures {

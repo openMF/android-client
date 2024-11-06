@@ -4,7 +4,10 @@ plugins {
     alias(libs.plugins.mifos.android.library.jacoco)
     alias(libs.plugins.secrets)
 }
-
+detekt {
+    buildUponDefaultConfig = true // preconfigure defaults
+    allRules = false // activate all available (even unstable) rules.
+}
 android {
     namespace = "com.mifos.core.common"
 
