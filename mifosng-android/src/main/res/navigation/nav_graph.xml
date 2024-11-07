@@ -134,19 +134,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/activateFragment"
-        android:name="com.mifos.mifosxdroid.online.activate.ActivateFragment"
-        android:label="ActivateFragment">
-        <argument
-            android:name="clientId"
-            app:argType="integer" />
-        <argument
-            android:name="activationType"
-            app:argType="string" />
-    </fragment>
-
-
-    <fragment
         android:id="@+id/signatureFragment"
         android:name="com.mifos.mifosxdroid.online.sign.SignatureFragment"
         android:label="SignatureFragment">
@@ -306,9 +293,7 @@
         android:id="@+id/centerDetailsFragment"
         android:name="com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment"
         android:label="CenterDetailsFragment">
-        <action
-            android:id="@+id/action_centerDetailsFragment_to_activateFragment"
-            app:destination="@id/activateFragment" />
+
         <action
             android:id="@+id/action_centerDetailsFragment_to_savingsAccountFragment"
             app:destination="@id/savingsAccountFragment" />

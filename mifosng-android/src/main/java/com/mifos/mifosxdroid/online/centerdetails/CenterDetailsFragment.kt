@@ -62,11 +62,11 @@ class CenterDetailsFragment : MifosBaseFragment() {
     }
 
     private fun onClickActivateCenter() {
-        val action = CenterDetailsFragmentDirections.actionCenterDetailsFragmentToActivateFragment(
-            centerId,
-            Constants.ACTIVATE_CENTER
-        )
-        findNavController().navigate(action)
+//        val action = CenterDetailsFragmentDirections.actionCenterDetailsFragmentToActivateFragment(
+//            centerId,
+//            Constants.ACTIVATE_CENTER
+//        )
+//        findNavController().navigate(action)
     }
 
     private fun addCenterSavingAccount(centerId: Int) {
