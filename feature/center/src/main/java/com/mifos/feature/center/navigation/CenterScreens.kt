@@ -15,6 +15,4 @@ sealed class CenterScreens(val route: String) {
     }
 
     data object CreateCenterScreen : CenterScreens("create_center_screen/{${Constants.CENTER_ID}}")
-
-    data object SyncCenterPayloadsScreen : CenterScreens("sync_center_payloads_screen")
 }

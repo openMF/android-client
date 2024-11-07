@@ -111,10 +111,6 @@ fun NavGraphBuilder.createCenterScreenRoute(
     }
 }
 
-fun NavController.navigateCenterListScreenRoute() {
-    navigate(CenterScreens.CenterListScreen.route)
-}
-
 fun NavController.navigateCenterDetailsScreenRoute(centerId: Int) {
     navigate(CenterScreens.CenterDetailScreen.argument(centerId))
 }
