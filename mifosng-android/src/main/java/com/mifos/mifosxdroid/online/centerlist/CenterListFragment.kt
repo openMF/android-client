@@ -52,31 +52,5 @@ class CenterListFragment : MifosBaseFragment() {
         }
     }
 
-    private fun onClickCreateNewCenter() {
-        findNavController().navigate(R.id.action_navigation_center_list_to_createNewCenterFragment)
-    }
 
-    private fun selectedCenters(center: Center) {
-        val action = center.id?.let {
-            CenterListFragmentDirections.actionNavigationCenterListToCentersActivity(
-                it
-            )
-        }
-        action?.let { findNavController().navigate(it) }
-    }
-
-    private fun syncCenters(selectedCenters: List<Center>) {
-        val syncCentersDialogFragment =
-            SyncCentersDialogFragment.newInstance(ArrayList(selectedCenters))
-        val fragmentTransaction =
-            activity?.supportFragmentManager?.beginTransaction()
-        fragmentTransaction?.addToBackStack(FragmentConstants.FRAG_CLIENT_SYNC)
-        syncCentersDialogFragment.isCancelable = false
-        fragmentTransaction?.let {
-            syncCentersDialogFragment.show(
-                fragmentTransaction,
-                resources.getString(R.string.sync_centers)
-            )
-        }
-    }
 }
