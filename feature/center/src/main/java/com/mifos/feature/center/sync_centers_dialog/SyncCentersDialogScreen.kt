@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.core.objects.group.Center
 import com.mifos.feature.center.R
 
 @Composable
@@ -34,12 +35,17 @@ fun SyncCenterDialogScreen(
     viewModel: SyncCentersDialogViewModel = hiltViewModel(),
     dismiss: () -> Unit,
     hide: () -> Unit,
+    centers: List<Center>? =null
+
 ) {
     val uiState by viewModel.syncCentersDialogUiState.collectAsStateWithLifecycle()
     val uiData by viewModel.syncCenterData.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.syncCenter()
+        centers?.let {
+            viewModel.setCentersList(centersList = centers)
+        }
     }
 
     SyncCenterDialogScreen(
