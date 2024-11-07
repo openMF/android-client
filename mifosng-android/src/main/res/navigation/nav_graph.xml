@@ -19,9 +19,6 @@
             android:id="@+id/action_clientDetailsFragment_to_documentListFragment"
             app:destination="@id/documentListFragment" />
         <action
-            android:id="@+id/action_clientDetailsFragment_to_noteFragment"
-            app:destination="@id/noteFragment" />
-        <action
             android:id="@+id/action_clientDetailsFragment_to_clientChargeFragment"
             app:destination="@id/clientChargeFragment" />
         <action
@@ -88,21 +85,7 @@
     </fragment>
 
 
-    <fragment
-        android:id="@+id/noteFragment"
-        android:name="com.mifos.mifosxdroid.online.note.NoteFragment"
-        android:label="NoteFragment">
-        <argument
-            android:name="entiyId"
-            app:argType="integer" />
-        <argument
-            android:name="entityType"
-            app:argType="string"
-            app:nullable="true" />
-    </fragment>
-
-
-    <fragment
+        <fragment
         android:id="@+id/clientChargeFragment"
         android:name="com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment"
         android:label="ClientChargeFragment">
@@ -149,19 +132,6 @@
             android:name="isGroupAccount"
             app:argType="boolean" />
     </fragment>
-
-    <fragment
-        android:id="@+id/activateFragment"
-        android:name="com.mifos.mifosxdroid.online.activate.ActivateFragment"
-        android:label="ActivateFragment">
-        <argument
-            android:name="clientId"
-            app:argType="integer" />
-        <argument
-            android:name="activationType"
-            app:argType="string" />
-    </fragment>
-
 
     <fragment
         android:id="@+id/signatureFragment"
@@ -323,9 +293,7 @@
         android:id="@+id/centerDetailsFragment"
         android:name="com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment"
         android:label="CenterDetailsFragment">
-        <action
-            android:id="@+id/action_centerDetailsFragment_to_activateFragment"
-            app:destination="@id/activateFragment" />
+
         <action
             android:id="@+id/action_centerDetailsFragment_to_savingsAccountFragment"
             app:destination="@id/savingsAccountFragment" />
