@@ -14,11 +14,12 @@ import com.mifos.feature.center.center_details.CenterDetailsScreen
 import com.mifos.feature.center.center_group_list.GroupListScreen
 import com.mifos.feature.center.center_list.ui.CenterListScreen
 import com.mifos.feature.center.create_center.CreateNewCenterScreen
+import com.mifos.feature.center.sync_centers_dialog.SyncCenterDialogScreen
 
 fun NavGraphBuilder.centerNavGraph(
     navController: NavController,
     paddingValues: PaddingValues,
-    onActivateCenter: (Int,String) -> Unit,
+    onActivateCenter: (Int, String) -> Unit,
     addSavingsAccount: (Int) -> Unit
 ) {
     navigation(
@@ -28,7 +29,7 @@ fun NavGraphBuilder.centerNavGraph(
         centerListScreenRoute(
             paddingValues = paddingValues,
             createNewCenter = navController::navigateCreateCenterScreenRoute,
-            syncClicked = { }, // TODO open sync dialog inside center list screen
+            syncClicked = navController::navigateSyncCentersDialog, // TODO open sync dialog inside center list screen
             onCenterSelect = navController::navigateCenterDetailsScreenRoute
         )
         centerDetailScreenRoute(
@@ -43,6 +44,10 @@ fun NavGraphBuilder.centerNavGraph(
         )
         createCenterScreenRoute(
             onCreateSuccess = navController::popBackStack
+        )
+        syncCentersDialogRoute(
+            dismiss = navController::popBackStack,
+            hide = navController::popBackStack,
         )
     }
 }
@@ -67,7 +72,7 @@ fun NavGraphBuilder.centerListScreenRoute(
 
 fun NavGraphBuilder.centerDetailScreenRoute(
     onBackPressed: () -> Unit,
-    onActivateCenter: (Int,String) -> Unit,
+    onActivateCenter: (Int, String) -> Unit,
     addSavingsAccount: (Int) -> Unit,
     groupList: (Int) -> Unit
 ) {
@@ -77,7 +82,7 @@ fun NavGraphBuilder.centerDetailScreenRoute(
     ) {
         CenterDetailsScreen(
             onBackPressed = onBackPressed,
-            onActivateCenter = {onActivateCenter(it,Constants.ACTIVATE_CENTER)},
+            onActivateCenter = { onActivateCenter(it, Constants.ACTIVATE_CENTER) },
             addSavingsAccount = addSavingsAccount,
             groupList = groupList
         )
@@ -111,8 +116,23 @@ fun NavGraphBuilder.createCenterScreenRoute(
     }
 }
 
-fun NavController.navigateCenterListScreenRoute() {
-    navigate(CenterScreens.CenterListScreen.route)
+fun NavGraphBuilder.syncCentersDialogRoute(
+    dismiss : ()->Unit,
+    hide : ()->Unit,
+) {
+    composable(
+        route = CenterScreens.SyncCenterPayloadsScreen.route,
+        arguments = listOf(navArgument(Constants.CENTER, builder = { type = NavType.IntType }))
+    ) {
+        SyncCenterDialogScreen(
+            dismiss = dismiss,
+            hide = hide,
+        )
+    }
+}
+
+fun NavController.navigateSyncCentersDialog(list: List<Center>) {
+    navigate(CenterScreens.SyncCenterPayloadsScreen.arguments(list))
 }
 
 fun NavController.navigateCenterDetailsScreenRoute(centerId: Int) {

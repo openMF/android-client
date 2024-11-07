@@ -14,6 +14,7 @@ import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
+import com.mifos.feature.center.navigation.navigateSyncCentersDialog
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTaskGraph
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
@@ -39,6 +40,7 @@ import com.mifos.feature.loan.navigation.navigateToLoanAccountScreen
 import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteScreen
+import com.mifos.feature.offline.navigation.navigateToSyncCenterPayloadsScreen
 import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.path_tracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.report.navigation.reportNavGraph
@@ -171,7 +173,8 @@ fun Navigation(
             addSavingsAccount = {
 //                TODO() check this logic
                 navController.navigateToAddSavingsAccount(it, 0, true)
-            }
+            },
+
         )
 
         reportNavGraph(
