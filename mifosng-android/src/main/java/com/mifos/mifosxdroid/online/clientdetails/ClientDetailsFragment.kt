@@ -101,11 +101,11 @@ class ClientDetailsFragment : MifosBaseFragment() {
     }
 
     private fun loadNotes(clientId: Int) {
-        val action = ClientDetailsFragmentDirections.actionClientDetailsFragmentToNoteFragment(
-            clientId,
-            Constants.ENTITY_TYPE_CLIENTS
-        )
-        findNavController().navigate(action)
+//        val action = ClientDetailsFragmentDirections.actionClientDetailsFragmentToNoteFragment(
+//            clientId,
+//            Constants.ENTITY_TYPE_CLIENTS
+//        )
+//        findNavController().navigate(action)
     }
 
     private fun loadClientCharges(clientId: Int) {
