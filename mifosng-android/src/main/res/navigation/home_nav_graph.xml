@@ -40,7 +40,6 @@
             app:destination="@id/clientActivity" />
     </fragment>
 
-
     <!--    CreateNewClientFragment-->
     <fragment
         android:id="@+id/createNewClientFragment"
