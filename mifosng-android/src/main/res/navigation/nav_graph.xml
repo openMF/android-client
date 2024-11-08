@@ -195,38 +195,6 @@
         android:name="com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetFragment"
         android:label="GenerateCollectionSheetFragment" />
 
-
-    <fragment
-        android:id="@+id/reportCategoryFragment"
-        android:name="com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryFragment"
-        android:label="ReportCategoryFragment">
-        <action
-            android:id="@+id/action_reportCategoryFragment_to_reportDetailFragment"
-            app:destination="@id/reportDetailFragment" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/reportDetailFragment"
-        android:name="com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment"
-        android:label="ReportDetailFragment">
-        <argument
-            android:name="clientReportTypeItem"
-            app:argType="com.mifos.core.objects.runreports.client.ClientReportTypeItem" />
-        <action
-            android:id="@+id/action_reportDetailFragment_to_reportFragment"
-            app:destination="@id/reportFragment" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/reportFragment"
-        android:name="com.mifos.mifosxdroid.online.runreports.report.ReportFragment"
-        android:label="ReportFragment">
-        <argument
-            android:name="respose"
-            app:argType="com.mifos.core.objects.runreports.FullParameterListResponse" />
-    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.mifos.mifosxdroid.activity.setting.SettingsFragment"
