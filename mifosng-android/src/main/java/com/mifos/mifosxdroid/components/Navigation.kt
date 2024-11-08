@@ -191,7 +191,7 @@ fun Navigation(
 
         settingsScreen(
             navigateBack = navController::popBackStack,
-            navigateToLoginScreen = { },
+            navigateToLoginScreen = {},
             changePasscode = { },
             languageChanged = { },
         )

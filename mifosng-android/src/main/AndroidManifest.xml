@@ -88,6 +88,14 @@
                 android:value=".activity.home.HomeActivity" />
         </activity>
         <activity
+            android:name=".online.runreports.RunReportsActivity"
+            android:label="@string/run_report"
+            android:parentActivityName=".activity.home.HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.home.HomeActivity" />
+        </activity>
+        <activity
             android:name=".activity.pinpointclient.PinpointClientActivity"
             android:exported="true"
             android:label="@string/pinpoint"

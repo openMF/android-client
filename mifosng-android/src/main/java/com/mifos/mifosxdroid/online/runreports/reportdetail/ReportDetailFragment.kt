@@ -1,8 +1,4 @@
-/*
- * This project is licensed under the open source MPL V2.
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
-package com.mifos.mifosxdroid.online.clientidentifiers
+package com.mifos.mifosxdroid.online.runreports.reportdetail
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,38 +6,38 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
-import androidx.navigation.findNavController
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.mifos.core.common.utils.Constants
-import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
+import com.mifos.core.objects.runreports.FullParameterListResponse
+import com.mifos.core.objects.runreports.client.ClientReportTypeItem
+import com.mifos.feature.report.report_detail.ReportDetailScreen
 import com.mifos.mifosxdroid.core.MifosBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * Created by Tarun on 04-08-17.
+ */
 @AndroidEntryPoint
-class ClientIdentifiersFragment : MifosBaseFragment() {
+class ReportDetailFragment : MifosBaseFragment() {
 
-    private val arg: ClientIdentifiersFragmentArgs by navArgs()
-    private var clientId = 0
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        clientId = arg.clientId
-    }
+    private val arg: ReportDetailFragmentArgs by navArgs()
+    private lateinit var reportItem: ClientReportTypeItem
 
     override fun onCreateView(
         inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+        reportItem = arg.clientReportTypeItem
         return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                ClientIdentifiersScreen(
+                ReportDetailScreen(
                     onBackPressed = {
                         findNavController().popBackStack()
                     },
-                    onDocumentClicked = {
-                        documentList(it)
+                    runReport = {
+                        showRunReport(it)
                     }
                 )
             }
@@ -58,12 +54,10 @@ class ClientIdentifiersFragment : MifosBaseFragment() {
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
     }
 
-    private fun documentList(identifierId: Int) {
+
+    private fun showRunReport(response: FullParameterListResponse) {
         val action =
-            ClientIdentifiersFragmentDirections.actionClientIdentifiersFragmentToDocumentListFragment(
-                identifierId,
-                Constants.ENTITY_TYPE_CLIENTS
-            )
+            ReportDetailFragmentDirections.actionReportDetailFragmentToReportFragment(response)
         findNavController().navigate(action)
     }
 }

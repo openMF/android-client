@@ -53,6 +53,8 @@ import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepository
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepositoryImp
 import com.mifos.mifosxdroid.activity.login.LoginRepository
 import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
+import com.mifos.mifosxdroid.online.activate.ActivateRepository
+import com.mifos.mifosxdroid.online.activate.ActivateRepositoryImp
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepository
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepositoryImp
 import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
@@ -78,6 +80,15 @@ class RepositoryModule {
     @Provides
     fun providesCenterListRepository(dataManagerCenter: DataManagerCenter): CenterListRepository {
         return CenterListRepositoryImp(dataManagerCenter)
+    }
+
+    @Provides
+    fun providesActivateRepository(
+        dataManagerClient: DataManagerClient,
+        dataManagerCenter: DataManagerCenter,
+        dataManagerGroups: DataManagerGroups
+    ): ActivateRepository {
+        return ActivateRepositoryImp(dataManagerClient, dataManagerCenter, dataManagerGroups)
     }
 
     @Provides
