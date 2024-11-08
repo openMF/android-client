@@ -8,25 +8,6 @@
     android:id="@+id/home_nav_graph"
     app:startDestination="@id/navigation_dashboard">
 
-    <!--    SearchFragment-->
-    <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.mifos.mifosxdroid.online.search.SearchFragment"
-        android:label="SearchFragment">
-        <action
-            android:id="@+id/action_navigation_dashboard_to_createNewClientFragment"
-            app:destination="@id/createNewClientFragment" />
-        <action
-            android:id="@+id/action_navigation_dashboard_to_createNewCenterFragment"
-            app:destination="@id/createNewCenterFragment" />
-        <action
-            android:id="@+id/action_navigation_dashboard_to_centersActivity"
-            app:destination="@id/centersActivity" />
-        <action
-            android:id="@+id/action_navigation_dashboard_to_clientActivity"
-            app:destination="@id/clientActivity" />
-    </fragment>
-
     <!--    ClientsListFragment-->
     <fragment
         android:id="@+id/navigation_client_list"
