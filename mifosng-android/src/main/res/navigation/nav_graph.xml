@@ -15,18 +15,10 @@
         <action
             android:id="@+id/action_clientDetailsFragment_to_savingsAccountSummaryFragment"
             app:destination="@id/savingsAccountSummaryFragment" />
-        <action
-            android:id="@+id/action_clientDetailsFragment_to_documentListFragment"
-            app:destination="@id/documentListFragment" />
-        <action
-            android:id="@+id/action_clientDetailsFragment_to_noteFragment"
-            app:destination="@id/noteFragment" />
+
         <action
             android:id="@+id/action_clientDetailsFragment_to_clientChargeFragment"
             app:destination="@id/clientChargeFragment" />
-        <action
-            android:id="@+id/action_clientDetailsFragment_to_clientIdentifiersFragment"
-            app:destination="@id/clientIdentifiersFragment" />
         <action
             android:id="@+id/action_clientDetailsFragment_to_surveyListFragment"
             app:destination="@id/surveyListFragment" />
@@ -55,9 +47,6 @@
             android:name="parentFragment"
             app:argType="boolean" />
         <action
-            android:id="@+id/action_savingsAccountSummaryFragment_to_documentListFragment"
-            app:destination="@id/documentListFragment" />
-        <action
             android:id="@+id/action_savingsAccountSummaryFragment_to_savingsAccountApprovalFragment"
             app:destination="@id/savingsAccountApprovalFragment" />
         <action
@@ -73,36 +62,8 @@
         android:id="@+id/mifosBaseFragment"
         android:name="com.mifos.mifosxdroid.core.MifosBaseFragment"
         android:label="MifosBaseFragment" />
-    <fragment
-        android:id="@+id/documentListFragment"
-        android:name="com.mifos.mifosxdroid.online.documentlist.DocumentListFragment"
-        android:label="fragment_document_list"
-        tools:layout="@layout/fragment_document_list">
-        <argument
-            android:name="entiyId"
-            app:argType="integer" />
-        <argument
-            android:name="entityType"
-            app:argType="string"
-            app:nullable="false" />
-    </fragment>
 
-
-    <fragment
-        android:id="@+id/noteFragment"
-        android:name="com.mifos.mifosxdroid.online.note.NoteFragment"
-        android:label="NoteFragment">
-        <argument
-            android:name="entiyId"
-            app:argType="integer" />
-        <argument
-            android:name="entityType"
-            app:argType="string"
-            app:nullable="true" />
-    </fragment>
-
-
-    <fragment
+        <fragment
         android:id="@+id/clientChargeFragment"
         android:name="com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment"
         android:label="ClientChargeFragment">
@@ -112,19 +73,6 @@
         <argument
             android:name="chargesList"
             app:argType="com.mifos.core.objects.client.Charges[]" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/clientIdentifiersFragment"
-        android:name="com.mifos.mifosxdroid.online.clientidentifiers.ClientIdentifiersFragment"
-        android:label="ClientIdentifiersFragment">
-        <action
-            android:id="@+id/action_clientIdentifiersFragment_to_documentListFragment"
-            app:destination="@id/documentListFragment" />
-        <argument
-            android:name="clientId"
-            app:argType="integer" />
     </fragment>
 
 
@@ -149,19 +97,6 @@
             android:name="isGroupAccount"
             app:argType="boolean" />
     </fragment>
-
-    <fragment
-        android:id="@+id/activateFragment"
-        android:name="com.mifos.mifosxdroid.online.activate.ActivateFragment"
-        android:label="ActivateFragment">
-        <argument
-            android:name="clientId"
-            app:argType="integer" />
-        <argument
-            android:name="activationType"
-            app:argType="string" />
-    </fragment>
-
 
     <fragment
         android:id="@+id/signatureFragment"
@@ -260,38 +195,6 @@
         android:name="com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetFragment"
         android:label="GenerateCollectionSheetFragment" />
 
-
-    <fragment
-        android:id="@+id/reportCategoryFragment"
-        android:name="com.mifos.mifosxdroid.online.runreports.reportcategory.ReportCategoryFragment"
-        android:label="ReportCategoryFragment">
-        <action
-            android:id="@+id/action_reportCategoryFragment_to_reportDetailFragment"
-            app:destination="@id/reportDetailFragment" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/reportDetailFragment"
-        android:name="com.mifos.mifosxdroid.online.runreports.reportdetail.ReportDetailFragment"
-        android:label="ReportDetailFragment">
-        <argument
-            android:name="clientReportTypeItem"
-            app:argType="com.mifos.core.objects.runreports.client.ClientReportTypeItem" />
-        <action
-            android:id="@+id/action_reportDetailFragment_to_reportFragment"
-            app:destination="@id/reportFragment" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/reportFragment"
-        android:name="com.mifos.mifosxdroid.online.runreports.report.ReportFragment"
-        android:label="ReportFragment">
-        <argument
-            android:name="respose"
-            app:argType="com.mifos.core.objects.runreports.FullParameterListResponse" />
-    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.mifos.mifosxdroid.activity.setting.SettingsFragment"
@@ -323,9 +226,7 @@
         android:id="@+id/centerDetailsFragment"
         android:name="com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment"
         android:label="CenterDetailsFragment">
-        <action
-            android:id="@+id/action_centerDetailsFragment_to_activateFragment"
-            app:destination="@id/activateFragment" />
+
         <action
             android:id="@+id/action_centerDetailsFragment_to_savingsAccountFragment"
             app:destination="@id/savingsAccountFragment" />
