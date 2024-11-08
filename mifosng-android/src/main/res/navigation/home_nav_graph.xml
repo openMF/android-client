@@ -94,12 +94,6 @@
 
 
     <activity
-        android:id="@+id/runReportsActivity"
-        android:name="com.mifos.mifosxdroid.online.runreports.RunReportsActivity"
-        android:label="RunReportsActivity" />
-
-
-    <activity
         android:id="@+id/generateCollectionSheetActivity"
         android:name="com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity"
         android:label="activity_generate_collection_sheet"

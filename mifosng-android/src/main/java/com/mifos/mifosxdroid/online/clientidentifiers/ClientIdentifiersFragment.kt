@@ -21,12 +21,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ClientIdentifiersFragment : MifosBaseFragment() {
 
-    private val arg: ClientIdentifiersFragmentArgs by navArgs()
+//    private val arg: ClientIdentifiersFragmentArgs by navArgs()
     private var clientId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        clientId = arg.clientId
+//        clientId = arg.clientId
     }
 
     override fun onCreateView(
@@ -59,11 +59,11 @@ class ClientIdentifiersFragment : MifosBaseFragment() {
     }
 
     private fun documentList(identifierId: Int) {
-        val action =
-            ClientIdentifiersFragmentDirections.actionClientIdentifiersFragmentToDocumentListFragment(
-                identifierId,
-                Constants.ENTITY_TYPE_CLIENTS
-            )
-        findNavController().navigate(action)
+//        val action =
+//            ClientIdentifiersFragmentDirections.actionClientIdentifiersFragmentToDocumentListFragment(
+//                identifierId,
+//                Constants.ENTITY_TYPE_CLIENTS
+//            )
+//        findNavController().navigate(action)
     }
 }
