@@ -86,7 +86,3 @@ fun NavGraphBuilder.searchRoute(
         )
     }
 }
-
-fun NavController.navigateSearchScreen() {
-    navigate(SearchScreens.SearchScreen.route)
-}
