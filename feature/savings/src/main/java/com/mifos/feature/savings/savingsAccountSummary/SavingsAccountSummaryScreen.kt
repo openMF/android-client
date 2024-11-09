@@ -1,4 +1,13 @@
-package com.mifos.feature.savings.account_summary
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.savings.savingsAccountSummary
 
 import android.content.Context
 import androidx.compose.foundation.background
@@ -66,7 +75,6 @@ import com.mifos.core.objects.accounts.savings.Status
 import com.mifos.core.objects.accounts.savings.Summary
 import com.mifos.core.objects.accounts.savings.Transaction
 import com.mifos.core.objects.accounts.savings.TransactionType
-import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate_Table.accountId
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.savings.R
 
@@ -75,19 +83,19 @@ import com.mifos.feature.savings.R
  */
 
 @Composable
-fun SavingsAccountSummaryScreen(
+internal fun SavingsAccountSummaryScreen(
     navigateBack: () -> Unit,
     loadMoreSavingsAccountInfo: (accountNumber: Int) -> Unit,
     loadDocuments: (accountNumber: Int) -> Unit,
-    onDepositClick: (savingsAccountWithAssociations: SavingsAccountWithAssociations, savingsAccountType: DepositType?) -> Unit,
-    onWithdrawButtonClicked: (savingsAccountWithAssociations: SavingsAccountWithAssociations, savingsAccountType: DepositType?) -> Unit,
-    approveSavings: (savingsAccountType: DepositType?, savingsAccountNumber: Int) -> Unit,
-    activateSavings: (savingsAccountType: DepositType?, savingsAccountNumber: Int) -> Unit
+    onDepositClick: (savings: SavingsAccountWithAssociations, type: DepositType?) -> Unit,
+    onWithdrawButtonClicked: (savings: SavingsAccountWithAssociations, type: DepositType?) -> Unit,
+    approveSavings: (type: DepositType?, accountNumber: Int) -> Unit,
+    activateSavings: (type: DepositType?, accountNumber: Int) -> Unit,
+    viewmodel: SavingsAccountSummaryViewModel = hiltViewModel(),
 ) {
-    val viewmodel: SavingsAccountSummaryViewModel = hiltViewModel()
     val uiState by viewmodel.savingsAccountSummaryUiState.collectAsStateWithLifecycle()
     val accountId = viewmodel.savingsNavigationData.id
-    val savingsAccountType =  viewmodel.savingsNavigationData.type
+    val savingsAccountType = viewmodel.savingsNavigationData.type
 
     LaunchedEffect(key1 = Unit) {
         viewmodel.loadSavingAccount(savingsAccountType?.endpoint, accountId)
@@ -100,12 +108,12 @@ fun SavingsAccountSummaryScreen(
         loadMoreSavingsAccountInfo = { loadMoreSavingsAccountInfo.invoke(accountId) },
         loadDocuments = { loadDocuments.invoke(accountId) },
         onDepositButtonClicked = {
-            onDepositClick.invoke( it, savingsAccountType)
+            onDepositClick.invoke(it, savingsAccountType)
         },
         onWithdrawButtonClicked = {
             onWithdrawButtonClicked.invoke(
                 it,
-                savingsAccountType
+                savingsAccountType,
             )
         },
         approveSavings = {
@@ -113,21 +121,22 @@ fun SavingsAccountSummaryScreen(
         },
         activateSavings = {
             activateSavings.invoke(savingsAccountType, accountId)
-        }
+        },
     )
 }
 
 @Composable
-fun SavingsAccountSummaryScreen(
+internal fun SavingsAccountSummaryScreen(
     uiState: SavingsAccountSummaryUiState,
     navigateBack: () -> Unit,
     onRetry: () -> Unit,
     loadMoreSavingsAccountInfo: () -> Unit,
     loadDocuments: () -> Unit,
-    onDepositButtonClicked: (savingsAccountWithAssociations: SavingsAccountWithAssociations) -> Unit,
-    onWithdrawButtonClicked: (savingsAccountWithAssociations: SavingsAccountWithAssociations) -> Unit,
+    onDepositButtonClicked: (savings: SavingsAccountWithAssociations) -> Unit,
+    onWithdrawButtonClicked: (savings: SavingsAccountWithAssociations) -> Unit,
     approveSavings: () -> Unit,
-    activateSavings: () -> Unit
+    modifier: Modifier = Modifier,
+    activateSavings: () -> Unit,
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -137,6 +146,7 @@ fun SavingsAccountSummaryScreen(
     }
 
     MifosScaffold(
+        modifier = modifier,
         snackbarHostState = snackbarHostState,
         onBackPressed = navigateBack,
         title = stringResource(id = R.string.feature_savings_savingsAccountSummary),
@@ -159,11 +169,11 @@ fun SavingsAccountSummaryScreen(
                     }
                 }
             }
-        }
+        },
     ) {
         Box(
             modifier = Modifier
-                .padding(it)
+                .padding(it),
         ) {
             when (uiState) {
                 is SavingsAccountSummaryUiState.ShowFetchingError -> {
@@ -182,7 +192,7 @@ fun SavingsAccountSummaryScreen(
                         onDepositButtonClicked = onDepositButtonClicked,
                         onWithdrawButtonClicked = onWithdrawButtonClicked,
                         approveSavings = approveSavings,
-                        activateSavings = activateSavings
+                        activateSavings = activateSavings,
                     )
                 }
             }
@@ -191,12 +201,13 @@ fun SavingsAccountSummaryScreen(
 }
 
 @Composable
-fun SavingsAccountSummaryContent(
+private fun SavingsAccountSummaryContent(
     savingsAccountWithAssociations: SavingsAccountWithAssociations,
     onDepositButtonClicked: (savingsAccountWithAssociations: SavingsAccountWithAssociations) -> Unit,
     onWithdrawButtonClicked: (savingsAccountWithAssociations: SavingsAccountWithAssociations) -> Unit,
     approveSavings: () -> Unit,
-    activateSavings: () -> Unit
+    modifier: Modifier = Modifier,
+    activateSavings: () -> Unit,
 ) {
     val context = LocalContext.current
     val isSavingsButtonVisible by rememberSaveable {
@@ -207,10 +218,10 @@ fun SavingsAccountSummaryContent(
     }
 
     Box(
-        modifier = Modifier.padding(horizontal = 24.dp)
+        modifier = modifier.padding(horizontal = 24.dp),
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             Text(
                 modifier = Modifier
@@ -226,7 +237,7 @@ fun SavingsAccountSummaryContent(
             FarApartTextItem(
                 title = savingsAccountWithAssociations.savingsProductName
                     ?: stringResource(id = R.string.feature_savings_product_name),
-                value = savingsAccountWithAssociations.accountNo?.toString() ?: ""
+                value = savingsAccountWithAssociations.accountNo?.toString() ?: "",
             )
 
             HorizontalDivider(modifier = Modifier.padding(top = 6.dp), color = DarkGray)
@@ -234,30 +245,30 @@ fun SavingsAccountSummaryContent(
             FarApartTextItem(
                 title = stringResource(id = R.string.feature_savings_account_balance),
                 value = savingsAccountWithAssociations.summary?.accountBalance?.toString()
-                    ?: "0.0"
+                    ?: "0.0",
             )
 
             FarApartTextItem(
                 title = stringResource(id = R.string.feature_savings_total_deposits),
                 value = savingsAccountWithAssociations.summary?.totalDeposits?.toString()
-                    ?: "0.0"
+                    ?: "0.0",
             )
 
             FarApartTextItem(
                 title = stringResource(id = R.string.feature_savings_total_withdrawals),
                 value = savingsAccountWithAssociations.summary?.totalWithdrawals?.toString()
-                    ?: "0.0"
+                    ?: "0.0",
             )
 
             FarApartTextItem(
                 title = stringResource(id = R.string.feature_savings_interest_earned),
                 value = savingsAccountWithAssociations.summary?.totalInterestEarned?.toString()
-                    ?: "0.0"
+                    ?: "0.0",
             )
 
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp),
-                color = DarkGray
+                color = DarkGray,
             )
 
             if (savingsAccountWithAssociations.transactions.isEmpty()) {
@@ -280,14 +291,14 @@ fun SavingsAccountSummaryContent(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .background(
-                    color = Color.White
+                    color = Color.White,
                 ),
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 if (isWithdrawalAndDepositButtonVisible) {
                     Button(
@@ -298,7 +309,8 @@ fun SavingsAccountSummaryContent(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
                         ),
-                        onClick = { onWithdrawButtonClicked.invoke(savingsAccountWithAssociations) }) {
+                        onClick = { onWithdrawButtonClicked.invoke(savingsAccountWithAssociations) },
+                    ) {
                         Text(text = stringResource(id = R.string.feature_savings_withdrawal))
                     }
 
@@ -310,11 +322,11 @@ fun SavingsAccountSummaryContent(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
                         ),
-                        onClick = { onDepositButtonClicked.invoke(savingsAccountWithAssociations) }) {
+                        onClick = { onDepositButtonClicked.invoke(savingsAccountWithAssociations) },
+                    ) {
                         Text(text = stringResource(id = R.string.feature_savings_make_deposit))
                     }
                 }
-
 
                 if (isSavingsButtonVisible) {
                     Button(
@@ -335,16 +347,16 @@ fun SavingsAccountSummaryContent(
                             }
 
                             else -> {
-                                { /** not reachable , view gone here **/ }
+                                { }
                             }
-                        }
+                        },
 
                     ) {
                         Text(
                             text = getSavingsButtonText(
                                 context = context,
-                                status = savingsAccountWithAssociations.status
-                            )
+                                status = savingsAccountWithAssociations.status,
+                            ),
                         )
                     }
                 }
@@ -354,8 +366,9 @@ fun SavingsAccountSummaryContent(
 }
 
 @Composable
-fun TransactionItemRow(
-    transaction: Transaction
+private fun TransactionItemRow(
+    transaction: Transaction,
+    modifier: Modifier = Modifier,
 ) {
     var showTransactionDetails by rememberSaveable {
         mutableStateOf(false)
@@ -364,30 +377,30 @@ fun TransactionItemRow(
     if (showTransactionDetails) {
         SummaryDialogBox(
             onDismissCall = { showTransactionDetails = false },
-            transaction = transaction
+            transaction = transaction,
         )
     }
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         onClick = { showTransactionDetails = !showTransactionDetails },
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = Color.White,
         ),
-        shape = RoundedCornerShape(0.dp)
+        shape = RoundedCornerShape(0.dp),
     ) {
         Column {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = DateHelper.getDateAsString(transaction.date as List<Int>),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.weight(4f)
+                    modifier = Modifier.weight(4f),
                 )
 
                 Text(
@@ -414,7 +427,7 @@ fun TransactionItemRow(
                         else -> {
                             Color.Black
                         }
-                    }
+                    },
                 )
             }
             HorizontalDivider(modifier = Modifier.fillMaxWidth())
@@ -423,65 +436,66 @@ fun TransactionItemRow(
 }
 
 @Composable
-fun SummaryDialogBox(
+private fun SummaryDialogBox(
     onDismissCall: () -> Unit,
-    transaction: Transaction
+    transaction: Transaction,
 ) {
     AlertDialog(
         onDismissRequest = { onDismissCall.invoke() },
         confirmButton = { },
         text = {
             Column(
-                modifier = Modifier.verticalScroll(rememberScrollState())
+                modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
                 DialogBoxRowItem(
                     title = stringResource(id = R.string.feature_savings_transaction_id),
-                    value = transaction.id?.toString() ?: ""
+                    value = transaction.id?.toString() ?: "",
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 DialogBoxRowItem(
                     title = stringResource(id = R.string.feature_savings_date),
-                    value = DateHelper.getDateAsString(transaction.date as List<Int>)
+                    value = DateHelper.getDateAsString(transaction.date as List<Int>),
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 DialogBoxRowItem(
                     title = stringResource(id = R.string.feature_savings_transaction_type),
-                    value = transaction.transactionType?.value ?: ""
+                    value = transaction.transactionType?.value ?: "",
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 DialogBoxRowItem(
                     title = stringResource(id = R.string.feature_savings_running_balance),
-                    value = transaction.runningBalance.toString()
+                    value = transaction.runningBalance.toString(),
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 DialogBoxRowItem(
                     title = stringResource(id = R.string.feature_savings_saving_account_id),
-                    value = transaction.accountId.toString()
+                    value = transaction.accountId.toString(),
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 DialogBoxRowItem(
                     title = stringResource(id = R.string.feature_savings_account_number),
-                    value = transaction.accountNo ?: ""
+                    value = transaction.accountNo ?: "",
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
                 DialogBoxRowItem(
                     title = stringResource(id = R.string.feature_savings_currency),
-                    value = transaction.currency?.name ?: ""
+                    value = transaction.currency?.name ?: "",
                 )
             }
-        })
+        },
+    )
 }
 
 @Composable
 private fun DialogBoxRowItem(
     title: String,
-    value: String
+    value: String,
 ) {
     Row(
         modifier = Modifier
@@ -489,10 +503,10 @@ private fun DialogBoxRowItem(
             .border(
                 width = 2.dp,
                 color = BluePrimary.copy(alpha = .5f),
-                shape = RoundedCornerShape(0.dp)
+                shape = RoundedCornerShape(0.dp),
             )
             .padding(horizontal = 8.dp, vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
 
     ) {
         Text(
@@ -509,7 +523,7 @@ private fun DialogBoxRowItem(
             style = MaterialTheme.typography.bodyMedium,
             text = value,
             color = Black,
-            textAlign = TextAlign.End
+            textAlign = TextAlign.End,
         )
     }
 }
@@ -520,7 +534,7 @@ private fun FarApartTextItem(title: String, value: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 6.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             style = MaterialTheme.typography.bodyLarge,
@@ -536,8 +550,7 @@ private fun FarApartTextItem(title: String, value: String) {
     }
 }
 
-
-fun getSavingsButtonText(context: Context, status: Status?): String {
+private fun getSavingsButtonText(context: Context, status: Status?): String {
     return when {
         status?.submittedAndPendingApproval == true -> {
             context.resources.getString(R.string.feature_savings_approve_savings)
@@ -557,7 +570,7 @@ fun getSavingsButtonText(context: Context, status: Status?): String {
     }
 }
 
-fun savingsButtonVisibilityStatus(status: Status?): Boolean {
+private fun savingsButtonVisibilityStatus(status: Status?): Boolean {
     return when {
         status?.submittedAndPendingApproval == true -> {
             true
@@ -577,7 +590,7 @@ fun savingsButtonVisibilityStatus(status: Status?): Boolean {
     }
 }
 
-fun depositAndWithdrawButtonVisibility(status: Status?): Boolean {
+private fun depositAndWithdrawButtonVisibility(status: Status?): Boolean {
     return when {
         status?.submittedAndPendingApproval == true -> {
             false
@@ -606,7 +619,7 @@ class SavingsAccountSummaryScreenPreviewProvider :
         totalDeposits = 4332.333,
         accountBalance = 23232.333,
         totalWithdrawals = 3343.434,
-        totalInterestEarned = 234.34
+        totalInterestEarned = 234.34,
     )
 
     val transaction = Transaction(
@@ -615,7 +628,7 @@ class SavingsAccountSummaryScreenPreviewProvider :
         ),
         date = listOf(2, 3, 2022),
         currency = Currency(
-            code = null
+            code = null,
         ),
     )
     override val values: Sequence<SavingsAccountSummaryUiState>
@@ -631,19 +644,19 @@ class SavingsAccountSummaryScreenPreviewProvider :
                         transaction,
                         transaction,
                         transaction,
-                        transaction
+                        transaction,
                     ),
                     status = Status(),
-                    summary = summary
-                )
+                    summary = summary,
+                ),
             ),
         )
 }
 
 @Composable
 @Preview(showSystemUi = true)
-fun PreviewSavingsAccountSummaryScreen(
-    @PreviewParameter(SavingsAccountSummaryScreenPreviewProvider::class) savingsAccountSummaryUiState: SavingsAccountSummaryUiState
+private fun PreviewSavingsAccountSummaryScreen(
+    @PreviewParameter(SavingsAccountSummaryScreenPreviewProvider::class) savingsAccountSummaryUiState: SavingsAccountSummaryUiState,
 ) {
     SavingsAccountSummaryScreen(
         uiState = savingsAccountSummaryUiState,
@@ -653,6 +666,7 @@ fun PreviewSavingsAccountSummaryScreen(
         loadDocuments = { },
         onDepositButtonClicked = { _ -> },
         onWithdrawButtonClicked = { _ -> },
-        approveSavings = { }) {
+        approveSavings = { },
+    ) {
     }
 }
