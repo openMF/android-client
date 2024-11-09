@@ -72,6 +72,7 @@ import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.group.Center
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.R
+import com.mifos.feature.center.sync_centers_dialog.SyncCenterDialogScreen
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
@@ -105,7 +106,7 @@ fun CenterListScreen(
 
 @Composable
 fun CenterListScreen(
-    paddingValues : PaddingValues,
+    paddingValues: PaddingValues,
     state: CenterListUiState,
     createNewCenter: () -> Unit,
     onRefresh: () -> Unit,
@@ -120,6 +121,9 @@ fun CenterListScreen(
     val resetSelectionMode = {
         isInSelectionMode = false
         selectedItems.clear()
+    }
+    val sync = remember {
+        mutableStateOf(false)
     }
     BackHandler(enabled = isInSelectionMode) {
         resetSelectionMode()
@@ -149,8 +153,9 @@ fun CenterListScreen(
                     actions = {
                         FilledTonalButton(
                             onClick = {
+                                sync.value = true
                                 syncClicked(selectedItems.toList())
-                                resetSelectionMode()
+                             //   resetSelectionMode()
                             },
                         ) {
                             Icon(
@@ -209,6 +214,17 @@ fun CenterListScreen(
                     }
 
                     is CenterListUiState.CenterListDb -> CenterListDbContent(centerList = state.centers)
+                }
+                if (sync.value) {
+                    SyncCenterDialogScreen(
+                        dismiss = {
+                            sync.value = false
+                            selectedItems.clear()
+                            resetSelectionMode()
+                        },
+                        hide = { sync.value = false },
+                        centers = selectedItems.toList()
+                    )
                 }
                 PullRefreshIndicator(
                     refreshing = refreshState,

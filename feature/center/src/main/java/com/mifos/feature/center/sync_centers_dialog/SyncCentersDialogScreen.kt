@@ -1,5 +1,6 @@
 package com.mifos.feature.center.sync_centers_dialog
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -102,7 +104,8 @@ fun SyncGroupDialogContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .background(Color.Yellow),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -181,14 +184,14 @@ fun SyncGroupDialogContent(
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-            if (uiData.isSyncSuccess) {
+
                 FilledTonalButton(
                     onClick = { okClicked() },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(text = stringResource(id = R.string.feature_center_dialog_action_ok))
                 }
-            } else {
+
                 FilledTonalButton(
                     onClick = { cancelClicked() },
                     modifier = Modifier.weight(1f)
@@ -204,7 +207,7 @@ fun SyncGroupDialogContent(
                 ) {
                     Text(text = stringResource(id = R.string.feature_center_hide))
                 }
-            }
+
         }
     }
 }

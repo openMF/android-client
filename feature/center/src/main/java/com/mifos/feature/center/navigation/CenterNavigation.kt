@@ -29,7 +29,7 @@ fun NavGraphBuilder.centerNavGraph(
         centerListScreenRoute(
             paddingValues = paddingValues,
             createNewCenter = navController::navigateCreateCenterScreenRoute,
-            syncClicked = navController::navigateSyncCentersDialog, // TODO open sync dialog inside center list screen
+            syncClicked = {  }, // TODO open sync dialog inside center list screen
             onCenterSelect = navController::navigateCenterDetailsScreenRoute
         )
         centerDetailScreenRoute(
@@ -45,10 +45,7 @@ fun NavGraphBuilder.centerNavGraph(
         createCenterScreenRoute(
             onCreateSuccess = navController::popBackStack
         )
-        syncCentersDialogRoute(
-            dismiss = navController::popBackStack,
-            hide = navController::popBackStack,
-        )
+
     }
 }
 
@@ -114,25 +111,6 @@ fun NavGraphBuilder.createCenterScreenRoute(
             onCreateSuccess = onCreateSuccess
         )
     }
-}
-
-fun NavGraphBuilder.syncCentersDialogRoute(
-    dismiss : ()->Unit,
-    hide : ()->Unit,
-) {
-    composable(
-        route = CenterScreens.SyncCenterPayloadsScreen.route,
-        arguments = listOf(navArgument(Constants.CENTER, builder = { type = NavType.IntType }))
-    ) {
-        SyncCenterDialogScreen(
-            dismiss = dismiss,
-            hide = hide,
-        )
-    }
-}
-
-fun NavController.navigateSyncCentersDialog(list: List<Center>) {
-    navigate(CenterScreens.SyncCenterPayloadsScreen.arguments(list))
 }
 
 fun NavController.navigateCenterDetailsScreenRoute(centerId: Int) {

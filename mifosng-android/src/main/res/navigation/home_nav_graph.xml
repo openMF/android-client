@@ -27,11 +27,6 @@
         android:name="com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment"
         android:label="CreateNewClientFragment" />
 
-    <!--    CreateNewCenterFragment-->
-    <fragment
-        android:id="@+id/createNewCenterFragment"
-        android:name="com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment"
-        android:label="CreateNewCenterFragment" />
 
     <!--    ClientActivity-->
     <activity
