@@ -1,5 +1,15 @@
-package com.mifos.feature.center.sync_centers_dialog
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.center.syncCentersDialog
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,12 +42,12 @@ import com.mifos.core.objects.group.Center
 import com.mifos.feature.center.R
 
 @Composable
-fun SyncCenterDialogScreen(
+fun syncCenterDialogScreen(
     viewModel: SyncCentersDialogViewModel = hiltViewModel(),
     dismiss: () -> Unit,
     hide: () -> Unit,
-    centers: List<Center>? = listOf()
-    ) {
+    centers: List<Center>? = listOf(),
+) {
     val uiState by viewModel.syncCentersDialogUiState.collectAsStateWithLifecycle()
     val uiData by viewModel.syncCenterData.collectAsStateWithLifecycle()
 
@@ -47,29 +58,29 @@ fun SyncCenterDialogScreen(
         }
     }
 
-    SyncCenterDialogScreen(
+    syncCenterDialogScreen(
         uiState = uiState,
         uiData = uiData,
         dismiss = dismiss,
-        hide = hide
+        hide = hide,
     )
 }
 
 @Composable
-fun SyncCenterDialogScreen(
+fun syncCenterDialogScreen(
     uiState: SyncCentersDialogUiState,
     uiData: SyncCentersDialogData,
     dismiss: () -> Unit,
-    hide: () -> Unit
+    hide: () -> Unit,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
     Box {
-        SyncGroupDialogContent(
+        syncGroupDialogContent(
             uiData = uiData,
             okClicked = dismiss,
             hideClicked = hide,
-            cancelClicked = dismiss
+            cancelClicked = dismiss,
         )
 
         when (uiState) {
@@ -93,41 +104,42 @@ fun SyncCenterDialogScreen(
 }
 
 @Composable
-fun SyncGroupDialogContent(
+fun syncGroupDialogContent(
     uiData: SyncCentersDialogData,
     okClicked: () -> Unit,
     hideClicked: () -> Unit,
-    cancelClicked: () -> Unit
+    cancelClicked: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(8.dp)
+            .background(Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
-            text = stringResource(id = R.string.feature_center_sync_centers_full_information)
+            text = stringResource(id = R.string.feature_center_sync_centers_full_information),
         )
 
-        PayloadField(
+        payloadField(
             label = stringResource(id = R.string.feature_center_name),
             value = uiData.centerName,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        PayloadField(
+        payloadField(
             label = stringResource(id = R.string.feature_center_total),
             value = uiData.centersList.size.toString() + stringResource(R.string.feature_center_space) + stringResource(
-                com.mifos.feature.center.R.string.feature_center_center
+                com.mifos.feature.center.R.string.feature_center_center,
             ),
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        PayloadField(
+        payloadField(
             label = stringResource(id = R.string.feature_center_syncing_center),
             value = uiData.centerName,
         )
@@ -138,40 +150,40 @@ fun SyncGroupDialogContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        PayloadField(
+        payloadField(
             label = stringResource(id = R.string.feature_center_syncing_group),
             value = "syncing_group",
         )
 
         LinearProgressIndicator(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        PayloadField(
+        payloadField(
             label = stringResource(id = R.string.feature_center_syncing_client),
             value = "syncing_client",
         )
 
         LinearProgressIndicator(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        PayloadField(
+        payloadField(
             label = stringResource(id = R.string.feature_center_total_sync_progress),
             value = stringResource(R.string.feature_center_space) + uiData.totalSyncCount + stringResource(id = R.string.feature_center_slash) + uiData.centersList.size,
         )
 
         LinearProgressIndicator(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        PayloadField(
+        payloadField(
             label = stringResource(id = R.string.feature_center_failed_sync),
             value = uiData.failedSyncGroupCount.toString(),
         )
@@ -179,19 +191,19 @@ fun SyncGroupDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             if (uiData.isSyncSuccess) {
                 FilledTonalButton(
                     onClick = { okClicked() },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(text = stringResource(id = R.string.feature_center_dialog_action_ok))
                 }
             } else {
                 FilledTonalButton(
                     onClick = { cancelClicked() },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(text = stringResource(id = R.string.feature_center_cancel))
                 }
@@ -200,7 +212,7 @@ fun SyncGroupDialogContent(
 
                 FilledTonalButton(
                     onClick = { hideClicked() },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(text = stringResource(id = R.string.feature_center_hide))
                 }
@@ -210,33 +222,33 @@ fun SyncGroupDialogContent(
 }
 
 @Composable
-fun PayloadField(label: String, value: String) {
+fun payloadField(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(vertical = 4.dp),
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
     }
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-fun SyncCenterDialogScreenPreview() {
-    SyncCenterDialogScreen(
+fun syncCenterDialogScreenPreview() {
+    syncCenterDialogScreen(
         dismiss = { },
         uiState = SyncCentersDialogUiState.Success,
         uiData = SyncCentersDialogData(),
-        hide = { }
+        hide = { },
     )
 }

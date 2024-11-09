@@ -14,7 +14,6 @@ import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
-import com.mifos.feature.center.navigation.navigateSyncCentersDialog
 import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTaskGraph
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
@@ -171,11 +170,10 @@ fun Navigation(
             paddingValues = padding,
             onActivateCenter = navController::navigateToActivateScreen,
             addSavingsAccount = {
-//                TODO() check this logic
                 navController.navigateToAddSavingsAccount(it, 0, true)
             },
 
-        )
+            )
 
         reportNavGraph(
             navController = navController
@@ -209,12 +207,12 @@ fun Navigation(
 
         dataTableNavGraph(
             navController = navController,
-            clientCreated = { client , userStatus ->
+            clientCreated = { client, userStatus ->
                 navController.popBackStack()
                 navController.popBackStack()
                 Toast.makeText(context, context.resources.getString(R.string.client) + MifosResponseHandler.response, Toast.LENGTH_LONG).show()
 
-                if(userStatus == Constants.USER_ONLINE){
+                if (userStatus == Constants.USER_ONLINE){
                     client.clientId?.let { navController.navigateClientDetailsScreen(it) }
                 }
             }

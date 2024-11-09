@@ -1,6 +1,15 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 @file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 
-package com.mifos.feature.center.center_list.ui
+package com.mifos.feature.center.centerList.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
@@ -72,16 +81,15 @@ import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.group.Center
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.R
+import com.mifos.feature.center.syncCentersDialog.syncCenterDialogScreen
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
-fun CenterListScreen(
+fun centerListScreen(
     paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
-    syncClicked: (List<Center>) -> Unit,
-    onCenterSelect: (Int) -> Unit
+    onCenterSelect: (Int) -> Unit,
 ) {
-
     val viewModel: CenterListViewModel = hiltViewModel()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val state by viewModel.centerListUiState.collectAsStateWithLifecycle()
@@ -90,7 +98,7 @@ fun CenterListScreen(
         viewModel.getCenterList()
     }
 
-    CenterListScreen(
+    centerListScreen(
         paddingValues = paddingValues,
         state = state,
         createNewCenter = createNewCenter,
@@ -99,21 +107,19 @@ fun CenterListScreen(
         },
         refreshState = refreshState,
         onCenterSelect = onCenterSelect,
-        syncClicked = syncClicked
+        //   syncClicked = syncClicked
     )
 }
 
 @Composable
-fun CenterListScreen(
-    paddingValues : PaddingValues,
+fun centerListScreen(
+    paddingValues: PaddingValues,
     state: CenterListUiState,
     createNewCenter: () -> Unit,
     onRefresh: () -> Unit,
     refreshState: Boolean,
-    syncClicked: (List<Center>) -> Unit,
-    onCenterSelect: (Int) -> Unit
+    onCenterSelect: (Int) -> Unit,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
     var isInSelectionMode by rememberSaveable { mutableStateOf(false) }
     val selectedItems = remember { mutableStateListOf<Center>() }
@@ -121,13 +127,16 @@ fun CenterListScreen(
         isInSelectionMode = false
         selectedItems.clear()
     }
+    val sync = rememberSaveable {
+        mutableStateOf(false)
+    }
     BackHandler(enabled = isInSelectionMode) {
         resetSelectionMode()
     }
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = refreshState,
-        onRefresh = onRefresh
+        onRefresh = onRefresh,
     )
 
     LaunchedEffect(
@@ -149,8 +158,7 @@ fun CenterListScreen(
                     actions = {
                         FilledTonalButton(
                             onClick = {
-                                syncClicked(selectedItems.toList())
-                                resetSelectionMode()
+                                sync.value = true
                             },
                         ) {
                             Icon(
@@ -159,7 +167,7 @@ fun CenterListScreen(
                             )
                             Text(text = stringResource(id = R.string.feature_center_sync))
                         }
-                    }
+                    },
                 )
             }
         },
@@ -167,19 +175,19 @@ fun CenterListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { createNewCenter() },
-                containerColor = BlueSecondary
+                containerColor = BlueSecondary,
             ) {
                 Icon(
                     imageVector = MifosIcons.Add,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
-        }
+        },
     ) { paddingValue ->
         Column(
             modifier = Modifier
                 .padding(paddingValue),
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
                 when (state) {
@@ -194,26 +202,39 @@ fun CenterListScreen(
                     }
 
                     is CenterListUiState.CenterList -> {
-                        CenterListContent(
+                        centerListContent(
                             centerPagingList = state.centers.collectAsLazyPagingItems(),
                             isInSelectionMode = isInSelectionMode,
                             selectedItems = selectedItems,
                             onRefresh = {
                                 onRefresh()
-                            }, onCenterSelect = {
+                            },
+                            onCenterSelect = {
                                 onCenterSelect(it)
-                            }, selectedMode = {
+                            },
+                            selectedMode = {
                                 isInSelectionMode = true
-                            }
+                            },
                         )
                     }
 
-                    is CenterListUiState.CenterListDb -> CenterListDbContent(centerList = state.centers)
+                    is CenterListUiState.CenterListDb -> centerListDbContent(centerList = state.centers)
+                }
+                if (sync.value) {
+                    syncCenterDialogScreen(
+                        dismiss = {
+                            sync.value = false
+                            selectedItems.clear()
+                            resetSelectionMode()
+                        },
+                        hide = { sync.value = false },
+                        centers = selectedItems.toList(),
+                    )
                 }
                 PullRefreshIndicator(
                     refreshing = refreshState,
                     state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter)
+                    modifier = Modifier.align(Alignment.TopCenter),
                 )
             }
         }
@@ -221,16 +242,14 @@ fun CenterListScreen(
 }
 
 @Composable
-fun CenterListContent(
+fun centerListContent(
     centerPagingList: LazyPagingItems<Center>,
     isInSelectionMode: Boolean,
     selectedItems: SnapshotStateList<Center>,
     onRefresh: () -> Unit,
     onCenterSelect: (Int) -> Unit,
-    selectedMode: () -> Unit
-
+    selectedMode: () -> Unit,
 ) {
-
     when (centerPagingList.loadState.refresh) {
         is LoadState.Error -> {
             MifosSweetError(message = stringResource(id = R.string.feature_center_error_loading_centers)) {
@@ -280,14 +299,16 @@ fun CenterListContent(
                                 centerPagingList[index]?.let { selectedItems.add(it) }
                                 cardColor = LightGray
                             }
-                        }
+                        },
                     ),
                 colors = CardDefaults.cardColors(
                     containerColor = if (selectedItems.isEmpty()) {
                         cardColor = White
                         White
-                    } else cardColor,
-                )
+                    } else {
+                        cardColor
+                    },
+                ),
             ) {
                 Row(
                     modifier = Modifier
@@ -296,22 +317,22 @@ fun CenterListContent(
                             start = 16.dp,
                             end = 16.dp,
                             top = 24.dp,
-                            bottom = 24.dp
+                            bottom = 24.dp,
                         ),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Canvas(
                         modifier = Modifier.size(16.dp),
                         onDraw = {
                             drawCircle(
-                                color = if (centerPagingList[index]?.active == true) Color.Green else Color.Red
+                                color = if (centerPagingList[index]?.active == true) Color.Green else Color.Red,
                             )
-                        }
+                        },
                     )
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = 16.dp)
+                            .padding(start = 16.dp),
                     ) {
                         centerPagingList[index]?.name?.let {
                             Text(
@@ -320,8 +341,8 @@ fun CenterListContent(
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = Black
-                                )
+                                    color = Black,
+                                ),
                             )
                         }
                         Text(
@@ -330,8 +351,8 @@ fun CenterListContent(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontStyle = FontStyle.Normal,
-                                color = DarkGray
-                            )
+                                color = DarkGray,
+                            ),
                         )
                         Row {
                             Text(
@@ -340,8 +361,8 @@ fun CenterListContent(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = DarkGray
-                                )
+                                    color = DarkGray,
+                                ),
                             )
                             Spacer(modifier = Modifier.width(26.dp))
                             Text(
@@ -350,8 +371,8 @@ fun CenterListContent(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = DarkGray
-                                )
+                                    color = DarkGray,
+                                ),
                             )
                         }
                         Row {
@@ -361,8 +382,8 @@ fun CenterListContent(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = DarkGray
-                                )
+                                    color = DarkGray,
+                                ),
                             )
                             Spacer(modifier = Modifier.width(26.dp))
                             Text(
@@ -371,8 +392,8 @@ fun CenterListContent(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = DarkGray
-                                )
+                                    color = DarkGray,
+                                ),
                             )
                         }
                     }
@@ -380,7 +401,7 @@ fun CenterListContent(
                         AsyncImage(
                             modifier = Modifier.size(20.dp),
                             model = R.drawable.feature_center_ic_done_all_black_24dp,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 }
@@ -407,10 +428,10 @@ fun CenterListContent(
                             .padding(6.dp),
                         text = stringResource(id = R.string.feature_center_no_more_centers),
                         style = TextStyle(
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
                         ),
                         color = DarkGray,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
@@ -421,8 +442,8 @@ fun CenterListContent(
 }
 
 @Composable
-fun CenterListDbContent(
-    centerList: List<Center>
+fun centerListDbContent(
+    centerList: List<Center>,
 ) {
     LazyColumn {
         items(centerList) { center ->
@@ -431,8 +452,8 @@ fun CenterListDbContent(
                 modifier = Modifier
                     .padding(6.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = White
-                )
+                    containerColor = White,
+                ),
             ) {
                 Row(
                     modifier = Modifier
@@ -441,22 +462,22 @@ fun CenterListDbContent(
                             start = 16.dp,
                             end = 16.dp,
                             top = 24.dp,
-                            bottom = 24.dp
+                            bottom = 24.dp,
                         ),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Canvas(
                         modifier = Modifier.size(16.dp),
                         onDraw = {
                             drawCircle(
-                                color = if (center.active == true) Color.Green else Color.Red
+                                color = if (center.active == true) Color.Green else Color.Red,
                             )
-                        }
+                        },
                     )
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = 16.dp)
+                            .padding(start = 16.dp),
                     ) {
                         center.name?.let {
                             Text(
@@ -465,8 +486,8 @@ fun CenterListDbContent(
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = Black
-                                )
+                                    color = Black,
+                                ),
                             )
                         }
                         Text(
@@ -475,8 +496,8 @@ fun CenterListDbContent(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontStyle = FontStyle.Normal,
-                                color = DarkGray
-                            )
+                                color = DarkGray,
+                            ),
                         )
                         Row {
                             Text(
@@ -485,8 +506,8 @@ fun CenterListDbContent(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = DarkGray
-                                )
+                                    color = DarkGray,
+                                ),
                             )
                             Spacer(modifier = Modifier.width(26.dp))
                             Text(
@@ -495,8 +516,8 @@ fun CenterListDbContent(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = DarkGray
-                                )
+                                    color = DarkGray,
+                                ),
                             )
                         }
                         Row {
@@ -506,8 +527,8 @@ fun CenterListDbContent(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = DarkGray
-                                )
+                                    color = DarkGray,
+                                ),
                             )
                             Spacer(modifier = Modifier.width(26.dp))
                             Text(
@@ -516,22 +537,21 @@ fun CenterListDbContent(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = DarkGray
-                                )
+                                    color = DarkGray,
+                                ),
                             )
                         }
                     }
                     AsyncImage(
                         modifier = Modifier.size(20.dp),
                         model = R.drawable.feature_center_ic_done_all_black_24dp,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
         }
     }
 }
-
 
 class CenterListUiStateProvider :
     PreviewParameterProvider<CenterListUiState> {
@@ -541,44 +561,41 @@ class CenterListUiStateProvider :
             CenterListUiState.Loading,
             CenterListUiState.Error(R.string.feature_center_error_loading_centers),
             CenterListUiState.CenterListDb(sampleCenterListDb),
-            CenterListUiState.CenterList(sampleCenterList)
+            CenterListUiState.CenterList(sampleCenterList),
         )
 }
 
-
 @Preview(showBackground = true)
 @Composable
-private fun CenterListContentPreview() {
-    CenterListContent(
+private fun centerListContentPreview() {
+    centerListContent(
         centerPagingList = sampleCenterList.collectAsLazyPagingItems(),
         isInSelectionMode = false,
         selectedItems = rememberSaveable { mutableStateListOf() },
         onRefresh = {},
         onCenterSelect = {},
-        selectedMode = {}
+        selectedMode = {},
     )
 }
 
-
 @Preview(showBackground = true)
 @Composable
-private fun CenterListDbContentPreview() {
-    CenterListDbContent(sampleCenterListDb)
+private fun centerListDbContentPreview() {
+    centerListDbContent(sampleCenterListDb)
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun CenterListScreenPreview(
-    @PreviewParameter(CenterListUiStateProvider::class) centerListUiState: CenterListUiState
+private fun centerListScreenPreview(
+    @PreviewParameter(CenterListUiStateProvider::class) centerListUiState: CenterListUiState,
 ) {
-    CenterListScreen(
+    centerListScreen(
         paddingValues = PaddingValues(),
         state = centerListUiState,
         createNewCenter = {},
         onRefresh = {},
         refreshState = false,
         onCenterSelect = {},
-        syncClicked = {}
     )
 }
 
@@ -589,7 +606,7 @@ val sampleCenterListDb = List(10) {
         officeName = "Office $it",
         staffId = it,
         staffName = "Staff $it",
-        active = it % 2 == 0
+        active = it % 2 == 0,
     )
 }
 

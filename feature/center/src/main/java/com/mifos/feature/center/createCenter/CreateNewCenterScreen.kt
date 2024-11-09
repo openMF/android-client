@@ -1,6 +1,15 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.mifos.feature.center.create_center
+package com.mifos.feature.center.createCenter
 
 import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -59,10 +68,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
-fun CreateNewCenterScreen(
-    onCreateSuccess: () -> Unit
+fun createNewCenterScreen(
+    onCreateSuccess: () -> Unit,
 ) {
-
     val viewModel: CreateNewCenterViewModel = hiltViewModel()
     val state by viewModel.createNewCenterUiState.collectAsStateWithLifecycle()
 
@@ -70,7 +78,7 @@ fun CreateNewCenterScreen(
         viewModel.loadOffices()
     }
 
-    CreateNewCenterScreen(
+    createNewCenterScreen(
         state = state,
         onRetry = {
             viewModel.loadOffices()
@@ -78,23 +86,22 @@ fun CreateNewCenterScreen(
         createCenter = {
             viewModel.createNewCenter(it)
         },
-        onCreateSuccess = onCreateSuccess
+        onCreateSuccess = onCreateSuccess,
     )
 }
 
 @Composable
-fun CreateNewCenterScreen(
+fun createNewCenterScreen(
     state: CreateNewCenterUiState,
     onRetry: () -> Unit,
     createCenter: (CenterPayload) -> Unit,
-    onCreateSuccess: () -> Unit
+    onCreateSuccess: () -> Unit,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
         title = stringResource(id = R.string.feature_center_create_new_center),
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
@@ -102,7 +109,7 @@ fun CreateNewCenterScreen(
                     Toast.makeText(
                         LocalContext.current,
                         stringResource(id = R.string.feature_center_center_created_successfully),
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
                     onCreateSuccess()
                 }
@@ -114,17 +121,15 @@ fun CreateNewCenterScreen(
                 is CreateNewCenterUiState.Loading -> MifosCircularProgress()
 
                 is CreateNewCenterUiState.Offices -> {
-                    CreateNewCenterContent(offices = state.offices, createCenter = createCenter)
+                    createNewCenterContent(offices = state.offices, createCenter = createCenter)
                 }
             }
         }
     }
 }
 
-
 @Composable
-fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterPayload) -> Unit) {
-
+fun createNewCenterContent(offices: List<Office>, createCenter: (CenterPayload) -> Unit) {
     val context = LocalContext.current
     var centerName by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(""))
@@ -140,7 +145,7 @@ fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterPayload) 
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis >= System.currentTimeMillis()
             }
-        }
+        },
     )
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
     var officeId by rememberSaveable { mutableIntStateOf(0) }
@@ -185,7 +190,6 @@ fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterPayload) 
         }
     }
 
-
     if (showDatePicker) {
         DatePickerDialog(
             onDismissRequest = {
@@ -198,18 +202,17 @@ fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterPayload) 
                         datePickerState.selectedDateMillis?.let {
                             activateDate = it
                         }
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_center_select)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         showDatePicker = false
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_center_cancel)) }
-            }
-        )
-        {
+            },
+        ) {
             DatePicker(state = datePickerState)
         }
     }
@@ -218,7 +221,7 @@ fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterPayload) 
         value = centerName,
         onValueChange = { centerName = it },
         label = R.string.feature_center_center_name,
-        error = null
+        error = null,
     )
 
     MifosTextFieldDropdown(
@@ -231,22 +234,21 @@ fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterPayload) 
             offices[index].id?.let {
                 officeId = it
             }
-
         },
         label = R.string.feature_center_office,
         options = offices.map { it.name.toString() },
-        readOnly = true
+        readOnly = true,
     )
 
     Row(
         modifier = Modifier.padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Checkbox(
             checked = isActivate,
             onCheckedChange = {
                 isActivate = it
-            }
+            },
         )
         Text(text = stringResource(id = R.string.feature_center_activate))
     }
@@ -254,12 +256,12 @@ fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterPayload) 
     if (isActivate) {
         MifosDatePickerTextField(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-                activateDate
+                activateDate,
             ),
             label = R.string.feature_center_activation_date,
             openDatePicker = {
                 showDatePicker = true
-            }
+            },
         )
         Spacer(modifier = Modifier.height(16.dp))
     }
@@ -271,16 +273,20 @@ fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterPayload) 
                     CenterPayload(
                         name = centerName.text,
                         active = isActivate,
-                        activationDate = if (isActivate) SimpleDateFormat(
-                            "dd MMMM yyyy",
-                            Locale.getDefault()
-                        ).format(
-                            activateDate
-                        ) else null,
+                        activationDate = if (isActivate) {
+                            SimpleDateFormat(
+                                "dd MMMM yyyy",
+                                Locale.getDefault(),
+                            ).format(
+                                activateDate,
+                            )
+                        } else {
+                            null
+                        },
                         officeId = officeId,
                         dateFormat = "dd MMMM yyyy",
-                        locale = "en"
-                    )
+                        locale = "en",
+                    ),
                 )
             }
         },
@@ -290,8 +296,8 @@ fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterPayload) 
             .padding(start = 16.dp, end = 16.dp),
         contentPadding = PaddingValues(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
-        )
+            containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+        ),
     ) {
         Text(text = stringResource(id = R.string.feature_center_create), fontSize = 16.sp)
     }
@@ -303,21 +309,20 @@ class CreateNewCenterUiStateProvider : PreviewParameterProvider<CreateNewCenterU
         CreateNewCenterUiState.Loading,
         CreateNewCenterUiState.Error(R.string.feature_center_failed_to_load_offices),
         CreateNewCenterUiState.Offices(sampleOfficeList),
-        CreateNewCenterUiState.CenterCreatedSuccessfully
+        CreateNewCenterUiState.CenterCreatedSuccessfully,
     )
 }
 
-
 @Preview(showBackground = true)
 @Composable
-private fun CreateNewCenterPreview(
-    @PreviewParameter(CreateNewCenterUiStateProvider::class) state: CreateNewCenterUiState
+private fun createNewCenterPreview(
+    @PreviewParameter(CreateNewCenterUiStateProvider::class) state: CreateNewCenterUiState,
 ) {
-    CreateNewCenterScreen(
+    createNewCenterScreen(
         state = state,
         onRetry = {},
         createCenter = {},
-        onCreateSuccess = {}
+        onCreateSuccess = {},
     )
 }
 

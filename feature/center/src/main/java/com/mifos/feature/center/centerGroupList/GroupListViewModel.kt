@@ -1,4 +1,13 @@
-package com.mifos.feature.center.center_group_list
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.center.centerGroupList
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -21,7 +30,7 @@ import javax.inject.Inject
 class GroupListViewModel @Inject constructor(
     private val getGroupsUseCase: GetGroupsUseCase,
     private val getGroupsByCenterUseCase: GetGroupsByCenterUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val centerId = savedStateHandle.getStateFlow(key = Constants.CENTER_ID, initialValue = 0)
@@ -32,27 +41,28 @@ class GroupListViewModel @Inject constructor(
     private val _groupAssociationState = MutableStateFlow<GroupWithAssociations?>(null)
     val groupAssociationState = _groupAssociationState.asStateFlow()
 
-
     fun loadGroupByCenter(id: Int) = viewModelScope.launch(Dispatchers.IO) {
         getGroupsByCenterUseCase(id).collect { result ->
             when (result) {
-                is Resource.Error -> _groupListUiState.value =
-                    GroupListUiState.Error(R.string.feature_center_failed_to_load_group_list)
+                is Resource.Error ->
+                    _groupListUiState.value =
+                        GroupListUiState.Error(R.string.feature_center_failed_to_load_group_list)
 
                 is Resource.Loading -> _groupListUiState.value = GroupListUiState.Loading
 
-                is Resource.Success -> _groupListUiState.value =
-                    GroupListUiState.GroupList(result.data ?: CenterWithAssociations())
+                is Resource.Success ->
+                    _groupListUiState.value =
+                        GroupListUiState.GroupList(result.data ?: CenterWithAssociations())
             }
-
         }
     }
 
     fun loadGroups(groupId: Int) = viewModelScope.launch(Dispatchers.IO) {
         getGroupsUseCase(groupId).collect { result ->
             when (result) {
-                is Resource.Error -> _groupListUiState.value =
-                    GroupListUiState.Error(R.string.feature_center_failed_to_load_group_list)
+                is Resource.Error ->
+                    _groupListUiState.value =
+                        GroupListUiState.Error(R.string.feature_center_failed_to_load_group_list)
 
                 is Resource.Loading -> _groupListUiState.value = GroupListUiState.Loading
 

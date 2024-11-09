@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.center.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,45 +18,38 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.group.Center
-import com.mifos.feature.center.center_details.CenterDetailsScreen
-import com.mifos.feature.center.center_group_list.GroupListScreen
-import com.mifos.feature.center.center_list.ui.CenterListScreen
-import com.mifos.feature.center.create_center.CreateNewCenterScreen
-import com.mifos.feature.center.sync_centers_dialog.SyncCenterDialogScreen
+import com.mifos.feature.center.centerDetails.centerDetailsScreen
+import com.mifos.feature.center.centerGroupList.groupListScreen
+import com.mifos.feature.center.centerList.ui.centerListScreen
+import com.mifos.feature.center.createCenter.createNewCenterScreen
 
 fun NavGraphBuilder.centerNavGraph(
     navController: NavController,
     paddingValues: PaddingValues,
     onActivateCenter: (Int, String) -> Unit,
-    addSavingsAccount: (Int) -> Unit
+    addSavingsAccount: (Int) -> Unit,
 ) {
     navigation(
         startDestination = CenterScreens.CenterListScreen.route,
-        route = "center_screen_route"
+        route = "center_screen_route",
     ) {
         centerListScreenRoute(
             paddingValues = paddingValues,
             createNewCenter = navController::navigateCreateCenterScreenRoute,
-            syncClicked = navController::navigateSyncCentersDialog, // TODO open sync dialog inside center list screen
-            onCenterSelect = navController::navigateCenterDetailsScreenRoute
+            onCenterSelect = navController::navigateCenterDetailsScreenRoute,
         )
         centerDetailScreenRoute(
             onBackPressed = navController::popBackStack,
             onActivateCenter = onActivateCenter,
             addSavingsAccount = addSavingsAccount,
-            groupList = navController::navigateCenterGroupListScreenRoute
+            groupList = navController::navigateCenterGroupListScreenRoute,
         )
         centerGroupListScreenRoute(
             onBackPressed = navController::popBackStack,
-            loadClientsOfGroup = { }
+            loadClientsOfGroup = { },
         )
         createCenterScreenRoute(
-            onCreateSuccess = navController::popBackStack
-        )
-        syncCentersDialogRoute(
-            dismiss = navController::popBackStack,
-            hide = navController::popBackStack,
+            onCreateSuccess = navController::popBackStack,
         )
     }
 }
@@ -55,17 +57,15 @@ fun NavGraphBuilder.centerNavGraph(
 fun NavGraphBuilder.centerListScreenRoute(
     paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
-    syncClicked: (List<Center>) -> Unit,
-    onCenterSelect: (Int) -> Unit
+    onCenterSelect: (Int) -> Unit,
 ) {
     composable(
-        route = CenterScreens.CenterListScreen.route
+        route = CenterScreens.CenterListScreen.route,
     ) {
-        CenterListScreen(
+        centerListScreen(
             paddingValues = paddingValues,
             createNewCenter = createNewCenter,
-            syncClicked = syncClicked,
-            onCenterSelect = onCenterSelect
+            onCenterSelect = onCenterSelect,
         )
     }
 }
@@ -74,65 +74,46 @@ fun NavGraphBuilder.centerDetailScreenRoute(
     onBackPressed: () -> Unit,
     onActivateCenter: (Int, String) -> Unit,
     addSavingsAccount: (Int) -> Unit,
-    groupList: (Int) -> Unit
+    groupList: (Int) -> Unit,
 ) {
     composable(
         route = CenterScreens.CenterDetailScreen.route,
-        arguments = listOf(navArgument(Constants.CENTER_ID, builder = { type = NavType.IntType }))
+        arguments = listOf(navArgument(Constants.CENTER_ID, builder = { type = NavType.IntType })),
     ) {
-        CenterDetailsScreen(
+        centerDetailsScreen(
             onBackPressed = onBackPressed,
             onActivateCenter = { onActivateCenter(it, Constants.ACTIVATE_CENTER) },
             addSavingsAccount = addSavingsAccount,
-            groupList = groupList
+            groupList = groupList,
         )
     }
 }
 
 fun NavGraphBuilder.centerGroupListScreenRoute(
     onBackPressed: () -> Unit,
-    loadClientsOfGroup: (List<Client>) -> Unit
+    loadClientsOfGroup: (List<Client>) -> Unit,
 ) {
     composable(
         route = CenterScreens.CenterGroupListScreen.route,
-        arguments = listOf(navArgument(Constants.CENTER_ID, builder = { type = NavType.IntType }))
+        arguments = listOf(navArgument(Constants.CENTER_ID, builder = { type = NavType.IntType })),
     ) {
-        GroupListScreen(
+        groupListScreen(
             onBackPressed = onBackPressed,
-            loadClientsOfGroup = loadClientsOfGroup
+            loadClientsOfGroup = loadClientsOfGroup,
         )
     }
 }
 
 fun NavGraphBuilder.createCenterScreenRoute(
-    onCreateSuccess: () -> Unit
+    onCreateSuccess: () -> Unit,
 ) {
     composable(
-        route = CenterScreens.CreateCenterScreen.route
+        route = CenterScreens.CreateCenterScreen.route,
     ) {
-        CreateNewCenterScreen(
-            onCreateSuccess = onCreateSuccess
+        createNewCenterScreen(
+            onCreateSuccess = onCreateSuccess,
         )
     }
-}
-
-fun NavGraphBuilder.syncCentersDialogRoute(
-    dismiss : ()->Unit,
-    hide : ()->Unit,
-) {
-    composable(
-        route = CenterScreens.SyncCenterPayloadsScreen.route,
-        arguments = listOf(navArgument(Constants.CENTER, builder = { type = NavType.IntType }))
-    ) {
-        SyncCenterDialogScreen(
-            dismiss = dismiss,
-            hide = hide,
-        )
-    }
-}
-
-fun NavController.navigateSyncCentersDialog(list: List<Center>) {
-    navigate(CenterScreens.SyncCenterPayloadsScreen.arguments(list))
 }
 
 fun NavController.navigateCenterDetailsScreenRoute(centerId: Int) {
