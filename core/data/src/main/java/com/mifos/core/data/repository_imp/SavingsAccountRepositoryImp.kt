@@ -33,7 +33,7 @@ class SavingsAccountRepositoryImp @Inject constructor(private val dataManagerSav
         groupId: Int,
         productId: Int
     ): Observable<SavingProductsTemplate> {
-        return getGroupSavingsAccountTemplateByProduct(groupId, productId)
+        return dataManagerSavings.getGroupSavingsAccountTemplateByProduct(groupId, productId)
     }
 
     override fun createSavingsAccount(savingsPayload: SavingsPayload?): Observable<Savings> {

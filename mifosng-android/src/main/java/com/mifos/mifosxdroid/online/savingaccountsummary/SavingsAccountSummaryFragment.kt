@@ -74,12 +74,12 @@ class SavingsAccountSummaryFragment : MifosBaseFragment() {
     }
 
     private fun loadDocuments(savingsAccountNumber: Int) {
-        val action =
-            SavingsAccountSummaryFragmentDirections.actionSavingsAccountSummaryFragmentToDocumentListFragment(
-                savingsAccountNumber,
-                Constants.ENTITY_TYPE_SAVINGS
-            )
-        findNavController().navigate(action)
+//        val action =
+//            SavingsAccountSummaryFragmentDirections.actionSavingsAccountSummaryFragmentToDocumentListFragment(
+//                savingsAccountNumber,
+//                Constants.ENTITY_TYPE_SAVINGS
+//            )
+//        findNavController().navigate(action)
     }
 
     private fun onDepositButtonClicked(
