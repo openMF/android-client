@@ -222,15 +222,6 @@
             android:name="client"
             app:argType="com.mifos.core.objects.navigation.ClientArgs" />
     </fragment>
-    <fragment
-        android:id="@+id/centerDetailsFragment"
-        android:name="com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment"
-        android:label="CenterDetailsFragment">
-
-        <action
-            android:id="@+id/action_centerDetailsFragment_to_savingsAccountFragment"
-            app:destination="@id/savingsAccountFragment" />
-    </fragment>
 
     <activity
         android:id="@+id/clientActivity"

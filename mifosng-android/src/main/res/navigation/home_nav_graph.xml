@@ -21,31 +21,11 @@
             app:destination="@id/clientActivity" />
     </fragment>
 
-    <!--    CentersListFragment-->
-    <fragment
-        android:id="@+id/navigation_center_list"
-        android:name="com.mifos.mifosxdroid.online.centerlist.CenterListFragment"
-        android:label="CenterListFragment">
-        <action
-            android:id="@+id/action_navigation_center_list_to_createNewCenterFragment"
-            app:destination="@id/createNewCenterFragment" />
-        <action
-            android:id="@+id/action_navigation_center_list_to_centersActivity"
-            app:destination="@id/centersActivity" />
-    </fragment>
-
-
     <!--    CreateNewClientFragment-->
     <fragment
         android:id="@+id/createNewClientFragment"
         android:name="com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment"
         android:label="CreateNewClientFragment" />
-
-    <!--    CreateNewCenterFragment-->
-    <fragment
-        android:id="@+id/createNewCenterFragment"
-        android:name="com.mifos.mifosxdroid.online.createnewcenter.CreateNewCenterFragment"
-        android:label="CreateNewCenterFragment" />
 
     <!--    ClientActivity-->
     <activity
@@ -55,17 +35,6 @@
         <argument
             android:name="client"
             app:argType="com.mifos.core.objects.navigation.ClientArgs" />
-    </activity>
-
-    <!--    CenterActivity-->
-    <activity
-        android:id="@+id/centersActivity"
-        android:name="com.mifos.mifosxdroid.online.CentersActivity"
-        android:label="activity_centers"
-        tools:layout="@layout/activity_centers">
-        <argument
-            android:name="centerId"
-            app:argType="integer" />
     </activity>
 
     <!--    GroupsActivity-->
