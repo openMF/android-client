@@ -105,7 +105,7 @@ fun SyncGroupDialogContent(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(Color.Yellow),
+            .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -184,14 +184,14 @@ fun SyncGroupDialogContent(
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-
+            if (uiData.isSyncSuccess) {
                 FilledTonalButton(
                     onClick = { okClicked() },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(text = stringResource(id = R.string.feature_center_dialog_action_ok))
                 }
-
+            } else {
                 FilledTonalButton(
                     onClick = { cancelClicked() },
                     modifier = Modifier.weight(1f)
@@ -207,7 +207,7 @@ fun SyncGroupDialogContent(
                 ) {
                     Text(text = stringResource(id = R.string.feature_center_hide))
                 }
-
+            }
         }
     }
 }

@@ -29,7 +29,6 @@ fun NavGraphBuilder.centerNavGraph(
         centerListScreenRoute(
             paddingValues = paddingValues,
             createNewCenter = navController::navigateCreateCenterScreenRoute,
-            syncClicked = {  }, // TODO open sync dialog inside center list screen
             onCenterSelect = navController::navigateCenterDetailsScreenRoute
         )
         centerDetailScreenRoute(
@@ -52,7 +51,6 @@ fun NavGraphBuilder.centerNavGraph(
 fun NavGraphBuilder.centerListScreenRoute(
     paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
-    syncClicked: (List<Center>) -> Unit,
     onCenterSelect: (Int) -> Unit
 ) {
     composable(
@@ -61,7 +59,6 @@ fun NavGraphBuilder.centerListScreenRoute(
         CenterListScreen(
             paddingValues = paddingValues,
             createNewCenter = createNewCenter,
-            syncClicked = syncClicked,
             onCenterSelect = onCenterSelect
         )
     }

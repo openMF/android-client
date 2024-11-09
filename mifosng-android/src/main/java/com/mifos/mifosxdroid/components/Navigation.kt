@@ -116,12 +116,7 @@ fun Navigation(
         savingsNavGraph(
             navController = navController,
             onBackPressed = navController::popBackStack,
-            loadMoreSavingsAccountInfo = {
-                navController.navigateToDataTable(
-                    Constants.DATA_TABLE_NAME_SAVINGS,
-                    it
-                )
-            },
+            loadMoreSavingsAccountInfo = { navController.navigateToDataTable(Constants.DATA_TABLE_NAME_SAVINGS, it) },
             loadDocuments = {
                 navController.navigateToDocumentListScreen(
                     it,
@@ -215,13 +210,9 @@ fun Navigation(
             clientCreated = { client, userStatus ->
                 navController.popBackStack()
                 navController.popBackStack()
-                Toast.makeText(
-                    context,
-                    context.resources.getString(R.string.client) + MifosResponseHandler.response,
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(context, context.resources.getString(R.string.client) + MifosResponseHandler.response, Toast.LENGTH_LONG).show()
 
-                if (userStatus == Constants.USER_ONLINE) {
+                if (userStatus == Constants.USER_ONLINE){
                     client.clientId?.let { navController.navigateClientDetailsScreen(it) }
                 }
             }

@@ -79,7 +79,6 @@ import kotlinx.coroutines.flow.flowOf
 fun CenterListScreen(
     paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
-    syncClicked: (List<Center>) -> Unit,
     onCenterSelect: (Int) -> Unit
 ) {
 
@@ -100,7 +99,7 @@ fun CenterListScreen(
         },
         refreshState = refreshState,
         onCenterSelect = onCenterSelect,
-        syncClicked = syncClicked
+     //   syncClicked = syncClicked
     )
 }
 
@@ -111,7 +110,6 @@ fun CenterListScreen(
     createNewCenter: () -> Unit,
     onRefresh: () -> Unit,
     refreshState: Boolean,
-    syncClicked: (List<Center>) -> Unit,
     onCenterSelect: (Int) -> Unit
 ) {
 
@@ -122,7 +120,7 @@ fun CenterListScreen(
         isInSelectionMode = false
         selectedItems.clear()
     }
-    val sync = remember {
+    val sync = rememberSaveable {
         mutableStateOf(false)
     }
     BackHandler(enabled = isInSelectionMode) {
@@ -154,8 +152,6 @@ fun CenterListScreen(
                         FilledTonalButton(
                             onClick = {
                                 sync.value = true
-                                syncClicked(selectedItems.toList())
-                             //   resetSelectionMode()
                             },
                         ) {
                             Icon(
@@ -593,8 +589,7 @@ private fun CenterListScreenPreview(
         createNewCenter = {},
         onRefresh = {},
         refreshState = false,
-        onCenterSelect = {},
-        syncClicked = {}
+        onCenterSelect = {}
     )
 }
 
