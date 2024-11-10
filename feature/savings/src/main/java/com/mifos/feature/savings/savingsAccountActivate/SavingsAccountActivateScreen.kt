@@ -1,4 +1,13 @@
-package com.mifos.feature.savings.account_activate
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.savings.savingsAccountActivate
 
 import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -58,24 +67,25 @@ import java.util.Locale
  */
 
 @Composable
-fun SavingsAccountActivateScreen(
-    navigateBack: () -> Unit
+internal fun SavingsAccountActivateScreen(
+    navigateBack: () -> Unit,
+    viewModel: SavingsAccountActivateViewModel = hiltViewModel(),
 ) {
-    val viewModel: SavingsAccountActivateViewModel = hiltViewModel()
     val uiState by viewModel.savingsAccountActivateUiState.collectAsStateWithLifecycle()
     val savingsAccountId by viewModel.savingsAccountId.collectAsStateWithLifecycle()
 
     SavingsAccountActivateScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        activateSavings = { viewModel.activateSavings(savingsAccountId, it) }
+        activateSavings = { viewModel.activateSavings(savingsAccountId, it) },
     )
 }
 
 @Composable
-fun SavingsAccountActivateScreen(
+internal fun SavingsAccountActivateScreen(
     uiState: SavingsAccountActivateUiState,
     navigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
     activateSavings: (hashMap: HashMap<String, String>) -> Unit,
 ) {
     val snackBarHostState = remember {
@@ -84,20 +94,21 @@ fun SavingsAccountActivateScreen(
     val context = LocalContext.current
 
     MifosScaffold(
+        modifier = modifier,
         snackbarHostState = snackBarHostState,
         title = stringResource(id = R.string.feature_savings_activate_savings),
         onBackPressed = navigateBack,
-        icon = MifosIcons.arrowBack
+        icon = MifosIcons.arrowBack,
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
+                .padding(it),
         ) {
             when (uiState) {
                 SavingsAccountActivateUiState.Initial -> {
                     SavingsAccountActivateContent(
-                        activateSavings = activateSavings
+                        activateSavings = activateSavings,
                     )
                 }
 
@@ -105,7 +116,7 @@ fun SavingsAccountActivateScreen(
                     MifosSweetError(
                         message = uiState.message,
                         isRetryEnabled = false,
-                        onclick = {}
+                        onclick = {},
                     )
                 }
 
@@ -117,7 +128,7 @@ fun SavingsAccountActivateScreen(
                     Toast.makeText(
                         context,
                         context.resources.getString(R.string.feature_savings_savings_account_activated),
-                        Toast.LENGTH_LONG
+                        Toast.LENGTH_LONG,
                     ).show()
 
                     navigateBack.invoke()
@@ -129,7 +140,8 @@ fun SavingsAccountActivateScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SavingsAccountActivateContent(
+private fun SavingsAccountActivateContent(
+    modifier: Modifier = Modifier,
     activateSavings: (hashMap: HashMap<String, String>) -> Unit,
 ) {
     val scrollstate = rememberScrollState()
@@ -149,7 +161,7 @@ fun SavingsAccountActivateContent(
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis >= System.currentTimeMillis()
             }
-        }
+        },
     )
 
     if (showDatePickerDialog) {
@@ -164,33 +176,32 @@ fun SavingsAccountActivateContent(
                             approvalDate = it
                         }
                         showDatePickerDialog = false
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_savings_select_date)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         showDatePickerDialog = false
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_savings_cancel)) }
-            }
-        )
-        {
+            },
+        ) {
             DatePicker(state = datePickerState)
         }
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .verticalScroll(scrollstate)
+            .verticalScroll(scrollstate),
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             style = MaterialTheme.typography.bodyLarge,
             text = stringResource(id = R.string.feature_savings_approved_on),
-            modifier = Modifier.padding(start = 16.dp)
+            modifier = Modifier.padding(start = 16.dp),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -198,8 +209,9 @@ fun SavingsAccountActivateContent(
         MifosDatePickerTextField(
             value = SimpleDateFormat(
                 "dd-MMMM-yyyy",
-                Locale.getDefault()
-            ).format(approvalDate), label = R.string.feature_savings_approval_savings_date
+                Locale.getDefault(),
+            ).format(approvalDate),
+            label = R.string.feature_savings_approval_savings_date,
         ) {
             showDatePickerDialog = true
         }
@@ -210,17 +222,18 @@ fun SavingsAccountActivateContent(
             value = approvalReason,
             onValueChange = { approvalReason = it },
             label = stringResource(id = R.string.feature_savings_savings_approval_reason),
-            error = null
+            error = null,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .heightIn(46.dp),
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .heightIn(46.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
+                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
             ),
             onClick = {
                 if (Network.isOnline(context)) {
@@ -228,7 +241,7 @@ fun SavingsAccountActivateContent(
                     hashMap["dateFormat"] = "dd MMMM yyyy"
                     hashMap["activatedOnDate"] = SimpleDateFormat(
                         "dd-MMMM-yyyy",
-                        Locale.getDefault()
+                        Locale.getDefault(),
                     ).format(approvalDate)
                     hashMap["locale"] = "en"
 
@@ -237,10 +250,11 @@ fun SavingsAccountActivateContent(
                     Toast.makeText(
                         context,
                         context.resources.getString(R.string.feature_savings_error_not_connected_internet),
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
                 }
-            }) {
+            },
+        ) {
             Text(text = stringResource(id = R.string.feature_savings_save))
         }
     }
@@ -253,18 +267,19 @@ class SavingsAccountActivateScreenPreviewProvider :
             SavingsAccountActivateUiState.Initial,
             SavingsAccountActivateUiState.ShowProgressbar,
             SavingsAccountActivateUiState.ShowSavingAccountActivatedSuccessfully(GenericResponse()),
-            SavingsAccountActivateUiState.ShowError("Error")
+            SavingsAccountActivateUiState.ShowError("Error"),
         )
 }
 
 @Composable
 @Preview(showSystemUi = true)
-fun PreviewSavingsAccountActivateScreen(
-    @PreviewParameter(SavingsAccountActivateScreenPreviewProvider::class) savingsAccountActivateUiState: SavingsAccountActivateUiState
+private fun PreviewSavingsAccountActivateScreen(
+    @PreviewParameter(SavingsAccountActivateScreenPreviewProvider::class)
+    savingsAccountActivateUiState: SavingsAccountActivateUiState,
 ) {
     SavingsAccountActivateScreen(
         uiState = savingsAccountActivateUiState,
         navigateBack = { },
-        activateSavings = {}
+        activateSavings = {},
     )
 }
