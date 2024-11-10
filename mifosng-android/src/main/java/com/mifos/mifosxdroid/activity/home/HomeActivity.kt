@@ -112,7 +112,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
             }
 
             R.id.runreport -> {
-                findNavController(R.id.nav_host_fragment).navigate(R.id.runReportsActivity)
+//                findNavController(R.id.nav_host_fragment).navigate(R.id.runReportsActivity)
             }
         }
         binding.drawer.closeDrawer(GravityCompat.START)
