@@ -42,7 +42,7 @@ import com.mifos.core.objects.group.Center
 import com.mifos.feature.center.R
 
 @Composable
-fun syncCenterDialogScreen(
+internal fun SyncCenterDialogScreen(
     viewModel: SyncCentersDialogViewModel = hiltViewModel(),
     dismiss: () -> Unit,
     hide: () -> Unit,
@@ -58,7 +58,7 @@ fun syncCenterDialogScreen(
         }
     }
 
-    syncCenterDialogScreen(
+    SyncCenterDialogScreen(
         uiState = uiState,
         uiData = uiData,
         dismiss = dismiss,
@@ -67,7 +67,7 @@ fun syncCenterDialogScreen(
 }
 
 @Composable
-fun syncCenterDialogScreen(
+private fun SyncCenterDialogScreen(
     uiState: SyncCentersDialogUiState,
     uiData: SyncCentersDialogData,
     dismiss: () -> Unit,
@@ -76,7 +76,7 @@ fun syncCenterDialogScreen(
     val snackBarHostState = remember { SnackbarHostState() }
 
     Box {
-        syncGroupDialogContent(
+        SyncGroupDialogContent(
             uiData = uiData,
             okClicked = dismiss,
             hideClicked = hide,
@@ -104,7 +104,7 @@ fun syncCenterDialogScreen(
 }
 
 @Composable
-fun syncGroupDialogContent(
+private fun SyncGroupDialogContent(
     uiData: SyncCentersDialogData,
     okClicked: () -> Unit,
     hideClicked: () -> Unit,
@@ -123,14 +123,14 @@ fun syncGroupDialogContent(
             text = stringResource(id = R.string.feature_center_sync_centers_full_information),
         )
 
-        payloadField(
+        PayloadField(
             label = stringResource(id = R.string.feature_center_name),
             value = uiData.centerName,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        payloadField(
+        PayloadField(
             label = stringResource(id = R.string.feature_center_total),
             value = uiData.centersList.size.toString() + stringResource(R.string.feature_center_space) + stringResource(
                 com.mifos.feature.center.R.string.feature_center_center,
@@ -139,7 +139,7 @@ fun syncGroupDialogContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        payloadField(
+        PayloadField(
             label = stringResource(id = R.string.feature_center_syncing_center),
             value = uiData.centerName,
         )
@@ -150,7 +150,7 @@ fun syncGroupDialogContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        payloadField(
+        PayloadField(
             label = stringResource(id = R.string.feature_center_syncing_group),
             value = "syncing_group",
         )
@@ -161,7 +161,7 @@ fun syncGroupDialogContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        payloadField(
+        PayloadField(
             label = stringResource(id = R.string.feature_center_syncing_client),
             value = "syncing_client",
         )
@@ -172,7 +172,7 @@ fun syncGroupDialogContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        payloadField(
+        PayloadField(
             label = stringResource(id = R.string.feature_center_total_sync_progress),
             value = stringResource(R.string.feature_center_space) + uiData.totalSyncCount + stringResource(id = R.string.feature_center_slash) + uiData.centersList.size,
         )
@@ -183,7 +183,7 @@ fun syncGroupDialogContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        payloadField(
+        PayloadField(
             label = stringResource(id = R.string.feature_center_failed_sync),
             value = uiData.failedSyncGroupCount.toString(),
         )
@@ -222,7 +222,7 @@ fun syncGroupDialogContent(
 }
 
 @Composable
-fun payloadField(label: String, value: String) {
+private fun PayloadField(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -244,8 +244,8 @@ fun payloadField(label: String, value: String) {
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-fun syncCenterDialogScreenPreview() {
-    syncCenterDialogScreen(
+private fun SyncCenterDialogScreenPreview() {
+    SyncCenterDialogScreen(
         dismiss = { },
         uiState = SyncCentersDialogUiState.Success,
         uiData = SyncCentersDialogData(),

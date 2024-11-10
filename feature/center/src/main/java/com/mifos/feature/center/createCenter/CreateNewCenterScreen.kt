@@ -68,7 +68,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
-fun createNewCenterScreen(
+internal fun CreateNewCenterScreen(
     onCreateSuccess: () -> Unit,
 ) {
     val viewModel: CreateNewCenterViewModel = hiltViewModel()
@@ -78,7 +78,7 @@ fun createNewCenterScreen(
         viewModel.loadOffices()
     }
 
-    createNewCenterScreen(
+    CreateNewCenterScreen(
         state = state,
         onRetry = {
             viewModel.loadOffices()
@@ -91,7 +91,7 @@ fun createNewCenterScreen(
 }
 
 @Composable
-fun createNewCenterScreen(
+private fun CreateNewCenterScreen(
     state: CreateNewCenterUiState,
     onRetry: () -> Unit,
     createCenter: (CenterPayload) -> Unit,
@@ -121,7 +121,7 @@ fun createNewCenterScreen(
                 is CreateNewCenterUiState.Loading -> MifosCircularProgress()
 
                 is CreateNewCenterUiState.Offices -> {
-                    createNewCenterContent(offices = state.offices, createCenter = createCenter)
+                    CreateNewCenterContent(offices = state.offices, createCenter = createCenter)
                 }
             }
         }
@@ -129,7 +129,7 @@ fun createNewCenterScreen(
 }
 
 @Composable
-fun createNewCenterContent(offices: List<Office>, createCenter: (CenterPayload) -> Unit) {
+private fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterPayload) -> Unit) {
     val context = LocalContext.current
     var centerName by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(""))
@@ -315,10 +315,10 @@ class CreateNewCenterUiStateProvider : PreviewParameterProvider<CreateNewCenterU
 
 @Preview(showBackground = true)
 @Composable
-private fun createNewCenterPreview(
+private fun CreateNewCenterPreview(
     @PreviewParameter(CreateNewCenterUiStateProvider::class) state: CreateNewCenterUiState,
 ) {
-    createNewCenterScreen(
+    CreateNewCenterScreen(
         state = state,
         onRetry = {},
         createCenter = {},

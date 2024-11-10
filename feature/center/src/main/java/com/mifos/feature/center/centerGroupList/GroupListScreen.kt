@@ -53,7 +53,7 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.center.R
 
 @Composable
-fun groupListScreen(
+internal fun GroupListScreen(
     onBackPressed: () -> Unit,
     loadClientsOfGroup: (List<Client>) -> Unit,
 ) {
@@ -75,7 +75,7 @@ fun groupListScreen(
         viewModel.loadGroupByCenter(centerId)
     }
 
-    groupListScreen(
+    GroupListScreen(
         state = state,
         onBackPressed = onBackPressed,
         onGroupClick = {
@@ -89,7 +89,7 @@ fun groupListScreen(
 }
 
 @Composable
-fun groupListScreen(
+private fun GroupListScreen(
     state: GroupListUiState,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
@@ -118,7 +118,7 @@ fun groupListScreen(
                             icon = MifosIcons.fileTask,
                         )
                     } else {
-                        groupListContent(
+                        GroupListContent(
                             centerWithAssociations = state.centerWithAssociations,
                             onGroupClick = onGroupClick,
                         )
@@ -130,19 +130,19 @@ fun groupListScreen(
 }
 
 @Composable
-fun groupListContent(
+private fun GroupListContent(
     centerWithAssociations: CenterWithAssociations,
     onGroupClick: (Int) -> Unit,
 ) {
     LazyColumn {
         items(centerWithAssociations.groupMembers) { group ->
-            groupItem(group = group, onGroupClick = onGroupClick)
+            GroupItem(group = group, onGroupClick = onGroupClick)
         }
     }
 }
 
 @Composable
-fun groupItem(
+private fun GroupItem(
     group: Group,
     onGroupClick: (Int) -> Unit,
 ) {
@@ -210,10 +210,10 @@ class GroupListUiStateProvider : PreviewParameterProvider<GroupListUiState> {
 
 @Preview(showBackground = true)
 @Composable
-private fun groupListScreenPreview(
+private fun GroupListScreenPreview(
     @PreviewParameter(GroupListUiStateProvider::class) state: GroupListUiState,
 ) {
-    groupListScreen(
+    GroupListScreen(
         state = state,
         onBackPressed = {},
         onGroupClick = {},

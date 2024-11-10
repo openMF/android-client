@@ -81,11 +81,11 @@ import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.group.Center
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.R
-import com.mifos.feature.center.syncCentersDialog.syncCenterDialogScreen
+import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
-fun centerListScreen(
+internal fun CenterListScreen(
     paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
     onCenterSelect: (Int) -> Unit,
@@ -98,7 +98,7 @@ fun centerListScreen(
         viewModel.getCenterList()
     }
 
-    centerListScreen(
+    CenterListScreen(
         paddingValues = paddingValues,
         state = state,
         createNewCenter = createNewCenter,
@@ -112,7 +112,7 @@ fun centerListScreen(
 }
 
 @Composable
-fun centerListScreen(
+private fun CenterListScreen(
     paddingValues: PaddingValues,
     state: CenterListUiState,
     createNewCenter: () -> Unit,
@@ -202,7 +202,7 @@ fun centerListScreen(
                     }
 
                     is CenterListUiState.CenterList -> {
-                        centerListContent(
+                        CenterListContent(
                             centerPagingList = state.centers.collectAsLazyPagingItems(),
                             isInSelectionMode = isInSelectionMode,
                             selectedItems = selectedItems,
@@ -218,10 +218,10 @@ fun centerListScreen(
                         )
                     }
 
-                    is CenterListUiState.CenterListDb -> centerListDbContent(centerList = state.centers)
+                    is CenterListUiState.CenterListDb -> CenterListDbContent(centerList = state.centers)
                 }
                 if (sync.value) {
-                    syncCenterDialogScreen(
+                    SyncCenterDialogScreen(
                         dismiss = {
                             sync.value = false
                             selectedItems.clear()
@@ -242,7 +242,7 @@ fun centerListScreen(
 }
 
 @Composable
-fun centerListContent(
+private fun CenterListContent(
     centerPagingList: LazyPagingItems<Center>,
     isInSelectionMode: Boolean,
     selectedItems: SnapshotStateList<Center>,
@@ -442,7 +442,7 @@ fun centerListContent(
 }
 
 @Composable
-fun centerListDbContent(
+private fun CenterListDbContent(
     centerList: List<Center>,
 ) {
     LazyColumn {
@@ -567,8 +567,8 @@ class CenterListUiStateProvider :
 
 @Preview(showBackground = true)
 @Composable
-private fun centerListContentPreview() {
-    centerListContent(
+private fun CenterListContentPreview() {
+    CenterListContent(
         centerPagingList = sampleCenterList.collectAsLazyPagingItems(),
         isInSelectionMode = false,
         selectedItems = rememberSaveable { mutableStateListOf() },
@@ -580,16 +580,16 @@ private fun centerListContentPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun centerListDbContentPreview() {
-    centerListDbContent(sampleCenterListDb)
+private fun CenterListDbContentPreview() {
+    CenterListDbContent(sampleCenterListDb)
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun centerListScreenPreview(
+private fun CenterListScreenPreview(
     @PreviewParameter(CenterListUiStateProvider::class) centerListUiState: CenterListUiState,
 ) {
-    centerListScreen(
+    CenterListScreen(
         paddingValues = PaddingValues(),
         state = centerListUiState,
         createNewCenter = {},

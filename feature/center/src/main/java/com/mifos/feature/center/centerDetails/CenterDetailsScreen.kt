@@ -66,7 +66,7 @@ import com.mifos.core.objects.group.CenterWithAssociations
 import com.mifos.feature.center.R
 
 @Composable
-fun centerDetailsScreen(
+internal fun CenterDetailsScreen(
     onBackPressed: () -> Unit,
     onActivateCenter: (Int) -> Unit,
     addSavingsAccount: (Int) -> Unit,
@@ -80,7 +80,7 @@ fun centerDetailsScreen(
         viewModel.loadClientDetails(centerId)
     }
 
-    centerDetailsScreen(
+    CenterDetailsScreen(
         state = state,
         onBackPressed = onBackPressed,
         onMenuClick = {
@@ -98,7 +98,7 @@ fun centerDetailsScreen(
 }
 
 @Composable
-fun centerDetailsScreen(
+private fun CenterDetailsScreen(
     state: CenterDetailsUiState,
     onBackPressed: () -> Unit,
     onMenuClick: (MenuItems) -> Unit,
@@ -166,7 +166,7 @@ fun centerDetailsScreen(
                 is CenterDetailsUiState.Loading -> MifosCircularProgress()
 
                 is CenterDetailsUiState.CenterDetails -> {
-                    centerDetailsContent(
+                    CenterDetailsContent(
                         centerWithAssociations = state.centerWithAssociations,
                         centerInfo = state.centerInfo,
                         activateCenter = { centerActive = false },
@@ -178,7 +178,7 @@ fun centerDetailsScreen(
 }
 
 @Composable
-fun centerDetailsContent(
+private fun CenterDetailsContent(
     centerWithAssociations: CenterWithAssociations,
     centerInfo: CenterInfo,
     activateCenter: () -> Unit,
@@ -201,12 +201,12 @@ fun centerDetailsContent(
                 textAlign = TextAlign.Center,
             )
         }
-        mifosCenterDetailsText(
+        MifosCenterDetailsText(
             icon = MifosIcons.date,
             field = stringResource(id = R.string.feature_center_activation_date),
             value = Utils.getStringOfDate(centerWithAssociations.activationDate),
         )
-        mifosCenterDetailsText(
+        MifosCenterDetailsText(
             icon = MifosIcons.date,
             field = stringResource(id = R.string.feature_center_next_meeting_on),
             value = if (centerWithAssociations.collectionMeetingCalendar.calendarInstanceId == null) {
@@ -218,13 +218,13 @@ fun centerDetailsContent(
             },
         )
         centerWithAssociations.collectionMeetingCalendar.humanReadable?.let {
-            mifosCenterDetailsText(
+            MifosCenterDetailsText(
                 icon = MifosIcons.eventRepeat,
                 field = stringResource(id = R.string.feature_center_meeting_frequency),
                 value = it,
             )
         }
-        mifosCenterDetailsText(
+        MifosCenterDetailsText(
             icon = MifosIcons.person,
             field = stringResource(id = R.string.feature_center_staff_name),
             value = if (centerWithAssociations.staffName != null) {
@@ -252,37 +252,37 @@ fun centerDetailsContent(
             textAlign = TextAlign.Center,
         )
 
-        mifosCenterDetailsText(
+        MifosCenterDetailsText(
             icon = MifosIcons.person,
             field = stringResource(id = R.string.feature_center_active_client),
             value = centerInfo.activeClients.toString(),
         )
-        mifosCenterDetailsText(
+        MifosCenterDetailsText(
             icon = MifosIcons.group,
             field = stringResource(id = R.string.feature_center_active_group_loan),
             value = centerInfo.activeGroupLoans.toString(),
         )
-        mifosCenterDetailsText(
+        MifosCenterDetailsText(
             icon = MifosIcons.person,
             field = stringResource(id = R.string.feature_center_active_client_loans),
             value = centerInfo.activeClientLoans.toString(),
         )
-        mifosCenterDetailsText(
+        MifosCenterDetailsText(
             icon = MifosIcons.group,
             field = stringResource(id = R.string.feature_center_active_group_borrowers),
             value = centerInfo.activeGroupBorrowers.toString(),
         )
-        mifosCenterDetailsText(
+        MifosCenterDetailsText(
             icon = MifosIcons.person,
             field = stringResource(id = R.string.feature_center_active_client_borrowers),
             value = centerInfo.activeClientBorrowers.toString(),
         )
-        mifosCenterDetailsText(
+        MifosCenterDetailsText(
             icon = MifosIcons.group,
             field = stringResource(id = R.string.feature_center_active_overdue_group_loans),
             value = centerInfo.overdueGroupLoans.toString(),
         )
-        mifosCenterDetailsText(
+        MifosCenterDetailsText(
             icon = MifosIcons.person,
             field = stringResource(id = R.string.feature_center_active_group_loan),
             value = centerInfo.overdueClientLoans.toString(),
@@ -291,7 +291,7 @@ fun centerDetailsContent(
 }
 
 @Composable
-fun mifosCenterDetailsText(icon: ImageVector, field: String, value: String) {
+private fun MifosCenterDetailsText(icon: ImageVector, field: String, value: String) {
     Row(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
@@ -331,7 +331,7 @@ fun mifosCenterDetailsText(icon: ImageVector, field: String, value: String) {
     }
 }
 
-class CenterDetailsUiStateProvider : PreviewParameterProvider<CenterDetailsUiState> {
+private class CenterDetailsUiStateProvider : PreviewParameterProvider<CenterDetailsUiState> {
 
     override val values: Sequence<CenterDetailsUiState>
         get() = sequenceOf(
@@ -343,10 +343,10 @@ class CenterDetailsUiStateProvider : PreviewParameterProvider<CenterDetailsUiSta
 
 @Preview(showBackground = true)
 @Composable
-private fun centerDetailsScreenPreview(
+private fun CenterDetailsScreenPreview(
     @PreviewParameter(CenterDetailsUiStateProvider::class) state: CenterDetailsUiState,
 ) {
-    centerDetailsScreen(
+    CenterDetailsScreen(
         state = state,
         onBackPressed = {},
         onMenuClick = {},

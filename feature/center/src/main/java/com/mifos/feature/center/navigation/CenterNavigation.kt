@@ -18,10 +18,10 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.client.Client
-import com.mifos.feature.center.centerDetails.centerDetailsScreen
-import com.mifos.feature.center.centerGroupList.groupListScreen
-import com.mifos.feature.center.centerList.ui.centerListScreen
-import com.mifos.feature.center.createCenter.createNewCenterScreen
+import com.mifos.feature.center.centerDetails.CenterDetailsScreen
+import com.mifos.feature.center.centerGroupList.GroupListScreen
+import com.mifos.feature.center.centerList.ui.CenterListScreen
+import com.mifos.feature.center.createCenter.CreateNewCenterScreen
 
 fun NavGraphBuilder.centerNavGraph(
     navController: NavController,
@@ -62,7 +62,7 @@ fun NavGraphBuilder.centerListScreenRoute(
     composable(
         route = CenterScreens.CenterListScreen.route,
     ) {
-        centerListScreen(
+        CenterListScreen(
             paddingValues = paddingValues,
             createNewCenter = createNewCenter,
             onCenterSelect = onCenterSelect,
@@ -80,7 +80,7 @@ fun NavGraphBuilder.centerDetailScreenRoute(
         route = CenterScreens.CenterDetailScreen.route,
         arguments = listOf(navArgument(Constants.CENTER_ID, builder = { type = NavType.IntType })),
     ) {
-        centerDetailsScreen(
+        CenterDetailsScreen(
             onBackPressed = onBackPressed,
             onActivateCenter = { onActivateCenter(it, Constants.ACTIVATE_CENTER) },
             addSavingsAccount = addSavingsAccount,
@@ -97,7 +97,7 @@ fun NavGraphBuilder.centerGroupListScreenRoute(
         route = CenterScreens.CenterGroupListScreen.route,
         arguments = listOf(navArgument(Constants.CENTER_ID, builder = { type = NavType.IntType })),
     ) {
-        groupListScreen(
+        GroupListScreen(
             onBackPressed = onBackPressed,
             loadClientsOfGroup = loadClientsOfGroup,
         )
@@ -110,7 +110,7 @@ fun NavGraphBuilder.createCenterScreenRoute(
     composable(
         route = CenterScreens.CreateCenterScreen.route,
     ) {
-        createNewCenterScreen(
+        CreateNewCenterScreen(
             onCreateSuccess = onCreateSuccess,
         )
     }
