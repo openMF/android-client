@@ -1,4 +1,13 @@
-package com.mifos.feature.checker_inbox_task.checker_inbox
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.checkerInboxTask.checkerInbox
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,28 +29,29 @@ class CheckerInboxViewModel @Inject constructor(
     val getCheckerInboxUseCase: GetCheckerTasksUseCase,
     val approveCheckerUseCase: ApproveCheckerUseCase,
     val rejectCheckerUseCase: RejectCheckerUseCase,
-    val deleteCheckerUseCase: DeleteCheckerUseCase
+    val deleteCheckerUseCase: DeleteCheckerUseCase,
 ) : ViewModel() {
 
     private val _checkerInboxUiState =
         MutableStateFlow<CheckerInboxUiState>(CheckerInboxUiState.Loading)
     val checkerInboxUiState = _checkerInboxUiState.asStateFlow()
 
-
     fun loadCheckerTasks(
         actionName: String? = null,
         entityName: String? = null,
-        resourceId: Int? = null
+        resourceId: Int? = null,
     ) = viewModelScope.launch(Dispatchers.IO) {
         getCheckerInboxUseCase(actionName, entityName, resourceId).collect { result ->
             when (result) {
-                is Resource.Error -> _checkerInboxUiState.value =
-                    CheckerInboxUiState.Error(R.string.feature_checker_inbox_task_failed_to_Load_Check_Inbox)
+                is Resource.Error ->
+                    _checkerInboxUiState.value =
+                        CheckerInboxUiState.Error(R.string.feature_checker_inbox_task_failed_to_Load_Check_Inbox)
 
                 is Resource.Loading -> _checkerInboxUiState.value = CheckerInboxUiState.Loading
 
-                is Resource.Success -> _checkerInboxUiState.value =
-                    CheckerInboxUiState.CheckerTasksList(result.data ?: emptyList())
+                is Resource.Success ->
+                    _checkerInboxUiState.value =
+                        CheckerInboxUiState.CheckerTasksList(result.data ?: emptyList())
             }
         }
     }
@@ -49,8 +59,9 @@ class CheckerInboxViewModel @Inject constructor(
     fun approveCheckerEntry(auditId: Int) = viewModelScope.launch(Dispatchers.IO) {
         approveCheckerUseCase(auditId).collect { result ->
             when (result) {
-                is Resource.Error -> _checkerInboxUiState.value =
-                    CheckerInboxUiState.Error(R.string.feature_checker_inbox_task_failed_to_approve)
+                is Resource.Error ->
+                    _checkerInboxUiState.value =
+                        CheckerInboxUiState.Error(R.string.feature_checker_inbox_task_failed_to_approve)
 
                 is Resource.Loading -> Unit
 
@@ -66,8 +77,9 @@ class CheckerInboxViewModel @Inject constructor(
     fun rejectCheckerEntry(auditId: Int) = viewModelScope.launch(Dispatchers.IO) {
         rejectCheckerUseCase(auditId).collect { result ->
             when (result) {
-                is Resource.Error -> _checkerInboxUiState.value =
-                    CheckerInboxUiState.Error(R.string.feature_checker_inbox_task_failed_to_reject)
+                is Resource.Error ->
+                    _checkerInboxUiState.value =
+                        CheckerInboxUiState.Error(R.string.feature_checker_inbox_task_failed_to_reject)
 
                 is Resource.Loading -> Unit
 
@@ -83,8 +95,9 @@ class CheckerInboxViewModel @Inject constructor(
     fun deleteCheckerEntry(auditId: Int) = viewModelScope.launch(Dispatchers.IO) {
         deleteCheckerUseCase(auditId).collect { result ->
             when (result) {
-                is Resource.Error -> _checkerInboxUiState.value =
-                    CheckerInboxUiState.Error(R.string.feature_checker_inbox_task_failed_to_delete)
+                is Resource.Error ->
+                    _checkerInboxUiState.value =
+                        CheckerInboxUiState.Error(R.string.feature_checker_inbox_task_failed_to_delete)
 
                 is Resource.Loading -> Unit
 

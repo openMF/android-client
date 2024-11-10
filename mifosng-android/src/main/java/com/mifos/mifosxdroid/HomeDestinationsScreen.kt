@@ -13,7 +13,7 @@ import androidx.compose.material.icons.rounded.PowerSettingsNew
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Task
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.feature.checker_inbox_task.navigation.CheckerInboxTaskScreens
+import com.mifos.feature.checkerInboxTask.navigation.CheckerInboxTaskScreens
 import com.mifos.feature.groups.navigation.GroupScreen
 import com.mifos.feature.path_tracking.navigation.PathTrackingScreens
 import com.mifos.feature.search.navigation.SearchScreens
