@@ -1,4 +1,13 @@
-package com.mifos.feature.savings.account_approval
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.savings.savingsAccountApproval
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -13,9 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -24,7 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SavingsAccountApprovalViewModel @Inject constructor(
     private val approveSavingsApplicationUseCase: ApproveSavingsApplicationUseCase,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val savingsAccountId = savedStateHandle.getStateFlow(key = Constants.SAVINGS_ACCOUNT_ID, initialValue = 0)
@@ -34,24 +40,26 @@ class SavingsAccountApprovalViewModel @Inject constructor(
     val savingsAccountApprovalUiState: StateFlow<SavingsAccountApprovalUiState>
         get() = _savingsAccountApprovalUiState
 
-    fun approveSavingsApplication(accountId : Int, savingsApproval: SavingsApproval?) =
+    fun approveSavingsApplication(accountId: Int, savingsApproval: SavingsApproval?) =
         viewModelScope.launch(Dispatchers.IO) {
             approveSavingsApplicationUseCase(accountId, savingsApproval).collect { result ->
                 when (result) {
-                    is Resource.Error -> _savingsAccountApprovalUiState.value =
-                        SavingsAccountApprovalUiState.ShowError(
-                            result.message ?: "Something went wrong"
-                        )
+                    is Resource.Error ->
+                        _savingsAccountApprovalUiState.value =
+                            SavingsAccountApprovalUiState.ShowError(
+                                result.message ?: "Something went wrong",
+                            )
 
-                    is Resource.Loading -> _savingsAccountApprovalUiState.value =
-                        SavingsAccountApprovalUiState.ShowProgressbar
+                    is Resource.Loading ->
+                        _savingsAccountApprovalUiState.value =
+                            SavingsAccountApprovalUiState.ShowProgressbar
 
-                    is Resource.Success -> _savingsAccountApprovalUiState.value =
-                        SavingsAccountApprovalUiState.ShowSavingAccountApprovedSuccessfully(
-                            result.data ?: GenericResponse()
-                        )
+                    is Resource.Success ->
+                        _savingsAccountApprovalUiState.value =
+                            SavingsAccountApprovalUiState.ShowSavingAccountApprovedSuccessfully(
+                                result.data ?: GenericResponse(),
+                            )
                 }
             }
         }
-
 }

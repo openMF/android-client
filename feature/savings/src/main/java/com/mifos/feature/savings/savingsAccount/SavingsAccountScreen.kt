@@ -1,4 +1,13 @@
-package com.mifos.feature.savings.account
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.savings.savingsAccount
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -78,10 +87,10 @@ import java.util.Locale
  */
 
 @Composable
-fun SavingsAccountScreen(
-    navigateBack: () -> Unit
+internal fun SavingsAccountScreen(
+    navigateBack: () -> Unit,
+    viewModel: SavingAccountViewModel = hiltViewModel(),
 ) {
-    val viewModel: SavingAccountViewModel = hiltViewModel()
     val uiState by viewModel.savingAccountUiState.collectAsStateWithLifecycle()
     val savingProductsTemplate by viewModel.savingProductsTemplate.collectAsStateWithLifecycle()
     val groupId by viewModel.groupId.collectAsStateWithLifecycle()
@@ -100,26 +109,30 @@ fun SavingsAccountScreen(
             viewModel.loadSavingsAccountsAndTemplate()
         },
         onSavingsProductSelected = { productId ->
-            if(isGroupAccount){
+            if (isGroupAccount) {
                 viewModel.loadGroupSavingAccountTemplateByProduct(groupId, productId)
-            } else viewModel.loadClientSavingAccountTemplateByProduct(clientId, productId)
+            } else {
+                viewModel.loadClientSavingAccountTemplateByProduct(clientId, productId)
+            }
         },
         fetchTemplate = { productId ->
-            if(isGroupAccount){
+            if (isGroupAccount) {
                 viewModel.loadGroupSavingAccountTemplateByProduct(groupId, productId)
-            } else viewModel.loadClientSavingAccountTemplateByProduct(clientId, productId)
+            } else {
+                viewModel.loadClientSavingAccountTemplateByProduct(clientId, productId)
+            }
         },
         clientId = clientId,
         groupId = groupId,
         isGroupAccount = isGroupAccount,
         createSavingsAccount = { savingsPayload ->
             viewModel.createSavingsAccount(savingsPayload)
-        }
+        },
     )
 }
 
 @Composable
-fun SavingsAccountScreen(
+internal fun SavingsAccountScreen(
     uiState: SavingAccountUiState,
     savingProductsTemplate: SavingProductsTemplate,
     onSavingsProductSelected: (Int) -> Unit,
@@ -129,6 +142,7 @@ fun SavingsAccountScreen(
     isGroupAccount: Boolean,
     clientId: Int,
     groupId: Int,
+    modifier: Modifier = Modifier,
     createSavingsAccount: (savingsPayload: SavingsPayload) -> Unit,
 ) {
     val snackBarHostState = remember {
@@ -137,15 +151,16 @@ fun SavingsAccountScreen(
     val context = LocalContext.current
 
     MifosScaffold(
+        modifier = modifier,
         snackbarHostState = snackBarHostState,
         title = stringResource(id = R.string.feature_savings_create_savings_account),
         icon = MifosIcons.arrowBack,
-        onBackPressed = navigateBack
+        onBackPressed = navigateBack,
     ) {
         Box(
             modifier = Modifier
                 .padding(it)
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             when (uiState) {
                 is SavingAccountUiState.ShowProgress -> {
@@ -162,7 +177,7 @@ fun SavingsAccountScreen(
                     MifosSweetError(
                         message = uiState.message,
                         buttonText = stringResource(id = R.string.feature_savings_go_back),
-                        onclick = { onRetry() }
+                        onclick = { onRetry() },
                     )
                 }
 
@@ -178,7 +193,7 @@ fun SavingsAccountScreen(
                         savingProductsTemplate = uiState.savingsTemplate,
                         productSavings = productSavingsList,
                         onSavingsProductSelected = onSavingsProductSelected,
-                        createSavingsAccount = createSavingsAccount
+                        createSavingsAccount = createSavingsAccount,
                     )
 
                     productSavingsList[0].id?.let { it2 -> fetchTemplate.invoke(it2) }
@@ -188,7 +203,7 @@ fun SavingsAccountScreen(
                     Toast.makeText(
                         context,
                         context.resources.getString(R.string.feature_savings_savings_account_submitted_for_approval),
-                        Toast.LENGTH_LONG
+                        Toast.LENGTH_LONG,
                     ).show()
 
                     navigateBack()
@@ -200,7 +215,7 @@ fun SavingsAccountScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SavingsAccountContent(
+private fun SavingsAccountContent(
     clientId: Int,
     groupId: Int,
     isGroupAccount: Boolean,
@@ -208,23 +223,14 @@ fun SavingsAccountContent(
     productSavings: List<ProductSavings>,
     savingProductsTemplate: SavingProductsAndTemplate,
     onSavingsProductSelected: (Int) -> Unit,
-    createSavingsAccount: (savingsPayload: SavingsPayload) -> Unit
+    modifier: Modifier = Modifier,
+    createSavingsAccount: (savingsPayload: SavingsPayload) -> Unit,
 ) {
-    var selectedSavingsProduct by rememberSaveable {
-        mutableStateOf("")
-    }
-    var selectedFieldOfficer by rememberSaveable {
-        mutableStateOf("")
-    }
-    var overDraftAllowed by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var enforceMinimumBalance by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var externalId by rememberSaveable {
-        mutableStateOf("")
-    }
+    var selectedSavingsProduct by rememberSaveable { mutableStateOf("") }
+    var selectedFieldOfficer by rememberSaveable { mutableStateOf("") }
+    var overDraftAllowed by rememberSaveable { mutableStateOf(false) }
+    var enforceMinimumBalance by rememberSaveable { mutableStateOf(false) }
+    var externalId by rememberSaveable { mutableStateOf("") }
     var maximumOverdraftAmount by rememberSaveable {
         mutableStateOf("")
     }
@@ -265,7 +271,7 @@ fun SavingsAccountContent(
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis >= System.currentTimeMillis()
             }
-        }
+        },
     )
 
     if (pickSubmitDate) {
@@ -280,26 +286,25 @@ fun SavingsAccountContent(
                             submittedOnDate = it
                         }
                         pickSubmitDate = false
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_savings_select_date)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         pickSubmitDate = false
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_savings_cancel)) }
-            }
-        )
-        {
+            },
+        ) {
             DatePicker(state = datePickerState)
         }
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
+            .verticalScroll(scrollState),
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -314,11 +319,10 @@ fun SavingsAccountContent(
                     selectedSavingsProductID = it
                     onSavingsProductSelected.invoke(it)
                 }
-
             },
             label = R.string.feature_savings_product,
             options = productSavings.map { it.name.toString() },
-            readOnly = true
+            readOnly = true,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -336,7 +340,7 @@ fun SavingsAccountContent(
             },
             label = R.string.feature_savings_field_officer,
             options = fieldOfficerOptions.map { it.displayName.toString() },
-            readOnly = true
+            readOnly = true,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -345,29 +349,29 @@ fun SavingsAccountContent(
             value = externalId,
             onValueChange = { externalId = it },
             label = stringResource(id = R.string.feature_savings_external_id),
-            error = null
+            error = null,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosDatePickerTextField(
             value = SimpleDateFormat(
-                "dd MMMM yyyy", Locale.getDefault()
+                "dd MMMM yyyy",
+                Locale.getDefault(),
             ).format(submittedOnDate),
-            label = R.string.feature_savings_submitted_on
+            label = R.string.feature_savings_submitted_on,
         ) {
             pickSubmitDate = true
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
         MifosOutlinedTextField(
             value = nominalAnnualInterest,
             onValueChange = { nominalAnnualInterest = it },
             label = stringResource(id = R.string.feature_savings_nominal),
             error = null,
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Number,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -377,7 +381,7 @@ fun SavingsAccountContent(
             onValueChange = { interestCalculatedUsing = it },
             label = stringResource(id = R.string.feature_savings_interest_calc),
             error = null,
-            readOnly = true
+            readOnly = true,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -397,7 +401,7 @@ fun SavingsAccountContent(
             onValueChange = { interestPostingPeriod = it },
             label = stringResource(id = R.string.feature_savings_interest_p_period),
             error = null,
-            readOnly = true
+            readOnly = true,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -407,21 +411,21 @@ fun SavingsAccountContent(
             onValueChange = { },
             label = stringResource(id = R.string.feature_savings_days_in_year),
             error = null,
-            readOnly = true
+            readOnly = true,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
                 checked = enforceMinimumBalance,
                 onCheckedChange = { enforceMinimumBalance = !enforceMinimumBalance },
                 colors = CheckboxDefaults.colors(
-                    checkedColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
-                )
+                    checkedColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+                ),
             )
 
             Text(text = stringResource(id = R.string.feature_savings_min_required_balance))
@@ -432,11 +436,11 @@ fun SavingsAccountContent(
             enter = slideInVertically {
                 with(density) { -40.dp.roundToPx() }
             } + expandVertically(
-                expandFrom = Alignment.Top
+                expandFrom = Alignment.Top,
             ) + fadeIn(
-                initialAlpha = 0.3f
+                initialAlpha = 0.3f,
             ),
-            exit = slideOutVertically() + shrinkVertically() + fadeOut()
+            exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -445,7 +449,7 @@ fun SavingsAccountContent(
                 onValueChange = { minimumRequiredBalance = it },
                 label = stringResource(id = R.string.feature_savings_min_required_balance),
                 error = null,
-                keyboardType = KeyboardType.Number
+                keyboardType = KeyboardType.Number,
             )
         }
 
@@ -453,14 +457,14 @@ fun SavingsAccountContent(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
                 checked = overDraftAllowed,
                 onCheckedChange = { overDraftAllowed = !overDraftAllowed },
                 colors = CheckboxDefaults.colors(
-                    checkedColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
-                )
+                    checkedColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+                ),
             )
 
             Text(text = stringResource(id = R.string.feature_savings_overdraft_allowed))
@@ -471,11 +475,11 @@ fun SavingsAccountContent(
             enter = slideInVertically {
                 with(density) { -40.dp.roundToPx() }
             } + expandVertically(
-                expandFrom = Alignment.Top
+                expandFrom = Alignment.Top,
             ) + fadeIn(
-                initialAlpha = 0.3f
+                initialAlpha = 0.3f,
             ),
-            exit = slideOutVertically() + shrinkVertically() + fadeOut()
+            exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
             Column {
                 Spacer(modifier = Modifier.height(16.dp))
@@ -485,7 +489,7 @@ fun SavingsAccountContent(
                     onValueChange = { maximumOverdraftAmount = it },
                     label = stringResource(id = R.string.feature_savings_maxoverdraft),
                     error = null,
-                    keyboardType = KeyboardType.Number
+                    keyboardType = KeyboardType.Number,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -495,7 +499,7 @@ fun SavingsAccountContent(
                     onValueChange = { nominalAnnualInterestOverdraft = it },
                     label = stringResource(id = R.string.feature_savings_nominal_overdraft),
                     error = null,
-                    keyboardType = KeyboardType.Number
+                    keyboardType = KeyboardType.Number,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -505,7 +509,7 @@ fun SavingsAccountContent(
                     onValueChange = { minimumOverdraftAmount = it },
                     label = stringResource(id = R.string.feature_savings_min_overdraft),
                     error = null,
-                    keyboardType = KeyboardType.Number
+                    keyboardType = KeyboardType.Number,
                 )
             }
         }
@@ -519,7 +523,7 @@ fun SavingsAccountContent(
                 .padding(horizontal = 16.dp),
             contentPadding = PaddingValues(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
+                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
             ),
             onClick = {
                 if (Network.isOnline(context)) {
@@ -528,7 +532,7 @@ fun SavingsAccountContent(
                     savingsPayload.externalId = externalId
                     savingsPayload.locale = "en"
                     savingsPayload.submittedOnDate = SimpleDateFormat(
-                        "dd MMMM yyyy", Locale.getDefault()
+                        "dd MMMM yyyy", Locale.getDefault(),
                     ).format(submittedOnDate)
                     savingsPayload.dateFormat = "dd MMMM yyyy"
                     if (isGroupAccount) {
@@ -551,52 +555,52 @@ fun SavingsAccountContent(
                     Toast.makeText(
                         context,
                         context.resources.getString(R.string.feature_savings_error_not_connected_internet),
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
                 }
-            }
+            },
         ) {
             Text(text = stringResource(id = R.string.feature_savings_submit))
         }
     }
 }
 
-
 class SavingsAccountScreenPreviewProvider : PreviewParameterProvider<SavingAccountUiState> {
     override val values: Sequence<SavingAccountUiState>
         get() = sequenceOf(
             SavingAccountUiState.ShowProgress,
-            SavingAccountUiState.LoadAllSavings(SavingProductsAndTemplate(
-                mProductSavings = listOf(
-                    ProductSavings(
-                        id = 0,
-                        name = "Product"
-                    )
+            SavingAccountUiState.LoadAllSavings(
+                SavingProductsAndTemplate(
+                    mProductSavings = listOf(
+                        ProductSavings(
+                            id = 0,
+                            name = "Product",
+                        ),
+                    ),
+                    mSavingProductsTemplate = SavingProductsTemplate(),
                 ),
-                mSavingProductsTemplate = SavingProductsTemplate()
-            )),
+            ),
             SavingAccountUiState.ShowFetchingErrorString("Failed to fetch"),
             SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(Savings()),
-            SavingAccountUiState.ShowFetchingError(R.string.feature_savings_failed_to_fetch_savings_template)
+            SavingAccountUiState.ShowFetchingError(R.string.feature_savings_failed_to_fetch_savings_template),
         )
 }
 
 @Composable
 @Preview(showSystemUi = true)
-fun PreviewSavingsAccountScreen(
-    @PreviewParameter(SavingsAccountScreenPreviewProvider::class) savingAccountUiState: SavingAccountUiState
+private fun PreviewSavingsAccountScreen(
+    @PreviewParameter(SavingsAccountScreenPreviewProvider::class) savingAccountUiState: SavingAccountUiState,
 ) {
     SavingsAccountScreen(
         uiState = savingAccountUiState,
         savingProductsTemplate = SavingProductsTemplate(),
-        onSavingsProductSelected = { } ,
+        onSavingsProductSelected = { },
         navigateBack = { },
         onRetry = { },
         fetchTemplate = { },
         isGroupAccount = true,
         clientId = 0,
-        groupId = 0
+        groupId = 0,
     ) {
-
     }
 }
