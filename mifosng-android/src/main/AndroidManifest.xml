@@ -98,10 +98,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.pathtracking.PathTrackingActivity"
-            android:label="@string/track_path"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.setting.SettingsActivity"
             android:label="@string/settings"
@@ -112,9 +109,7 @@
                 android:value=".activity.home.HomeActivity" />
         </activity>
 
-        <service
-            android:name=".activity.pathtracking.PathTrackingService"
-            android:exported="false" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"

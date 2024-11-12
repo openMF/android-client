@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.savings.navigation
 
 import com.google.gson.Gson
@@ -45,7 +54,7 @@ sealed class SavingsScreens(val route: String) {
         fun argument(
             savingsAccountWithAssociations: SavingsAccountWithAssociations,
             transactionType: String,
-            depositType: DepositType?
+            depositType: DepositType?,
         ): String {
             val gson = Gson()
             val arg = SavingsTransactionData(savingsAccountWithAssociations, depositType, transactionType)
@@ -58,4 +67,3 @@ sealed class SavingsScreens(val route: String) {
     data object SavingsSyncAccountTransaction :
         SavingsScreens("savings_sync_account_transaction")
 }
-

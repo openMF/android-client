@@ -115,13 +115,8 @@ fun Navigation(
         savingsNavGraph(
             navController = navController,
             onBackPressed = navController::popBackStack,
-            loadMoreSavingsAccountInfo = { navController.navigateToDataTable(Constants.DATA_TABLE_NAME_SAVINGS, it) },
-            loadDocuments = {
-                navController.navigateToDocumentListScreen(
-                    it,
-                    Constants.ENTITY_TYPE_SAVINGS
-                )
-            },
+            loadMoreSavingsAccountInfo = navController::navigateToDataTable,
+            loadDocuments = navController::navigateToDocumentListScreen
         )
 
         loanNavGraph(

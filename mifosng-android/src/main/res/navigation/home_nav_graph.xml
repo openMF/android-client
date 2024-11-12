@@ -76,10 +76,7 @@
         android:label="CheckerInboxPendingTasksActivity" />
 
 
-    <activity
-        android:id="@+id/pathTrackingActivity"
-        android:name="com.mifos.mifosxdroid.activity.pathtracking.PathTrackingActivity"
-        android:label="PathTrackingActivity" />
+
 
 
     <activity
