@@ -28,14 +28,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Network
 import com.mifos.core.data.CenterPayload
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.center.sync_center_payloads.SyncCenterPayloadsUiState
 import com.mifos.feature.center.sync_center_payloads.SyncCenterPayloadsViewModel
 import com.mifos.feature.offline.R
 
 
 @Composable
-fun SyncCenterPayloadsScreenRoute(
+internal fun SyncCenterPayloadsScreenRoute(
     viewModel: SyncCenterPayloadsViewModel = hiltViewModel(),
     onBackPressed: () -> Unit
 ) {
@@ -58,12 +60,13 @@ fun SyncCenterPayloadsScreenRoute(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SyncCenterPayloadsScreen(
+internal fun SyncCenterPayloadsScreen(
     uiState: SyncCenterPayloadsUiState,
     onBackPressed: () -> Unit,
     refreshing: Boolean,
     onRefresh: () -> Unit,
     syncCenterPayloads: () -> Unit,
+    modifier: Modifier = Modifier,
     userStatus : Boolean
 ) {
     val context = LocalContext.current
@@ -71,6 +74,7 @@ fun SyncCenterPayloadsScreen(
     val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = onRefresh)
 
     MifosScaffold(
+        modifier = modifier,
         icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_offline_sync_centers_payloads),
         onBackPressed = onBackPressed,
@@ -99,7 +103,7 @@ fun SyncCenterPayloadsScreen(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
                 is SyncCenterPayloadsUiState.ShowError -> {
-                    ErrorState(message = uiState.message, onRefresh = onRefresh)
+                    MifosSweetError(message = uiState.message, onclick = onRefresh )
                 }
                 is SyncCenterPayloadsUiState.ShowCenters -> {
                     CenterPayloadsList(centerPayloads = uiState.centerPayloads)
@@ -115,9 +119,9 @@ fun SyncCenterPayloadsScreen(
 }
 
 @Composable
-fun CenterPayloadsList(centerPayloads: List<CenterPayload>) {
+private fun CenterPayloadsList(centerPayloads: List<CenterPayload>) {
     if (centerPayloads.isEmpty()) {
-        EmptyState()
+        MifosEmptyUi(text = stringResource(id = R.string.feature_offline_no_center_payload_to_sync))
     } else {
         LazyColumn {
             items(centerPayloads) { payload ->
@@ -128,7 +132,7 @@ fun CenterPayloadsList(centerPayloads: List<CenterPayload>) {
 }
 
 @Composable
-fun CenterPayloadItem(payload: CenterPayload) {
+private fun CenterPayloadItem(payload: CenterPayload) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -164,7 +168,7 @@ fun CenterPayloadItem(payload: CenterPayload) {
 }
 
 @Composable
-fun PayloadField(label: String, value: String) {
+private fun PayloadField(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -184,45 +188,7 @@ fun PayloadField(label: String, value: String) {
     }
 }
 
-@Composable
-fun ErrorState(message: String, onRefresh: () -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = Icons.Default.Error,
-            contentDescription = null,
-            modifier = Modifier.size(48.dp)
-        )
-        Text(text = message, modifier = Modifier.padding(vertical = 16.dp))
-        Button(onClick = onRefresh) {
-            Text(stringResource(id = R.string.feature_offline_click_to_refresh))
-        }
-    }
-}
-
-@Composable
-fun EmptyState() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector =  Icons.Default.TurnedIn,
-            contentDescription = null,
-            modifier = Modifier.size(48.dp)
-        )
-        Text(
-            text = stringResource(id = R.string.feature_offline_no_center_payload_to_sync),
-            modifier = Modifier.padding(top = 16.dp)
-        )
-    }
-}
-
-fun checkNetworkConnectionAndSync(
+private fun checkNetworkConnectionAndSync(
     context: Context,
     syncCenterPayloads: () -> Unit
 ) {
@@ -239,7 +205,7 @@ fun checkNetworkConnectionAndSync(
 
 @Preview(showBackground = true)
 @Composable
-fun SyncCenterPayloadsScreenPreview(
+private fun SyncCenterPayloadsScreenPreview(
     @PreviewParameter(SyncCenterPayloadsUiStateProvider::class) uiState: SyncCenterPayloadsUiState
 ) {
     SyncCenterPayloadsScreen(
@@ -283,21 +249,6 @@ fun CenterPayloadItemPreview() {
     }
 
     CenterPayloadItem(payload = sampleCenterPayload)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ErrorStatePreview() {
-    ErrorState(
-        message = "Failed to load center payloads",
-        onRefresh = {}
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun EmptyStatePreview() {
-    EmptyState()
 }
 
 @Preview(showBackground = true)

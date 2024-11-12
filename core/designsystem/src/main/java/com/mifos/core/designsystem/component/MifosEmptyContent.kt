@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,20 +25,24 @@ fun MifosErrorContent(
     isRefreshEnabled: Boolean = false,
     imageVector: ImageVector? = null,
     onRefresh: () -> Unit = {},
-    refreshButtonText: String = ""
+    refreshButtonText: String = "",
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Icon(
             imageVector = imageVector ?: Icons.Default.Error,
             contentDescription = null,
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier.size(48.dp),
         )
         if (isRefreshEnabled) {
-            Text(text = message, modifier = Modifier.padding(vertical = 16.dp))
+            Text(
+                text = message,
+                modifier = Modifier.padding(vertical = 16.dp),
+                color = MaterialTheme.colorScheme.onBackground,
+            )
             Button(onClick = onRefresh) {
                 Text(text = refreshButtonText)
             }
