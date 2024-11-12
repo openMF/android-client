@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
 import android.util.Log
@@ -25,12 +34,12 @@ import javax.inject.Inject
 @HiltViewModel
 class SyncLoanRepaymentTransactionViewModel @Inject constructor(
     private val repository: SyncLoanRepaymentTransactionRepository,
-    private val prefManager : PrefManager
+    private val prefManager: PrefManager,
 ) : ViewModel() {
 
     private val _syncLoanRepaymentTransactionUiState =
         MutableStateFlow<SyncLoanRepaymentTransactionUiState>(
-            SyncLoanRepaymentTransactionUiState.ShowProgressbar
+            SyncLoanRepaymentTransactionUiState.ShowProgressbar,
         )
     val syncLoanRepaymentTransactionUiState: StateFlow<SyncLoanRepaymentTransactionUiState> =
         _syncLoanRepaymentTransactionUiState
@@ -42,7 +51,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
     private var mPaymentTypeOptions: List<PaymentTypeOption> = emptyList()
     private var mClientSyncIndex = 0
 
-    fun getUserStatus() : Boolean {
+    fun getUserStatus(): Boolean {
         return prefManager.userStatus
     }
 
@@ -71,7 +80,6 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
                     updateUiState()
                 }
             })
-
     }
 
     fun loanPaymentTypeOption() {
@@ -100,12 +108,12 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
             _syncLoanRepaymentTransactionUiState.value =
                 SyncLoanRepaymentTransactionUiState.ShowLoanRepaymentTransactions(
                     mLoanRepaymentRequests,
-                    mPaymentTypeOptions
+                    mPaymentTypeOptions,
                 )
         } else {
             _syncLoanRepaymentTransactionUiState.value =
                 SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments(
-                    R.string.feature_offline_no_loanrepayment_to_sync.toString()
+                    R.string.feature_offline_no_loanrepayment_to_sync.toString(),
                 )
         }
     }
@@ -127,12 +135,11 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
                 override fun onNext(loanRepaymentResponse: LoanRepaymentResponse) {
                     mLoanRepaymentRequests[mClientSyncIndex].loanId?.let {
                         deleteAndUpdateLoanRepayments(
-                            it
+                            it,
                         )
                     }
                 }
             })
-
     }
 
     fun deleteAndUpdateLoanRepayments(loanId: Int) {
@@ -157,13 +164,12 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
                     } else {
                         _syncLoanRepaymentTransactionUiState.value =
                             SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments(
-                                R.string.feature_offline_no_loanrepayment_to_sync.toString()
+                                R.string.feature_offline_no_loanrepayment_to_sync.toString(),
                             )
                     }
                     updateUiState()
                 }
             })
-
     }
 
     fun updateLoanRepayment(loanRepaymentRequest: LoanRepaymentRequest?) {
@@ -195,7 +201,8 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
             if (mLoanRepaymentRequests[i].errorMessage == null) {
                 mLoanRepaymentRequests[i].loanId?.let {
                     syncLoanRepayment(
-                        it, mLoanRepaymentRequests[i]
+                        it,
+                        mLoanRepaymentRequests[i],
                     )
                 }
                 mClientSyncIndex = i
@@ -204,7 +211,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
                 mLoanRepaymentRequests[i].errorMessage?.let {
                     Log.d(
                         LOG_TAG,
-                        it
+                        it,
                     )
                 }
             }

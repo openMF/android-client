@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.offline.navigation
 
 import androidx.navigation.NavController
@@ -5,11 +14,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.mifos.feature.offline.dashboard.OfflineDashboardRoute
+import com.mifos.feature.offline.syncCenterPayloads.SyncCenterPayloadsScreenRoute
+import com.mifos.feature.offline.syncClientPayloads.SyncClientPayloadsScreenRoute
+import com.mifos.feature.offline.syncGroupPayloads.SyncGroupPayloadsScreenRoute
 import com.mifos.feature.offline.syncLoanRepaymentTransaction.SyncLoanRepaymentTransactionScreenRoute
-import com.mifos.feature.offline.sync_center_payloads.SyncCenterPayloadsScreenRoute
-import com.mifos.feature.offline.sync_client_payload.SyncClientPayloadsScreenRoute
-import com.mifos.feature.offline.sync_group_payloads.SyncGroupPayloadsScreenRoute
-import com.mifos.feature.offline.sync_savings_account_transaction.SyncSavingsAccountTransactionScreenRoute
+import com.mifos.feature.offline.syncSavingsAccountTransaction.SyncSavingsAccountTransactionScreenRoute
 
 /**
  * Created by Pronay Sarker on 31/08/2024 (3:57 PM)
@@ -20,7 +29,7 @@ fun NavGraphBuilder.offlineNavGraph(
 ) {
     navigation(
         startDestination = OfflineScreens.OfflineDashboardScreens.route,
-        route = "offline_graph"
+        route = "offline_graph",
     ) {
         offlineDashboardScreen(
             onBackPressed = navController::popBackStack,
@@ -31,19 +40,19 @@ fun NavGraphBuilder.offlineNavGraph(
             syncCenterPayload = navController::navigateToSyncCenterPayloadsScreen,
         )
         syncCenterPayloadsScreen(
-            onBackPressed = navController::popBackStack
+            onBackPressed = navController::popBackStack,
         )
         syncGroupPayloadsScreen(
-            onBackPressed = navController::popBackStack
+            onBackPressed = navController::popBackStack,
         )
         syncClientPayloadsScreen(
-            onBackPressed = navController::popBackStack
+            onBackPressed = navController::popBackStack,
         )
         syncSavingsAccountTransactionsScreen(
-            onBackPressed = navController::popBackStack
+            onBackPressed = navController::popBackStack,
         )
         syncLoanRepaymentScreen(
-            onBackPressed = navController::popBackStack
+            onBackPressed = navController::popBackStack,
         )
     }
 }
@@ -57,7 +66,7 @@ fun NavGraphBuilder.offlineDashboardScreen(
     syncCenterPayload: () -> Unit,
 ) {
     composable(
-        route = OfflineScreens.OfflineDashboardScreens.route
+        route = OfflineScreens.OfflineDashboardScreens.route,
     ) {
         OfflineDashboardRoute(
             onBackPressed = onBackPressed,
@@ -71,19 +80,19 @@ fun NavGraphBuilder.offlineDashboardScreen(
 }
 
 fun NavGraphBuilder.syncCenterPayloadsScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     composable(
-        route = OfflineScreens.SyncCenterPayloadsScreens.route
+        route = OfflineScreens.SyncCenterPayloadsScreens.route,
     ) {
         SyncCenterPayloadsScreenRoute(
-            onBackPressed = onBackPressed
+            onBackPressed = onBackPressed,
         )
     }
 }
 
 fun NavGraphBuilder.syncGroupPayloadsScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     composable(OfflineScreens.SyncGroupPayloadsScreens.route) {
         SyncGroupPayloadsScreenRoute {
@@ -93,27 +102,27 @@ fun NavGraphBuilder.syncGroupPayloadsScreen(
 }
 
 fun NavGraphBuilder.syncClientPayloadsScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     composable(OfflineScreens.SyncClientPayloadsScreens.route) {
         SyncClientPayloadsScreenRoute(
-            onBackPressed = onBackPressed
+            onBackPressed = onBackPressed,
         )
     }
 }
 
 fun NavGraphBuilder.syncSavingsAccountTransactionsScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     composable(OfflineScreens.SyncSavingsAccountTransactionsScreens.route) {
         SyncSavingsAccountTransactionScreenRoute(
-            onBackPressed = onBackPressed
+            onBackPressed = onBackPressed,
         )
     }
 }
 
 fun NavGraphBuilder.syncLoanRepaymentScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     composable(route = OfflineScreens.SyncLoanRepaymentsScreens.route) {
         SyncLoanRepaymentTransactionScreenRoute {
@@ -122,22 +131,22 @@ fun NavGraphBuilder.syncLoanRepaymentScreen(
     }
 }
 
-fun NavController.navigateToSyncCenterPayloadsScreen(){
+fun NavController.navigateToSyncCenterPayloadsScreen() {
     navigate(OfflineScreens.SyncCenterPayloadsScreens.route)
 }
 
-fun NavController.navigateToSyncGroupPayloadsScreen(){
+fun NavController.navigateToSyncGroupPayloadsScreen() {
     navigate(OfflineScreens.SyncGroupPayloadsScreens.route)
 }
 
-fun NavController.navigateToSyncClientPayloadsScreen(){
+fun NavController.navigateToSyncClientPayloadsScreen() {
     navigate(OfflineScreens.SyncClientPayloadsScreens.route)
 }
 
-fun NavController.navigateToSyncSavingsAccountTransactionsScreen(){
+fun NavController.navigateToSyncSavingsAccountTransactionsScreen() {
     navigate(OfflineScreens.SyncSavingsAccountTransactionsScreens.route)
 }
 
-fun NavController.navigateToSyncLoanRepaymentScreen(){
+fun NavController.navigateToSyncLoanRepaymentScreen() {
     navigate(OfflineScreens.SyncLoanRepaymentsScreens.route)
 }

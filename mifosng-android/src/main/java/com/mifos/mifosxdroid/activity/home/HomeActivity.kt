@@ -78,14 +78,6 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
                 findNavController(R.id.nav_host_fragment).navigate(R.id.checkerInboxPendingTasksActivity)
             }
 
-            R.id.item_path_tracker -> {
-                findNavController(R.id.nav_host_fragment).navigate(R.id.pathTrackingActivity)
-            }
-
-            R.id.item_offline -> {
-//                findNavController(R.id.nav_host_fragment).navigate(R.id.offlineDashboardFragment)
-            }
-
             R.id.individual_collection_sheet -> {
                 val bundle = Bundle()
                 bundle.putString(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_INDIVIDUAL)

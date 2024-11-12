@@ -1,4 +1,13 @@
-package com.mifos.feature.offline.sync_client_payload
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.offline.syncClientPayloads
 
 import android.content.Context
 import android.widget.Toast
@@ -49,7 +58,7 @@ import com.mifos.core.objects.client.ClientPayload
 import com.mifos.feature.offline.R
 
 @Composable
-fun SyncClientPayloadsScreenRoute(
+internal fun SyncClientPayloadsScreenRoute(
     viewModel: SyncClientPayloadsViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
 ) {
@@ -70,55 +79,62 @@ fun SyncClientPayloadsScreenRoute(
         syncClientPayloads = {
             viewModel.syncClientPayload()
         },
-        userStatus = viewModel.getUserStatus()
+        userStatus = viewModel.getUserStatus(),
     )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SyncClientPayloadsScreen(
+internal fun SyncClientPayloadsScreen(
     uiState: SyncClientPayloadsUiState,
     onBackPressed: () -> Unit,
     refreshState: Boolean,
     onRefresh: () -> Unit,
     syncClientPayloads: () -> Unit,
-    userStatus : Boolean
+    userStatus: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
-    val pullRefreshState = rememberPullRefreshState(refreshing = refreshState, onRefresh = onRefresh)
+    val pullRefreshState =
+        rememberPullRefreshState(refreshing = refreshState, onRefresh = onRefresh)
 
     MifosScaffold(
+        modifier = modifier,
         icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_offline_sync_clients_payloads),
         onBackPressed = onBackPressed,
         actions = {
-            IconButton(onClick = {
-                when (userStatus) {
-                    false -> checkNetworkConnectionAndSync(context, syncClientPayloads)
-                    true -> TODO("Implement OfflineModeDialog()")
-                }
-            }) {
+            IconButton(
+                onClick = {
+                    when (userStatus) {
+                        false -> checkNetworkConnectionAndSync(context, syncClientPayloads)
+                        true -> TODO("Implement OfflineModeDialog()")
+                    }
+                },
+            ) {
                 Icon(
                     MifosIcons.sync,
-                    contentDescription = stringResource(id = R.string.feature_offline_sync_clients)
+                    contentDescription = stringResource(id = R.string.feature_offline_sync_clients),
                 )
             }
         },
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)
-                .pullRefresh(pullRefreshState)
+                .pullRefresh(pullRefreshState),
         ) {
             when (uiState) {
                 is SyncClientPayloadsUiState.ShowProgressbar -> {
                     MifosCircularProgress()
                 }
+
                 is SyncClientPayloadsUiState.ShowError -> {
                     ErrorStateScreen(uiState.message, onRefresh)
                 }
+
                 is SyncClientPayloadsUiState.ShowPayloads -> {
                     ClientPayloadsList(uiState.clientPayloads)
                 }
@@ -126,15 +142,18 @@ fun SyncClientPayloadsScreen(
             PullRefreshIndicator(
                 refreshing = refreshState,
                 state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
+                modifier = Modifier.align(Alignment.TopCenter),
             )
         }
     }
 }
 
 @Composable
-fun ClientPayloadsList(clientPayloads: List<ClientPayload>) {
-    LazyColumn {
+private fun ClientPayloadsList(
+    clientPayloads: List<ClientPayload>,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(modifier = modifier) {
         items(clientPayloads) { payload ->
             ClientPayloadItem(payload)
         }
@@ -142,17 +161,20 @@ fun ClientPayloadsList(clientPayloads: List<ClientPayload>) {
 }
 
 @Composable
-fun ClientPayloadItem(payload: ClientPayload) {
+private fun ClientPayloadItem(
+    payload: ClientPayload,
+    modifier: Modifier = Modifier,
+) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            val payloadStatus: String = if(payload.active == true){
+            val payloadStatus: String = if (payload.active == true) {
                 "true"
-            }else{
+            } else {
                 "false"
             }
 
@@ -160,23 +182,49 @@ fun ClientPayloadItem(payload: ClientPayload) {
                 24.toString() -> {
                     "Female"
                 }
+
                 91.toString() -> {
                     "Homosexual"
                 }
+
                 else -> {
                     "Male"
                 }
             }
 
-            PayloadField(stringResource(id = R.string.feature_offline_first_name), payload.firstname ?: "")
-            PayloadField(stringResource(id = R.string.feature_offline_middle_name), payload.middlename ?: "")
-            PayloadField(stringResource(id = R.string.feature_offline_last_name), payload.lastname ?: "")
-            PayloadField(stringResource(id = R.string.feature_offline_mobile_no), payload.mobileNo ?: "")
-            PayloadField(stringResource(id = R.string.feature_offline_external_id), payload.externalId ?: "")
+            PayloadField(
+                stringResource(id = R.string.feature_offline_first_name),
+                payload.firstname ?: "",
+            )
+            PayloadField(
+                stringResource(id = R.string.feature_offline_middle_name),
+                payload.middlename ?: "",
+            )
+            PayloadField(
+                stringResource(id = R.string.feature_offline_last_name),
+                payload.lastname ?: "",
+            )
+            PayloadField(
+                stringResource(id = R.string.feature_offline_mobile_no),
+                payload.mobileNo ?: "",
+            )
+            PayloadField(
+                stringResource(id = R.string.feature_offline_external_id),
+                payload.externalId ?: "",
+            )
             PayloadField(stringResource(id = R.string.feature_offline_gender), gender)
-            PayloadField(stringResource(id = R.string.feature_offline_dob), payload.dateOfBirth ?: "")
-            PayloadField(stringResource(id = R.string.feature_offline_office_id), payload.officeId?.toString() ?: "")
-            PayloadField(stringResource(id = R.string.feature_offline_activation_date), payload.activationDate ?: "")
+            PayloadField(
+                stringResource(id = R.string.feature_offline_dob),
+                payload.dateOfBirth ?: "",
+            )
+            PayloadField(
+                stringResource(id = R.string.feature_offline_office_id),
+                payload.officeId?.toString() ?: "",
+            )
+            PayloadField(
+                stringResource(id = R.string.feature_offline_activation_date),
+                payload.activationDate ?: "",
+            )
             PayloadField(stringResource(id = R.string.feature_offline_active), payloadStatus)
 
             if (payload.errorMessage != null) {
@@ -184,7 +232,7 @@ fun ClientPayloadItem(payload: ClientPayload) {
                     text = payload.errorMessage!!,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp),
                 )
             }
         }
@@ -192,37 +240,45 @@ fun ClientPayloadItem(payload: ClientPayload) {
 }
 
 @Composable
-fun PayloadField(label: String, value: String) {
+private fun PayloadField(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier,
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(vertical = 4.dp),
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
     }
 }
 
 @Composable
-fun ErrorStateScreen(message: String, onRefresh: () -> Unit) {
+private fun ErrorStateScreen(
+    message: String,
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Icon(
             imageVector = Icons.Default.Error,
             contentDescription = null,
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier.size(48.dp),
         )
         Text(text = message, modifier = Modifier.padding(vertical = 16.dp))
         Button(onClick = onRefresh) {
@@ -231,9 +287,9 @@ fun ErrorStateScreen(message: String, onRefresh: () -> Unit) {
     }
 }
 
-fun checkNetworkConnectionAndSync(
+private fun checkNetworkConnectionAndSync(
     context: Context,
-    syncClientPayloads: () -> Unit
+    syncClientPayloads: () -> Unit,
 ) {
     if (Network.isOnline(context)) {
         syncClientPayloads()
@@ -241,7 +297,7 @@ fun checkNetworkConnectionAndSync(
         Toast.makeText(
             context,
             context.getString(R.string.feature_offline_error_not_connected_internet),
-            Toast.LENGTH_SHORT
+            Toast.LENGTH_SHORT,
         ).show()
     }
 }
@@ -250,14 +306,14 @@ class SyncClientPayloadsUiStateProvider : PreviewParameterProvider<SyncClientPay
     override val values = sequenceOf(
         SyncClientPayloadsUiState.ShowProgressbar,
         SyncClientPayloadsUiState.ShowError("Failed to load client payloads"),
-        SyncClientPayloadsUiState.ShowPayloads(sampleClientPayloads)
+        SyncClientPayloadsUiState.ShowPayloads(sampleClientPayloads),
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun SyncClientPayloadsScreenPreview(
-    @PreviewParameter(SyncClientPayloadsUiStateProvider::class) uiState: SyncClientPayloadsUiState
+    @PreviewParameter(SyncClientPayloadsUiStateProvider::class) uiState: SyncClientPayloadsUiState,
 ) {
     SyncClientPayloadsScreen(
         uiState = uiState,
@@ -265,7 +321,7 @@ private fun SyncClientPayloadsScreenPreview(
         refreshState = false,
         onRefresh = {},
         syncClientPayloads = {},
-        userStatus = true
+        userStatus = true,
     )
 }
 
@@ -288,7 +344,7 @@ val sampleClientPayloads = List(5) { index ->
 
 @Preview(showBackground = true)
 @Composable
-fun ClientPayloadItemPreview() {
+private fun ClientPayloadItemPreview() {
     val sampleClientPayload = ClientPayload().apply {
         firstname = "John"
         middlename = "Michael"
@@ -316,14 +372,14 @@ class PayloadFieldPreviewProvider : PreviewParameterProvider<Pair<String, String
         "Date of Birth" to "1990-01-01",
         "Office ID" to "12345",
         "Activation Date" to "2023-07-15",
-        "Active" to "true"
+        "Active" to "true",
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PayloadFieldPreview(
-    @PreviewParameter(PayloadFieldPreviewProvider::class) labelValuePair: Pair<String, String>
+private fun PayloadFieldPreview(
+    @PreviewParameter(PayloadFieldPreviewProvider::class) labelValuePair: Pair<String, String>,
 ) {
     PayloadField(label = labelValuePair.first, value = labelValuePair.second)
 }

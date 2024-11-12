@@ -28,7 +28,7 @@ class CentersActivity : MifosBaseActivity() {
             supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
         navHostFragment.navController.apply {
             popBackStack()
-            navigate(R.id.centerDetailsFragment, bundle)
+//            navigate(R.id.centerDetailsFragment, bundle)
         }
     }
 }

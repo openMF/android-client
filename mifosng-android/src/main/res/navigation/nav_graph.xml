@@ -12,9 +12,6 @@
         android:id="@+id/clientDetailsFragment"
         android:name="com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment"
         android:label="ClientDetailsFragment">
-        <action
-            android:id="@+id/action_clientDetailsFragment_to_savingsAccountSummaryFragment"
-            app:destination="@id/savingsAccountSummaryFragment" />
 
         <action
             android:id="@+id/action_clientDetailsFragment_to_clientChargeFragment"
@@ -23,40 +20,12 @@
             android:id="@+id/action_clientDetailsFragment_to_surveyListFragment"
             app:destination="@id/surveyListFragment" />
         <action
-            android:id="@+id/action_clientDetailsFragment_to_savingsAccountFragment"
-            app:destination="@id/savingsAccountFragment" />
-        <action
             android:id="@+id/action_clientDetailsFragment_to_signatureFragment"
             app:destination="@id/signatureFragment" />
         <action
             android:id="@+id/action_clientDetailsFragment_to_pinpointClientActivity"
             app:destination="@id/pinpointClientActivity" />
     </fragment>
-
-    <fragment
-        android:id="@+id/savingsAccountSummaryFragment"
-        android:name="com.mifos.mifosxdroid.online.savingaccountsummary.SavingsAccountSummaryFragment"
-        android:label="SavingsAccountSummaryFragment">
-        <argument
-            android:name="savingsAccountNumber"
-            app:argType="integer" />
-        <argument
-            android:name="accountType"
-            app:argType="com.mifos.core.objects.accounts.savings.DepositType" />
-        <argument
-            android:name="parentFragment"
-            app:argType="boolean" />
-        <action
-            android:id="@+id/action_savingsAccountSummaryFragment_to_savingsAccountApprovalFragment"
-            app:destination="@id/savingsAccountApprovalFragment" />
-        <action
-            android:id="@+id/action_savingsAccountSummaryFragment_to_savingsAccountActivateFragment"
-            app:destination="@id/savingsAccountActivateFragment" />
-        <action
-            android:id="@+id/action_savingsAccountSummaryFragment_to_savingsAccountTransactionFragment"
-            app:destination="@id/savingsAccountTransactionFragment" />
-    </fragment>
-
 
     <fragment
         android:id="@+id/mifosBaseFragment"
@@ -87,18 +56,6 @@
 
 
     <fragment
-        android:id="@+id/savingsAccountFragment"
-        android:name="com.mifos.mifosxdroid.online.savingsaccount.SavingsAccountFragment"
-        android:label="SavingsAccountFragment">
-        <argument
-            android:name="id"
-            app:argType="integer" />
-        <argument
-            android:name="isGroupAccount"
-            app:argType="boolean" />
-    </fragment>
-
-    <fragment
         android:id="@+id/signatureFragment"
         android:name="com.mifos.mifosxdroid.online.sign.SignatureFragment"
         android:label="SignatureFragment">
@@ -116,51 +73,6 @@
             android:name="clientId"
             app:argType="integer" />
     </activity>
-
-
-
-    <fragment
-        android:id="@+id/savingsAccountApprovalFragment"
-        android:name="com.mifos.mifosxdroid.online.savingsaccountapproval.SavingsAccountApprovalFragment"
-        android:label="SavingsAccountApprovalFragment">
-        <argument
-            android:name="savingsAccountNumber"
-            app:argType="integer" />
-        <argument
-            android:name="type"
-            app:argType="com.mifos.core.objects.accounts.savings.DepositType" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/savingsAccountActivateFragment"
-        android:name="com.mifos.mifosxdroid.online.savingsaccountactivate.SavingsAccountActivateFragment"
-        android:label="SavingsAccountActivateFragment">
-        <argument
-            android:name="savingsAccountNumber"
-            app:argType="integer" />
-        <argument
-            android:name="type"
-            app:argType="com.mifos.core.objects.accounts.savings.DepositType" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/savingsAccountTransactionFragment"
-        android:name="com.mifos.mifosxdroid.online.savingaccounttransaction.SavingsAccountTransactionFragment"
-        android:label="fragment_savings_account_transaction"
-        tools:layout="@layout/fragment_savings_account_transaction">
-        <argument
-            android:name="savingsAccountWithAssociations"
-            app:argType="com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations" />
-        <argument
-            android:name="transactionType"
-            app:argType="string" />
-        <argument
-            android:name="accountType"
-            app:argType="com.mifos.core.objects.accounts.savings.DepositType" />
-    </fragment>
-
 
     <fragment
         android:id="@+id/checkerInboxTasksFragment"
@@ -221,15 +133,6 @@
         <argument
             android:name="client"
             app:argType="com.mifos.core.objects.navigation.ClientArgs" />
-    </fragment>
-    <fragment
-        android:id="@+id/centerDetailsFragment"
-        android:name="com.mifos.mifosxdroid.online.centerdetails.CenterDetailsFragment"
-        android:label="CenterDetailsFragment">
-
-        <action
-            android:id="@+id/action_centerDetailsFragment_to_savingsAccountFragment"
-            app:destination="@id/savingsAccountFragment" />
     </fragment>
 
     <activity
