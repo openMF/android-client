@@ -1,9 +1,19 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 @file:OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class,
+    ExperimentalFoundationApi::class,
 )
 
-package com.mifos.feature.checker_inbox_task.checker_inbox
+package com.mifos.feature.checkerInboxTask.checkerInbox
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -69,15 +79,14 @@ import com.mifos.core.designsystem.theme.LightGray
 import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
 import com.mifos.core.ui.components.SelectionModeTopAppBar
+import com.mifos.feature.checkerInboxTask.checkerInboxDialog.CheckerInboxTasksFilterDialog
 import com.mifos.feature.checker_inbox_task.R
-import com.mifos.feature.checker_inbox_task.checker_inbox_dialog.CheckerInboxTasksFilterDialog
 import java.sql.Timestamp
 
 @Composable
-fun CheckerInboxScreen(
-    onBackPressed: () -> Unit
+ internal fun CheckerInboxScreen(
+    onBackPressed: () -> Unit,
 ) {
-
     val context = LocalContext.current
     val viewModel: CheckerInboxViewModel = hiltViewModel()
     val state by viewModel.checkerInboxUiState.collectAsStateWithLifecycle()
@@ -121,7 +130,7 @@ fun CheckerInboxScreen(
                         action,
                         entity,
                         resourceId,
-                        checkerList
+                        checkerList,
                     )
                 } catch (e: Exception) {
                     Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
@@ -136,7 +145,7 @@ fun CheckerInboxScreen(
                 resourceId = null
                 fromDate = null
                 toDate = null
-            }
+            },
         )
     }
 
@@ -172,7 +181,7 @@ fun CheckerInboxScreen(
                 action,
                 entity,
                 resourceId,
-                checkerList
+                checkerList,
             )
         },
         filter = {
@@ -181,13 +190,12 @@ fun CheckerInboxScreen(
         isFiltered = isFiltered,
         isSearching = isSearching,
         filteredList = filterList,
-        setList = { checkerList = it }
+        setList = { checkerList = it },
     )
 }
 
-
 @Composable
-fun CheckerInboxScreen(
+private fun CheckerInboxScreen(
     state: CheckerInboxUiState,
     onBackPressed: () -> Unit,
     onApprove: (Int) -> Unit,
@@ -202,9 +210,8 @@ fun CheckerInboxScreen(
     isFiltered: Boolean,
     isSearching: Boolean,
     filteredList: List<CheckerTask>,
-    setList: (List<CheckerTask>) -> Unit
+    setList: (List<CheckerTask>) -> Unit,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
     var searchInbox by rememberSaveable { mutableStateOf("") }
     var approveId by rememberSaveable { mutableIntStateOf(0) }
@@ -241,7 +248,7 @@ fun CheckerInboxScreen(
             onApprove(approveId)
             showApproveDialog = false
         },
-        dismissButtonText = R.string.feature_checker_inbox_task_no
+        dismissButtonText = R.string.feature_checker_inbox_task_no,
     )
 
     MifosDialogBox(
@@ -253,9 +260,8 @@ fun CheckerInboxScreen(
             onReject(rejectId)
             showRejectDialog = false
         },
-        dismissButtonText = R.string.feature_checker_inbox_task_no
+        dismissButtonText = R.string.feature_checker_inbox_task_no,
     )
-
 
     MifosDialogBox(
         showDialogState = showDeleteDialog,
@@ -266,7 +272,7 @@ fun CheckerInboxScreen(
             onDelete(deleteId)
             showDeleteDialog = false
         },
-        dismissButtonText = R.string.feature_checker_inbox_task_no
+        dismissButtonText = R.string.feature_checker_inbox_task_no,
     )
 
     Scaffold(
@@ -283,7 +289,7 @@ fun CheckerInboxScreen(
                             Icon(
                                 imageVector = MifosIcons.check,
                                 tint = Color.Green,
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
                         IconButton(onClick = {
@@ -293,7 +299,7 @@ fun CheckerInboxScreen(
                             Icon(
                                 imageVector = MifosIcons.close,
                                 tint = Color.Yellow,
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
                         IconButton(onClick = {
@@ -303,10 +309,10 @@ fun CheckerInboxScreen(
                             Icon(
                                 imageVector = MifosIcons.delete,
                                 tint = Color.Red,
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
-                    }
+                    },
                 )
             } else {
                 TopAppBar(
@@ -321,7 +327,6 @@ fun CheckerInboxScreen(
                                 tint = Black,
                             )
                         }
-
                     },
                     title = {
                         Text(
@@ -329,34 +334,34 @@ fun CheckerInboxScreen(
                             style = TextStyle(
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Medium,
-                                fontStyle = FontStyle.Normal
+                                fontStyle = FontStyle.Normal,
                             ),
                             color = Black,
-                            textAlign = TextAlign.Start
+                            textAlign = TextAlign.Start,
                         )
                     },
-                    actions = { }
+                    actions = { },
                 )
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentColor = Color.White
+        contentColor = Color.White,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             ElevatedCard(
                 modifier = Modifier.padding(8.dp),
                 elevation = CardDefaults.elevatedCardElevation(4.dp),
-                colors = CardDefaults.elevatedCardColors(White)
+                colors = CardDefaults.elevatedCardColors(White),
             ) {
                 Row(
                     modifier = Modifier.padding(4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Image(
                         modifier = Modifier.weight(1f),
                         imageVector = MifosIcons.search,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                     TextField(
                         modifier = Modifier
@@ -372,16 +377,16 @@ fun CheckerInboxScreen(
                             focusedContainerColor = White,
                             unfocusedContainerColor = White,
                             focusedIndicatorColor = Color.White,
-                            unfocusedIndicatorColor = Color.White
-                        )
+                            unfocusedIndicatorColor = Color.White,
+                        ),
                     )
                     IconButton(
                         modifier = Modifier.weight(1f),
-                        onClick = { filter.invoke() }
+                        onClick = { filter.invoke() },
                     ) {
                         Icon(
                             imageVector = MifosIcons.filter,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 }
@@ -409,13 +414,13 @@ fun CheckerInboxScreen(
                         selectedItems = selectedItems,
                         selectedMode = {
                             isInSelectionMode = true
-                        }
+                        },
                     )
                 }
 
                 is CheckerInboxUiState.Error -> {
                     MifosSweetError(
-                        message = stringResource(id = R.string.feature_checker_inbox_task_failed_to_Load_Check_Inbox)
+                        message = stringResource(id = R.string.feature_checker_inbox_task_failed_to_Load_Check_Inbox),
                     ) {
                         onRetry()
                     }
@@ -432,21 +437,19 @@ fun CheckerInboxScreen(
                     }
                 }
             }
-
         }
     }
-
 }
 
 @Composable
-fun CheckerInboxContent(
+private fun CheckerInboxContent(
     checkerTaskList: List<CheckerTask>,
     onApprove: (Int) -> Unit,
     onReject: (Int) -> Unit,
     onDelete: (Int) -> Unit,
     isInSelectionMode: Boolean,
     selectedItems: SnapshotStateList<Int>,
-    selectedMode: () -> Unit
+    selectedMode: () -> Unit,
 ) {
     LazyColumn {
         items(checkerTaskList.size) { index ->
@@ -457,22 +460,21 @@ fun CheckerInboxContent(
                 onDelete = onDelete,
                 isInSelectionMode = isInSelectionMode,
                 selectedItems = selectedItems,
-                selectedMode = selectedMode
+                selectedMode = selectedMode,
             )
         }
     }
 }
 
-
 @Composable
-fun CheckerInboxItem(
+private fun CheckerInboxItem(
     checkerTask: CheckerTask,
     onApprove: (Int) -> Unit,
     onReject: (Int) -> Unit,
     onDelete: (Int) -> Unit,
     isInSelectionMode: Boolean,
     selectedItems: SnapshotStateList<Int>,
-    selectedMode: () -> Unit
+    selectedMode: () -> Unit,
 ) {
     val isSelected = selectedItems.contains(checkerTask.id)
     var cardColor by remember { mutableStateOf(White) }
@@ -510,35 +512,38 @@ fun CheckerInboxItem(
                         selectedItems.add(checkerTask.id)
                         cardColor = LightGray
                     }
-                }
+                },
             ),
         colors = CardDefaults.cardColors(
             containerColor = if (selectedItems.isEmpty()) {
                 cardColor = White
                 White
-            } else cardColor,
-        )
+            } else {
+                cardColor
+            },
+        ),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Card(
                 modifier = Modifier
                     .width(8.dp)
-                    .height(60.dp), colors = CardDefaults.cardColors(Color.Yellow)
+                    .height(60.dp),
+                colors = CardDefaults.cardColors(Color.Yellow),
             ) {
             }
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             ) {
                 Text(
                     text = "# ${checkerTask.id} ${checkerTask.actionName} ${checkerTask.entityName}",
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Black
-                    )
+                        color = Black,
+                    ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
@@ -546,11 +551,11 @@ fun CheckerInboxItem(
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
-                    )
+                    ),
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Row {
                         Text(
@@ -558,7 +563,7 @@ fun CheckerInboxItem(
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
-                            )
+                            ),
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
@@ -566,7 +571,7 @@ fun CheckerInboxItem(
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium,
-                            )
+                            ),
                         )
                     }
                     Text(
@@ -574,7 +579,7 @@ fun CheckerInboxItem(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
-                        )
+                        ),
                     )
                 }
             }
@@ -587,32 +592,32 @@ fun CheckerInboxItem(
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Black
-                    )
+                        color = Black,
+                    ),
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.End,
                 ) {
                     IconButton(onClick = { onApprove(checkerTask.id) }) {
                         Icon(
                             imageVector = MifosIcons.check,
                             tint = Color.Green,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                     IconButton(onClick = { onReject(checkerTask.id) }) {
                         Icon(
                             imageVector = MifosIcons.close,
                             tint = Color.Yellow,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                     IconButton(onClick = { onDelete(checkerTask.id) }) {
                         Icon(
                             imageVector = MifosIcons.delete,
                             tint = Color.Red,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 }
@@ -623,14 +628,13 @@ fun CheckerInboxItem(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                     ),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
             HorizontalDivider()
         }
     }
 }
-
 
 private fun getFilteredList(
     searchQuery: String,
@@ -639,9 +643,8 @@ private fun getFilteredList(
     action: String?,
     entity: String?,
     resourceId: String?,
-    list: List<CheckerTask>
+    list: List<CheckerTask>,
 ): List<CheckerTask> {
-
     var checkerList = list
     if (searchQuery.isNotEmpty()) {
         checkerList = checkerList.filter {
@@ -650,12 +653,10 @@ private fun getFilteredList(
     }
 
     val filteredList = mutableListOf<CheckerTask>()
-    val ALL = "ALL"
-
+    val aLL = "ALL"
     if (!resourceId.isNullOrEmpty()) {
         // If resource id is available there is no need to check for other filter options
         for (checkerTask in checkerList) {
-
             if (resourceId == checkerTask.resourceId) {
                 filteredList.add(checkerTask)
             }
@@ -668,7 +669,7 @@ private fun getFilteredList(
             return checkerList
         } else if (fromDate == null) {
             // From Date is not available
-            if (action == ALL && entity == ALL) {
+            if (action == aLL && entity == aLL) {
                 // No need to check for Action and Entity
                 for (checkerTask in checkerList) {
                     if (!checkerTask.getTimeStamp().after(toDate)) {
@@ -676,18 +677,17 @@ private fun getFilteredList(
                     }
                 }
                 return filteredList
-            } else if (action == ALL) {
+            } else if (action == aLL) {
                 // Entity has a specific value
                 for (checkerTask in checkerList) {
                     if (checkerTask.getTimeStamp().before(toDate)) {
                         if (entity.equals(checkerTask.entityName, true)) {
                             filteredList.add(checkerTask)
                         }
-
                     }
                 }
                 return filteredList
-            } else if (entity == ALL) {
+            } else if (entity == aLL) {
                 // Action has a specific value
                 for (checkerTask in checkerList) {
                     if (checkerTask.getTimeStamp().before(toDate)) {
@@ -712,34 +712,33 @@ private fun getFilteredList(
             }
         } else {
             // Both dates are available
-            if (action == ALL && entity == ALL) {
+            if (action == aLL && entity == aLL) {
                 // No need to check for Action and Entity
                 for (checkerTask in checkerList) {
-                    if (checkerTask.getTimeStamp().after(fromDate)
-                        && checkerTask.getTimeStamp().before(toDate)
+                    if (checkerTask.getTimeStamp().after(fromDate) &&
+                        checkerTask.getTimeStamp().before(toDate)
                     ) {
                         filteredList.add(checkerTask)
                     }
                 }
                 return filteredList
-            } else if (action == ALL) {
+            } else if (action == aLL) {
                 // Entity has a specific value
                 for (checkerTask in checkerList) {
-                    if (checkerTask.getTimeStamp().after(fromDate)
-                        && checkerTask.getTimeStamp().before(toDate)
+                    if (checkerTask.getTimeStamp().after(fromDate) &&
+                        checkerTask.getTimeStamp().before(toDate)
                     ) {
                         if (entity.equals(checkerTask.entityName, true)) {
                             filteredList.add(checkerTask)
                         }
-
                     }
                 }
                 return filteredList
-            } else if (entity == ALL) {
+            } else if (entity == aLL) {
                 // Action has a specific value
                 for (checkerTask in checkerList) {
-                    if (checkerTask.getTimeStamp().after(fromDate)
-                        && checkerTask.getTimeStamp().before(toDate)
+                    if (checkerTask.getTimeStamp().after(fromDate) &&
+                        checkerTask.getTimeStamp().before(toDate)
                     ) {
                         if (action.equals(checkerTask.actionName, true)) {
                             filteredList.add(checkerTask)
@@ -750,8 +749,8 @@ private fun getFilteredList(
             } else {
                 // Both Action and Entity have specific values
                 for (checkerTask in checkerList) {
-                    if (checkerTask.getTimeStamp().after(fromDate)
-                        && checkerTask.getTimeStamp().before(toDate)
+                    if (checkerTask.getTimeStamp().after(fromDate) &&
+                        checkerTask.getTimeStamp().before(toDate)
                     ) {
                         if (action.equals(checkerTask.actionName, true) &&
                             entity.equals(checkerTask.entityName, true)
@@ -773,7 +772,7 @@ class CheckerInboxUiStateProvider : PreviewParameterProvider<CheckerInboxUiState
             CheckerInboxUiState.Loading,
             CheckerInboxUiState.Error(R.string.feature_checker_inbox_task_failed_to_Load_Check_Inbox),
             CheckerInboxUiState.CheckerTasksList(sampleCheckerTaskList),
-            CheckerInboxUiState.SuccessResponse(R.string.feature_checker_inbox_task_client_Approval)
+            CheckerInboxUiState.SuccessResponse(R.string.feature_checker_inbox_task_client_Approval),
         )
 }
 
@@ -787,7 +786,7 @@ private fun CheckerInboxItemPreview() {
         onDelete = {},
         isInSelectionMode = false,
         selectedItems = remember { mutableStateListOf() },
-        selectedMode = {}
+        selectedMode = {},
     )
 }
 
@@ -801,14 +800,14 @@ private fun CheckerInboxContentPreview() {
         onDelete = {},
         isInSelectionMode = false,
         selectedItems = remember { mutableStateListOf() },
-        selectedMode = {}
+        selectedMode = {},
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun CheckerInboxScreenPreview(
-    @PreviewParameter(CheckerInboxUiStateProvider::class) state: CheckerInboxUiState
+    @PreviewParameter(CheckerInboxUiStateProvider::class) state: CheckerInboxUiState,
 ) {
     CheckerInboxScreen(
         state = state,
@@ -824,7 +823,7 @@ private fun CheckerInboxScreenPreview(
         filteredList = sampleCheckerTaskList,
         isFiltered = false,
         isSearching = false,
-        search = {}
+        search = {},
     )
 }
 

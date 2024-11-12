@@ -1,4 +1,13 @@
-package com.mifos.feature.checker_inbox_task.checker_inbox_dialog
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.checkerInboxTask.checkerInboxDialog
 
 import android.annotation.SuppressLint
 import android.widget.Toast
@@ -61,7 +70,7 @@ import java.util.Date
 
 @SuppressLint("RestrictedApi")
 @Composable
-fun CheckerInboxTasksFilterDialog(
+internal fun CheckerInboxTasksFilterDialog(
     closeDialog: () -> Unit,
     filter: (String?, String?, String?, Timestamp, Timestamp) -> Unit,
     clearFilter: () -> Unit,
@@ -69,19 +78,18 @@ fun CheckerInboxTasksFilterDialog(
     toDate: Timestamp?,
     action: String?,
     entity: String?,
-    resourceId: String?
+    resourceId: String?,
 ) {
-
-    val viewModel : CheckerInboxViewModel = hiltViewModel()
+    val viewModel: CheckerInboxViewModel = hiltViewModel()
     val searchTemplate by viewModel.searchTemplate.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = true) {
         viewModel.loadSearchTemplate()
     }
-    val actionList : MutableList<String> = mutableListOf()
+    val actionList: MutableList<String> = mutableListOf()
     actionList.add(stringResource(id = R.string.feature_checker_inbox_task_all))
     searchTemplate?.actionNames?.let { actionList.addAll(it) }
 
-    val entityList : MutableList<String> = mutableListOf()
+    val entityList: MutableList<String> = mutableListOf()
     entityList.add(stringResource(id = R.string.feature_checker_inbox_task_all))
     searchTemplate?.entityNames?.let { entityList.addAll(it) }
 
@@ -95,62 +103,61 @@ fun CheckerInboxTasksFilterDialog(
         filterToDate = toDate,
         filterAction = action,
         filterEntity = entity,
-        filterResourceId = resourceId
+        filterResourceId = resourceId,
     )
 }
 
 @SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CheckerInboxTasksFilterDialog(
+private fun CheckerInboxTasksFilterDialog(
     closeDialog: () -> Unit,
     actionList: List<String>,
     entityList: List<String>,
-    filter: ( String?, String?, String?, Timestamp, Timestamp ) -> Unit,
+    filter: (String?, String?, String?, Timestamp, Timestamp) -> Unit,
     clearFilter: () -> Unit,
     filterFromDate: Timestamp?,
     filterToDate: Timestamp?,
     filterAction: String?,
     filterEntity: String?,
-    filterResourceId: String?
+    filterResourceId: String?,
 ) {
-
     val context = LocalContext.current
     var resourceId by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(filterResourceId ?: ""))
     }
-    var action by rememberSaveable  {
-        mutableStateOf( filterAction ?: "")
+    var action by rememberSaveable {
+        mutableStateOf(filterAction ?: "")
     }
-    var entity by rememberSaveable  {
+    var entity by rememberSaveable {
         mutableStateOf(filterEntity ?: "")
     }
     var resourceIdError by rememberSaveable { mutableStateOf(false) }
     var showFromDatePicker by rememberSaveable { mutableStateOf(false) }
     var showToDatePicker by rememberSaveable { mutableStateOf(false) }
-    var fromDate : Long by rememberSaveable { mutableLongStateOf(filterFromDate?.time ?: 0) }
-    var toDate : Long by rememberSaveable { mutableLongStateOf(filterToDate?.time ?: 0) }
+    var fromDate: Long by rememberSaveable { mutableLongStateOf(filterFromDate?.time ?: 0) }
+    var toDate: Long by rememberSaveable { mutableLongStateOf(filterToDate?.time ?: 0) }
 
     val formatter = SimpleDateFormat("dd/MM/yyyy")
-    val initialDate : LocalDate = LocalDate.parse("01/01/2023", DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+    val initialDate: LocalDate = LocalDate.parse("01/01/2023", DateTimeFormatter.ofPattern("dd/MM/yyyy"))
     val fromDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = System.currentTimeMillis(),
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-            return utcTimeMillis >=  initialDate.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
+                return utcTimeMillis >= initialDate.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
             }
-        }
+        },
     )
     val toDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = System.currentTimeMillis(),
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >=  initialDate.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
+                return utcTimeMillis >= initialDate.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
             }
-        }
+        },
     )
 
-    if (showFromDatePicker ) {
+    if (showFromDatePicker) {
         DatePickerDialog(
             onDismissRequest = {
                 showFromDatePicker = false
@@ -162,24 +169,22 @@ fun CheckerInboxTasksFilterDialog(
                         fromDatePickerState.selectedDateMillis?.let {
                             fromDate = it
                         }
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_checker_inbox_task_select)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         showFromDatePicker = false
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_checker_inbox_task_cancel)) }
-            }
-        )
-        {
+            },
+        ) {
             DatePicker(state = fromDatePickerState)
         }
     }
 
-
-    if ( showToDatePicker ) {
+    if (showToDatePicker) {
         DatePickerDialog(
             onDismissRequest = {
                 showToDatePicker = false
@@ -191,46 +196,43 @@ fun CheckerInboxTasksFilterDialog(
                         toDatePickerState.selectedDateMillis?.let {
                             toDate = it
                         }
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_checker_inbox_task_select)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         showToDatePicker = false
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_checker_inbox_task_cancel)) }
-            }
-        )
-        {
+            },
+        ) {
             DatePicker(state = toDatePickerState)
         }
     }
 
     Dialog(
-        onDismissRequest = { closeDialog.invoke() }
-    )
-    {
+        onDismissRequest = { closeDialog.invoke() },
+    ) {
         Surface(
             shape = RoundedCornerShape(16.dp),
-            color = Color.White
+            color = Color.White,
         ) {
             Box(
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
-
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = stringResource(id = R.string.feature_checker_inbox_task_filter_checkers),
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                            color = BluePrimary
+                            color = BluePrimary,
                         )
                         Icon(
                             imageVector = MifosIcons.cancel,
@@ -239,34 +241,36 @@ fun CheckerInboxTasksFilterDialog(
                             modifier = Modifier
                                 .width(30.dp)
                                 .height(30.dp)
-                                .clickable { closeDialog.invoke() }
+                                .clickable { closeDialog.invoke() },
                         )
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     MifosDatePickerTextField(
-                        value = if(fromDate == 0L) "" else formatter.format(Date(fromDate)),
+                        value = if (fromDate == 0L) "" else formatter.format(Date(fromDate)),
                         label = R.string.feature_checker_inbox_task_select_from_date,
                         openDatePicker = {
-                            if(fromDate == 0L)
+                            if (fromDate == 0L) {
                                 fromDatePickerState.selectedDateMillis = System.currentTimeMillis()
-                            else
+                            } else {
                                 fromDatePickerState.selectedDateMillis = fromDate
+                            }
                             showFromDatePicker = true
-                        }
+                        },
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     MifosDatePickerTextField(
-                        value = if(toDate == 0L) "" else formatter.format(Date(toDate)),
+                        value = if (toDate == 0L) "" else formatter.format(Date(toDate)),
                         label = R.string.feature_checker_inbox_task_select_to_date,
                         openDatePicker = {
-                            if(toDate == 0L)
+                            if (toDate == 0L) {
                                 toDatePickerState.selectedDateMillis = System.currentTimeMillis()
-                            else
+                            } else {
                                 toDatePickerState.selectedDateMillis = toDate
+                            }
                             showToDatePicker = true
                         },
                     )
@@ -275,7 +279,7 @@ fun CheckerInboxTasksFilterDialog(
 
                     MifosTextFieldDropdown(
                         value = action,
-                        onValueChanged = { it->
+                        onValueChanged = { it ->
                             action = it
                         },
                         readOnly = true,
@@ -283,7 +287,7 @@ fun CheckerInboxTasksFilterDialog(
                             action = value
                         },
                         label = R.string.feature_checker_inbox_task_select_action,
-                        options = actionList
+                        options = actionList,
 
                     )
 
@@ -291,7 +295,7 @@ fun CheckerInboxTasksFilterDialog(
 
                     MifosTextFieldDropdown(
                         value = entity,
-                        onValueChanged = { it->
+                        onValueChanged = { it ->
                             entity = it
                         },
                         readOnly = true,
@@ -299,7 +303,7 @@ fun CheckerInboxTasksFilterDialog(
                             entity = value
                         },
                         label = R.string.feature_checker_inbox_task_select_entity,
-                        options = entityList
+                        options = entityList,
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -316,16 +320,15 @@ fun CheckerInboxTasksFilterDialog(
                             if (resourceIdError) {
                                 Icon(imageVector = MifosIcons.error, contentDescription = null)
                             }
-                        }
+                        },
                     )
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ){
-
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
                         Button(
                             onClick = {
                                 clearFilter.invoke()
@@ -336,24 +339,23 @@ fun CheckerInboxTasksFilterDialog(
                                 containerColor = BluePrimary,
                                 contentColor = White,
                                 disabledContainerColor = BluePrimary,
-                                disabledContentColor = White
-                            )
+                                disabledContentColor = White,
+                            ),
                         ) {
-                            Text(text = stringResource(id =R.string.feature_checker_inbox_task_clear_filter))
+                            Text(text = stringResource(id = R.string.feature_checker_inbox_task_clear_filter))
                         }
 
                         Button(
                             onClick = {
-                                if(fromDate > toDate)
-                                {
+                                if (fromDate > toDate) {
                                     Toast.makeText(context, R.string.feature_checker_inbox_task_invalid_date_range, Toast.LENGTH_SHORT).show()
-                                }else {
+                                } else {
                                     filter.invoke(
                                         action,
                                         entity,
                                         resourceId.text,
                                         Timestamp(fromDate),
-                                        Timestamp(toDate)
+                                        Timestamp(toDate),
                                     )
                                 }
                             },
@@ -363,12 +365,11 @@ fun CheckerInboxTasksFilterDialog(
                                 containerColor = BluePrimary,
                                 contentColor = White,
                                 disabledContainerColor = BluePrimary,
-                                disabledContentColor = Gray
-                            )
+                                disabledContentColor = Gray,
+                            ),
                         ) {
-                            Text(text = stringResource(id =R.string.feature_checker_inbox_task_apply_filter))
+                            Text(text = stringResource(id = R.string.feature_checker_inbox_task_apply_filter))
                         }
-
                     }
                 }
             }
@@ -376,21 +377,19 @@ fun CheckerInboxTasksFilterDialog(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
-private fun CheckerInboxTasksFilterDialogPreview(
-) {
+private fun CheckerInboxTasksFilterDialogPreview() {
     CheckerInboxTasksFilterDialog(
         { },
-        listOf<String>(),
-        listOf<String>(),
+        listOf(),
+        listOf(),
         { _, _, _, _, _ -> },
         {},
         null,
         null,
         null,
         null,
-        null
+        null,
     )
 }
