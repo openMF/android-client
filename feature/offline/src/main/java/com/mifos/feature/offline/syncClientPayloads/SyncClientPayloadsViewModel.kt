@@ -1,4 +1,13 @@
-package com.mifos.feature.offline.sync_client_payload
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.offline.syncClientPayloads
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -23,14 +32,14 @@ import javax.inject.Inject
 @HiltViewModel
 class SyncClientPayloadsViewModel @Inject constructor(
     private val repository: SyncClientPayloadsRepository,
-    private val prefManager: PrefManager
+    private val prefManager: PrefManager,
 ) : ViewModel() {
 
-    private val _syncClientPayloadsRepository =
+    private val _syncClientPayloadsUiState =
         MutableStateFlow<SyncClientPayloadsUiState>(SyncClientPayloadsUiState.ShowProgressbar)
 
     val syncClientPayloadsUiState: StateFlow<SyncClientPayloadsUiState>
-        get() = _syncClientPayloadsRepository
+        get() = _syncClientPayloadsUiState
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
@@ -38,7 +47,7 @@ class SyncClientPayloadsViewModel @Inject constructor(
     private var mClientPayloads: MutableList<ClientPayload> = mutableListOf()
     private var mClientSyncIndex = 0
 
-    fun getUserStatus() : Boolean{
+    fun getUserStatus(): Boolean {
         return prefManager.userStatus
     }
 
@@ -49,35 +58,34 @@ class SyncClientPayloadsViewModel @Inject constructor(
     }
 
     fun loadDatabaseClientPayload() {
-        _syncClientPayloadsRepository.value = SyncClientPayloadsUiState.ShowProgressbar
+        _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
         repository.allDatabaseClientPayload()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<List<ClientPayload>>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    _syncClientPayloadsRepository.value =
+                    _syncClientPayloadsUiState.value =
                         SyncClientPayloadsUiState.ShowError(e.message.toString())
                 }
 
                 override fun onNext(clientPayloads: List<ClientPayload>) {
                     mClientPayloads = clientPayloads.toMutableList()
-                    _syncClientPayloadsRepository.value =
+                    _syncClientPayloadsUiState.value =
                         SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
                 }
             })
-
     }
 
     private fun syncClientPayload(clientPayload: ClientPayload?) {
-        _syncClientPayloadsRepository.value = SyncClientPayloadsUiState.ShowProgressbar
+        _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
         repository.createClient(clientPayload!!)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Observer<Client> {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    _syncClientPayloadsRepository.value =
+                    _syncClientPayloadsUiState.value =
                         SyncClientPayloadsUiState.ShowError(e.message.toString())
                     updateClientPayload(clientPayload)
                 }
@@ -87,24 +95,23 @@ class SyncClientPayloadsViewModel @Inject constructor(
                         mClientPayloads[mClientSyncIndex].clientCreationTime?.let { it1 ->
                             deleteAndUpdateClientPayload(
                                 it,
-                                it1
+                                it1,
                             )
                         }
                     }
                 }
             })
-
     }
 
     fun deleteAndUpdateClientPayload(id: Int, clientCreationTIme: Long) {
-        _syncClientPayloadsRepository.value = SyncClientPayloadsUiState.ShowProgressbar
+        _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
         repository.deleteAndUpdatePayloads(id, clientCreationTIme)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Observer<List<ClientPayload>> {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    _syncClientPayloadsRepository.value =
+                    _syncClientPayloadsUiState.value =
                         SyncClientPayloadsUiState.ShowError(e.message.toString())
                 }
 
@@ -114,22 +121,21 @@ class SyncClientPayloadsViewModel @Inject constructor(
                         syncClientPayload()
                     }
                     mClientPayloads = clientPayloads.toMutableList()
-                    _syncClientPayloadsRepository.value =
+                    _syncClientPayloadsUiState.value =
                         SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
                 }
             })
-
     }
 
     fun updateClientPayload(clientPayload: ClientPayload?) {
-        _syncClientPayloadsRepository.value = SyncClientPayloadsUiState.ShowProgressbar
+        _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
         repository.updateClientPayload(clientPayload!!)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Subscriber<ClientPayload>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    _syncClientPayloadsRepository.value =
+                    _syncClientPayloadsUiState.value =
                         SyncClientPayloadsUiState.ShowError(e.message.toString())
                 }
 
@@ -141,7 +147,6 @@ class SyncClientPayloadsViewModel @Inject constructor(
                     }
                 }
             })
-
     }
 
     fun syncClientPayload() {
@@ -154,7 +159,7 @@ class SyncClientPayloadsViewModel @Inject constructor(
                 mClientPayloads[i].errorMessage?.let {
                     Log.d(
                         LOG_TAG,
-                        it
+                        it,
                     )
                 }
             }

@@ -1,4 +1,13 @@
-package com.mifos.feature.offline.sync_savings_account_transaction
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.offline.syncSavingsAccountTransaction
 
 import android.content.Context
 import android.widget.Toast
@@ -52,11 +61,9 @@ import com.mifos.core.objects.PaymentTypeOption
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.offline.R
-import com.mifos.feature.savings.sync_account_transaction.SyncSavingsAccountTransactionUiState
-import com.mifos.feature.savings.sync_account_transaction.SyncSavingsAccountTransactionViewModel
 
 @Composable
-fun SyncSavingsAccountTransactionScreenRoute(
+internal fun SyncSavingsAccountTransactionScreenRoute(
     viewModel: SyncSavingsAccountTransactionViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
 ) {
@@ -78,43 +85,50 @@ fun SyncSavingsAccountTransactionScreenRoute(
         syncSavingsAccountTransactions = {
             viewModel.syncSavingsAccountTransactions()
         },
-        getUserStatus = {viewModel.getUserStatus()}
+        getUserStatus = { viewModel.getUserStatus() },
     )
 }
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SyncSavingsAccountTransactionScreen(
+internal fun SyncSavingsAccountTransactionScreen(
     uiState: SyncSavingsAccountTransactionUiState,
     onBackPressed: () -> Unit,
     refreshState: Boolean,
     onRefresh: () -> Unit,
     syncSavingsAccountTransactions: () -> Unit,
-    getUserStatus: () -> Boolean
+    modifier: Modifier = Modifier,
+    getUserStatus: () -> Boolean,
 ) {
     val snackbarHostState by remember { mutableStateOf(SnackbarHostState()) }
     val context = LocalContext.current
     val pullRefreshState = rememberPullRefreshState(
         refreshing = refreshState,
-        onRefresh = onRefresh
+        onRefresh = onRefresh,
     )
 
     MifosScaffold(
+        modifier = modifier,
         icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_offline_sync_savingsAccountTransactions),
         onBackPressed = onBackPressed,
         actions = {
-            IconButton(onClick = {
-                when (getUserStatus()) {
-                    false -> checkNetworkConnectionAndSync(context, syncSavingsAccountTransactions)
-                    true -> TODO()//Implement OfflineModeDialog()
-                }
-            }) {
+            IconButton(
+                onClick = {
+                    when (getUserStatus()) {
+                        false -> checkNetworkConnectionAndSync(
+                            context,
+                            syncSavingsAccountTransactions,
+                        )
+
+                        true -> TODO() // Implement OfflineModeDialog()
+                    }
+                },
+            ) {
                 Icon(Icons.Default.Sync, contentDescription = "Sync")
             }
         },
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
@@ -126,7 +140,7 @@ fun SyncSavingsAccountTransactionScreen(
                     is SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions -> {
                         MifosEmptyUi(
                             text = stringResource(id = R.string.feature_offline_nothing_to_sync),
-                            icon = MifosIcons.sync
+                            icon = MifosIcons.sync,
                         )
                     }
 
@@ -148,7 +162,7 @@ fun SyncSavingsAccountTransactionScreen(
                 PullRefreshIndicator(
                     refreshing = refreshState,
                     state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter)
+                    modifier = Modifier.align(Alignment.TopCenter),
                 )
             }
         }
@@ -156,50 +170,51 @@ fun SyncSavingsAccountTransactionScreen(
 }
 
 @Composable
-fun SavingsAccountTransactionItem(
+private fun SavingsAccountTransactionItem(
     transaction: SavingsAccountTransactionRequest,
-    paymentTypeOptions: List<PaymentTypeOption>
+    paymentTypeOptions: List<PaymentTypeOption>,
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(2.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(2.dp)
+        shape = RoundedCornerShape(2.dp),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(8.dp),
         ) {
             TransactionRow(
                 label = stringResource(R.string.feature_offline_savings_account_id),
-                value = transaction.savingAccountId.toString()
+                value = transaction.savingAccountId.toString(),
             )
             TransactionRow(
                 label = stringResource(R.string.feature_offline_payment_type),
                 value = transaction.paymentTypeId?.toInt()?.let {
                     getPaymentTypeName(it, paymentTypeOptions)
-                } ?: ""
+                } ?: "",
             )
             TransactionRow(
                 label = stringResource(R.string.feature_offline_transaction_type),
-                value = transaction.transactionType ?: ""
+                value = transaction.transactionType ?: "",
             )
             TransactionRow(
                 label = stringResource(R.string.feature_offline_transaction_amount),
-                value = transaction.transactionAmount ?: ""
+                value = transaction.transactionAmount ?: "",
             )
             TransactionRow(
                 label = stringResource(R.string.feature_offline_transaction_date),
-                value = transaction.transactionDate ?: ""
+                value = transaction.transactionDate ?: "",
             )
 
             if (transaction.errorMessage != null) {
                 Text(
                     text = transaction.errorMessage!!,
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 4.dp)
+                    modifier = Modifier.padding(top = 4.dp),
                 )
             }
         }
@@ -207,38 +222,46 @@ fun SavingsAccountTransactionItem(
 }
 
 @Composable
-fun TransactionRow(label: String, value: String) {
+private fun TransactionRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier,
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(vertical = 4.dp),
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
     }
 }
 
 @Composable
-fun ErrorStateScreen(message: String, onRefresh: () -> Unit) {
+private fun ErrorStateScreen(
+    message: String,
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Icon(
             imageVector = Icons.Default.Error,
             contentDescription = null,
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier.size(48.dp),
         )
         Text(text = message, modifier = Modifier.padding(vertical = 8.dp))
         Button(onClick = onRefresh) {
@@ -249,16 +272,16 @@ fun ErrorStateScreen(message: String, onRefresh: () -> Unit) {
 
 fun getPaymentTypeName(
     paymentId: Int,
-    paymentTypeOptions: List<PaymentTypeOption>?
+    paymentTypeOptions: List<PaymentTypeOption>?,
 ): String? {
     return paymentTypeOptions
         ?.firstOrNull { it.id == paymentId }
         ?.name
 }
 
-fun checkNetworkConnectionAndSync(
+private fun checkNetworkConnectionAndSync(
     context: Context,
-    syncSavingsAccountTransactions: () -> Unit
+    syncSavingsAccountTransactions: () -> Unit,
 ) {
     if (Network.isOnline(context)) {
         syncSavingsAccountTransactions()
@@ -266,11 +289,10 @@ fun checkNetworkConnectionAndSync(
         Toast.makeText(
             context,
             context.resources.getString(R.string.feature_offline_error_not_connected_internet),
-            Toast.LENGTH_SHORT
+            Toast.LENGTH_SHORT,
         ).show()
     }
 }
-
 
 class SyncSavingsAccountTransactionUiStateProvider :
     PreviewParameterProvider<SyncSavingsAccountTransactionUiState> {
@@ -280,15 +302,16 @@ class SyncSavingsAccountTransactionUiStateProvider :
         SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(R.string.feature_offline_no_transaction_to_sync),
         SyncSavingsAccountTransactionUiState.ShowSavingsAccountTransactions(
             sampleSavingsAccountTransactions.toMutableList(),
-            samplePaymentTypeOptions
-        )
+            samplePaymentTypeOptions,
+        ),
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun SyncSavingsAccountTransactionScreenPreview(
-    @PreviewParameter(SyncSavingsAccountTransactionUiStateProvider::class) state: SyncSavingsAccountTransactionUiState
+    @PreviewParameter(SyncSavingsAccountTransactionUiStateProvider::class)
+    state: SyncSavingsAccountTransactionUiState,
 ) {
     SyncSavingsAccountTransactionScreen(
         uiState = state,
@@ -296,7 +319,7 @@ private fun SyncSavingsAccountTransactionScreenPreview(
         refreshState = false,
         onRefresh = {},
         syncSavingsAccountTransactions = {},
-        getUserStatus = { true }
+        getUserStatus = { true },
     )
 }
 
@@ -312,7 +335,7 @@ val sampleSavingsAccountTransactions = List(5) { index ->
         checkNumber = "CHK-$index",
         routingCode = "RTG-$index",
         receiptNumber = "RCP-$index",
-        bankNumber = "BNK-$index"
+        bankNumber = "BNK-$index",
     )
 }
 
@@ -322,16 +345,16 @@ val samplePaymentTypeOptions = List(3) { index ->
         name = "Payment Type $index",
         description = "Description for Payment Type $index",
         isCashPayment = index % 2 == 0,
-        position = index
+        position = index,
     )
 }
 
 // Individual preview for SavingsAccountTransactionItem
 @Preview(showBackground = true)
 @Composable
-fun SavingsAccountTransactionItemPreview() {
+private fun SavingsAccountTransactionItemPreview() {
     SavingsAccountTransactionItem(
         transaction = sampleSavingsAccountTransactions[0],
-        paymentTypeOptions = samplePaymentTypeOptions
+        paymentTypeOptions = samplePaymentTypeOptions,
     )
 }

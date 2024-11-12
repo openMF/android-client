@@ -1,4 +1,13 @@
-package com.mifos.feature.offline.sync_group_payloads
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.offline.syncGroupPayloads
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,12 +35,12 @@ class SyncGroupPayloadsViewModel @Inject constructor(
     private val createGroupUseCase: CreateGroupUseCase,
     private val deleteAndUpdateGroupPayloadUseCase: DeleteAndUpdateGroupPayloadUseCase,
     private val updateGroupPayloadUseCase: UpdateGroupPayloadUseCase,
-    private val prefManager: PrefManager
+    private val prefManager: PrefManager,
 ) : ViewModel() {
 
     val syncGroupPayloadsUiState get() = _syncGroupPayloadsUiState
     private val _syncGroupPayloadsUiState = MutableStateFlow<SyncGroupPayloadsUiState>(
-        SyncGroupPayloadsUiState.Loading
+        SyncGroupPayloadsUiState.Loading,
     )
 
     val groupPayloadsList get() = _groupPayloadsList
@@ -51,26 +60,33 @@ class SyncGroupPayloadsViewModel @Inject constructor(
         _isRefreshing.value = false
     }
 
-    fun getUserStatus() : Boolean {
+    fun getUserStatus(): Boolean {
         return prefManager.userStatus
     }
 
     fun loanDatabaseGroupPayload() = viewModelScope.launch {
         allDatabaseGroupPayloadUseCase().collect { result ->
             when (result) {
-                is Resource.Error -> _syncGroupPayloadsUiState.value =
-                    SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_load_groupPayload)
+                is Resource.Error ->
+                    _syncGroupPayloadsUiState.value =
+                        SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_load_groupPayload)
 
-                is Resource.Loading -> _syncGroupPayloadsUiState.value =
-                    SyncGroupPayloadsUiState.Loading
+                is Resource.Loading ->
+                    _syncGroupPayloadsUiState.value =
+                        SyncGroupPayloadsUiState.Loading
 
                 is Resource.Success -> {
                     _groupPayloadsList.value = result.data ?: emptyList()
                     _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
-                        if ((result.data
-                                ?: emptyList()).isEmpty()
-                        ) GroupPayloadEmptyState.NOTHING_TO_SYNC
-                        else null
+                        if ((
+                                result.data
+                                    ?: emptyList()
+                                ).isEmpty()
+                        ) {
+                            GroupPayloadEmptyState.NOTHING_TO_SYNC
+                        } else {
+                            null
+                        },
                     )
                 }
             }
@@ -99,8 +115,9 @@ class SyncGroupPayloadsViewModel @Inject constructor(
                     updateGroupPayload()
                 }
 
-                is Resource.Loading -> _syncGroupPayloadsUiState.value =
-                    SyncGroupPayloadsUiState.Loading
+                is Resource.Loading ->
+                    _syncGroupPayloadsUiState.value =
+                        SyncGroupPayloadsUiState.Loading
 
                 is Resource.Success -> deleteAndUpdateGroupPayload()
             }
@@ -112,8 +129,9 @@ class SyncGroupPayloadsViewModel @Inject constructor(
 
         deleteAndUpdateGroupPayloadUseCase(id).collect { result ->
             when (result) {
-                is Resource.Error -> _syncGroupPayloadsUiState.value =
-                    SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_update_list)
+                is Resource.Error ->
+                    _syncGroupPayloadsUiState.value =
+                        SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_update_list)
 
                 is Resource.Loading -> Unit
 
@@ -122,8 +140,11 @@ class SyncGroupPayloadsViewModel @Inject constructor(
                     _groupPayloadsList.value = result.data ?: emptyList()
                     _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
                         if ((result.data ?: emptyList()).isEmpty()
-                        ) GroupPayloadEmptyState.ALL_SYNCED
-                        else null
+                        ) {
+                            GroupPayloadEmptyState.ALL_SYNCED
+                        } else {
+                            null
+                        },
                     )
                 }
             }
@@ -135,11 +156,13 @@ class SyncGroupPayloadsViewModel @Inject constructor(
 
         updateGroupPayloadUseCase(groupPayload).collect { result ->
             when (result) {
-                is Resource.Error -> _syncGroupPayloadsUiState.value =
-                    SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_load_groupPayload)
+                is Resource.Error ->
+                    _syncGroupPayloadsUiState.value =
+                        SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_load_groupPayload)
 
-                is Resource.Loading -> _syncGroupPayloadsUiState.value =
-                    SyncGroupPayloadsUiState.Loading
+                is Resource.Loading ->
+                    _syncGroupPayloadsUiState.value =
+                        SyncGroupPayloadsUiState.Loading
 
                 is Resource.Success -> {
                     _syncGroupPayloadsUiState.value =

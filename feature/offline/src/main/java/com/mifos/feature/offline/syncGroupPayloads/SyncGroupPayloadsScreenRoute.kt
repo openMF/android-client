@@ -1,4 +1,13 @@
-package com.mifos.feature.offline.sync_group_payloads
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.offline.syncGroupPayloads
 
 import android.content.Context
 import android.widget.Toast
@@ -44,7 +53,7 @@ import com.mifos.core.objects.group.GroupPayload
 import com.mifos.feature.offline.R
 
 @Composable
-fun SyncGroupPayloadsScreenRoute(
+internal fun SyncGroupPayloadsScreenRoute(
     viewModel: SyncGroupPayloadsViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
 ) {
@@ -67,52 +76,56 @@ fun SyncGroupPayloadsScreenRoute(
         syncGroupPayloads = {
             viewModel.syncGroupPayloadFromStart()
         },
-        userStatus = viewModel.getUserStatus()
+        userStatus = viewModel.getUserStatus(),
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SyncGroupPayloadsScreen(
+internal fun SyncGroupPayloadsScreen(
     uiState: SyncGroupPayloadsUiState,
     onBackPressed: () -> Unit,
     refreshState: Boolean,
     groupPayloadsList: List<GroupPayload>,
     onRefresh: () -> Unit,
     syncGroupPayloads: () -> Unit,
-    userStatus : Boolean
+    userStatus: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val pullRefreshState = rememberPullToRefreshState()
 
     MifosScaffold(
+        modifier = modifier,
         icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_offline_sync_groups),
         onBackPressed = onBackPressed,
         actions = {
-            IconButton(onClick = {
-                when (userStatus) {
-                    false -> checkNetworkConnectionAndSync(
-                        context = context,
-                        syncGroupPayloads = syncGroupPayloads
-                    )
+            IconButton(
+                onClick = {
+                    when (userStatus) {
+                        false -> checkNetworkConnectionAndSync(
+                            context = context,
+                            syncGroupPayloads = syncGroupPayloads,
+                        )
 
-                    true -> TODO("Implement OfflineModeDialog()")
-                }
-            }) {
+                        true -> TODO("Implement OfflineModeDialog()")
+                    }
+                },
+            ) {
                 Icon(
                     MifosIcons.sync,
-                    contentDescription = stringResource(id = R.string.feature_offline_sync)
+                    contentDescription = stringResource(id = R.string.feature_offline_sync),
                 )
             }
         },
-        snackbarHostState = snackBarHostState
+        snackbarHostState = snackBarHostState,
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)
-                .nestedScroll(pullRefreshState.nestedScrollConnection)
+                .nestedScroll(pullRefreshState.nestedScrollConnection),
         ) {
             when (uiState) {
                 is SyncGroupPayloadsUiState.Loading -> {
@@ -123,16 +136,16 @@ fun SyncGroupPayloadsScreen(
                     MifosErrorContent(
                         message = stringResource(id = uiState.messageResId),
                         onRefresh = onRefresh,
-                        refreshButtonText = stringResource(id = R.string.feature_offline_click_to_refresh)
+                        refreshButtonText = stringResource(id = R.string.feature_offline_click_to_refresh),
                     )
                 }
 
                 is SyncGroupPayloadsUiState.Success -> {
-                    if(uiState.emptyState != null) {
+                    if (uiState.emptyState != null) {
                         MifosErrorContent(
                             imageVector = ImageVector.vectorResource(id = uiState.emptyState.iconResId),
                             message = stringResource(id = uiState.emptyState.messageResId),
-                            isRefreshEnabled = false
+                            isRefreshEnabled = false,
                         )
                     } else {
                         GroupPayloadsContent(groupPayloadsList)
@@ -142,13 +155,14 @@ fun SyncGroupPayloadsScreen(
 
             PullToRefreshContainer(
                 state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
+                modifier = Modifier.align(Alignment.TopCenter),
             )
         }
 
         LaunchedEffect(key1 = refreshState) {
-            if (refreshState)
+            if (refreshState) {
                 pullRefreshState.startRefresh()
+            }
         }
 
         LaunchedEffect(key1 = pullRefreshState.isRefreshing) {
@@ -156,7 +170,11 @@ fun SyncGroupPayloadsScreen(
                 if (Network.isOnline(context)) {
                     onRefresh()
                 } else {
-                    Toast.makeText(context, context.resources.getText(R.string.feature_offline_error_not_connected_internet), Toast.LENGTH_SHORT,).show()
+                    Toast.makeText(
+                        context,
+                        context.resources.getText(R.string.feature_offline_error_not_connected_internet),
+                        Toast.LENGTH_SHORT,
+                    ).show()
                 }
                 pullRefreshState.endRefresh()
             }
@@ -165,8 +183,11 @@ fun SyncGroupPayloadsScreen(
 }
 
 @Composable
-fun GroupPayloadsContent(groupPayloadList: List<GroupPayload>) {
-    LazyColumn {
+private fun GroupPayloadsContent(
+    groupPayloadList: List<GroupPayload>,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(modifier = modifier) {
         items(groupPayloadList) { payload ->
             GroupPayloadItem(payload)
         }
@@ -174,12 +195,15 @@ fun GroupPayloadsContent(groupPayloadList: List<GroupPayload>) {
 }
 
 @Composable
-fun GroupPayloadItem(payload: GroupPayload) {
+private fun GroupPayloadItem(
+    payload: GroupPayload,
+    modifier: Modifier = Modifier,
+) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             val status: String = if (payload.active) {
@@ -188,19 +212,25 @@ fun GroupPayloadItem(payload: GroupPayload) {
                 false.toString()
             }
 
-            GroupPayloadField(stringResource(id = R.string.feature_offline_name), payload.name ?: "")
-            GroupPayloadField(stringResource(id = R.string.feature_offline_external_id), payload.externalId ?: "")
+            GroupPayloadField(
+                stringResource(id = R.string.feature_offline_name),
+                payload.name ?: "",
+            )
+            GroupPayloadField(
+                stringResource(id = R.string.feature_offline_external_id),
+                payload.externalId ?: "",
+            )
             GroupPayloadField(
                 stringResource(id = R.string.feature_offline_office_id),
-                payload.officeId.toString()
+                payload.officeId.toString(),
             )
             GroupPayloadField(
                 stringResource(id = R.string.feature_offline_submit_date),
-                payload.submittedOnDate ?: ""
+                payload.submittedOnDate ?: "",
             )
             GroupPayloadField(
                 stringResource(id = R.string.feature_offline_activation_date),
-                payload.activationDate ?: ""
+                payload.activationDate ?: "",
             )
             GroupPayloadField(stringResource(id = R.string.feature_offline_active), status)
 
@@ -209,7 +239,7 @@ fun GroupPayloadItem(payload: GroupPayload) {
                     text = payload.errorMessage!!,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp),
                 )
             }
         }
@@ -217,29 +247,33 @@ fun GroupPayloadItem(payload: GroupPayload) {
 }
 
 @Composable
-fun GroupPayloadField(label: String, value: String) {
+private fun GroupPayloadField(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier,
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(vertical = 4.dp),
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
     }
 }
 
-fun checkNetworkConnectionAndSync(
+private fun checkNetworkConnectionAndSync(
     context: Context,
-    syncGroupPayloads: () -> Unit
+    syncGroupPayloads: () -> Unit,
 ) {
     if (Network.isOnline(context)) {
         syncGroupPayloads()
@@ -247,15 +281,14 @@ fun checkNetworkConnectionAndSync(
         Toast.makeText(
             context,
             context.getString(R.string.feature_offline_error_not_connected_internet),
-            Toast.LENGTH_SHORT
+            Toast.LENGTH_SHORT,
         ).show()
     }
 }
 
-
 @Preview
 @Composable
-fun SyncGroupPayloadsScreenPreview() {
+private fun SyncGroupPayloadsScreenPreview() {
     SyncGroupPayloadsScreen(
         uiState = SyncGroupPayloadsUiState.Success(),
         onRefresh = { },
@@ -263,6 +296,6 @@ fun SyncGroupPayloadsScreenPreview() {
         refreshState = false,
         syncGroupPayloads = { },
         groupPayloadsList = dummyGroupPayloads,
-        userStatus = true
+        userStatus = true,
     )
 }
