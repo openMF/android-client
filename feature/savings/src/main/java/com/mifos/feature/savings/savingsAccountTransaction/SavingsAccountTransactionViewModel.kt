@@ -1,4 +1,13 @@
-package com.mifos.feature.savings.account_transaction
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.savings.savingsAccountTransaction
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -6,27 +15,19 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.use_cases.GetSavingsAccountTransactionTemplateUseCase
 import com.mifos.core.domain.use_cases.GetSavingsAccountTransactionUseCase
 import com.mifos.core.domain.use_cases.ProcessTransactionUseCase
-import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
-import com.mifos.core.objects.accounts.savings.SavingsSummaryData
 import com.mifos.core.objects.accounts.savings.SavingsTransactionData
-import com.mifos.core.objects.client.Savings
 import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -38,13 +39,13 @@ class SavingsAccountTransactionViewModel @Inject constructor(
     private val processTransactionUseCase: ProcessTransactionUseCase,
     private val getSavingsAccountTransactionUseCase: GetSavingsAccountTransactionUseCase,
     private val prefManager: PrefManager,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val arg = savedStateHandle.getStateFlow(key = "arg", initialValue = "")
     private val savingsTransactionData: SavingsTransactionData = Gson().fromJson(arg.value, SavingsTransactionData::class.java)
 
-    val accountId = savingsTransactionData.savingsAccountWithAssociations.id 
+    val accountId = savingsTransactionData.savingsAccountWithAssociations.id
     val savingsAccountNumber = savingsTransactionData.savingsAccountWithAssociations.accountNo
     val clientName = savingsTransactionData.savingsAccountWithAssociations.clientName
     val transactionType = savingsTransactionData.transactionType
@@ -64,19 +65,22 @@ class SavingsAccountTransactionViewModel @Inject constructor(
                 getSavingsAccountTransactionTemplateUseCase(
                     savingsAccountType?.endpoint,
                     it,
-                    transactionType
+                    transactionType,
                 ).collect { result ->
                     when (result) {
-                        is Resource.Error -> _savingsAccountTransactionUiState.value =
-                            SavingsAccountTransactionUiState.ShowError(result.message.toString())
+                        is Resource.Error ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowError(result.message.toString())
 
-                        is Resource.Loading -> _savingsAccountTransactionUiState.value =
-                            SavingsAccountTransactionUiState.ShowProgressbar
+                        is Resource.Loading ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowProgressbar
 
-                        is Resource.Success -> _savingsAccountTransactionUiState.value =
-                            SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
-                                result.data ?: SavingsAccountTransactionTemplate()
-                            )
+                        is Resource.Success ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
+                                    result.data ?: SavingsAccountTransactionTemplate(),
+                                )
                     }
                 }
             }
@@ -89,19 +93,22 @@ class SavingsAccountTransactionViewModel @Inject constructor(
                     savingsAccountType?.endpoint,
                     it,
                     transactionType,
-                    request
+                    request,
                 ).collect { result ->
                     when (result) {
-                        is Resource.Error -> _savingsAccountTransactionUiState.value =
-                            SavingsAccountTransactionUiState.ShowError(result.message.toString())
+                        is Resource.Error ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowError(result.message.toString())
 
-                        is Resource.Loading -> _savingsAccountTransactionUiState.value =
-                            SavingsAccountTransactionUiState.ShowProgressbar
+                        is Resource.Loading ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowProgressbar
 
-                        is Resource.Success -> _savingsAccountTransactionUiState.value =
-                            SavingsAccountTransactionUiState.ShowTransactionSuccessfullyDone(
-                                result.data ?: SavingsAccountTransactionResponse()
-                            )
+                        is Resource.Success ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowTransactionSuccessfullyDone(
+                                    result.data ?: SavingsAccountTransactionResponse(),
+                                )
                     }
                 }
             }
@@ -112,11 +119,13 @@ class SavingsAccountTransactionViewModel @Inject constructor(
             accountId?.let {
                 getSavingsAccountTransactionUseCase(it).collect { result ->
                     when (result) {
-                        is Resource.Error -> _savingsAccountTransactionUiState.value =
-                            SavingsAccountTransactionUiState.ShowError(result.message.toString())
+                        is Resource.Error ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowError(result.message.toString())
 
-                        is Resource.Loading -> _savingsAccountTransactionUiState.value =
-                            SavingsAccountTransactionUiState.ShowProgressbar
+                        is Resource.Loading ->
+                            _savingsAccountTransactionUiState.value =
+                                SavingsAccountTransactionUiState.ShowProgressbar
 
                         is Resource.Success -> {
                             if (result.data != null) {
@@ -131,5 +140,4 @@ class SavingsAccountTransactionViewModel @Inject constructor(
                 }
             }
         }
-
 }
