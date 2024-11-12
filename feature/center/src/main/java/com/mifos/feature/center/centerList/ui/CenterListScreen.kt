@@ -112,7 +112,7 @@ internal fun CenterListScreen(
 }
 
 @Composable
-private fun CenterListScreen(
+internal fun CenterListScreen(
     paddingValues: PaddingValues,
     state: CenterListUiState,
     createNewCenter: () -> Unit,

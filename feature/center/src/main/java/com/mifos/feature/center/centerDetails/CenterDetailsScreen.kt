@@ -98,7 +98,7 @@ internal fun CenterDetailsScreen(
 }
 
 @Composable
-private fun CenterDetailsScreen(
+internal fun CenterDetailsScreen(
     state: CenterDetailsUiState,
     onBackPressed: () -> Unit,
     onMenuClick: (MenuItems) -> Unit,

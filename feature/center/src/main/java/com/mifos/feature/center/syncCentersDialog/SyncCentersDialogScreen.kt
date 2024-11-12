@@ -67,7 +67,7 @@ internal fun SyncCenterDialogScreen(
 }
 
 @Composable
-private fun SyncCenterDialogScreen(
+internal fun SyncCenterDialogScreen(
     uiState: SyncCentersDialogUiState,
     uiData: SyncCentersDialogData,
     dismiss: () -> Unit,

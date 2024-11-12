@@ -89,7 +89,7 @@ internal fun GroupListScreen(
 }
 
 @Composable
-private fun GroupListScreen(
+internal fun GroupListScreen(
     state: GroupListUiState,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,

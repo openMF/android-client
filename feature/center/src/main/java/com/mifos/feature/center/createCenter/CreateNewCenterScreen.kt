@@ -91,7 +91,7 @@ internal fun CreateNewCenterScreen(
 }
 
 @Composable
-private fun CreateNewCenterScreen(
+internal fun CreateNewCenterScreen(
     state: CreateNewCenterUiState,
     onRetry: () -> Unit,
     createCenter: (CenterPayload) -> Unit,
