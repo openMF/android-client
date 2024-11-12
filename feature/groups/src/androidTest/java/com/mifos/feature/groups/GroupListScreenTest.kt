@@ -124,7 +124,7 @@ class GroupListScreenTest {
                 onGroupClick = {},
                 onSelectItem = {},
                 onAddGroupClick = {},
-                //onSyncClick = {},
+                onSyncClick = {},
                 resetSelectionMode = {},
             )
         }
@@ -164,7 +164,7 @@ class GroupListScreenTest {
                 onGroupClick = {},
                 onSelectItem = {},
                 onAddGroupClick = {},
-               // onSyncClick = {},
+                onSyncClick = {},
                 resetSelectionMode = {},
             )
         }
@@ -201,7 +201,7 @@ class GroupListScreenTest {
                 onGroupClick = {},
                 onSelectItem = {},
                 onAddGroupClick = {},
-               // onSyncClick = {},
+                onSyncClick = {},
                 resetSelectionMode = {},
             )
         }
@@ -253,7 +253,7 @@ class GroupListScreenTest {
                 onGroupClick = {},
                 onSelectItem = {},
                 onAddGroupClick = {},
-              //  onSyncClick = {},
+                onSyncClick = {},
                 resetSelectionMode = {},
             )
         }
@@ -312,7 +312,7 @@ class GroupListScreenTest {
                 onGroupClick = {},
                 onSelectItem = {},
                 onAddGroupClick = {},
-             //   onSyncClick = {},
+                onSyncClick = {},
                 resetSelectionMode = {},
             )
         }
@@ -380,7 +380,7 @@ class GroupListScreenTest {
                     }
                 },
                 onAddGroupClick = {},
-              //  onSyncClick = {},
+                onSyncClick = {},
                 resetSelectionMode = {
                     selectedItems.clear()
                 },
