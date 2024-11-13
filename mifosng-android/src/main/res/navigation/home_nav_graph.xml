@@ -75,10 +75,6 @@
         android:name="com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxPendingTasksActivity"
         android:label="CheckerInboxPendingTasksActivity" />
 
-
-
-
-
     <activity
         android:id="@+id/settingsActivity"
         android:name="com.mifos.mifosxdroid.activity.setting.SettingsActivity"

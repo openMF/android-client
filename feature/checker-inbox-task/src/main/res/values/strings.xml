@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2024 Mifos Initiative
+
+    This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at https://mozilla.org/MPL/2.0/.
+
+    See https://github.com/openMF/android-client/blob/master/LICENSE.md
+-->
 <resources>
     <string name="feature_checker_inbox_task_checker_inbox_and_pending_tasks">Checker Inbox &amp; Tasks</string>
     <string name="feature_checker_inbox_task_failed_to_Load_Check_Inbox">Failed to Load Check Inbox</string>
