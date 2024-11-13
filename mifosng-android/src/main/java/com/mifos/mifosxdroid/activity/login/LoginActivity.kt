@@ -37,6 +37,10 @@ class LoginActivity : MifosBaseActivity() {
                         supportFragmentManager,
                         "UpdateServerConfigFragment"
                     )
+                },
+                onSuccessNavigate = {
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    finish()
                 }
             )
         }

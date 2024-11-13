@@ -75,6 +75,7 @@ fun LoginScreen(
     homeIntent: () -> Unit,
     passcodeIntent: () -> Unit,
     onClickToUpdateServerConfig: () -> Unit,
+    onSuccessNavigate: () -> Unit
 ) {
 
     val loginViewModel: LoginViewModel = hiltViewModel()
@@ -127,6 +128,10 @@ fun LoginScreen(
         LoginUiState.PassCodeActivityIntent -> {
             showDialog.value = false
             passcodeIntent()
+        }
+        LoginUiState.NavigateToHome ->{
+            showDialog.value = false
+            onSuccessNavigate()
         }
     }
 
@@ -264,5 +269,5 @@ fun LoginScreen(
 @Preview(showSystemUi = true, device = "id:pixel_7")
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen({}, {}, {})
+    LoginScreen({}, {}, {},{})
 }

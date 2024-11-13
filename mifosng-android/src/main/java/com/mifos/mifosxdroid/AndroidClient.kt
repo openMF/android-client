@@ -32,7 +32,8 @@ fun AndroidClient() {
         authNavGraph(
             navigatePasscode = {},
             navigateHome = navController::navigateHome,
-            updateServerConfig = {}
+            updateServerConfig = {},
+            onSuccessNavigate = navController ::navigateHome
         )
 
         homeGraph()

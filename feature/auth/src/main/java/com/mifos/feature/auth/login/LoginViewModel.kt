@@ -118,6 +118,7 @@ class LoginViewModel @Inject constructor(
         } else {
             _loginUiState.value = LoginUiState.PassCodeActivityIntent
         }
+        _loginUiState.value = LoginUiState.NavigateToHome
     }
 
 }

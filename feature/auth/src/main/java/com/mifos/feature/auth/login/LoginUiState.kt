@@ -19,4 +19,6 @@ sealed class LoginUiState {
 
     data object PassCodeActivityIntent : LoginUiState()
 
+    data object NavigateToHome : LoginUiState()
+
 }
