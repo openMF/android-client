@@ -1,8 +1,16 @@
-package com.mifos.feature.center.center_list.ui
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.center.centerList.ui
 
 import androidx.paging.PagingData
 import com.mifos.core.objects.group.Center
-import com.mifos.core.objects.group.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
 
 /**

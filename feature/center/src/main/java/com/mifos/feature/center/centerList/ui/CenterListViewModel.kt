@@ -1,4 +1,13 @@
-package com.mifos.feature.center.center_list.ui
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.center.centerList.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,12 +23,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class CenterListViewModel @Inject constructor(
     private val prefManager: PrefManager,
     private val repository: CenterListRepository,
-    private val getCenterListDbUseCase: GetCenterListDbUseCase
+    private val getCenterListDbUseCase: GetCenterListDbUseCase,
 ) : ViewModel() {
 
     // for refresh feature
@@ -36,8 +44,11 @@ class CenterListViewModel @Inject constructor(
     val centerListUiState = _centerListUiState.asStateFlow()
 
     fun getCenterList() {
-        if (prefManager.userStatus) loadCentersFromDb()
-        else loadCentersFromApi()
+        if (prefManager.userStatus) {
+            loadCentersFromDb()
+        } else {
+            loadCentersFromApi()
+        }
     }
 
     private fun loadCentersFromApi() = viewModelScope.launch(Dispatchers.IO) {
@@ -48,13 +59,15 @@ class CenterListViewModel @Inject constructor(
     private fun loadCentersFromDb() = viewModelScope.launch(Dispatchers.IO) {
         getCenterListDbUseCase().collect { result ->
             when (result) {
-                is Resource.Error -> _centerListUiState.value =
-                    CenterListUiState.Error(R.string.feature_center_failed_to_load_db_centers)
+                is Resource.Error ->
+                    _centerListUiState.value =
+                        CenterListUiState.Error(R.string.feature_center_failed_to_load_db_centers)
 
                 is Resource.Loading -> _centerListUiState.value = CenterListUiState.Loading
 
-                is Resource.Success -> _centerListUiState.value =
-                    CenterListUiState.CenterListDb(result.data ?: emptyList())
+                is Resource.Success ->
+                    _centerListUiState.value =
+                        CenterListUiState.CenterListDb(result.data ?: emptyList())
             }
         }
     }

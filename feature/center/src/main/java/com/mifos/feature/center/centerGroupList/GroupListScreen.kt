@@ -1,4 +1,13 @@
-package com.mifos.feature.center.center_group_list
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.center.centerGroupList
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
@@ -44,11 +53,10 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.center.R
 
 @Composable
-fun GroupListScreen(
+internal fun GroupListScreen(
     onBackPressed: () -> Unit,
-    loadClientsOfGroup: (List<Client>) -> Unit
+    loadClientsOfGroup: (List<Client>) -> Unit,
 ) {
-
     val viewModel: GroupListViewModel = hiltViewModel()
     val centerId by viewModel.centerId.collectAsStateWithLifecycle()
     val state by viewModel.groupListUiState.collectAsStateWithLifecycle()
@@ -76,16 +84,16 @@ fun GroupListScreen(
         },
         onRetry = {
             viewModel.loadGroupByCenter(centerId)
-        }
+        },
     )
 }
 
 @Composable
-fun GroupListScreen(
+internal fun GroupListScreen(
     state: GroupListUiState,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
-    onGroupClick: (Int) -> Unit
+    onGroupClick: (Int) -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -93,7 +101,7 @@ fun GroupListScreen(
         icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_center_groups),
         onBackPressed = onBackPressed,
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
@@ -107,12 +115,12 @@ fun GroupListScreen(
                     if (state.centerWithAssociations.groupMembers.isEmpty()) {
                         MifosEmptyUi(
                             text = stringResource(id = R.string.feature_center_no_group_list_to_show),
-                            icon = MifosIcons.fileTask
+                            icon = MifosIcons.fileTask,
                         )
                     } else {
                         GroupListContent(
                             centerWithAssociations = state.centerWithAssociations,
-                            onGroupClick = onGroupClick
+                            onGroupClick = onGroupClick,
                         )
                     }
                 }
@@ -121,11 +129,10 @@ fun GroupListScreen(
     }
 }
 
-
 @Composable
-fun GroupListContent(
+private fun GroupListContent(
     centerWithAssociations: CenterWithAssociations,
-    onGroupClick: (Int) -> Unit
+    onGroupClick: (Int) -> Unit,
 ) {
     LazyColumn {
         items(centerWithAssociations.groupMembers) { group ->
@@ -134,11 +141,10 @@ fun GroupListContent(
     }
 }
 
-
 @Composable
-fun GroupItem(
+private fun GroupItem(
     group: Group,
-    onGroupClick: (Int) -> Unit
+    onGroupClick: (Int) -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -146,22 +152,22 @@ fun GroupItem(
         shape = RoundedCornerShape(0.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = Color.White,
         ),
-        onClick = { group.id?.let { onGroupClick(it) } }
+        onClick = { group.id?.let { onGroupClick(it) } },
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     modifier = Modifier
                         .padding(8.dp),
                     text = group.name.toString(),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
                     modifier = Modifier.padding(8.dp),
@@ -177,7 +183,7 @@ fun GroupItem(
                         stringResource(id = R.string.feature_center_active)
                     } else {
                         stringResource(id = R.string.feature_center_inactive)
-                    }
+                    },
                 )
                 Canvas(modifier = Modifier.size(16.dp)) {
                     if (group.status?.value?.let { Status.isActive(it) } == true) {
@@ -198,20 +204,20 @@ class GroupListUiStateProvider : PreviewParameterProvider<GroupListUiState> {
         get() = sequenceOf(
             GroupListUiState.Loading,
             GroupListUiState.Error(R.string.feature_center_failed_to_load_group_list),
-            GroupListUiState.GroupList(sampleCenterWithAssociations)
+            GroupListUiState.GroupList(sampleCenterWithAssociations),
         )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun GroupListScreenPreview(
-    @PreviewParameter(GroupListUiStateProvider::class) state: GroupListUiState
+    @PreviewParameter(GroupListUiStateProvider::class) state: GroupListUiState,
 ) {
     GroupListScreen(
         state = state,
         onBackPressed = {},
         onGroupClick = {},
-        onRetry = {}
+        onRetry = {},
     )
 }
 

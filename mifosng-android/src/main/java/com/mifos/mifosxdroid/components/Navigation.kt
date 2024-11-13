@@ -39,6 +39,7 @@ import com.mifos.feature.loan.navigation.navigateToLoanAccountScreen
 import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteScreen
+import com.mifos.feature.offline.navigation.navigateToSyncCenterPayloadsScreen
 import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.path_tracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.report.navigation.reportNavGraph
@@ -164,10 +165,10 @@ fun Navigation(
             paddingValues = padding,
             onActivateCenter = navController::navigateToActivateScreen,
             addSavingsAccount = {
-//                TODO() check this logic
                 navController.navigateToAddSavingsAccount(it, 0, true)
-            }
-        )
+            },
+
+            )
 
         reportNavGraph(
             navController = navController
@@ -201,12 +202,12 @@ fun Navigation(
 
         dataTableNavGraph(
             navController = navController,
-            clientCreated = { client , userStatus ->
+            clientCreated = { client, userStatus ->
                 navController.popBackStack()
                 navController.popBackStack()
                 Toast.makeText(context, context.resources.getString(R.string.client) + MifosResponseHandler.response, Toast.LENGTH_LONG).show()
 
-                if(userStatus == Constants.USER_ONLINE){
+                if (userStatus == Constants.USER_ONLINE){
                     client.clientId?.let { navController.navigateClientDetailsScreen(it) }
                 }
             }
