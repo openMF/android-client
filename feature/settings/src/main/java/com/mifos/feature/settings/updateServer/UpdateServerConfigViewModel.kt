@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.settings.updateServer
 
 import androidx.compose.runtime.State
@@ -36,7 +45,7 @@ class UpdateServerConfigViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = null
+        initialValue = null,
     )
 
     val endPointError = snapshotFlow { _state.value.endPoint }.mapLatest {
@@ -44,7 +53,7 @@ class UpdateServerConfigViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = null
+        initialValue = null,
     )
 
     val apiPathError = snapshotFlow { _state.value.apiPath }.mapLatest {
@@ -52,7 +61,7 @@ class UpdateServerConfigViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = null
+        initialValue = null,
     )
 
     val portError = snapshotFlow { _state.value.port }.mapLatest {
@@ -60,7 +69,7 @@ class UpdateServerConfigViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = null
+        initialValue = null,
     )
 
     val tenantError = snapshotFlow { _state.value.tenant }.mapLatest {
@@ -68,39 +77,38 @@ class UpdateServerConfigViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = null
+        initialValue = null,
     )
-
 
     fun onEvent(event: UpdateServerConfigEvent) {
         when (event) {
             is UpdateServerConfigEvent.UpdateProtocol -> {
                 _state.value = _state.value.copy(
-                    protocol = event.protocol
+                    protocol = event.protocol,
                 )
             }
 
             is UpdateServerConfigEvent.UpdateEndPoint -> {
                 _state.value = _state.value.copy(
-                    endPoint = event.endPoint
+                    endPoint = event.endPoint,
                 )
             }
 
             is UpdateServerConfigEvent.UpdateApiPath -> {
                 _state.value = _state.value.copy(
-                    apiPath = event.apiPath
+                    apiPath = event.apiPath,
                 )
             }
 
             is UpdateServerConfigEvent.UpdatePort -> {
                 _state.value = _state.value.copy(
-                    port = event.port
+                    port = event.port,
                 )
             }
 
             is UpdateServerConfigEvent.UpdateTenant -> {
                 _state.value = _state.value.copy(
-                    tenant = event.tenant
+                    tenant = event.tenant,
                 )
             }
 
@@ -111,7 +119,7 @@ class UpdateServerConfigViewModel @Inject constructor(
                         apiPathError,
                         endPointError,
                         portError,
-                        tenantError
+                        tenantError,
                     ).any { it.value != null }
 
                     if (!hasAnyError) {

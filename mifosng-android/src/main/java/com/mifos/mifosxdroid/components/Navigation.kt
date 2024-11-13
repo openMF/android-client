@@ -14,7 +14,7 @@ import com.mifos.feature.activate.navigation.navigateToActivateScreen
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
-import com.mifos.feature.checker_inbox_task.navigation.checkerInboxTaskGraph
+import com.mifos.feature.checkerInboxTask.navigation.checkerInboxTaskGraph
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.client.navigation.navigateCreateClientScreen
@@ -115,13 +115,8 @@ fun Navigation(
         savingsNavGraph(
             navController = navController,
             onBackPressed = navController::popBackStack,
-            loadMoreSavingsAccountInfo = { navController.navigateToDataTable(Constants.DATA_TABLE_NAME_SAVINGS, it) },
-            loadDocuments = {
-                navController.navigateToDocumentListScreen(
-                    it,
-                    Constants.ENTITY_TYPE_SAVINGS
-                )
-            },
+            loadMoreSavingsAccountInfo = navController::navigateToDataTable,
+            loadDocuments = navController::navigateToDocumentListScreen
         )
 
         loanNavGraph(
@@ -188,7 +183,7 @@ fun Navigation(
 
         settingsScreen(
             navigateBack = navController::popBackStack,
-            navigateToLoginScreen = {},
+            navigateToLoginScreen = { navController.navigateToLogin() },
             changePasscode = { },
             languageChanged = { },
         )

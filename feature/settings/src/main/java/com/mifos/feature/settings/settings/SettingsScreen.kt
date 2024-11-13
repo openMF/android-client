@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.settings.settings
 
 import android.content.ComponentName
@@ -9,7 +18,6 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,13 +42,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalAutofill
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.enums.MifosAppLanguage
@@ -55,7 +61,7 @@ import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import java.util.Locale
 
 @Composable
-fun SettingsScreen(
+internal fun SettingsScreen(
     onBackPressed: () -> Unit,
     navigateToLoginScreen: () -> Unit,
     changePasscode: (String) -> Unit,
@@ -89,17 +95,16 @@ fun SettingsScreen(
             updateLanguageLocale(
                 context = context,
                 language = it.code,
-                isSystemLanguage = isSystemLanguage
+                isSystemLanguage = isSystemLanguage,
             )
             languageChanged()
         },
     )
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(
+internal fun SettingsScreen(
     onBackPressed: () -> Unit,
     selectedLanguage: String,
     selectedTheme: String,
@@ -110,7 +115,6 @@ fun SettingsScreen(
     updateTheme: (theme: AppTheme) -> Unit,
     updateLanguage: (language: MifosAppLanguage) -> Unit,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
     var showLanguageUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showEndpointUpdateDialog by rememberSaveable { mutableStateOf(false) }
@@ -128,7 +132,7 @@ fun SettingsScreen(
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(
-            Modifier.padding(paddingValues)
+            Modifier.padding(paddingValues),
         ) {
             SettingsCards(
                 settingsCardClicked = { item ->
@@ -145,7 +149,7 @@ fun SettingsScreen(
 
                         SettingsCardItem.SERVER_CONFIG -> showServerConfig = true
                     }
-                }
+                },
             )
         }
     }
@@ -154,7 +158,7 @@ fun SettingsScreen(
         SyncSurveysDialog(
             closeDialog = {
                 showSyncSurveyDialog = false
-            }
+            },
         )
     }
 
@@ -168,7 +172,7 @@ fun SettingsScreen(
                 onSuccessful = {
                     showServerConfig = false
                     showRestartCountdownToast(context, 2)
-                }
+                },
             )
         }
     }
@@ -179,7 +183,7 @@ fun SettingsScreen(
             items = stringArrayResource(R.array.feature_settings_languages),
             selectItem = { _, index -> updateLanguage(MifosAppLanguage.entries[index]) },
             onDismissRequest = { showLanguageUpdateDialog = false },
-            selectedItem = MifosAppLanguage.fromCode(selectedLanguage).displayName
+            selectedItem = MifosAppLanguage.fromCode(selectedLanguage).displayName,
         )
     }
 
@@ -189,7 +193,7 @@ fun SettingsScreen(
             items = AppTheme.entries.map { it.themeName }.toTypedArray(),
             selectItem = { _, index -> updateTheme(AppTheme.entries[index]) },
             onDismissRequest = { showThemeUpdateDialog = false },
-            selectedItem = selectedTheme
+            selectedItem = selectedTheme,
         )
     }
 
@@ -198,13 +202,13 @@ fun SettingsScreen(
             initialBaseURL = baseURL,
             initialTenant = tenant,
             onDismissRequest = { showEndpointUpdateDialog = false },
-            handleEndpointUpdate = handleEndpointUpdate
+            handleEndpointUpdate = handleEndpointUpdate,
         )
     }
 }
 
 @Composable
-fun SettingsCards(
+private fun SettingsCards(
     settingsCardClicked: (SettingsCardItem) -> Unit,
 ) {
     LazyColumn {
@@ -215,24 +219,24 @@ fun SettingsCards(
                 icon = card.icon,
                 onclick = {
                     settingsCardClicked(card)
-                }
+                },
             )
         }
     }
 }
 
 @Composable
-fun SettingsCardItem(
+private fun SettingsCardItem(
     title: Int,
     details: Int,
     icon: ImageVector?,
-    onclick: () -> Unit
+    onclick: () -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         shape = RoundedCornerShape(0.dp),
-        onClick = { onclick.invoke() }
+        onClick = { onclick.invoke() },
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -242,18 +246,18 @@ fun SettingsCardItem(
                 Icon(
                     imageVector = it,
                     contentDescription = null,
-                    modifier = Modifier.weight(0.2f)
+                    modifier = Modifier.weight(0.2f),
                 )
             }
             if (icon == null) {
                 Spacer(modifier = Modifier.weight(0.2f))
             }
             Column(
-                modifier = Modifier.weight(0.8f)
+                modifier = Modifier.weight(0.8f),
             ) {
                 Text(
                     text = stringResource(id = title),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
                     modifier = Modifier.padding(end = 16.dp),
@@ -266,8 +270,7 @@ fun SettingsCardItem(
     }
 }
 
-
-fun updateLanguageLocale(context: Context, language: String, isSystemLanguage: Boolean) {
+private fun updateLanguageLocale(context: Context, language: String, isSystemLanguage: Boolean) {
     if (isSystemLanguage) {
         LanguageHelper.setLocale(context, language)
     } else {
@@ -287,7 +290,7 @@ private fun showRestartCountdownToast(context: Context, seconds: Int) {
             Toast.makeText(
                 context,
                 "Restarting app in $secondsRemaining seconds",
-                Toast.LENGTH_SHORT
+                Toast.LENGTH_SHORT,
             ).show()
         }
 
@@ -298,7 +301,7 @@ private fun showRestartCountdownToast(context: Context, seconds: Int) {
     countDownTimer.start()
 }
 
-fun Context.restartApplication() {
+private fun Context.restartApplication() {
     val packageManager: PackageManager = this.packageManager
     val intent: Intent = packageManager.getLaunchIntentForPackage(this.packageName)!!
     val componentName: ComponentName = intent.component!!
@@ -309,7 +312,7 @@ fun Context.restartApplication() {
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun PreviewSettingsScreen() {
+private fun PreviewSettingsScreen() {
     SettingsScreen(
         onBackPressed = {},
         selectedLanguage = "",
@@ -321,5 +324,4 @@ fun PreviewSettingsScreen() {
         updateTheme = {},
         changePasscode = {},
     )
-
 }

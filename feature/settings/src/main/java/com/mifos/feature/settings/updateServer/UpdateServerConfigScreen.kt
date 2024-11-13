@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.settings.updateServer
 
 import androidx.annotation.VisibleForTesting
@@ -50,7 +59,7 @@ import com.mifos.core.ui.util.DevicePreviews
 import com.mifos.feature.settings.R
 
 @Composable
-fun UpdateServerConfigScreenRoute(
+internal fun UpdateServerConfigScreenRoute(
     onCloseClick: () -> Unit,
     onSuccessful: () -> Unit,
     modifier: Modifier = Modifier,
@@ -79,7 +88,7 @@ fun UpdateServerConfigScreenRoute(
         portError = portError,
         tenantError = tenantError,
         onEvent = viewModel::onEvent,
-        onCloseClick = onCloseClick
+        onCloseClick = onCloseClick,
     )
 }
 
@@ -102,7 +111,7 @@ internal fun UpdateServerConfigScreenContent(
         apiPathError,
         endPointError,
         portError,
-        tenantError
+        tenantError,
     ).any { it != null }
     Surface(
         modifier = modifier,
@@ -113,28 +122,28 @@ internal fun UpdateServerConfigScreenContent(
                 .fillMaxWidth()
                 .padding(bottom = 24.dp)
                 .imePadding(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        MaterialTheme.colorScheme.secondaryContainer
+                        MaterialTheme.colorScheme.secondaryContainer,
                     )
-                    .padding(12.dp)
+                    .padding(12.dp),
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = stringResource(R.string.feature_settings_title),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -144,7 +153,7 @@ internal fun UpdateServerConfigScreenContent(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = stringResource(R.string.feature_settings_close_bottomsheet)
+                            contentDescription = stringResource(R.string.feature_settings_close_bottomsheet),
                         )
                     }
                 }
@@ -172,7 +181,7 @@ internal fun UpdateServerConfigScreenContent(
                         },
                         onValueChange = {
                             onEvent(UpdateServerConfigEvent.UpdateProtocol(it))
-                        }
+                        },
                     )
                 }
 
@@ -190,7 +199,7 @@ internal fun UpdateServerConfigScreenContent(
                         },
                         onValueChange = {
                             onEvent(UpdateServerConfigEvent.UpdateEndPoint(it))
-                        }
+                        },
                     )
                 }
 
@@ -208,7 +217,7 @@ internal fun UpdateServerConfigScreenContent(
                         },
                         onValueChange = {
                             onEvent(UpdateServerConfigEvent.UpdateApiPath(it))
-                        }
+                        },
                     )
                 }
 
@@ -227,7 +236,7 @@ internal fun UpdateServerConfigScreenContent(
                         },
                         onValueChange = {
                             onEvent(UpdateServerConfigEvent.UpdatePort(it))
-                        }
+                        },
                     )
                 }
 
@@ -245,7 +254,7 @@ internal fun UpdateServerConfigScreenContent(
                         },
                         onValueChange = {
                             onEvent(UpdateServerConfigEvent.UpdateTenant(it))
-                        }
+                        },
                     )
                 }
 
@@ -253,18 +262,18 @@ internal fun UpdateServerConfigScreenContent(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start),
                     ) {
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = "infoIcon",
                             tint = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(20.dp),
                         )
 
                         Text(
                             text = stringResource(R.string.feature_settings_note_text),
-                            style = MaterialTheme.typography.labelSmall
+                            style = MaterialTheme.typography.labelSmall,
                         )
                     }
 
@@ -282,12 +291,12 @@ internal fun UpdateServerConfigScreenContent(
                         enabled = !hasAnyError,
                         colors = ButtonDefaults.elevatedButtonColors(
                             containerColor = BluePrimary,
-                            contentColor = Color.White
-                        )
+                            contentColor = Color.White,
+                        ),
                     ) {
                         Icon(
                             imageVector = Icons.Default.Save,
-                            contentDescription = "updateConfig"
+                            contentDescription = "updateConfig",
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(stringResource(R.string.feature_settings_update_config_btn_text).uppercase())
@@ -308,10 +317,10 @@ private fun UpdateServerConfigScreenEmptyData() {
                 endPoint = "",
                 apiPath = "",
                 port = "",
-                tenant = ""
+                tenant = "",
             ),
             onEvent = {},
-            onCloseClick = {}
+            onCloseClick = {},
         )
     }
 }
