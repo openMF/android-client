@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.settings.syncSurvey
 
 import androidx.lifecycle.ViewModel
@@ -9,9 +18,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import retrofit2.HttpException
+import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
-import rx.plugins.RxJavaPlugins
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -20,7 +29,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SyncSurveysDialogViewModel @Inject constructor(
-    private val repository: SyncSurveysDialogRepository
+    private val repository: SyncSurveysDialogRepository,
 ) :
     ViewModel() {
 
@@ -41,7 +50,6 @@ class SyncSurveysDialogViewModel @Inject constructor(
     private var mQuestionDataSyncIndex = 0
     private var mResponseDataSyncIndex = 0
     private var maxSingleSyncSurveyProgressBar = 0
-
 
     private fun checkNetworkConnection(): Boolean {
         return networkUtilsWrapper.isNetworkConnected()
@@ -113,13 +121,13 @@ class SyncSurveysDialogViewModel @Inject constructor(
         if (mQuestionDataSyncIndex != mQuestionDatasList.size) {
             syncQuestionData(
                 mSurveyList[mSurveySyncIndex].id,
-                mQuestionDatasList[mQuestionDataSyncIndex]
+                mQuestionDatasList[mQuestionDataSyncIndex],
             )
         } else {
             _syncSurveysDialogUiState.value =
                 mSurveyList[mSurveySyncIndex].name?.let {
                     SyncSurveysDialogUiState.UpdateSingleSyncSurvey(
-                        mSurveySyncIndex, it, mQuestionDatasList.size
+                        mSurveySyncIndex, it, mQuestionDatasList.size,
                     )
                 }!!
             mSurveySyncIndex += 1
@@ -138,14 +146,14 @@ class SyncSurveysDialogViewModel @Inject constructor(
         if (mResponseDataSyncIndex != mResponseDatasList.size) {
             syncResponseData(
                 mQuestionDatasList[mQuestionDataSyncIndex].id,
-                mResponseDatasList[mResponseDataSyncIndex]
+                mResponseDatasList[mResponseDataSyncIndex],
             )
         } else {
             _syncSurveysDialogUiState.value =
                 SyncSurveysDialogUiState.UpdateQuestionSync(
                     mQuestionDataSyncIndex,
                     mQuestionDatasList[mQuestionDataSyncIndex].questionId,
-                    mResponseDatasList.size
+                    mResponseDatasList.size,
                 )
             mQuestionDataSyncIndex += 1
             mResponseDataSyncIndex = 0
@@ -161,7 +169,7 @@ class SyncSurveysDialogViewModel @Inject constructor(
     private fun onAccountSyncFailed(e: Throwable) {
         try {
             if (e is HttpException) {
-                val singleSyncSurveyMax = maxSingleSyncSurveyProgressBar
+                maxSingleSyncSurveyProgressBar
                 mFailedSyncSurvey.add(mSurveyList[mSurveySyncIndex])
                 mSurveySyncIndex += 1
                 _syncSurveysDialogUiState.value =
@@ -169,7 +177,8 @@ class SyncSurveysDialogViewModel @Inject constructor(
                 checkNetworkConnectionAndSyncSurvey()
             }
         } catch (throwable: Throwable) {
-            RxJavaPlugins.getInstance().errorHandler.handleError(throwable)
+            val errorObservable = Observable.error<Throwable>(RuntimeException("Custom error"))
+            errorObservable.subscribe { println("Error: ${throwable.message}") }
         }
     }
 
@@ -183,33 +192,34 @@ class SyncSurveysDialogViewModel @Inject constructor(
         repository.syncSurveyInDatabase(survey)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Survey>() {
-                override fun onStart() {
-                    _syncSurveysDialogUiState.value =
-                        SyncSurveysDialogUiState.ShowUI(mSurveyList.size)
-                }
+            .subscribe(
+                object : Subscriber<Survey>() {
+                    override fun onStart() {
+                        _syncSurveysDialogUiState.value =
+                            SyncSurveysDialogUiState.ShowUI(mSurveyList.size)
+                    }
 
-                override fun onCompleted() {
-                    _syncSurveysDialogUiState.value =
-                        mSurveyList[mSurveySyncIndex].name?.let {
-                            SyncSurveysDialogUiState.UpdateSingleSyncSurvey(
-                                mSurveySyncIndex + 1, it, mQuestionDatasList.size
-                            )
-                        }!!
-                }
+                    override fun onCompleted() {
+                        _syncSurveysDialogUiState.value =
+                            mSurveyList[mSurveySyncIndex].name?.let {
+                                SyncSurveysDialogUiState.UpdateSingleSyncSurvey(
+                                    mSurveySyncIndex + 1, it, mQuestionDatasList.size,
+                                )
+                            }!!
+                    }
 
-                override fun onError(e: Throwable) {
-                    _syncSurveysDialogUiState.value =
-                        SyncSurveysDialogUiState.ShowError(e.message.toString())
-                    onAccountSyncFailed(e)
-                }
+                    override fun onError(e: Throwable) {
+                        _syncSurveysDialogUiState.value =
+                            SyncSurveysDialogUiState.ShowError(e.message.toString())
+                        onAccountSyncFailed(e)
+                    }
 
-                override fun onNext(survey: Survey) {
-                    mQuestionDatasList = survey.questionDatas
-                    checkSurveySyncStatus()
-                }
-            }
-        )
+                    override fun onNext(survey: Survey) {
+                        mQuestionDatasList = survey.questionDatas
+                        checkSurveySyncStatus()
+                    }
+                },
+            )
     }
 
     /**
@@ -221,28 +231,29 @@ class SyncSurveysDialogViewModel @Inject constructor(
         repository.syncQuestionDataInDatabase(surveyId, questionDatas)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<QuestionDatas>() {
-                override fun onCompleted() {
-                    _syncSurveysDialogUiState.value =
-                        SyncSurveysDialogUiState.UpdateQuestionSync(
-                            mQuestionDataSyncIndex + 1,
-                            mQuestionDatasList[mQuestionDataSyncIndex].questionId,
-                            mResponseDatasList.size
-                        )
-                }
+            .subscribe(
+                object : Subscriber<QuestionDatas>() {
+                    override fun onCompleted() {
+                        _syncSurveysDialogUiState.value =
+                            SyncSurveysDialogUiState.UpdateQuestionSync(
+                                mQuestionDataSyncIndex + 1,
+                                mQuestionDatasList[mQuestionDataSyncIndex].questionId,
+                                mResponseDatasList.size,
+                            )
+                    }
 
-                override fun onError(e: Throwable) {
-                    _syncSurveysDialogUiState.value =
-                        SyncSurveysDialogUiState.ShowError(e.message.toString())
-                    onAccountSyncFailed(e)
-                }
+                    override fun onError(e: Throwable) {
+                        _syncSurveysDialogUiState.value =
+                            SyncSurveysDialogUiState.ShowError(e.message.toString())
+                        onAccountSyncFailed(e)
+                    }
 
-                override fun onNext(questionDatas: QuestionDatas) {
-                    mResponseDatasList = questionDatas.responseDatas
-                    checkQuestionDataSyncStatusAndSync()
-                }
-            }
-        )
+                    override fun onNext(questionDatas: QuestionDatas) {
+                        mResponseDatasList = questionDatas.responseDatas
+                        checkQuestionDataSyncStatusAndSync()
+                    }
+                },
+            )
     }
 
     /**
@@ -254,31 +265,32 @@ class SyncSurveysDialogViewModel @Inject constructor(
         repository.syncResponseDataInDatabase(questionId, responseDatas)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<ResponseDatas>() {
-                override fun onCompleted() {
-                    SyncSurveysDialogUiState.UpdateResponseSync(
-                        mResponseDataSyncIndex,
-                        mResponseDatasList[mResponseDataSyncIndex].value
-                    )
-                }
-
-                override fun onError(e: Throwable) {
-                    _syncSurveysDialogUiState.value =
-                        SyncSurveysDialogUiState.ShowError(e.message.toString())
-                    onAccountSyncFailed(e)
-                }
-
-                override fun onNext(responseDatas: ResponseDatas) {
-                    _syncSurveysDialogUiState.value =
+            .subscribe(
+                object : Subscriber<ResponseDatas>() {
+                    override fun onCompleted() {
                         SyncSurveysDialogUiState.UpdateResponseSync(
                             mResponseDataSyncIndex,
-                            mResponseDatasList[mResponseDataSyncIndex].value
+                            mResponseDatasList[mResponseDataSyncIndex].value,
                         )
-                    mResponseDataSyncIndex += 1
-                    checkNetworkConnectionAndSyncResponseData()
-                }
-            }
-        )
+                    }
+
+                    override fun onError(e: Throwable) {
+                        _syncSurveysDialogUiState.value =
+                            SyncSurveysDialogUiState.ShowError(e.message.toString())
+                        onAccountSyncFailed(e)
+                    }
+
+                    override fun onNext(responseDatas: ResponseDatas) {
+                        _syncSurveysDialogUiState.value =
+                            SyncSurveysDialogUiState.UpdateResponseSync(
+                                mResponseDataSyncIndex,
+                                mResponseDatasList[mResponseDataSyncIndex].value,
+                            )
+                        mResponseDataSyncIndex += 1
+                        checkNetworkConnectionAndSyncResponseData()
+                    }
+                },
+            )
     }
 
     private fun checkSurveySyncStatus() {
@@ -302,20 +314,21 @@ class SyncSurveysDialogViewModel @Inject constructor(
         repository.allSurvey()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<Survey>>() {
-                override fun onCompleted() {
-                    startSyncingSurveys()
-                }
+            .subscribe(
+                object : Subscriber<List<Survey>>() {
+                    override fun onCompleted() {
+                        startSyncingSurveys()
+                    }
 
-                override fun onError(e: Throwable) {
-                    _syncSurveysDialogUiState.value =
-                        SyncSurveysDialogUiState.ShowError(e.message.toString())
-                }
+                    override fun onError(e: Throwable) {
+                        _syncSurveysDialogUiState.value =
+                            SyncSurveysDialogUiState.ShowError(e.message.toString())
+                    }
 
-                override fun onNext(surveys: List<Survey>) {
-                    mSurveyList = surveys
-                }
-            }
-        )
+                    override fun onNext(surveys: List<Survey>) {
+                        mSurveyList = surveys
+                    }
+                },
+            )
     }
 }

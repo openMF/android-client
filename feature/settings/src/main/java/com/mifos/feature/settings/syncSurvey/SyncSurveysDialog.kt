@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.settings.syncSurvey
 
 import android.annotation.SuppressLint
@@ -47,11 +56,10 @@ import com.mifos.feature.settings.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun SyncSurveysDialog(
+internal fun SyncSurveysDialog(
     viewModel: SyncSurveysDialogViewModel = hiltViewModel(),
     closeDialog: () -> Unit,
 ) {
-
     val state by viewModel.syncSurveysDialogUiState.collectAsState()
 
     LaunchedEffect(key1 = true) {
@@ -66,7 +74,7 @@ fun SyncSurveysDialog(
 
 @SuppressLint("CoroutineCreationDuringComposition", "MutableCollectionMutableState")
 @Composable
-fun SyncSurveysDialog(
+internal fun SyncSurveysDialog(
     uiState: SyncSurveysDialogUiState,
     closeDialog: () -> Unit,
 ) {
@@ -92,7 +100,6 @@ fun SyncSurveysDialog(
     var totalProgressText by rememberSaveable { mutableStateOf("") }
     var syncFailedText by rememberSaveable { mutableStateOf("") }
 
-
     SyncSurveysDialogContent(
         closeDialog = closeDialog,
         showCancelButton = showCancelButton,
@@ -105,11 +112,10 @@ fun SyncSurveysDialog(
         totalSyncProgress = totalSyncProgress.toFloat() / totalSyncProgressMax.toFloat(),
         surveySyncProgress = surveySyncProgress.toFloat() / surveySyncProgressMax.toFloat(),
         questionName = questionName,
-        responseName = responseName
+        responseName = responseName,
     )
 
     when (uiState) {
-
         is SyncSurveysDialogUiState.Initial -> Unit
 
         is SyncSurveysDialogUiState.DismissDialog -> {
@@ -121,7 +127,7 @@ fun SyncSurveysDialog(
                 snackBarHostState.showSnackbar(
                     message = uiState.message,
                     actionLabel = "Ok",
-                    duration = SnackbarDuration.Short
+                    duration = SnackbarDuration.Short,
                 )
             }
             closeDialog.invoke()
@@ -132,10 +138,9 @@ fun SyncSurveysDialog(
                 Toast.makeText(
                     context,
                     context.getString(R.string.feature_settings_error_network_not_available),
-                    Toast.LENGTH_SHORT
+                    Toast.LENGTH_SHORT,
                 ).show()
             }
-
         }
 
         is SyncSurveysDialogUiState.ShowProgressbar -> {
@@ -158,7 +163,7 @@ fun SyncSurveysDialog(
             surveySyncProgressMax = uiState.total
             totalSyncProgressMax = uiState.total
             val totalSurveys = uiState.total.toString() + stringResource(R.string.feature_settings_space) +
-                    stringResource(R.string.feature_settings_surveys)
+                stringResource(R.string.feature_settings_surveys)
             totalSurveysText = totalSurveys
             syncFailedText = 0.toString()
         }
@@ -191,9 +196,8 @@ fun SyncSurveysDialog(
     }
 }
 
-
 @Composable
-fun SyncSurveysDialogContent(
+private fun SyncSurveysDialogContent(
     closeDialog: () -> Unit,
     questionSyncProgress: Float,
     responseSyncProgress: Float,
@@ -205,9 +209,8 @@ fun SyncSurveysDialogContent(
     totalProgressText: String,
     showCancelButton: Boolean,
     questionName: String,
-    responseName: String
+    responseName: String,
 ) {
-
     Dialog(onDismissRequest = { closeDialog.invoke() }) {
         Box(
             modifier = Modifier
@@ -219,25 +222,25 @@ fun SyncSurveysDialogContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(5.dp)
+                    .padding(5.dp),
             ) {
                 Text(
                     text = stringResource(id = R.string.feature_settings_sync_surveys_full_information),
                     modifier = Modifier
                         .padding(10.dp)
-                        .align(Alignment.CenterHorizontally)
+                        .align(Alignment.CenterHorizontally),
                 )
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(8.dp),
                 ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(id = R.string.feature_settings_name))
                         Text(text = surveyName)
@@ -247,7 +250,7 @@ fun SyncSurveysDialogContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(id = R.string.feature_settings_total))
                         Text(text = totalSurveysText)
@@ -257,75 +260,75 @@ fun SyncSurveysDialogContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(id = R.string.feature_settings_syncing_survey))
                         Text(text = surveyName)
                     }
 
                     LinearProgressIndicator(
-                        progress = surveySyncProgress,
+                        progress = { surveySyncProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 8.dp),
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(id = R.string.feature_settings_syncing_question))
                         Text(text = questionName)
                     }
 
                     LinearProgressIndicator(
-                        progress = questionSyncProgress,
+                        progress = { questionSyncProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 8.dp),
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(id = R.string.feature_settings_syncing_response))
                         Text(text = responseName)
                     }
 
                     LinearProgressIndicator(
-                        progress = responseSyncProgress,
+                        progress = { responseSyncProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 8.dp),
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(id = R.string.feature_settings_total_sync_progress))
                         Text(text = totalProgressText)
                     }
 
                     LinearProgressIndicator(
-                        progress = totalSyncProgress,
+                        progress = { totalSyncProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 8.dp),
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(id = R.string.feature_settings_failed_sync))
                         Text(text = syncFailedText)
@@ -335,7 +338,7 @@ fun SyncSurveysDialogContent(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp)
+                        .padding(vertical = 16.dp),
                 ) {
                     SyncSurveyButton(
                         onClick = { closeDialog.invoke() },
@@ -343,7 +346,7 @@ fun SyncSurveysDialogContent(
                             .weight(1f)
                             .padding(end = 8.dp),
                         text = stringResource(id = R.string.feature_settings_cancel),
-                        isEnabled = showCancelButton
+                        isEnabled = showCancelButton,
                     )
 
                     SyncSurveyButton(
@@ -352,7 +355,7 @@ fun SyncSurveysDialogContent(
                             .weight(1f)
                             .padding(start = 8.dp),
                         text = stringResource(id = R.string.feature_settings_hide),
-                        isEnabled = true
+                        isEnabled = true,
                     )
                 }
             }
@@ -361,11 +364,11 @@ fun SyncSurveysDialogContent(
 }
 
 @Composable
-fun SyncSurveyButton(
+private fun SyncSurveyButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    isEnabled: Boolean
+    isEnabled: Boolean,
 ) {
     Button(
         onClick = onClick,
@@ -376,9 +379,9 @@ fun SyncSurveyButton(
             containerColor = BluePrimary,
             contentColor = White,
             disabledContainerColor = Color.DarkGray,
-            disabledContentColor = White
+            disabledContentColor = White,
         ),
-        enabled = isEnabled
+        enabled = isEnabled,
     ) {
         Text(text = text)
     }
@@ -398,10 +401,10 @@ class SyncSurveysDialogPreviewProvider : PreviewParameterProvider<SyncSurveysDia
 @Preview(showBackground = true)
 @Composable
 private fun SyncSurveysDialogPreview(
-    @PreviewParameter(SyncSurveysDialogPreviewProvider::class) state: SyncSurveysDialogUiState
+    @PreviewParameter(SyncSurveysDialogPreviewProvider::class) state: SyncSurveysDialogUiState,
 ) {
     SyncSurveysDialog(
         uiState = state,
-        closeDialog = { }
+        closeDialog = { },
     )
 }
