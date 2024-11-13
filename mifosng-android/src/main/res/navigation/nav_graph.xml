@@ -75,22 +75,6 @@
     </activity>
 
     <fragment
-        android:id="@+id/checkerInboxTasksFragment"
-        android:name="com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxTasksFragment"
-        android:label="CheckerInboxTasksFragment">
-        <action
-            android:id="@+id/action_checkerInboxTasksFragment_to_checkerInboxFragment"
-            app:destination="@id/checkerInboxFragment" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/checkerInboxFragment"
-        android:name="com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxFragment"
-        android:label="CheckerInboxFragment" />
-
-
-    <fragment
         android:id="@+id/individualCollectionSheetFragment"
         android:name="com.mifos.mifosxdroid.online.collectionsheetindividual.IndividualCollectionSheetFragment"
         android:label="IndividualCollectionSheetFragment">
