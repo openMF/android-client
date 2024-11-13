@@ -85,8 +85,10 @@ fun LoginScreen(
     passcodeIntent: () -> Unit,
     onClickToUpdateServerConfig: () -> Unit,
     onSuccessNavigate: () -> Unit,
+    modifier: Modifier = Modifier,
+    loginViewModel: LoginViewModel = hiltViewModel(),
 ) {
-    val loginViewModel: LoginViewModel = hiltViewModel()
+
     val state = loginViewModel.loginUiState.collectAsState().value
     val context = LocalContext.current
 
@@ -144,7 +146,7 @@ fun LoginScreen(
     }
 
     Scaffold(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
         containerColor = Color.White,
