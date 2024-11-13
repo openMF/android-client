@@ -75,39 +75,6 @@
     </activity>
 
     <fragment
-        android:id="@+id/checkerInboxTasksFragment"
-        android:name="com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxTasksFragment"
-        android:label="CheckerInboxTasksFragment">
-        <action
-            android:id="@+id/action_checkerInboxTasksFragment_to_checkerInboxFragment"
-            app:destination="@id/checkerInboxFragment" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/checkerInboxFragment"
-        android:name="com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxFragment"
-        android:label="CheckerInboxFragment" />
-
-
-    <fragment
-        android:id="@+id/individualCollectionSheetFragment"
-        android:name="com.mifos.mifosxdroid.online.collectionsheetindividual.IndividualCollectionSheetFragment"
-        android:label="IndividualCollectionSheetFragment">
-
-        <action
-            android:id="@+id/action_individualCollectionSheetFragment_to_individualCollectionSheetDetailsFragment"
-            app:destination="@id/individualCollectionSheetDetailsFragment" />
-
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/generateCollectionSheetFragment"
-        android:name="com.mifos.mifosxdroid.online.generatecollectionsheet.GenerateCollectionSheetFragment"
-        android:label="GenerateCollectionSheetFragment" />
-
-    <fragment
         android:id="@+id/settingsFragment"
         android:name="com.mifos.mifosxdroid.activity.setting.SettingsFragment"
         android:label="SettingsFragment" />
@@ -143,47 +110,6 @@
             android:name="client"
             app:argType="com.mifos.core.objects.navigation.ClientArgs" />
     </activity>
-    <fragment
-        android:id="@+id/individualCollectionSheetDetailsFragment"
-        android:name="com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsFragment"
-        android:label="IndividualCollectionSheetDetailsFragment">
-        <argument
-            android:name="sheet"
-            app:argType="com.mifos.core.objects.collectionsheet.IndividualCollectionSheet" />
-        <argument
-            android:name="actualDisbursementDate"
-            app:argType="string" />
-        <argument
-            android:name="transactionDate"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_individualCollectionSheetDetailsFragment_to_paymentDetailsFragment"
-            app:destination="@id/paymentDetailsFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/paymentDetailsFragment"
-        android:name="com.mifos.mifosxdroid.online.collectionsheetindividualdetails.PaymentDetailsFragment"
-        android:label="PaymentDetailsFragment">
-        <argument
-            android:name="position"
-            app:argType="integer" />
-        <argument
-            android:name="payload"
-            app:argType="com.mifos.core.network.model.IndividualCollectionSheetPayload" />
-        <argument
-            android:name="paymentTypeList"
-            app:argType="string[]" />
-        <argument
-            android:name="loanAndClientName"
-            app:argType="com.mifos.core.objects.collectionsheet.LoanAndClientName" />
-        <argument
-            android:name="paymentTypeOptions"
-            app:argType="com.mifos.core.objects.accounts.loan.PaymentTypeOptions[]" />
-        <argument
-            android:name="clientId"
-            app:argType="integer" />
-    </fragment>
-
     <dialog
         android:id="@+id/updateServerConfigFragment"
         android:name="com.mifos.mifosxdroid.activity.setting.UpdateServerConfigFragment"

@@ -29,8 +29,8 @@ import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
-import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
-import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetNavGraph
+import com.mifos.feature.individualCollectionSheet.navigation.generateCollectionSheetScreen
+import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.loan.navigation.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.groupLoanScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
@@ -193,11 +193,11 @@ fun Navigation(
         )
 
         individualCollectionSheetNavGraph(
-            onBackPressed = { navController.popBackStack() },
+            onBackPressed = navController::popBackStack,
             navController = navController,
         )
 
-        generateCollectionSheetScreen(onBackPressed = navController::popBackStack)
+        generateCollectionSheetScreen ( navController::popBackStack )
 
         dataTableNavGraph(
             navController = navController,
