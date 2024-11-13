@@ -47,10 +47,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.login.LoginActivity"
-            android:label="@string/mifos_account"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.home.HomeActivity"
             android:label="home_activity"
             android:screenOrientation="portrait"
