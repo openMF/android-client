@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.offline.dashboard
 
 import androidx.lifecycle.ViewModel
@@ -20,7 +29,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OfflineDashboardViewModel @Inject constructor(
-    private val repository: OfflineDashboardRepository
+    private val repository: OfflineDashboardRepository,
 ) : ViewModel() {
 
     private val _offlineDashboardUiState = MutableStateFlow(OfflineDashboardUiState.SyncUiState(initGetSyncData()))
@@ -132,13 +141,13 @@ class OfflineDashboardViewModel @Inject constructor(
         }
     }
 
-    private fun initGetSyncData () : List<SyncStateData>{
+    private fun initGetSyncData(): List<SyncStateData> {
         return listOf(
             SyncStateData(count = 0, name = R.string.feature_offline_sync_clients, type = Type.SYNC_CLIENTS),
             SyncStateData(count = 0, name = R.string.feature_offline_sync_groups, type = Type.SYNC_GROUPS),
             SyncStateData(count = 0, name = R.string.feature_offline_sync_centers, type = Type.SYNC_CENTERS),
             SyncStateData(count = 0, name = R.string.feature_offline_sync_loanRepayments, type = Type.SYNC_LOAN_REPAYMENTS),
-            SyncStateData(count = 0, name = R.string.feature_offline_sync_savingsAccountTransactions, type = Type.SYNC_SAVINGS_ACCOUNT_TRANSACTION)
+            SyncStateData(count = 0, name = R.string.feature_offline_sync_savingsAccountTransactions, type = Type.SYNC_SAVINGS_ACCOUNT_TRANSACTION),
         )
     }
 }

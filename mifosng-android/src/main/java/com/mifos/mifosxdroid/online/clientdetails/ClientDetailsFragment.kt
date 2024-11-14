@@ -92,20 +92,20 @@ class ClientDetailsFragment : MifosBaseFragment() {
     }
 
     private fun loadDocuments(clientId: Int) {
-        val action =
-            ClientDetailsFragmentDirections.actionClientDetailsFragmentToDocumentListFragment(
-                clientId,
-                Constants.ENTITY_TYPE_CLIENTS
-            )
-        findNavController().navigate(action)
+//        val action =
+//            ClientDetailsFragmentDirections.actionClientDetailsFragmentToDocumentListFragment(
+//                clientId,
+//                Constants.ENTITY_TYPE_CLIENTS
+//            )
+//        findNavController().navigate(action)
     }
 
     private fun loadNotes(clientId: Int) {
-        val action = ClientDetailsFragmentDirections.actionClientDetailsFragmentToNoteFragment(
-            clientId,
-            Constants.ENTITY_TYPE_CLIENTS
-        )
-        findNavController().navigate(action)
+//        val action = ClientDetailsFragmentDirections.actionClientDetailsFragmentToNoteFragment(
+//            clientId,
+//            Constants.ENTITY_TYPE_CLIENTS
+//        )
+//        findNavController().navigate(action)
     }
 
     private fun loadClientCharges(clientId: Int) {
@@ -118,11 +118,11 @@ class ClientDetailsFragment : MifosBaseFragment() {
     }
 
     private fun loadIdentifiers(clientId: Int) {
-        val action =
-            ClientDetailsFragmentDirections.actionClientDetailsFragmentToClientIdentifiersFragment(
-                clientId
-            )
-        findNavController().navigate(action)
+//        val action =
+//            ClientDetailsFragmentDirections.actionClientDetailsFragmentToClientIdentifiersFragment(
+//                clientId
+//            )
+//        findNavController().navigate(action)
     }
 
     private fun loadSurveys(clientId: Int) {
@@ -132,12 +132,12 @@ class ClientDetailsFragment : MifosBaseFragment() {
     }
 
     private fun addSavingsAccount(clientId: Int) {
-        val action =
-            ClientDetailsFragmentDirections.actionClientDetailsFragmentToSavingsAccountFragment(
-                clientId,
-                false
-            )
-        findNavController().navigate(action)
+//        val action =
+//            ClientDetailsFragmentDirections.actionClientDetailsFragmentToSavingsAccountFragment(
+//                clientId,
+//                false
+//            )
+//        findNavController().navigate(action)
     }
 
     private fun addLoanAccount(clientId: Int) {
@@ -168,12 +168,12 @@ class ClientDetailsFragment : MifosBaseFragment() {
     }
 
     private fun loadSavingsAccountSummary(savingsAccountNumber: Int, accountType: DepositType) {
-        val action =
-            ClientDetailsFragmentDirections.actionClientDetailsFragmentToSavingsAccountSummaryFragment(
-                savingsAccountNumber,
-                accountType,
-                true
-            )
-        findNavController().navigate(action)
+//        val action =
+//            ClientDetailsFragmentDirections.actionClientDetailsFragmentToSavingsAccountSummaryFragment(
+//                savingsAccountNumber,
+//                accountType,
+//                true
+//            )
+//        findNavController().navigate(action)
     }
 }

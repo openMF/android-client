@@ -62,20 +62,20 @@ class CenterDetailsFragment : MifosBaseFragment() {
     }
 
     private fun onClickActivateCenter() {
-        val action = CenterDetailsFragmentDirections.actionCenterDetailsFragmentToActivateFragment(
-            centerId,
-            Constants.ACTIVATE_CENTER
-        )
-        findNavController().navigate(action)
+//        val action = CenterDetailsFragmentDirections.actionCenterDetailsFragmentToActivateFragment(
+//            centerId,
+//            Constants.ACTIVATE_CENTER
+//        )
+//        findNavController().navigate(action)
     }
 
     private fun addCenterSavingAccount(centerId: Int) {
-        val action =
-            CenterDetailsFragmentDirections.actionCenterDetailsFragmentToSavingsAccountFragment(
-                centerId,
-                true
-            )
-        findNavController().navigate(action)
+//        val action =
+//            CenterDetailsFragmentDirections.actionCenterDetailsFragmentToSavingsAccountFragment(
+//                centerId,
+//                true
+//            )
+//        findNavController().navigate(action)
     }
 
     private fun loadGroupsOfCenter(centerId: Int) {
