@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.auth.login
 
 import android.content.Context
@@ -31,16 +40,14 @@ class LoginViewModel @Inject constructor(
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val baseApiManager: BaseApiManager,
-    private val loginUseCase: com.mifos.core.domain.use_cases.LoginUseCase
+    private val loginUseCase: com.mifos.core.domain.use_cases.LoginUseCase,
 ) :
     ViewModel() {
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
     val loginUiState = _loginUiState.asStateFlow()
 
-
     fun validateUserInputs(username: String, password: String) {
-
         val usernameValidationResult = usernameValidationUseCase(username)
         val passwordValidationResult = passwordValidationUseCase(password)
 
@@ -50,7 +57,7 @@ class LoginViewModel @Inject constructor(
         if (hasError) {
             _loginUiState.value = LoginUiState.ShowValidationError(
                 usernameValidationResult.message,
-                passwordValidationResult.message
+                passwordValidationResult.message,
             )
             return
         }
@@ -66,7 +73,7 @@ class LoginViewModel @Inject constructor(
             password,
             prefManager.getServerConfig.getInstanceUrl(),
             prefManager.getServerConfig.tenant,
-            true
+            true,
         )
         if (Network.isOnline(context)) {
             login(username, password)
@@ -75,7 +82,6 @@ class LoginViewModel @Inject constructor(
                 LoginUiState.ShowError(R.string.feature_auth_error_not_connected_internet)
         }
     }
-
 
     fun login(username: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -98,11 +104,10 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-
     private fun onLoginSuccessful(
         user: PostAuthenticationResponse,
         username: String,
-        password: String
+        password: String,
     ) {
         // Saving username password
         prefManager.usernamePassword = Pair(username, password)
@@ -119,5 +124,4 @@ class LoginViewModel @Inject constructor(
             _loginUiState.value = LoginUiState.PassCodeActivityIntent
         }
     }
-
 }

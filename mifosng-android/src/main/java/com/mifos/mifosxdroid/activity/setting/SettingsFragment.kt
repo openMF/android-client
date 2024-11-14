@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.settings.settings.SettingsScreen
-import com.mifos.mifosxdroid.activity.login.LoginActivity
 
 /**
  * Created by mayankjindal on 22/07/17.
@@ -32,9 +31,9 @@ class SettingsFragment : Fragment() {
                         findNavController().popBackStack()
                     },
                     navigateToLoginScreen = {
-                        Intent(requireContext(), LoginActivity::class.java).also {
-                            startActivity(it)
-                        }
+//                        Intent(requireContext(), LoginActivity::class.java).also {
+//                            startActivity(it)
+//                        }
                     },
                     changePasscode = {
 

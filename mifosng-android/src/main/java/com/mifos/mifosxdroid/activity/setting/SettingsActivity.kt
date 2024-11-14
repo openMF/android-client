@@ -26,7 +26,7 @@ class SettingsActivity : MifosBaseActivity() {
             supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
         navHostFragment.navController.apply {
             popBackStack()
-            navigate(R.id.settingsFragment)
+     //       navigate(R.id.settingsFragment)
         }
 
         if (intent.hasExtra(Constants.HAS_SETTING_CHANGED)) {

@@ -108,11 +108,6 @@
         android:label="GenerateCollectionSheetFragment" />
 
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.mifos.mifosxdroid.activity.setting.SettingsFragment"
-        android:label="SettingsFragment" />
-
-    <fragment
         android:id="@+id/clientListFragment"
         android:name="com.mifos.mifosxdroid.online.clientlist.ClientListFragment"
         android:label="ClientListFragment">
