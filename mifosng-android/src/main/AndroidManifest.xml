@@ -96,18 +96,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activity.setting.SettingsActivity"
-            android:label="@string/settings"
-            android:parentActivityName=".activity.home.HomeActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.home.HomeActivity" />
-        </activity>
-
-
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.mifos.mifosxdroid.provider"
