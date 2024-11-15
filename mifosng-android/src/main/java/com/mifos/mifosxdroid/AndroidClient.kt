@@ -8,7 +8,6 @@ import com.mifos.feature.auth.navigation.authNavGraph
 import com.mifos.feature.auth.navigation.navigateToLogin
 import com.mifos.feature.splash.navigation.SplashScreens
 import com.mifos.feature.splash.navigation.splashNavGraph
-import com.mifos.mifosxdroid.navigation.HomeNavigation
 import com.mifos.mifosxdroid.navigation.MifosNavGraph
 import com.mifos.mifosxdroid.navigation.homeGraph
 import com.mifos.mifosxdroid.navigation.navigateHome
@@ -40,7 +39,7 @@ fun AndroidClient() {
         )
 
         composable(MifosNavGraph.MAIN_GRAPH){
-            HomeNavigation()
+            homeGraph()
         }
         homeGraph()
     }
