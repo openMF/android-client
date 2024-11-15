@@ -8,87 +8,11 @@
     android:id="@+id/client_nav_graph"
     app:startDestination="@id/mifosBaseFragment">
 
-    <fragment
-        android:id="@+id/clientDetailsFragment"
-        android:name="com.mifos.mifosxdroid.online.clientdetails.ClientDetailsFragment"
-        android:label="ClientDetailsFragment">
-
-        <action
-            android:id="@+id/action_clientDetailsFragment_to_clientChargeFragment"
-            app:destination="@id/clientChargeFragment" />
-        <action
-            android:id="@+id/action_clientDetailsFragment_to_surveyListFragment"
-            app:destination="@id/surveyListFragment" />
-        <action
-            android:id="@+id/action_clientDetailsFragment_to_signatureFragment"
-            app:destination="@id/signatureFragment" />
-        <action
-            android:id="@+id/action_clientDetailsFragment_to_pinpointClientActivity"
-            app:destination="@id/pinpointClientActivity" />
-    </fragment>
 
     <fragment
         android:id="@+id/mifosBaseFragment"
         android:name="com.mifos.mifosxdroid.core.MifosBaseFragment"
         android:label="MifosBaseFragment" />
-
-        <fragment
-        android:id="@+id/clientChargeFragment"
-        android:name="com.mifos.mifosxdroid.online.clientcharge.ClientChargeFragment"
-        android:label="ClientChargeFragment">
-        <argument
-            android:name="clientId"
-            app:argType="integer" />
-        <argument
-            android:name="chargesList"
-            app:argType="com.mifos.core.objects.client.Charges[]" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/surveyListFragment"
-        android:name="com.mifos.mifosxdroid.online.surveylist.SurveyListFragment"
-        android:label="SurveyListFragment">
-        <argument
-            android:name="clientId"
-            app:argType="integer" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/signatureFragment"
-        android:name="com.mifos.mifosxdroid.online.sign.SignatureFragment"
-        android:label="SignatureFragment">
-        <argument
-            android:name="clientId"
-            app:argType="integer" />
-    </fragment>
-
-
-    <activity
-        android:id="@+id/pinpointClientActivity"
-        android:name="com.mifos.mifosxdroid.activity.pinpointclient.PinpointClientActivity"
-        android:label="PinpointClientActivity">
-        <argument
-            android:name="clientId"
-            app:argType="integer" />
-    </activity>
-
-    <fragment
-        android:id="@+id/checkerInboxTasksFragment"
-        android:name="com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxTasksFragment"
-        android:label="CheckerInboxTasksFragment">
-        <action
-            android:id="@+id/action_checkerInboxTasksFragment_to_checkerInboxFragment"
-            app:destination="@id/checkerInboxFragment" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/checkerInboxFragment"
-        android:name="com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxFragment"
-        android:label="CheckerInboxFragment" />
-
 
     <fragment
         android:id="@+id/individualCollectionSheetFragment"
@@ -112,37 +36,6 @@
         android:name="com.mifos.mifosxdroid.activity.setting.SettingsFragment"
         android:label="SettingsFragment" />
 
-    <fragment
-        android:id="@+id/clientListFragment"
-        android:name="com.mifos.mifosxdroid.online.clientlist.ClientListFragment"
-        android:label="ClientListFragment">
-        <argument
-            android:name="clientListArgs"
-            app:argType="com.mifos.core.objects.navigation.ClientListArgs" />
-        <action
-            android:id="@+id/action_clientListFragment_to_createNewClientFragment"
-            app:destination="@id/createNewClientFragment" />
-        <action
-            android:id="@+id/action_clientListFragment_to_clientActivity"
-            app:destination="@id/clientActivity" />
-    </fragment>
-    <fragment
-        android:id="@+id/createNewClientFragment"
-        android:name="com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment"
-        android:label="CreateNewClientFragment">
-        <argument
-            android:name="client"
-            app:argType="com.mifos.core.objects.navigation.ClientArgs" />
-    </fragment>
-
-    <activity
-        android:id="@+id/clientActivity"
-        android:name="com.mifos.mifosxdroid.online.ClientActivity"
-        android:label="ClientActivity">
-        <argument
-            android:name="client"
-            app:argType="com.mifos.core.objects.navigation.ClientArgs" />
-    </activity>
     <fragment
         android:id="@+id/individualCollectionSheetDetailsFragment"
         android:name="com.mifos.mifosxdroid.online.collectionsheetindividualdetails.IndividualCollectionSheetDetailsFragment"

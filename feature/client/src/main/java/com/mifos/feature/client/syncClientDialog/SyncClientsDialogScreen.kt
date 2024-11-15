@@ -1,5 +1,15 @@
-package com.mifos.feature.client.sync_client_dialog
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.client.syncClientDialog
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,35 +38,40 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.core.objects.client.Client
 import com.mifos.feature.client.R
 
 @Composable
-fun SyncClientsDialogScreen(
-    viewModel: SyncClientsDialogViewModel = hiltViewModel(),
+internal fun SyncClientsDialogScreen(
     dismiss: () -> Unit,
     hide: () -> Unit,
+    list: List<Client>? = listOf(),
+    viewModel: SyncClientsDialogViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.syncClientsDialogUiState.collectAsStateWithLifecycle()
     val uiData by viewModel.syncClientData.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.syncClient()
+        list?.let {
+            viewModel.setClientList(clientsList = list)
+        }
     }
 
     SyncClientsDialogScreen(
         uiState = uiState,
         uiData = uiData,
         dismiss = dismiss,
-        hide = hide
+        hide = hide,
     )
 }
 
 @Composable
-fun SyncClientsDialogScreen(
+internal fun SyncClientsDialogScreen(
     uiState: SyncClientsDialogUiState,
     uiData: SyncClientsDialogData,
     dismiss: () -> Unit,
-    hide: () -> Unit
+    hide: () -> Unit,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -64,7 +80,7 @@ fun SyncClientsDialogScreen(
             uiData = uiData,
             okClicked = dismiss,
             hideClicked = hide,
-            cancelClicked = dismiss
+            cancelClicked = dismiss,
         )
 
         when (uiState) {
@@ -86,22 +102,23 @@ fun SyncClientsDialogScreen(
 }
 
 @Composable
-fun SyncClientsDialogContent(
+private fun SyncClientsDialogContent(
     uiData: SyncClientsDialogData,
     okClicked: () -> Unit,
     hideClicked: () -> Unit,
-    cancelClicked: () -> Unit
+    cancelClicked: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(8.dp)
+            .background(Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
-            text = stringResource(id = R.string.feature_client_sync_clients_full_information)
+            text = stringResource(id = R.string.feature_client_sync_clients_full_information),
         )
 
         PayloadField(
@@ -114,7 +131,7 @@ fun SyncClientsDialogContent(
         PayloadField(
             label = stringResource(id = R.string.feature_client_total),
             value = uiData.clientList.size.toString() + stringResource(R.string.feature_client_space) + stringResource(
-                R.string.feature_client_clients
+                R.string.feature_client_clients,
             ),
         )
 
@@ -133,11 +150,13 @@ fun SyncClientsDialogContent(
 
         PayloadField(
             label = stringResource(id = R.string.feature_client_total_sync_progress),
-            value = stringResource(R.string.feature_client_space) + uiData.totalSyncCount + stringResource(id = R.string.feature_client_slash) + uiData.clientList.size,
+            value = stringResource(R.string.feature_client_space) +
+                uiData.totalSyncCount + stringResource(id = R.string.feature_client_slash) +
+                uiData.clientList.size,
         )
 
         LinearProgressIndicator(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -150,19 +169,19 @@ fun SyncClientsDialogContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             if (uiData.isSyncSuccess) {
                 FilledTonalButton(
                     onClick = { okClicked() },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(text = stringResource(id = R.string.feature_client_dialog_action_ok))
                 }
             } else {
                 FilledTonalButton(
                     onClick = { cancelClicked() },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(text = stringResource(id = R.string.feature_client_cancel))
                 }
@@ -171,7 +190,7 @@ fun SyncClientsDialogContent(
 
                 FilledTonalButton(
                     onClick = { hideClicked() },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(text = stringResource(id = R.string.feature_client_hide))
                 }
@@ -181,33 +200,33 @@ fun SyncClientsDialogContent(
 }
 
 @Composable
-fun PayloadField(label: String, value: String) {
+private fun PayloadField(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(vertical = 4.dp),
     ) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
     }
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-fun SyncClientsDialogScreenPreview() {
+private fun SyncClientsDialogScreenPreview() {
     SyncClientsDialogScreen(
         dismiss = { },
         uiState = SyncClientsDialogUiState.Success,
         uiData = SyncClientsDialogData(),
-        hide = { }
+        hide = { },
     )
 }

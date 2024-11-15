@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientSurveyQuestion
 
 import android.annotation.SuppressLint
@@ -32,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -65,110 +75,113 @@ import com.mifos.feature.client.clientSurveySubmit.SurveySubmitUiState
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
 import java.util.Date
 
-
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun SurveyQuestionScreen(
-    viewModel: SurveySubmitViewModel = hiltViewModel(),
+internal fun SurveyQuestionScreen(
     navigateBack: () -> Unit,
-    survey: Survey?
+    survey: Survey?,
+    viewModel: SurveySubmitViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val uiState by viewModel.surveySubmitUiState.collectAsStateWithLifecycle()
     val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val userId by viewModel.userId.collectAsStateWithLifecycle()
-    val questionData: MutableList<String> = mutableListOf()
-    val optionsData: MutableList<MutableList<String>> = mutableListOf()
     val scoreCardData: MutableList<ScorecardValues> by rememberSaveable {
-        mutableStateOf(
-            mutableListOf()
-        )
+        mutableStateOf(mutableListOf())
     }
     var currentQuestionNumber by rememberSaveable { mutableIntStateOf(0) }
     var showSubmitScreen by rememberSaveable { mutableStateOf(false) }
 
-
     if (survey != null) {
-        if (survey.questionDatas.isNotEmpty()) {
-            for (i in survey.questionDatas.indices) {
-                val temp = Gson().toJson(survey.questionDatas[i].text).replace("\"", "")
-                val optionsList: MutableList<String> = mutableListOf<String>()
-
-                for (j in survey.questionDatas[i].responseDatas.indices) {
-                    optionsList.add(survey.questionDatas[i].responseDatas[j].text!!)
-                }
-                questionData.add(temp)
-                optionsData.add(optionsList)
-            }
-        }
+        val (questionData, optionsData) = processSurveyData(survey)
 
         SurveyQuestionScreen(
             uiState = uiState,
             navigateBack = navigateBack,
-            currentQuestionNumber = currentQuestionNumber,
-            questionData = questionData,
-            optionsData = optionsData,
-            scoreCardData = scoreCardData,
+            questionNumber = currentQuestionNumber,
+            currentQuestionData = questionData,
+            currentOptionsData = optionsData,
+            currentScoreCardData = scoreCardData,
             showSubmitScreen = showSubmitScreen,
             gotoNextQuestion = { index ->
-
                 if (index != -1) {
                     val scoreCardValue = ScorecardValues(
                         questionId = survey.questionDatas[currentQuestionNumber].questionId,
                         responseId = survey.questionDatas[currentQuestionNumber].responseDatas[index].responseId,
-                        value = survey.questionDatas[currentQuestionNumber].responseDatas[index].value
+                        value = survey.questionDatas[currentQuestionNumber].responseDatas[index].value,
                     )
                     scoreCardData.add(scoreCardValue)
                 }
-                if (currentQuestionNumber < questionData.size - 1)
+                if (currentQuestionNumber < questionData.size - 1) {
                     currentQuestionNumber += 1
-                else
+                } else {
                     showSubmitScreen = true
+                }
             },
             submitSurvey = {
                 if (scoreCardData.isNotEmpty()) {
                     viewModel.submitSurvey(
                         survey = survey.id,
-                        scorecardPayload =
-                        Scorecard(
+                        scorecardPayload = Scorecard(
                             userId = userId,
                             clientId = clientId,
                             createdOn = Date(),
-                            scorecardValues = scoreCardData
-                        )
+                            scorecardValues = scoreCardData,
+                        ),
                     )
                 } else {
                     Toast.makeText(
                         context,
                         context.getString(R.string.feature_client_please_attempt_at_least_one_question),
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
                 }
-            }
+            },
         )
     }
 }
 
+private fun processSurveyData(survey: Survey): Pair<List<String>, List<List<String>>> {
+    val questionData = mutableListOf<String>()
+    val optionsData = mutableListOf<List<String>>()
+
+    survey.questionDatas.forEach { question ->
+        val questionText = Gson().toJson(question.text).replace("\"", "")
+        val optionsList = question.responseDatas.map { it.text!! }
+
+        questionData.add(questionText)
+        optionsData.add(optionsList)
+    }
+
+    return questionData to optionsData
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SurveyQuestionScreen(
+internal fun SurveyQuestionScreen(
     uiState: SurveySubmitUiState,
     navigateBack: () -> Unit,
-    currentQuestionNumber: Int,
-    questionData: MutableList<String>,
-    optionsData: MutableList<MutableList<String>>,
-    scoreCardData: MutableList<ScorecardValues>,
+    questionNumber: Int,
+    currentQuestionData: List<String>,
+    currentOptionsData: List<List<String>>,
+    currentScoreCardData: List<ScorecardValues>,
     gotoNextQuestion: (Int) -> Unit,
     showSubmitScreen: Boolean,
-    submitSurvey: () -> Unit
+    submitSurvey: () -> Unit,
 ) {
+    val questionData = currentQuestionData.toMutableList()
+    val optionsData = remember {
+        mutableStateListOf<MutableList<String>>().also {
+            it.addAll(currentOptionsData.map { innerList -> innerList.toMutableList() })
+        }
+    }
+    val scoreCardData = currentScoreCardData.toMutableList()
     val snackbarHostState = remember {
         SnackbarHostState()
     }
     val pagerState = rememberPagerState(pageCount = { 3 })
-    LaunchedEffect(currentQuestionNumber) {
-        pagerState.scrollToPage(currentQuestionNumber)
+    LaunchedEffect(questionNumber) {
+        pagerState.scrollToPage(questionNumber)
     }
 
     MifosScaffold(
@@ -176,10 +189,10 @@ fun SurveyQuestionScreen(
         topBar = {
             SurveyQuestionTopBar(
                 onBackPressed = { navigateBack.invoke() },
-                title = (currentQuestionNumber + 1).toString() + "/" + questionData.size,
-                showSubmitScreen = showSubmitScreen
+                title = (questionNumber + 1).toString() + "/" + questionData.size,
+                showSubmitScreen = showSubmitScreen,
             )
-        }
+        },
     ) {
         Box(modifier = Modifier.padding(it)) {
             HorizontalPager(
@@ -190,62 +203,62 @@ fun SurveyQuestionScreen(
                     if (!showSubmitScreen) {
                         SurveyQuestionContent(
                             questionData = questionData[page],
-                            optionsData = optionsData[page],
-                            gotoNextQuestion = gotoNextQuestion
+                            currentOptionsData = optionsData[page],
+                            gotoNextQuestion = gotoNextQuestion,
                         )
                     } else {
                         SurveySubmitScreen(
                             uiState = uiState,
                             submitSurvey = submitSurvey,
-                            noOfQuestions = scoreCardData.size
+                            noOfQuestions = scoreCardData.size,
                         )
                     }
-                }
+                },
             )
         }
     }
 }
 
-
 @Composable
-fun SurveyQuestionContent(
+private fun SurveyQuestionContent(
     questionData: String,
-    optionsData: MutableList<String>,
+    currentOptionsData: List<String>,
     gotoNextQuestion: (Int) -> Unit,
 ) {
+    val optionsData = currentOptionsData.toMutableList()
     val scrollState = rememberScrollState()
     var selectedOption by remember { mutableIntStateOf(-1) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
+            .verticalScroll(scrollState),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(BluePrimary)
-                .padding(24.dp)
+                .padding(24.dp),
         ) {
             Text(
                 text = questionData,
                 color = Color.White,
                 fontSize = 20.sp,
                 modifier = Modifier
-                    .align(Alignment.Start)
+                    .align(Alignment.Start),
             )
         }
 
         Column(
             modifier = Modifier
-                .background(Color.White)
+                .background(Color.White),
         ) {
             RadioGroup(
                 options = optionsData,
                 selectedOptionIndex = selectedOption,
                 onOptionSelected = {
                     selectedOption = it
-                }
+                },
             )
         }
 
@@ -262,7 +275,7 @@ fun SurveyQuestionContent(
                 containerColor = BluePrimary,
                 contentColor = White,
                 disabledContainerColor = Color.DarkGray,
-                disabledContentColor = White
+                disabledContentColor = White,
             ),
         ) {
             Text(text = stringResource(id = R.string.feature_client_next))
@@ -271,7 +284,7 @@ fun SurveyQuestionContent(
 }
 
 @Composable
-fun RadioGroup(options: List<String>, selectedOptionIndex: Int, onOptionSelected: (Int) -> Unit) {
+private fun RadioGroup(options: List<String>, selectedOptionIndex: Int, onOptionSelected: (Int) -> Unit) {
     Column {
         options.forEachIndexed { index, option ->
             Row(
@@ -280,11 +293,11 @@ fun RadioGroup(options: List<String>, selectedOptionIndex: Int, onOptionSelected
                 RadioButton(
                     selected = index == selectedOptionIndex,
                     onClick = { onOptionSelected(index) },
-                    colors = RadioButtonDefaults.colors(BluePrimary)
+                    colors = RadioButtonDefaults.colors(BluePrimary),
                 )
                 Text(
                     text = option,
-                    modifier = Modifier.padding(start = 4.dp)
+                    modifier = Modifier.padding(start = 4.dp),
                 )
             }
         }
@@ -293,10 +306,10 @@ fun RadioGroup(options: List<String>, selectedOptionIndex: Int, onOptionSelected
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SurveyQuestionTopBar(
+private fun SurveyQuestionTopBar(
     onBackPressed: () -> Unit,
     title: String,
-    showSubmitScreen: Boolean
+    showSubmitScreen: Boolean,
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = White),
@@ -310,7 +323,6 @@ fun SurveyQuestionTopBar(
                     tint = Black,
                 )
             }
-
         },
         title = {
             Column {
@@ -319,10 +331,10 @@ fun SurveyQuestionTopBar(
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium,
-                        fontStyle = FontStyle.Normal
+                        fontStyle = FontStyle.Normal,
                     ),
                     color = Black,
-                    textAlign = TextAlign.Start
+                    textAlign = TextAlign.Start,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
 
@@ -330,10 +342,10 @@ fun SurveyQuestionTopBar(
                     Text(
                         text = title,
                         style = TextStyle(
-                            fontSize = 16.sp
+                            fontSize = 16.sp,
                         ),
                         color = Black,
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.Start,
                     )
                 }
             }
@@ -343,17 +355,16 @@ fun SurveyQuestionTopBar(
 
 @Composable
 @Preview(showSystemUi = true)
-fun PreviewSurveyQuestionScreen(
-) {
+private fun PreviewSurveyQuestionScreen() {
     SurveyQuestionScreen(
         uiState = SurveySubmitUiState.Initial,
         navigateBack = { },
-        currentQuestionNumber = 1,
-        questionData = mutableListOf(),
-        optionsData = mutableListOf(),
-        scoreCardData = mutableListOf(),
+        questionNumber = 1,
+        currentQuestionData = mutableListOf(),
+        currentOptionsData = mutableListOf(),
+        currentScoreCardData = listOf(),
         gotoNextQuestion = { },
         showSubmitScreen = false,
-        submitSurvey = { }
+        submitSurvey = { },
     )
 }

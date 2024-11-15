@@ -1,6 +1,15 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 @file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
-package com.mifos.feature.client.client_charge_dialog
+package com.mifos.feature.client.clientChargeDialog
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -64,13 +73,12 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
-fun ChargeDialogScreen(
+internal fun ChargeDialogScreen(
     clientId: Int,
     onDismiss: () -> Unit,
-    onCreated: () -> Unit
+    onCreated: () -> Unit,
+    viewModel: ChargeDialogViewModel = hiltViewModel(),
 ) {
-
-    val viewModel: ChargeDialogViewModel = hiltViewModel()
     val state by viewModel.chargeDialogUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -83,19 +91,17 @@ fun ChargeDialogScreen(
         onCreate = { payload ->
             viewModel.createCharges(clientId, payload)
         },
-        onCreated = onCreated
+        onCreated = onCreated,
     )
-
 }
 
 @Composable
-fun ChargeDialogScreen(
+internal fun ChargeDialogScreen(
     state: ChargeDialogUiState,
     onDismiss: () -> Unit,
     onCreate: (ChargesPayload) -> Unit,
-    onCreated: () -> Unit
+    onCreated: () -> Unit,
 ) {
-
     var amount by rememberSaveable { mutableStateOf("") }
     var amountError by rememberSaveable { mutableStateOf(false) }
     val locale by rememberSaveable { mutableStateOf("en") }
@@ -106,7 +112,7 @@ fun ChargeDialogScreen(
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis >= System.currentTimeMillis()
             }
-        }
+        },
     )
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
 
@@ -130,31 +136,30 @@ fun ChargeDialogScreen(
                         dueDatePickerState.selectedDateMillis?.let {
                             dueDate = it
                         }
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_client_charge_select)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
                         showDatePicker = false
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_client_charge_cancel)) }
-            }
-        )
-        {
+            },
+        ) {
             DatePicker(state = dueDatePickerState)
         }
     }
 
-
-    Dialog(onDismissRequest = { onDismiss() }
+    Dialog(
+        onDismissRequest = { onDismiss() },
     ) {
         Surface(
             shape = RoundedCornerShape(16.dp),
-            color = Color.White
+            color = Color.White,
         ) {
             Box(
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 when (state) {
                     is ChargeDialogUiState.AllChargesV2 -> {
@@ -167,12 +172,12 @@ fun ChargeDialogScreen(
                                     .fillMaxWidth()
                                     .padding(bottom = 16.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text(
                                     text = stringResource(id = R.string.feature_client_charge_dialog),
                                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                                    color = BluePrimary
+                                    color = BluePrimary,
                                 )
                                 IconButton(onClick = { onDismiss() }) {
                                     Icon(
@@ -181,7 +186,7 @@ fun ChargeDialogScreen(
                                         tint = colorResource(android.R.color.darker_gray),
                                         modifier = Modifier
                                             .width(30.dp)
-                                            .height(30.dp)
+                                            .height(30.dp),
                                     )
                                 }
                             }
@@ -197,7 +202,7 @@ fun ChargeDialogScreen(
                                     chargeId = state.chargeTemplate.chargeOptions[index].id
                                     name = value
                                 },
-                                options = state.chargeTemplate.chargeOptions.map { it.name }
+                                options = state.chargeTemplate.chargeOptions.map { it.name },
                             )
 
                             MifosOutlinedTextField(
@@ -212,23 +217,23 @@ fun ChargeDialogScreen(
                                     if (amountError) {
                                         Icon(
                                             imageVector = MifosIcons.error,
-                                            contentDescription = null
+                                            contentDescription = null,
                                         )
                                     }
-                                }
+                                },
                             )
 
                             MifosDatePickerTextField(
                                 value = SimpleDateFormat(
                                     "dd MMMM yyyy",
-                                    Locale.getDefault()
+                                    Locale.getDefault(),
                                 ).format(
-                                    dueDate
+                                    dueDate,
                                 ),
                                 label = R.string.feature_client_due_date,
                                 openDatePicker = {
                                     showDatePicker = true
-                                }
+                                },
                             )
 
                             MifosOutlinedTextField(
@@ -236,7 +241,7 @@ fun ChargeDialogScreen(
                                 onValueChange = {},
                                 label = stringResource(id = R.string.feature_client_charge_locale),
                                 error = null,
-                                readOnly = true
+                                readOnly = true,
                             )
 
                             Spacer(modifier = Modifier.height(16.dp))
@@ -251,9 +256,9 @@ fun ChargeDialogScreen(
                                             this.chargeId = chargeId
                                             this.dueDate = SimpleDateFormat(
                                                 "dd MMMM yyyy",
-                                                Locale.getDefault()
+                                                Locale.getDefault(),
                                             ).format(
-                                                dueDate
+                                                dueDate,
                                             )
                                         }
                                         onCreate(payload)
@@ -266,35 +271,33 @@ fun ChargeDialogScreen(
                                     containerColor = BluePrimary,
                                     contentColor = White,
                                     disabledContainerColor = BluePrimary,
-                                    disabledContentColor = Gray
-                                )
+                                    disabledContentColor = Gray,
+                                ),
                             ) {
                                 Text(text = stringResource(id = R.string.feature_client_charge_submit))
                             }
                         }
-
                     }
 
                     is ChargeDialogUiState.Error -> MifosSweetError(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(300.dp),
-                        message = stringResource(id = state.message)
+                        message = stringResource(id = state.message),
                     ) {
-
                     }
 
                     is ChargeDialogUiState.Loading -> MifosCircularProgress(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(300.dp)
+                            .heightIn(300.dp),
                     )
 
                     is ChargeDialogUiState.ChargesCreatedSuccessfully -> {
                         Toast.makeText(
                             LocalContext.current,
                             stringResource(id = R.string.feature_client_charge_created_successfully),
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_SHORT,
                         ).show()
                         onCreated()
                     }
@@ -304,28 +307,26 @@ fun ChargeDialogScreen(
     }
 }
 
-class ChargeDialogScreenUiStateProvider : PreviewParameterProvider<ChargeDialogUiState> {
+private class ChargeDialogScreenUiStateProvider : PreviewParameterProvider<ChargeDialogUiState> {
 
     override val values: Sequence<ChargeDialogUiState>
         get() = sequenceOf(
             ChargeDialogUiState.AllChargesV2(ChargeTemplate(false, emptyList())),
             ChargeDialogUiState.Error(R.string.feature_client_failed_to_load_charges),
             ChargeDialogUiState.Loading,
-            ChargeDialogUiState.ChargesCreatedSuccessfully
+            ChargeDialogUiState.ChargesCreatedSuccessfully,
         )
-
 }
-
 
 @Preview(showBackground = true)
 @Composable
 private fun ChargeDialogScreenPreview(
-    @PreviewParameter(ChargeDialogScreenUiStateProvider::class) state: ChargeDialogUiState
+    @PreviewParameter(ChargeDialogScreenUiStateProvider::class) state: ChargeDialogUiState,
 ) {
     ChargeDialogScreen(
         state = state,
         onDismiss = {},
         onCreate = {},
-        onCreated = {}
+        onCreated = {},
     )
 }
