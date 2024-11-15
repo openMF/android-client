@@ -61,13 +61,6 @@
         android:name="com.mifos.mifosxdroid.activity.setting.SettingsActivity"
         android:label="SettingsActivity" />
 
-
-    <activity
-        android:id="@+id/generateCollectionSheetActivity"
-        android:name="com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity"
-        android:label="activity_generate_collection_sheet"
-        tools:layout="@layout/activity_generate_collection_sheet" />
-
     <dialog
         android:id="@+id/updateServerConfigFragment"
         android:name="com.mifos.mifosxdroid.activity.setting.UpdateServerConfigFragment"
