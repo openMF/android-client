@@ -9,11 +9,8 @@
  */
 package com.mifos.mifosxdroid.navigation
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import org.mifos.library.passcode.PASSCODE_SCREEN
 import org.mifos.library.passcode.passcodeRoute
@@ -26,33 +23,20 @@ internal fun NavGraphBuilder.passcodeNavGraph(navController: NavHostController) 
         passcodeRoute(
             onForgotButton = {
                 navController.popBackStack()
-                navController.navigateToMainGraph()
+                navController.navigate(MifosNavGraph.MAIN_GRAPH)
             },
             onSkipButton = {
                 navController.popBackStack()
-                navController.navigateToMainGraph()
+                navController.navigate(MifosNavGraph.MAIN_GRAPH)
             },
             onPasscodeConfirm = {
                 navController.popBackStack()
-                navController.navigateToMainGraph()
+                navController.navigate(MifosNavGraph.MAIN_GRAPH)
             },
             onPasscodeRejected = {
                 navController.popBackStack()
-                navController.navigateToMainGraph()
+                navController.navigate(MifosNavGraph.MAIN_GRAPH)
             },
         )
     }
-}
-fun NavController.navigateToMainGraph(){
-    val options = navOptions {
-        popUpTo(graph.findStartDestination().id) {
-            saveState = false
-        }
-        launchSingleTop = true
-        restoreState = false
-    }
-    navigate(MifosNavGraph.MAIN_GRAPH , options)
-
-
-
 }
