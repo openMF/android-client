@@ -20,7 +20,7 @@ class CheckerInboxPendingTasksActivity : MifosBaseActivity() {
             supportFragmentManager.findFragmentById(R.id.container_nav_host_fragment) as NavHostFragment
         navHostFragment.navController.apply {
             popBackStack()
-            navigate(R.id.checkerInboxTasksFragment)
+//            navigate(R.id.checkerInboxTasksFragment)
         }
     }
 }

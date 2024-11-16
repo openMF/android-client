@@ -8,6 +8,7 @@ import org.gradle.kotlin.dsl.named
 
 internal fun Project.configureDetekt(extension: DetektExtension) = extension.apply {
     tasks.named<Detekt>("detekt") {
+        jvmTarget = "1.8"
         config.from(rootProject.file("config/detekt/detekt.yml"))
         reports {
             xml.required.set(true)

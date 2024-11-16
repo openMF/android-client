@@ -75,15 +75,6 @@
                 android:value=".activity.home.HomeActivity" />
         </activity>
         <activity
-            android:name=".online.GenerateCollectionSheetActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/title_activity_generate_collection_sheet"
-            android:parentActivityName=".activity.home.HomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.home.HomeActivity" />
-        </activity>
-        <activity
             android:name=".activity.pinpointclient.PinpointClientActivity"
             android:exported="true"
             android:label="@string/pinpoint"

@@ -2,8 +2,6 @@ package com.mifos.mifosxdroid.injection.module
 
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.data.repository.DocumentDialogRepository
-import com.mifos.core.data.repository.GroupDetailsRepository
-import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.data.repository.OfflineDashboardRepository
 import com.mifos.core.data.repository.SavingsAccountActivateRepository
@@ -21,7 +19,6 @@ import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.data.repository_imp.CreateNewClientRepositoryImp
 import com.mifos.core.data.repository_imp.DocumentDialogRepositoryImp
-import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repository_imp.NoteRepositoryImp
 import com.mifos.core.data.repository_imp.OfflineDashboardRepositoryImp
 import com.mifos.core.data.repository_imp.SavingsAccountActivateRepositoryImp
@@ -37,7 +34,6 @@ import com.mifos.core.data.repository_imp.SyncGroupPayloadsRepositoryImp
 import com.mifos.core.data.repository_imp.SyncGroupsDialogRepositoryImp
 import com.mifos.core.data.repository_imp.SyncLoanRepaymentTransactionRepositoryImp
 import com.mifos.core.data.repository_imp.SyncSavingsAccountTransactionRepositoryImp
-import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerAuth
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerClient
@@ -53,8 +49,6 @@ import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepository
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepositoryImp
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepository
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepositoryImp
-import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepository
-import com.mifos.mifosxdroid.online.collectionsheet.CollectionSheetRepositoryImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -88,11 +82,6 @@ class RepositoryModule {
     @Provides
     fun providesSavingAccountRepository(dataManagerSavings: DataManagerSavings): SavingsAccountRepository {
         return SavingsAccountRepositoryImp(dataManagerSavings)
-    }
-
-    @Provides
-    fun providesCollectionSheetRepository(dataManager: DataManager): CollectionSheetRepository {
-        return CollectionSheetRepositoryImp(dataManager)
     }
 
     @Provides

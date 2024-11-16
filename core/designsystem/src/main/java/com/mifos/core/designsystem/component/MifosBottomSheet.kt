@@ -24,7 +24,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun MifosBottomSheet(
     content: @Composable () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -44,14 +45,17 @@ fun MifosBottomSheet(
         dismissSheet()
     }
 
-    AnimatedVisibility(visible = showBottomSheet) {
+    AnimatedVisibility(
+        modifier = modifier,
+        visible = showBottomSheet,
+    ) {
         ModalBottomSheet(
             containerColor = Color.White,
             onDismissRequest = {
                 showBottomSheet = false
                 dismissSheet()
             },
-            sheetState = modalSheetState
+            sheetState = modalSheetState,
         ) {
             content()
         }
@@ -61,9 +65,12 @@ fun MifosBottomSheet(
 @Preview
 @Composable
 fun MifosBottomSheetPreview() {
-    MifosBottomSheet({
-        Box {
-            Modifier.height(100.dp)
-        }
-    }, {})
+    MifosBottomSheet(
+        {
+            Box {
+                Modifier.height(100.dp)
+            }
+        },
+        {},
+    )
 }
