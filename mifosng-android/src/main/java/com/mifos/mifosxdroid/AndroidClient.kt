@@ -10,6 +10,7 @@ import com.mifos.feature.splash.navigation.splashNavGraph
 import com.mifos.mifosxdroid.navigation.homeGraph
 import com.mifos.mifosxdroid.navigation.navigateHome
 import com.mifos.mifosxdroid.navigation.passcodeNavGraph
+import org.mifos.library.passcode.navigateToPasscodeScreen
 
 @Composable
 fun AndroidClient() {
@@ -30,7 +31,7 @@ fun AndroidClient() {
         )
 
         authNavGraph(
-            navigatePasscode = {},
+            navigatePasscode = navController::navigateToPasscodeScreen,
             navigateHome = navController::navigateHome,
             updateServerConfig = {}
         )
