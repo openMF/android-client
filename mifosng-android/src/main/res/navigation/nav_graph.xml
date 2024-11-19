@@ -75,11 +75,6 @@
     </activity>
 
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.mifos.mifosxdroid.activity.setting.SettingsFragment"
-        android:label="SettingsFragment" />
-
-    <fragment
         android:id="@+id/clientListFragment"
         android:name="com.mifos.mifosxdroid.online.clientlist.ClientListFragment"
         android:label="ClientListFragment">
@@ -110,8 +105,5 @@
             android:name="client"
             app:argType="com.mifos.core.objects.navigation.ClientArgs" />
     </activity>
-    <dialog
-        android:id="@+id/updateServerConfigFragment"
-        android:name="com.mifos.mifosxdroid.activity.setting.UpdateServerConfigFragment"
-        android:label="UpdateServerConfigFragment" />
+
 </navigation>

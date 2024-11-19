@@ -47,8 +47,6 @@ import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepository
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepositoryImp
-import com.mifos.mifosxdroid.activity.login.LoginRepository
-import com.mifos.mifosxdroid.activity.login.LoginRepositoryImp
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepository
 import com.mifos.mifosxdroid.online.centerlist.CenterListRepositoryImp
 import dagger.Module
@@ -64,10 +62,6 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 class RepositoryModule {
 
-    @Provides
-    fun providesLoginRepository(dataManagerAuth: DataManagerAuth): LoginRepository {
-        return LoginRepositoryImp(dataManagerAuth)
-    }
 
     @Provides
     fun providesCenterListRepository(dataManagerCenter: DataManagerCenter): CenterListRepository {
