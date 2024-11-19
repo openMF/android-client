@@ -66,15 +66,7 @@
         <activity
             android:name=".online.ClientActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".online.CentersActivity"
-            android:label="@string/title_activity_centers"
-            android:parentActivityName=".activity.home.HomeActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.home.HomeActivity" />
-        </activity>
+
         <activity
             android:name=".activity.pinpointclient.PinpointClientActivity"
             android:exported="true"

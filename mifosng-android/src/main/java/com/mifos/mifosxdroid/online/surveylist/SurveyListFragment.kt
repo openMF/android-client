@@ -77,10 +77,10 @@ class SurveyListFragment : MifosBaseFragment() {
         toolbar?.visibility = View.VISIBLE
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.mItem_search) requireActivity().finish()
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        if (item.itemId == R.id.mItem_search) requireActivity().finish()
+//        return super.onOptionsItemSelected(item)
+//    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
