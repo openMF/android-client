@@ -1,15 +1,12 @@
-/*
- * This project is licensed under the open source MPL V2.
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
 package com.mifos.mifosxdroid.activity.login
+
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import com.mifos.feature.auth.login.LoginScreen
 import com.mifos.mifosxdroid.activity.home.HomeActivity
-import com.mifos.mifosxdroid.activity.setting.UpdateServerConfigFragment
+//import com.mifos.mifosxdroid.activity.setting.UpdateServerConfigFragment
 import com.mifos.mifosxdroid.core.MifosBaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,10 +30,10 @@ class LoginActivity : MifosBaseActivity() {
                 },
                 onClickToUpdateServerConfig = {
                     // TODO:: show fragment using navController
-                    UpdateServerConfigFragment().show(
-                        supportFragmentManager,
-                        "UpdateServerConfigFragment"
-                    )
+//                    UpdateServerConfigFragment().show(
+//                        supportFragmentManager,
+//                        "UpdateServerConfigFragment"
+//                    )
                 }
             )
         }

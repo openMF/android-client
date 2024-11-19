@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.settings.settings
 
 import androidx.appcompat.app.AppCompatDelegate
@@ -17,7 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val prefManager: PrefManager
+    private val prefManager: PrefManager,
 ) : ViewModel() {
 
     val tenant: StateFlow<String?> = prefManager.getStringValue(Constants.TENANT)
@@ -35,7 +44,6 @@ class SettingsViewModel @Inject constructor(
     val language: StateFlow<String?> = prefManager.getStringValue(Constants.LANGUAGE)
         .stateIn(viewModelScope, SharingStarted.Eagerly, "System Language")
 
-
     fun updateTheme(theme: AppTheme) {
         prefManager.setStringValue(Constants.THEME, theme.themeName)
         AppCompatDelegate.setDefaultNightMode(
@@ -43,7 +51,7 @@ class SettingsViewModel @Inject constructor(
                 AppTheme.DARK -> AppCompatDelegate.MODE_NIGHT_YES
                 AppTheme.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
                 else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            }
+            },
         )
     }
 
@@ -54,54 +62,56 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun tryUpdatingEndpoint(selectedBaseUrl: String, selectedTenant: String): Boolean {
-        // TODO Implement endpoint update
+        val isEndpointUpdated = !(baseUrl.value == selectedBaseUrl && tenant.value == selectedTenant)
+        if (isEndpointUpdated) {
+            prefManager.setStringValue(Constants.BASE_URL, selectedBaseUrl)
+            prefManager.setStringValue(Constants.TENANT, selectedTenant)
+        }
         return !(baseUrl.equals(selectedBaseUrl) && tenant.equals(selectedTenant))
     }
-
 }
-
 
 enum class SettingsCardItem(
     val title: Int,
     val details: Int,
-    val icon: ImageVector?
+    val icon: ImageVector?,
 ) {
     SYNC_SURVEY(
         title = R.string.feature_settings_sync_survey,
         details = R.string.feature_settings_sync_survey_desc,
-        icon = null
+        icon = null,
     ),
     LANGUAGE(
         title = R.string.feature_settings_language,
         details = R.string.feature_settings_language_desc,
-        icon = MifosIcons.language
+        icon = MifosIcons.language,
     ),
     THEME(
         title = R.string.feature_settings_theme,
         details = R.string.feature_settings_theme_desc,
-        icon = MifosIcons.theme
+        icon = MifosIcons.theme,
     ),
     PASSCODE(
         title = R.string.feature_settings_change_passcode,
         details = R.string.feature_settings_change_passcode_desc,
-        icon = MifosIcons.password
+        icon = MifosIcons.password,
     ),
     ENDPOINT(
         title = R.string.feature_settings_instance_url,
         details = R.string.feature_settings_instance_url_desc,
-        icon = null
+        icon = null,
     ),
     SERVER_CONFIG(
         title = R.string.feature_settings_server_config,
         details = R.string.feature_settings_server_config_desc,
-        icon = null
-    )
+        icon = null,
+    ),
 }
 
 enum class AppTheme(
-    val themeName: String
+    val themeName: String,
 ) {
     SYSTEM(themeName = "System Theme"),
     LIGHT(themeName = "Light Theme"),
-    DARK(themeName = "Dark Theme")
+    DARK(themeName = "Dark Theme"),
 }

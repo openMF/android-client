@@ -46,10 +46,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.login.LoginActivity"
-            android:label="@string/mifos_account"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.home.HomeActivity"
             android:label="home_activity"
@@ -89,18 +86,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".activity.setting.SettingsActivity"
-            android:label="@string/settings"
-            android:parentActivityName=".activity.home.HomeActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.home.HomeActivity" />
-        </activity>
-
-
 
         <provider
             android:name="androidx.core.content.FileProvider"
