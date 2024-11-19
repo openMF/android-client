@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.splash.splash
 
 import androidx.compose.foundation.Image
@@ -20,27 +29,27 @@ import com.mifos.core.designsystem.theme.SummerSky
 import com.mifos.feature.splash.R
 
 @Composable
-fun SplashScreen(
-    viewmodel: SplashScreenViewmodel = hiltViewModel(),
+internal fun SplashScreen(
     navigatePasscode: () -> Unit,
-    navigateLogin: () -> Unit
+    viewmodel: SplashScreenViewmodel = hiltViewModel(),
+    navigateLogin: () -> Unit,
 ) {
     val state by viewmodel.isAuthenticated.collectAsStateWithLifecycle()
 
     SplashScreen(
         state = state,
         navigatePasscode = navigatePasscode,
-        navigateLogin = navigateLogin
+        navigateLogin = navigateLogin,
     )
 }
 
 @Composable
-fun SplashScreen(
+internal fun SplashScreen(
     state: Boolean?,
     navigatePasscode: () -> Unit,
-    navigateLogin: () -> Unit
+    navigateLogin: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-
     when (state) {
         false -> navigateLogin()
         true -> navigatePasscode()
@@ -48,19 +57,20 @@ fun SplashScreen(
     }
 
     MifosScaffold(
-        containerColor = SummerSky
+        modifier = modifier,
+        containerColor = SummerSky,
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 modifier = Modifier.size(100.dp),
                 painter = painterResource(id = R.drawable.feature_splash_icon),
-                contentDescription = null
+                contentDescription = null,
             )
         }
     }
@@ -72,6 +82,6 @@ private fun SplashScreenPreview() {
     SplashScreen(
         state = false,
         navigatePasscode = {},
-        navigateLogin = {}
+        navigateLogin = {},
     )
 }

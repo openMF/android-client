@@ -63,19 +63,24 @@ fun ActivateScreen(
     ActivateScreen(
         state = state,
         onActivate = {
+            val clientIdAsInt: Int = try {
+                id
+            } catch (e: Exception) {
+                0
+            }
             when (activateType) {
                 Constants.ACTIVATE_CLIENT -> viewModel.activateClient(
-                    clientId = id,
+                    clientId = clientIdAsInt,
                     clientPayload = it
                 )
 
                 Constants.ACTIVATE_CENTER -> viewModel.activateCenter(
-                    centerId = id,
+                    centerId = clientIdAsInt,
                     centerPayload = it
                 )
 
                 Constants.ACTIVATE_GROUP -> viewModel.activateGroup(
-                    groupId = id,
+                    groupId = clientIdAsInt,
                     groupPayload = it
                 )
 

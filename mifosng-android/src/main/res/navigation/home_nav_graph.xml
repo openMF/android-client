@@ -39,15 +39,6 @@
     </activity>
 
     <!--    CenterActivity-->
-    <activity
-        android:id="@+id/centersActivity"
-        android:name="com.mifos.mifosxdroid.online.CentersActivity"
-        android:label="activity_centers"
-        tools:layout="@layout/activity_centers">
-        <argument
-            android:name="centerId"
-            app:argType="integer" />
-    </activity>
 
     <!--    GroupsActivity-->
 
@@ -60,6 +51,13 @@
         android:id="@+id/settingsActivity"
         android:name="com.mifos.mifosxdroid.activity.setting.SettingsActivity"
         android:label="SettingsActivity" />
+
+
+    <activity
+        android:id="@+id/generateCollectionSheetActivity"
+        android:name="com.mifos.mifosxdroid.online.GenerateCollectionSheetActivity"
+        android:label="activity_generate_collection_sheet"
+        tools:layout="@layout/activity_generate_collection_sheet" />
 
     <dialog
         android:id="@+id/updateServerConfigFragment"
