@@ -1,16 +1,20 @@
 package com.mifos.mifosxdroid.components
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.about.navigation.aboutScreen
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
+import com.mifos.feature.auth.navigation.navigateToLogin
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
@@ -29,8 +33,8 @@ import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupNavGraph
 import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
-import com.mifos.feature.individual_collection_sheet.navigation.generateCollectionSheetScreen
-import com.mifos.feature.individual_collection_sheet.navigation.individualCollectionSheetNavGraph
+import com.mifos.feature.individualCollectionSheet.navigation.generateCollectionSheetScreen
+import com.mifos.feature.individualCollectionSheet.navigation.individualCollectionSheetNavGraph
 import com.mifos.feature.loan.navigation.addLoanAccountScreen
 import com.mifos.feature.loan.navigation.groupLoanScreen
 import com.mifos.feature.loan.navigation.loanNavGraph
@@ -184,7 +188,7 @@ fun Navigation(
 
         settingsScreen(
             navigateBack = navController::popBackStack,
-            navigateToLoginScreen = { },
+            navigateToLoginScreen = { navController.navigateToLogin() },
             changePasscode = { },
             languageChanged = { },
         )
@@ -194,11 +198,11 @@ fun Navigation(
         )
 
         individualCollectionSheetNavGraph(
-            onBackPressed = { navController.popBackStack() },
+            onBackPressed = navController::popBackStack,
             navController = navController,
         )
 
-        generateCollectionSheetScreen(onBackPressed = navController::popBackStack)
+        generateCollectionSheetScreen ( navController::popBackStack )
 
         dataTableNavGraph(
             navController = navController,

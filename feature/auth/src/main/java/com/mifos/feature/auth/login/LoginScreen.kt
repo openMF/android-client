@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.auth.login
 
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -71,13 +80,13 @@ import com.mifos.feature.auth.R
  */
 
 @Composable
-fun LoginScreen(
+internal fun LoginScreen(
     homeIntent: () -> Unit,
     passcodeIntent: () -> Unit,
     onClickToUpdateServerConfig: () -> Unit,
+    modifier: Modifier = Modifier,
+    loginViewModel: LoginViewModel = hiltViewModel(),
 ) {
-
-    val loginViewModel: LoginViewModel = hiltViewModel()
     val state = loginViewModel.loginUiState.collectAsState().value
     val context = LocalContext.current
 
@@ -87,12 +96,12 @@ fun LoginScreen(
 
     var userName by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(
-            TextFieldValue("")
+            TextFieldValue(""),
         )
     }
     var password by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(
-            TextFieldValue("")
+            TextFieldValue(""),
         )
     }
     var passwordVisibility: Boolean by remember { mutableStateOf(false) }
@@ -130,9 +139,8 @@ fun LoginScreen(
         }
     }
 
-
     Scaffold(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
         containerColor = Color.White,
@@ -140,7 +148,7 @@ fun LoginScreen(
         bottomBar = {
             Box(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 FilledTonalButton(
                     onClick = onClickToUpdateServerConfig,
@@ -148,8 +156,8 @@ fun LoginScreen(
                         .align(Alignment.Center),
                     colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        contentColor = MaterialTheme.colorScheme.tertiary
-                    )
+                        contentColor = MaterialTheme.colorScheme.tertiary,
+                    ),
                 ) {
                     Text(text = "Update Server Configuration")
 
@@ -157,18 +165,18 @@ fun LoginScreen(
 
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = "ArrowForward"
+                        contentDescription = "ArrowForward",
                     )
                 }
             }
-        }
+        },
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(it)
                 .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
             Spacer(modifier = Modifier.height(80.dp))
@@ -185,8 +193,8 @@ fun LoginScreen(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     fontStyle = FontStyle.Normal,
-                    color = DarkGray
-                )
+                    color = DarkGray,
+                ),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -203,7 +211,7 @@ fun LoginScreen(
                     if (usernameError.value != null) {
                         Icon(imageVector = Icons.Filled.Error, contentDescription = null)
                     }
-                }
+                },
             )
 
             Spacer(modifier = Modifier.height(6.dp))
@@ -219,16 +227,18 @@ fun LoginScreen(
                 error = passwordError.value,
                 trailingIcon = {
                     if (passwordError.value == null) {
-                        val image = if (passwordVisibility)
+                        val image = if (passwordVisibility) {
                             Icons.Filled.Visibility
-                        else Icons.Filled.VisibilityOff
+                        } else {
+                            Icons.Filled.VisibilityOff
+                        }
                         IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                             Icon(imageVector = image, null)
                         }
                     } else {
                         Icon(imageVector = Icons.Filled.Error, contentDescription = null)
                     }
-                }
+                },
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -241,8 +251,8 @@ fun LoginScreen(
                     .padding(start = 16.dp, end = 16.dp),
                 contentPadding = PaddingValues(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
-                )
+                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+                ),
             ) {
                 Text(text = "Login", fontSize = 16.sp)
             }
@@ -252,8 +262,8 @@ fun LoginScreen(
                 onDismissRequest = { showDialog.value },
                 properties = DialogProperties(
                     dismissOnBackPress = false,
-                    dismissOnClickOutside = false
-                )
+                    dismissOnClickOutside = false,
+                ),
             ) {
                 CircularProgressIndicator(color = White)
             }
@@ -263,6 +273,6 @@ fun LoginScreen(
 
 @Preview(showSystemUi = true, device = "id:pixel_7")
 @Composable
-fun LoginScreenPreview() {
+private fun LoginScreenPreview() {
     LoginScreen({}, {}, {})
 }

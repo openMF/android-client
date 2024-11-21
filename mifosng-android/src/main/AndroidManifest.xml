@@ -45,46 +45,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.login.LoginActivity"
-            android:label="@string/mifos_account"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.home.HomeActivity"
             android:label="home_activity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-
-        <activity
-            android:name=".online.CentersActivity"
-            android:label="@string/title_activity_centers"
-            android:parentActivityName=".activity.home.HomeActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.home.HomeActivity" />
-        </activity>
-        <activity
-            android:name=".online.GenerateCollectionSheetActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/title_activity_generate_collection_sheet"
-            android:parentActivityName=".activity.home.HomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.home.HomeActivity" />
-        </activity>
-
-        <activity
-            android:name=".activity.setting.SettingsActivity"
-            android:label="@string/settings"
-            android:parentActivityName=".activity.home.HomeActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.home.HomeActivity" />
-        </activity>
-
-
 
         <provider
             android:name="androidx.core.content.FileProvider"

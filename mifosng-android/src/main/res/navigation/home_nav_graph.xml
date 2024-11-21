@@ -9,15 +9,6 @@
     app:startDestination="@id/navigation_dashboard">
 
     <!--    CenterActivity-->
-    <activity
-        android:id="@+id/centersActivity"
-        android:name="com.mifos.mifosxdroid.online.CentersActivity"
-        android:label="activity_centers"
-        tools:layout="@layout/activity_centers">
-        <argument
-            android:name="centerId"
-            app:argType="integer" />
-    </activity>
 
     <activity
         android:id="@+id/settingsActivity"

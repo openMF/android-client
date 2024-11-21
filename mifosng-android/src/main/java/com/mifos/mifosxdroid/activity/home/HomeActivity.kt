@@ -78,10 +78,10 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
             R.id.individual_collection_sheet -> {
                 val bundle = Bundle()
                 bundle.putString(Constants.COLLECTION_TYPE, Constants.EXTRA_COLLECTION_INDIVIDUAL)
-                findNavController(R.id.nav_host_fragment).navigate(
-                    R.id.generateCollectionSheetActivity,
-                    bundle
-                )
+//                findNavController(R.id.nav_host_fragment).navigate(
+//                    R.id.generateCollectionSheetActivity,
+//                    bundle
+//                )
             }
 
             R.id.collection_sheet -> {
@@ -90,10 +90,10 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
                     Constants.COLLECTION_TYPE,
                     Constants.EXTRA_COLLECTION_COLLECTION
                 )
-                findNavController(R.id.nav_host_fragment).navigate(
-                    R.id.generateCollectionSheetActivity,
-                    bundle
-                )
+//                findNavController(R.id.nav_host_fragment).navigate(
+//                    R.id.generateCollectionSheetActivity,
+//                    bundle
+//                )
             }
 
             R.id.item_settings -> {
