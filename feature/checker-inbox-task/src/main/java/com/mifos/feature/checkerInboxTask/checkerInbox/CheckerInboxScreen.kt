@@ -46,6 +46,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -53,7 +55,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -84,11 +85,11 @@ import com.mifos.feature.checker_inbox_task.R
 import java.sql.Timestamp
 
 @Composable
- internal fun CheckerInboxScreen(
+internal fun CheckerInboxScreen(
     onBackPressed: () -> Unit,
+    viewModel: CheckerInboxViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
-    val viewModel: CheckerInboxViewModel = hiltViewModel()
     val state by viewModel.checkerInboxUiState.collectAsStateWithLifecycle()
     var isDialogBoxActive by rememberSaveable { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
@@ -201,7 +202,6 @@ private fun CheckerInboxScreen(
     onApprove: (Int) -> Unit,
     onReject: (Int) -> Unit,
     onDelete: (Int) -> Unit,
-    onRetry: () -> Unit = {},
     onApproveList: (List<Int>) -> Unit,
     onRejectList: (List<Int>) -> Unit,
     onDeleteList: (List<Int>) -> Unit,
@@ -211,6 +211,7 @@ private fun CheckerInboxScreen(
     isSearching: Boolean,
     filteredList: List<CheckerTask>,
     setList: (List<CheckerTask>) -> Unit,
+    onRetry: () -> Unit = {},
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var searchInbox by rememberSaveable { mutableStateOf("") }
@@ -221,20 +222,20 @@ private fun CheckerInboxScreen(
     var deleteId by rememberSaveable { mutableIntStateOf(0) }
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
     var isInSelectionMode by rememberSaveable { mutableStateOf(false) }
-    val selectedItems = remember { mutableStateListOf<Int>() }
+    val selectedItemsState = remember { SelectedItemsState() }
     var fetchedList: List<CheckerTask> = listOf()
     val resetSelectionMode = {
         isInSelectionMode = false
-        selectedItems.clear()
+        selectedItemsState.clear()
     }
     BackHandler(enabled = isInSelectionMode) {
         resetSelectionMode()
     }
     LaunchedEffect(
         key1 = isInSelectionMode,
-        key2 = selectedItems.size,
+        key2 = selectedItemsState.size(),
     ) {
-        if (isInSelectionMode && selectedItems.isEmpty()) {
+        if (isInSelectionMode && selectedItemsState.size() == 0) {
             isInSelectionMode = false
         }
     }
@@ -279,11 +280,11 @@ private fun CheckerInboxScreen(
         topBar = {
             if (isInSelectionMode) {
                 SelectionModeTopAppBar(
-                    itemCount = selectedItems.size,
+                    itemCount = selectedItemsState.size(),
                     resetSelectionMode = resetSelectionMode,
                     actions = {
                         IconButton(onClick = {
-                            onApproveList(selectedItems)
+                            onApproveList(selectedItemsState.selectedItems.value)
                             resetSelectionMode()
                         }) {
                             Icon(
@@ -293,7 +294,7 @@ private fun CheckerInboxScreen(
                             )
                         }
                         IconButton(onClick = {
-                            onRejectList(selectedItems)
+                            onRejectList(selectedItemsState.selectedItems.value)
                             resetSelectionMode()
                         }) {
                             Icon(
@@ -303,7 +304,7 @@ private fun CheckerInboxScreen(
                             )
                         }
                         IconButton(onClick = {
-                            onDeleteList(selectedItems)
+                            onDeleteList(selectedItemsState.selectedItems.value)
                             resetSelectionMode()
                         }) {
                             Icon(
@@ -411,7 +412,7 @@ private fun CheckerInboxScreen(
                             showDeleteDialog = true
                         },
                         isInSelectionMode = isInSelectionMode,
-                        selectedItems = selectedItems,
+                        selectedItemsState = selectedItemsState,
                         selectedMode = {
                             isInSelectionMode = true
                         },
@@ -448,7 +449,7 @@ private fun CheckerInboxContent(
     onReject: (Int) -> Unit,
     onDelete: (Int) -> Unit,
     isInSelectionMode: Boolean,
-    selectedItems: SnapshotStateList<Int>,
+    selectedItemsState: SelectedItemsState,
     selectedMode: () -> Unit,
 ) {
     LazyColumn {
@@ -459,10 +460,35 @@ private fun CheckerInboxContent(
                 onReject = onReject,
                 onDelete = onDelete,
                 isInSelectionMode = isInSelectionMode,
-                selectedItems = selectedItems,
+                selectedItemsState = selectedItemsState,
                 selectedMode = selectedMode,
             )
         }
+    }
+}
+
+class SelectedItemsState(initialSelectedItems: List<Int> = emptyList()) {
+    private val _selectedItems = mutableStateListOf<Int>().also { it.addAll(initialSelectedItems) }
+    val selectedItems: State<List<Int>> = derivedStateOf { _selectedItems }
+
+    fun add(itemId: Int) {
+        _selectedItems.add(itemId)
+    }
+
+    fun remove(itemId: Int) {
+        _selectedItems.remove(itemId)
+    }
+
+    fun contains(itemId: Int): Boolean {
+        return _selectedItems.contains(itemId)
+    }
+
+    fun clear() {
+        _selectedItems.clear()
+    }
+
+    fun size(): Int {
+        return _selectedItems.size
     }
 }
 
@@ -473,10 +499,12 @@ private fun CheckerInboxItem(
     onReject: (Int) -> Unit,
     onDelete: (Int) -> Unit,
     isInSelectionMode: Boolean,
-    selectedItems: SnapshotStateList<Int>,
+    selectedItemsState: SelectedItemsState,
     selectedMode: () -> Unit,
 ) {
-    val isSelected = selectedItems.contains(checkerTask.id)
+    val selectedItems by selectedItemsState.selectedItems
+    val isSelected = selectedItemsState.contains(checkerTask.id)
+
     var cardColor by remember { mutableStateOf(White) }
 
     var expendCheckerTask by remember { mutableStateOf(false) }
@@ -488,10 +516,10 @@ private fun CheckerInboxItem(
                 onClick = {
                     if (isInSelectionMode) {
                         cardColor = if (isSelected) {
-                            selectedItems.remove(checkerTask.id)
+                            selectedItemsState.remove(checkerTask.id)
                             White
                         } else {
-                            selectedItems.add(checkerTask.id)
+                            selectedItemsState.add(checkerTask.id)
                             LightGray
                         }
                     } else {
@@ -501,15 +529,15 @@ private fun CheckerInboxItem(
                 onLongClick = {
                     if (isInSelectionMode) {
                         cardColor = if (isSelected) {
-                            selectedItems.remove(checkerTask.id)
+                            selectedItemsState.remove(checkerTask.id)
                             White
                         } else {
-                            selectedItems.add(checkerTask.id)
+                            selectedItemsState.add(checkerTask.id)
                             LightGray
                         }
                     } else {
                         selectedMode()
-                        selectedItems.add(checkerTask.id)
+                        selectedItemsState.add(checkerTask.id)
                         cardColor = LightGray
                     }
                 },
@@ -652,116 +680,26 @@ private fun getFilteredList(
         }
     }
 
-    val filteredList = mutableListOf<CheckerTask>()
-    val aLL = "ALL"
     if (!resourceId.isNullOrEmpty()) {
-        // If resource id is available there is no need to check for other filter options
-        for (checkerTask in checkerList) {
-            if (resourceId == checkerTask.resourceId) {
-                filteredList.add(checkerTask)
-            }
-        }
-        return filteredList
-    } else {
-        // Resource Id is not available.
-        // If Clear Filter clicked
-        if (fromDate == null && toDate == null) {
-            return checkerList
-        } else if (fromDate == null) {
-            // From Date is not available
-            if (action == aLL && entity == aLL) {
-                // No need to check for Action and Entity
-                for (checkerTask in checkerList) {
-                    if (!checkerTask.getTimeStamp().after(toDate)) {
-                        filteredList.add(checkerTask)
-                    }
-                }
-                return filteredList
-            } else if (action == aLL) {
-                // Entity has a specific value
-                for (checkerTask in checkerList) {
-                    if (checkerTask.getTimeStamp().before(toDate)) {
-                        if (entity.equals(checkerTask.entityName, true)) {
-                            filteredList.add(checkerTask)
-                        }
-                    }
-                }
-                return filteredList
-            } else if (entity == aLL) {
-                // Action has a specific value
-                for (checkerTask in checkerList) {
-                    if (checkerTask.getTimeStamp().before(toDate)) {
-                        if (action.equals(checkerTask.actionName, true)) {
-                            filteredList.add(checkerTask)
-                        }
-                    }
-                }
-                return filteredList
-            } else {
-                // Both Action and Entity have specific values
-                for (checkerTask in checkerList) {
-                    if (checkerTask.getTimeStamp().before(toDate)) {
-                        if (action.equals(checkerTask.actionName, true) &&
-                            entity.equals(checkerTask.entityName, true)
-                        ) {
-                            filteredList.add(checkerTask)
-                        }
-                    }
-                }
-                return filteredList
-            }
+        return checkerList.filter { resourceId == it.resourceId }
+    }
+
+    if (fromDate == null && toDate == null) {
+        return checkerList
+    }
+
+    val aLL = "ALL"
+    return checkerList.filter { checkerTask ->
+        val isDateInRange = if (fromDate == null) {
+            !checkerTask.getTimeStamp().after(toDate)
         } else {
-            // Both dates are available
-            if (action == aLL && entity == aLL) {
-                // No need to check for Action and Entity
-                for (checkerTask in checkerList) {
-                    if (checkerTask.getTimeStamp().after(fromDate) &&
-                        checkerTask.getTimeStamp().before(toDate)
-                    ) {
-                        filteredList.add(checkerTask)
-                    }
-                }
-                return filteredList
-            } else if (action == aLL) {
-                // Entity has a specific value
-                for (checkerTask in checkerList) {
-                    if (checkerTask.getTimeStamp().after(fromDate) &&
-                        checkerTask.getTimeStamp().before(toDate)
-                    ) {
-                        if (entity.equals(checkerTask.entityName, true)) {
-                            filteredList.add(checkerTask)
-                        }
-                    }
-                }
-                return filteredList
-            } else if (entity == aLL) {
-                // Action has a specific value
-                for (checkerTask in checkerList) {
-                    if (checkerTask.getTimeStamp().after(fromDate) &&
-                        checkerTask.getTimeStamp().before(toDate)
-                    ) {
-                        if (action.equals(checkerTask.actionName, true)) {
-                            filteredList.add(checkerTask)
-                        }
-                    }
-                }
-                return filteredList
-            } else {
-                // Both Action and Entity have specific values
-                for (checkerTask in checkerList) {
-                    if (checkerTask.getTimeStamp().after(fromDate) &&
-                        checkerTask.getTimeStamp().before(toDate)
-                    ) {
-                        if (action.equals(checkerTask.actionName, true) &&
-                            entity.equals(checkerTask.entityName, true)
-                        ) {
-                            filteredList.add(checkerTask)
-                        }
-                    }
-                }
-                return filteredList
-            }
+            checkerTask.getTimeStamp().after(fromDate) && checkerTask.getTimeStamp().before(toDate)
         }
+
+        val isActionMatch = action == aLL || action.equals(checkerTask.actionName, true)
+        val isEntityMatch = entity == aLL || entity.equals(checkerTask.entityName, true)
+
+        isDateInRange && isActionMatch && isEntityMatch
     }
 }
 
@@ -785,7 +723,7 @@ private fun CheckerInboxItemPreview() {
         onReject = {},
         onDelete = {},
         isInSelectionMode = false,
-        selectedItems = remember { mutableStateListOf() },
+        selectedItemsState = SelectedItemsState(),
         selectedMode = {},
     )
 }
@@ -799,7 +737,7 @@ private fun CheckerInboxContentPreview() {
         onReject = {},
         onDelete = {},
         isInSelectionMode = false,
-        selectedItems = remember { mutableStateListOf() },
+        selectedItemsState = SelectedItemsState(),
         selectedMode = {},
     )
 }
