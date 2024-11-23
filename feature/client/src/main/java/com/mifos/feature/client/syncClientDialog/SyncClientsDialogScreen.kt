@@ -52,10 +52,10 @@ internal fun SyncClientsDialogScreen(
     val uiData by viewModel.syncClientData.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.syncClient()
         list?.let {
             viewModel.setClientList(clientsList = list)
         }
+        viewModel.syncClient()
     }
 
     SyncClientsDialogScreen(

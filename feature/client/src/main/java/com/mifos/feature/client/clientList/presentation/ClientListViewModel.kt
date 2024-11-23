@@ -52,7 +52,7 @@ class ClientListViewModel @Inject constructor(
         _isRefreshing.value = false
     }
 
-    private fun getClientList() {
+    fun getClientList() {
         if (prefManager.userStatus) {
             loadClientsFromDb()
         } else {
