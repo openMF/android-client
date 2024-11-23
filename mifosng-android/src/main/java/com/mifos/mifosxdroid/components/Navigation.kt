@@ -25,6 +25,7 @@ import com.mifos.feature.client.navigation.navigateCreateClientScreen
 import com.mifos.feature.client.navigation.navigateToClientListScreen
 
 import com.mifos.feature.data_table.navigation.dataTableNavGraph
+import com.mifos.feature.data_table.navigation.navigateDataTableList
 import com.mifos.feature.data_table.navigation.navigateToDataTable
 
 
@@ -98,6 +99,23 @@ fun Navigation(
                     it,
                     Constants.ACTIVATE_CLIENT
                 )
+            },
+            hasDatatables = { datatable, clientPayload ->
+                navController.navigateDataTableList(
+                    dataTableList = datatable,
+                    payload = clientPayload,
+                    requestType = Constants.CREATE_CLIENT,
+                    formWidget = mutableListOf()
+                )
+            },
+            onDocumentClicked = {id ->
+                navController.navigateToDocumentListScreen(
+                    entityId = id,
+                    Constants.ENTITY_TYPE_CLIENTS
+                )
+            },
+            onCardClicked = { position, survey->
+            //    navController.nav
             }
         )
 

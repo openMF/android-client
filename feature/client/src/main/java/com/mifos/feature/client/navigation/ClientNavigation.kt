@@ -43,6 +43,9 @@ fun NavGraphBuilder.clientNavGraph(
     loanAccountSelected: (Int) -> Unit,
     savingsAccountSelected: (Int, DepositType) -> Unit,
     activateClient: (Int) -> Unit,
+    hasDatatables: (List<DataTable>, ClientPayload) -> Unit,
+    onDocumentClicked: (Int) -> Unit,
+    onCardClicked: (Int, List<Survey>) -> Unit
 ) {
     navigation(
         startDestination = ClientScreens.ClientListScreen.route,
@@ -73,7 +76,7 @@ fun NavGraphBuilder.clientNavGraph(
             onBackPressed = navController::popBackStack,
         )
         clientIdentifierRoute(
-            onDocumentClicked = {},
+            onDocumentClicked = onDocumentClicked,
             onBackPressed = navController::popBackStack,
         )
         clientPinPointRoute(
@@ -84,14 +87,14 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientSurveyListRoute(
             onBackPressed = navController::popBackStack,
-            onCardClicked = { _, _ -> },
+            onCardClicked = onCardClicked,
         )
         clientSurveyQuestionRoute(
             onBackPressed = navController::popBackStack,
         )
         createClientRoute(
             onBackPressed = navController::popBackStack,
-            hasDatatables = { _, _ -> },
+            hasDatatables = hasDatatables,
         )
     }
 }
