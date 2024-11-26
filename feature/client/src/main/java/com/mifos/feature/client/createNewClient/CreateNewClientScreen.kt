@@ -54,6 +54,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -95,6 +96,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.component.PermissionBox
@@ -163,74 +165,88 @@ internal fun CreateNewClientScreen(
     val context = LocalContext.current
     var createClientWithImage by rememberSaveable { mutableStateOf(false) }
     var clientImageUri: Uri? by rememberSaveable { mutableStateOf(null) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    Box {
-        when (uiState) {
-            CreateNewClientUiState.ShowProgressbar -> {
-                MifosCircularProgress()
-            }
+    MifosScaffold(
+        title = stringResource(id = R.string.feature_client_create_new_client),
+        snackbarHostState = snackbarHostState,
+    ) { paddingValues ->
+        Column(modifier = Modifier.padding(paddingValues)) {
+            when (uiState) {
+                CreateNewClientUiState.ShowProgressbar -> {
+                    MifosCircularProgress()
+                }
 
-            is CreateNewClientUiState.ShowProgress -> {
-                MifosCircularProgress(text = uiState.message)
-            }
+                is CreateNewClientUiState.ShowProgress -> {
+                    MifosCircularProgress(text = uiState.message)
+                }
 
-            is CreateNewClientUiState.ShowClientTemplate -> {
-                CreateNewClientContent(
-                    officeList = officeList,
-                    staffInOffices = staffInOffices,
-                    clientTemplate = uiState.clientsTemplate,
-                    loadStaffInOffice = loadStaffInOffice,
-                    createClient = createClient,
-                    onHasDatatables = hasDatatables,
-                    setUriForUpload = { uri ->
-                        if (uri.path?.isNotEmpty() == true) {
-                            clientImageUri = uri
-                            createClientWithImage = true
-                        }
-                    },
-                )
-            }
+                is CreateNewClientUiState.ShowClientTemplate -> {
+                    CreateNewClientContent(
+                        officeList = officeList,
+                        staffInOffices = staffInOffices,
+                        clientTemplate = uiState.clientsTemplate,
+                        loadStaffInOffice = loadStaffInOffice,
+                        createClient = createClient,
+                        onHasDatatables = hasDatatables,
+                        setUriForUpload = { uri ->
+                            if (uri.path?.isNotEmpty() == true) {
+                                clientImageUri = uri
+                                createClientWithImage = true
+                            }
+                        },
+                    )
+                }
 
-            is CreateNewClientUiState.SetClientId -> {
-                if (createClientWithImage) {
-                    clientImageUri?.let { uploadImage(uiState.id, it) }
-                } else {
+                is CreateNewClientUiState.SetClientId -> {
+                    if (createClientWithImage) {
+                        clientImageUri?.let { uploadImage(uiState.id, it) }
+                    } else {
+                        navigateBack.invoke()
+                    }
+                }
+
+                is CreateNewClientUiState.ShowClientCreatedSuccessfully -> {
+                    Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
+                }
+
+                is CreateNewClientUiState.OnImageUploadSuccess -> {
+                    Toast.makeText(
+                        context,
+                        stringResource(id = uiState.message),
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                     navigateBack.invoke()
                 }
-            }
 
-            is CreateNewClientUiState.ShowClientCreatedSuccessfully -> {
-                Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
-            }
+                is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
+                    Toast.makeText(
+                        context,
+                        stringResource(id = uiState.message),
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                    navigateBack.invoke()
+                }
 
-            is CreateNewClientUiState.OnImageUploadSuccess -> {
-                Toast.makeText(context, stringResource(id = uiState.message), Toast.LENGTH_SHORT)
-                    .show()
-                navigateBack.invoke()
-            }
+                is CreateNewClientUiState.ShowError -> {
+                    MifosSweetError(
+                        message = stringResource(id = uiState.message),
+                        onclick = { onRetry() },
+                    )
+                }
 
-            is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
-                Toast.makeText(context, stringResource(id = uiState.message), Toast.LENGTH_SHORT)
-                    .show()
-                navigateBack.invoke()
-            }
-
-            is CreateNewClientUiState.ShowError -> {
-                MifosSweetError(
-                    message = stringResource(id = uiState.message),
-                    onclick = { onRetry() },
-                )
-            }
-
-            is CreateNewClientUiState.ShowStringError -> {
-                MifosSweetError(
-                    message = uiState.message,
-                    onclick = { onRetry() },
-                    buttonText = stringResource(id = R.string.feature_client_go_back),
-                )
+                is CreateNewClientUiState.ShowStringError -> {
+                    MifosSweetError(
+                        message = uiState.message,
+                        onclick = { onRetry() },
+                        buttonText = stringResource(id = R.string.feature_client_go_back),
+                    )
+                }
             }
         }
-    }
+        }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -435,8 +451,7 @@ private fun CreateNewClientContent(
             .fillMaxSize()
             .verticalScroll(state = scrollState),
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        ClientHeader()
+
         ClientImageSection(selectedImageUri = selectedImageUri) {
             showImagePickerDialog = true
         }
@@ -770,19 +785,6 @@ private fun ClientInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-    }
-}
-
-@Composable
-private fun ClientHeader() {
-    Column {
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            style = MaterialTheme.typography.headlineSmall,
-            text = stringResource(id = R.string.feature_client_create_new_client),
-            modifier = Modifier.padding(start = 16.dp),
-        )
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
