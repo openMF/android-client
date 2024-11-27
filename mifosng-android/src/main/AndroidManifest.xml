@@ -26,7 +26,6 @@
         android:supportsRtl="true"
         android:windowSoftInputMode="adjustResize"
         android:theme="@style/MaterialAppTheme">
-        <activity android:name=".online.checkerinbox.CheckerInboxPendingTasksActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -52,32 +51,6 @@
             android:label="home_activity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-
-        <activity
-            android:name=".online.surveyquestion.SurveyQuestionActivity"
-            android:label="Survey"
-            android:parentActivityName="com.mifos.mifosxdroid.online.ClientActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mifos.mifosxdroid.online.ClientActivity" />
-        </activity>
-
-        <activity
-            android:name=".online.ClientActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".activity.pinpointclient.PinpointClientActivity"
-            android:exported="true"
-            android:label="@string/pinpoint"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -52,10 +52,10 @@ internal fun SyncCenterDialogScreen(
     val uiData by viewModel.syncCenterData.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.syncCenter()
         centers?.let {
             viewModel.setCentersList(centersList = centers)
         }
+        viewModel.syncCenter()
     }
 
     SyncCenterDialogScreen(

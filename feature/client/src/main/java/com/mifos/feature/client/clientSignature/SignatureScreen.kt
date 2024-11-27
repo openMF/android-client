@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 @file:OptIn(ExperimentalComposeUiApi::class)
 
 package com.mifos.feature.client.clientSignature
@@ -55,11 +64,10 @@ import java.io.File
 import kotlin.math.roundToInt
 
 @Composable
-fun SignatureScreen(
-    onBackPressed: () -> Unit
+internal fun SignatureScreen(
+    onBackPressed: () -> Unit,
+    viewmodel: SignatureViewModel = hiltViewModel(),
 ) {
-
-    val viewmodel: SignatureViewModel = hiltViewModel()
     val clientId by viewmodel.clientId.collectAsStateWithLifecycle()
     val state by viewmodel.signatureUiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -78,18 +86,17 @@ fun SignatureScreen(
                 clientId,
                 file.name,
                 "Signature",
-                file
+                file,
             )
-        }
+        },
     )
-
 }
 
 @Composable
-fun SignatureScreen(
+internal fun SignatureScreen(
     state: SignatureUiState,
     onBackPressed: () -> Unit,
-    uploadSignature: (Bitmap) -> Unit
+    uploadSignature: (Bitmap) -> Unit,
 ) {
     val view = LocalView.current
     val context = LocalContext.current
@@ -109,12 +116,11 @@ fun SignatureScreen(
             mutableSetOf(
                 Color.Black,
                 Color.White,
-                Color.Gray
-            )
+                Color.Gray,
+            ),
         )
     }
     var paths by remember { mutableStateOf(mutableListOf<PathState>()) }
-
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -126,9 +132,8 @@ fun SignatureScreen(
                 }
                 uploadSignature(bitmap)
             }
-        }
+        },
     )
-
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
@@ -139,7 +144,7 @@ fun SignatureScreen(
                 val bounds = capturingViewBounds ?: return@IconButton
                 image = Bitmap.createBitmap(
                     bounds.width.roundToInt(), bounds.height.roundToInt(),
-                    Bitmap.Config.ARGB_8888
+                    Bitmap.Config.ARGB_8888,
                 ).applyCanvas {
                     translate(-bounds.left, -bounds.top)
                     view.draw(this)
@@ -148,7 +153,7 @@ fun SignatureScreen(
             }) {
                 Icon(
                     imageVector = MifosIcons.upload,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         },
@@ -164,7 +169,7 @@ fun SignatureScreen(
                             icon = {
                                 Icon(
                                     navigationItem.icon,
-                                    contentDescription = navigationItem.label
+                                    contentDescription = navigationItem.label,
                                 )
                             },
                             onClick = {
@@ -178,21 +183,22 @@ fun SignatureScreen(
                                         galleryLauncher.launch("image/*")
                                     }
                                 }
-                            }
+                            },
                         )
                     }
             }
         },
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
-        Column(modifier = Modifier
-            .padding(paddingValues)
-            .onGloballyPositioned {
-                capturingViewBounds = it.boundsInRoot()
-            }) {
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .onGloballyPositioned {
+                    capturingViewBounds = it.boundsInRoot()
+                },
+        ) {
             when (state) {
                 is SignatureUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {
-
                 }
 
                 is SignatureUiState.Loading -> MifosCircularProgress()
@@ -201,7 +207,7 @@ fun SignatureScreen(
                     Toast.makeText(
                         LocalContext.current,
                         stringResource(id = R.string.feature_client_signature_uploaded_successfully),
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
                     onBackPressed()
                 }
@@ -213,19 +219,18 @@ fun SignatureScreen(
                         drawColor = drawColor,
                         drawBrush = drawBrush,
                         usedColors = usedColors,
-                        paths = paths
+                        paths = paths,
                     )
-
                 }
             }
         }
     }
 }
 
-data class BottomNavigationItem(
+private data class BottomNavigationItem(
     val label: String = "",
     val icon: ImageVector = MifosIcons.close,
-    val route: String = ""
+    val route: String = "",
 ) {
 
     @Composable
@@ -233,37 +238,35 @@ data class BottomNavigationItem(
         return listOf(
             BottomNavigationItem(
                 label = stringResource(id = R.string.feature_client_signature_reset),
-                icon = MifosIcons.close
+                icon = MifosIcons.close,
             ),
             BottomNavigationItem(
                 label = stringResource(id = R.string.feature_client_signature_gallery),
-                icon = MifosIcons.gallery
-            )
+                icon = MifosIcons.gallery,
+            ),
         )
     }
 }
 
-
-class SignatureScreenUiStateProvider : PreviewParameterProvider<SignatureUiState> {
+private class SignatureScreenUiStateProvider : PreviewParameterProvider<SignatureUiState> {
 
     override val values: Sequence<SignatureUiState>
         get() = sequenceOf(
             SignatureUiState.Initial,
             SignatureUiState.Error(message = R.string.feature_client_failed_to_add_signature),
             SignatureUiState.Loading,
-            SignatureUiState.SignatureUploadedSuccessfully
+            SignatureUiState.SignatureUploadedSuccessfully,
         )
-
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun SignatureScreenPreview(
-    @PreviewParameter(SignatureScreenUiStateProvider::class) state: SignatureUiState
+    @PreviewParameter(SignatureScreenUiStateProvider::class) state: SignatureUiState,
 ) {
     SignatureScreen(
         state = state,
         onBackPressed = {},
-        uploadSignature = {}
+        uploadSignature = {},
     )
 }

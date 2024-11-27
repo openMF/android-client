@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientSurveySubmit
 
 import android.widget.Toast
@@ -34,38 +43,35 @@ import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.survey.Scorecard
 import com.mifos.feature.client.R
 
-
 @Composable
-fun SurveySubmitScreen(
+internal fun SurveySubmitScreen(
     uiState: SurveySubmitUiState,
     submitSurvey: () -> Unit,
-    noOfQuestions: Int = 0
+    noOfQuestions: Int = 0,
 ) {
     val context = LocalContext.current
 
     when (uiState) {
-
         SurveySubmitUiState.Initial -> {
             SurveySubmitContent(
                 showButton = true,
                 displayText = "Attempt Questions: $noOfQuestions",
-                submitSurvey = submitSurvey
+                submitSurvey = submitSurvey,
             )
         }
 
         is SurveySubmitUiState.ShowSurveySubmittedSuccessfully -> {
-
             SurveySubmitContent(
                 showButton = false,
                 displayText = stringResource(id = R.string.feature_client_survey_successfully_submitted),
-                submitSurvey = submitSurvey
+                submitSurvey = submitSurvey,
             )
 
             LaunchedEffect(key1 = true) {
                 Toast.makeText(
                     context,
                     context.getString(R.string.feature_client_scorecard_created_successfully),
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_LONG,
                 ).show()
             }
         }
@@ -74,12 +80,13 @@ fun SurveySubmitScreen(
             SurveySubmitContent(
                 showButton = false,
                 displayText = stringResource(id = R.string.feature_client_failed_to_submit_survey),
-                submitSurvey = submitSurvey
+                submitSurvey = submitSurvey,
             )
             LaunchedEffect(key1 = true) {
                 Toast.makeText(
-                    context, uiState.message,
-                    Toast.LENGTH_LONG
+                    context,
+                    uiState.message,
+                    Toast.LENGTH_LONG,
                 ).show()
             }
         }
@@ -88,52 +95,50 @@ fun SurveySubmitScreen(
             SurveySubmitContent(
                 showButton = false,
                 displayText = stringResource(id = R.string.feature_client_survey_successfully_submitted),
-                submitSurvey = submitSurvey
+                submitSurvey = submitSurvey,
             )
             MifosCircularProgress()
         }
     }
-
 }
 
 @Composable
-fun SurveySubmitContent(
-    showButton: Boolean = true,
+internal fun SurveySubmitContent(
     displayText: String,
-    submitSurvey: () -> Unit
+    submitSurvey: () -> Unit,
+    showButton: Boolean = true,
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
-
             Card(
                 modifier = Modifier.padding(horizontal = 40.dp),
                 shape = RoundedCornerShape(4.dp),
-                colors = CardDefaults.cardColors(containerColor = BluePrimary)
+                colors = CardDefaults.cardColors(containerColor = BluePrimary),
             ) {
                 Card(
                     modifier = Modifier
                         .padding(top = 4.dp),
                     shape = RoundedCornerShape(4.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
                 ) {
                     Box(
                         modifier = Modifier
                             .shadow(1.dp)
                             .padding(horizontal = 8.dp, vertical = 4.dp),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         Text(
                             text = displayText,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Normal,
-                            color = Color.Black
+                            color = Color.Black,
                         )
                     }
                 }
@@ -154,7 +159,7 @@ fun SurveySubmitContent(
                         containerColor = BluePrimary,
                         contentColor = White,
                         disabledContainerColor = Color.DarkGray,
-                        disabledContentColor = White
+                        disabledContentColor = White,
                     ),
                 ) {
                     Text(text = stringResource(id = R.string.feature_client_submit_survey))
@@ -164,25 +169,25 @@ fun SurveySubmitContent(
     }
 }
 
-class SurveySubmitPreviewProvider : PreviewParameterProvider<SurveySubmitUiState> {
+private class SurveySubmitPreviewProvider : PreviewParameterProvider<SurveySubmitUiState> {
 
     override val values: Sequence<SurveySubmitUiState>
         get() = sequenceOf(
             SurveySubmitUiState.Initial,
             SurveySubmitUiState.ShowProgressbar,
             SurveySubmitUiState.ShowSurveySubmittedSuccessfully(Scorecard()),
-            SurveySubmitUiState.ShowError("Error")
+            SurveySubmitUiState.ShowError("Error"),
         )
 }
 
 @Composable
 @Preview(showSystemUi = true)
-fun PreviewSurveyListScreen(
-    @PreviewParameter(SurveySubmitPreviewProvider::class) surveySubmitUiState: SurveySubmitUiState
+private fun PreviewSurveyListScreen(
+    @PreviewParameter(SurveySubmitPreviewProvider::class) surveySubmitUiState: SurveySubmitUiState,
 ) {
     SurveySubmitScreen(
         uiState = surveySubmitUiState,
         submitSurvey = { },
-        noOfQuestions = 0
+        noOfQuestions = 0,
     )
 }

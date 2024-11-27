@@ -74,9 +74,6 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         }*/
         clearFragmentBackStack()
         when (item.itemId) {
-            R.id.item_checker_inbox -> {
-                findNavController(R.id.nav_host_fragment).navigate(R.id.checkerInboxPendingTasksActivity)
-            }
 
             R.id.individual_collection_sheet -> {
                 val bundle = Bundle()

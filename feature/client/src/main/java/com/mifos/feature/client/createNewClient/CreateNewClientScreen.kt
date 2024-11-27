@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.createNewClient
 
 import android.Manifest
@@ -45,6 +54,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -86,6 +96,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.component.PermissionBox
@@ -111,11 +122,11 @@ import java.util.Objects
  */
 
 @Composable
-fun CreateNewClientScreen(
+internal fun CreateNewClientScreen(
     navigateBack: () -> Unit,
-    hasDatatables: (datatables: List<DataTable>, clientPayload: ClientPayload) -> Unit
+    hasDatatables: (datatables: List<DataTable>, clientPayload: ClientPayload) -> Unit,
+    viewmodel: CreateNewClientViewModel = hiltViewModel(),
 ) {
-    val viewmodel: CreateNewClientViewModel = hiltViewModel()
     val uiState by viewmodel.createNewClientUiState.collectAsStateWithLifecycle()
     val officeList by viewmodel.showOffices.collectAsStateWithLifecycle()
     val staffInOffice by viewmodel.staffInOffices.collectAsStateWithLifecycle()
@@ -135,12 +146,12 @@ fun CreateNewClientScreen(
         uploadImage = { id, uri ->
             viewmodel.uploadImage(id, uri.toFile())
         },
-        hasDatatables = hasDatatables
+        hasDatatables = hasDatatables,
     )
 }
 
 @Composable
-fun CreateNewClientScreen(
+internal fun CreateNewClientScreen(
     uiState: CreateNewClientUiState,
     onRetry: () -> Unit,
     officeList: List<Office>,
@@ -149,77 +160,93 @@ fun CreateNewClientScreen(
     navigateBack: () -> Unit,
     createClient: (clientPayload: ClientPayload) -> Unit,
     uploadImage: (id: Int, imageUri: Uri) -> Unit,
-    hasDatatables: (datatables: List<DataTable>, clientPayload: ClientPayload) -> Unit
+    hasDatatables: (datatables: List<DataTable>, clientPayload: ClientPayload) -> Unit,
 ) {
     val context = LocalContext.current
     var createClientWithImage by rememberSaveable { mutableStateOf(false) }
     var clientImageUri: Uri? by rememberSaveable { mutableStateOf(null) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    Box {
-        when (uiState) {
-            CreateNewClientUiState.ShowProgressbar -> {
-                MifosCircularProgress()
-            }
+    MifosScaffold(
+        title = stringResource(id = R.string.feature_client_create_new_client),
+        snackbarHostState = snackbarHostState,
+    ) { paddingValues ->
+        Column(modifier = Modifier.padding(paddingValues)) {
+            when (uiState) {
+                CreateNewClientUiState.ShowProgressbar -> {
+                    MifosCircularProgress()
+                }
 
-            is CreateNewClientUiState.ShowProgress -> {
-                MifosCircularProgress(text = uiState.message)
-            }
+                is CreateNewClientUiState.ShowProgress -> {
+                    MifosCircularProgress(text = uiState.message)
+                }
 
-            is CreateNewClientUiState.ShowClientTemplate -> {
-                CreateNewClientContent(
-                    officeList = officeList,
-                    staffInOffices = staffInOffices,
-                    clientTemplate = uiState.clientsTemplate,
-                    loadStaffInOffice = loadStaffInOffice,
-                    createClient = createClient,
-                    onHasDatatables = hasDatatables,
-                    setUriForUpload = { uri ->
-                        if (uri.path?.isNotEmpty() == true) {
-                            clientImageUri = uri
-                            createClientWithImage = true
-                        }
+                is CreateNewClientUiState.ShowClientTemplate -> {
+                    CreateNewClientContent(
+                        officeList = officeList,
+                        staffInOffices = staffInOffices,
+                        clientTemplate = uiState.clientsTemplate,
+                        loadStaffInOffice = loadStaffInOffice,
+                        createClient = createClient,
+                        onHasDatatables = hasDatatables,
+                        setUriForUpload = { uri ->
+                            if (uri.path?.isNotEmpty() == true) {
+                                clientImageUri = uri
+                                createClientWithImage = true
+                            }
+                        },
+                    )
+                }
+
+                is CreateNewClientUiState.SetClientId -> {
+                    if (createClientWithImage) {
+                        clientImageUri?.let { uploadImage(uiState.id, it) }
+                    } else {
+                        navigateBack.invoke()
                     }
-                )
-            }
+                }
 
-            is CreateNewClientUiState.SetClientId -> {
-                if (createClientWithImage) {
-                    clientImageUri?.let { uploadImage(uiState.id, it) }
-                } else navigateBack.invoke()
-            }
+                is CreateNewClientUiState.ShowClientCreatedSuccessfully -> {
+                    Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
+                }
 
-            is CreateNewClientUiState.ShowClientCreatedSuccessfully -> {
-                Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
-            }
+                is CreateNewClientUiState.OnImageUploadSuccess -> {
+                    Toast.makeText(
+                        context,
+                        stringResource(id = uiState.message),
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                    navigateBack.invoke()
+                }
 
-            is CreateNewClientUiState.OnImageUploadSuccess -> {
-                Toast.makeText(context, stringResource(id = uiState.message), Toast.LENGTH_SHORT)
-                    .show()
-                navigateBack.invoke()
-            }
+                is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
+                    Toast.makeText(
+                        context,
+                        stringResource(id = uiState.message),
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                    navigateBack.invoke()
+                }
 
-            is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
-                Toast.makeText(context, stringResource(id = uiState.message), Toast.LENGTH_SHORT)
-                    .show()
-                navigateBack.invoke()
-            }
+                is CreateNewClientUiState.ShowError -> {
+                    MifosSweetError(
+                        message = stringResource(id = uiState.message),
+                        onclick = { onRetry() },
+                    )
+                }
 
-            is CreateNewClientUiState.ShowError -> {
-                MifosSweetError(
-                    message = stringResource(id = uiState.message),
-                    onclick = { onRetry() }
-                )
-            }
-
-            is CreateNewClientUiState.ShowStringError -> {
-                MifosSweetError(
-                    message = uiState.message,
-                    onclick = { onRetry() },
-                    buttonText = stringResource(id = R.string.feature_client_go_back)
-                )
+                is CreateNewClientUiState.ShowStringError -> {
+                    MifosSweetError(
+                        message = uiState.message,
+                        onclick = { onRetry() },
+                        buttonText = stringResource(id = R.string.feature_client_go_back),
+                    )
+                }
             }
         }
-    }
+        }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -231,7 +258,7 @@ private fun CreateNewClientContent(
     loadStaffInOffice: (officeId: Int) -> Unit,
     createClient: (clientPayload: ClientPayload) -> Unit,
     onHasDatatables: (datatables: List<DataTable>, clientPayload: ClientPayload) -> Unit,
-    setUriForUpload: (uri: Uri) -> Unit
+    setUriForUpload: (uri: Uri) -> Unit,
 ) {
     var firstName by rememberSaveable { mutableStateOf("") }
     var middleName by rememberSaveable { mutableStateOf("") }
@@ -271,7 +298,7 @@ private fun CreateNewClientContent(
     val imgUri = FileProvider.getUriForFile(
         Objects.requireNonNull(context),
         "com.mifos.mifosxdroid" + ".provider",
-        file
+        file,
     )
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
@@ -280,11 +307,11 @@ private fun CreateNewClientContent(
                 selectedImageUri = imgUri
             }
             handleImageSelection = false
-        }
+        },
     )
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.GetContent(),
     ) { uri: Uri? ->
         if (uri != null) {
             selectedImageUri = uri
@@ -294,7 +321,7 @@ private fun CreateNewClientContent(
 
     val hasDatatables by rememberSaveable {
         mutableStateOf(
-            clientTemplate.dataTables.isNotEmpty()
+            clientTemplate.dataTables.isNotEmpty(),
         )
     }
 
@@ -304,7 +331,7 @@ private fun CreateNewClientContent(
         }
     }
     LaunchedEffect(key1 = staffInOffices) {
-        if(staffInOffices.isEmpty()){
+        if (staffInOffices.isEmpty()) {
             Toast.makeText(context, context.resources.getString(R.string.feature_client_no_staff_associated_with_office), Toast.LENGTH_SHORT).show()
             staff = ""
             selectedStaffId = 0
@@ -317,7 +344,7 @@ private fun CreateNewClientContent(
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis >= System.currentTimeMillis()
             }
-        }
+        },
     )
     val dateOfBirthDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = dateOfBirth,
@@ -325,7 +352,7 @@ private fun CreateNewClientContent(
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis <= System.currentTimeMillis()
             }
-        }
+        },
     )
 
     if (handleImageSelection) {
@@ -343,7 +370,7 @@ private fun CreateNewClientContent(
                         cameraLauncher.launch(imgUri)
                     }
                 }
-            }
+            },
         )
     }
 
@@ -363,12 +390,12 @@ private fun CreateNewClientContent(
 
                 val requiredPermissions = if (Build.VERSION.SDK_INT >= 33) {
                     listOf(
-                        Manifest.permission.READ_MEDIA_IMAGES
+                        Manifest.permission.READ_MEDIA_IMAGES,
                     )
                 } else {
                     listOf(
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     )
                 }
 
@@ -379,7 +406,7 @@ private fun CreateNewClientContent(
             removeImage = {
                 showImagePickerDialog = false
                 selectedImageUri = Uri.EMPTY
-            }
+            },
         )
     }
 
@@ -403,7 +430,7 @@ private fun CreateNewClientContent(
                         }
                         showActivateDatepicker = false
                         showDateOfBirthDatepicker = false
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_client_select_date)) }
             },
             dismissButton = {
@@ -411,11 +438,10 @@ private fun CreateNewClientContent(
                     onClick = {
                         showActivateDatepicker = false
                         showDateOfBirthDatepicker = false
-                    }
+                    },
                 ) { Text(stringResource(id = R.string.feature_client_cancel)) }
-            }
-        )
-        {
+            },
+        ) {
             DatePicker(state = if (showActivateDatepicker) activateDatePickerState else dateOfBirthDatePickerState)
         }
     }
@@ -423,89 +449,24 @@ private fun CreateNewClientContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(state = scrollState)
+            .verticalScroll(state = scrollState),
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            style = MaterialTheme.typography.headlineSmall,
-            text = stringResource(id = R.string.feature_client_create_new_client),
-            modifier = Modifier.padding(start = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-        ) {
-            Image(
-                painter = if (selectedImageUri.path?.isNotEmpty() == true) rememberAsyncImagePainter(
-                    selectedImageUri
-                ) else painterResource(
-                    id = R.drawable.feature_client_ic_dp_placeholder
-                ),
-                contentDescription = null,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .clickable {
-                        showImagePickerDialog = true
-                    }
-                    .border(color = DarkGray, width = 2.dp, shape = CircleShape)
-                    .size(80.dp)
-                    .clip(CircleShape)
-            )
+        ClientImageSection(selectedImageUri = selectedImageUri) {
+            showImagePickerDialog = true
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        MifosOutlinedTextField(
-            value = firstName,
-            onValueChange = { firstName = it },
-            label = stringResource(id = R.string.feature_client_first_name_mandatory),
-            error = null
+        ClientInputTextFields(
+            firstName = firstName,
+            middleName = middleName,
+            lastName = lastName,
+            mobileNumber = mobileNumber,
+            externalId = externalId,
+            onFirstNameChange = { firstName = it },
+            onMiddleNameChange = { middleName = it },
+            onLastNameChange = { lastName = it },
+            onMobileNumberChange = { mobileNumber = it },
+            onExternalIdChange = { externalId = it },
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        MifosOutlinedTextField(
-            value = middleName,
-            onValueChange = { middleName = it },
-            label = stringResource(id = R.string.feature_client_middle_name),
-            error = null
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        MifosOutlinedTextField(
-            value = lastName,
-            onValueChange = { lastName = it },
-            label = stringResource(id = R.string.feature_client_last_name_mandatory),
-            error = null
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        MifosOutlinedTextField(
-            value = mobileNumber,
-            onValueChange = { mobileNumber = it },
-            label = stringResource(id = R.string.feature_client_mobile_no),
-            error = null,
-            keyboardType = KeyboardType.Number
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        MifosOutlinedTextField(
-            value = externalId,
-            onValueChange = { externalId = it },
-            label = stringResource(id = R.string.feature_client_external_id),
-            error = null
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         MifosTextFieldDropdown(
             value = gender,
             onValueChanged = { gender = it },
@@ -515,17 +476,17 @@ private fun CreateNewClientContent(
             },
             label = R.string.feature_client_gender,
             options = clientTemplate.genderOptions.map { it.name },
-            readOnly = true
+            readOnly = true,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosDatePickerTextField(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-                dateOfBirth
+                dateOfBirth,
             ),
             label = R.string.feature_client_dob,
-            openDatePicker = { showDateOfBirthDatepicker = !showDateOfBirthDatepicker }
+            openDatePicker = { showDateOfBirthDatepicker = !showDateOfBirthDatepicker },
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -539,7 +500,7 @@ private fun CreateNewClientContent(
             },
             label = R.string.feature_client_client,
             options = clientTemplate.clientTypeOptions.sortedBy { it.name }.map { it.name },
-            readOnly = true
+            readOnly = true,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -555,7 +516,7 @@ private fun CreateNewClientContent(
             label = R.string.feature_client_client_classification,
             options = clientTemplate.clientClassificationOptions.sortedBy { it.name }
                 .map { it.name },
-            readOnly = true
+            readOnly = true,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -575,7 +536,7 @@ private fun CreateNewClientContent(
             },
             label = R.string.feature_client_office_name_mandatory,
             options = officeList.sortedBy { it.name }.map { it.name.toString() },
-            readOnly = true
+            readOnly = true,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -589,45 +550,44 @@ private fun CreateNewClientContent(
             },
             label = R.string.feature_client_staff,
             options = staffInOffices.sortedBy { it.displayName }.map { it.displayName.toString() },
-            readOnly = true
+            readOnly = true,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
                 checked = isActive,
                 onCheckedChange = { isActive = !isActive },
                 colors = CheckboxDefaults.colors(
-                    if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
-                )
+                    if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+                ),
             )
             Text(text = stringResource(id = R.string.feature_client_client_active))
         }
-
 
         AnimatedVisibility(
             visible = isActive,
             enter = slideInVertically {
                 with(density) { -40.dp.roundToPx() }
             } + expandVertically(
-                expandFrom = Alignment.Top
+                expandFrom = Alignment.Top,
             ) + fadeIn(
-                initialAlpha = 0.3f
+                initialAlpha = 0.3f,
             ),
-            exit = slideOutVertically() + shrinkVertically() + fadeOut()
+            exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
             MifosDatePickerTextField(
                 value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-                    activationDate
+                    activationDate,
                 ),
                 label = R.string.feature_client_center_submission_date,
-                openDatePicker = { showActivateDatepicker = !showActivateDatepicker }
+                openDatePicker = { showActivateDatepicker = !showActivateDatepicker },
             )
         }
 
@@ -639,82 +599,226 @@ private fun CreateNewClientContent(
                 .padding(horizontal = 16.dp)
                 .heightIn(46.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
+                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
             ),
             onClick = {
-                if (isAllFieldsValid(
-                        context = context,
-                        firstName = firstName,
-                        middleName = middleName,
-                        lastName = lastName
-                    )
-                ) {
-                    if (com.mifos.core.common.utils.Network.isOnline(context)) {
-                        val clientPayload = ClientPayload()
-
-                        //Mandatory fields
-                        clientPayload.firstname = firstName
-                        clientPayload.lastname = lastName
-                        clientPayload.officeId = selectedOfficeId
-
-                        // Optional Fields, we do not need to add any check because these fields carry some
-                        //  default values
-                        clientPayload.active = isActive
-                        clientPayload.activationDate =
-                            SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-                                activationDate
-                            )
-                        clientPayload.dateOfBirth =
-                            SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-                                dateOfBirth
-                            )
-
-                        //Optional Fields
-                        if (middleName.isNotEmpty()) {
-                            clientPayload.middlename = middleName
-                        }
-                        if (PhoneNumberUtils.isGlobalPhoneNumber(mobileNumber)) {
-                            clientPayload.mobileNo = mobileNumber
-                        }
-                        if (externalId.isNotEmpty()) {
-                            clientPayload.externalId = externalId
-                        }
-                        if (clientTemplate.genderOptions.isNotEmpty()) {
-                            clientPayload.genderId = genderId
-                        }
-                        if (staffInOffices.isNotEmpty()) {
-                            clientPayload.staffId = selectedStaffId
-                        }
-                        if (clientTemplate.clientTypeOptions.isNotEmpty()) {
-                            clientPayload.clientTypeId = selectedClientId
-                        }
-                        if (clientTemplate.clientClassificationOptions.isNotEmpty()) {
-                            clientPayload.clientClassificationId = selectedClientClassificationId
-                        }
-                        if (hasDatatables) {
-                            onHasDatatables.invoke(clientTemplate.dataTables, clientPayload)
-                        } else {
-                            setUriForUpload.invoke(selectedImageUri)
-                            clientPayload.datatables = null
-                            createClient.invoke(clientPayload)
-                        }
-                    } else {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.feature_client_error_not_connected_internet),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
+                val clientNames = Name(firstName, lastName, middleName)
+                handleSubmitClick(
+                    context, clientNames, clientTemplate, createClient, isActive, onHasDatatables,
+                    selectedImageUri, setUriForUpload, staffInOffices, hasDatatables,
+                    selectedOfficeId, selectedClientId, selectedClientClassificationId,
+                    genderId, selectedStaffId, activationDate, dateOfBirth,
+                    mobileNumber, externalId,
+                )
+            },
         ) {
             Text(text = stringResource(id = R.string.feature_client_submit))
         }
     }
 }
+data class Name(
+    val firstName: String,
+    val lastName: String,
+    val middleName: String,
+)
+private fun handleSubmitClick(
+    context: Context,
+    clientNames: Name,
+    clientTemplate: ClientsTemplate,
+    createClient: (clientPayload: ClientPayload) -> Unit,
+    isActive: Boolean,
+    onHasDatatables: (datatables: List<DataTable>, clientPayload: ClientPayload) -> Unit,
+    selectedImageUri: Uri,
+    setUriForUpload: (uri: Uri) -> Unit,
+    staffInOffices: List<Staff>,
+    hasDatatables: Boolean,
+    selectedOfficeId: Int?,
+    selectedClientId: Int,
+    selectedClientClassificationId: Int,
+    genderId: Int,
+    selectedStaffId: Int?,
+    activationDate: Long,
+    dateOfBirth: Long,
+    mobileNumber: String,
+    externalId: String,
+) {
+    if (!isAllFieldsValid(context, clientNames.firstName, clientNames.middleName, clientNames.lastName)) {
+        return
+    }
+
+    if (!com.mifos.core.common.utils.Network.isOnline(context)) {
+        Toast.makeText(
+            context,
+            context.resources.getString(R.string.feature_client_error_not_connected_internet),
+            Toast.LENGTH_SHORT,
+        ).show()
+        return
+    }
+
+    val clientPayload = createClientPayload(
+        clientNames.firstName, clientNames.lastName, selectedOfficeId, staffInOffices, isActive,
+        activationDate, dateOfBirth, clientNames.middleName, mobileNumber,
+        externalId, clientTemplate, genderId, selectedStaffId,
+        selectedClientId, selectedClientClassificationId,
+    )
+
+    if (hasDatatables) {
+        onHasDatatables.invoke(clientTemplate.dataTables, clientPayload)
+    } else {
+        setUriForUpload.invoke(selectedImageUri)
+        clientPayload.datatables = null
+        createClient.invoke(clientPayload)
+    }
+}
+
+private fun createClientPayload(
+    firstName: String,
+    lastName: String,
+    selectedOfficeId: Int?,
+    staffInOffices: List<Staff>,
+    isActive: Boolean,
+    activationDate: Long,
+    dateOfBirth: Long,
+    middleName: String,
+    mobileNumber: String,
+    externalId: String,
+    clientTemplate: ClientsTemplate,
+    genderId: Int,
+    selectedStaffId: Int?,
+    selectedClientId: Int,
+    selectedClientClassificationId: Int,
+): ClientPayload {
+    val clientPayload = ClientPayload()
+
+    // Mandatory fields
+    clientPayload.firstname = firstName
+    clientPayload.lastname = lastName
+    clientPayload.officeId = selectedOfficeId
+
+    // Optional fields with default values
+    clientPayload.active = isActive
+    clientPayload.activationDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(activationDate)
+    clientPayload.dateOfBirth = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(dateOfBirth)
+
+    // Optional fields
+    if (middleName.isNotEmpty()) {
+        clientPayload.middlename = middleName
+    }
+    if (PhoneNumberUtils.isGlobalPhoneNumber(mobileNumber)) {
+        clientPayload.mobileNo = mobileNumber
+    }
+    if (externalId.isNotEmpty()) {
+        clientPayload.externalId = externalId
+    }
+    if (clientTemplate.genderOptions.isNotEmpty()) {
+        clientPayload.genderId = genderId
+    }
+    if (staffInOffices.isNotEmpty()) {
+        clientPayload.staffId = selectedStaffId
+    }
+    if (clientTemplate.clientTypeOptions.isNotEmpty()) {
+        clientPayload.clientTypeId = selectedClientId
+    }
+    if (clientTemplate.clientClassificationOptions.isNotEmpty()) {
+        clientPayload.clientClassificationId = selectedClientClassificationId
+    }
+    return clientPayload
+}
 
 @Composable
-fun MifosSelectImageDialog(
+private fun ClientInputTextFields(
+    firstName: String,
+    middleName: String,
+    lastName: String,
+    mobileNumber: String,
+    externalId: String,
+    onFirstNameChange: (String) -> Unit,
+    onMiddleNameChange: (String) -> Unit,
+    onLastNameChange: (String) -> Unit,
+    onMobileNumberChange: (String) -> Unit,
+    onExternalIdChange: (String) -> Unit,
+) {
+    Column {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MifosOutlinedTextField(
+            value = firstName,
+            onValueChange = onFirstNameChange,
+            label = stringResource(id = R.string.feature_client_first_name_mandatory),
+            error = null,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MifosOutlinedTextField(
+            value = middleName,
+            onValueChange = onMiddleNameChange,
+            label = stringResource(id = R.string.feature_client_middle_name),
+            error = null,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MifosOutlinedTextField(
+            value = lastName,
+            onValueChange = onLastNameChange,
+            label = stringResource(id = R.string.feature_client_last_name_mandatory),
+            error = null,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MifosOutlinedTextField(
+            value = mobileNumber,
+            onValueChange = onMobileNumberChange,
+            label = stringResource(id = R.string.feature_client_mobile_no),
+            error = null,
+            keyboardType = KeyboardType.Number,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MifosOutlinedTextField(
+            value = externalId,
+            onValueChange = onExternalIdChange,
+            label = stringResource(id = R.string.feature_client_external_id),
+            error = null,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+private fun ClientImageSection(selectedImageUri: Uri, onImageClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+    ) {
+        Image(
+            painter = if (selectedImageUri.path?.isNotEmpty() == true) {
+                rememberAsyncImagePainter(
+                    selectedImageUri,
+                )
+            } else {
+                painterResource(
+                    id = R.drawable.feature_client_ic_dp_placeholder,
+                )
+            },
+            contentDescription = null,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .clickable { onImageClick() }
+                .border(color = DarkGray, width = 2.dp, shape = CircleShape)
+                .size(80.dp)
+                .clip(CircleShape),
+        )
+    }
+}
+
+@Composable
+private fun MifosSelectImageDialog(
     onDismissRequest: () -> Unit,
     takeImage: () -> Unit,
     uploadImage: () -> Unit,
@@ -724,18 +828,18 @@ fun MifosSelectImageDialog(
         onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(
             dismissOnBackPress = true,
-            dismissOnClickOutside = true
-        )
+            dismissOnClickOutside = true,
+        ),
     ) {
         Card(
             colors = CardDefaults.cardColors(White),
-            shape = RoundedCornerShape(20.dp)
+            shape = RoundedCornerShape(20.dp),
         ) {
             Column(
                 modifier = Modifier
                     .padding(30.dp),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = stringResource(id = R.string.feature_client_please_select_action),
@@ -743,16 +847,16 @@ fun MifosSelectImageDialog(
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal
+                        fontStyle = FontStyle.Normal,
                     ),
                     color = Color.Black,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
                     onClick = { takeImage() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary)
+                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_take_a_photo),
@@ -760,15 +864,15 @@ fun MifosSelectImageDialog(
                         style = TextStyle(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal
+                            fontStyle = FontStyle.Normal,
                         ),
                         color = Color.Black,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
                 Button(
                     onClick = { uploadImage() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary)
+                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_upload_photo),
@@ -776,15 +880,15 @@ fun MifosSelectImageDialog(
                         style = TextStyle(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal
+                            fontStyle = FontStyle.Normal,
                         ),
                         color = Color.Black,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
                 Button(
                     onClick = { removeImage() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary)
+                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_remove_existing_photo),
@@ -792,10 +896,10 @@ fun MifosSelectImageDialog(
                         style = TextStyle(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal
+                            fontStyle = FontStyle.Normal,
                         ),
                         color = Color.Black,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
@@ -803,27 +907,26 @@ fun MifosSelectImageDialog(
     }
 }
 
-enum class ImagePickerType {
+private enum class ImagePickerType {
     CAMERA,
-    GALLERY
+    GALLERY,
 }
 
-fun Context.createTempImageFile(): File {
+private fun Context.createTempImageFile(): File {
     val imageFileName = "clients_image"
     return File.createTempFile(
-        imageFileName, /* prefix */
-        ".png", /* suffix */
-        externalCacheDir /* directory */
+        imageFileName,
+        ".png",
+        externalCacheDir,
     )
 }
 
-fun isAllFieldsValid(
+private fun isAllFieldsValid(
     context: Context,
     firstName: String,
     middleName: String,
     lastName: String,
-
-    ): Boolean {
+): Boolean {
     return when {
         !isFirstNameValid(firstName, context) -> {
             false
@@ -841,13 +944,13 @@ fun isAllFieldsValid(
     }
 }
 
-fun isFirstNameValid(name: String, context: Context): Boolean {
+private fun isFirstNameValid(name: String, context: Context): Boolean {
     return when {
         name.isEmpty() -> {
             Toast.makeText(
                 context,
                 context.resources.getString(R.string.feature_client_error_first_name_can_not_be_empty),
-                Toast.LENGTH_SHORT
+                Toast.LENGTH_SHORT,
             ).show()
             return false
         }
@@ -856,7 +959,7 @@ fun isFirstNameValid(name: String, context: Context): Boolean {
             Toast.makeText(
                 context,
                 context.resources.getString(R.string.feature_client_error_first_name_should_contain_only_alphabets),
-                Toast.LENGTH_SHORT
+                Toast.LENGTH_SHORT,
             ).show()
             return false
         }
@@ -865,13 +968,13 @@ fun isFirstNameValid(name: String, context: Context): Boolean {
     }
 }
 
-fun isLastNameValid(name: String, context: Context): Boolean {
+private fun isLastNameValid(name: String, context: Context): Boolean {
     return when {
         name.isEmpty() -> {
             Toast.makeText(
                 context,
                 context.resources.getString(R.string.feature_client_error_last_name_can_not_be_empty),
-                Toast.LENGTH_SHORT
+                Toast.LENGTH_SHORT,
             ).show()
             return false
         }
@@ -880,7 +983,7 @@ fun isLastNameValid(name: String, context: Context): Boolean {
             Toast.makeText(
                 context,
                 context.resources.getString(R.string.feature_client_error_last_name_should_contain_only_alphabets),
-                Toast.LENGTH_SHORT
+                Toast.LENGTH_SHORT,
             ).show()
             return false
         }
@@ -889,7 +992,7 @@ fun isLastNameValid(name: String, context: Context): Boolean {
     }
 }
 
-fun isMiddleNameValid(name: String, context: Context): Boolean {
+private fun isMiddleNameValid(name: String, context: Context): Boolean {
     return when {
         name.isEmpty() -> {
             true
@@ -899,7 +1002,7 @@ fun isMiddleNameValid(name: String, context: Context): Boolean {
             Toast.makeText(
                 context,
                 context.resources.getString(R.string.feature_client_error_middle_name_should_contain_only_alphabets),
-                Toast.LENGTH_SHORT
+                Toast.LENGTH_SHORT,
             ).show()
             return false
         }
@@ -908,7 +1011,7 @@ fun isMiddleNameValid(name: String, context: Context): Boolean {
     }
 }
 
-class CreateNewClientScreenPreviewProvider : PreviewParameterProvider<CreateNewClientUiState> {
+private class CreateNewClientScreenPreviewProvider : PreviewParameterProvider<CreateNewClientUiState> {
     override val values: Sequence<CreateNewClientUiState>
         get() = sequenceOf(
             CreateNewClientUiState.ShowClientTemplate(
@@ -920,20 +1023,20 @@ class CreateNewClientScreenPreviewProvider : PreviewParameterProvider<CreateNewC
                     clientClassificationOptions = listOf(),
                     clientLegalFormOptions = listOf(),
                     savingProductOptions = listOf(),
-                    dataTables = listOf()
-                )
+                    dataTables = listOf(),
+                ),
             ),
             CreateNewClientUiState.ShowProgressbar,
             CreateNewClientUiState.ShowClientCreatedSuccessfully(R.string.feature_client_client_created_successfully),
             CreateNewClientUiState.OnImageUploadSuccess(R.string.feature_client_Image_Upload_Successful),
-            CreateNewClientUiState.ShowWaitingForCheckerApproval(R.string.feature_client_waiting_for_checker_approval)
+            CreateNewClientUiState.ShowWaitingForCheckerApproval(R.string.feature_client_waiting_for_checker_approval),
         )
 }
 
 @Composable
 @Preview(showSystemUi = true)
-fun PreviewCreateNewClientScreen(
-    @PreviewParameter(CreateNewClientScreenPreviewProvider::class) createNewClientUiState: CreateNewClientUiState
+private fun PreviewCreateNewClientScreen(
+    @PreviewParameter(CreateNewClientScreenPreviewProvider::class) createNewClientUiState: CreateNewClientUiState,
 ) {
     // ToDo : FIX Preview
 
@@ -945,8 +1048,7 @@ fun PreviewCreateNewClientScreen(
         loadStaffInOffice = { },
         navigateBack = { },
         createClient = { },
-        uploadImage = { _, _ -> }
+        uploadImage = { _, _ -> },
     ) { _, _ ->
-
     }
 }

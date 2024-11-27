@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientIdentifiers
 
 import androidx.lifecycle.SavedStateHandle
@@ -19,7 +28,7 @@ import javax.inject.Inject
 class ClientIdentifiersViewModel @Inject constructor(
     private val getClientIdentifiersUseCase: GetClientIdentifiersUseCase,
     private val deleteIdentifierUseCase: DeleteIdentifierUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = 0)
@@ -40,16 +49,19 @@ class ClientIdentifiersViewModel @Inject constructor(
     fun loadIdentifiers(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
         getClientIdentifiersUseCase(clientId).collect { result ->
             when (result) {
-                is Resource.Error -> _clientIdentifiersUiState.value =
-                    ClientIdentifiersUiState.Error(
-                        R.string.feature_client_failed_to_load_client_identifiers
-                    )
+                is Resource.Error ->
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.Error(
+                            R.string.feature_client_failed_to_load_client_identifiers,
+                        )
 
-                is Resource.Loading -> _clientIdentifiersUiState.value =
-                    ClientIdentifiersUiState.Loading
+                is Resource.Loading ->
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.Loading
 
-                is Resource.Success -> _clientIdentifiersUiState.value =
-                    ClientIdentifiersUiState.ClientIdentifiers(result.data ?: emptyList())
+                is Resource.Success ->
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.ClientIdentifiers(result.data ?: emptyList())
             }
         }
     }
@@ -57,11 +69,13 @@ class ClientIdentifiersViewModel @Inject constructor(
     fun deleteIdentifier(clientId: Int, identifierId: Int) = viewModelScope.launch(Dispatchers.IO) {
         deleteIdentifierUseCase(clientId, identifierId).collect { result ->
             when (result) {
-                is Resource.Error -> _clientIdentifiersUiState.value =
-                    ClientIdentifiersUiState.Error(R.string.feature_client_failed_to_delete_identifier)
+                is Resource.Error ->
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.Error(R.string.feature_client_failed_to_delete_identifier)
 
-                is Resource.Loading -> _clientIdentifiersUiState.value =
-                    ClientIdentifiersUiState.Loading
+                is Resource.Loading ->
+                    _clientIdentifiersUiState.value =
+                        ClientIdentifiersUiState.Loading
 
                 is Resource.Success -> {
                     _clientIdentifiersUiState.value =

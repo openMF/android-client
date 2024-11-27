@@ -8,44 +8,7 @@
     android:id="@+id/home_nav_graph"
     app:startDestination="@id/navigation_dashboard">
 
-    <!--    ClientsListFragment-->
-    <fragment
-        android:id="@+id/navigation_client_list"
-        android:name="com.mifos.mifosxdroid.online.clientlist.ClientListFragment"
-        android:label="ClientListFragment">
-        <action
-            android:id="@+id/action_navigation_client_list_to_createNewClientFragment"
-            app:destination="@id/createNewClientFragment" />
-        <action
-            android:id="@+id/action_clientListFragment_to_clientActivity"
-            app:destination="@id/clientActivity" />
-    </fragment>
-
-    <!--    CreateNewClientFragment-->
-    <fragment
-        android:id="@+id/createNewClientFragment"
-        android:name="com.mifos.mifosxdroid.online.createnewclient.CreateNewClientFragment"
-        android:label="CreateNewClientFragment" />
-
-
-    <!--    ClientActivity-->
-    <activity
-        android:id="@+id/clientActivity"
-        android:name="com.mifos.mifosxdroid.online.ClientActivity"
-        android:label="ClientActivity">
-        <argument
-            android:name="client"
-            app:argType="com.mifos.core.objects.navigation.ClientArgs" />
-    </activity>
-
     <!--    CenterActivity-->
-
-    <!--    GroupsActivity-->
-
-    <activity
-        android:id="@+id/checkerInboxPendingTasksActivity"
-        android:name="com.mifos.mifosxdroid.online.checkerinbox.CheckerInboxPendingTasksActivity"
-        android:label="CheckerInboxPendingTasksActivity" />
 
     <activity
         android:id="@+id/settingsActivity"

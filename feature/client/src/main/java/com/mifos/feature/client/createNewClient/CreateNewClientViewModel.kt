@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.createNewClient
 
 import android.util.Log
@@ -37,7 +46,7 @@ import javax.inject.Inject
 class CreateNewClientViewModel @Inject constructor(
     private val repository: CreateNewClientRepository,
     private val clientTemplateUseCase: ClientTemplateUseCase,
-    private val getStaffInOffice : GetStaffInOfficeForCreateNewClientUseCase
+    private val getStaffInOffice: GetStaffInOfficeForCreateNewClientUseCase,
 ) : ViewModel() {
 
     private val _createNewClientUiState = MutableStateFlow<CreateNewClientUiState>(CreateNewClientUiState.ShowProgressbar)
@@ -57,13 +66,15 @@ class CreateNewClientViewModel @Inject constructor(
     private fun loadClientTemplate() = viewModelScope.launch(Dispatchers.IO) {
         clientTemplateUseCase().collect { result ->
             when (result) {
-                is Resource.Error -> _createNewClientUiState.value =
-                    CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
+                is Resource.Error ->
+                    _createNewClientUiState.value =
+                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
 
                 is Resource.Loading -> Unit
 
-                is Resource.Success -> _createNewClientUiState.value =
-                    CreateNewClientUiState.ShowClientTemplate(result.data ?: ClientsTemplate())
+                is Resource.Success ->
+                    _createNewClientUiState.value =
+                        CreateNewClientUiState.ShowClientTemplate(result.data ?: ClientsTemplate())
             }
         }
     }
@@ -89,18 +100,19 @@ class CreateNewClientViewModel @Inject constructor(
     }
 
     fun loadStaffInOffices(officeId: Int) =
-        viewModelScope.launch (Dispatchers.IO) {
-            getStaffInOffice(officeId).collect{ result ->
-                when(result){
-                    is Resource.Error -> _createNewClientUiState.value =
-                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_staffs)
+        viewModelScope.launch(Dispatchers.IO) {
+            getStaffInOffice(officeId).collect { result ->
+                when (result) {
+                    is Resource.Error ->
+                        _createNewClientUiState.value =
+                            CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_staffs)
 
                     is Resource.Loading -> Unit
 
-                    is Resource.Success ->_staffInOffices.value = result.data ?: emptyList()
+                    is Resource.Success -> _staffInOffices.value = result.data ?: emptyList()
                 }
             }
-    }
+        }
 
     fun createClient(clientPayload: ClientPayload) {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
@@ -119,7 +131,6 @@ class CreateNewClientViewModel @Inject constructor(
                             Log.d("error", errorMessage)
                             _createNewClientUiState.value =
                                 CreateNewClientUiState.ShowStringError(errorMessage)
-
                         }
                     } catch (throwable: Throwable) {
                         RxJavaPlugins.getInstance().errorHandler.handleError(e)
@@ -134,13 +145,13 @@ class CreateNewClientViewModel @Inject constructor(
 
                             _createNewClientUiState.value = client.clientId?.let {
                                 CreateNewClientUiState.SetClientId(
-                                    it
+                                    it,
                                 )
                             }!!
                         } else {
                             _createNewClientUiState.value = client.clientId?.let {
                                 CreateNewClientUiState.ShowWaitingForCheckerApproval(
-                                    it
+                                    it,
                                 )
                             }!!
                         }
@@ -152,7 +163,6 @@ class CreateNewClientViewModel @Inject constructor(
     fun uploadImage(id: Int, pngFile: File) {
         _createNewClientUiState.value =
             CreateNewClientUiState.ShowProgress("Uploading Client's Picture...")
-        val imagePath = pngFile.absolutePath
 
         // create RequestBody instance from file
         val requestFile = pngFile.asRequestBody("image/png".toMediaTypeOrNull())

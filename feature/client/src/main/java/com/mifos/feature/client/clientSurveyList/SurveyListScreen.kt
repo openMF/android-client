@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientSurveyList
 
 import androidx.compose.foundation.background
@@ -45,10 +54,10 @@ import com.mifos.feature.client.R
  */
 
 @Composable
-fun SurveyListScreen(
-    viewModel: SurveyListViewModel = hiltViewModel(),
+internal fun SurveyListScreen(
     navigateBack: () -> Unit,
-    onCardClicked: (index: Int, surveys: List<Survey>) -> Unit
+    onCardClicked: (index: Int, surveys: List<Survey>) -> Unit,
+    viewModel: SurveyListViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.surveyListUiState.collectAsStateWithLifecycle()
 
@@ -60,16 +69,16 @@ fun SurveyListScreen(
         uiState = uiState,
         navigateBack = navigateBack,
         onRetry = { viewModel.loadSurveyList() },
-        onCardClicked = onCardClicked
+        onCardClicked = onCardClicked,
     )
 }
 
 @Composable
-fun SurveyListScreen(
+internal fun SurveyListScreen(
     uiState: SurveyListUiState,
     navigateBack: () -> Unit,
     onRetry: () -> Unit,
-    onCardClicked: (index: Int, surveys: List<Survey>) -> Unit
+    onCardClicked: (index: Int, surveys: List<Survey>) -> Unit,
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -79,18 +88,17 @@ fun SurveyListScreen(
         snackbarHostState = snackbarHostState,
         icon = MifosIcons.arrowBack,
         onBackPressed = navigateBack,
-        title = stringResource(id = R.string.feature_client_surveys)
+        title = stringResource(id = R.string.feature_client_surveys),
     ) {
         Box(modifier = Modifier.padding(it)) {
             when (uiState) {
-
                 is SurveyListUiState.ShowAllSurvey -> {
                     if (uiState.syncSurvey.isEmpty()) {
                         MifosEmptyUi(text = stringResource(id = R.string.feature_client_no_survey_available_for_client))
                     } else {
                         SurveyListContent(
                             surveyList = uiState.syncSurvey,
-                            onCardClicked = onCardClicked
+                            onCardClicked = onCardClicked,
                         )
                     }
                 }
@@ -98,7 +106,7 @@ fun SurveyListScreen(
                 is SurveyListUiState.ShowFetchingError -> {
                     MifosSweetError(
                         message = stringResource(id = uiState.message),
-                        onclick = onRetry
+                        onclick = onRetry,
                     )
                 }
 
@@ -111,12 +119,12 @@ fun SurveyListScreen(
 }
 
 @Composable
-fun SurveyListContent(
+private fun SurveyListContent(
     surveyList: List<Survey>,
-    onCardClicked: (index: Int, surveys: List<Survey>) -> Unit
+    onCardClicked: (index: Int, surveys: List<Survey>) -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         Text(
             modifier = Modifier
@@ -126,8 +134,8 @@ fun SurveyListContent(
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal
-            )
+                fontStyle = FontStyle.Normal,
+            ),
         )
 
         LazyColumn {
@@ -135,7 +143,7 @@ fun SurveyListContent(
                 SurveyCardItem(
                     surveyName = survey.name,
                     description = survey.description,
-                    onCardClicked = { onCardClicked.invoke(surveyList.indexOf(survey), surveyList) }
+                    onCardClicked = { onCardClicked.invoke(surveyList.indexOf(survey), surveyList) },
                 )
             }
         }
@@ -143,10 +151,10 @@ fun SurveyListContent(
 }
 
 @Composable
-fun SurveyCardItem(
+private fun SurveyCardItem(
     surveyName: String?,
     description: String?,
-    onCardClicked: () -> Unit
+    onCardClicked: () -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -154,42 +162,42 @@ fun SurveyCardItem(
             .padding(horizontal = 12.dp)
             .padding(bottom = 12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = Color.White,
         ),
         elevation = CardDefaults.cardElevation(2.dp),
         onClick = onCardClicked,
-        shape = RoundedCornerShape(4.dp)
+        shape = RoundedCornerShape(4.dp),
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .size(5.dp)
-                    .background(color = Color(0xFF4285f6))
+                    .background(color = Color(0xFF4285f6)),
             )
 
             Column(
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
             ) {
                 Text(
                     text = surveyName ?: "",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
 
                 Text(
                     text = description ?: "",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = .8f)
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = .8f),
                 )
             }
         }
     }
 }
 
-class SurveyListPreviewProvider : PreviewParameterProvider<SurveyListUiState> {
+private class SurveyListPreviewProvider : PreviewParameterProvider<SurveyListUiState> {
     var demoSurvey = listOf(
         Survey(name = "Survey header", description = "Survey description"),
         Survey(name = "Header", description = null),
@@ -202,21 +210,20 @@ class SurveyListPreviewProvider : PreviewParameterProvider<SurveyListUiState> {
         get() = sequenceOf(
             SurveyListUiState.ShowProgressbar,
             SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_fetch_datatable),
-            SurveyListUiState.ShowAllSurvey(demoSurvey)
+            SurveyListUiState.ShowAllSurvey(demoSurvey),
         )
 }
 
 @Composable
 @Preview(showSystemUi = true)
-fun PreviewSurveyListScreen(
-    @PreviewParameter(SurveyListPreviewProvider::class) surveyListUiState: SurveyListUiState
+private fun PreviewSurveyListScreen(
+    @PreviewParameter(SurveyListPreviewProvider::class) surveyListUiState: SurveyListUiState,
 ) {
     SurveyListScreen(
         uiState = surveyListUiState,
         navigateBack = { },
         onRetry = { },
         onCardClicked = { _, _ ->
-
-        }
+        },
     )
 }
