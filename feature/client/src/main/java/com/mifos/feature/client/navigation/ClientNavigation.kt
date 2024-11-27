@@ -18,7 +18,6 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.accounts.savings.DepositType
-import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
 import com.mifos.core.objects.noncore.DataTable
 import com.mifos.core.objects.survey.Survey
@@ -31,6 +30,8 @@ import com.mifos.feature.client.clientSignature.SignatureScreen
 import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
+import com.mifos.feature.data_table.dataTableList.FormWidget
+import kotlin.reflect.KFunction4
 
 fun NavGraphBuilder.clientNavGraph(
     navController: NavController,
@@ -43,8 +44,8 @@ fun NavGraphBuilder.clientNavGraph(
     loanAccountSelected: (Int) -> Unit,
     savingsAccountSelected: (Int, DepositType) -> Unit,
     activateClient: (Int) -> Unit,
-    hasDatatables: (List<DataTable>, ClientPayload) -> Unit,
-    onDocumentClicked: (Int) -> Unit,
+    hasDatatables: KFunction4<List<DataTable>, Any?, Int, MutableList<List<FormWidget>>, Unit>,
+    onDocumentClicked: (Int, String) -> Unit,
     onCardClicked: (Int, List<Survey>) -> Unit
 ) {
     navigation(
@@ -155,7 +156,7 @@ fun NavGraphBuilder.clientDetailRoute(
 }
 
 fun NavGraphBuilder.clientIdentifierRoute(
-    onDocumentClicked: (Int) -> Unit,
+    onDocumentClicked: (Int, String) -> Unit,
     onBackPressed: () -> Unit,
 ) {
     composable(
@@ -164,7 +165,7 @@ fun NavGraphBuilder.clientIdentifierRoute(
     ) {
         ClientIdentifiersScreen(
             onBackPressed = onBackPressed,
-            onDocumentClicked = onDocumentClicked,
+            onDocumentClicked = {onDocumentClicked(it,Constants.ENTITY_TYPE_CLIENTS)},
         )
     }
 }
@@ -239,14 +240,16 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
 
 fun NavGraphBuilder.createClientRoute(
     onBackPressed: () -> Unit,
-    hasDatatables: (List<DataTable>, ClientPayload) -> Unit,
+    hasDatatables: (List<DataTable>, ClientPayload, Int,MutableList<List<FormWidget>>) -> Unit,
 ) {
     composable(
         route = ClientScreens.CreateClientScreen.route,
     ) {
         CreateNewClientScreen(
             navigateBack = onBackPressed,
-            hasDatatables = hasDatatables,
+            hasDatatables ={ datatables, clientPayload ->
+                hasDatatables(datatables, clientPayload, Constants.CREATE_CLIENT, mutableListOf())
+            } ,
         )
     }
 }

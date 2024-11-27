@@ -29,6 +29,7 @@ dependencies {
 
     implementation(libs.coil.kt.compose)
     implementation(libs.androidx.paging.compose)
+    implementation(project(":feature:data-table"))
 
     testImplementation(libs.hilt.android.testing)
     testImplementation(projects.core.testing)

@@ -1,13 +1,10 @@
 package com.mifos.mifosxdroid.components
 
-import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.mifos.core.common.utils.Constants
@@ -44,7 +41,6 @@ import com.mifos.feature.loan.navigation.navigateToLoanAccountScreen
 import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteScreen
-import com.mifos.feature.offline.navigation.navigateToSyncCenterPayloadsScreen
 import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.path_tracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.report.navigation.reportNavGraph
@@ -100,23 +96,11 @@ fun Navigation(
                     Constants.ACTIVATE_CLIENT
                 )
             },
-            hasDatatables = { datatable, clientPayload ->
-                navController.navigateDataTableList(
-                    dataTableList = datatable,
-                    payload = clientPayload,
-                    requestType = Constants.CREATE_CLIENT,
-                    formWidget = mutableListOf()
-                )
+            hasDatatables = navController :: navigateDataTableList,
+            onDocumentClicked = navController :: navigateToDocumentListScreen,
+            onCardClicked = { position, survey ->
+                //    TODO
             },
-            onDocumentClicked = {id ->
-                navController.navigateToDocumentListScreen(
-                    entityId = id,
-                    Constants.ENTITY_TYPE_CLIENTS
-                )
-            },
-            onCardClicked = { position, survey->
-            //    navController.nav
-            }
         )
 
         groupNavGraph(
