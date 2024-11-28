@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 @file:OptIn(ExperimentalMaterialApi::class)
 
 package com.mifos.feature.client.clientIdentifiers
@@ -58,11 +67,11 @@ import com.mifos.feature.client.R
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen
 
 @Composable
-fun ClientIdentifiersScreen(
+internal fun ClientIdentifiersScreen(
     onBackPressed: () -> Unit,
-    onDocumentClicked: (Int) -> Unit
+    onDocumentClicked: (Int) -> Unit,
+    viewModel: ClientIdentifiersViewModel = hiltViewModel(),
 ) {
-    val viewModel: ClientIdentifiersViewModel = hiltViewModel()
     val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val state by viewModel.clientIdentifiersUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
@@ -88,13 +97,12 @@ fun ClientIdentifiersScreen(
         onIdentifierCreated = {
             viewModel.loadIdentifiers(clientId)
         },
-        onDocumentClicked = onDocumentClicked
+        onDocumentClicked = onDocumentClicked,
     )
-
 }
 
 @Composable
-fun ClientIdentifiersScreen(
+internal fun ClientIdentifiersScreen(
     clientId: Int,
     state: ClientIdentifiersUiState,
     onBackPressed: () -> Unit,
@@ -103,15 +111,14 @@ fun ClientIdentifiersScreen(
     onRefresh: () -> Unit,
     onRetry: () -> Unit,
     onIdentifierCreated: () -> Unit,
-    onDocumentClicked: (Int) -> Unit
+    onDocumentClicked: (Int) -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = refreshState,
-        onRefresh = onRefresh
+        onRefresh = onRefresh,
     )
     var showCreateIdentifierDialog by remember { mutableStateOf(false) }
-
 
     if (showCreateIdentifierDialog) {
         ClientIdentifiersDialogScreen(
@@ -120,7 +127,7 @@ fun ClientIdentifiersScreen(
             onIdentifierCreated = {
                 showCreateIdentifierDialog = false
                 onIdentifierCreated()
-            }
+            },
         )
     }
 
@@ -134,11 +141,11 @@ fun ClientIdentifiersScreen(
             }) {
                 Icon(
                     imageVector = MifosIcons.Add,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         },
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
@@ -148,14 +155,14 @@ fun ClientIdentifiersScreen(
                             true -> {
                                 MifosEmptyUi(
                                     text = stringResource(id = R.string.feature_client_there_is_no_identifier_to_show),
-                                    icon = MifosIcons.fileTask
+                                    icon = MifosIcons.fileTask,
                                 )
                             }
 
                             false -> ClientIdentifiersContent(
                                 identifiers = state.identifiers,
                                 onDeleteIdentifier = onDeleteIdentifier,
-                                onDocumentClicked = onDocumentClicked
+                                onDocumentClicked = onDocumentClicked,
                             )
                         }
                     }
@@ -168,7 +175,7 @@ fun ClientIdentifiersScreen(
                         Toast.makeText(
                             LocalContext.current,
                             stringResource(id = R.string.feature_client_identifier_deleted),
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_SHORT,
                         ).show()
                     }
 
@@ -178,7 +185,7 @@ fun ClientIdentifiersScreen(
                 PullRefreshIndicator(
                     refreshing = refreshState,
                     state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter)
+                    modifier = Modifier.align(Alignment.TopCenter),
                 )
             }
         }
@@ -186,44 +193,43 @@ fun ClientIdentifiersScreen(
 }
 
 @Composable
-fun ClientIdentifiersContent(
+private fun ClientIdentifiersContent(
     identifiers: List<Identifier>,
     onDeleteIdentifier: (Int) -> Unit,
-    onDocumentClicked: (Int) -> Unit
+    onDocumentClicked: (Int) -> Unit,
 ) {
     LazyColumn {
         items(identifiers) { identifier ->
             ClientIdentifiersItem(
                 identifier = identifier,
                 onDeleteIdentifier = onDeleteIdentifier,
-                onDocumentClicked = onDocumentClicked
+                onDocumentClicked = onDocumentClicked,
             )
         }
     }
 }
 
 @Composable
-fun ClientIdentifiersItem(
+private fun ClientIdentifiersItem(
     identifier: Identifier,
     onDeleteIdentifier: (Int) -> Unit,
-    onDocumentClicked: (Int) -> Unit
+    onDocumentClicked: (Int) -> Unit,
 ) {
-
     var showMenu by remember { mutableStateOf(false) }
 
     ElevatedCard(
         modifier = Modifier.padding(8.dp),
         elevation = CardDefaults.elevatedCardElevation(0.dp),
         colors = CardDefaults.elevatedCardColors(LightGray),
-        onClick = {}
+        onClick = {},
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Canvas(
                 modifier = Modifier
                     .width(16.dp)
-                    .height(94.dp)
+                    .height(94.dp),
             ) {
                 drawRect(
                     color = LightGreen,
@@ -232,19 +238,19 @@ fun ClientIdentifiersItem(
             }
             Column(
                 modifier = Modifier
-                    .weight(3f)
+                    .weight(3f),
             ) {
                 MifosIdentifierDetailsText(
                     field = stringResource(id = R.string.feature_client_id),
-                    value = identifier.id.toString()
+                    value = identifier.id.toString(),
                 )
                 MifosIdentifierDetailsText(
                     field = stringResource(id = R.string.feature_client_type),
-                    value = identifier.documentType?.name ?: "-"
+                    value = identifier.documentType?.name ?: "-",
                 )
                 MifosIdentifierDetailsText(
                     field = stringResource(id = R.string.feature_client_description),
-                    value = identifier.description ?: "-"
+                    value = identifier.description ?: "-",
                 )
             }
             IconButton(modifier = Modifier.weight(.5f), onClick = { showMenu = showMenu.not() }) {
@@ -252,7 +258,7 @@ fun ClientIdentifiersItem(
                 DropdownMenu(
                     modifier = Modifier.background(White),
                     expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
+                    onDismissRequest = { showMenu = false },
                 ) {
                     MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_remove)) {
                         identifier.id?.let { onDeleteIdentifier(it) }
@@ -269,44 +275,43 @@ fun ClientIdentifiersItem(
 }
 
 @Composable
-fun MifosIdentifierDetailsText(field: String, value: String) {
+private fun MifosIdentifierDetailsText(field: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             modifier = Modifier
                 .weight(1f)
                 .padding(start = 16.dp),
             text = field,
-            style = identifierTextStyleDark
+            style = identifierTextStyleDark,
         )
         Text(
             modifier = Modifier.weight(1f),
             text = value,
-            style = identifierTextStyleLight
+            style = identifierTextStyleLight,
         )
     }
 }
 
-
-class ClientIdentifiersUiStateProvider : PreviewParameterProvider<ClientIdentifiersUiState> {
+private class ClientIdentifiersUiStateProvider : PreviewParameterProvider<ClientIdentifiersUiState> {
 
     override val values: Sequence<ClientIdentifiersUiState>
         get() = sequenceOf(
             ClientIdentifiersUiState.Loading,
             ClientIdentifiersUiState.Error(R.string.feature_client_failed_to_load_client_identifiers),
             ClientIdentifiersUiState.IdentifierDeletedSuccessfully,
-            ClientIdentifiersUiState.ClientIdentifiers(sampleClientIdentifiers)
+            ClientIdentifiersUiState.ClientIdentifiers(sampleClientIdentifiers),
         )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ClientIdentifiersScreenPreview(
-    @PreviewParameter(ClientIdentifiersUiStateProvider::class) state: ClientIdentifiersUiState
+    @PreviewParameter(ClientIdentifiersUiStateProvider::class) state: ClientIdentifiersUiState,
 ) {
     ClientIdentifiersScreen(
         clientId = 1,
@@ -317,7 +322,7 @@ private fun ClientIdentifiersScreenPreview(
         onRefresh = {},
         onRetry = {},
         onIdentifierCreated = {},
-        onDocumentClicked = {}
+        onDocumentClicked = {},
     )
 }
 

@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientList.presentation
 
 import androidx.lifecycle.ViewModel
@@ -23,7 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ClientListViewModel @Inject constructor(
     private val repository: ClientListRepository,
-    private val prefManager: PrefManager
+    private val prefManager: PrefManager,
 ) : ViewModel() {
 
     private val _clientListUiState = MutableStateFlow<ClientListUiState>(ClientListUiState.Empty)
@@ -43,9 +52,12 @@ class ClientListViewModel @Inject constructor(
         _isRefreshing.value = false
     }
 
-    private fun getClientList() {
-        if (prefManager.userStatus) loadClientsFromDb()
-        else loadClientsFromApi()
+    fun getClientList() {
+        if (prefManager.userStatus) {
+            loadClientsFromDb()
+        } else {
+            loadClientsFromApi()
+        }
     }
 
     private fun loadClientsFromApi() = viewModelScope.launch(Dispatchers.IO) {
@@ -70,5 +82,4 @@ class ClientListViewModel @Inject constructor(
                 }
             })
     }
-
 }

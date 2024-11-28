@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientSurveyList
 
 import androidx.lifecycle.ViewModel
@@ -21,17 +30,15 @@ import javax.inject.Inject
 @HiltViewModel
 class SurveyListViewModel @Inject constructor(
     private val repository: SurveyListRepository,
-    private val prefManager: PrefManager
+    private val prefManager: PrefManager,
 ) : ViewModel() {
 
     private val _surveyListUiState =
         MutableStateFlow<SurveyListUiState>(SurveyListUiState.ShowProgressbar)
     val surveyListUiState: StateFlow<SurveyListUiState> get() = _surveyListUiState
 
-
     private var mDbSurveyList: List<Survey>? = null
     private lateinit var mSyncSurveyList: List<Survey>
-
 
     fun loadSurveyList() {
         _surveyListUiState.value = SurveyListUiState.ShowProgressbar
@@ -78,7 +85,6 @@ class SurveyListViewModel @Inject constructor(
                     }
                 }
             })
-
     }
 
     fun loadDatabaseQuestionData(surveyId: Int, survey: Survey?) {
@@ -100,7 +106,6 @@ class SurveyListViewModel @Inject constructor(
                     survey!!.questionDatas = questionDatasList
                 }
             })
-
     }
 
     fun loadDatabaseResponseDatas(questionId: Int, questionDatas: QuestionDatas) {
@@ -119,7 +124,6 @@ class SurveyListViewModel @Inject constructor(
                     questionDatas.responseDatas = responseDatas
                 }
             })
-
     }
 
     fun setAlreadySurveySyncStatus(surveys: List<Survey>) {
@@ -127,14 +131,11 @@ class SurveyListViewModel @Inject constructor(
     }
 
     private fun checkSurveyAlreadySyncedOrNot(surveys: List<Survey>) {
-        if (mDbSurveyList!!.isNotEmpty()) {
-            for (dbSurvey in mDbSurveyList!!) {
-                for (syncSurvey in surveys) {
-                    if (dbSurvey.id == syncSurvey.id) {
-                        syncSurvey.isSync = true
-                        break
-                    }
-                }
+        if (mDbSurveyList.isNullOrEmpty()) return // Early return if mDbSurveyList is empty
+
+        surveys.forEach { syncSurvey ->
+            if (mDbSurveyList!!.any { it.id == syncSurvey.id }) {
+                syncSurvey.isSync = true
             }
         }
     }

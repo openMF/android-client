@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientIdentifiersDialog
 
 import android.widget.Toast
@@ -51,13 +60,12 @@ import com.mifos.core.objects.noncore.IdentifierTemplate
 import com.mifos.feature.client.R
 
 @Composable
-fun ClientIdentifiersDialogScreen(
+internal fun ClientIdentifiersDialogScreen(
     clientId: Int,
-    viewModel: ClientIdentifiersDialogViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
     onIdentifierCreated: () -> Unit,
+    viewModel: ClientIdentifiersDialogViewModel = hiltViewModel(),
 ) {
-
     val state by viewModel.clientIdentifierDialogUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -73,29 +81,27 @@ fun ClientIdentifiersDialogScreen(
         },
         onCreate = {
             viewModel.createClientIdentifier(clientId, it)
-        }
+        },
     )
-
 }
 
 @Composable
-fun ClientIdentifiersDialogScreen(
+internal fun ClientIdentifiersDialogScreen(
     state: ClientIdentifierDialogUiState,
     onDismiss: () -> Unit,
     onIdentifierCreated: () -> Unit,
     onRetry: () -> Unit,
-    onCreate: (IdentifierPayload) -> Unit
+    onCreate: (IdentifierPayload) -> Unit,
 ) {
-
-
-    Dialog(onDismissRequest = { onDismiss() }
+    Dialog(
+        onDismissRequest = { onDismiss() },
     ) {
         Surface(
             shape = RoundedCornerShape(16.dp),
-            color = Color.White
+            color = Color.White,
         ) {
             Box(
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Row(
@@ -103,12 +109,12 @@ fun ClientIdentifiersDialogScreen(
                             .fillMaxWidth()
                             .padding(bottom = 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = stringResource(id = R.string.feature_client_create_identifier_dialog),
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                            color = BluePrimary
+                            color = BluePrimary,
                         )
                         IconButton(onClick = { onDismiss() }) {
                             Icon(
@@ -117,7 +123,7 @@ fun ClientIdentifiersDialogScreen(
                                 tint = colorResource(android.R.color.darker_gray),
                                 modifier = Modifier
                                     .width(30.dp)
-                                    .height(30.dp)
+                                    .height(30.dp),
                             )
                         }
                     }
@@ -125,14 +131,14 @@ fun ClientIdentifiersDialogScreen(
                         is ClientIdentifierDialogUiState.ClientIdentifierTemplate -> {
                             ClientIdentifiersContent(
                                 clientIdentifierTemplate = state.identifierTemplate,
-                                onCreate = onCreate
+                                onCreate = onCreate,
                             )
                         }
 
                         is ClientIdentifierDialogUiState.Error -> MifosSweetError(
                             message = stringResource(
-                                id = state.message
-                            )
+                                id = state.message,
+                            ),
                         ) {
                             onRetry()
                         }
@@ -141,7 +147,7 @@ fun ClientIdentifiersDialogScreen(
                             Toast.makeText(
                                 LocalContext.current,
                                 stringResource(id = R.string.feature_client_identifier_created_successfully),
-                                Toast.LENGTH_SHORT
+                                Toast.LENGTH_SHORT,
                             ).show()
                             onIdentifierCreated()
                         }
@@ -155,22 +161,22 @@ fun ClientIdentifiersDialogScreen(
 }
 
 @Composable
-fun ClientIdentifiersContent(
+private fun ClientIdentifiersContent(
     clientIdentifierTemplate: IdentifierTemplate,
-    onCreate: (IdentifierPayload) -> Unit
+    onCreate: (IdentifierPayload) -> Unit,
 ) {
     var documentType by rememberSaveable {
         mutableStateOf(
             clientIdentifierTemplate.allowedDocumentTypes?.get(
-                0
-            )?.name ?: ""
+                0,
+            )?.name ?: "",
         )
     }
     var documentTypeId by rememberSaveable {
         mutableStateOf(
             clientIdentifierTemplate.allowedDocumentTypes?.get(
-                0
-            )?.id
+                0,
+            )?.id,
         )
     }
     var uniqueId by rememberSaveable { mutableStateOf("") }
@@ -191,123 +197,121 @@ fun ClientIdentifiersContent(
         }
         return temp
     }
-
-
-    MifosTextFieldDropdown(
-        value = documentType,
-        onValueChanged = {
-            documentType = it
-        },
-        onOptionSelected = { index, value ->
-            documentType = value
-            documentTypeId = clientIdentifierTemplate.allowedDocumentTypes?.get(index)?.id
-        },
-        label = R.string.feature_client_identifier_document_type,
-        options = clientIdentifierTemplate.allowedDocumentTypes?.map { it.name.toString() }
-            ?: emptyList(),
-        readOnly = true
-    )
-
-    MifosOutlinedTextField(
-        value = uniqueId,
-        onValueChange = {
-            uniqueId = it
-            uniqueIdError = false
-        },
-        label = stringResource(id = R.string.feature_client_identifier_unique_id),
-        error = if (uniqueIdError) R.string.feature_client_identifier_message_field_required else null,
-        trailingIcon = {
-            if (uniqueIdError) {
-                Icon(
-                    imageVector = MifosIcons.error,
-                    contentDescription = null
-                )
-            }
-        }
-    )
-
-    MifosOutlinedTextField(
-        value = description,
-        onValueChange = {
-            description = it
-            descriptionError = false
-        },
-        label = stringResource(id = R.string.feature_client_identifier_description),
-        error = if (descriptionError) R.string.feature_client_identifier_message_field_required else null,
-        trailingIcon = {
-            if (descriptionError) {
-                Icon(
-                    imageVector = MifosIcons.error,
-                    contentDescription = null
-                )
-            }
-        }
-    )
-
-    Row(
-        modifier = Modifier.padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Checkbox(
-            checked = isActive,
-            onCheckedChange = {
-                isActive = it
-            }
+    Column {
+        MifosTextFieldDropdown(
+            value = documentType,
+            onValueChanged = {
+                documentType = it
+            },
+            onOptionSelected = { index, value ->
+                documentType = value
+                documentTypeId = clientIdentifierTemplate.allowedDocumentTypes?.get(index)?.id
+            },
+            label = R.string.feature_client_identifier_document_type,
+            options = clientIdentifierTemplate.allowedDocumentTypes?.map { it.name.toString() }
+                ?: emptyList(),
+            readOnly = true,
         )
-        Text(text = stringResource(id = R.string.feature_client_identifier_isActive))
-    }
 
-    Spacer(modifier = Modifier.height(16.dp))
-
-    Button(
-        onClick = {
-            if (validateInput()) {
-
-                val payload = IdentifierPayload(
-                    documentTypeId = documentTypeId,
-                    documentKey = uniqueId,
-                    status = if (isActive) "Active" else "InActive",
-                    description = description
-                )
-                onCreate(payload)
-            }
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp),
-        colors = ButtonColors(
-            containerColor = BluePrimary,
-            contentColor = White,
-            disabledContainerColor = BluePrimary,
-            disabledContentColor = Gray
+        MifosOutlinedTextField(
+            value = uniqueId,
+            onValueChange = {
+                uniqueId = it
+                uniqueIdError = false
+            },
+            label = stringResource(id = R.string.feature_client_identifier_unique_id),
+            error = if (uniqueIdError) R.string.feature_client_identifier_message_field_required else null,
+            trailingIcon = {
+                if (uniqueIdError) {
+                    Icon(
+                        imageVector = MifosIcons.error,
+                        contentDescription = null,
+                    )
+                }
+            },
         )
-    ) {
-        Text(text = stringResource(id = R.string.feature_client_identifier_submit))
+
+        MifosOutlinedTextField(
+            value = description,
+            onValueChange = {
+                description = it
+                descriptionError = false
+            },
+            label = stringResource(id = R.string.feature_client_identifier_description),
+            error = if (descriptionError) R.string.feature_client_identifier_message_field_required else null,
+            trailingIcon = {
+                if (descriptionError) {
+                    Icon(
+                        imageVector = MifosIcons.error,
+                        contentDescription = null,
+                    )
+                }
+            },
+        )
+
+        Row(
+            modifier = Modifier.padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Checkbox(
+                checked = isActive,
+                onCheckedChange = {
+                    isActive = it
+                },
+            )
+            Text(text = stringResource(id = R.string.feature_client_identifier_isActive))
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                if (validateInput()) {
+                    val payload = IdentifierPayload(
+                        documentTypeId = documentTypeId,
+                        documentKey = uniqueId,
+                        status = if (isActive) "Active" else "InActive",
+                        description = description,
+                    )
+                    onCreate(payload)
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonColors(
+                containerColor = BluePrimary,
+                contentColor = White,
+                disabledContainerColor = BluePrimary,
+                disabledContentColor = Gray,
+            ),
+        ) {
+            Text(text = stringResource(id = R.string.feature_client_identifier_submit))
+        }
     }
 }
 
-class ClientIdentifiersDialogUiStatePreview :
+private class ClientIdentifiersDialogUiStatePreview :
     PreviewParameterProvider<ClientIdentifierDialogUiState> {
 
     override val values: Sequence<ClientIdentifierDialogUiState>
         get() = sequenceOf(
             ClientIdentifierDialogUiState.Loading,
             ClientIdentifierDialogUiState.Error(R.string.feature_client_failed_to_load_client_identifiers),
-            ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully
+            ClientIdentifierDialogUiState.IdentifierCreatedSuccessfully,
         )
-
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ClientIdentifiersDialogScreenPreview(
-    @PreviewParameter(ClientIdentifiersDialogUiStatePreview::class) state: ClientIdentifierDialogUiState
+    @PreviewParameter(ClientIdentifiersDialogUiStatePreview::class) state: ClientIdentifierDialogUiState,
 ) {
     ClientIdentifiersDialogScreen(
         state = state,
         onDismiss = {},
         onIdentifierCreated = {},
         onRetry = {},
-        onCreate = {}
+        onCreate = {},
     )
 }

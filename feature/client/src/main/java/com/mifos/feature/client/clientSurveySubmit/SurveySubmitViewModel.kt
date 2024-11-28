@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.clientSurveySubmit
 
 import androidx.lifecycle.SavedStateHandle
@@ -21,7 +30,7 @@ import javax.inject.Inject
 class SurveySubmitViewModel @Inject constructor(
     private val repository: SurveySubmitRepository,
     private val prefManager: PrefManager,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = -1)

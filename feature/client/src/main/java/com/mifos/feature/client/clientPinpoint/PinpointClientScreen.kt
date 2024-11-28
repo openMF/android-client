@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 @file:OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 
 package com.mifos.feature.client.clientPinpoint
@@ -72,11 +81,10 @@ import com.mifos.core.objects.client.ClientAddressResponse
 import com.mifos.feature.client.R
 
 @Composable
-fun PinpointClientScreen(
+internal fun PinpointClientScreen(
     onBackPressed: () -> Unit,
+    viewModel: PinPointClientViewModel = hiltViewModel(),
 ) {
-
-    val viewModel: PinPointClientViewModel = hiltViewModel()
     val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val state by viewModel.pinPointClientUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
@@ -84,7 +92,6 @@ fun PinpointClientScreen(
     LaunchedEffect(Unit) {
         viewModel.getClientPinpointLocations(clientId = clientId)
     }
-
 
     PinpointClientScreen(
         state = state,
@@ -99,26 +106,27 @@ fun PinpointClientScreen(
         onAddAddress = { clientAddressRequest ->
             viewModel.addClientPinpointLocation(
                 clientId,
-                clientAddressRequest
+                clientAddressRequest,
             )
         },
         onUpdateAddress = { apptableId, dapptableId, clientAddressRequest ->
             viewModel.updateClientPinpointLocation(
-                apptableId, dapptableId, clientAddressRequest,
+                apptableId,
+                dapptableId,
+                clientAddressRequest,
             )
         },
         onDeleteAddress = { apptableId, dapptableId ->
             viewModel.deleteClientPinpointLocation(
                 apptableId,
-                dapptableId
+                dapptableId,
             )
-        }
+        },
     )
-
 }
 
 @Composable
-fun PinpointClientScreen(
+internal fun PinpointClientScreen(
     state: PinPointClientUiState,
     onBackPressed: () -> Unit,
     onRefresh: () -> Unit,
@@ -131,7 +139,7 @@ fun PinpointClientScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = refreshState,
-        onRefresh = onRefresh
+        onRefresh = onRefresh,
     )
     var showPermissionDialog by remember { mutableStateOf(false) }
 
@@ -139,7 +147,7 @@ fun PinpointClientScreen(
         PermissionBox(
             requiredPermissions = listOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION,
             ),
             title = R.string.feature_client_permission_required,
             description = R.string.feature_client_approve_permission_description_location,
@@ -149,9 +157,9 @@ fun PinpointClientScreen(
                 showPermissionDialog = false
                 onAddAddress(
                     // TODO Implement Place picker intent and fetch data and put into ClientAddressRequest
-                    ClientAddressRequest()
+                    ClientAddressRequest(),
                 )
-            }
+            },
         )
     }
 
@@ -165,11 +173,11 @@ fun PinpointClientScreen(
             }) {
                 Icon(
                     imageVector = MifosIcons.addLocation,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         },
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
@@ -178,7 +186,7 @@ fun PinpointClientScreen(
                         PinPointClientContent(
                             pinpointLocations = state.clientAddressResponses,
                             onUpdateAddress = onUpdateAddress,
-                            onDeleteAddress = onDeleteAddress
+                            onDeleteAddress = onDeleteAddress,
                         )
                     }
 
@@ -192,7 +200,7 @@ fun PinpointClientScreen(
                         Toast.makeText(
                             LocalContext.current,
                             stringResource(id = state.message),
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_SHORT,
                         ).show()
                     }
                 }
@@ -200,7 +208,7 @@ fun PinpointClientScreen(
                 PullRefreshIndicator(
                     refreshing = refreshState,
                     state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter)
+                    modifier = Modifier.align(Alignment.TopCenter),
                 )
             }
         }
@@ -208,26 +216,24 @@ fun PinpointClientScreen(
 }
 
 @Composable
-fun PinPointClientContent(
+private fun PinPointClientContent(
     pinpointLocations: List<ClientAddressResponse>,
     onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
 ) {
-
     LazyColumn {
         items(pinpointLocations) { pinpointLocation ->
             PinpointLocationItem(
                 pinpointLocation = pinpointLocation,
                 onUpdateAddress = onUpdateAddress,
-                onDeleteAddress = onDeleteAddress
+                onDeleteAddress = onDeleteAddress,
             )
-
         }
     }
 }
 
 @Composable
-fun PinpointLocationItem(
+private fun PinpointLocationItem(
     pinpointLocation: ClientAddressResponse,
     onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
@@ -255,7 +261,7 @@ fun PinpointLocationItem(
                         onUpdateAddress(
                             clientId,
                             id,
-                            ClientAddressRequest()
+                            ClientAddressRequest(),
                         )
                     }
                 }
@@ -266,12 +272,12 @@ fun PinpointLocationItem(
                     pinpointLocation.clientId?.let { clientId ->
                         onDeleteAddress(
                             clientId,
-                            id
+                            id,
                         )
                     }
                 }
                 showPinPointDialog = false
-            }
+            },
         )
     }
 
@@ -282,16 +288,16 @@ fun PinpointLocationItem(
                 onClick = {},
                 onLongClick = {
                     showPinPointDialog = true
-                }
+                },
             ),
-        colors = CardDefaults.outlinedCardColors(White)
+        colors = CardDefaults.outlinedCardColors(White),
     ) {
         GoogleMap(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp),
             cameraPositionState = cameraPositionState,
-            uiSettings = uiSettings
+            uiSettings = uiSettings,
         )
         Text(
             modifier = Modifier.padding(8.dp),
@@ -300,35 +306,34 @@ fun PinpointLocationItem(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
-                color = Black
-            )
+                color = Black,
+            ),
         )
     }
 }
 
 @Composable
-fun PinPointSelectDialog(
+private fun PinPointSelectDialog(
     onDismissRequest: () -> Unit,
     updateAddress: () -> Unit,
     deleteAddress: () -> Unit,
 ) {
-
     Dialog(
         onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(
             dismissOnBackPress = true,
-            dismissOnClickOutside = true
-        )
+            dismissOnClickOutside = true,
+        ),
     ) {
         Card(
             colors = CardDefaults.cardColors(White),
-            shape = RoundedCornerShape(20.dp)
+            shape = RoundedCornerShape(20.dp),
         ) {
             Column(
                 modifier = Modifier
                     .padding(30.dp),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = stringResource(id = R.string.feature_client_please_select),
@@ -336,16 +341,16 @@ fun PinPointSelectDialog(
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal
+                        fontStyle = FontStyle.Normal,
                     ),
                     color = Color.Black,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
                     onClick = { updateAddress() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary)
+                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_update_client_address),
@@ -353,15 +358,15 @@ fun PinPointSelectDialog(
                         style = TextStyle(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal
+                            fontStyle = FontStyle.Normal,
                         ),
                         color = Color.Black,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
                 Button(
                     onClick = { deleteAddress() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary)
+                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_delete_image),
@@ -369,10 +374,10 @@ fun PinPointSelectDialog(
                         style = TextStyle(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal
+                            fontStyle = FontStyle.Normal,
                         ),
                         color = Color.Black,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
@@ -380,21 +385,21 @@ fun PinPointSelectDialog(
     }
 }
 
-class PinpointClientUiStateProvider : PreviewParameterProvider<PinPointClientUiState> {
+private class PinpointClientUiStateProvider : PreviewParameterProvider<PinPointClientUiState> {
 
     override val values: Sequence<PinPointClientUiState>
         get() = sequenceOf(
             PinPointClientUiState.Loading,
             PinPointClientUiState.Error(R.string.feature_client_failed_to_load_pinpoint),
             PinPointClientUiState.SuccessMessage(R.string.feature_client_pinpoint_location_added),
-            PinPointClientUiState.ClientPinpointLocations(clientAddressResponses = samplePinpointLocations)
+            PinPointClientUiState.ClientPinpointLocations(clientAddressResponses = samplePinpointLocations),
         )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun PinpointClientScreenPreview(
-    @PreviewParameter(PinpointClientUiStateProvider::class) state: PinPointClientUiState
+    @PreviewParameter(PinpointClientUiStateProvider::class) state: PinPointClientUiState,
 ) {
     PinpointClientScreen(
         state = state,
@@ -404,7 +409,7 @@ private fun PinpointClientScreenPreview(
         onRetry = {},
         onAddAddress = {},
         onUpdateAddress = { _, _, _ -> },
-        onDeleteAddress = { _, _ -> }
+        onDeleteAddress = { _, _ -> },
     )
 }
 

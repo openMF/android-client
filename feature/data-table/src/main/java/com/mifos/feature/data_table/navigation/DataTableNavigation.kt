@@ -116,8 +116,8 @@ fun NavController.navigateDataTableData(
 
 fun NavController.navigateDataTableList(
     dataTableList: List<DataTable>,
-    requestType: Int,
     payload: Any?,
+    requestType: Int,
     formWidget: MutableList<List<FormWidget>>
 ) {
     val arg = Gson().toJson(DataTableListNavArgs(dataTableList, requestType, payload, formWidget))
