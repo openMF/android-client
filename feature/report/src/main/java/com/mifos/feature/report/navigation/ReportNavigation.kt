@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.report.navigation
 
 import androidx.navigation.NavController
@@ -11,68 +20,68 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.runreports.FullParameterListResponse
 import com.mifos.core.objects.runreports.client.ClientReportTypeItem
 import com.mifos.feature.report.report.ReportScreen
-import com.mifos.feature.report.report_detail.ReportDetailScreen
-import com.mifos.feature.report.run_report.RunReportScreen
+import com.mifos.feature.report.reportDetail.ReportDetailScreen
+import com.mifos.feature.report.runReport.RunReportScreen
 
 fun NavGraphBuilder.reportNavGraph(
-    navController: NavController
+    navController: NavController,
 ) {
     navigation(
         startDestination = ReportScreens.RunReportScreen.route,
-        route = "run_report_route"
+        route = "run_report_route",
     ) {
         runReportScreenRoute(
             onBackPressed = navController::popBackStack,
-            onReportSelected = navController::navigateReportDetailsScreen
+            onReportSelected = navController::navigateReportDetailsScreen,
         )
         reportDetailsScreenRoute(
             onBackPressed = navController::popBackStack,
-            runReport = navController::navigateReportScreens
+            runReport = navController::navigateReportScreens,
         )
         reportScreenRoute(
-            onBackPressed = navController::popBackStack
+            onBackPressed = navController::popBackStack,
         )
     }
 }
 
 fun NavGraphBuilder.runReportScreenRoute(
     onBackPressed: () -> Unit,
-    onReportSelected: (ClientReportTypeItem) -> Unit
+    onReportSelected: (ClientReportTypeItem) -> Unit,
 ) {
     composable(
-        route = ReportScreens.RunReportScreen.route
+        route = ReportScreens.RunReportScreen.route,
     ) {
         RunReportScreen(
             onBackPressed = onBackPressed,
-            onReportClick = onReportSelected
+            onReportClick = onReportSelected,
         )
     }
 }
 
 fun NavGraphBuilder.reportDetailsScreenRoute(
     onBackPressed: () -> Unit,
-    runReport: (FullParameterListResponse) -> Unit
+    runReport: (FullParameterListResponse) -> Unit,
 ) {
     composable(
         route = ReportScreens.ReportDetailScreen.route,
-        arguments = listOf(navArgument(Constants.REPORT_TYPE_ITEM, builder = {type = NavType.StringType}))
+        arguments = listOf(navArgument(Constants.REPORT_TYPE_ITEM, builder = { type = NavType.StringType })),
     ) {
         ReportDetailScreen(
             onBackPressed = onBackPressed,
-            runReport = runReport
+            runReport = runReport,
         )
     }
 }
 
 fun NavGraphBuilder.reportScreenRoute(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     composable(
         route = ReportScreens.ReportScreen.route,
-        arguments = listOf(navArgument(Constants.REPORT_PARAMETER_RESPONSE, builder = {type = NavType.StringType}))
+        arguments = listOf(navArgument(Constants.REPORT_PARAMETER_RESPONSE, builder = { type = NavType.StringType })),
     ) {
         ReportScreen(
-            onBackPressed = onBackPressed
+            onBackPressed = onBackPressed,
         )
     }
 }

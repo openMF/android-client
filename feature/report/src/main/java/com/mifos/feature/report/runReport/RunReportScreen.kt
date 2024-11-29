@@ -1,6 +1,15 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.mifos.feature.report.run_report
+package com.mifos.feature.report.runReport
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -61,12 +70,11 @@ import com.mifos.core.objects.runreports.client.ClientReportTypeItem
 import com.mifos.feature.report.R
 
 @Composable
-fun RunReportScreen(
+internal fun RunReportScreen(
     onBackPressed: () -> Unit,
-    onReportClick: (ClientReportTypeItem) -> Unit
+    onReportClick: (ClientReportTypeItem) -> Unit,
+    viewModel: RunReportViewModel = hiltViewModel(),
 ) {
-
-    val viewModel: RunReportViewModel = hiltViewModel()
     val state by viewModel.runReportUiState.collectAsStateWithLifecycle()
     var category by rememberSaveable { mutableStateOf(MenuItems.Client.name) }
 
@@ -74,7 +82,7 @@ fun RunReportScreen(
         viewModel.fetchCategories(
             reportCategory = category,
             genericResultSet = false,
-            parameterType = true
+            parameterType = true,
         )
     }
 
@@ -86,30 +94,28 @@ fun RunReportScreen(
             viewModel.fetchCategories(
                 reportCategory = category,
                 genericResultSet = false,
-                parameterType = true
+                parameterType = true,
             )
         },
         onRetry = {
             viewModel.fetchCategories(
                 reportCategory = category,
                 genericResultSet = false,
-                parameterType = true
+                parameterType = true,
             )
         },
-        onReportClick = onReportClick
+        onReportClick = onReportClick,
     )
 }
 
-
 @Composable
-private fun RunReportScreen(
+internal fun RunReportScreen(
     state: RunReportUiState,
     onBackPressed: () -> Unit,
     onMenuClick: (MenuItems) -> Unit,
     onRetry: () -> Unit,
-    onReportClick: (ClientReportTypeItem) -> Unit
+    onReportClick: (ClientReportTypeItem) -> Unit,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
     var showMenu by remember { mutableStateOf(false) }
     var menuTitle by rememberSaveable { mutableStateOf(MenuItems.Client.name) }
@@ -134,28 +140,28 @@ private fun RunReportScreen(
                         modifier = Modifier.clickable {
                             showMenu = showMenu.not()
                         },
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = menuTitle,
                             style = TextStyle(
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Medium,
-                                fontStyle = FontStyle.Normal
+                                fontStyle = FontStyle.Normal,
                             ),
                             color = Black,
-                            textAlign = TextAlign.Start
+                            textAlign = TextAlign.Start,
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(
                             imageVector = if (showMenu) MifosIcons.arrowUp else MifosIcons.arrowDown,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                     DropdownMenu(
                         modifier = Modifier.background(White),
                         expanded = showMenu,
-                        onDismissRequest = { showMenu = false }
+                        onDismissRequest = { showMenu = false },
                     ) {
                         MifosMenuDropDownItem(option = stringResource(id = R.string.feature_report_client)) {
                             onMenuClick(MenuItems.Client)
@@ -194,11 +200,11 @@ private fun RunReportScreen(
                         }
                     }
                 },
-                actions = {}
+                actions = {},
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        containerColor = White
+        containerColor = White,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
@@ -216,42 +222,42 @@ private fun RunReportScreen(
             }
         }
     }
-
 }
 
 @Composable
-fun RunReportContent(
+private fun RunReportContent(
     runReports: List<ClientReportTypeItem>,
-    onReportClick: (ClientReportTypeItem) -> Unit
+    modifier: Modifier = Modifier,
+    onReportClick: (ClientReportTypeItem) -> Unit,
 ) {
-    LazyColumn {
+    LazyColumn(modifier = modifier) {
         items(runReports.size) { index ->
             RunReportCardItem(report = runReports[index], onReportClick = onReportClick)
         }
     }
 }
 
-
 @Composable
-fun RunReportCardItem(
+private fun RunReportCardItem(
     report: ClientReportTypeItem,
-    onReportClick: (ClientReportTypeItem) -> Unit
+    modifier: Modifier = Modifier,
+    onReportClick: (ClientReportTypeItem) -> Unit,
 ) {
     OutlinedCard(
-        modifier = Modifier
+        modifier = modifier
             .padding(8.dp)
             .clickable {
                 onReportClick(report)
             },
-        colors = CardDefaults.cardColors(White)
+        colors = CardDefaults.cardColors(White),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    16.dp
+                    16.dp,
                 ),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -262,13 +268,13 @@ fun RunReportCardItem(
                 Icon(
                     painter = painterResource(id = R.drawable.feature_report_ic_report_item),
                     contentDescription = null,
-                    tint = Black
+                    tint = Black,
                 )
             }
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 16.dp)
+                    .padding(start = 16.dp),
             ) {
                 report.report_name?.let {
                     Text(
@@ -277,14 +283,15 @@ fun RunReportCardItem(
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal,
-                            color = Black
-                        )
+                            color = Black,
+                        ),
                     )
                 }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp), horizontalArrangement = Arrangement.SpaceBetween
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
                         text = report.report_type.toString(),
@@ -292,8 +299,8 @@ fun RunReportCardItem(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal,
-                            color = DarkGray
-                        )
+                            color = DarkGray,
+                        ),
                     )
                     Text(
                         text = report.report_category.toString(),
@@ -301,15 +308,14 @@ fun RunReportCardItem(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal,
-                            color = DarkGray
-                        )
+                            color = DarkGray,
+                        ),
                     )
                 }
             }
         }
     }
 }
-
 
 enum class MenuItems {
     Client,
@@ -318,9 +324,8 @@ enum class MenuItems {
     Fund,
     Accounting,
     XBRL,
-    All
+    All,
 }
-
 
 class RunReportUiStateProvider : PreviewParameterProvider<RunReportUiState> {
 
@@ -328,21 +333,21 @@ class RunReportUiStateProvider : PreviewParameterProvider<RunReportUiState> {
         get() = sequenceOf(
             RunReportUiState.Loading,
             RunReportUiState.Error(R.string.feature_report_failed_to_fetch_reports),
-            RunReportUiState.RunReports(sampleRunReports)
+            RunReportUiState.RunReports(sampleRunReports),
         )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun RunReportPreview(
-    @PreviewParameter(RunReportUiStateProvider::class) state: RunReportUiState
+    @PreviewParameter(RunReportUiStateProvider::class) state: RunReportUiState,
 ) {
     RunReportScreen(
         state = state,
         onBackPressed = {},
         onMenuClick = {},
         onRetry = {},
-        onReportClick = {}
+        onReportClick = {},
     )
 }
 
@@ -350,6 +355,6 @@ val sampleRunReports = List(10) {
     ClientReportTypeItem(
         report_name = "Report $it",
         report_type = "Type $it",
-        report_category = "Category $it"
+        report_category = "Category $it",
     )
 }

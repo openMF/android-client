@@ -7,11 +7,16 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.report.report
+package com.mifos.feature.report.reportDetail
 
-sealed class ReportUiState {
+/**
+ * Created by Aditya Gupta on 12/08/23.
+ */
+sealed class ReportDetailUiState {
 
-    data object Initial : ReportUiState()
+    data object Loading : ReportDetailUiState()
 
-    data class Message(val message: Int) : ReportUiState()
+    data class Error(val message: Int) : ReportDetailUiState()
+
+    data object ParameterDetailsSuccess : ReportDetailUiState()
 }

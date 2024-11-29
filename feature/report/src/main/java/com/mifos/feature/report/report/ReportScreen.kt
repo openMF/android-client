@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.report.report
 
 import android.Manifest
@@ -43,11 +52,10 @@ import com.mifos.feature.report.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun ReportScreen(
-    onBackPressed: () -> Unit
+internal fun ReportScreen(
+    onBackPressed: () -> Unit,
+    viewModel: ReportViewModel = hiltViewModel(),
 ) {
-
-    val viewModel: ReportViewModel = hiltViewModel()
     val report = viewModel.report
     val state by viewModel.reportUiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -62,26 +70,24 @@ fun ReportScreen(
                     .toString() + getString(context, R.string.feature_report_export_csv_directory)
             viewModel.exportCsv(
                 report = report,
-                reportDirectoryPath = reportDirectoryPath
+                reportDirectoryPath = reportDirectoryPath,
             )
-        }
+        },
     )
 }
 
-
 @Composable
-fun ReportScreen(
+internal fun ReportScreen(
     state: ReportUiState,
     report: FullParameterListResponse,
     onBackPressed: () -> Unit,
-    exportReport: () -> Unit
+    modifier: Modifier = Modifier,
+    exportReport: () -> Unit,
 ) {
-
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var checkPermission by remember { mutableStateOf(false) }
-
 
     when (state) {
         is ReportUiState.Initial -> Unit
@@ -97,7 +103,7 @@ fun ReportScreen(
             } else {
                 listOf(
                     Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 )
             },
             title = R.string.feature_report_permission_required,
@@ -110,11 +116,12 @@ fun ReportScreen(
                         exportReport()
                     }
                 }
-            }
+            },
         )
     }
 
     MifosScaffold(
+        modifier = modifier,
         icon = MifosIcons.arrowBack,
         title = stringResource(R.string.feature_report_title),
         onBackPressed = onBackPressed,
@@ -123,18 +130,18 @@ fun ReportScreen(
                 onClick = {
                     checkPermission = true
                 },
-                colors = ButtonDefaults.textButtonColors(White)
+                colors = ButtonDefaults.textButtonColors(White),
             ) {
                 Text(text = stringResource(id = R.string.feature_report_export_csv), color = Black)
             }
         },
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
 
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
         ) {
             LazyRow {
                 itemsIndexed(report.columnHeaders.map { it.columnName }) { index, columnName ->
@@ -143,8 +150,8 @@ fun ReportScreen(
                             modifier = Modifier.padding(8.dp),
                             text = columnName,
                             style = TextStyle(
-                                fontWeight = FontWeight.Bold
-                            )
+                                fontWeight = FontWeight.Bold,
+                            ),
                         )
                         report.data.map { it.row }.forEach {
                             Text(text = it[index], modifier = Modifier.padding(8.dp))
@@ -156,25 +163,24 @@ fun ReportScreen(
     }
 }
 
-class ReportUiStateProvider : PreviewParameterProvider<ReportUiState> {
+private class ReportUiStateProvider : PreviewParameterProvider<ReportUiState> {
 
     override val values: Sequence<ReportUiState>
         get() = sequenceOf(
             ReportUiState.Initial,
-            ReportUiState.Message(R.string.feature_report_export_csv)
+            ReportUiState.Message(R.string.feature_report_export_csv),
         )
-
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ReportScreenPreview(
-    @PreviewParameter(ReportUiStateProvider::class) state: ReportUiState
+    @PreviewParameter(ReportUiStateProvider::class) state: ReportUiState,
 ) {
     ReportScreen(
         state = state,
         report = FullParameterListResponse(emptyList(), emptyList()),
         onBackPressed = { },
-        exportReport = { }
+        exportReport = { },
     )
 }

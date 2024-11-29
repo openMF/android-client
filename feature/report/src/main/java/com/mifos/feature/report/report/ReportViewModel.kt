@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.report.report
 
 import androidx.lifecycle.SavedStateHandle
@@ -18,7 +27,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReportViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val reportParameterString =
@@ -31,7 +40,6 @@ class ReportViewModel @Inject constructor(
 
     fun exportCsv(report: FullParameterListResponse, reportDirectoryPath: String) =
         viewModelScope.launch(Dispatchers.IO) {
-
             _reportUiState.value = ReportUiState.Message(R.string.feature_report_export_started)
             val timestamp = System.currentTimeMillis()
             val reportPath = "$reportDirectoryPath$timestamp.csv"
@@ -46,7 +54,6 @@ class ReportViewModel @Inject constructor(
             }
 
             try {
-
                 val fileWriter = FileWriter(reportPath)
 
                 // write headers
