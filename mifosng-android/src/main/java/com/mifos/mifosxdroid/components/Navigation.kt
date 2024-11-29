@@ -42,7 +42,7 @@ import com.mifos.feature.loan.navigation.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.note.navigation.navigateToNoteScreen
 import com.mifos.feature.note.navigation.noteScreen
 import com.mifos.feature.offline.navigation.offlineNavGraph
-import com.mifos.feature.path_tracking.navigation.pathTrackingNavGraph
+import com.mifos.feature.pathTracking.navigation.pathTrackingNavGraph
 import com.mifos.feature.report.navigation.reportNavGraph
 import com.mifos.feature.savings.navigation.addSavingsAccountScreen
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
