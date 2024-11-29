@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.activate
 
 import androidx.lifecycle.SavedStateHandle
@@ -21,7 +30,7 @@ class ActivateViewModel @Inject constructor(
     private val activateClientUseCase: ActivateClientUseCase,
     private val activateCenterUseCase: ActivateCenterUseCase,
     private val activateGroupUseCase: ActivateGroupUseCase,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val id = savedStateHandle.getStateFlow(key = Constants.ACTIVATE_ID, initialValue = 0)
@@ -34,15 +43,16 @@ class ActivateViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             activateClientUseCase(clientId, clientPayload).collect { result ->
                 when (result) {
-                    is Resource.Error -> _activateUiState.value =
-                        ActivateUiState.Error(R.string.feature_activate_failed_to_activate_client)
+                    is Resource.Error ->
+                        _activateUiState.value =
+                            ActivateUiState.Error(R.string.feature_activate_failed_to_activate_client)
 
                     is Resource.Loading -> _activateUiState.value = ActivateUiState.Loading
 
-                    is Resource.Success -> _activateUiState.value =
-                        ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_client)
+                    is Resource.Success ->
+                        _activateUiState.value =
+                            ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_client)
                 }
-
             }
         }
 
@@ -50,13 +60,15 @@ class ActivateViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             activateCenterUseCase(centerId, centerPayload).collect { result ->
                 when (result) {
-                    is Resource.Error -> _activateUiState.value =
-                        ActivateUiState.Error(R.string.feature_activate_failed_to_activate_center)
+                    is Resource.Error ->
+                        _activateUiState.value =
+                            ActivateUiState.Error(R.string.feature_activate_failed_to_activate_center)
 
                     is Resource.Loading -> _activateUiState.value = ActivateUiState.Loading
 
-                    is Resource.Success -> _activateUiState.value =
-                        ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_center)
+                    is Resource.Success ->
+                        _activateUiState.value =
+                            ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_center)
                 }
             }
         }
@@ -65,13 +77,15 @@ class ActivateViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             activateGroupUseCase(groupId, groupPayload).collect { result ->
                 when (result) {
-                    is Resource.Error -> _activateUiState.value =
-                        ActivateUiState.Error(R.string.feature_activate_failed_to_activate_group)
+                    is Resource.Error ->
+                        _activateUiState.value =
+                            ActivateUiState.Error(R.string.feature_activate_failed_to_activate_group)
 
                     is Resource.Loading -> _activateUiState.value = ActivateUiState.Loading
 
-                    is Resource.Success -> _activateUiState.value =
-                        ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_group)
+                    is Resource.Success ->
+                        _activateUiState.value =
+                            ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_group)
                 }
             }
         }
