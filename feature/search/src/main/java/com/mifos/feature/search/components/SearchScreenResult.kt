@@ -1,5 +1,13 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.search.components
-
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
@@ -36,9 +44,9 @@ import com.mifos.feature.search.SearchResultState
 
 @Composable
 internal fun SearchScreenResult(
-    modifier: Modifier = Modifier,
     searchResultState: SearchResultState,
     onResultItemClick: (SearchedEntity) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
@@ -46,7 +54,7 @@ internal fun SearchScreenResult(
     ) {
         Crossfade(
             targetState = searchResultState,
-            label = "SearchResult"
+            label = "SearchResult",
         ) { state ->
             when (state) {
                 is SearchResultState.Loading -> {
@@ -56,7 +64,7 @@ internal fun SearchScreenResult(
                 is SearchResultState.Empty -> {
                     if (!state.initial) {
                         MifosEmptyUi(
-                            text = stringResource(R.string.feature_search_no_search_result_found)
+                            text = stringResource(R.string.feature_search_no_search_result_found),
                         )
                     }
                 }
@@ -64,7 +72,7 @@ internal fun SearchScreenResult(
                 is SearchResultState.Error -> {
                     MifosEmptyUi(
                         text = state.message,
-                        modifier = Modifier.align(Alignment.Center)
+                        modifier = Modifier.align(Alignment.Center),
                     )
                 }
 
@@ -73,17 +81,17 @@ internal fun SearchScreenResult(
                         modifier = Modifier
                             .fillMaxSize(),
                         contentPadding = PaddingValues(vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         items(
                             items = state.results,
                             key = {
                                 "${it.entityType}-${it.entityId}-${it.parentId}"
-                            }
+                            },
                         ) { searchedEntity ->
                             SearchResult(
                                 searchedEntity = searchedEntity,
-                                onSearchOptionClick = onResultItemClick
+                                onSearchOptionClick = onResultItemClick,
                             )
                         }
                     }
@@ -95,9 +103,9 @@ internal fun SearchScreenResult(
 
 @Composable
 internal fun SearchResult(
-    modifier: Modifier = Modifier,
     searchedEntity: SearchedEntity,
-    onSearchOptionClick: (SearchedEntity) -> Unit
+    onSearchOptionClick: (SearchedEntity) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val color = ColorGenerator.MATERIAL.getColor(searchedEntity.entityType)
     val drawable =
@@ -117,7 +125,7 @@ internal fun SearchResult(
             )
         },
         colors = ListItemDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
         ),
         modifier = modifier
             .fillMaxWidth()
@@ -127,13 +135,12 @@ internal fun SearchResult(
     )
 }
 
-
 @DevicePreviews
 @Composable
 private fun SearchScreenResultLoadingPreview() {
     SearchScreenResult(
         searchResultState = SearchResultState.Loading,
-        onResultItemClick = {}
+        onResultItemClick = {},
     )
 }
 
@@ -142,7 +149,7 @@ private fun SearchScreenResultLoadingPreview() {
 private fun SearchScreenResultInitialEmptyPreview() {
     SearchScreenResult(
         searchResultState = SearchResultState.Empty(),
-        onResultItemClick = {}
+        onResultItemClick = {},
     )
 }
 
@@ -151,7 +158,7 @@ private fun SearchScreenResultInitialEmptyPreview() {
 private fun SearchScreenResultEmptyPreview() {
     SearchScreenResult(
         searchResultState = SearchResultState.Empty(true),
-        onResultItemClick = {}
+        onResultItemClick = {},
     )
 }
 
@@ -160,7 +167,7 @@ private fun SearchScreenResultEmptyPreview() {
 private fun SearchScreenResultErrorPreview() {
     SearchScreenResult(
         searchResultState = SearchResultState.Error("Unable to fetch data from server"),
-        onResultItemClick = {}
+        onResultItemClick = {},
     )
 }
 
@@ -168,11 +175,11 @@ private fun SearchScreenResultErrorPreview() {
 @Composable
 private fun SearchScreenResultSuccessPreview(
     @PreviewParameter(SearchResultPreviewParameter::class)
-    results: List<SearchedEntity>
+    results: List<SearchedEntity>,
 ) {
     SearchScreenResult(
         searchResultState = SearchResultState.Success(results),
-        onResultItemClick = {}
+        onResultItemClick = {},
     )
 }
 
@@ -187,8 +194,8 @@ private fun SearchResultPreview() {
             entityType = "center",
             parentId = 3296,
             parentName = "center",
-            entityStatus = null
+            entityStatus = null,
         ),
-        onSearchOptionClick = {}
+        onSearchOptionClick = {},
     )
 }

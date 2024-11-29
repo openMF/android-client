@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.search
 
 import com.mifos.core.testing.repository.TestSearchRepository
@@ -10,7 +19,6 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertIsNot
-
 
 class SearchViewModelTest {
 
@@ -31,7 +39,7 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun performSearchAndReturnEmptyResult() = runTest{
+    fun performSearchAndReturnEmptyResult() = runTest {
         repository.addSampleResults(SearchResultPreviewData.searchResults)
 
         viewModel.onEvent(SearchScreenEvent.UpdateSearchText("kkk"))

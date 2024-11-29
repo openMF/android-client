@@ -1,5 +1,13 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.search.components
-
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -45,29 +53,29 @@ import com.mifos.feature.search.SearchScreenState
 
 @Composable
 internal fun SearchBox(
-    modifier: Modifier = Modifier,
     state: SearchScreenState,
     onEvent: (SearchScreenEvent) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     var showDialog by remember { mutableStateOf(false) }
 
     Box(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             // Title And Filter Icon
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = stringResource(id = R.string.feature_search_title),
-                    fontSize = 24.sp
+                    fontSize = 24.sp,
                 )
 
                 AssistChip(
@@ -77,24 +85,24 @@ internal fun SearchBox(
                     label = {
                         Text(
                             text = state.selectedFilter?.label ?: "All",
-                            fontSize = 16.sp
+                            fontSize = 16.sp,
                         )
                     },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.FilterList,
-                            contentDescription = "filterIcon"
+                            contentDescription = "filterIcon",
                         )
                     },
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "changeFilter"
+                            contentDescription = "changeFilter",
                         )
                     },
                     colors = AssistChipDefaults.assistChipColors().copy(
-                        leadingIconContentColor = MaterialTheme.colorScheme.tertiary
-                    )
+                        leadingIconContentColor = MaterialTheme.colorScheme.tertiary,
+                    ),
                 )
             }
 
@@ -124,12 +132,12 @@ internal fun SearchBox(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Search,
-                    contentDescription = "searchIcon"
+                    contentDescription = "searchIcon",
                 )
 
                 Text(
                     text = stringResource(id = R.string.feature_search_title),
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
                 )
             }
 
@@ -138,13 +146,13 @@ internal fun SearchBox(
                 modifier = Modifier
                     .clickable(
                         interactionSource = interactionSource,
-                        indication = null
+                        indication = null,
                     ) {
                         onEvent(SearchScreenEvent.UpdateExactMatch)
                     }
                     .padding(vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start)
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
             ) {
                 Checkbox(
                     checked = state.exactMatch ?: false,
@@ -152,30 +160,29 @@ internal fun SearchBox(
                         onEvent(SearchScreenEvent.UpdateExactMatch)
                     },
                     modifier = Modifier
-                        .size(20.dp)
+                        .size(20.dp),
                 )
 
                 Text(
                     text = stringResource(id = R.string.feature_search_exact_match),
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
                 )
             }
         }
     }
 
     AnimatedVisibility(
-        visible = showDialog
+        visible = showDialog,
     ) {
         FilterDialog(
             selected = state.selectedFilter,
             onEvent = onEvent,
             onDismiss = {
                 showDialog = false
-            }
+            },
         )
     }
 }
-
 
 @DevicePreviews
 @Composable
@@ -183,10 +190,9 @@ private fun SearchBoxPreview() {
     SearchBox(
         modifier = Modifier.background(Color.White),
         state = SearchScreenState(),
-        onEvent = {}
+        onEvent = {},
     )
 }
-
 
 @DevicePreviews
 @Composable
@@ -196,8 +202,8 @@ private fun SearchBoxWithValuesPreview() {
         state = SearchScreenState(
             searchText = "search text",
             selectedFilter = FilterOption.Groups,
-            exactMatch = true
+            exactMatch = true,
         ),
-        onEvent = {}
+        onEvent = {},
     )
 }
