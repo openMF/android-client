@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.about
 
 import androidx.compose.foundation.Image
@@ -42,11 +51,11 @@ import com.mifos.core.designsystem.theme.White
 import com.mifos.core.designsystem.theme.aboutItemTextStyle
 import com.mifos.core.designsystem.theme.aboutItemTextStyleBold
 
-
 @Composable
-fun AboutScreen(onBackPressed: () -> Unit) {
-
-    val viewModel: AboutViewModel = hiltViewModel()
+internal fun AboutScreen(
+    onBackPressed: () -> Unit,
+    viewModel: AboutViewModel = hiltViewModel()
+) {
     val state by viewModel.aboutUiState.collectAsStateWithLifecycle()
     val uriHandler = LocalUriHandler.current
 
@@ -72,35 +81,34 @@ fun AboutScreen(onBackPressed: () -> Unit) {
 
                 AboutItems.LICENSE -> uriHandler.openUri("https://github.com/openMF/android-client/blob/master/LICENSE.md")
             }
-        }
+        },
     )
 }
 
 @Composable
-fun AboutScreen(
+internal fun AboutScreen(
     state: AboutUiState,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
-    onOptionClick: (AboutItems) -> Unit
+    onOptionClick: (AboutItems) -> Unit,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
         title = stringResource(R.string.feature_about),
         onBackPressed = onBackPressed,
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             when (state) {
                 is AboutUiState.AboutOptions -> {
                     AboutScreenContent(
                         aboutOptions = state.aboutOptions,
-                        onOptionClick = onOptionClick
+                        onOptionClick = onOptionClick,
                     )
                 }
 
@@ -115,76 +123,79 @@ fun AboutScreen(
 }
 
 @Composable
-fun AboutScreenContent(
+private fun AboutScreenContent(
     aboutOptions: List<AboutItem>,
-    onOptionClick: (AboutItems) -> Unit
+    onOptionClick: (AboutItems) -> Unit,
 ) {
-    Image(
-        modifier = Modifier.size(100.dp),
-        painter = painterResource(id = R.drawable.feature_about_ic_launcher),
-        contentDescription = null
-    )
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        text = stringResource(id = R.string.feature_about_mifos_x_droid),
-        style = aboutItemTextStyleBold
-    )
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp),
-        text = stringResource(id = R.string.feature_about_app),
-        style = aboutItemTextStyle
-    )
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .clickable {
-                onOptionClick(AboutItems.CONTRIBUTIONS)
-            },
-        text = stringResource(id = R.string.feature_about_mifos),
-        style = TextStyle(
-            fontSize = 16.sp
-        ),
-        color = BluePrimary,
-        textAlign = TextAlign.Center
-    )
-    LazyColumn {
-        items(aboutOptions) { about ->
-            AboutCardItem(about = about, onOptionClick = onOptionClick)
+    Column {
+
+        Image(
+            modifier = Modifier.size(100.dp),
+            painter = painterResource(id = R.drawable.feature_about_ic_launcher),
+            contentDescription = null,
+        )
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            text = stringResource(id = R.string.feature_about_mifos_x_droid),
+            style = aboutItemTextStyleBold,
+        )
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp),
+            text = stringResource(id = R.string.feature_about_app),
+            style = aboutItemTextStyle,
+        )
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .clickable {
+                    onOptionClick(AboutItems.CONTRIBUTIONS)
+                },
+            text = stringResource(id = R.string.feature_about_mifos),
+            style = TextStyle(
+                fontSize = 16.sp,
+            ),
+            color = BluePrimary,
+            textAlign = TextAlign.Center,
+        )
+        LazyColumn {
+            items(aboutOptions) { about ->
+                AboutCardItem(about = about, onOptionClick = onOptionClick)
+            }
         }
     }
 }
 
 @Composable
-fun AboutCardItem(
+private fun AboutCardItem(
     about: AboutItem,
-    onOptionClick: (AboutItems) -> Unit
+    onOptionClick: (AboutItems) -> Unit,
 ) {
     ElevatedCard(
         modifier = Modifier.padding(
             start = 16.dp,
             end = 16.dp,
             top = 8.dp,
-            bottom = 8.dp
+            bottom = 8.dp,
         ),
         elevation = CardDefaults.elevatedCardElevation(0.dp),
         colors = CardDefaults.elevatedCardColors(about.color),
         onClick = {
             onOptionClick(about.id)
-        }
+        },
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             about.icon?.let {
                 Icon(
                     painter = painterResource(it),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
             Column {
@@ -194,9 +205,9 @@ fun AboutCardItem(
                         .padding(start = 16.dp, end = 16.dp),
                     text = stringResource(id = about.title),
                     style = TextStyle(
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
                     ),
-                    color = Black
+                    color = Black,
                 )
                 about.subtitle?.let {
                     Text(
@@ -205,9 +216,9 @@ fun AboutCardItem(
                             .padding(start = 16.dp, end = 16.dp),
                         text = stringResource(id = it),
                         style = TextStyle(
-                            fontSize = 16.sp
+                            fontSize = 16.sp,
                         ),
-                        color = Black
+                        color = Black,
                     )
                 }
             }
@@ -215,28 +226,26 @@ fun AboutCardItem(
     }
 }
 
-class AboutUiStateProvider : PreviewParameterProvider<AboutUiState> {
+private class AboutUiStateProvider : PreviewParameterProvider<AboutUiState> {
 
     override val values: Sequence<AboutUiState>
         get() = sequenceOf(
             AboutUiState.Loading,
             AboutUiState.Error(R.string.feature_about_failed_to_load),
-            AboutUiState.AboutOptions(sampleAboutItem)
+            AboutUiState.AboutOptions(sampleAboutItem),
         )
-
 }
-
 
 @Preview(showBackground = true)
 @Composable
 private fun AboutScreenPreview(
-    @PreviewParameter(AboutUiStateProvider::class) state: AboutUiState
+    @PreviewParameter(AboutUiStateProvider::class) state: AboutUiState,
 ) {
     AboutScreen(
         state = state,
         onBackPressed = {},
         onRetry = {},
-        onOptionClick = {}
+        onOptionClick = {},
     )
 }
 
@@ -246,6 +255,6 @@ val sampleAboutItem = List(4) {
         title = R.string.feature_about_support_twitter,
         subtitle = R.string.feature_about_license_sub,
         color = White,
-        id = AboutItems.TWITTER
+        id = AboutItems.TWITTER,
     )
 }
