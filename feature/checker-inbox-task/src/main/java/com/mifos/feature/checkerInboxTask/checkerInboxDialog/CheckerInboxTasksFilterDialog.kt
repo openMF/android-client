@@ -79,8 +79,8 @@ internal fun CheckerInboxTasksFilterDialog(
     action: String?,
     entity: String?,
     resourceId: String?,
+    viewModel: CheckerInboxViewModel = hiltViewModel(),
 ) {
-    val viewModel: CheckerInboxViewModel = hiltViewModel()
     val searchTemplate by viewModel.searchTemplate.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = true) {
         viewModel.loadSearchTemplate()
@@ -279,7 +279,7 @@ private fun CheckerInboxTasksFilterDialog(
 
                     MifosTextFieldDropdown(
                         value = action,
-                        onValueChanged = { it ->
+                        onValueChanged = {
                             action = it
                         },
                         readOnly = true,
@@ -295,7 +295,7 @@ private fun CheckerInboxTasksFilterDialog(
 
                     MifosTextFieldDropdown(
                         value = entity,
-                        onValueChanged = { it ->
+                        onValueChanged = {
                             entity = it
                         },
                         readOnly = true,

@@ -48,9 +48,9 @@ import com.mifos.feature.checker_inbox_task.R
 
 @Composable
 internal fun CheckerInboxTasksScreen(
-    checkerInboxTasksViewModel: CheckerInboxTasksViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
     checkerInbox: () -> Unit,
+    checkerInboxTasksViewModel: CheckerInboxTasksViewModel = hiltViewModel(),
 ) {
     val state =
         checkerInboxTasksViewModel.checkerInboxTasksUiState.collectAsStateWithLifecycle().value
