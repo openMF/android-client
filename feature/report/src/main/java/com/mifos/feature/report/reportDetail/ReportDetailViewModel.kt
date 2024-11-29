@@ -1,4 +1,13 @@
-package com.mifos.feature.report.report_detail
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.report.reportDetail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -29,7 +38,7 @@ class ReportDetailViewModel @Inject constructor(
     private val getRunReportProductUseCase: GetRunReportProductUseCase,
     private val getRunReportWithQueryUseCase: GetRunReportWithQueryUseCase,
     private val getRunReportOfficesUseCase: GetRunReportOfficesUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val reportName =
@@ -60,13 +69,15 @@ class ReportDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getReportFullParameterListUseCase(reportName, parameterType).collect { result ->
                 when (result) {
-                    is Resource.Error -> _reportDetailUiState.value =
-                        ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
+                    is Resource.Error ->
+                        _reportDetailUiState.value =
+                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
 
                     is Resource.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
 
-                    is Resource.Success -> _reportParameterList.value =
-                        result.data?.data ?: emptyList()
+                    is Resource.Success ->
+                        _reportParameterList.value =
+                            result.data?.data ?: emptyList()
                 }
             }
         }
@@ -91,8 +102,9 @@ class ReportDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getRunReportOfficesUseCase(parameterName, officeId, parameterType).collect { result ->
                 when (result) {
-                    is Resource.Error -> _reportDetailUiState.value =
-                        ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
+                    is Resource.Error ->
+                        _reportDetailUiState.value =
+                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
 
                     is Resource.Loading -> Unit
 
@@ -108,8 +120,9 @@ class ReportDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getRunReportProductUseCase(parameterName, currencyId, parameterType).collect { result ->
                 when (result) {
-                    is Resource.Error -> _reportDetailUiState.value =
-                        ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
+                    is Resource.Error ->
+                        _reportDetailUiState.value =
+                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
 
                     is Resource.Loading -> Unit
 
@@ -125,8 +138,9 @@ class ReportDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getRunReportWithQueryUseCase(reportName, options).collect { result ->
                 when (result) {
-                    is Resource.Error -> _reportDetailUiState.value =
-                        ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
+                    is Resource.Error ->
+                        _reportDetailUiState.value =
+                            ReportDetailUiState.Error(R.string.feature_report_failed_to_load_report_details)
 
                     is Resource.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
 
