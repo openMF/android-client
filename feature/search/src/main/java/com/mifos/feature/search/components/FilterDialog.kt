@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.search.components
 
 import androidx.compose.foundation.clickable
@@ -27,10 +36,10 @@ import com.mifos.feature.search.SearchScreenEvent
 
 @Composable
 internal fun FilterDialog(
-    modifier: Modifier = Modifier,
     selected: FilterOption?,
     onEvent: (SearchScreenEvent.UpdateSelectedFilter) -> Unit,
     onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val configuration = LocalConfiguration.current
 
@@ -45,7 +54,7 @@ internal fun FilterDialog(
             HorizontalDivider()
             Column(
                 modifier = Modifier
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(rememberScrollState()),
             ) {
                 FilterOption(
                     text = "All",
@@ -53,7 +62,7 @@ internal fun FilterDialog(
                     onSelected = {
                         onEvent(SearchScreenEvent.UpdateSelectedFilter(null))
                         onDismiss()
-                    }
+                    },
                 )
 
                 HorizontalDivider()
@@ -65,7 +74,7 @@ internal fun FilterDialog(
                         onSelected = {
                             onEvent(SearchScreenEvent.UpdateSelectedFilter(option))
                             onDismiss()
-                        }
+                        },
                     )
 
                     if (index != FilterOption.values.size - 1) {
@@ -74,16 +83,16 @@ internal fun FilterDialog(
                 }
             }
         },
-        confirmButton = {}
+        confirmButton = {},
     )
 }
 
 @Composable
 internal fun FilterOption(
-    modifier: Modifier = Modifier,
     text: String,
     selected: Boolean,
-    onSelected: () -> Unit
+    onSelected: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
@@ -97,11 +106,11 @@ internal fun FilterOption(
             selected = selected,
             onClick = {
                 onSelected()
-            }
+            },
         )
         Text(
             text = text,
-            fontSize = 16.sp
+            fontSize = 16.sp,
         )
     }
 }
@@ -109,27 +118,27 @@ internal fun FilterOption(
 @DevicePreviews
 @Composable
 private fun FilterDialogPreview(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     FilterDialog(
         modifier = modifier,
         selected = null,
         onEvent = {},
-        onDismiss = {}
+        onDismiss = {},
     )
 }
 
 @DevicePreviews
 @Composable
 private fun FilterOptionPreview(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     MaterialTheme {
         FilterOption(
             modifier = modifier,
             text = "Search Option",
             selected = true,
-            onSelected = {}
+            onSelected = {},
         )
     }
 }

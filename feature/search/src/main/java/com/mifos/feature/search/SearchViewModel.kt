@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.search
 
 import androidx.compose.runtime.mutableStateOf
@@ -25,8 +34,8 @@ class SearchViewModel @Inject constructor(
     var state = mutableStateOf(SearchScreenState())
         private set
 
-    private val _searchResultState = MutableStateFlow<SearchResultState>(SearchResultState.Empty())
-    val searchResult = _searchResultState.asStateFlow()
+    private val searchResultState = MutableStateFlow<SearchResultState>(SearchResultState.Empty())
+    val searchResult = searchResultState.asStateFlow()
 
     private var searchJob: Job? = null
 
@@ -35,7 +44,7 @@ class SearchViewModel @Inject constructor(
             is SearchScreenEvent.UpdateSearchText -> {
                 viewModelScope.launch {
                     state.value = state.value.copy(
-                        searchText = event.searchText
+                        searchText = event.searchText,
                     )
                 }
             }
@@ -43,17 +52,17 @@ class SearchViewModel @Inject constructor(
             is SearchScreenEvent.ClearSearchText -> {
                 viewModelScope.launch {
                     state.value = state.value.copy(
-                        searchText = ""
+                        searchText = "",
                     )
 
-                    _searchResultState.update { SearchResultState.Empty() }
+                    searchResultState.update { SearchResultState.Empty() }
                 }
             }
 
             is SearchScreenEvent.UpdateSelectedFilter -> {
                 viewModelScope.launch {
                     state.value = state.value.copy(
-                        selectedFilter = event.filter
+                        selectedFilter = event.filter,
                     )
 
                     getSearchResult()
@@ -63,8 +72,11 @@ class SearchViewModel @Inject constructor(
             is SearchScreenEvent.UpdateExactMatch -> {
                 viewModelScope.launch {
                     state.value = state.value.copy(
-                        exactMatch = if (state.value.exactMatch == null) true
-                        else !state.value.exactMatch!!
+                        exactMatch = if (state.value.exactMatch == null) {
+                            true
+                        } else {
+                            !state.value.exactMatch!!
+                        },
                     )
 
                     getSearchResult()
@@ -76,7 +88,6 @@ class SearchViewModel @Inject constructor(
                     getSearchResult()
                 }
             }
-
         }
     }
 
@@ -87,16 +98,16 @@ class SearchViewModel @Inject constructor(
             searchJob = searchRepository.searchResources(
                 query = state.value.searchText,
                 resources = state.value.selectedFilter?.value,
-                exactMatch = state.value.exactMatch
+                exactMatch = state.value.exactMatch,
             ).onStart {
-                _searchResultState.update { SearchResultState.Loading }
+                searchResultState.update { SearchResultState.Loading }
             }.catch { throwable ->
-                _searchResultState.update { SearchResultState.Error(throwable.message.toString()) }
+                searchResultState.update { SearchResultState.Error(throwable.message.toString()) }
             }.onEach { results ->
                 if (results.isEmpty()) {
-                    _searchResultState.update { SearchResultState.Empty(false) }
+                    searchResultState.update { SearchResultState.Empty(false) }
                 } else {
-                    _searchResultState.update { SearchResultState.Success(results) }
+                    searchResultState.update { SearchResultState.Success(results) }
                 }
             }.launchIn(viewModelScope)
         }
@@ -113,7 +124,7 @@ sealed interface SearchResultState {
 data class SearchScreenState(
     val searchText: String = "",
     val selectedFilter: FilterOption? = null,
-    val exactMatch: Boolean? = null
+    val exactMatch: Boolean? = null,
 )
 
 sealed interface SearchScreenEvent {
@@ -121,7 +132,7 @@ sealed interface SearchScreenEvent {
 
     data class UpdateSelectedFilter(val filter: FilterOption? = null) : SearchScreenEvent
 
-    data object ClearSearchText: SearchScreenEvent
+    data object ClearSearchText : SearchScreenEvent
 
     data object UpdateExactMatch : SearchScreenEvent
 

@@ -1,9 +1,17 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.search.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
@@ -21,11 +29,11 @@ fun NavGraphBuilder.searchNavGraph(
     onCenter: (Int) -> Unit,
     onGroup: (Int) -> Unit,
     onSavings: (Int) -> Unit,
-    onLoan: (Int) -> Unit
+    onLoan: (Int) -> Unit,
 ) {
     navigation(
         startDestination = SearchScreens.SearchScreen.route,
-        route = SearchScreens.SearchScreenRoute.route
+        route = SearchScreens.SearchScreenRoute.route,
     ) {
         searchRoute(
             modifier = Modifier.padding(paddingValues),
@@ -66,7 +74,7 @@ fun NavGraphBuilder.searchNavGraph(
                         onCenter(searchedEntity.entityId)
                     }
                 }
-            }
+            },
         )
     }
 }
@@ -74,15 +82,15 @@ fun NavGraphBuilder.searchNavGraph(
 fun NavGraphBuilder.searchRoute(
     modifier: Modifier,
     onFabClick: (FabType) -> Unit,
-    onSearchOptionClick: (SearchedEntity) -> Unit
+    onSearchOptionClick: (SearchedEntity) -> Unit,
 ) {
     composable(
-        route = SearchScreens.SearchScreen.route
+        route = SearchScreens.SearchScreen.route,
     ) {
         SearchScreenRoute(
             modifier = modifier,
             onFabClick = onFabClick,
-            onSearchOptionClick = onSearchOptionClick
+            onSearchOptionClick = onSearchOptionClick,
         )
     }
 }

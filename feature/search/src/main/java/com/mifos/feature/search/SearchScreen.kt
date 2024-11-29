@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.search
 
 import androidx.annotation.VisibleForTesting
@@ -29,9 +38,9 @@ import com.mifos.feature.search.components.SearchScreenResult
 
 @Composable
 fun SearchScreenRoute(
-    modifier: Modifier = Modifier,
     onFabClick: (FabType) -> Unit,
     onSearchOptionClick: (SearchedEntity) -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state
@@ -50,12 +59,12 @@ fun SearchScreenRoute(
 @VisibleForTesting
 @Composable
 internal fun SearchScreenContent(
-    modifier: Modifier = Modifier,
     state: SearchScreenState,
     searchResultState: SearchResultState,
     onEvent: (SearchScreenEvent) -> Unit,
     onFabClick: (FabType) -> Unit,
-    onResultItemClick: (SearchedEntity) -> Unit
+    onResultItemClick: (SearchedEntity) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var fabButtonState by remember { mutableStateOf<FabButtonState>(FabButtonState.Collapsed) }
@@ -67,25 +76,25 @@ internal fun SearchScreenContent(
                 fabButtons = listOf(
                     FabButton(
                         fabType = FabType.CLIENT,
-                        iconRes = com.mifos.core.ui.R.drawable.core_ui_ic_person_black_24dp
+                        iconRes = com.mifos.core.ui.R.drawable.core_ui_ic_person_black_24dp,
                     ),
                     FabButton(
                         fabType = FabType.CENTER,
-                        iconRes = com.mifos.core.ui.R.drawable.core_ui_ic_centers_24dp
+                        iconRes = com.mifos.core.ui.R.drawable.core_ui_ic_centers_24dp,
                     ),
                     FabButton(
                         fabType = FabType.GROUP,
-                        iconRes = com.mifos.core.ui.R.drawable.core_ui_ic_group_black_24dp
-                    )
+                        iconRes = com.mifos.core.ui.R.drawable.core_ui_ic_group_black_24dp,
+                    ),
                 ),
                 fabButtonState = fabButtonState,
                 onFabButtonStateChange = {
                     fabButtonState = it
                 },
-                onFabClick = onFabClick
+                onFabClick = onFabClick,
             )
         },
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) {
         Column(
             modifier = Modifier
@@ -97,13 +106,13 @@ internal fun SearchScreenContent(
                 modifier = Modifier
                     .padding(horizontal = 16.dp),
                 state = state,
-                onEvent = onEvent
+                onEvent = onEvent,
             )
 
             SearchScreenResult(
                 modifier = Modifier.weight(2f),
                 searchResultState = searchResultState,
-                onResultItemClick = onResultItemClick
+                onResultItemClick = onResultItemClick,
             )
         }
     }
@@ -119,7 +128,7 @@ private fun SearchScreenContentEmptyStateAndLoadingPreview() {
         searchResultState = SearchResultState.Loading,
         onEvent = {},
         onFabClick = {},
-        onResultItemClick = {}
+        onResultItemClick = {},
     )
 }
 
@@ -132,7 +141,7 @@ private fun SearchScreenContentInitialEmptyStatePreview() {
         searchResultState = SearchResultState.Empty(),
         onEvent = {},
         onFabClick = {},
-        onResultItemClick = {}
+        onResultItemClick = {},
     )
 }
 
@@ -143,12 +152,12 @@ private fun SearchScreenContentEmptyResultPreview() {
         modifier = Modifier,
         state = SearchScreenState(
             searchText = "yyy",
-            selectedFilter = FilterOption.Groups
+            selectedFilter = FilterOption.Groups,
         ),
         searchResultState = SearchResultState.Empty(false),
         onEvent = {},
         onFabClick = {},
-        onResultItemClick = {}
+        onResultItemClick = {},
     )
 }
 
@@ -161,7 +170,7 @@ private fun SearchScreenContentErrorPreview() {
         searchResultState = SearchResultState.Error("Something went wrong!"),
         onEvent = {},
         onFabClick = {},
-        onResultItemClick = {}
+        onResultItemClick = {},
     )
 }
 
@@ -169,7 +178,7 @@ private fun SearchScreenContentErrorPreview() {
 @Composable
 private fun SearchScreenContentSuccessPreview(
     @PreviewParameter(SearchResultPreviewParameter::class)
-    results: List<SearchedEntity>
+    results: List<SearchedEntity>,
 ) {
     SearchScreenContent(
         modifier = Modifier,
@@ -179,6 +188,6 @@ private fun SearchScreenContentSuccessPreview(
         searchResultState = SearchResultState.Success(results),
         onEvent = {},
         onFabClick = {},
-        onResultItemClick = {}
+        onResultItemClick = {},
     )
 }
