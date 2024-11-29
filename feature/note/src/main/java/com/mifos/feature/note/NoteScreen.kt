@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.note
 
 import android.widget.Toast
@@ -41,32 +50,33 @@ import com.mifos.core.objects.noncore.Note
 import com.mifos.core.ui.components.MifosEmptyUi
 
 @Composable
-fun NoteScreen(
-    onBackPressed: () -> Unit
+internal fun NoteScreen(
+    onBackPressed: () -> Unit,
+    viewModel: NoteViewModel = hiltViewModel(),
 ) {
-    val viewModel: NoteViewModel = hiltViewModel()
     val uiState by viewModel.noteUiState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-            viewModel.loadNote()
+        viewModel.loadNote()
     }
 
     NoteScreen(
         uiState = uiState,
         onBackPressed = onBackPressed,
         refresh = { viewModel.refresh() },
-        isRefreshing = isRefreshing
+        isRefreshing = isRefreshing,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NoteScreen(
+internal fun NoteScreen(
     isRefreshing: Boolean,
     refresh: () -> Unit,
     uiState: NoteUiState,
     onBackPressed: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullToRefreshState()
@@ -76,13 +86,14 @@ fun NoteScreen(
         icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_note_Note),
         onBackPressed = onBackPressed,
-        snackbarHostState = snackBarHostState
+        snackbarHostState = snackBarHostState,
+        modifier = modifier
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .nestedScroll(pullRefreshState.nestedScrollConnection)
+                .nestedScroll(pullRefreshState.nestedScrollConnection),
         ) {
             when (uiState) {
                 NoteUiState.ShowProgressbar -> {
@@ -96,7 +107,7 @@ fun NoteScreen(
                 is NoteUiState.ShowError -> {
                     MifosSweetError(
                         message = stringResource(id = uiState.message),
-                        onclick = refresh
+                        onclick = refresh,
                     )
                 }
 
@@ -107,13 +118,14 @@ fun NoteScreen(
 
             PullToRefreshContainer(
                 state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
+                modifier = Modifier.align(Alignment.TopCenter),
             )
         }
 
         LaunchedEffect(key1 = isRefreshing) {
-            if (isRefreshing)
+            if (isRefreshing) {
                 pullRefreshState.startRefresh()
+            }
         }
 
         LaunchedEffect(key1 = pullRefreshState.isRefreshing) {
@@ -130,16 +142,15 @@ fun NoteScreen(
                 pullRefreshState.endRefresh()
             }
         }
-
     }
 }
 
-
 @Composable
-fun NoteContent(
-    notes: List<Note>
+private fun NoteContent(
+    notes: List<Note>,
+    modifier: Modifier = Modifier,
 ) {
-    LazyColumn {
+    LazyColumn (modifier = modifier) {
         items(notes) { note ->
             note.noteContent?.let { NoteItem(noteTitle = it) }
         }
@@ -147,34 +158,34 @@ fun NoteContent(
 }
 
 @Composable
-fun NoteItem(
-    noteTitle: String
+private fun NoteItem(
+    noteTitle: String,
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
                 horizontal = 4.dp,
-                vertical = 4.dp
+                vertical = 4.dp,
             ),
         shape = RoundedCornerShape(0.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        )
+            containerColor = Color.White,
+        ),
     ) {
         Text(
             modifier = Modifier.padding(
                 horizontal = 12.dp,
-                vertical = 16.dp
+                vertical = 16.dp,
             ),
             style = MaterialTheme.typography.bodyLarge,
-            text = noteTitle
+            text = noteTitle,
         )
     }
 }
 
-class NoteScreenPreviewProvider : PreviewParameterProvider<NoteUiState> {
+private class NoteScreenPreviewProvider : PreviewParameterProvider<NoteUiState> {
     val demoNotes = listOf(
         Note(
             id = 1,
@@ -185,7 +196,7 @@ class NoteScreenPreviewProvider : PreviewParameterProvider<NoteUiState> {
             createdOn = System.currentTimeMillis(),
             updatedById = 1002,
             updatedByUsername = "updater_1",
-            updatedOn = System.currentTimeMillis()
+            updatedOn = System.currentTimeMillis(),
         ),
         Note(
             id = 2,
@@ -196,7 +207,7 @@ class NoteScreenPreviewProvider : PreviewParameterProvider<NoteUiState> {
             createdOn = System.currentTimeMillis(),
             updatedById = 1004,
             updatedByUsername = "updater_2",
-            updatedOn = System.currentTimeMillis()
+            updatedOn = System.currentTimeMillis(),
         ),
         Note(
             id = 3,
@@ -207,8 +218,8 @@ class NoteScreenPreviewProvider : PreviewParameterProvider<NoteUiState> {
             createdOn = System.currentTimeMillis(),
             updatedById = 1006,
             updatedByUsername = "updater_3",
-            updatedOn = System.currentTimeMillis()
-        )
+            updatedOn = System.currentTimeMillis(),
+        ),
     )
 
     override val values: Sequence<NoteUiState>
@@ -216,19 +227,19 @@ class NoteScreenPreviewProvider : PreviewParameterProvider<NoteUiState> {
             NoteUiState.ShowEmptyNotes,
             NoteUiState.ShowNote(demoNotes),
             NoteUiState.ShowProgressbar,
-            NoteUiState.ShowError(R.string.feature_note_failed_to_fetch_notes)
+            NoteUiState.ShowError(R.string.feature_note_failed_to_fetch_notes),
         )
 }
 
 @Composable
 @Preview(showSystemUi = true)
-fun PreviewNoteScreen(
-    @PreviewParameter(NoteScreenPreviewProvider::class) noteUiState: NoteUiState
+private fun PreviewNoteScreen(
+    @PreviewParameter(NoteScreenPreviewProvider::class) noteUiState: NoteUiState,
 ) {
     NoteScreen(
         isRefreshing = false,
         refresh = { },
         uiState = noteUiState,
-        onBackPressed = {}
+        onBackPressed = {},
     )
 }

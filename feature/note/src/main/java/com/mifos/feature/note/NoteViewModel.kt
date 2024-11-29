@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.note
 
 import android.util.Log
@@ -18,11 +27,11 @@ import javax.inject.Inject
 @HiltViewModel
 class NoteViewModel @Inject constructor(
     private val repository: NoteRepositoryImp,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val entityId = savedStateHandle.getStateFlow(key = Constants.ENTITY_ID, initialValue = 0)
-    val entityType : StateFlow<String?> = savedStateHandle.getStateFlow(key = Constants.ENTITY_TYPE, initialValue = null)
+    val entityType: StateFlow<String?> = savedStateHandle.getStateFlow(key = Constants.ENTITY_TYPE, initialValue = null)
 
     private val _noteUiState = MutableStateFlow<NoteUiState>(NoteUiState.ShowProgressbar)
     val noteUiState: StateFlow<NoteUiState> get() = _noteUiState
@@ -40,7 +49,7 @@ class NoteViewModel @Inject constructor(
     /**
      * This method load the Notes.
      * Response: List<Note>
-    </Note> */
+     </Note> */
     fun loadNote() {
         Log.d("NoteScreendebug1", "id ${entityId.value} type ${entityType.value}")
         viewModelScope.launch {
