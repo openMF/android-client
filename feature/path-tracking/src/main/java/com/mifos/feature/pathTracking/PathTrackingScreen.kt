@@ -1,8 +1,17 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 @file:OptIn(
-    ExperimentalMaterialApi::class
+    ExperimentalMaterialApi::class,
 )
 
-package com.mifos.feature.path_tracking
+package com.mifos.feature.pathTracking
 
 import android.Manifest
 import android.content.BroadcastReceiver
@@ -75,17 +84,15 @@ import com.mifos.feature.path.tracking.R
 
 @Composable
 fun PathTrackingScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    viewModel: PathTrackingViewModel = hiltViewModel(),
 ) {
-
     val context = LocalContext.current
-    val viewModel: PathTrackingViewModel = hiltViewModel()
     val state by viewModel.pathTrackingUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
 
     DisposableEffect(Unit) {
-
         val notificationReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val action = intent.action
@@ -98,7 +105,7 @@ fun PathTrackingScreen(
             context,
             notificationReceiver,
             IntentFilter(Constants.STOP_TRACKING),
-            ContextCompat.RECEIVER_NOT_EXPORTED
+            ContextCompat.RECEIVER_NOT_EXPORTED,
         )
 
         onDispose {
@@ -120,7 +127,8 @@ fun PathTrackingScreen(
             val uri = if (userLatLngs.isNotEmpty()) {
                 val originLatLng = userLatLngs[0]
                 val destinationLatLng = userLatLngs[userLatLngs.size - 1]
-                "http://maps.google.com/maps?f=d&hl=en&saddr=${originLatLng.lat},${originLatLng.lng}&daddr=${destinationLatLng.lat},${destinationLatLng.lng}"
+                "http://maps.google.com/maps?f=d&hl=en&saddr=${originLatLng.lat},${originLatLng.lng}" +
+                    "&daddr=${destinationLatLng.lat},${destinationLatLng.lng}"
             } else {
                 // Handle the case when userLatLngs is empty
                 ""
@@ -128,7 +136,8 @@ fun PathTrackingScreen(
 
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
             intent.setClassName(
-                "com.google.android.apps.maps", "com.google.android.maps.MapsActivity"
+                "com.google.android.apps.maps",
+                "com.google.android.maps.MapsActivity",
             )
             startActivity(context, Intent.createChooser(intent, "Start Tracking"), null)
         },
@@ -137,13 +146,13 @@ fun PathTrackingScreen(
         },
         refreshState = refreshState,
         userStatus = userStatus,
-        updateUserStatus = { viewModel.updateUserStatus(it) }
+        updateUserStatus = { viewModel.updateUserStatus(it) },
     )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun PathTrackingScreen(
+internal fun PathTrackingScreen(
     state: PathTrackingUiState,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
@@ -151,22 +160,21 @@ fun PathTrackingScreen(
     onRefresh: () -> Unit,
     refreshState: Boolean,
     userStatus: Boolean,
-    updateUserStatus: (Boolean) -> Unit
+    modifier: Modifier = Modifier,
+    updateUserStatus: (Boolean) -> Unit,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = refreshState,
-        onRefresh = onRefresh
+        onRefresh = onRefresh,
     )
     var checkPermission by remember { mutableStateOf(false) }
-
 
     if (checkPermission) {
         PermissionBox(
             requiredPermissions = listOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION,
             ),
             title = R.string.feature_path_tracking_permission_required,
             description = R.string.feature_path_tracking_approve_permission_description_location,
@@ -174,11 +182,12 @@ fun PathTrackingScreen(
             dismissButtonText = R.string.feature_path_tracking_dismiss,
             onGranted = {
                 updateUserStatus(true)
-            }
+            },
         )
     }
 
     MifosScaffold(
+        modifier = modifier,
         icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_path_tracking_track_my_path),
         onBackPressed = onBackPressed,
@@ -191,7 +200,7 @@ fun PathTrackingScreen(
                     } else {
                         checkPermission = true
                     }
-                }
+                },
             ) {
                 Icon(
                     imageVector = if (userStatus) Icons.Rounded.Stop else Icons.Rounded.MyLocation,
@@ -199,7 +208,7 @@ fun PathTrackingScreen(
                 )
             }
         },
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
@@ -215,40 +224,41 @@ fun PathTrackingScreen(
                     is PathTrackingUiState.PathTracking -> {
                         PathTrackingContent(
                             pathTrackingList = state.userLocations,
-                            onPathTrackingClick = onPathTrackingClick
+                            onPathTrackingClick = onPathTrackingClick,
                         )
                     }
                 }
                 PullRefreshIndicator(
                     refreshing = refreshState,
                     state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter)
+                    modifier = Modifier.align(Alignment.TopCenter),
                 )
             }
         }
     }
 }
 
-
 @Composable
-fun PathTrackingContent(
+private fun PathTrackingContent(
     pathTrackingList: List<UserLocation>,
-    onPathTrackingClick: (List<UserLatLng>) -> Unit
+    modifier: Modifier = Modifier,
+    onPathTrackingClick: (List<UserLatLng>) -> Unit,
 ) {
-    LazyColumn {
+    LazyColumn(modifier = modifier) {
         items(pathTrackingList) { pathTracking ->
             PathTrackingItem(
                 pathTracking = pathTracking,
-                onPathTrackingClick = onPathTrackingClick
+                onPathTrackingClick = onPathTrackingClick,
             )
         }
     }
 }
 
 @Composable
-fun PathTrackingItem(
+private fun PathTrackingItem(
     pathTracking: UserLocation,
-    onPathTrackingClick: (List<UserLatLng>) -> Unit
+    modifier: Modifier = Modifier,
+    onPathTrackingClick: (List<UserLatLng>) -> Unit,
 ) {
     val latLngList = getLatLngList(pathTracking.latlng)
     val latLng = latLngList[0]
@@ -260,19 +270,19 @@ fun PathTrackingItem(
     }
 
     OutlinedCard(
-        modifier = Modifier
+        modifier = modifier
             .padding(8.dp),
         onClick = {
             onPathTrackingClick(latLngList)
         },
-        colors = CardDefaults.outlinedCardColors(White)
+        colors = CardDefaults.outlinedCardColors(White),
     ) {
         GoogleMap(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp),
             cameraPositionState = cameraPositionState,
-            uiSettings = uiSettings
+            uiSettings = uiSettings,
         )
         Text(
             modifier = Modifier.padding(8.dp),
@@ -281,8 +291,8 @@ fun PathTrackingItem(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
-                color = Black
-            )
+                color = Black,
+            ),
         )
     }
 }
@@ -291,26 +301,25 @@ private fun getLatLngList(latLngString: String?): List<UserLatLng> {
     val gson = Gson()
     return gson.fromJson(
         latLngString,
-        object : TypeToken<List<UserLatLng>>() {}.type
+        object : TypeToken<List<UserLatLng>>() {}.type,
     )
 }
 
-
-class PathTrackingUiStateProvider : PreviewParameterProvider<PathTrackingUiState> {
+private class PathTrackingUiStateProvider : PreviewParameterProvider<PathTrackingUiState> {
 
     override val values: Sequence<PathTrackingUiState>
         get() = sequenceOf(
             PathTrackingUiState.Loading,
             PathTrackingUiState.Error(R.string.feature_path_tracking_no_path_tracking_found),
             PathTrackingUiState.Error(R.string.feature_path_tracking_failed_to_load_path_tracking),
-            PathTrackingUiState.PathTracking(samplePathTrackingList)
+            PathTrackingUiState.PathTracking(samplePathTrackingList),
         )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun PathTrackingScreenPreview(
-    @PreviewParameter(PathTrackingUiStateProvider::class) state: PathTrackingUiState
+    @PreviewParameter(PathTrackingUiStateProvider::class) state: PathTrackingUiState,
 ) {
     PathTrackingScreen(
         state = state,
@@ -320,7 +329,7 @@ private fun PathTrackingScreenPreview(
         onRefresh = {},
         refreshState = false,
         userStatus = false,
-        updateUserStatus = {}
+        updateUserStatus = {},
     )
 }
 

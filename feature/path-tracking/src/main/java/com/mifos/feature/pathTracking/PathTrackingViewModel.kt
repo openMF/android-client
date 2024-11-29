@@ -1,4 +1,13 @@
-package com.mifos.feature.path_tracking
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.pathTracking
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PathTrackingViewModel @Inject constructor(
     private val getUserPathTrackingUseCase: GetUserPathTrackingUseCase,
-    private val prefManager: PrefManager
+    private val prefManager: PrefManager,
 ) : ViewModel() {
 
     private val _pathTrackingUiState =
@@ -35,24 +44,27 @@ class PathTrackingViewModel @Inject constructor(
         _isRefreshing.value = false
     }
 
-
     fun loadPathTracking() = viewModelScope.launch(Dispatchers.IO) {
         getUserPathTrackingUseCase(prefManager.getUserId()).collect { result ->
             when (result) {
-                is Resource.Error -> _pathTrackingUiState.value =
-                    PathTrackingUiState.Error(R.string.feature_path_tracking_failed_to_load_path_tracking)
+                is Resource.Error ->
+                    _pathTrackingUiState.value =
+                        PathTrackingUiState.Error(R.string.feature_path_tracking_failed_to_load_path_tracking)
 
                 is Resource.Loading -> _pathTrackingUiState.value = PathTrackingUiState.Loading
 
                 is Resource.Success ->
                     result.data?.let { pathTracking ->
                         _pathTrackingUiState.value =
-                            if (pathTracking.isEmpty()) PathTrackingUiState.Error(R.string.feature_path_tracking_no_path_tracking_found) else PathTrackingUiState.PathTracking(
-                                pathTracking
-                            )
+                            if (pathTracking.isEmpty()) {
+                                PathTrackingUiState.Error(R.string.feature_path_tracking_no_path_tracking_found)
+                            } else {
+                                PathTrackingUiState.PathTracking(
+                                    pathTracking,
+                                )
+                            }
                     }
             }
-
         }
     }
 
@@ -60,5 +72,4 @@ class PathTrackingViewModel @Inject constructor(
         prefManager.userStatus = status
         _userStatus.value = status
     }
-
 }
