@@ -1,4 +1,13 @@
-package com.mifos.feature.groups.group_details
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.groups.groupDetails
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -59,7 +68,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Utils
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -81,22 +89,22 @@ import com.mifos.core.objects.group.Group
 import com.mifos.feature.groups.R
 
 @Composable
-fun GroupDetailsScreen(
+internal fun GroupDetailsScreen(
     onBackPressed: () -> Unit,
     addLoanAccount: (Int) -> Unit,
-    addSavingsAccount: (groupId : Int, clientId : Int, isGroupAccount : Boolean) -> Unit,
+    addSavingsAccount: (groupId: Int, clientId: Int, isGroupAccount: Boolean) -> Unit,
     documents: (Int, String) -> Unit,
     groupClients: (List<Client>) -> Unit,
     moreGroupInfo: (String, Int) -> Unit,
     notes: (Int, String) -> Unit,
     loanAccountSelected: (Int) -> Unit,
     savingsAccountSelected: (Int, DepositType) -> Unit,
-    activateGroup: (Int, String) -> Unit
+    activateGroup: (Int, String) -> Unit,
+    viewModel: GroupDetailsViewModel = hiltViewModel(),
 ) {
-    val viewModel: GroupDetailsViewModel = hiltViewModel()
     val groupId by viewModel.groupId.collectAsStateWithLifecycle()
     val state by viewModel.groupDetailsUiState.collectAsStateWithLifecycle()
-    val loanAccounts by viewModel.loanAccount.collectAsStateWithLifecycle()
+    val loanAccounts by viewModel.loanAccounts.collectAsStateWithLifecycle()
     val savingsAccounts by viewModel.savingsAccounts.collectAsStateWithLifecycle()
     val groupAssociateClients by viewModel.groupAssociateClients.collectAsStateWithLifecycle()
     var groupClientEnable by remember { mutableStateOf(false) }
@@ -112,7 +120,6 @@ fun GroupDetailsScreen(
     }
 
     GroupDetailsScreen(
-        groupId = groupId,
         state = state,
         loanAccounts = loanAccounts,
         savingsAccounts = savingsAccounts,
@@ -122,7 +129,7 @@ fun GroupDetailsScreen(
         onMenuClick = { menu ->
             when (menu) {
                 MenuItems.ADD_LOAN_ACCOUNT -> addLoanAccount(groupId)
-                MenuItems.ADD_SAVINGS_ACCOUNT -> addSavingsAccount(groupId, 0,true )
+                MenuItems.ADD_SAVINGS_ACCOUNT -> addSavingsAccount(groupId, 0, true)
                 MenuItems.DOCUMENTS -> documents(groupId, Constants.ENTITY_TYPE_GROUPS)
                 MenuItems.GROUP_CLIENTS -> {
                     groupClientEnable = true
@@ -133,14 +140,12 @@ fun GroupDetailsScreen(
                 MenuItems.NOTES -> notes(groupId, Constants.ENTITY_TYPE_GROUPS)
             }
         },
-        activateGroup = { activateGroup(groupId, Constants.ACTIVATE_GROUP) }
+        activateGroup = { activateGroup(groupId, Constants.ACTIVATE_GROUP) },
     )
-
 }
 
 @Composable
-fun GroupDetailsScreen(
-    groupId: Int,
+internal fun GroupDetailsScreen(
     state: GroupDetailsUiState,
     loanAccounts: List<LoanAccount>,
     savingsAccounts: List<SavingsAccount>,
@@ -148,14 +153,15 @@ fun GroupDetailsScreen(
     savingsAccountSelected: (Int, DepositType) -> Unit,
     onBackPressed: () -> Unit,
     onMenuClick: (MenuItems) -> Unit,
-    activateGroup: () -> Unit
+    modifier: Modifier = Modifier,
+    activateGroup: () -> Unit,
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
     var showMenu by remember { mutableStateOf(false) }
     var groupActive by remember { mutableStateOf(true) }
 
     MifosScaffold(
+        modifier = modifier,
         icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_groups_group),
         onBackPressed = onBackPressed,
@@ -166,7 +172,7 @@ fun GroupDetailsScreen(
             DropdownMenu(
                 modifier = Modifier.background(White),
                 expanded = showMenu,
-                onDismissRequest = { showMenu = false }
+                onDismissRequest = { showMenu = false },
             ) {
                 MifosMenuDropDownItem(option = stringResource(id = R.string.feature_groups_add_loan_account)) {
                     onMenuClick(MenuItems.ADD_LOAN_ACCOUNT)
@@ -204,22 +210,20 @@ fun GroupDetailsScreen(
                         .heightIn(44.dp)
                         .padding(start = 16.dp, end = 16.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary
-                    )
+                        containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+                    ),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_groups_activate_group),
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
                     )
                 }
-
             }
-        }
+        },
     ) { paddingValue ->
         Column(modifier = Modifier.padding(paddingValue)) {
             when (state) {
                 is GroupDetailsUiState.Error -> MifosSweetError(message = stringResource(id = state.message)) {
-
                 }
 
                 is GroupDetailsUiState.Loading -> MifosCircularProgress()
@@ -233,14 +237,12 @@ fun GroupDetailsScreen(
                         savingsAccountSelected = savingsAccountSelected,
                         activateGroup = {
                             groupActive = false
-                        }
+                        },
                     )
                 }
             }
         }
-
     }
-
 }
 
 @Composable
@@ -250,12 +252,13 @@ fun GroupDetailsContent(
     savingsAccounts: List<SavingsAccount>,
     loanAccountSelected: (Int) -> Unit,
     savingsAccountSelected: (Int, DepositType) -> Unit,
-    activateGroup: () -> Unit
+    modifier: Modifier = Modifier,
+    activateGroup: () -> Unit,
 ) {
     if (group.active == false) {
         activateGroup()
     }
-    Column(modifier = Modifier) {
+    Column(modifier = modifier) {
         group.name?.let {
             Text(
                 modifier = Modifier
@@ -267,33 +270,33 @@ fun GroupDetailsContent(
                     fontWeight = FontWeight.SemiBold,
                 ),
                 color = Black,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
         group.externalId?.let {
             MifosCenterDetailsText(
                 icon = Icons.Outlined.Numbers,
                 field = stringResource(id = R.string.feature_groups_external_id),
-                value = it
+                value = it,
             )
         }
         MifosCenterDetailsText(
             icon = Icons.Outlined.DateRange,
             field = stringResource(id = R.string.feature_groups_activation_date),
-            value = Utils.getStringOfDate(group.activationDate)
+            value = Utils.getStringOfDate(group.activationDate),
         )
         group.officeName?.let {
             MifosCenterDetailsText(
                 icon = Icons.Outlined.HomeWork,
                 field = stringResource(id = R.string.feature_groups_office),
-                value = it
+                value = it,
             )
         }
         group.staffName?.let {
             MifosCenterDetailsText(
                 icon = Icons.Outlined.PersonOutline,
                 field = stringResource(id = R.string.feature_groups_staff),
-                value = it
+                value = it,
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -304,10 +307,10 @@ fun GroupDetailsContent(
                 style = TextStyle(
                     fontSize = 21.sp,
                     fontWeight = FontWeight.Medium,
-                    fontStyle = FontStyle.Normal
+                    fontStyle = FontStyle.Normal,
                 ),
                 color = Black,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
             )
             HorizontalDivider(modifier = Modifier.padding(start = 16.dp, end = 16.dp))
         }
@@ -315,32 +318,37 @@ fun GroupDetailsContent(
             MifosLoanAccountExpendableCard(
                 stringResource(id = R.string.feature_groups_loan_account),
                 loanAccounts,
-                loanAccountSelected = loanAccountSelected
+                loanAccountSelected = loanAccountSelected,
             )
         }
         if (savingsAccounts.isNotEmpty()) {
             MifosSavingsAccountExpendableCard(
                 stringResource(id = R.string.feature_groups_savings_account),
                 savingsAccounts,
-                savingsAccountSelected = savingsAccountSelected
+                savingsAccountSelected = savingsAccountSelected,
             )
         }
     }
 }
 
 @Composable
-fun MifosCenterDetailsText(icon: ImageVector, field: String, value: String) {
+fun MifosCenterDetailsText(
+    icon: ImageVector,
+    field: String,
+    value: String,
+    modifier: Modifier = Modifier,
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
             .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             modifier = Modifier.size(18.dp),
             imageVector = icon,
             contentDescription = null,
-            tint = DarkGray
+            tint = DarkGray,
         )
         Text(
             modifier = Modifier
@@ -350,10 +358,10 @@ fun MifosCenterDetailsText(icon: ImageVector, field: String, value: String) {
             style = TextStyle(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal
+                fontStyle = FontStyle.Normal,
             ),
             color = Black,
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
         )
         Text(
 
@@ -361,40 +369,39 @@ fun MifosCenterDetailsText(icon: ImageVector, field: String, value: String) {
             style = TextStyle(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal
+                fontStyle = FontStyle.Normal,
             ),
             color = DarkGray,
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
         )
     }
 }
-
 
 @Composable
 fun MifosLoanAccountExpendableCard(
     accountType: String,
     loanAccounts: List<LoanAccount>,
-    loanAccountSelected: (Int) -> Unit
+    modifier: Modifier = Modifier,
+    loanAccountSelected: (Int) -> Unit,
 ) {
-
     var expendableState by remember { mutableStateOf(false) }
     val rotateState by animateFloatAsState(
         targetValue = if (expendableState) 180f else 0f,
-        label = ""
+        label = "",
     )
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
             .animateContentSize(
                 animationSpec = tween(
                     durationMillis = 300,
-                    easing = LinearOutSlowInEasing
-                )
+                    easing = LinearOutSlowInEasing,
+                ),
             ),
         shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(BlueSecondary)
+        colors = CardDefaults.cardColors(BlueSecondary),
     ) {
         Column(
             modifier = Modifier
@@ -402,7 +409,7 @@ fun MifosLoanAccountExpendableCard(
                 .padding(10.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     modifier = Modifier
@@ -412,94 +419,102 @@ fun MifosLoanAccountExpendableCard(
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal
+                        fontStyle = FontStyle.Normal,
                     ),
                     color = Black,
-                    textAlign = TextAlign.Start
+                    textAlign = TextAlign.Start,
                 )
                 IconButton(
                     modifier = Modifier
                         .size(24.dp),
-                    onClick = { expendableState = !expendableState }) {
+                    onClick = { expendableState = !expendableState },
+                ) {
                     Icon(
                         modifier = Modifier.rotate(rotateState),
-                        imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = null,
                     )
                 }
             }
 
             if (expendableState) {
-
                 Spacer(modifier = Modifier.height(10.dp))
-                MifosLoanAccountsLazyColumn(loanAccounts, loanAccountSelected)
+                MifosLoanAccountsLazyColumn(
+                    loanAccounts = loanAccounts,
+                    loanAccountSelected = loanAccountSelected,
+                )
             }
         }
     }
 }
 
-
 @Composable
 fun MifosLoanAccountsLazyColumn(
     loanAccounts: List<LoanAccount>,
-    loanAccountSelected: (Int) -> Unit
+    modifier: Modifier = Modifier,
+    loanAccountSelected: (Int) -> Unit,
 ) {
-
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
         shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(White)
+        colors = CardDefaults.cardColors(White),
     ) {
         LazyColumn(
             modifier = Modifier
                 .height((loanAccounts.size * 52).dp)
-                .padding(6.dp)
+                .padding(6.dp),
         ) {
             items(loanAccounts) { loanAccount ->
                 Row(
                     modifier = Modifier
                         .padding(5.dp)
-                        .clickable(onClick = {
-                            loanAccount.id?.let {
-                                loanAccountSelected(
-                                    it
-                                )
-                            }
-                        }),
-                    verticalAlignment = Alignment.CenterVertically
+                        .clickable(
+                            onClick = {
+                                loanAccount.id?.let {
+                                    loanAccountSelected(
+                                        it,
+                                    )
+                                }
+                            },
+                        ),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Canvas(modifier = Modifier
-                        .size(20.dp)
-                        .padding(4.dp), onDraw = {
-                        drawCircle(
-                            color = when {
-                                loanAccount.status?.active == true -> {
-                                    Color.Green
-                                }
+                    Canvas(
+                        modifier = Modifier
+                            .size(20.dp)
+                            .padding(4.dp),
+                        onDraw = {
+                            drawCircle(
+                                color = when {
+                                    loanAccount.status?.active == true -> {
+                                        Color.Green
+                                    }
 
-                                loanAccount.status?.waitingForDisbursal == true -> {
-                                    Color.Blue
-                                }
+                                    loanAccount.status?.waitingForDisbursal == true -> {
+                                        Color.Blue
+                                    }
 
-                                loanAccount.status?.pendingApproval == true -> {
-                                    Color.Yellow
-                                }
+                                    loanAccount.status?.pendingApproval == true -> {
+                                        Color.Yellow
+                                    }
 
-                                loanAccount.status?.active == true && loanAccount.inArrears == true -> {
-                                    Color.Red
-                                }
+                                    loanAccount.status?.active == true && loanAccount.inArrears == true -> {
+                                        Color.Red
+                                    }
 
-                                else -> {
-                                    Color.DarkGray
-                                }
-                            }
-                        )
-                    })
+                                    else -> {
+                                        Color.DarkGray
+                                    }
+                                },
+                            )
+                        },
+                    )
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = 4.dp)
+                            .padding(start = 4.dp),
                     ) {
                         loanAccount.productName?.let {
                             Text(
@@ -507,10 +522,10 @@ fun MifosLoanAccountsLazyColumn(
                                 style = TextStyle(
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
-                                    fontStyle = FontStyle.Normal
+                                    fontStyle = FontStyle.Normal,
                                 ),
                                 color = Black,
-                                textAlign = TextAlign.Start
+                                textAlign = TextAlign.Start,
                             )
                         }
                         Text(
@@ -518,10 +533,10 @@ fun MifosLoanAccountsLazyColumn(
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal
+                                fontStyle = FontStyle.Normal,
                             ),
                             color = DarkGray,
-                            textAlign = TextAlign.Start
+                            textAlign = TextAlign.Start,
                         )
                     }
                     loanAccount.productId?.let {
@@ -530,10 +545,10 @@ fun MifosLoanAccountsLazyColumn(
                             style = TextStyle(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal
+                                fontStyle = FontStyle.Normal,
                             ),
                             color = Black,
-                            textAlign = TextAlign.Start
+                            textAlign = TextAlign.Start,
                         )
                     }
                 }
@@ -544,16 +559,15 @@ fun MifosLoanAccountsLazyColumn(
 }
 
 @Composable
-fun MifosSavingsAccountExpendableCard(
+private fun MifosSavingsAccountExpendableCard(
     accountType: String,
     savingsAccount: List<SavingsAccount>,
-    savingsAccountSelected: (Int, DepositType) -> Unit
+    savingsAccountSelected: (Int, DepositType) -> Unit,
 ) {
-
     var expendableState by remember { mutableStateOf(false) }
     val rotateState by animateFloatAsState(
         targetValue = if (expendableState) 180f else 0f,
-        label = ""
+        label = "",
     )
 
     Card(
@@ -563,11 +577,11 @@ fun MifosSavingsAccountExpendableCard(
             .animateContentSize(
                 animationSpec = tween(
                     durationMillis = 300,
-                    easing = LinearOutSlowInEasing
-                )
+                    easing = LinearOutSlowInEasing,
+                ),
             ),
         shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(BlueSecondary)
+        colors = CardDefaults.cardColors(BlueSecondary),
     ) {
         Column(
             modifier = Modifier
@@ -575,7 +589,7 @@ fun MifosSavingsAccountExpendableCard(
                 .padding(10.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     modifier = Modifier
@@ -585,91 +599,101 @@ fun MifosSavingsAccountExpendableCard(
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal
+                        fontStyle = FontStyle.Normal,
                     ),
                     color = Black,
-                    textAlign = TextAlign.Start
+                    textAlign = TextAlign.Start,
                 )
                 IconButton(
                     modifier = Modifier
                         .size(24.dp),
-                    onClick = { expendableState = !expendableState }) {
+                    onClick = { expendableState = !expendableState },
+                ) {
                     Icon(
                         modifier = Modifier.rotate(rotateState),
-                        imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = null,
                     )
                 }
             }
 
             if (expendableState) {
-
                 Spacer(modifier = Modifier.height(10.dp))
-                MifosSavingsAccountsLazyColumn(savingsAccount, savingsAccountSelected)
+                MifosSavingsAccountsLazyColumn(
+                    savingsAccounts = savingsAccount,
+                    savingsAccountSelected = savingsAccountSelected,
+                )
             }
         }
     }
 }
 
 @Composable
-fun MifosSavingsAccountsLazyColumn(
+private fun MifosSavingsAccountsLazyColumn(
     savingsAccounts: List<SavingsAccount>,
-    savingsAccountSelected: (Int, DepositType) -> Unit
+    modifier: Modifier = Modifier,
+    savingsAccountSelected: (Int, DepositType) -> Unit,
 ) {
-
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
         shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(White)
+        colors = CardDefaults.cardColors(White),
     ) {
         LazyColumn(
             modifier = Modifier
                 .height((savingsAccounts.size * 50).dp)
-                .padding(6.dp)
+                .padding(6.dp),
         ) {
             items(savingsAccounts) { savingsAccount ->
                 Row(
                     modifier = Modifier
                         .padding(5.dp)
-                        .clickable(onClick = {
-                            savingsAccount.id?.let {
-                                savingsAccount.depositType?.let { it1 ->
-                                    savingsAccountSelected(
-                                        it, it1
-                                    )
+                        .clickable(
+                            onClick = {
+                                savingsAccount.id?.let {
+                                    savingsAccount.depositType?.let { it1 ->
+                                        savingsAccountSelected(
+                                            it,
+                                            it1,
+                                        )
+                                    }
                                 }
-                            }
-                        }),
-                    verticalAlignment = Alignment.CenterVertically
+                            },
+                        ),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Canvas(modifier = Modifier
-                        .size(20.dp)
-                        .padding(4.dp), onDraw = {
-                        drawCircle(
-                            color = when {
-                                savingsAccount.status?.active == true -> {
-                                    Color.Green
-                                }
+                    Canvas(
+                        modifier = Modifier
+                            .size(20.dp)
+                            .padding(4.dp),
+                        onDraw = {
+                            drawCircle(
+                                color = when {
+                                    savingsAccount.status?.active == true -> {
+                                        Color.Green
+                                    }
 
-                                savingsAccount.status?.approved == true -> {
-                                    Color.Blue
-                                }
+                                    savingsAccount.status?.approved == true -> {
+                                        Color.Blue
+                                    }
 
-                                savingsAccount.status?.submittedAndPendingApproval == true -> {
-                                    Color.Yellow
-                                }
+                                    savingsAccount.status?.submittedAndPendingApproval == true -> {
+                                        Color.Yellow
+                                    }
 
-                                else -> {
-                                    Color.DarkGray
-                                }
-                            }
-                        )
-                    })
+                                    else -> {
+                                        Color.DarkGray
+                                    }
+                                },
+                            )
+                        },
+                    )
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = 4.dp)
+                            .padding(start = 4.dp),
                     ) {
                         savingsAccount.productName?.let {
                             Text(
@@ -677,10 +701,10 @@ fun MifosSavingsAccountsLazyColumn(
                                 style = TextStyle(
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
-                                    fontStyle = FontStyle.Normal
+                                    fontStyle = FontStyle.Normal,
                                 ),
                                 color = Black,
-                                textAlign = TextAlign.Start
+                                textAlign = TextAlign.Start,
                             )
                         }
                         Text(
@@ -688,10 +712,10 @@ fun MifosSavingsAccountsLazyColumn(
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal
+                                fontStyle = FontStyle.Normal,
                             ),
                             color = DarkGray,
-                            textAlign = TextAlign.Start
+                            textAlign = TextAlign.Start,
                         )
                     }
                     savingsAccount.productId?.let {
@@ -700,10 +724,10 @@ fun MifosSavingsAccountsLazyColumn(
                             style = TextStyle(
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal
+                                fontStyle = FontStyle.Normal,
                             ),
                             color = Black,
-                            textAlign = TextAlign.Start
+                            textAlign = TextAlign.Start,
                         )
                     }
                 }
@@ -713,25 +737,23 @@ fun MifosSavingsAccountsLazyColumn(
     }
 }
 
-class GroupDetailsUiStateProvider : PreviewParameterProvider<GroupDetailsUiState> {
+private class GroupDetailsUiStateProvider : PreviewParameterProvider<GroupDetailsUiState> {
 
     override val values: Sequence<GroupDetailsUiState>
         get() = sequenceOf(
             GroupDetailsUiState.Loading,
             GroupDetailsUiState.Error(R.string.feature_groups_failed_to_fetch_group_and_account),
             GroupDetailsUiState.ShowGroup(group = Group(name = "Group", active = true)),
-            GroupDetailsUiState.ShowGroup(group = Group(name = "Group", active = false))
+            GroupDetailsUiState.ShowGroup(group = Group(name = "Group", active = false)),
         )
 }
-
 
 @Preview
 @Composable
 private fun GroupDetailsScreenPreview(
-    @PreviewParameter(GroupDetailsUiStateProvider::class) state: GroupDetailsUiState
+    @PreviewParameter(GroupDetailsUiStateProvider::class) state: GroupDetailsUiState,
 ) {
     GroupDetailsScreen(
-        groupId = 1,
         state = state,
         onBackPressed = {},
         onMenuClick = {},
@@ -740,7 +762,7 @@ private fun GroupDetailsScreenPreview(
         loanAccountSelected = {},
         savingsAccountSelected = { _, _ ->
         },
-        activateGroup = {}
+        activateGroup = {},
     )
 }
 
@@ -750,13 +772,13 @@ enum class MenuItems {
     DOCUMENTS,
     GROUP_CLIENTS,
     MORE_GROUP_INFO,
-    NOTES
+    NOTES,
 }
 
-val sampleLoanAccountList = List(10) {
+private val sampleLoanAccountList = List(10) {
     LoanAccount(id = it, productName = "Product $it")
 }
 
-val sampleSavingAccountList = List(10) {
+private val sampleSavingAccountList = List(10) {
     SavingsAccount(id = it, productName = "Product $it")
 }

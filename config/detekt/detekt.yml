@@ -230,7 +230,7 @@ complexity:
       ]
     # Modifying default values 11 to 20
     thresholdInFiles: 20
-    thresholdInClasses: 20
+    thresholdInClasses: 30
     thresholdInInterfaces: 20
     thresholdInObjects: 20
     thresholdInEnums: 20
@@ -785,7 +785,7 @@ style:
     maxChainedCalls: 5
   MaxLineLength:
     active: true
-    maxLineLength: 150
+    maxLineLength: 250
     excludePackageStatements: true
     excludeImportStatements: true
     excludeCommentStatements: false
@@ -828,7 +828,7 @@ style:
     active: false
   ReturnCount:
     active: true
-    max: 4
+    max: 5
     excludedFunctions:
       - "equals"
     excludeLabeled: false

@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.groups.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,14 +17,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.datastore.PrefManager
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.group.Group
 import com.mifos.core.objects.response.SaveResponse
-import com.mifos.feature.groups.create_new_group.CreateNewGroupScreen
-import com.mifos.feature.groups.group_details.GroupDetailsScreen
-import com.mifos.feature.groups.group_list.GroupsListRoute
+import com.mifos.feature.groups.createNewGroup.CreateNewGroupScreen
+import com.mifos.feature.groups.groupDetails.GroupDetailsScreen
+import com.mifos.feature.groups.groupList.GroupsListRoute
 
 /**
  * Created by Pronay Sarker on 13/08/2024
@@ -32,11 +39,11 @@ fun NavGraphBuilder.groupNavGraph(
     loadNotes: (Int, String) -> Unit,
     loadLoanAccountSummary: (Int) -> Unit,
     loadSavingsAccountSummary: (Int, DepositType) -> Unit,
-    activateGroup: (Int, String) -> Unit
+    activateGroup: (Int, String) -> Unit,
 ) {
     navigation(
         startDestination = GroupScreen.GroupListScreen.route,
-        route = "group_list_routes"
+        route = "group_list_routes",
     ) {
         groupListScreenRoute(
             paddingValues = paddingValues,
@@ -54,7 +61,7 @@ fun NavGraphBuilder.groupNavGraph(
             loadNotes = loadNotes,
             loadLoanAccountSummary = loadLoanAccountSummary,
             loadSavingsAccountSummary = loadSavingsAccountSummary,
-            activateGroup = activateGroup
+            activateGroup = activateGroup,
         )
 
         addNewGroupRoute(
@@ -63,7 +70,7 @@ fun NavGraphBuilder.groupNavGraph(
                 if (userStatus == Constants.USER_ONLINE) {
                     groups?.groupId?.let { navController.navigateToGroupDetailsScreen(it) }
                 }
-            }
+            },
         )
     }
 }
@@ -92,13 +99,13 @@ fun NavGraphBuilder.groupDetailsRoute(
     loadNotes: (Int, String) -> Unit,
     loadLoanAccountSummary: (Int) -> Unit,
     loadSavingsAccountSummary: (Int, DepositType) -> Unit,
-    activateGroup: (Int, String) -> Unit
+    activateGroup: (Int, String) -> Unit,
 ) {
     composable(
         route = GroupScreen.GroupDetailsScreen.route,
         arguments = listOf(
-            navArgument(name = Constants.GROUP_ID, builder = { type = NavType.IntType })
-        )
+            navArgument(name = Constants.GROUP_ID, builder = { type = NavType.IntType }),
+        ),
     ) {
         GroupDetailsScreen(
             onBackPressed = onBackPressed,
@@ -110,7 +117,7 @@ fun NavGraphBuilder.groupDetailsRoute(
             notes = loadNotes,
             loanAccountSelected = loadLoanAccountSummary,
             savingsAccountSelected = loadSavingsAccountSummary,
-            activateGroup = activateGroup
+            activateGroup = activateGroup,
         )
     }
 }
@@ -120,7 +127,7 @@ fun NavGraphBuilder.addNewGroupRoute(
 ) {
     composable(route = GroupScreen.CreateNewGroupScreen.route) {
         CreateNewGroupScreen(
-            onGroupCreated = onGroupCreated
+            onGroupCreated = onGroupCreated,
         )
     }
 }
@@ -132,7 +139,3 @@ fun NavController.navigateToCreateNewGroupScreen() {
 fun NavController.navigateToGroupDetailsScreen(groupId: Int) {
     navigate(GroupScreen.GroupDetailsScreen.argument(groupId))
 }
-
-
-
-
