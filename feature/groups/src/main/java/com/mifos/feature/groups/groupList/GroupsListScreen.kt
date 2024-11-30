@@ -1,4 +1,13 @@
-package com.mifos.feature.groups.group_list
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.groups.groupList
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -80,21 +89,21 @@ import com.mifos.core.ui.util.GroupListItemPreviewParameterProvider
 import com.mifos.core.ui.util.GroupListLoadingPreviewParameterProvider
 import com.mifos.core.ui.util.GroupListSuccessPreviewParameterProvider
 import com.mifos.feature.groups.R
-import com.mifos.feature.groups.sync_group_dialog.SyncGroupDialogScreen
+import com.mifos.feature.groups.syncGroupDialog.SyncGroupDialogScreen
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun GroupsListRoute(
+internal fun GroupsListRoute(
     paddingValues: PaddingValues,
     onAddGroupClick: () -> Unit,
-    onGroupClick: (groupId : Int) -> Unit,
-    viewModel: GroupsListViewModel = hiltViewModel()
+    onGroupClick: (groupId: Int) -> Unit,
+    viewModel: GroupsListViewModel = hiltViewModel(),
 ) {
     val data = viewModel.data.collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()
 
     val swipeRefreshState = rememberSwipeRefreshState(
-        isRefreshing = data.loadState.refresh is LoadState.Loading
+        isRefreshing = data.loadState.refresh is LoadState.Loading,
     )
 
     val selectedItems = remember {
@@ -102,7 +111,7 @@ fun GroupsListRoute(
     }
 
     BackHandler(
-        enabled = selectedItems.isNotEmpty()
+        enabled = selectedItems.isNotEmpty(),
     ) {
         selectedItems.clear()
     }
@@ -132,23 +141,23 @@ fun GroupsListRoute(
 
 @Composable
 fun GroupsListScreen(
-    modifier: Modifier = Modifier,
     lazyListState: LazyListState,
     swipeRefreshState: SwipeRefreshState,
     selectedItems: List<Group>,
     data: LazyPagingItems<Group>,
     onAddGroupClick: () -> Unit,
-    onGroupClick: (groupId : Int) -> Unit,
+    onGroupClick: (groupId: Int) -> Unit,
     onSelectItem: (Group) -> Unit,
+    modifier: Modifier = Modifier,
     resetSelectionMode: () -> Unit,
 ) {
     var syncGroups by rememberSaveable { mutableStateOf(false) }
-    if (syncGroups){
+    if (syncGroups) {
         SyncGroupDialogScreen(
             dismiss = { syncGroups = false },
             hide = {
                 // TODO implement hide
-            }
+            },
         )
     }
 
@@ -184,7 +193,7 @@ fun GroupsListScreen(
                             )
                             Text(text = stringResource(id = R.string.feature_groups_sync))
                         }
-                    }
+                    },
                 )
             }
         },
@@ -194,14 +203,14 @@ fun GroupsListScreen(
                 contentDescription = "SwipeRefresh::GroupList"
             },
             state = swipeRefreshState,
-            onRefresh = { data.refresh() }
+            onRefresh = { data.refresh() },
         ) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
                 state = lazyListState,
-                verticalArrangement = if (data.itemCount < 1) Arrangement.Center else Arrangement.Top
+                verticalArrangement = if (data.itemCount < 1) Arrangement.Center else Arrangement.Top,
             ) {
                 refreshState(data)
 
@@ -210,7 +219,7 @@ fun GroupsListScreen(
                     isInSelectionMode = selectedItems.isNotEmpty(),
                     isSelected = selectedItems::contains,
                     onGroupClick = onGroupClick,
-                    onSelectItem = onSelectItem
+                    onSelectItem = onSelectItem,
                 )
 
                 appendState(data)
@@ -225,7 +234,7 @@ private fun LazyListScope.refreshState(data: LazyPagingItems<Group>) {
             item {
                 MifosSweetError(
                     message = stringResource(id = R.string.feature_groups_failed_to_fetch_groups),
-                    onclick = { data.refresh() }
+                    onclick = { data.refresh() },
                 )
             }
         }
@@ -240,13 +249,12 @@ private fun LazyListScope.refreshState(data: LazyPagingItems<Group>) {
             if (data.itemCount < 1) {
                 item {
                     MifosEmptyUi(
-                        text = stringResource(id = R.string.feature_groups_no_more_groups_available)
+                        text = stringResource(id = R.string.feature_groups_no_more_groups_available),
                     )
                 }
             }
         }
     }
-
 }
 
 private fun LazyListScope.appendState(data: LazyPagingItems<Group>) {
@@ -275,7 +283,7 @@ private fun LazyListScope.appendState(data: LazyPagingItems<Group>) {
                         text = stringResource(id = R.string.feature_groups_no_more_groups_available),
                         style = TextStyle(fontSize = 14.sp),
                         color = DarkGray,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
@@ -287,11 +295,11 @@ private fun LazyListScope.successState(
     pagingItems: LazyPagingItems<Group>,
     isInSelectionMode: Boolean,
     isSelected: (Group) -> Boolean,
-    onGroupClick: (groupId : Int) -> Unit,
-    onSelectItem: (Group) -> Unit
+    onGroupClick: (groupId: Int) -> Unit,
+    onSelectItem: (Group) -> Unit,
 ) {
     items(
-        count = pagingItems.itemCount
+        count = pagingItems.itemCount,
     ) { index ->
         pagingItems[index]?.let { group ->
             GroupItem(
@@ -303,24 +311,25 @@ private fun LazyListScope.successState(
                 },
                 onSelectItem = {
                     onSelectItem(group)
-                }
+                },
             )
         }
     }
-
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun GroupItem(
-    modifier: Modifier = Modifier,
+private fun GroupItem(
     group: Group,
     doesSelected: Boolean,
     inSelectionMode: Boolean,
     onGroupClick: () -> Unit,
+    modifier: Modifier = Modifier,
     onSelectItem: () -> Unit,
 ) {
-    val borderStroke = if (doesSelected) BorderStroke(1.dp, BluePrimary) else {
+    val borderStroke = if (doesSelected) {
+        BorderStroke(1.dp, BluePrimary)
+    } else {
         CardDefaults.outlinedCardBorder()
     }
     val containerColor = if (doesSelected) BlueSecondary else Color.Unspecified
@@ -341,24 +350,24 @@ fun GroupItem(
                             onGroupClick()
                         }
                     },
-                    onLongClick = onSelectItem
+                    onLongClick = onSelectItem,
                 ),
             shape = RoundedCornerShape(8.dp),
             colors = CardDefaults.outlinedCardColors(
-                containerColor = containerColor
+                containerColor = containerColor,
             ),
-            border = borderStroke
+            border = borderStroke,
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = it,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
 
                 if (group.sync) {
@@ -369,12 +378,11 @@ fun GroupItem(
     }
 }
 
-
 @Preview
 @Composable
-fun GroupListScreenLoadingState(
+private fun GroupListScreenLoadingState(
     @PreviewParameter(GroupListLoadingPreviewParameterProvider::class)
-    data: Flow<PagingData<Group>>
+    data: Flow<PagingData<Group>>,
 ) {
     GroupsListScreen(
         lazyListState = rememberLazyListState(),
@@ -390,9 +398,9 @@ fun GroupListScreenLoadingState(
 
 @Preview
 @Composable
-fun GroupListScreenEmptyState(
+private fun GroupListScreenEmptyState(
     @PreviewParameter(GroupListEmptyPreviewParameterProvider::class)
-    data: Flow<PagingData<Group>>
+    data: Flow<PagingData<Group>>,
 ) {
     GroupsListScreen(
         lazyListState = rememberLazyListState(),
@@ -408,9 +416,9 @@ fun GroupListScreenEmptyState(
 
 @Preview
 @Composable
-fun GroupListScreenErrorState(
+private fun GroupListScreenErrorState(
     @PreviewParameter(GroupListErrorPreviewParameterProvider::class)
-    data: Flow<PagingData<Group>>
+    data: Flow<PagingData<Group>>,
 ) {
     GroupsListScreen(
         lazyListState = rememberLazyListState(),
@@ -426,9 +434,9 @@ fun GroupListScreenErrorState(
 
 @Preview
 @Composable
-fun GroupListScreenPopulatedAndSuccessState(
+private fun GroupListScreenPopulatedAndSuccessState(
     @PreviewParameter(GroupListSuccessPreviewParameterProvider::class)
-    data: Flow<PagingData<Group>>
+    data: Flow<PagingData<Group>>,
 ) {
     GroupsListScreen(
         lazyListState = rememberLazyListState(),
@@ -444,9 +452,9 @@ fun GroupListScreenPopulatedAndSuccessState(
 
 @Preview
 @Composable
-fun GroupListScreenPopulatedAndSelectedItem(
+private fun GroupListScreenPopulatedAndSelectedItem(
     @PreviewParameter(GroupListSuccessPreviewParameterProvider::class)
-    data: Flow<PagingData<Group>>
+    data: Flow<PagingData<Group>>,
 ) {
     GroupsListScreen(
         lazyListState = rememberLazyListState(),
@@ -462,9 +470,9 @@ fun GroupListScreenPopulatedAndSelectedItem(
 
 @DevicePreviews
 @Composable
-fun GroupItemSelectedState(
+private fun GroupItemSelectedState(
     @PreviewParameter(GroupListItemPreviewParameterProvider::class)
-    group: Group
+    group: Group,
 ) {
     GroupItem(
         group = group,
@@ -477,9 +485,9 @@ fun GroupItemSelectedState(
 
 @DevicePreviews
 @Composable
-fun GroupItemIsNotSelectedState(
+private fun GroupItemIsNotSelectedState(
     @PreviewParameter(GroupListItemPreviewParameterProvider::class)
-    group: Group
+    group: Group,
 ) {
     GroupItem(
         group = group,

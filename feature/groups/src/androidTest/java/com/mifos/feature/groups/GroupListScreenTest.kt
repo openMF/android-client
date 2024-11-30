@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.groups
 
 import androidx.activity.ComponentActivity
@@ -35,14 +44,13 @@ import com.mifos.core.domain.use_cases.GroupsListPagingDataSource
 import com.mifos.core.objects.group.Group
 import com.mifos.core.testing.repository.TestGroupsListRepository
 import com.mifos.core.testing.repository.sampleGroups
-import com.mifos.feature.groups.group_list.GroupsListScreen
+import com.mifos.feature.groups.groupList.GroupsListScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
-
 
 class GroupListScreenTest {
 
@@ -61,7 +69,7 @@ class GroupListScreenTest {
         ),
         pagingSourceFactory: () -> PagingSource<Int, Group> = {
             GroupsListPagingDataSource(repository, pageSize)
-        }
+        },
     ): Pager<Int, Group> {
         return Pager(config = config, pagingSourceFactory = pagingSourceFactory)
     }
@@ -75,7 +83,7 @@ class GroupListScreenTest {
         ),
         pagingSourceFactory: () -> PagingSource<Int, Group> = {
             GroupsListPagingDataSource(repository, pageSize)
-        }
+        },
     ): Pager<Int, Group> {
         return Pager(config = config, pagingSourceFactory = pagingSourceFactory)
     }
@@ -98,9 +106,9 @@ class GroupListScreenTest {
             source = LoadStates(
                 LoadState.Loading,
                 LoadState.NotLoading(false),
-                LoadState.NotLoading(false)
+                LoadState.NotLoading(false),
             ),
-            mediator = null
+            mediator = null,
         )
         assert(loadStates.isNotEmpty())
         assertEquals(loadStates.first(), expected)
@@ -124,7 +132,6 @@ class GroupListScreenTest {
                 onGroupClick = {},
                 onSelectItem = {},
                 onAddGroupClick = {},
-                onSyncClick = {},
                 resetSelectionMode = {},
             )
         }
@@ -139,7 +146,6 @@ class GroupListScreenTest {
             .onChildren()
             .onLast()
             .assertTextContains(composeTestRule.activity.resources.getString(R.string.feature_groups_no_more_groups_available))
-
     }
 
     @Test
@@ -153,7 +159,7 @@ class GroupListScreenTest {
             // Adding some delay to test refresh state
             lazyPagingItems = pager.flow.onStart { delay(5000) }.collectAsLazyPagingItems()
             refreshState = rememberSwipeRefreshState(
-                isRefreshing = lazyPagingItems.loadState.refresh is LoadState.Loading
+                isRefreshing = lazyPagingItems.loadState.refresh is LoadState.Loading,
             )
 
             GroupsListScreen(
@@ -164,7 +170,6 @@ class GroupListScreenTest {
                 onGroupClick = {},
                 onSelectItem = {},
                 onAddGroupClick = {},
-                onSyncClick = {},
                 resetSelectionMode = {},
             )
         }
@@ -177,7 +182,7 @@ class GroupListScreenTest {
         // Check initial refresh state is true
         assertEquals(true, refreshState.isRefreshing)
 
-        //Perform refresh and check refresh state is true
+        // Perform refresh and check refresh state is true
         lazyPagingItems.refresh()
 
         assertEquals(true, refreshState.isRefreshing)
@@ -201,7 +206,6 @@ class GroupListScreenTest {
                 onGroupClick = {},
                 onSelectItem = {},
                 onAddGroupClick = {},
-                onSyncClick = {},
                 resetSelectionMode = {},
             )
         }
@@ -237,7 +241,6 @@ class GroupListScreenTest {
         repository.setGroupsData(sampleGroups)
         val pager = createPager()
 
-
         lateinit var lazyPagingItems: LazyPagingItems<Group>
         lateinit var lazyListState: LazyListState
 
@@ -253,7 +256,6 @@ class GroupListScreenTest {
                 onGroupClick = {},
                 onSelectItem = {},
                 onAddGroupClick = {},
-                onSyncClick = {},
                 resetSelectionMode = {},
             )
         }
@@ -271,10 +273,10 @@ class GroupListScreenTest {
         assertEquals(
             expected = sampleGroups.take(pageSize),
             actual = lazyPagingItems.itemSnapshotList.items,
-            message = "Sample Groups are differ from Snapshot items"
+            message = "Sample Groups are differ from Snapshot items",
         )
 
-        //Check paged item is being displayed
+        // Check paged item is being displayed
         sampleGroups.take(pageSize).forEach { group ->
             group.name?.let {
                 composeTestRule
@@ -312,7 +314,6 @@ class GroupListScreenTest {
                 onGroupClick = {},
                 onSelectItem = {},
                 onAddGroupClick = {},
-                onSyncClick = {},
                 resetSelectionMode = {},
             )
         }
@@ -327,12 +328,12 @@ class GroupListScreenTest {
 
         assertEquals(
             pageSize * 2,
-            lazyPagingItems.itemSnapshotList.items.size
+            lazyPagingItems.itemSnapshotList.items.size,
         )
 
         assertEquals(
             LoadState.NotLoading(false),
-            lazyPagingItems.loadState.append
+            lazyPagingItems.loadState.append,
         )
 
         composeTestRule.runOnIdle {
@@ -346,9 +347,8 @@ class GroupListScreenTest {
         // end of pagination reached so total item will be (pageSize * 3) + 1 = 31
         assertEquals(
             pageSize * 3 + 1,
-            lazyListState.layoutInfo.totalItemsCount
+            lazyListState.layoutInfo.totalItemsCount,
         )
-
     }
 
     @Test
@@ -380,7 +380,6 @@ class GroupListScreenTest {
                     }
                 },
                 onAddGroupClick = {},
-                onSyncClick = {},
                 resetSelectionMode = {
                     selectedItems.clear()
                 },
@@ -429,14 +428,13 @@ class GroupListScreenTest {
                 }
         }
 
-
         // Check item has been selected
         assert(selectedItems.contains(sampleGroups[4]))
 
-        //Check both item has been selected
+        // Check both item has been selected
         assertEquals(
             2,
-            selectedItems.size
+            selectedItems.size,
         )
 
         composeTestRule.waitForIdle()
@@ -456,18 +454,18 @@ class GroupListScreenTest {
 
         composeTestRule.waitForIdle()
 
-        //check for Contextual TopAppBar Visibility
+        // check for Contextual TopAppBar Visibility
         composeTestRule
             .onNodeWithContentDescription("GroupList::ContextualTopAppBar")
             .assertIsDisplayed()
 
-        //Check reset selection IconButton is visible or not
+        // Check reset selection IconButton is visible or not
         composeTestRule
             .onNodeWithContentDescription("reset selection")
             .assertIsDisplayed()
             .assertHasClickAction()
 
-        //Check selected text is visible or not
+        // Check selected text is visible or not
         composeTestRule
             .onNodeWithContentDescription("GroupList::ContextualTopAppBar")
             .assertIsDisplayed()
@@ -475,7 +473,7 @@ class GroupListScreenTest {
             .assertTextContains("${selectedItems.size} selected")
             .assertIsDisplayed()
 
-        //Check Sync Button is visible or not
+        // Check Sync Button is visible or not
         composeTestRule
             .onNodeWithContentDescription("GroupList::ContextualTopAppBar")
             .assertIsDisplayed()
@@ -497,7 +495,7 @@ class GroupListScreenTest {
         // and selected list only contain 1 item
         assert(selectedItems.size == 1)
 
-        //also check the background color of that item is set to surfaceColor
+        // also check the background color of that item is set to surfaceColor
         sampleGroups[2].name?.let {
             val data = composeTestRule
                 .onNodeWithTag(it)
