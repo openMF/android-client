@@ -1,4 +1,13 @@
-package com.mifos.feature.document.document_dialog
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.document.documentDialog
 
 import androidx.lifecycle.ViewModel
 import com.mifos.core.data.repository.DocumentDialogRepository
@@ -46,7 +55,7 @@ class DocumentDialogViewModel @Inject constructor(private val repository: Docume
                             errorMessage = e.response()?.errorBody()?.string()
                             _documentDialogUiState.value = errorMessage?.let {
                                 DocumentDialogUiState.ShowUploadError(
-                                    it
+                                    it,
                                 )
                             }!!
                         } else {
@@ -63,17 +72,24 @@ class DocumentDialogViewModel @Inject constructor(private val repository: Docume
                     _documentDialogUiState.value = DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(genericResponse)
                 }
             })
-
     }
 
     fun updateDocument(
-        entityType: String?, entityId: Int, documentId: Int,
-        name: String?, desc: String?, file: File
+        entityType: String?,
+        entityId: Int,
+        documentId: Int,
+        name: String?,
+        desc: String?,
+        file: File,
     ) {
         _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
         repository.updateDocument(
-            entityType, entityId, documentId,
-            name, desc, getRequestFileBody(file)
+            entityType,
+            entityId,
+            documentId,
+            name,
+            desc,
+            getRequestFileBody(file),
         )
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -89,7 +105,6 @@ class DocumentDialogViewModel @Inject constructor(private val repository: Docume
                         DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(genericResponse)
                 }
             })
-
     }
 
     private fun getRequestFileBody(file: File): MultipartBody.Part {
