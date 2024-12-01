@@ -1,6 +1,14 @@
-package com.mifos.feature.document.document_list
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.document.documentList
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,7 +30,7 @@ class DocumentListViewModel @Inject constructor(
     private val getDocumentsListUseCase: GetDocumentsListUseCase,
     private val downloadDocumentUseCase: DownloadDocumentUseCase,
     private val removeDocumentUseCase: RemoveDocumentUseCase,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val entityId = savedStateHandle.getStateFlow(key = Constants.ENTITY_ID, initialValue = 0)
@@ -46,20 +54,20 @@ class DocumentListViewModel @Inject constructor(
         _isRefreshing.value = false
     }
 
-
     fun loadDocumentList(entityType: String, entityId: Int) =
         viewModelScope.launch(Dispatchers.IO) {
             getDocumentsListUseCase(entityType, entityId).collect { result ->
                 when (result) {
-                    is Resource.Error -> _documentListUiState.value =
-                        DocumentListUiState.Error(R.string.feature_document_failed_to_load_documents_list)
+                    is Resource.Error ->
+                        _documentListUiState.value =
+                            DocumentListUiState.Error(R.string.feature_document_failed_to_load_documents_list)
 
                     is Resource.Loading -> _documentListUiState.value = DocumentListUiState.Loading
 
-                    is Resource.Success -> _documentListUiState.value =
-                        DocumentListUiState.DocumentList(result.data ?: emptyList())
+                    is Resource.Success ->
+                        _documentListUiState.value =
+                            DocumentListUiState.DocumentList(result.data ?: emptyList())
                 }
-
             }
         }
 
@@ -67,8 +75,9 @@ class DocumentListViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             downloadDocumentUseCase(entityType, entityId, documentId).collect { result ->
                 when (result) {
-                    is Resource.Error -> _documentListUiState.value =
-                        DocumentListUiState.Error(R.string.feature_document_failed_to_download_document)
+                    is Resource.Error ->
+                        _documentListUiState.value =
+                            DocumentListUiState.Error(R.string.feature_document_failed_to_download_document)
 
                     is Resource.Loading -> _documentListUiState.value = DocumentListUiState.Loading
 
@@ -78,15 +87,15 @@ class DocumentListViewModel @Inject constructor(
                     }
                 }
             }
-
         }
 
     fun removeDocument(entityType: String, entityId: Int, documentId: Int) =
         viewModelScope.launch(Dispatchers.IO) {
             removeDocumentUseCase(entityType, entityId, documentId).collect { result ->
                 when (result) {
-                    is Resource.Error -> _documentListUiState.value =
-                        DocumentListUiState.Error(R.string.feature_document_failed_to_remove_document)
+                    is Resource.Error ->
+                        _documentListUiState.value =
+                            DocumentListUiState.Error(R.string.feature_document_failed_to_remove_document)
 
                     is Resource.Loading -> _documentListUiState.value = DocumentListUiState.Loading
 
@@ -97,6 +106,4 @@ class DocumentListViewModel @Inject constructor(
                 }
             }
         }
-
-
 }
