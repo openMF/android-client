@@ -12,13 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.navArgs
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.LoansPayload
 import com.mifos.core.objects.noncore.DataTable
-import com.mifos.feature.loan.loan_account.LoanAccountScreen
-import com.mifos.mifosxdroid.R
-import com.mifos.utils.FragmentConstants
+import com.mifos.feature.loan.loanAccount.LoanAccountScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 /**

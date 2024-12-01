@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.loan.navigation
 
 import androidx.navigation.NavController
@@ -10,15 +19,15 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.LoansPayload
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import com.mifos.core.objects.noncore.DataTable
-import com.mifos.feature.loan.group_loan_account.GroupLoanAccountScreen
-import com.mifos.feature.loan.loan_account.LoanAccountScreen
-import com.mifos.feature.loan.loan_account_summary.LoanAccountSummaryScreen
-import com.mifos.feature.loan.loan_approval.LoanAccountApprovalScreen
-import com.mifos.feature.loan.loan_charge.LoanChargeScreen
-import com.mifos.feature.loan.loan_disbursement.LoanAccountDisbursementScreen
-import com.mifos.feature.loan.loan_repayment.LoanRepaymentScreen
-import com.mifos.feature.loan.loan_repayment_schedule.LoanRepaymentScheduleScreen
-import com.mifos.feature.loan.loan_transaction.LoanTransactionsScreen
+import com.mifos.feature.loan.groupLoanAccount.GroupLoanAccountScreen
+import com.mifos.feature.loan.loanAccount.LoanAccountScreen
+import com.mifos.feature.loan.loanAccountSummary.LoanAccountSummaryScreen
+import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
+import com.mifos.feature.loan.loanCharge.LoanChargeScreen
+import com.mifos.feature.loan.loanDisbursement.LoanAccountDisbursementScreen
+import com.mifos.feature.loan.loanRepayment.LoanRepaymentScreen
+import com.mifos.feature.loan.loanRepaymentSchedule.LoanRepaymentScheduleScreen
+import com.mifos.feature.loan.loanTransaction.LoanTransactionsScreen
 
 /**
  * Created by Pronay Sarker on 16/08/2024 (2:24 AM)
@@ -27,11 +36,11 @@ import com.mifos.feature.loan.loan_transaction.LoanTransactionsScreen
 fun NavGraphBuilder.loanNavGraph(
     navController: NavController,
     onDocumentsClicked: (Int, String) -> Unit,
-    onMoreInfoClicked: (String, Int) -> Unit
+    onMoreInfoClicked: (String, Int) -> Unit,
 ) {
     navigation(
         startDestination = LoanScreens.LoanAccountSummaryScreen.route,
-        route = "loan_route"
+        route = "loan_route",
     ) {
         loanAccountSummary(
             onBackPressed = navController::popBackStack,
@@ -42,7 +51,7 @@ fun NavGraphBuilder.loanNavGraph(
             onChargesClicked = navController::navigateToLoanChargesScreen,
             approveLoan = navController::navigateToLoanApprovalScreen,
             disburseLoan = navController::navigateToLoanDisbursementScreen,
-            onRepaymentClick = navController::navigateToLoanRepaymentScreen
+            onRepaymentClick = navController::navigateToLoanRepaymentScreen,
         )
 
         loanDisbursementScreen {
@@ -60,20 +69,20 @@ fun NavGraphBuilder.loanNavGraph(
         loanChargeScreen {
             navController.popBackStack()
         }
-        loanRepaymentScreen{
+        loanRepaymentScreen {
             navController.popBackStack()
         }
     }
 }
 
 fun NavGraphBuilder.groupLoanScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     composable(
         route = LoanScreens.GroupLoanScreen.route,
         arguments = listOf(
-            navArgument(name = Constants.GROUP_ID, builder = { type = NavType.IntType })
-        )
+            navArgument(name = Constants.GROUP_ID, builder = { type = NavType.IntType }),
+        ),
     ) {
         GroupLoanAccountScreen(
             onBackPressed = onBackPressed,
@@ -83,17 +92,17 @@ fun NavGraphBuilder.groupLoanScreen(
 
 fun NavGraphBuilder.addLoanAccountScreen(
     onBackPressed: () -> Unit,
-    dataTable: (List<DataTable>, LoansPayload) -> Unit
+    dataTable: (List<DataTable>, LoansPayload) -> Unit,
 ) {
     composable(
         route = LoanScreens.LoanAccountScreen.route,
         arguments = listOf(
-            navArgument(name = Constants.CLIENT_ID, builder = { type = NavType.IntType })
-        )
+            navArgument(name = Constants.CLIENT_ID, builder = { type = NavType.IntType }),
+        ),
     ) {
         LoanAccountScreen(
             onBackPressed = onBackPressed,
-            dataTable = dataTable
+            dataTable = dataTable,
         )
     }
 }
@@ -107,13 +116,13 @@ fun NavGraphBuilder.loanAccountSummary(
     onChargesClicked: (Int) -> Unit,
     approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociations) -> Unit,
     disburseLoan: (Int) -> Unit,
-    onRepaymentClick: (LoanWithAssociations) -> Unit
+    onRepaymentClick: (LoanWithAssociations) -> Unit,
 ) {
     composable(
         route = LoanScreens.LoanAccountSummaryScreen.route,
         arguments = listOf(
-            navArgument(name = Constants.LOAN_ACCOUNT_NUMBER, builder = { type = NavType.IntType })
-        )
+            navArgument(name = Constants.LOAN_ACCOUNT_NUMBER, builder = { type = NavType.IntType }),
+        ),
     ) {
         LoanAccountSummaryScreen(
             navigateBack = onBackPressed,
@@ -124,98 +133,98 @@ fun NavGraphBuilder.loanAccountSummary(
             onChargesClicked = onChargesClicked,
             approveLoan = approveLoan,
             disburseLoan = disburseLoan,
-            onRepaymentClick = onRepaymentClick
+            onRepaymentClick = onRepaymentClick,
         )
     }
 }
 
 fun NavGraphBuilder.loanApprovalScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     composable(
         route = LoanScreens.LoanApprovalScreen.route,
         arguments = listOf(
-            navArgument(name = "arg", builder = { type = NavType.StringType })
-        )
+            navArgument(name = "arg", builder = { type = NavType.StringType }),
+        ),
     ) {
         LoanAccountApprovalScreen(
-            navigateBack = onBackPressed
+            navigateBack = onBackPressed,
         )
     }
 }
 
 fun NavGraphBuilder.loanChargeScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     composable(
         route = LoanScreens.LoanChargeScreen.route,
         arguments = listOf(
-            navArgument(name = Constants.LOAN_ACCOUNT_NUMBER, builder = { type = NavType.IntType })
-        )
+            navArgument(name = Constants.LOAN_ACCOUNT_NUMBER, builder = { type = NavType.IntType }),
+        ),
     ) {
         LoanChargeScreen(
-            onBackPressed = onBackPressed
+            onBackPressed = onBackPressed,
         )
     }
 }
 
 fun NavGraphBuilder.loanDisbursementScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     composable(
         route = LoanScreens.LoanDisbursementScreen.route,
         arguments = listOf(
-            navArgument(name = Constants.LOAN_ACCOUNT_NUMBER, builder = { type = NavType.IntType })
-        )
+            navArgument(name = Constants.LOAN_ACCOUNT_NUMBER, builder = { type = NavType.IntType }),
+        ),
     ) {
         LoanAccountDisbursementScreen(
-            navigateBack = onBackPressed
+            navigateBack = onBackPressed,
         )
     }
 }
 
 fun NavGraphBuilder.loanRepaymentScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     composable(
         route = LoanScreens.LoanRepaymentScreen.route,
         arguments = listOf(
-            navArgument(name = Constants.LOAN_WITH_ASSOCIATIONS , builder = { type = NavType.StringType })
-        )
+            navArgument(name = Constants.LOAN_WITH_ASSOCIATIONS, builder = { type = NavType.StringType }),
+        ),
     ) {
         LoanRepaymentScreen(
-            navigateBack = onBackPressed
+            navigateBack = onBackPressed,
         )
     }
 }
 
 fun NavGraphBuilder.loanRepaymentSchedule(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     composable(
         route = LoanScreens.LoanRepaymentSchedule.route,
         arguments = listOf(
-            navArgument(name = Constants.LOAN_ACCOUNT_NUMBER, builder = { type = NavType.IntType })
-        )
+            navArgument(name = Constants.LOAN_ACCOUNT_NUMBER, builder = { type = NavType.IntType }),
+        ),
 
     ) {
         LoanRepaymentScheduleScreen(
-            navigateBack = onBackPressed
+            navigateBack = onBackPressed,
         )
     }
 }
 
 fun NavGraphBuilder.loanTransactionScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     composable(
         route = LoanScreens.LoanTransactionScreen.route,
         arguments = listOf(
-            navArgument(name = Constants.LOAN_ACCOUNT_NUMBER, builder = { type = NavType.IntType })
-        )
+            navArgument(name = Constants.LOAN_ACCOUNT_NUMBER, builder = { type = NavType.IntType }),
+        ),
     ) {
         LoanTransactionsScreen(
-            navigateBack = onBackPressed
+            navigateBack = onBackPressed,
         )
     }
 }
@@ -246,7 +255,7 @@ fun NavController.navigateToLoanChargesScreen(loanAccountNumber: Int) {
 
 fun NavController.navigateToLoanApprovalScreen(
     loanId: Int,
-    loanWithAssociations: LoanWithAssociations
+    loanWithAssociations: LoanWithAssociations,
 ) {
     navigate(LoanScreens.LoanApprovalScreen.argument(loanId, loanWithAssociations))
 }
@@ -255,6 +264,6 @@ fun NavController.navigateToLoanRepaymentScreen(loanWithAssociations: LoanWithAs
     navigate(LoanScreens.LoanRepaymentScreen.argument(loanWithAssociations))
 }
 
-fun NavController.navigateToGroupLoanScreen(groupId : Int){
+fun NavController.navigateToGroupLoanScreen(groupId: Int) {
     navigate(LoanScreens.GroupLoanScreen.argument(groupId))
 }
