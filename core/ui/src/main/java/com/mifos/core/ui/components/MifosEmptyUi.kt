@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
@@ -26,8 +35,8 @@ import com.mifos.core.designsystem.theme.DarkGray
 
 @Composable
 fun MifosEmptyUi(
-    modifier: Modifier = Modifier,
     text: String,
+    modifier: Modifier = Modifier,
     icon: ImageVector = Icons.Default.Info,
 ) {
     Box(
@@ -36,7 +45,7 @@ fun MifosEmptyUi(
             .semantics {
                 contentDescription = "MifosEmptyUi"
             },
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             modifier = Modifier
@@ -44,13 +53,13 @@ fun MifosEmptyUi(
                 .padding(18.dp)
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
+            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = text + icon.name,
                 tint = Color.Gray,
-                modifier = Modifier.size(70.dp)
+                modifier = Modifier.size(70.dp),
             )
 
             Text(
@@ -59,8 +68,8 @@ fun MifosEmptyUi(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
                     fontStyle = FontStyle.Normal,
-                    color = DarkGray
-                )
+                    color = DarkGray,
+                ),
             )
         }
     }
