@@ -1,5 +1,13 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.data.di
-
 
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.data.repository.CenterDetailsRepository
@@ -41,46 +49,46 @@ import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.data.repository.SurveySubmitRepository
-import com.mifos.core.data.repository_imp.ActivateRepositoryImp
-import com.mifos.core.data.repository_imp.CenterDetailsRepositoryImp
-import com.mifos.core.data.repository_imp.CenterListRepositoryImp
-import com.mifos.core.data.repository_imp.ChargeDialogRepositoryImp
-import com.mifos.core.data.repository_imp.CheckerInboxRepositoryImp
-import com.mifos.core.data.repository_imp.CheckerInboxTasksRepositoryImp
-import com.mifos.core.data.repository_imp.ClientChargeRepositoryImp
-import com.mifos.core.data.repository_imp.ClientIdentifierDialogRepositoryImp
-import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
-import com.mifos.core.data.repository_imp.CreateNewCenterRepositoryImp
-import com.mifos.core.data.repository_imp.CreateNewGroupRepositoryImp
-import com.mifos.core.data.repository_imp.DataTableDataRepositoryImp
-import com.mifos.core.data.repository_imp.DataTableListRepositoryImp
-import com.mifos.core.data.repository_imp.DataTableRepositoryImp
-import com.mifos.core.data.repository_imp.DataTableRowDialogRepositoryImp
-import com.mifos.core.data.repository_imp.DocumentListRepositoryImp
-import com.mifos.core.data.repository_imp.GenerateCollectionSheetRepositoryImp
-import com.mifos.core.data.repository_imp.GroupDetailsRepositoryImp
-import com.mifos.core.data.repository_imp.GroupListRepositoryImp
-import com.mifos.core.data.repository_imp.GroupLoanAccountRepositoryImp
-import com.mifos.core.data.repository_imp.GroupsListRepositoryImpl
-import com.mifos.core.data.repository_imp.IndividualCollectionSheetDetailsRepositoryImp
-import com.mifos.core.data.repository_imp.LoanAccountApprovalRepositoryImp
-import com.mifos.core.data.repository_imp.LoanAccountDisbursementRepositoryImp
-import com.mifos.core.data.repository_imp.LoanAccountRepositoryImp
-import com.mifos.core.data.repository_imp.LoanAccountSummaryRepositoryImp
-import com.mifos.core.data.repository_imp.LoanChargeDialogRepositoryImp
-import com.mifos.core.data.repository_imp.LoanChargeRepositoryImp
-import com.mifos.core.data.repository_imp.LoanRepaymentRepositoryImp
-import com.mifos.core.data.repository_imp.LoanRepaymentScheduleRepositoryImp
-import com.mifos.core.data.repository_imp.LoanTransactionsRepositoryImp
-import com.mifos.core.data.repository_imp.NewIndividualCollectionSheetRepositoryImp
-import com.mifos.core.data.repository_imp.PathTrackingRepositoryImp
-import com.mifos.core.data.repository_imp.PinPointClientRepositoryImp
-import com.mifos.core.data.repository_imp.ReportCategoryRepositoryImp
-import com.mifos.core.data.repository_imp.ReportDetailRepositoryImp
-import com.mifos.core.data.repository_imp.SearchRepositoryImp
-import com.mifos.core.data.repository_imp.SignatureRepositoryImp
-import com.mifos.core.data.repository_imp.SurveyListRepositoryImp
-import com.mifos.core.data.repository_imp.SurveySubmitRepositoryImp
+import com.mifos.core.data.repositoryImp.ActivateRepositoryImp
+import com.mifos.core.data.repositoryImp.CenterDetailsRepositoryImp
+import com.mifos.core.data.repositoryImp.CenterListRepositoryImp
+import com.mifos.core.data.repositoryImp.ChargeDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.CheckerInboxRepositoryImp
+import com.mifos.core.data.repositoryImp.CheckerInboxTasksRepositoryImp
+import com.mifos.core.data.repositoryImp.ClientChargeRepositoryImp
+import com.mifos.core.data.repositoryImp.ClientIdentifierDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.ClientIdentifiersRepositoryImp
+import com.mifos.core.data.repositoryImp.CreateNewCenterRepositoryImp
+import com.mifos.core.data.repositoryImp.CreateNewGroupRepositoryImp
+import com.mifos.core.data.repositoryImp.DataTableDataRepositoryImp
+import com.mifos.core.data.repositoryImp.DataTableListRepositoryImp
+import com.mifos.core.data.repositoryImp.DataTableRepositoryImp
+import com.mifos.core.data.repositoryImp.DataTableRowDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.DocumentListRepositoryImp
+import com.mifos.core.data.repositoryImp.GenerateCollectionSheetRepositoryImp
+import com.mifos.core.data.repositoryImp.GroupDetailsRepositoryImp
+import com.mifos.core.data.repositoryImp.GroupListRepositoryImp
+import com.mifos.core.data.repositoryImp.GroupLoanAccountRepositoryImp
+import com.mifos.core.data.repositoryImp.GroupsListRepositoryImpl
+import com.mifos.core.data.repositoryImp.IndividualCollectionSheetDetailsRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanAccountApprovalRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanAccountDisbursementRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanAccountRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanAccountSummaryRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanChargeDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanChargeRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanRepaymentRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanRepaymentScheduleRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanTransactionsRepositoryImp
+import com.mifos.core.data.repositoryImp.NewIndividualCollectionSheetRepositoryImp
+import com.mifos.core.data.repositoryImp.PathTrackingRepositoryImp
+import com.mifos.core.data.repositoryImp.PinPointClientRepositoryImp
+import com.mifos.core.data.repositoryImp.ReportCategoryRepositoryImp
+import com.mifos.core.data.repositoryImp.ReportDetailRepositoryImp
+import com.mifos.core.data.repositoryImp.SearchRepositoryImp
+import com.mifos.core.data.repositoryImp.SignatureRepositoryImp
+import com.mifos.core.data.repositoryImp.SurveyListRepositoryImp
+import com.mifos.core.data.repositoryImp.SurveySubmitRepositoryImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
