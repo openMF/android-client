@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.common.utils
@@ -66,7 +71,7 @@ object DateHelper {
             builder.append(splittedDate[2])
         }
         return builder.toString()
-        //Return as dd-mmm-yyyy
+        // Return as dd-mmm-yyyy
     }
 
     /**
@@ -87,7 +92,7 @@ object DateHelper {
             builder.append(splittedDate[2])
         }
         return builder.toString()
-        //Return as dd-mmm-yyyy
+        // Return as dd-mmm-yyyy
     }
 
     /**
@@ -155,7 +160,6 @@ object DateHelper {
      * and negative int if date1 < date2
      */
     fun dateComparator(date1: List<Int>, date2: List<Int>): Int {
-
         /*
          *  Each List contains 3 items
          *  index 0 = Year
@@ -163,15 +167,13 @@ object DateHelper {
          *  index 2 = Day
          *
          *  Format is YYYY - MM - DD
-        */
+         */
 
-        //comparing years
+        // comparing years
         return if (date1[0] == date2[0]) {
-
-            //now that years are equal lets compare months
+            // now that years are equal lets compare months
             if (date1[1] == date2[1]) {
-
-                //now that months are also equal lets compare days
+                // now that months are also equal lets compare days
                 if (date1[2] == date2[2]) {
                     0
                 } else if (date1[2] > date2[2]) {

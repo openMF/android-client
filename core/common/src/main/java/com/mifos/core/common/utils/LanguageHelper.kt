@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.common.utils
 
 import android.content.Context
@@ -12,7 +21,7 @@ object LanguageHelper {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         return if (preferences.getBoolean(
                 context.getString(R.string.core_common_default_system_language),
-                true
+                true,
             )
         ) {
             if (!context.resources.getStringArray(R.array.core_common_languages_value)
@@ -46,7 +55,7 @@ object LanguageHelper {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         return preferences.getString(
             context.getString(R.string.core_common_language_type),
-            defaultLanguage
+            defaultLanguage,
         )
     }
 

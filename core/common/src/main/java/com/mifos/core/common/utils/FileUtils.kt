@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.common.utils
@@ -40,9 +45,9 @@ object FileUtils {
             var cursor: Cursor? = null
             try {
                 cursor = context.contentResolver.query(uri, projection, null, null, null)
-                val column_index = cursor!!.getColumnIndexOrThrow("_data")
+                val columnindex = cursor!!.getColumnIndexOrThrow("_data")
                 if (cursor.moveToFirst()) {
-                    return cursor.getString(column_index)
+                    return cursor.getString(columnindex)
                 }
             } catch (e: Exception) {
                 // Eat it
@@ -56,78 +61,70 @@ object FileUtils {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     fun getPathRealOnKitkatAboveVersion(context: Context, uri: Uri): String? {
         val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+        var resultPath: String? = null
 
-        // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
-            if (isExternalStorageDocument(uri)) {
-                val docId = DocumentsContract.getDocumentId(uri)
-                val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-                val type = split[0]
-                if ("primary".equals(type, ignoreCase = true)) {
-                    return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
+            when {
+                isExternalStorageDocument(uri) -> {
+                    val docId = DocumentsContract.getDocumentId(uri)
+                    val split = docId.split(":")
+                    val type = split[0]
+                    if ("primary".equals(type, ignoreCase = true)) {
+                        resultPath = "${Environment.getExternalStorageDirectory()}/${split[1]}"
+                    }
+                    // Handle non-primary volumes if necessary
                 }
-                // TODO handle non-primary volumes
-
-                // DownloadsProvider
-            } else if (isDownloadsDocument(uri)) {
-                val id = DocumentsContract.getDocumentId(uri)
-                val contentUri = ContentUris.withAppendedId(
-                    Uri.parse("content://downloads/public_downloads"), id.toLong()
-                )
-                return getDataColumn(context, contentUri, null, null)
-
-                // MediaProvider
-            } else if (isMediaDocument(uri)) {
-                val docId = DocumentsContract.getDocumentId(uri)
-                val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-                val type = split[0]
-                var contentUri: Uri? = null
-                if ("image" == type) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                } else if ("video" == type) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                } else if ("audio" == type) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                isDownloadsDocument(uri) -> {
+                    val id = DocumentsContract.getDocumentId(uri)
+                    val contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"),
+                        id.toLong(),
+                    )
+                    resultPath = getDataColumn(context, contentUri, null, null)
                 }
-                val selection = "_id=?"
-                val selectionArgs = arrayOf(
-                    split[1]
-                )
-                return getDataColumn(context, contentUri, selection, selectionArgs)
+                isMediaDocument(uri) -> {
+                    val docId = DocumentsContract.getDocumentId(uri)
+                    val split = docId.split(":")
+                    val type = split[0]
+                    val contentUri = when (type) {
+                        "image" -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                        "video" -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                        "audio" -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                        else -> null
+                    }
+                    val selection = "_id=?"
+                    val selectionArgs = arrayOf(split[1])
+                    resultPath = getDataColumn(context, contentUri, selection, selectionArgs)
+                }
             }
-
-            // MediaStore (and general)
         } else if ("content".equals(uri.scheme, ignoreCase = true)) {
-
-            // Return the remote address
-            return if (isGooglePhotosUri(uri)) uri.lastPathSegment else getDataColumn(
-                context,
-                uri,
-                null,
-                null
-            )
-
-            // File
+            resultPath = if (isGooglePhotosUri(uri)) {
+                uri.lastPathSegment
+            } else {
+                getDataColumn(context, uri, null, null)
+            }
         } else if ("file".equals(uri.scheme, ignoreCase = true)) {
-            return uri.path
+            resultPath = uri.path
         }
-        return null
+
+        return resultPath
     }
 
     fun getDataColumn(
-        context: Context, uri: Uri?, selection: String?,
-        selectionArgs: Array<String>?
+        context: Context,
+        uri: Uri?,
+        selection: String?,
+        selectionArgs: Array<String>?,
     ): String? {
         var cursor: Cursor? = null
         val column = "_data"
         val projection = arrayOf(
-            column
+            column,
         )
         try {
             cursor = context.contentResolver.query(
                 uri!!, projection, selection, selectionArgs,
-                null
+                null,
             )
             if (cursor != null && cursor.moveToFirst()) {
                 val index = cursor.getColumnIndexOrThrow(column)
@@ -192,16 +189,16 @@ object FileUtils {
      * @param in   InputStream
      * @param file File
      */
-    fun writeInputStreamDataToFile(`in`: InputStream, file: File?) {
+    fun writeInputStreamDataToFile(inputStream: InputStream, file: File?) {
         try {
             val out: OutputStream = FileOutputStream(file)
             val buf = ByteArray(1024)
             var len: Int
-            while (`in`.read(buf).also { len = it } > 0) {
+            while (inputStream.read(buf).also { len = it } > 0) {
                 out.write(buf, 0, len)
             }
             out.close()
-            `in`.close()
+            inputStream.close()
         } catch (e: Exception) {
             Log.d(LOG_TAG, e.localizedMessage)
         }
