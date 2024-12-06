@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
@@ -23,7 +32,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 enum class FabType {
-    CLIENT, CENTER, GROUP
+    CLIENT,
+    CENTER,
+    GROUP,
 }
 
 sealed class FabButtonState {
@@ -47,53 +58,55 @@ data class FabButton(
 
 @Composable
 fun FabItem(
-    modifier: Modifier = Modifier,
     fabButton: FabButton,
-    onFabClick: (FabType) -> Unit
+    modifier: Modifier = Modifier,
+    onFabClick: (FabType) -> Unit,
 ) {
     FloatingActionButton(
         onClick = {
             onFabClick(fabButton.fabType)
         },
         modifier = modifier
-            .size(48.dp)
+            .size(48.dp),
     ) {
         Icon(
             painter = painterResource(id = fabButton.iconRes),
-            contentDescription = fabButton.fabType.name
+            contentDescription = fabButton.fabType.name,
         )
     }
 }
 
 @Composable
 fun MultiFloatingActionButton(
-    modifier: Modifier = Modifier,
     fabButtons: List<FabButton>,
     fabButtonState: FabButtonState,
     onFabButtonStateChange: (FabButtonState) -> Unit,
+    modifier: Modifier = Modifier,
     onFabClick: (FabType) -> Unit,
 ) {
     val rotation by animateFloatAsState(
-        if (fabButtonState.isExpanded())
+        if (fabButtonState.isExpanded()) {
             45f
-        else
-            0f, label = "mainFabRotation"
+        } else {
+            0f
+        },
+        label = "mainFabRotation",
     )
 
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         AnimatedVisibility(
             visible = fabButtonState.isExpanded(),
             enter = fadeIn() + expandVertically(),
-            exit = fadeOut() + shrinkVertically()
+            exit = fadeOut() + shrinkVertically(),
         ) {
             Column {
                 fabButtons.forEach {
                     FabItem(
                         fabButton = it,
-                        onFabClick = onFabClick
+                        onFabClick = onFabClick,
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                 }
@@ -105,11 +118,11 @@ fun MultiFloatingActionButton(
                 onFabButtonStateChange(fabButtonState.toggleValue())
             },
             modifier = Modifier
-                .rotate(rotation)
+                .rotate(rotation),
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "mainFabIcon"
+                contentDescription = "mainFabIcon",
             )
         }
     }
