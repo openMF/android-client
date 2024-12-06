@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.datastore
 
 import android.content.Context
@@ -24,11 +33,11 @@ const val AUTH_USERNAME = "auth_username"
 const val AUTH_PASSWORD = "auth_password"
 
 class PrefManager @Inject constructor(
-    @ApplicationContext context: Context
+    @ApplicationContext context: Context,
 ) : UserPreferences<User>() {
 
     private val serverConfigKey = Key.Custom("SERVER_CONFIG_KEY")
-    
+
     override val preference: SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -62,7 +71,7 @@ class PrefManager @Inject constructor(
     var usernamePassword: Pair<String, String>
         get() = Pair(
             preference.getString(AUTH_USERNAME, "")!!,
-            preference.getString(AUTH_PASSWORD, "")!!
+            preference.getString(AUTH_PASSWORD, "")!!,
         )
         set(value) {
             preference.edit().putString(AUTH_USERNAME, value.first).apply()
@@ -82,7 +91,7 @@ class PrefManager @Inject constructor(
         emit(preference.getString(key, ""))
     }
 
-    fun setStringValue(key: String,value: String) {
+    fun setStringValue(key: String, value: String) {
         preference.edit().putString(key, value).apply()
     }
 }
