@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.common.utils
 
 import com.google.gson.JsonDeserializationContext
@@ -9,46 +18,35 @@ import java.lang.reflect.Type
 class MapDeserializer : JsonDeserializer<Map<String, Any>?> {
     @Throws(JsonParseException::class)
     override fun deserialize(
-        json: JsonElement, typeOfT: Type,
-        context: JsonDeserializationContext
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext,
     ): Map<String, Any>? {
         return read(json) as Map<String, Any>?
     }
 
-    fun read(`in`: JsonElement): Any? {
-        if (`in`.isJsonArray) {
-            val list: MutableList<Any?> = ArrayList()
-            val arr = `in`.asJsonArray
-            for (anArr in arr) {
-                list.add(read(anArr))
+    fun read(jsonElement: JsonElement): Any? {
+        return when {
+            jsonElement.isJsonArray -> {
+                val list = jsonElement.asJsonArray.map { read(it) }
+                list
             }
-            return list
-        } else if (`in`.isJsonObject) {
-            val map: MutableMap<String, Any?> = HashMap()
-            val obj = `in`.asJsonObject
-            val entitySet = obj.entrySet()
-            for ((key, value) in entitySet) {
-                map[key] = read(value)
+            jsonElement.isJsonObject -> {
+                jsonElement.asJsonObject.entrySet().associate { (key, value) -> key to read(value) }
             }
-            return map
-        } else if (`in`.isJsonPrimitive) {
-            val prim = `in`.asJsonPrimitive
-            if (prim.isBoolean) {
-                return prim.asBoolean
-            } else if (prim.isString) {
-                return prim.asString
-            } else if (prim.isNumber) {
-                val num = prim.asNumber
-                // here you can handle double int/long values
-                // and return any type you want
-                // this solution will transform 3.0 float to long values
-                return if (Math.ceil(num.toDouble()) == num.toLong().toDouble()) {
-                    num.toLong()
-                } else {
-                    num.toDouble()
+            jsonElement.isJsonPrimitive -> {
+                val prim = jsonElement.asJsonPrimitive
+                when {
+                    prim.isBoolean -> prim.asBoolean
+                    prim.isString -> prim.asString
+                    prim.isNumber -> {
+                        val num = prim.asNumber
+                        if (Math.ceil(num.toDouble()) == num.toLong().toDouble()) num.toLong() else num.toDouble()
+                    }
+                    else -> null
                 }
             }
+            else -> null
         }
-        return null
     }
 }
