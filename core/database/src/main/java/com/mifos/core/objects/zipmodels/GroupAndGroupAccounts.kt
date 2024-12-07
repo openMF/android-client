@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.objects.zipmodels
 
 import android.os.Parcel
@@ -27,9 +36,9 @@ class GroupAndGroupAccounts : Parcelable {
         this.groupAccounts = groupAccounts
     }
 
-    protected constructor(`in`: Parcel) {
-        group = `in`.readParcelable(Group::class.java.classLoader)
-        groupAccounts = `in`.readParcelable(GroupAccounts::class.java.classLoader)
+    private constructor(parcel: Parcel) {
+        group = parcel.readParcelable(Group::class.java.classLoader)
+        groupAccounts = parcel.readParcelable(GroupAccounts::class.java.classLoader)
     }
 
     companion object {
