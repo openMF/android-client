@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.objects.accounts.savings
@@ -10,7 +15,7 @@ import javax.annotation.processing.Generated
 
 @Parcelize
 @Generated("org.jsonschema2pojo")
-data class Charge (
+data class Charge(
     var id: Int? = null,
 
     var chargeId: Int? = null,
@@ -43,7 +48,7 @@ data class Charge (
 
     var penalty: Boolean? = null,
 
-    val additionalProperties: MutableMap<String, String> = HashMap()
+    val additionalProperties: MutableMap<String, String> = HashMap(),
 ) : Parcelable {
 
     fun setAdditionalProperty(name: String, value: String) {
