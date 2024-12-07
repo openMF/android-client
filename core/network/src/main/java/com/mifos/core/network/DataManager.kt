@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network
 
 import com.mifos.core.data.ChargesPayload
@@ -36,7 +45,7 @@ class DataManager {
     private val mBaseApiManager: BaseApiManager
     private var mDataManagerClient: DataManagerClient? = null
 
-    //TODO : This Constructor is temp after splitting the Datamanager layer into Sub DataManager
+    // TODO : This Constructor is temp after splitting the Datamanager layer into Sub DataManager
     constructor(baseApiManager: BaseApiManager) {
         mBaseApiManager = baseApiManager
     }
@@ -44,7 +53,7 @@ class DataManager {
     @Inject
     constructor(
         baseApiManager: BaseApiManager,
-        dataManagerClient: DataManagerClient?
+        dataManagerClient: DataManagerClient?,
     ) {
         mBaseApiManager = baseApiManager
         mDataManagerClient = dataManagerClient
@@ -67,33 +76,41 @@ class DataManager {
 
     fun saveCollectionSheet(
         centerId: Int,
-        collectionSheetPayload: CollectionSheetPayload?
+        collectionSheetPayload: CollectionSheetPayload?,
     ): Observable<SaveResponse> {
         return mBaseApiManager.centerApi.saveCollectionSheet(
-            centerId, collectionSheetPayload
+            centerId,
+            collectionSheetPayload,
         )
     }
 
     fun saveCollectionSheetAsync(
         id: Int,
-        payload: CollectionSheetPayload?
+        payload: CollectionSheetPayload?,
     ): Observable<SaveResponse> {
         return mBaseApiManager.centerApi.saveCollectionSheetAsync(id, payload)
     }
 
     fun getCenterList(
-        dateFormat: String?, locale: String?, meetingDate: String?, officeId: Int, staffId: Int
+        dateFormat: String?,
+        locale: String?,
+        meetingDate: String?,
+        officeId: Int,
+        staffId: Int,
     ): Observable<List<OfflineCenter>> {
         return mBaseApiManager.centerApi.getCenterList(
-            dateFormat, locale, meetingDate,
-            officeId, staffId
+            dateFormat,
+            locale,
+            meetingDate,
+            officeId,
+            staffId,
         )
     }
 
     /**
      * Charges API
      */
-    //TODO Remove this Method After fixing the Charge Test
+    // TODO Remove this Method After fixing the Charge Test
     fun getClientCharges(clientId: Int, offset: Int, limit: Int): Observable<Page<Charges>> {
         return mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
     }
@@ -104,7 +121,7 @@ class DataManager {
 
     suspend fun createCharges(
         clientId: Int,
-        payload: ChargesPayload
+        payload: ChargesPayload,
     ): ChargeCreationResponse {
         return mBaseApiManager.chargeApi.createCharges(clientId, payload)
     }
@@ -115,7 +132,7 @@ class DataManager {
 
     suspend fun createLoanCharges(
         loanId: Int,
-        chargesPayload: ChargesPayload
+        chargesPayload: ChargesPayload,
     ): ChargeCreationResponse {
         return mBaseApiManager.chargeApi.createLoanCharges(loanId, chargesPayload)
     }
@@ -129,7 +146,7 @@ class DataManager {
 
     suspend fun getGroupsByOffice(
         office: Int,
-        params: Map<String, String>
+        params: Map<String, String>,
     ): List<Group> {
         return mBaseApiManager.groupApi.getAllGroupsInOffice(office, params)
     }

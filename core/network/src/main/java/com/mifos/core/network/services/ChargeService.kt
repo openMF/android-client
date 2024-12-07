@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.network.services
@@ -35,13 +40,13 @@ interface ChargeService {
     fun getListOfCharges(
         @Path("clientId") clientId: Int,
         @Query("offset") offset: Int,
-        @Query("limit") limit: Int
+        @Query("limit") limit: Int,
     ): Observable<Page<Charges>>
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}/charges")
     suspend fun createCharges(
         @Path("clientId") clientId: Int,
-        @Body chargesPayload: ChargesPayload
+        @Body chargesPayload: ChargesPayload,
     ): ChargeCreationResponse
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges")
@@ -50,6 +55,6 @@ interface ChargeService {
     @POST(APIEndPoint.LOANS + "/{loanId}/charges")
     suspend fun createLoanCharges(
         @Path("loanId") loanId: Int,
-        @Body chargesPayload: ChargesPayload
+        @Body chargesPayload: ChargesPayload,
     ): ChargeCreationResponse
 }

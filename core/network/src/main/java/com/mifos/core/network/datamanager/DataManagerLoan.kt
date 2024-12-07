@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.data.LoansPayload
@@ -24,7 +33,7 @@ import javax.inject.Singleton
 class DataManagerLoan @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     val mDatabaseHelperLoan: DatabaseHelperLoan,
-    private val prefManager: com.mifos.core.datastore.PrefManager
+    private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -65,7 +74,7 @@ class DataManagerLoan @Inject constructor(
             .getLoanByIdWithAllAssociations(loanId)
             .concatMap { loanWithAssociations ->
                 mDatabaseHelperLoan.saveLoanById(
-                    loanWithAssociations
+                    loanWithAssociations,
                 )
             }
     }
@@ -129,7 +138,7 @@ class DataManagerLoan @Inject constructor(
             .concatMap { loanRepaymentTemplate ->
                 mDatabaseHelperLoan.saveLoanRepaymentTemplate(
                     loanId,
-                    loanRepaymentTemplate
+                    loanRepaymentTemplate,
                 )
             }
     }
@@ -150,7 +159,7 @@ class DataManagerLoan @Inject constructor(
      */
     fun submitPayment(
         loanId: Int,
-        request: LoanRepaymentRequest
+        request: LoanRepaymentRequest,
     ): Observable<LoanRepaymentResponse> {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.loanApi.submitPayment(loanId, request)
@@ -169,7 +178,7 @@ class DataManagerLoan @Inject constructor(
      * These LoanRepayment are those LoanRepayment that are saved during the Offline LoanRepayment.
      *
      * @return List<LoanRepaymentRequest>
-    </LoanRepaymentRequest></LoanRepayment> */
+     </LoanRepaymentRequest></LoanRepayment> */
     val databaseLoanRepayments: Observable<List<LoanRepaymentRequest>>
         get() = mDatabaseHelperLoan.readAllLoanRepaymentTransaction()
 
@@ -198,7 +207,7 @@ class DataManagerLoan @Inject constructor(
      * PaymentTypeOption_Table.
      *
      * @return List<PaymentTypeOption>
-    </PaymentTypeOption> */
+     </PaymentTypeOption> */
     val paymentTypeOption: Observable<List<com.mifos.core.objects.PaymentTypeOption>>
         get() = mDatabaseHelperLoan.paymentTypeOption
 
@@ -208,7 +217,7 @@ class DataManagerLoan @Inject constructor(
      *
      * @param loanId Loan Id of the Loan
      * @return List<LoanRepaymentRequest>
-    </LoanRepaymentRequest> */
+     </LoanRepaymentRequest> */
     fun deleteAndUpdateLoanRepayments(loanId: Int): Observable<List<LoanRepaymentRequest>> {
         return mDatabaseHelperLoan.deleteAndUpdateLoanRepayments(loanId)
     }
@@ -220,7 +229,7 @@ class DataManagerLoan @Inject constructor(
      * @return LoanRepaymentRequest
      */
     fun updateLoanRepaymentTransaction(
-        loanRepaymentRequest: LoanRepaymentRequest
+        loanRepaymentRequest: LoanRepaymentRequest,
     ): Observable<LoanRepaymentRequest> {
         return mDatabaseHelperLoan.updateLoanRepaymentTransaction(loanRepaymentRequest)
     }
@@ -240,14 +249,14 @@ class DataManagerLoan @Inject constructor(
      */
     fun getLoanTransactionTemplate(
         loanId: Int,
-        command: String?
+        command: String?,
     ): Observable<LoanTransactionTemplate> {
         return mBaseApiManager.loanApi.getLoanTransactionTemplate(loanId, command)
     }
 
     fun disburseLoan(
         loanId: Int,
-        loanDisbursement: LoanDisbursement?
+        loanDisbursement: LoanDisbursement?,
     ): Observable<GenericResponse> {
         return mBaseApiManager.loanApi.disburseLoan(loanId, loanDisbursement)
     }

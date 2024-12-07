@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.data.SavingsPayload
@@ -16,7 +25,6 @@ import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 /**
  * Created by Rajan Maurya on 17/08/16.
  */
@@ -24,7 +32,7 @@ import javax.inject.Singleton
 class DataManagerSavings @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     val mDatabaseHelperSavings: DatabaseHelperSavings,
-    private val prefManager: com.mifos.core.datastore.PrefManager
+    private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**
      * This Method Make the Request to the REST API
@@ -42,11 +50,15 @@ class DataManagerSavings @Inject constructor(
      * @return SavingsAccountWithAssociations
      */
     fun getSavingsAccount(
-        type: String?, savingsAccountId: Int, association: String?
+        type: String?,
+        savingsAccountId: Int,
+        association: String?,
     ): Observable<SavingsAccountWithAssociations> {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
-                type, savingsAccountId, association
+                type,
+                savingsAccountId,
+                association,
             )
 
             true ->
@@ -75,22 +87,25 @@ class DataManagerSavings @Inject constructor(
      * @return SavingsAccountWithAssociations
      */
     fun syncSavingsAccount(
-        type: String?, savingsAccountId: Int, association: String?
+        type: String?,
+        savingsAccountId: Int,
+        association: String?,
     ): Observable<SavingsAccountWithAssociations> {
         return mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
             type,
-            savingsAccountId, association
+            savingsAccountId,
+            association,
         )
             .concatMap { savingsAccountWithAssociations ->
                 mDatabaseHelperSavings.saveSavingsAccount(
-                    savingsAccountWithAssociations
+                    savingsAccountWithAssociations,
                 )
             }
     }
 
     fun activateSavings(
         savingsAccountId: Int,
-        request: HashMap<String, String>
+        request: HashMap<String, String>,
     ): Observable<GenericResponse> {
         return mBaseApiManager.savingsApi.activateSavings(savingsAccountId, request)
     }
@@ -110,12 +125,15 @@ class DataManagerSavings @Inject constructor(
      * @return SavingsAccountTransactionTemplate
      */
     fun getSavingsAccountTransactionTemplate(
-        type: String?, savingsAccountId: Int, transactionType: String?
+        type: String?,
+        savingsAccountId: Int,
+        transactionType: String?,
     ): Observable<SavingsAccountTransactionTemplate> {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.savingsApi.getSavingsAccountTransactionTemplate(
                 type,
-                savingsAccountId, transactionType
+                savingsAccountId,
+                transactionType,
             )
 
             true ->
@@ -140,16 +158,18 @@ class DataManagerSavings @Inject constructor(
      * @return SavingsAccountTransactionTemplate
      */
     fun syncSavingsAccountTransactionTemplate(
-        savingsAccountType: String?, savingsAccountId: Int, transactionType: String?
+        savingsAccountType: String?,
+        savingsAccountId: Int,
+        transactionType: String?,
     ): Observable<SavingsAccountTransactionTemplate> {
         return mBaseApiManager.savingsApi.getSavingsAccountTransactionTemplate(
             savingsAccountType,
             savingsAccountId,
-            transactionType
+            transactionType,
         )
             .concatMap { savingsAccountTransactionTemplate ->
                 mDatabaseHelperSavings.saveSavingsAccountTransactionTemplate(
-                    savingsAccountTransactionTemplate
+                    savingsAccountTransactionTemplate,
                 )
             }
     }
@@ -167,13 +187,17 @@ class DataManagerSavings @Inject constructor(
      * @return SavingsAccountTransactionResponse
      */
     fun processTransaction(
-        savingsAccountType: String?, savingsAccountId: Int, transactionType: String?,
-        request: SavingsAccountTransactionRequest
+        savingsAccountType: String?,
+        savingsAccountId: Int,
+        transactionType: String?,
+        request: SavingsAccountTransactionRequest,
     ): Observable<SavingsAccountTransactionResponse> {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.savingsApi.processTransaction(
                 savingsAccountType,
-                savingsAccountId, transactionType, request
+                savingsAccountId,
+                transactionType,
+                request,
             )
 
             true ->
@@ -182,8 +206,10 @@ class DataManagerSavings @Inject constructor(
                  */
                 mDatabaseHelperSavings
                     .saveSavingsAccountTransaction(
-                        savingsAccountType, savingsAccountId,
-                        transactionType, request
+                        savingsAccountType,
+                        savingsAccountId,
+                        transactionType,
+                        request,
                     )
         }
     }
@@ -198,7 +224,7 @@ class DataManagerSavings @Inject constructor(
      * @return SavingsAccountTransactionRequest
      */
     fun getSavingsAccountTransaction(
-        savingAccountId: Int
+        savingAccountId: Int,
     ): Observable<SavingsAccountTransactionRequest> {
         return mDatabaseHelperSavings.getSavingsAccountTransaction(savingAccountId)
     }
@@ -209,7 +235,7 @@ class DataManagerSavings @Inject constructor(
      * and returns the List<SavingsAccountTransactionRequest>
      *
      * @return List<SavingsAccountTransactionRequest></SavingsAccountTransactionRequest>>
-    </SavingsAccountTransactionRequest> */
+     </SavingsAccountTransactionRequest> */
     val allSavingsAccountTransactions: Observable<List<SavingsAccountTransactionRequest>>
         get() = mDatabaseHelperSavings.allSavingsAccountTransaction
 
@@ -220,9 +246,9 @@ class DataManagerSavings @Inject constructor(
      *
      * @param savingsAccountId Loan Id of the Loan
      * @return List<SavingsAccountTransaction>
-    </SavingsAccountTransaction> */
+     </SavingsAccountTransaction> */
     fun deleteAndUpdateTransactions(
-        savingsAccountId: Int
+        savingsAccountId: Int,
     ): Observable<List<SavingsAccountTransactionRequest>> {
         return mDatabaseHelperSavings.deleteAndUpdateTransaction(savingsAccountId)
     }
@@ -236,10 +262,10 @@ class DataManagerSavings @Inject constructor(
      * @return LoanRepaymentRequest
      */
     fun updateLoanRepaymentTransaction(
-        savingsAccountTransactionRequest: SavingsAccountTransactionRequest
+        savingsAccountTransactionRequest: SavingsAccountTransactionRequest,
     ): Observable<SavingsAccountTransactionRequest> {
         return mDatabaseHelperSavings.updateSavingsAccountTransaction(
-            savingsAccountTransactionRequest
+            savingsAccountTransactionRequest,
         )
     }
 
@@ -255,30 +281,31 @@ class DataManagerSavings @Inject constructor(
 
     fun getClientSavingsAccountTemplateByProduct(
         clientId: Int,
-        productId: Int
+        productId: Int,
     ): Observable<SavingProductsTemplate> {
         return mBaseApiManager.savingsApi.getClientSavingsAccountTemplateByProduct(
             clientId,
-            productId
+            productId,
         )
     }
 
     fun getGroupSavingsAccountTemplateByProduct(
         groupId: Int,
-        productId: Int
+        productId: Int,
     ): Observable<SavingProductsTemplate> {
         return mBaseApiManager.savingsApi.getGroupSavingsAccountTemplateByProduct(
             groupId,
-            productId
+            productId,
         )
     }
 
     fun approveSavingsApplication(
         savingsAccountId: Int,
-        savingsApproval: SavingsApproval?
+        savingsApproval: SavingsApproval?,
     ): Observable<GenericResponse> {
         return mBaseApiManager.savingsApi.approveSavingsApplication(
-            savingsAccountId, savingsApproval
+            savingsAccountId,
+            savingsApproval,
         )
     }
 }

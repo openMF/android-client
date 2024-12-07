@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.network.services
@@ -43,7 +48,7 @@ interface LoanService {
     @POST(APIEndPoint.LOANS + "/{loanId}?command=approve")
     fun approveLoanApplication(
         @Path("loanId") loanId: Int,
-        @Body loanApproval: LoanApproval?
+        @Body loanApproval: LoanApproval?,
     ): Observable<GenericResponse>
 
     //  Mandatory Fields
@@ -51,13 +56,13 @@ interface LoanService {
     @POST(APIEndPoint.LOANS + "/{loanId}/?command=disburse")
     fun disburseLoan(
         @Path("loanId") loanId: Int,
-        @Body loanDisbursement: LoanDisbursement?
+        @Body loanDisbursement: LoanDisbursement?,
     ): Observable<GenericResponse>
 
     @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=repayment")
     fun submitPayment(
         @Path("loanId") loanId: Int,
-        @Body loanRepaymentRequest: LoanRepaymentRequest?
+        @Body loanRepaymentRequest: LoanRepaymentRequest?,
     ): Observable<LoanRepaymentResponse>
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
@@ -75,7 +80,7 @@ interface LoanService {
     @GET(APIEndPoint.CREATE_LOANS_ACCOUNTS + "/template?templateType=individual")
     fun getLoansAccountTemplate(
         @Query("clientId") clientId: Int,
-        @Query("productId") productId: Int
+        @Query("productId") productId: Int,
     ): Observable<LoanTemplate>
 
     /**
@@ -94,7 +99,7 @@ interface LoanService {
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template")
     fun getLoanTransactionTemplate(
         @Path("loanId") loanId: Int,
-        @Query("command") command: String?
+        @Query("command") command: String?,
     ): Observable<LoanTransactionTemplate>
 
     @POST(APIEndPoint.CREATE_LOANS_ACCOUNTS)
@@ -103,7 +108,7 @@ interface LoanService {
     @GET(APIEndPoint.CREATE_LOANS_ACCOUNTS + "/template?templateType=group")
     fun getGroupLoansAccountTemplate(
         @Query("groupId") groupId: Int,
-        @Query("productId") productId: Int
+        @Query("productId") productId: Int,
     ): Observable<GroupLoanTemplate>
 
     @GET(APIEndPoint.LOANS + "/{loanId}/" + APIEndPoint.CHARGES)

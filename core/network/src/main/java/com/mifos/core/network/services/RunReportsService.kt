@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.services
 
 import com.mifos.core.model.APIEndPoint
@@ -24,7 +33,7 @@ interface RunReportsService {
     suspend fun getReportCategories(
         @Query("R_reportCategory") category: String?,
         @Query("genericResultSet") genericResultSet: Boolean,
-        @Query("parameterType") parameterType: Boolean
+        @Query("parameterType") parameterType: Boolean,
     ): List<ClientReportTypeItem>
 
     /**
@@ -36,7 +45,7 @@ interface RunReportsService {
     @GET(APIEndPoint.RUN_REPORTS + "/FullParameterList")
     suspend fun getReportFullParameterList(
         @Query("R_reportListing") reportName: String,
-        @Query("parameterType") parameterType: Boolean
+        @Query("parameterType") parameterType: Boolean,
     ): FullParameterListResponse
 
     /**
@@ -48,21 +57,21 @@ interface RunReportsService {
     @GET(APIEndPoint.RUN_REPORTS + "/{path}")
     suspend fun getReportParameterDetails(
         @Path("path") parameterName: String,
-        @Query("parameterType") parameterType: Boolean
+        @Query("parameterType") parameterType: Boolean,
     ): FullParameterListResponse
 
     @GET(APIEndPoint.RUN_REPORTS + "/{path}")
     suspend fun getReportOffice(
         @Path("path") parameterName: String,
         @Query("R_officeId") office: Int,
-        @Query("parameterType") parameterType: Boolean
+        @Query("parameterType") parameterType: Boolean,
     ): FullParameterListResponse
 
     @GET(APIEndPoint.RUN_REPORTS + "/{path}")
     suspend fun getReportProduct(
         @Path("path") parameterName: String,
         @Query("R_currencyId") currency: String,
-        @Query("parameterType") parameterType: Boolean
+        @Query("parameterType") parameterType: Boolean,
     ): FullParameterListResponse
 
     /**
@@ -74,12 +83,12 @@ interface RunReportsService {
     @GET(APIEndPoint.RUN_REPORTS + "/{path}")
     suspend fun getRunReportWithQuery(
         @Path("path") reportName: String,
-        @QueryMap options: Map<String, String>
+        @QueryMap options: Map<String, String>,
     ): FullParameterListResponse
 
     @GET(APIEndPoint.RUN_REPORTS + "/GroupSummaryCounts")
     suspend fun getCenterSummaryInfo(
         @Query("R_groupId") centerId: Int,
-        @Query("genericResultSet") genericResultSet: Boolean
+        @Query("genericResultSet") genericResultSet: Boolean,
     ): List<CenterInfo>
 }

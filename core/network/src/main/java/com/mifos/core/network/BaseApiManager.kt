@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.network
@@ -35,7 +40,6 @@ import javax.inject.Inject
  * @author fomenkoo
  */
 class BaseApiManager @Inject constructor(private val prefManager: com.mifos.core.datastore.PrefManager) {
-
 
     init {
         createService(prefManager)
@@ -98,55 +102,55 @@ class BaseApiManager @Inject constructor(private val prefManager: com.mifos.core
 
         fun init() {
             centerApi = createApi(
-                CenterService::class.java
+                CenterService::class.java,
             )
             accountsApi = createApi(
-                ClientAccountsService::class.java
+                ClientAccountsService::class.java,
             )
             clientsApi = createApi(
-                ClientService::class.java
+                ClientService::class.java,
             )
             dataTableApi = createApi(
-                DataTableService::class.java
+                DataTableService::class.java,
             )
             loanApi = createApi(
-                LoanService::class.java
+                LoanService::class.java,
             )
             savingsApi = createApi(
-                SavingsAccountService::class.java
+                SavingsAccountService::class.java,
             )
             searchApi = createApi(
-                SearchService::class.java
+                SearchService::class.java,
             )
             groupApi = createApi(
-                GroupService::class.java
+                GroupService::class.java,
             )
             documentApi = createApi(
-                DocumentService::class.java
+                DocumentService::class.java,
             )
             officeApi = createApi(
-                OfficeService::class.java
+                OfficeService::class.java,
             )
             staffApi = createApi(
-                StaffService::class.java
+                StaffService::class.java,
             )
             surveyApi = createApi(
-                SurveyService::class.java
+                SurveyService::class.java,
             )
             chargeApi = createApi(
-                ChargeService::class.java
+                ChargeService::class.java,
             )
             runReportsService = createApi(
-                RunReportsService::class.java
+                RunReportsService::class.java,
             )
             noteApi = createApi(
-                NoteService::class.java
+                NoteService::class.java,
             )
             collectionSheetApi = createApi(
-                CollectionSheetService::class.java
+                CollectionSheetService::class.java,
             )
             checkerInboxApi = createApi(
-                CheckerInboxService::class.java
+                CheckerInboxService::class.java,
             )
         }
 
@@ -162,7 +166,7 @@ class BaseApiManager @Inject constructor(private val prefManager: com.mifos.core
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .client(MifosOkHttpClient(prefManager).mifosOkHttpClient)
+                .client(MifosOkHttpClient(prefManager).okHttpClient)
                 .build()
             init()
         }

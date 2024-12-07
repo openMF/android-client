@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.network.services
@@ -46,7 +51,7 @@ interface SavingsAccountService {
     fun getSavingsAccountWithAssociations(
         @Path("savingsAccountType") savingsAccountType: String?,
         @Path("savingsAccountId") savingsAccountId: Int,
-        @Query("associations") association: String?
+        @Query("associations") association: String?,
     ): Observable<SavingsAccountWithAssociations>
 
     /**
@@ -63,7 +68,7 @@ interface SavingsAccountService {
     fun getSavingsAccountTransactionTemplate(
         @Path("savingsAccountType") savingsAccountType: String?,
         @Path("savingsAccountId") savingsAccountId: Int,
-        @Query("command") transactionType: String?
+        @Query("command") transactionType: String?,
     ): Observable<SavingsAccountTransactionTemplate>
 
     /**
@@ -82,19 +87,19 @@ interface SavingsAccountService {
         @Path("savingsAccountType") savingsAccountType: String?,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("command") transactionType: String?,
-        @Body savingsAccountTransactionRequest: SavingsAccountTransactionRequest?
+        @Body savingsAccountTransactionRequest: SavingsAccountTransactionRequest?,
     ): Observable<SavingsAccountTransactionResponse>
 
     @POST(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/{savingsAccountId}/?command=activate")
     fun activateSavings(
         @Path("savingsAccountId") savingsAccountId: Int,
-        @Body genericRequest: HashMap<String, String>
+        @Body genericRequest: HashMap<String, String>,
     ): Observable<GenericResponse>
 
     @POST(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/{savingsAccountId}?command=approve")
     fun approveSavingsApplication(
         @Path("savingsAccountId") savingsAccountId: Int,
-        @Body savingsApproval: SavingsApproval?
+        @Body savingsApproval: SavingsApproval?,
     ): Observable<GenericResponse>
 
     @get:GET(APIEndPoint.CREATE_SAVINGS_PRODUCTS)
@@ -109,12 +114,12 @@ interface SavingsAccountService {
     @GET(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/template")
     fun getClientSavingsAccountTemplateByProduct(
         @Query("clientId") clientId: Int,
-        @Query("productId") productId: Int
+        @Query("productId") productId: Int,
     ): Observable<SavingProductsTemplate>
 
     @GET(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/template")
     fun getGroupSavingsAccountTemplateByProduct(
         @Query("groupId") groupId: Int,
-        @Query("productId") productId: Int
+        @Query("productId") productId: Int,
     ): Observable<SavingProductsTemplate>
 }
