@@ -1,4 +1,13 @@
-package com.mifos.feature.data_table.dataTableData
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.dataTable.dataTableData
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -22,7 +31,7 @@ import javax.inject.Inject
 class DataTableDataViewModel @Inject constructor(
     private val getDataTableInfoUseCase: GetDataTableInfoUseCase,
     private val deleteDataTableEntryUseCase: DeleteDataTableEntryUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val args =
@@ -32,9 +41,8 @@ class DataTableDataViewModel @Inject constructor(
 
     private val _dataTableDataUiState =
         MutableStateFlow<DataTableDataUiState>(DataTableDataUiState.Loading)
-    val tableDataUiState = _dataTableDataUiState.asStateFlow()
+    val dataTableDataUiState = _dataTableDataUiState.asStateFlow()
 
-    // for refresh feature
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
@@ -48,14 +56,17 @@ class DataTableDataViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getDataTableInfoUseCase(table, entityId).collect { result ->
                 when (result) {
-                    is Resource.Error -> _dataTableDataUiState.value =
-                        DataTableDataUiState.Error(R.string.feature_data_table_failed_to_load_data_table_details)
+                    is Resource.Error ->
+                        _dataTableDataUiState.value =
+                            DataTableDataUiState.Error(R.string.feature_data_table_failed_to_load_data_table_details)
 
-                    is Resource.Loading -> _dataTableDataUiState.value =
-                        DataTableDataUiState.Loading
+                    is Resource.Loading ->
+                        _dataTableDataUiState.value =
+                            DataTableDataUiState.Loading
 
-                    is Resource.Success -> _dataTableDataUiState.value =
-                        DataTableDataUiState.DataTableInfo(result.data ?: JsonArray())
+                    is Resource.Success ->
+                        _dataTableDataUiState.value =
+                            DataTableDataUiState.DataTableInfo(result.data ?: JsonArray())
                 }
             }
         }
@@ -64,14 +75,17 @@ class DataTableDataViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             deleteDataTableEntryUseCase(table, entity, rowId).collect { result ->
                 when (result) {
-                    is Resource.Error -> _dataTableDataUiState.value =
-                        DataTableDataUiState.Error(R.string.feature_data_table_failed_to_delete_data_table)
+                    is Resource.Error ->
+                        _dataTableDataUiState.value =
+                            DataTableDataUiState.Error(R.string.feature_data_table_failed_to_delete_data_table)
 
-                    is Resource.Loading -> _dataTableDataUiState.value =
-                        DataTableDataUiState.Loading
+                    is Resource.Loading ->
+                        _dataTableDataUiState.value =
+                            DataTableDataUiState.Loading
 
-                    is Resource.Success -> _dataTableDataUiState.value =
-                        DataTableDataUiState.DataTableDeletedSuccessfully
+                    is Resource.Success ->
+                        _dataTableDataUiState.value =
+                            DataTableDataUiState.DataTableDeletedSuccessfully
                 }
             }
         }

@@ -30,7 +30,7 @@ import com.mifos.feature.client.clientSignature.SignatureScreen
 import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
-import com.mifos.feature.data_table.dataTableList.FormWidget
+import com.mifos.feature.dataTable.dataTableList.FormWidget
 import kotlin.reflect.KFunction4
 
 fun NavGraphBuilder.clientNavGraph(
