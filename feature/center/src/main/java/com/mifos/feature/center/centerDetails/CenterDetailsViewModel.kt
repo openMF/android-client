@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.use_cases.GetCenterDetailsUseCase
+import com.mifos.core.domain.useCases.GetCenterDetailsUseCase
 import com.mifos.core.objects.group.CenterInfo
 import com.mifos.feature.center.R
 import dagger.hilt.android.lifecycle.HiltViewModel

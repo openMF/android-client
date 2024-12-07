@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.ChargesPayload
-import com.mifos.core.domain.use_cases.CreateChargesUseCase
-import com.mifos.core.domain.use_cases.GetAllChargesV2UseCase
+import com.mifos.core.domain.useCases.CreateChargesUseCase
+import com.mifos.core.domain.useCases.GetAllChargesV2UseCase
 import com.mifos.core.objects.templates.clients.ChargeTemplate
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel

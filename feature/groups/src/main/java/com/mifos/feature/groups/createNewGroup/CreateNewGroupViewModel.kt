@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.use_cases.CreateNewGroupUseCase
-import com.mifos.core.domain.use_cases.GetGroupOfficesUseCase
+import com.mifos.core.domain.useCases.CreateNewGroupUseCase
+import com.mifos.core.domain.useCases.GetGroupOfficesUseCase
 import com.mifos.core.objects.group.GroupPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

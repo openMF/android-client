@@ -15,9 +15,9 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.LoansPayload
-import com.mifos.core.domain.use_cases.CreateLoanAccountUseCase
-import com.mifos.core.domain.use_cases.GetAllLoanUseCase
-import com.mifos.core.domain.use_cases.GetLoansAccountTemplateUseCase
+import com.mifos.core.domain.useCases.CreateLoanAccountUseCase
+import com.mifos.core.domain.useCases.GetAllLoanUseCase
+import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase
 import com.mifos.core.objects.templates.loans.LoanTemplate
 import com.mifos.feature.loan.R
 import dagger.hilt.android.lifecycle.HiltViewModel

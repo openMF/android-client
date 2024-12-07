@@ -16,10 +16,10 @@ import com.mifos.core.common.utils.FileUtils.LOG_TAG
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.CenterPayload
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.use_cases.AllDatabaseCenterPayloadUseCase
-import com.mifos.core.domain.use_cases.CreateCenterUseCase
-import com.mifos.core.domain.use_cases.DeleteAndUpdateCenterPayloadsUseCase
-import com.mifos.core.domain.use_cases.UpdateCenterPayloadUseCase
+import com.mifos.core.domain.useCases.AllDatabaseCenterPayloadUseCase
+import com.mifos.core.domain.useCases.CreateCenterUseCase
+import com.mifos.core.domain.useCases.DeleteAndUpdateCenterPayloadsUseCase
+import com.mifos.core.domain.useCases.UpdateCenterPayloadUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

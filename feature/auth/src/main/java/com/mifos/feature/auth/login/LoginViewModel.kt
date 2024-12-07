@@ -15,8 +15,8 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Network
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.use_cases.PasswordValidationUseCase
-import com.mifos.core.domain.use_cases.UsernameValidationUseCase
+import com.mifos.core.domain.useCases.PasswordValidationUseCase
+import com.mifos.core.domain.useCases.UsernameValidationUseCase
 import com.mifos.core.model.getInstanceUrl
 import com.mifos.feature.auth.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,7 +40,7 @@ class LoginViewModel @Inject constructor(
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val baseApiManager: BaseApiManager,
-    private val loginUseCase: com.mifos.core.domain.use_cases.LoginUseCase,
+    private val loginUseCase: com.mifos.core.domain.useCases.LoginUseCase,
 ) :
     ViewModel() {
 

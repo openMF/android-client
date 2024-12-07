@@ -12,7 +12,7 @@ package com.mifos.feature.checkerInboxTask.checkerInboxTasks
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.use_cases.GetCheckerInboxBadgesUseCase
+import com.mifos.core.domain.useCases.GetCheckerInboxBadgesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

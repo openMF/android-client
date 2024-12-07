@@ -40,7 +40,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.domain.use_cases.GroupsListPagingDataSource
+import com.mifos.core.domain.useCases.GroupsListPagingDataSource
 import com.mifos.core.objects.group.Group
 import com.mifos.core.testing.repository.TestGroupsListRepository
 import com.mifos.core.testing.repository.sampleGroups

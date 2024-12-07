@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.CenterPayload
-import com.mifos.core.domain.use_cases.CreateNewCenterUseCase
-import com.mifos.core.domain.use_cases.GetOfficeListUseCase
+import com.mifos.core.domain.useCases.CreateNewCenterUseCase
+import com.mifos.core.domain.useCases.GetOfficeListUseCase
 import com.mifos.feature.center.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

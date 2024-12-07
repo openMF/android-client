@@ -14,9 +14,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.use_cases.DownloadDocumentUseCase
-import com.mifos.core.domain.use_cases.GetDocumentsListUseCase
-import com.mifos.core.domain.use_cases.RemoveDocumentUseCase
+import com.mifos.core.domain.useCases.DownloadDocumentUseCase
+import com.mifos.core.domain.useCases.GetDocumentsListUseCase
+import com.mifos.core.domain.useCases.RemoveDocumentUseCase
 import com.mifos.feature.document.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

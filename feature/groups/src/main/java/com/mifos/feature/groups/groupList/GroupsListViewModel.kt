@@ -33,7 +33,7 @@ class GroupsListViewModel @Inject constructor(
             prefetchDistance = 1,
         ),
         pagingSourceFactory = {
-            com.mifos.core.domain.use_cases.GroupsListPagingDataSource(repository, PAGE_SIZE)
+            com.mifos.core.domain.useCases.GroupsListPagingDataSource(repository, PAGE_SIZE)
         },
     ).flow.cachedIn(viewModelScope)
 }

@@ -14,7 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CenterListRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.use_cases.GetCenterListDbUseCase
+import com.mifos.core.domain.useCases.GetCenterListDbUseCase
 import com.mifos.feature.center.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

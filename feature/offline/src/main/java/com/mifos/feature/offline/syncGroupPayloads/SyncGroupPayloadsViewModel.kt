@@ -13,10 +13,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.use_cases.AllDatabaseGroupPayloadUseCase
-import com.mifos.core.domain.use_cases.CreateGroupUseCase
-import com.mifos.core.domain.use_cases.DeleteAndUpdateGroupPayloadUseCase
-import com.mifos.core.domain.use_cases.UpdateGroupPayloadUseCase
+import com.mifos.core.domain.useCases.AllDatabaseGroupPayloadUseCase
+import com.mifos.core.domain.useCases.CreateGroupUseCase
+import com.mifos.core.domain.useCases.DeleteAndUpdateGroupPayloadUseCase
+import com.mifos.core.domain.useCases.UpdateGroupPayloadUseCase
 import com.mifos.core.objects.group.GroupPayload
 import com.mifos.feature.offline.R
 import dagger.hilt.android.lifecycle.HiltViewModel
