@@ -71,8 +71,8 @@ internal fun CenterDetailsScreen(
     onActivateCenter: (Int) -> Unit,
     addSavingsAccount: (Int) -> Unit,
     groupList: (Int) -> Unit,
+    viewModel: CenterDetailsViewModel = hiltViewModel(),
 ) {
-    val viewModel: CenterDetailsViewModel = hiltViewModel()
     val centerId by viewModel.centerId.collectAsStateWithLifecycle()
     val state by viewModel.centerDetailsUiState.collectAsStateWithLifecycle()
 

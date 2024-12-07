@@ -42,13 +42,14 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -89,8 +90,8 @@ internal fun CenterListScreen(
     paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
     onCenterSelect: (Int) -> Unit,
+    viewModel: CenterListViewModel = hiltViewModel(),
 ) {
-    val viewModel: CenterListViewModel = hiltViewModel()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val state by viewModel.centerListUiState.collectAsStateWithLifecycle()
 
@@ -122,7 +123,7 @@ internal fun CenterListScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var isInSelectionMode by rememberSaveable { mutableStateOf(false) }
-    val selectedItems = remember { mutableStateListOf<Center>() }
+    val selectedItems = remember { SelectedItemsState() }
     val resetSelectionMode = {
         isInSelectionMode = false
         selectedItems.clear()
@@ -141,7 +142,7 @@ internal fun CenterListScreen(
 
     LaunchedEffect(
         key1 = isInSelectionMode,
-        key2 = selectedItems.size,
+        key2 = selectedItems.size(),
     ) {
         if (isInSelectionMode && selectedItems.isEmpty()) {
             isInSelectionMode = false
@@ -153,7 +154,7 @@ internal fun CenterListScreen(
         topBar = {
             if (isInSelectionMode) {
                 SelectionModeTopAppBar(
-                    itemCount = selectedItems.size,
+                    itemCount = selectedItems.size(),
                     resetSelectionMode = resetSelectionMode,
                     actions = {
                         FilledTonalButton(
@@ -241,11 +242,41 @@ internal fun CenterListScreen(
     }
 }
 
+private class SelectedItemsState(initialSelectedItems: List<Center> = emptyList()) {
+    private val _selectedItems = mutableStateListOf<Center>().also { it.addAll(initialSelectedItems) }
+    val selectedItems: State<List<Center>> = derivedStateOf { _selectedItems }
+
+    fun add(item: Center) {
+        _selectedItems.add(item)
+    }
+
+    fun remove(item: Center) {
+        _selectedItems.remove(item)
+    }
+    fun toList(): List<Center> {
+        return _selectedItems.toList()
+    }
+    fun contains(item: Center): Boolean {
+        return _selectedItems.contains(item)
+    }
+
+    fun clear() {
+        _selectedItems.clear()
+    }
+
+    fun size(): Int {
+        return _selectedItems.size
+    }
+    fun isEmpty(): Boolean {
+        return _selectedItems.isEmpty()
+    }
+}
+
 @Composable
 private fun CenterListContent(
     centerPagingList: LazyPagingItems<Center>,
     isInSelectionMode: Boolean,
-    selectedItems: SnapshotStateList<Center>,
+    selectedItems: SelectedItemsState,
     onRefresh: () -> Unit,
     onCenterSelect: (Int) -> Unit,
     selectedMode: () -> Unit,
@@ -265,7 +296,7 @@ private fun CenterListContent(
     LazyColumn {
         items(centerPagingList.itemCount) { index ->
 
-            val isSelected = selectedItems.contains(centerPagingList[index])
+            val isSelected = selectedItems.contains(centerPagingList[index]!!)
             var cardColor by remember { mutableStateOf(White) }
 
             OutlinedCard(
@@ -275,7 +306,7 @@ private fun CenterListContent(
                         onClick = {
                             if (isInSelectionMode) {
                                 cardColor = if (isSelected) {
-                                    selectedItems.remove(centerPagingList[index])
+                                    centerPagingList[index]?.let { selectedItems.remove(it) }
                                     White
                                 } else {
                                     centerPagingList[index]?.let { selectedItems.add(it) }
@@ -288,7 +319,7 @@ private fun CenterListContent(
                         onLongClick = {
                             if (isInSelectionMode) {
                                 cardColor = if (isSelected) {
-                                    selectedItems.remove(centerPagingList[index])
+                                    centerPagingList[index]?.let { selectedItems.remove(it) }
                                     White
                                 } else {
                                     centerPagingList[index]?.let { selectedItems.add(it) }
@@ -571,7 +602,7 @@ private fun CenterListContentPreview() {
     CenterListContent(
         centerPagingList = sampleCenterList.collectAsLazyPagingItems(),
         isInSelectionMode = false,
-        selectedItems = rememberSaveable { mutableStateListOf() },
+        selectedItems = SelectedItemsState(),
         onRefresh = {},
         onCenterSelect = {},
         selectedMode = {},

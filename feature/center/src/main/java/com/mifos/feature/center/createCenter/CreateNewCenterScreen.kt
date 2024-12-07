@@ -70,8 +70,8 @@ import java.util.Locale
 @Composable
 internal fun CreateNewCenterScreen(
     onCreateSuccess: () -> Unit,
+    viewModel: CreateNewCenterViewModel = hiltViewModel(),
 ) {
-    val viewModel: CreateNewCenterViewModel = hiltViewModel()
     val state by viewModel.createNewCenterUiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -189,117 +189,118 @@ private fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterP
             }
         }
     }
-
-    if (showDatePicker) {
-        DatePickerDialog(
-            onDismissRequest = {
-                showDatePicker = false
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showDatePicker = false
-                        datePickerState.selectedDateMillis?.let {
-                            activateDate = it
-                        }
-                    },
-                ) { Text(stringResource(id = R.string.feature_center_select)) }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showDatePicker = false
-                    },
-                ) { Text(stringResource(id = R.string.feature_center_cancel)) }
-            },
-        ) {
-            DatePicker(state = datePickerState)
-        }
-    }
-
-    MifosOutlinedTextField(
-        value = centerName,
-        onValueChange = { centerName = it },
-        label = R.string.feature_center_center_name,
-        error = null,
-    )
-
-    MifosTextFieldDropdown(
-        value = selectedOffice,
-        onValueChanged = {
-            selectedOffice = it
-        },
-        onOptionSelected = { index, value ->
-            selectedOffice = value
-            offices[index].id?.let {
-                officeId = it
-            }
-        },
-        label = R.string.feature_center_office,
-        options = offices.map { it.name.toString() },
-        readOnly = true,
-    )
-
-    Row(
-        modifier = Modifier.padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Checkbox(
-            checked = isActivate,
-            onCheckedChange = {
-                isActivate = it
-            },
-        )
-        Text(text = stringResource(id = R.string.feature_center_activate))
-    }
-
-    if (isActivate) {
-        MifosDatePickerTextField(
-            value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-                activateDate,
-            ),
-            label = R.string.feature_center_activation_date,
-            openDatePicker = {
-                showDatePicker = true
-            },
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-    }
-
-    Button(
-        onClick = {
-            if (validateAllFields()) {
-                createCenter(
-                    CenterPayload(
-                        name = centerName.text,
-                        active = isActivate,
-                        activationDate = if (isActivate) {
-                            SimpleDateFormat(
-                                "dd MMMM yyyy",
-                                Locale.getDefault(),
-                            ).format(
-                                activateDate,
-                            )
-                        } else {
-                            null
+    Column {
+        if (showDatePicker) {
+            DatePickerDialog(
+                onDismissRequest = {
+                    showDatePicker = false
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showDatePicker = false
+                            datePickerState.selectedDateMillis?.let {
+                                activateDate = it
+                            }
                         },
-                        officeId = officeId,
-                        dateFormat = "dd MMMM yyyy",
-                        locale = "en",
-                    ),
-                )
+                    ) { Text(stringResource(id = R.string.feature_center_select)) }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            showDatePicker = false
+                        },
+                    ) { Text(stringResource(id = R.string.feature_center_cancel)) }
+                },
+            ) {
+                DatePicker(state = datePickerState)
             }
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(44.dp)
-            .padding(start = 16.dp, end = 16.dp),
-        contentPadding = PaddingValues(),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-        ),
-    ) {
-        Text(text = stringResource(id = R.string.feature_center_create), fontSize = 16.sp)
+        }
+
+        MifosOutlinedTextField(
+            value = centerName,
+            onValueChange = { centerName = it },
+            label = R.string.feature_center_center_name,
+            error = null,
+        )
+
+        MifosTextFieldDropdown(
+            value = selectedOffice,
+            onValueChanged = {
+                selectedOffice = it
+            },
+            onOptionSelected = { index, value ->
+                selectedOffice = value
+                offices[index].id?.let {
+                    officeId = it
+                }
+            },
+            label = R.string.feature_center_office,
+            options = offices.map { it.name.toString() },
+            readOnly = true,
+        )
+
+        Row(
+            modifier = Modifier.padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Checkbox(
+                checked = isActivate,
+                onCheckedChange = {
+                    isActivate = it
+                },
+            )
+            Text(text = stringResource(id = R.string.feature_center_activate))
+        }
+
+        if (isActivate) {
+            MifosDatePickerTextField(
+                value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
+                    activateDate,
+                ),
+                label = R.string.feature_center_activation_date,
+                openDatePicker = {
+                    showDatePicker = true
+                },
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        Button(
+            onClick = {
+                if (validateAllFields()) {
+                    createCenter(
+                        CenterPayload(
+                            name = centerName.text,
+                            active = isActivate,
+                            activationDate = if (isActivate) {
+                                SimpleDateFormat(
+                                    "dd MMMM yyyy",
+                                    Locale.getDefault(),
+                                ).format(
+                                    activateDate,
+                                )
+                            } else {
+                                null
+                            },
+                            officeId = officeId,
+                            dateFormat = "dd MMMM yyyy",
+                            locale = "en",
+                        ),
+                    )
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(44.dp)
+                .padding(start = 16.dp, end = 16.dp),
+            contentPadding = PaddingValues(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+            ),
+        ) {
+            Text(text = stringResource(id = R.string.feature_center_create), fontSize = 16.sp)
+        }
     }
 }
 
