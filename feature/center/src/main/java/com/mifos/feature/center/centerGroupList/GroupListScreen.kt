@@ -56,8 +56,8 @@ import com.mifos.feature.center.R
 internal fun GroupListScreen(
     onBackPressed: () -> Unit,
     loadClientsOfGroup: (List<Client>) -> Unit,
+    viewModel: GroupListViewModel = hiltViewModel(),
 ) {
-    val viewModel: GroupListViewModel = hiltViewModel()
     val centerId by viewModel.centerId.collectAsStateWithLifecycle()
     val state by viewModel.groupListUiState.collectAsStateWithLifecycle()
     val groupAssociationState by viewModel.groupAssociationState.collectAsStateWithLifecycle()

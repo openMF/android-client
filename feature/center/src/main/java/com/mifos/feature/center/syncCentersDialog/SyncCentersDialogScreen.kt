@@ -43,10 +43,10 @@ import com.mifos.feature.center.R
 
 @Composable
 internal fun SyncCenterDialogScreen(
-    viewModel: SyncCentersDialogViewModel = hiltViewModel(),
     dismiss: () -> Unit,
     hide: () -> Unit,
     centers: List<Center>? = listOf(),
+    viewModel: SyncCentersDialogViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.syncCentersDialogUiState.collectAsStateWithLifecycle()
     val uiData by viewModel.syncCenterData.collectAsStateWithLifecycle()
