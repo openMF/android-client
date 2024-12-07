@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperClient
@@ -38,7 +47,7 @@ class DataManagerClient @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     private val mDatabaseHelperClient: DatabaseHelperClient,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-    private val prefManager: com.mifos.core.datastore.PrefManager
+    private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -62,7 +71,7 @@ class DataManagerClient @Inject constructor(
                 null, null, null,
                 null, null, null,
                 null, null, offset,
-                limit, null, null, null
+                limit, null, null, null,
             ).map(GetClientResponseMapper::mapFromEntity)
 
             true -> {
@@ -146,7 +155,7 @@ class DataManagerClient @Inject constructor(
             .concatMap { clientAccounts ->
                 mDatabaseHelperClient.saveClientAccounts(
                     clientAccounts,
-                    clientId
+                    clientId,
                 )
             }
     }
@@ -189,12 +198,13 @@ class DataManagerClient @Inject constructor(
      */
     val clientTemplate: Observable<ClientsTemplate>
         get() = when (prefManager.userStatus) {
-            false -> mBaseApiManager.clientsApi.clientTemplate
-                .concatMap { clientsTemplate ->
-                    mDatabaseHelperClient.saveClientTemplate(
-                        clientsTemplate
-                    )
-                }
+            false ->
+                mBaseApiManager.clientsApi.clientTemplate
+                    .concatMap { clientsTemplate ->
+                        mDatabaseHelperClient.saveClientTemplate(
+                            clientsTemplate,
+                        )
+                    }
 
             true ->
                 /**
@@ -246,7 +256,7 @@ class DataManagerClient @Inject constructor(
      */
     fun deleteAndUpdatePayloads(
         id: Int,
-        clientCreationTIme: Long
+        clientCreationTIme: Long,
     ): Observable<List<ClientPayload>> {
         return mDatabaseHelperClient.deleteAndUpdatePayloads(id, clientCreationTIme)
     }
@@ -266,7 +276,7 @@ class DataManagerClient @Inject constructor(
      *
      * @param clientId Client Id
      * @return List<Identifier>
-    </Identifier> */
+     </Identifier> */
     fun getClientIdentifiers(clientId: Int): Observable<List<Identifier>> {
         return baseApiManager.getClient().clientIdentifiers.retrieveAllClientIdentifiers(clientId.toLong())
             .map(IdentifierMapper::mapFromEntityList)
@@ -280,7 +290,8 @@ class DataManagerClient @Inject constructor(
      * @return IdentifierCreationResponse
      */
     suspend fun createClientIdentifier(
-        clientId: Int, identifierPayload: IdentifierPayload
+        clientId: Int,
+        identifierPayload: IdentifierPayload,
     ): IdentifierCreationResponse {
         return mBaseApiManager.clientsApi.createClientIdentifier(clientId, identifierPayload)
     }
@@ -305,11 +316,11 @@ class DataManagerClient @Inject constructor(
      */
     fun deleteClientIdentifier(
         clientId: Int,
-        identifierId: Int
+        identifierId: Int,
     ): Observable<DeleteClientsClientIdIdentifiersIdentifierIdResponse> {
         return baseApiManager.getClient().clientIdentifiers.deleteClientIdentifier(
             clientId.toLong(),
-            identifierId.toLong()
+            identifierId.toLong(),
         )
     }
 
@@ -333,7 +344,7 @@ class DataManagerClient @Inject constructor(
      */
     suspend fun addClientPinpointLocation(
         clientId: Int,
-        address: ClientAddressRequest?
+        address: ClientAddressRequest?,
     ): GenericResponse {
         return mBaseApiManager.clientsApi.addClientPinpointLocation(clientId, address)
     }
@@ -347,7 +358,7 @@ class DataManagerClient @Inject constructor(
      */
     suspend fun deleteClientAddressPinpointLocation(
         apptableId: Int,
-        datatableId: Int
+        datatableId: Int,
     ): GenericResponse {
         return mBaseApiManager.clientsApi
             .deleteClientPinpointLocation(apptableId, datatableId)
@@ -364,10 +375,12 @@ class DataManagerClient @Inject constructor(
     suspend fun updateClientPinpointLocation(
         apptableId: Int,
         datatableId: Int,
-        address: ClientAddressRequest?
+        address: ClientAddressRequest?,
     ): GenericResponse {
         return mBaseApiManager.clientsApi.updateClientPinpointLocation(
-            apptableId, datatableId, address
+            apptableId,
+            datatableId,
+            address,
         )
     }
 
@@ -379,7 +392,7 @@ class DataManagerClient @Inject constructor(
      */
     fun activateClient(
         clientId: Int,
-        clientActivate: ActivatePayload?
+        clientActivate: ActivatePayload?,
     ): Observable<PostClientsClientIdResponse> {
         return baseApiManager.getClientsApi().activate1(
             clientId.toLong(),
@@ -387,7 +400,8 @@ class DataManagerClient @Inject constructor(
                 activationDate = clientActivate?.activationDate
                 dateFormat = clientActivate?.dateFormat
                 locale = clientActivate?.locale
-            }, "activate"
+            },
+            "activate",
         )
     }
 }

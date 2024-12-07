@@ -1,7 +1,15 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.di
 
 import android.content.Context
-import android.util.Log
 import androidx.core.os.trace
 import coil.ImageLoader
 import coil.util.DebugLogger
@@ -36,7 +44,7 @@ object NetworkModule {
             usernamePassword.second,
             prefManager.getServerConfig.getInstanceUrl(),
             prefManager.getServerConfig.tenant,
-            false
+            false,
         )
         return baseManager
     }
@@ -47,12 +55,11 @@ object NetworkModule {
         OkHttpClient.Builder().build()
     }
 
-
     @Provides
     @Singleton
     fun provideImageLoader(
         okHttpCallFactory: dagger.Lazy<Call.Factory>,
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): ImageLoader {
         return ImageLoader.Builder(context)
             .callFactory { okHttpCallFactory.get() }

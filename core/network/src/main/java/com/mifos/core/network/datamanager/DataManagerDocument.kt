@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.network.BaseApiManager
@@ -23,7 +32,7 @@ class DataManagerDocument @Inject constructor(val mBaseApiManager: BaseApiManage
      * @param entityType Entity Type
      * @param entityId   Entity Id
      * @return List<Document>
-    </Document> */
+     </Document> */
     suspend fun getDocumentsList(entityType: String, entityId: Int): List<Document> {
         return mBaseApiManager.documentApi.getDocuments(entityType, entityId)
     }
@@ -41,8 +50,11 @@ class DataManagerDocument @Inject constructor(val mBaseApiManager: BaseApiManage
      * @return GenericResponse
      */
     fun createDocument(
-        entityType: String?, entityId: Int, name: String?,
-        desc: String?, file: MultipartBody.Part?
+        entityType: String?,
+        entityId: Int,
+        name: String?,
+        desc: String?,
+        file: MultipartBody.Part?,
     ): Observable<GenericResponse> {
         return mBaseApiManager
             .documentApi
@@ -61,8 +73,9 @@ class DataManagerDocument @Inject constructor(val mBaseApiManager: BaseApiManage
      * @return ResponseBody Binary File of Document
      */
     suspend fun downloadDocument(
-        entityType: String, entityId: Int,
-        documentId: Int
+        entityType: String,
+        entityId: Int,
+        documentId: Int,
     ): ResponseBody {
         return mBaseApiManager.documentApi.downloadDocument(entityType, entityId, documentId)
     }
@@ -80,8 +93,9 @@ class DataManagerDocument @Inject constructor(val mBaseApiManager: BaseApiManage
      * @return GenericResponse
      */
     suspend fun removeDocument(
-        entityType: String, entityId: Int,
-        documentId: Int
+        entityType: String,
+        entityId: Int,
+        documentId: Int,
     ): GenericResponse {
         return mBaseApiManager.documentApi.removeDocument(entityType, entityId, documentId)
     }
@@ -107,7 +121,7 @@ class DataManagerDocument @Inject constructor(val mBaseApiManager: BaseApiManage
         documentId: Int,
         name: String?,
         desc: String?,
-        file: MultipartBody.Part?
+        file: MultipartBody.Part?,
     ): Observable<GenericResponse> {
         return mBaseApiManager.documentApi
             .updateDocument(entityType, entityId, documentId, name, desc, file)

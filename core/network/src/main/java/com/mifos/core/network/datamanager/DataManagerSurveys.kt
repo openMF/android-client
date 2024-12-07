@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperSurveys
@@ -20,7 +29,7 @@ import javax.inject.Singleton
 class DataManagerSurveys @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     private val mDatabaseHelperSurveys: DatabaseHelperSurveys,
-    private val prefManager: com.mifos.core.datastore.PrefManager
+    private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**
      * This Method sending the Request to REST API :
@@ -28,7 +37,7 @@ class DataManagerSurveys @Inject constructor(
      * returns the Observable<List></List><Survey>> to the Presenter.
      *
      * @return Observable<List></List><Survey>>
-    </Survey></Survey> */
+     </Survey></Survey> */
     val allSurvey: Observable<List<Survey>>
         get() = when (prefManager.userStatus) {
             false -> mBaseApiManager.surveyApi.allSurveys
@@ -40,7 +49,7 @@ class DataManagerSurveys @Inject constructor(
      * read the all Surveys from the Database Survey table and returns the List<Survey>.
      *
      * @return List<Survey>
-    </Survey></Survey> */
+     </Survey></Survey> */
     val databaseSurveys: Observable<List<Survey>>
         get() = mDatabaseHelperSurveys.readAllSurveys()
 
@@ -49,7 +58,7 @@ class DataManagerSurveys @Inject constructor(
      * mDatabaseHelperSurveys.getQuestionDatas() read the all QuestionDatas
      * from the Database QuestionDatas table and returns the List<QuestionDatas>.
      * @return List<QuestionDatas>
-    </QuestionDatas></QuestionDatas> */
+     </QuestionDatas></QuestionDatas> */
     fun getDatabaseQuestionData(surveyId: Int): Observable<List<QuestionDatas>> {
         return mDatabaseHelperSurveys.getQuestionDatas(surveyId)
     }
@@ -59,7 +68,7 @@ class DataManagerSurveys @Inject constructor(
      * mDatabaseHelperSurveys.getResponseDatas() read the all ResponseDatas
      * from the Database ResponseDatas table and returns the List<ResponseDatas>.
      * @return List<ResponseDatas>
-    </ResponseDatas></ResponseDatas> */
+     </ResponseDatas></ResponseDatas> */
     fun getDatabaseResponseDatas(questionId: Int): Observable<List<ResponseDatas>> {
         return mDatabaseHelperSurveys.getResponseDatas(questionId)
     }
@@ -97,7 +106,7 @@ class DataManagerSurveys @Inject constructor(
      */
     fun syncQuestionDataInDatabase(
         surveyId: Int,
-        questionDatas: QuestionDatas
+        questionDatas: QuestionDatas,
     ): Observable<QuestionDatas> {
         return mDatabaseHelperSurveys.saveQuestionData(surveyId, questionDatas)
     }
@@ -110,7 +119,7 @@ class DataManagerSurveys @Inject constructor(
      */
     fun syncResponseDataInDatabase(
         questionId: Int,
-        responseDatas: ResponseDatas
+        responseDatas: ResponseDatas,
     ): Observable<ResponseDatas> {
         return mDatabaseHelperSurveys.saveResponseData(questionId, responseDatas)
     }

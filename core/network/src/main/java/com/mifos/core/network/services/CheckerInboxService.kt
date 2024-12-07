@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.services
 
 import com.mifos.core.model.APIEndPoint
@@ -5,8 +14,11 @@ import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.checkerinboxandtasks.CheckerInboxSearchTemplate
 import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
 import com.mifos.core.objects.checkerinboxandtasks.RescheduleLoansTask
-import kotlinx.coroutines.flow.Flow
-import retrofit2.http.*
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 import rx.Observable
 
 interface CheckerInboxService {
@@ -15,7 +27,7 @@ interface CheckerInboxService {
     suspend fun getCheckerList(
         @Query("actionName") actionName: String? = null,
         @Query("entityName") entityName: String? = null,
-        @Query("resourceId") resourceId: Int? = null
+        @Query("resourceId") resourceId: Int? = null,
     ): List<CheckerTask>
 
     @POST(APIEndPoint.MAKER_CHECKER + "/{auditId}?command=approve")
@@ -37,7 +49,6 @@ interface CheckerInboxService {
     fun getCheckerTasksFromResourceId(
         @Query("actionName") actionName: String? = null,
         @Query("entityName") entityName: String? = null,
-        @Query("resourceId") resourceId: Int? = null
+        @Query("resourceId") resourceId: Int? = null,
     ): Observable<List<CheckerTask>>
-
 }

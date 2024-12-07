@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperCharge
@@ -20,7 +29,7 @@ import javax.inject.Singleton
 class DataManagerCharge @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     val mDatabaseHelperCharge: DatabaseHelperCharge,
-    private val prefManager: com.mifos.core.datastore.PrefManager
+    private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**
      * This Method Request the Charge API at
@@ -45,9 +54,13 @@ class DataManagerCharge @Inject constructor(
                 /**
                  * Return Client Charges from DatabaseHelperClient only one time.
                  */
-                if (offset == 0) mDatabaseHelperCharge.readClientCharges(clientId) else Observable.just(
-                    Page()
-                )
+                if (offset == 0) {
+                    mDatabaseHelperCharge.readClientCharges(clientId)
+                } else {
+                    Observable.just(
+                        Page(),
+                    )
+                }
             }
         }
     }

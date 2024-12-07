@@ -1,9 +1,15 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.network
 
+import android.util.Log
 import java.io.IOException
 import java.net.InetAddress
 import java.net.Socket
@@ -23,18 +29,20 @@ class UnsafeSSLSocketFactory(truststore: KeyStore?) : SSLSocketFactory() {
     var sslContext = SSLContext.getInstance("TLS")
 
     init {
-
+        Log.d("truststore", truststore.toString())
         // Create a trust manager that does not validate certificate chains
-        val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
-            override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
-            @Throws(CertificateException::class)
-            override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
-            }
+        val trustAllCerts = arrayOf<TrustManager>(
+            object : X509TrustManager {
+                override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
 
-            override fun getAcceptedIssuers(): Array<X509Certificate> {
-                return emptyArray()
-            }
-        }
+                @Throws(CertificateException::class)
+                override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {
+                }
+
+                override fun getAcceptedIssuers(): Array<X509Certificate> {
+                    return emptyArray()
+                }
+            },
         )
         sslContext.init(null, trustAllCerts, null)
     }
@@ -62,7 +70,7 @@ class UnsafeSSLSocketFactory(truststore: KeyStore?) : SSLSocketFactory() {
         host: String,
         port: Int,
         localHost: InetAddress,
-        localPort: Int
+        localPort: Int,
     ): Socket? {
         return null
     }
@@ -77,7 +85,7 @@ class UnsafeSSLSocketFactory(truststore: KeyStore?) : SSLSocketFactory() {
         address: InetAddress,
         port: Int,
         localAddress: InetAddress,
-        localPort: Int
+        localPort: Int,
     ): Socket? {
         return null
     }

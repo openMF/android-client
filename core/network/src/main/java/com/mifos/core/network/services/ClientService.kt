@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.network.services
@@ -45,7 +50,7 @@ interface ClientService {
     fun getAllClients(
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
-        @Query("limit") limit: Int
+        @Query("limit") limit: Int,
     ): Observable<Page<Client>>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
@@ -55,13 +60,13 @@ interface ClientService {
     @POST(APIEndPoint.CLIENTS + "/{clientId}/images")
     fun uploadClientImage(
         @Path("clientId") clientId: Int,
-        @Part file: MultipartBody.Part?
+        @Part file: MultipartBody.Part?,
     ): Observable<ResponseBody>
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
     fun deleteClientImage(@Path("clientId") clientId: Int): Observable<ResponseBody>
 
-    //TODO: Implement when API Fixed
+    // TODO: Implement when API Fixed
     //    @GET("/clients/{clientId}/images")
     //    Observable<TypedString> getClientImage(@Path("clientId") int clientId);
     @POST(APIEndPoint.CLIENTS)
@@ -80,7 +85,7 @@ interface ClientService {
      *
      * @param clientId Client Id
      * @return List<Identifier>
-    </Identifier> */
+     </Identifier> */
     @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
     fun getClientIdentifiers(@Path("clientId") clientId: Int): Observable<List<Identifier>>
 
@@ -96,7 +101,7 @@ interface ClientService {
     @POST(APIEndPoint.CLIENTS + "/{clientId}/identifiers")
     suspend fun createClientIdentifier(
         @Path("clientId") clientId: Int,
-        @Body identifierPayload: IdentifierPayload
+        @Body identifierPayload: IdentifierPayload,
     ): IdentifierCreationResponse
 
     /**
@@ -123,7 +128,7 @@ interface ClientService {
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
     fun deleteClientIdentifier(
         @Path("clientId") clientId: Int,
-        @Path("identifierId") identifierId: Int
+        @Path("identifierId") identifierId: Int,
     ): Observable<GenericResponse>
 
     /**
@@ -142,7 +147,7 @@ interface ClientService {
      */
     @GET(APIEndPoint.DATATABLES + "/client_pinpoint_location/{clientId}")
     suspend fun getClientPinpointLocations(
-        @Path("clientId") clientId: Int
+        @Path("clientId") clientId: Int,
     ): List<ClientAddressResponse>
 
     /**
@@ -159,7 +164,7 @@ interface ClientService {
     @POST(APIEndPoint.DATATABLES + "/client_pinpoint_location/{clientId}")
     suspend fun addClientPinpointLocation(
         @Path("clientId") clientId: Int,
-        @Body clientAddressRequest: ClientAddressRequest?
+        @Body clientAddressRequest: ClientAddressRequest?,
     ): GenericResponse
 
     /**
@@ -176,7 +181,7 @@ interface ClientService {
     @DELETE(APIEndPoint.DATATABLES + "/client_pinpoint_location/{apptableId}/{datatableId}")
     suspend fun deleteClientPinpointLocation(
         @Path("apptableId") apptableId: Int,
-        @Path("datatableId") datatableId: Int
+        @Path("datatableId") datatableId: Int,
     ): GenericResponse
 
     /**
@@ -195,7 +200,7 @@ interface ClientService {
     suspend fun updateClientPinpointLocation(
         @Path("apptableId") apptableId: Int,
         @Path("datatableId") datatableId: Int,
-        @Body address: ClientAddressRequest?
+        @Body address: ClientAddressRequest?,
     ): GenericResponse
 
     /**
@@ -209,6 +214,6 @@ interface ClientService {
     @POST(APIEndPoint.CLIENTS + "/{clientId}?command=activate")
     fun activateClient(
         @Path("clientId") clientId: Int,
-        @Body clientActivate: ActivatePayload?
+        @Body clientActivate: ActivatePayload?,
     ): Observable<GenericResponse>
 }
