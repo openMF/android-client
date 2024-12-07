@@ -12,10 +12,10 @@ package com.mifos.feature.checkerInboxTask.checkerInbox
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.use_cases.ApproveCheckerUseCase
-import com.mifos.core.domain.use_cases.DeleteCheckerUseCase
-import com.mifos.core.domain.use_cases.GetCheckerTasksUseCase
-import com.mifos.core.domain.use_cases.RejectCheckerUseCase
+import com.mifos.core.domain.useCases.ApproveCheckerUseCase
+import com.mifos.core.domain.useCases.DeleteCheckerUseCase
+import com.mifos.core.domain.useCases.GetCheckerTasksUseCase
+import com.mifos.core.domain.useCases.RejectCheckerUseCase
 import com.mifos.feature.checker_inbox_task.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

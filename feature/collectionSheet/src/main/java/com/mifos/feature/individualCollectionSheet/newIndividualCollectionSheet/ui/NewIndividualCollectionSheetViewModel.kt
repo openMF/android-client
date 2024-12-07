@@ -12,9 +12,9 @@ package com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.use_cases.GetIndividualCollectionSheetUseCase
-import com.mifos.core.domain.use_cases.GetOfficeListUseCase
-import com.mifos.core.domain.use_cases.GetStaffInOfficeUseCase
+import com.mifos.core.domain.useCases.GetIndividualCollectionSheetUseCase
+import com.mifos.core.domain.useCases.GetOfficeListUseCase
+import com.mifos.core.domain.useCases.GetStaffInOfficeUseCase
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
 import dagger.hilt.android.lifecycle.HiltViewModel

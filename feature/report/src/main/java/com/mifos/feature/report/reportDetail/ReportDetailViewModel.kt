@@ -15,11 +15,11 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.use_cases.GetReportFullParameterListUseCase
-import com.mifos.core.domain.use_cases.GetReportParameterDetailsUseCase
-import com.mifos.core.domain.use_cases.GetRunReportOfficesUseCase
-import com.mifos.core.domain.use_cases.GetRunReportProductUseCase
-import com.mifos.core.domain.use_cases.GetRunReportWithQueryUseCase
+import com.mifos.core.domain.useCases.GetReportFullParameterListUseCase
+import com.mifos.core.domain.useCases.GetReportParameterDetailsUseCase
+import com.mifos.core.domain.useCases.GetRunReportOfficesUseCase
+import com.mifos.core.domain.useCases.GetRunReportProductUseCase
+import com.mifos.core.domain.useCases.GetRunReportWithQueryUseCase
 import com.mifos.core.objects.runreports.DataRow
 import com.mifos.core.objects.runreports.FullParameterListResponse
 import com.mifos.core.objects.runreports.client.ClientReportTypeItem

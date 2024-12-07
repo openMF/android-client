@@ -15,10 +15,10 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.SavingsPayload
-import com.mifos.core.domain.use_cases.CreateSavingsAccountUseCase
-import com.mifos.core.domain.use_cases.GetClientSavingsAccountTemplateByProductUseCase
-import com.mifos.core.domain.use_cases.GetGroupSavingsAccountTemplateByProductUseCase
-import com.mifos.core.domain.use_cases.LoadSavingsAccountsAndTemplateUseCase
+import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
+import com.mifos.core.domain.useCases.GetClientSavingsAccountTemplateByProductUseCase
+import com.mifos.core.domain.useCases.GetGroupSavingsAccountTemplateByProductUseCase
+import com.mifos.core.domain.useCases.LoadSavingsAccountsAndTemplateUseCase
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import com.mifos.feature.savings.R
 import dagger.hilt.android.lifecycle.HiltViewModel

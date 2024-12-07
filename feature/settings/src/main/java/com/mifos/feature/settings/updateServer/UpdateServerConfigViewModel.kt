@@ -15,7 +15,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.use_cases.ServerConfigValidatorUseCase
+import com.mifos.core.domain.useCases.ServerConfigValidatorUseCase
 import com.mifos.core.model.ServerConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

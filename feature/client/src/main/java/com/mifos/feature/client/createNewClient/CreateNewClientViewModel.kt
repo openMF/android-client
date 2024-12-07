@@ -14,8 +14,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.core.domain.use_cases.ClientTemplateUseCase
-import com.mifos.core.domain.use_cases.GetStaffInOfficeForCreateNewClientUseCase
+import com.mifos.core.domain.useCases.ClientTemplateUseCase
+import com.mifos.core.domain.useCases.GetStaffInOfficeForCreateNewClientUseCase
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
 import com.mifos.core.objects.organisation.Office
