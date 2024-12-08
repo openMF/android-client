@@ -57,8 +57,8 @@ class GroupsListFragment : MifosBaseFragment() {
                 .getBoolean(Constants.IS_A_PARENT_FRAGMENT)
         }
 
-        if (!isParentFragment) (activity as HomeActivity).supportActionBar?.title =
-            getString(R.string.feature_groups_groups)
+//        if (!isParentFragment) (activity as HomeActivity).supportActionBar?.title =
+//            getString(R.string.feature_groups_groups)
     }
 
     override fun onCreateView(

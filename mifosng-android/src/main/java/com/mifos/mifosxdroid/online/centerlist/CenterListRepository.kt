@@ -10,7 +10,7 @@ import rx.Observable
  */
 interface CenterListRepository {
 
-    fun getCenters(paged: Boolean, offset: Int, limit: Int): Observable<Page<Center>>
+    suspend fun getCenters(paged: Boolean, offset: Int, limit: Int): Page<Center>
 
     suspend fun getCentersGroupAndMeeting(id: Int): CenterWithAssociations
 

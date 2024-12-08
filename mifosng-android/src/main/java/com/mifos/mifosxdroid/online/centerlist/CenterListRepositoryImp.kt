@@ -13,7 +13,7 @@ import javax.inject.Inject
 class CenterListRepositoryImp @Inject constructor(private val dataManagerCenter: DataManagerCenter) :
     CenterListRepository {
 
-    override fun getCenters(paged: Boolean, offset: Int, limit: Int): Observable<Page<Center>> {
+    override suspend fun getCenters(paged: Boolean, offset: Int, limit: Int): Page<Center> {
         return dataManagerCenter.getCenters(paged, offset, limit)
     }
 

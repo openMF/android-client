@@ -1,27 +1,19 @@
 package com.mifos.mifosxdroid.passcode
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import androidx.core.widget.NestedScrollView
-import com.mifos.mifosxdroid.AndroidClientActivity
-import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.core.util.Toaster
-import com.mifos.mobile.passcode.MifosPassCodeActivity
-import com.mifos.mobile.passcode.utils.EncryptionUtil
-import com.mifos.mobile.passcode.utils.PasscodePreferencesHelper
+import androidx.appcompat.app.AppCompatActivity
 import com.mifos.utils.Constants
 
-class PassCodeActivity : MifosPassCodeActivity() {
+class PassCodeActivity : AppCompatActivity() {
 
     private var currPassCode: String? = null
     private var isToUpdatePassCode: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        findViewById<NestedScrollView>(com.mifos.mobile.passcode.R.id.cl_rootview).setBackgroundColor(
-            android.R.attr.colorBackground
-        )
+//        findViewById<NestedScrollView>(com.mifos.mobile.passcode.R.id.cl_rootview).setBackgroundColor(
+//            android.R.attr.colorBackground
+//        )
 
         intent?.let {
             currPassCode = it.getStringExtra(Constants.CURR_PASSWORD)
@@ -29,34 +21,34 @@ class PassCodeActivity : MifosPassCodeActivity() {
         }
     }
 
-    override fun showToaster(view: View?, msg: Int) {
-        Toaster.show(view, msg, Toaster.SHORT)
-    }
-
-    override fun startLoginActivity() {
-        startActivity(Intent(this, AndroidClientActivity::class.java))
-        finish()
-    }
-
-    override fun getLogo(): Int {
-        return R.drawable.mifos_logo
-    }
-
-    override fun getEncryptionType(): Int {
-        return EncryptionUtil.FINERACT_CN
-    }
-
-    override fun startNextActivity() {
-        startActivity(Intent(this, AndroidClientActivity::class.java))
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        if (isToUpdatePassCode && !currPassCode.isNullOrEmpty()) {
-            PasscodePreferencesHelper(this).apply {
-                savePassCode(currPassCode)
-            }
-        }
-        finish()
-    }
+//    override fun showToaster(view: View?, msg: Int) {
+//        Toaster.show(view, msg, Toaster.SHORT)
+//    }
+//
+//    override fun startLoginActivity() {
+//        startActivity(Intent(this, AndroidClientActivity::class.java))
+//        finish()
+//    }
+//
+//    override fun getLogo(): Int {
+//        return R.drawable.mifos_logo
+//    }
+//
+//    override fun getEncryptionType(): Int {
+//        return EncryptionUtil.FINERACT_CN
+//    }
+//
+//    override fun startNextActivity() {
+//        startActivity(Intent(this, AndroidClientActivity::class.java))
+//    }
+//
+//    override fun onBackPressed() {
+//        super.onBackPressed()
+//        if (isToUpdatePassCode && !currPassCode.isNullOrEmpty()) {
+//            PasscodePreferencesHelper(this).apply {
+//                savePassCode(currPassCode)
+//            }
+//        }
+//        finish()
+//    }
 }

@@ -29,7 +29,7 @@ class SearchFragment : MifosBaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        (activity as HomeActivity).supportActionBar?.title = getString(R.string.dashboard)
+//        (activity as HomeActivity).supportActionBar?.title = getString(R.string.dashboard)
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {

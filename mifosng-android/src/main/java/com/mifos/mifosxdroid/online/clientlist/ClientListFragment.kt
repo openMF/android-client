@@ -42,8 +42,8 @@ class ClientListFragment : MifosBaseFragment() {
             isParentFragment = arg.clientListArgs.isParentFragment
         }
 
-        if (!isParentFragment) (activity as HomeActivity).supportActionBar?.title =
-            getString(R.string.clients)
+//        if (!isParentFragment) (activity as HomeActivity).supportActionBar?.title =
+//            getString(R.string.clients)
     }
 
     override fun onCreateView(

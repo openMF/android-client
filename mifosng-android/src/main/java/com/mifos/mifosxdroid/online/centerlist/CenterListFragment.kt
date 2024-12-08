@@ -33,7 +33,7 @@ class CenterListFragment : MifosBaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireActivity()).apply {
-            (activity as HomeActivity).supportActionBar?.title = getString(R.string.centers)
+//            (activity as HomeActivity).supportActionBar?.title = getString(R.string.centers)
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
 //                CenterListScreen(

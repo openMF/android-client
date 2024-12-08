@@ -4,9 +4,9 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.mifos.application.App
 import com.mifos.core.objects.user.User
-import org.apache.fineract.client.models.PostAuthenticationResponse
 import org.mifos.core.sharedpreference.Key
 import org.mifos.core.sharedpreference.UserPreferences
+import org.openapitools.client.models.PostAuthenticationResponse
 
 /**
  * Created by Aditya Gupta on 19/08/23.
@@ -18,7 +18,8 @@ object PrefManager : UserPreferences<User>() {
     private const val AUTH_USERNAME = "auth_username"
     private const val AUTH_PASSWORD = "auth_password"
 
-    override val preference: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.instance?.applicationContext)
+    override val preference: SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(App.instance?.applicationContext)
 
     override fun getUser(): User {
         return get(Key.Custom(USER_DETAILS))

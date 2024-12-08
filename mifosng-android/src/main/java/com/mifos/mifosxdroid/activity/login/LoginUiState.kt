@@ -1,6 +1,6 @@
 package com.mifos.mifosxdroid.activity.login
 
-import org.apache.fineract.client.models.PostAuthenticationResponse
+import org.openapitools.client.models.PostAuthenticationResponse
 
 /**
  * Created by Aditya Gupta on 06/08/23.

@@ -11,7 +11,7 @@ import javax.inject.Inject
  */
 class GroupsListRepositoryImp @Inject constructor(private val dataManagerGroups: DataManagerGroups) :
     GroupsListRepository {
-    override fun getGroups(paged: Boolean, offset: Int, limit: Int): Observable<Page<Group>> {
+    override suspend fun getGroups(paged: Boolean, offset: Int, limit: Int): Page<Group> {
         return dataManagerGroups.getGroups(paged, offset, limit)
     }
 

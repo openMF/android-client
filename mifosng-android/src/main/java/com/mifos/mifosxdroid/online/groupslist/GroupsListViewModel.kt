@@ -76,36 +76,36 @@ class GroupsListViewModel @Inject constructor(private val repository: GroupsList
     }
 
     private fun loadGroups(paged: Boolean, offset: Int, limit: Int) {
-        _groupsListUiState.value = GroupsListUiState.ShowProgressbar
-        repository.getGroups(paged, offset, limit)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Page<Group>>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    if (loadmore) {
-                        _groupsListUiState.value =
-                            GroupsListUiState.ShowMessage(R.string.feature_groups_failed_to_fetch_groups)
-                    } else {
-                        _groupsListUiState.value = GroupsListUiState.ShowFetchingError
-                    }
-                }
-
-                override fun onNext(groupPage: Page<Group>) {
-                    mSyncGroupList = groupPage.pageItems
-                    if (mSyncGroupList.isEmpty() && !loadmore) {
-                        _groupsListUiState.value = GroupsListUiState.ShowEmptyGroups(R.string.group)
-                        _groupsListUiState.value =
-                            GroupsListUiState.UnregisterSwipeAndScrollListener
-                    } else if (mSyncGroupList.isEmpty() && loadmore) {
-                        _groupsListUiState.value =
-                            GroupsListUiState.ShowMessage(R.string.feature_groups_no_more_groups_available)
-                    } else {
-                        mRestApiGroupSyncStatus = true
-                        setAlreadyClientSyncStatus()
-                    }
-                }
-            })
+//        _groupsListUiState.value = GroupsListUiState.ShowProgressbar
+//        repository.getGroups(paged, offset, limit)
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribeOn(Schedulers.io())
+//            .subscribe(object : Subscriber<Page<Group>>() {
+//                override fun onCompleted() {}
+//                override fun onError(e: Throwable) {
+//                    if (loadmore) {
+//                        _groupsListUiState.value =
+//                            GroupsListUiState.ShowMessage(R.string.feature_groups_failed_to_fetch_groups)
+//                    } else {
+//                        _groupsListUiState.value = GroupsListUiState.ShowFetchingError
+//                    }
+//                }
+//
+//                override fun onNext(groupPage: Page<Group>) {
+//                    mSyncGroupList = groupPage.pageItems
+//                    if (mSyncGroupList.isEmpty() && !loadmore) {
+//                        _groupsListUiState.value = GroupsListUiState.ShowEmptyGroups(R.string.group)
+//                        _groupsListUiState.value =
+//                            GroupsListUiState.UnregisterSwipeAndScrollListener
+//                    } else if (mSyncGroupList.isEmpty() && loadmore) {
+//                        _groupsListUiState.value =
+//                            GroupsListUiState.ShowMessage(R.string.feature_groups_no_more_groups_available)
+//                    } else {
+//                        mRestApiGroupSyncStatus = true
+//                        setAlreadyClientSyncStatus()
+//                    }
+//                }
+//            })
     }
 
     fun loadDatabaseGroups() {

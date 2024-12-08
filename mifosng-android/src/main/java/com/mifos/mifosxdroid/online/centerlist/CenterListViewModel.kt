@@ -74,37 +74,38 @@ class CenterListViewModel @Inject constructor(private val repository: CenterList
      */
     private fun loadCenters(paged: Boolean, offset: Int, limit: Int) {
         _centerListUiState.value = CenterListUiState.ShowProgressbar(true)
-        repository.getCenters(paged, offset, limit)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Page<Center>>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    if (loadmore) {
-                        _centerListUiState.value =
-                            CenterListUiState.ShowMessage(R.string.failed_to_fetch_centers)
-                    } else {
-                        _centerListUiState.value = CenterListUiState.ShowFetchingError
-                    }
-                }
-
-                override fun onNext(centerPage: Page<Center>) {
-                    mSyncCenterList = centerPage.pageItems
-                    if (mSyncCenterList.isEmpty() && !loadmore) {
-                        _centerListUiState.value =
-                            CenterListUiState.ShowEmptyCenters(R.string.center)
-                        _centerListUiState.value =
-                            CenterListUiState.UnregisterSwipeAndScrollListener
-                    } else if (mSyncCenterList.isEmpty() && loadmore) {
-                        _centerListUiState.value =
-                            CenterListUiState.ShowMessage(R.string.no_more_centers_available)
-                    } else {
-                        showCenters(mSyncCenterList)
-                        mRestApiCenterSyncStatus = true
-                        setAlreadyCenterSyncStatus()
-                    }
-                }
-            })
+//        val response = repository.getCenters()
+//        repository.getCenters(paged, offset, limit)
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribeOn(Schedulers.io())
+//            .subscribe(object : Subscriber<Page<Center>>() {
+//                override fun onCompleted() {}
+//                override fun onError(e: Throwable) {
+//                    if (loadmore) {
+//                        _centerListUiState.value =
+//                            CenterListUiState.ShowMessage(R.string.failed_to_fetch_centers)
+//                    } else {
+//                        _centerListUiState.value = CenterListUiState.ShowFetchingError
+//                    }
+//                }
+//
+//                override fun onNext(centerPage: Page<Center>) {
+//                    mSyncCenterList = centerPage.pageItems
+//                    if (mSyncCenterList.isEmpty() && !loadmore) {
+//                        _centerListUiState.value =
+//                            CenterListUiState.ShowEmptyCenters(R.string.center)
+//                        _centerListUiState.value =
+//                            CenterListUiState.UnregisterSwipeAndScrollListener
+//                    } else if (mSyncCenterList.isEmpty() && loadmore) {
+//                        _centerListUiState.value =
+//                            CenterListUiState.ShowMessage(R.string.no_more_centers_available)
+//                    } else {
+//                        showCenters(mSyncCenterList)
+//                        mRestApiCenterSyncStatus = true
+//                        setAlreadyCenterSyncStatus()
+//                    }
+//                }
+//            })
     }
 
     fun loadCentersGroupAndMeeting(id: Int) = viewModelScope.launch(Dispatchers.IO) {
