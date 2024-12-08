@@ -25,8 +25,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.apache.fineract.client.models.PostAuthenticationResponse
 import org.mifos.core.apimanager.BaseApiManager
+import org.openapitools.client.models.PostAuthenticationResponse
 import javax.inject.Inject
 
 /**

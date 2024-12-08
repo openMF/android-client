@@ -36,11 +36,11 @@ class CreateNewClientRepositoryImp @Inject constructor(
         return dataManagerClient.clientTemplate
     }
 
-    override fun offices(): Observable<List<Office>> {
-        return dataManagerOffices.offices
+    override suspend fun offices(): List<Office> {
+        return dataManagerOffices.offices()
     }
 
-    override fun getStaffInOffice(officeId: Int): Observable<List<Staff>> {
+    override suspend fun getStaffInOffice(officeId: Int): List<Staff> {
         return dataManagerStaff.getStaffInOffice(officeId)
     }
 

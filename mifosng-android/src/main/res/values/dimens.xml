@@ -23,6 +23,7 @@
     <dimen name="datatable_name_heading">18sp</dimen>
     <dimen name="dimension_72_dp">72dp</dimen>
     <dimen name="dimension_32_dp">32dp</dimen>
+    <dimen name="fab_margin">32dp</dimen>
 
     <dimen name="marginItemsInSectionSmall">16dp</dimen>
     <dimen name="marginItemsInSectionMedium">20dp</dimen>

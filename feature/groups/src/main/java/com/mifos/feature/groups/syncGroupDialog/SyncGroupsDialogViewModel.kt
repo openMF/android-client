@@ -1,21 +1,12 @@
-/*
- * Copyright 2024 Mifos Initiative
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
-package com.mifos.feature.groups.syncGroupDialog
+package com.mifos.feature.groups.sync_group_dialog
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.objects.accounts.ClientAccounts
 import com.mifos.core.objects.accounts.GroupAccounts
 import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.core.objects.accounts.savings.SavingsAccount
@@ -26,9 +17,11 @@ import com.mifos.core.objects.zipmodels.LoanAndLoanRepayment
 import com.mifos.core.objects.zipmodels.SavingsAccountAndTransactionTemplate
 import com.mifos.feature.groups.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
@@ -44,7 +37,7 @@ import javax.inject.Inject
 class SyncGroupsDialogViewModel @Inject constructor(
     private val repository: SyncGroupsDialogRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val prefManager: PrefManager,
+    private val prefManager: PrefManager
 ) : ViewModel() {
 
     private var mGroupList: List<Group> = ArrayList()
@@ -60,12 +53,12 @@ class SyncGroupsDialogViewModel @Inject constructor(
     private var maxSingleSyncGroupProgressBar = 0
 
     private val _syncGroupsDialogUiState = MutableStateFlow<SyncGroupsDialogUiState>(
-        SyncGroupsDialogUiState.Loading,
+        SyncGroupsDialogUiState.Loading
     )
     val syncGroupsDialogUiState: StateFlow<SyncGroupsDialogUiState> = _syncGroupsDialogUiState
 
     private val _syncGroupData: MutableStateFlow<SyncGroupDialogData> = MutableStateFlow(
-        SyncGroupDialogData(),
+        SyncGroupDialogData()
     )
     val syncGroupData: StateFlow<SyncGroupDialogData> = _syncGroupData
 
@@ -100,6 +93,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
         }
     }
 
+
     /**
      * This Method Checking network connection and  Syncing the LoanAndLoanRepayment.
      * If found no internet connection then stop syncing the groups and dismiss the dialog.
@@ -116,7 +110,8 @@ class SyncGroupsDialogViewModel @Inject constructor(
      */
     private fun checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate() {
         checkNetworkConnection {
-            val endPoint = mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint
+            val endPoint =
+                mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint
             val id = mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
             if (endPoint != null && id != null) {
                 syncSavingsAccountAndTemplate(endPoint, id)
@@ -132,10 +127,10 @@ class SyncGroupsDialogViewModel @Inject constructor(
      */
     private fun checkAccountsSyncStatusAndSyncAccounts() {
         if (mLoanAccountList.isNotEmpty() && !mLoanAccountSyncStatus) {
-            // Sync the Active Loan and LoanRepayment
+            //Sync the Active Loan and LoanRepayment
             checkNetworkConnectionAndSyncLoanAndLoanRepayment()
         } else if (mSavingsAccountList.isNotEmpty()) {
-            // Sync the Active Savings Account
+            //Sync the Active Savings Account
             checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
         } else {
             // If LoanAccounts and SavingsAccount are null then sync Client to Database
@@ -209,17 +204,18 @@ class SyncGroupsDialogViewModel @Inject constructor(
 
                 override fun onNext(groupAccounts: GroupAccounts) {
                     mLoanAccountList = getActiveLoanAccounts(
-                        groupAccounts.loanAccounts,
+                        groupAccounts.loanAccounts
                     )
                     mSavingsAccountList = getActiveSavingsAccounts(
-                        groupAccounts.savingsAccounts,
+                        groupAccounts.savingsAccounts
                     )
 
-                    // Updating UI
+                    //Updating UI
                     maxSingleSyncGroupProgressBar = mLoanAccountList.size + mSavingsAccountList.size
                     checkAccountsSyncStatusAndSyncAccounts()
                 }
             })
+
     }
 
     /**
@@ -251,6 +247,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
                     }
                 }
             })
+
     }
 
     /**
@@ -278,6 +275,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
                     }
                 }
             })
+
     }
 
     /**
@@ -308,6 +306,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
                     }
                 }
             })
+
     }
 
     /**
@@ -325,7 +324,8 @@ class SyncGroupsDialogViewModel @Inject constructor(
             .subscribe(object : Subscriber<Client>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.Error(message = e.message.toString())
+                    _syncGroupsDialogUiState.value =
+                        SyncGroupsDialogUiState.Error(message = e.message.toString())
                 }
 
                 override fun onNext(client: Client) {
@@ -339,6 +339,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
                     }
                 }
             })
+
     }
 
     /**
@@ -349,12 +350,12 @@ class SyncGroupsDialogViewModel @Inject constructor(
      */
     private fun checkAccountsSyncStatusAndSyncClientAccounts() {
         if (mLoanAccountList.isNotEmpty() && !mLoanAccountSyncStatus) {
-            // Sync the Active Loan and LoanRepayment
+            //Sync the Active Loan and LoanRepayment
             mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let {
                 syncClientLoanAndLoanRepayment(it)
             }
         } else if (mSavingsAccountList.isNotEmpty()) {
-            // Sync the Active Savings Account
+            //Sync the Active Savings Account
             mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint?.let {
                 mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
                     syncClientSavingsAccountAndTemplate(it, it1)
@@ -378,28 +379,17 @@ class SyncGroupsDialogViewModel @Inject constructor(
      *
      * @param clientId Client Id
      */
-    private fun syncClientAccounts(clientId: Int) {
-        repository.syncClientAccounts(clientId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<ClientAccounts>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    onAccountSyncFailed(e)
-                }
-
-                override fun onNext(clientAccounts: ClientAccounts) {
-                    mLoanAccountList = getActiveLoanAccounts(
-                        clientAccounts
-                            .loanAccounts,
-                    )
-                    mSavingsAccountList = getSyncableSavingsAccounts(
-                        clientAccounts
-                            .savingsAccounts,
-                    )
-                    checkAccountsSyncStatusAndSyncClientAccounts()
-                }
-            })
+    private fun syncClientAccounts(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val clientAccounts = repository.syncClientAccounts(clientId)
+        mLoanAccountList = getActiveLoanAccounts(
+            clientAccounts
+                .loanAccounts
+        )
+        mSavingsAccountList = getSyncableSavingsAccounts(
+            clientAccounts
+                .savingsAccounts
+        )
+        checkAccountsSyncStatusAndSyncClientAccounts()
     }
 
     /**
@@ -431,6 +421,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
                     }
                 }
             })
+
     }
 
     /**
@@ -442,7 +433,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
      */
     private fun syncClientSavingsAccountAndTemplate(
         savingsAccountType: String,
-        savingsAccountId: Int,
+        savingsAccountId: Int
     ) {
         getSavingsAccountAndTemplate(savingsAccountType, savingsAccountId)
             .subscribe(object : Subscriber<SavingsAccountAndTransactionTemplate>() {
@@ -459,7 +450,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
                                 mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
                                     syncClientSavingsAccountAndTemplate(
                                         it,
-                                        it1,
+                                        it1
                                     )
                                 }
                             }
@@ -468,6 +459,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
                     }
                 }
             })
+
     }
 
     /**
@@ -487,6 +479,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
                 mGroupSyncIndex += 1
                 syncGroups()
             }
+
     }
 
     /**
@@ -498,11 +491,11 @@ class SyncGroupsDialogViewModel @Inject constructor(
     private fun getLoanAndLoanRepayment(loanId: Int): Observable<LoanAndLoanRepayment> {
         return Observable.combineLatest(
             repository.syncLoanById(loanId),
-            repository.syncLoanRepaymentTemplate(loanId),
+            repository.syncLoanRepaymentTemplate(loanId)
         ) { loanWithAssociations, loanRepaymentTemplate ->
             LoanAndLoanRepayment(
                 loanWithAssociations,
-                loanRepaymentTemplate,
+                loanRepaymentTemplate
             )
         }
             .observeOn(AndroidSchedulers.mainThread())
@@ -517,24 +510,20 @@ class SyncGroupsDialogViewModel @Inject constructor(
      * @return SavingsAccountAndTransactionTemplate
      */
     private fun getSavingsAccountAndTemplate(
-        savingsAccountType: String,
-        savingsAccountId: Int,
+        savingsAccountType: String, savingsAccountId: Int
     ): Observable<SavingsAccountAndTransactionTemplate> {
         return Observable.combineLatest(
             repository.syncSavingsAccount(
-                savingsAccountType,
-                savingsAccountId,
-                Constants.TRANSACTIONS,
+                savingsAccountType, savingsAccountId,
+                Constants.TRANSACTIONS
             ),
             repository.syncSavingsAccountTransactionTemplate(
                 savingsAccountType,
-                savingsAccountId,
-                Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT,
-            ),
+                savingsAccountId, Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT
+            )
         ) { savingsAccountWithAssociations, savingsAccountTransactionTemplate ->
             SavingsAccountAndTransactionTemplate(
-                savingsAccountWithAssociations,
-                savingsAccountTransactionTemplate,
+                savingsAccountWithAssociations, savingsAccountTransactionTemplate
             )
         }
             .observeOn(AndroidSchedulers.mainThread())
@@ -553,14 +542,14 @@ class SyncGroupsDialogViewModel @Inject constructor(
     }
 
     private fun checkNetworkConnection(
-        taskWhenOnline: () -> Unit,
+        taskWhenOnline: () -> Unit
     ) {
         if (networkUtilsWrapper.isNetworkConnected()) {
             taskWhenOnline.invoke()
         } else {
             _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.Error(
                 messageResId = R.string.feature_groups_error_not_connected_internet,
-                imageVector = MifosIcons.WifiOff,
+                imageVector = MifosIcons.WifiOff
             )
         }
     }
@@ -578,7 +567,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
                 savingsAccount.status?.active == true &&
-                    !savingsAccount.depositType!!.isRecurring
+                        !savingsAccount.depositType!!.isRecurring
             }
             .subscribe { savingsAccount -> accounts.add(savingsAccount) }
         return accounts
@@ -589,8 +578,8 @@ class SyncGroupsDialogViewModel @Inject constructor(
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
                 savingsAccount.depositType?.value == "Savings" &&
-                    savingsAccount.status?.active == true &&
-                    !savingsAccount.depositType!!.isRecurring
+                        savingsAccount.status?.active == true &&
+                        !savingsAccount.depositType!!.isRecurring
             }
             .subscribe { savingsAccount -> accounts.add(savingsAccount) }
         return accounts

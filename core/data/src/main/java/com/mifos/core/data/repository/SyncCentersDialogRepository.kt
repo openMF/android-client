@@ -40,7 +40,7 @@ interface SyncCentersDialogRepository {
 
     fun syncGroupAccounts(groupId: Int): Observable<GroupAccounts>
 
-    fun syncClientAccounts(clientId: Int): Observable<ClientAccounts>
+    suspend fun syncClientAccounts(clientId: Int): ClientAccounts
 
     fun syncGroupInDatabase(group: Group): Observable<Group>
 

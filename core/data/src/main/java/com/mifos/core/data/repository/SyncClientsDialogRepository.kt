@@ -22,7 +22,7 @@ import rx.Observable
  */
 interface SyncClientsDialogRepository {
 
-    fun syncClientAccounts(clientId: Int): Observable<ClientAccounts>
+    suspend fun syncClientAccounts(clientId: Int): ClientAccounts
 
     fun syncLoanById(loanId: Int): Observable<LoanWithAssociations>
 

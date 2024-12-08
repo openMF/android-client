@@ -5,9 +5,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.GravityCompat
 import androidx.navigation.findNavController
@@ -28,7 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * Created by shashankpriyadarshi on 19/06/20.
  */
 @AndroidEntryPoint
-open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSelectedListener {
+open class HomeActivity : ComponentActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var navHeaderBinding: ViewNavDrawerHeaderBinding
