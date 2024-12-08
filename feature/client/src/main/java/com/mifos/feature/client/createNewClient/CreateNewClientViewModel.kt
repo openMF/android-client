@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.domain.use_cases.ClientTemplateUseCase
+import com.mifos.core.domain.use_cases.GetOfficeListUseCase
 import com.mifos.core.domain.use_cases.GetStaffInOfficeForCreateNewClientUseCase
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
@@ -37,10 +38,12 @@ import javax.inject.Inject
 class CreateNewClientViewModel @Inject constructor(
     private val repository: CreateNewClientRepository,
     private val clientTemplateUseCase: ClientTemplateUseCase,
-    private val getStaffInOffice : GetStaffInOfficeForCreateNewClientUseCase
+    private val getStaffInOffice: GetStaffInOfficeForCreateNewClientUseCase,
+    private val getOfficeListUseCase: GetOfficeListUseCase
 ) : ViewModel() {
 
-    private val _createNewClientUiState = MutableStateFlow<CreateNewClientUiState>(CreateNewClientUiState.ShowProgressbar)
+    private val _createNewClientUiState =
+        MutableStateFlow<CreateNewClientUiState>(CreateNewClientUiState.ShowProgressbar)
     val createNewClientUiState: StateFlow<CreateNewClientUiState> get() = _createNewClientUiState
 
     private val _staffInOffices = MutableStateFlow<List<Staff>>(emptyList())
@@ -68,39 +71,38 @@ class CreateNewClientViewModel @Inject constructor(
         }
     }
 
-    private fun loadOffices() {
-        repository.offices()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<Office>>() {
-                override fun onCompleted() {
-                    loadClientTemplate()
-                }
-
-                override fun onError(e: Throwable) {
+    private fun loadOffices() = viewModelScope.launch(Dispatchers.IO) {
+        getOfficeListUseCase().collect { result ->
+            when (result) {
+                is Resource.Error -> {
                     _createNewClientUiState.value =
                         CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_offices)
                 }
 
-                override fun onNext(officeList: List<Office>) {
-                    _showOffices.value = officeList
+                is Resource.Loading -> {
+
                 }
-            })
+
+                is Resource.Success -> {
+                    _showOffices.value = result.data ?: emptyList()
+                }
+            }
+        }
     }
 
     fun loadStaffInOffices(officeId: Int) =
-        viewModelScope.launch (Dispatchers.IO) {
-            getStaffInOffice(officeId).collect{ result ->
-                when(result){
+        viewModelScope.launch(Dispatchers.IO) {
+            getStaffInOffice(officeId).collect { result ->
+                when (result) {
                     is Resource.Error -> _createNewClientUiState.value =
                         CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_staffs)
 
                     is Resource.Loading -> Unit
 
-                    is Resource.Success ->_staffInOffices.value = result.data ?: emptyList()
+                    is Resource.Success -> _staffInOffices.value = result.data ?: emptyList()
                 }
             }
-    }
+        }
 
     fun createClient(clientPayload: ClientPayload) {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar

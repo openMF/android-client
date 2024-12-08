@@ -219,7 +219,7 @@ dependencies {
     implementation(libs.glide)
 
     //mifos passcode dependency
-    implementation(libs.mifos.passcode)
+//    implementation(libs.mifos.passcode)
 
     // Mockito and jUnit dependencies
     testImplementation(libs.junit4)

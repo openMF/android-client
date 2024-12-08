@@ -4,7 +4,6 @@ import com.mifos.core.databasehelper.DatabaseHelperStaff
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.staffs.StaffMapper
 import com.mifos.core.objects.organisation.Staff
-import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,16 +21,20 @@ class DataManagerStaff @Inject constructor(
      * @param officeId
      * @return
      */
-    fun getStaffInOffice(officeId: Int): Observable<List<Staff>> {
-        return when (prefManager.userStatus) {
-            false -> baseApiManager.getStaffApi().retrieveAll16(officeId.toLong(), null, null, null)
-                .map(StaffMapper::mapFromEntityList)
-
-            true ->
-                /**
-                 * return all List of Staffs of Office from DatabaseHelperOffices
-                 */
-                mDatabaseHelperStaff.readAllStaffOffices(officeId)
-        }
+    suspend fun getStaffInOffice(officeId: Int): List<Staff> {
+        return baseApiManager.getStaffApi().retrieveAll16(officeId.toLong(), null, null, null)
+            .map(StaffMapper::mapFromEntity)
     }
+//    fun getStaffInOffice(officeId: Int): Observable<List<Staff>> {
+//        return when (prefManager.userStatus) {
+//            false -> baseApiManager.getStaffApi().retrieveAll16(officeId.toLong(), null, null, null)
+//                .map(StaffMapper::mapFromEntityList)
+//
+//            true ->
+//                /**
+//                 * return all List of Staffs of Office from DatabaseHelperOffices
+//                 */
+//                mDatabaseHelperStaff.readAllStaffOffices(officeId)
+//        }
+//    }
 }

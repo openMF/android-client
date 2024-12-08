@@ -17,8 +17,8 @@ class CreateNewGroupRepositoryImp @Inject constructor(
     private val dataManagerGroups: DataManagerGroups
 ) : CreateNewGroupRepository {
 
-    override fun offices(): Observable<List<Office>> {
-        return dataManagerOffices.offices
+    override suspend fun offices(): List<Office> {
+        return dataManagerOffices.offices()
     }
 
     override fun createGroup(groupPayload: GroupPayload): Observable<SaveResponse> {

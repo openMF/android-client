@@ -22,7 +22,7 @@ class SyncClientsDialogRepositoryImp @Inject constructor(
     private val dataManagerSavings: DataManagerSavings
 ) : SyncClientsDialogRepository {
 
-    override fun syncClientAccounts(clientId: Int): Observable<ClientAccounts> {
+    override suspend fun syncClientAccounts(clientId: Int): ClientAccounts {
         return dataManagerClient.getClientAccounts(clientId)
     }
 

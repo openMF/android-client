@@ -3,7 +3,6 @@ package com.mifos.core.data.repository_imp
 import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.network.datamanager.DataManagerDataTable
 import com.mifos.core.objects.noncore.DataTable
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -12,7 +11,7 @@ import javax.inject.Inject
 class DataTableRepositoryImp @Inject constructor(private val dataManagerDataTable: DataManagerDataTable) :
     DataTableRepository {
 
-    override fun getDataTable(tableName: String?): Observable<List<DataTable>> {
+    override suspend fun getDataTable(tableName: String?): List<DataTable> {
         return dataManagerDataTable.getDataTable(tableName)
     }
 }

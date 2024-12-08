@@ -2,8 +2,7 @@ package com.mifos.core.data.repository_imp
 
 import com.mifos.core.data.repository.LoginRepository
 import com.mifos.core.network.datamanger.DataManagerAuth
-import org.apache.fineract.client.models.PostAuthenticationResponse
-import rx.Observable
+import org.openapitools.client.models.PostAuthenticationResponse
 import javax.inject.Inject
 
 /**
@@ -13,7 +12,7 @@ import javax.inject.Inject
 class LoginRepositoryImp @Inject constructor(private val dataManagerAuth: DataManagerAuth) :
     LoginRepository {
 
-    override fun login(username: String, password: String): Observable<PostAuthenticationResponse> {
+    override suspend fun login(username: String, password: String): PostAuthenticationResponse {
         return dataManagerAuth.login(username, password)
     }
 }
