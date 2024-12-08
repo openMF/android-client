@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.network.BaseApiManager
@@ -15,30 +24,34 @@ class DataManagerRunReport @Inject constructor(val mBaseApiManager: BaseApiManag
     suspend fun getReportCategories(
         reportCategory: String?,
         genericResultSet: Boolean,
-        parameterType: Boolean
+        parameterType: Boolean,
     ): List<ClientReportTypeItem> {
         return mBaseApiManager.runReportsService.getReportCategories(
             reportCategory,
-            genericResultSet, parameterType
+            genericResultSet,
+            parameterType,
         )
     }
 
     suspend fun getReportFullParameterList(
-        reportName: String, parameterType: Boolean
+        reportName: String,
+        parameterType: Boolean,
     ): FullParameterListResponse {
         return mBaseApiManager.runReportsService
             .getReportFullParameterList(reportName, parameterType)
     }
 
     suspend fun getReportParameterDetails(
-        parameterName: String, parameterType: Boolean
+        parameterName: String,
+        parameterType: Boolean,
     ): FullParameterListResponse {
         return mBaseApiManager.runReportsService
             .getReportParameterDetails(parameterName, parameterType)
     }
 
     suspend fun getRunReportWithQuery(
-        reportName: String, options: Map<String, String>
+        reportName: String,
+        options: Map<String, String>,
     ): FullParameterListResponse {
         return mBaseApiManager.runReportsService
             .getRunReportWithQuery(reportName, options)
@@ -46,29 +59,33 @@ class DataManagerRunReport @Inject constructor(val mBaseApiManager: BaseApiManag
 
     suspend fun getCenterSummaryInfo(
         centerId: Int,
-        genericResultSet: Boolean
+        genericResultSet: Boolean,
     ): List<CenterInfo> {
         return mBaseApiManager.runReportsService
             .getCenterSummaryInfo(centerId, genericResultSet)
     }
 
     suspend fun getRunReportOffices(
-        parameterName: String, officeId: Int, parameterType: Boolean
+        parameterName: String,
+        officeId: Int,
+        parameterType: Boolean,
     ): FullParameterListResponse {
         return mBaseApiManager.runReportsService.getReportOffice(
             parameterName,
             officeId,
-            parameterType
+            parameterType,
         )
     }
 
     suspend fun getRunReportProduct(
-        parameterName: String, currency: String, parameterType: Boolean
+        parameterName: String,
+        currency: String,
+        parameterType: Boolean,
     ): FullParameterListResponse {
         return mBaseApiManager.runReportsService.getReportProduct(
             parameterName,
             currency,
-            parameterType
+            parameterType,
         )
     }
 }

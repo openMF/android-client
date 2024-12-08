@@ -1,10 +1,17 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.datamanager
 
-import android.database.Observable
 import com.mifos.core.databasehelper.DatabaseHelperNote
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.objects.noncore.Note
-import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,7 +23,7 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerNote @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperNote: DatabaseHelperNote
+    val mDatabaseHelperNote: DatabaseHelperNote,
 ) {
     /**
      * This Method Request the REST API of Note and In response give the List of Notes

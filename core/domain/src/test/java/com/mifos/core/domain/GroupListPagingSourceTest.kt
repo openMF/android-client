@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.domain
 
 import androidx.paging.PagingConfig
@@ -24,7 +33,7 @@ class GroupListPagingSourceTest {
 
     private val fakeRepository = TestGroupsListRepository()
 
-    private lateinit var pagingDataSource: com.mifos.core.domain.use_cases.GroupsListPagingDataSource
+    private lateinit var pagingDataSource: com.mifos.core.domain.useCases.GroupsListPagingDataSource
 
     private lateinit var pager: TestPager<Int, Group>
 
@@ -33,14 +42,14 @@ class GroupListPagingSourceTest {
     @Before
     fun setup() {
         pagingDataSource =
-            com.mifos.core.domain.use_cases.GroupsListPagingDataSource(fakeRepository, pageSize)
+            com.mifos.core.domain.useCases.GroupsListPagingDataSource(fakeRepository, pageSize)
 
         pager = TestPager(
             config = PagingConfig(
                 pageSize = pageSize,
                 enablePlaceholders = false,
             ),
-            pagingSource = pagingDataSource
+            pagingSource = pagingDataSource,
         )
     }
 
@@ -67,7 +76,7 @@ class GroupListPagingSourceTest {
 
         assertEquals(
             sampleGroups.getPagedData(pageSize * 2, pageSize),
-            page.data
+            page.data,
         )
     }
 
@@ -78,7 +87,7 @@ class GroupListPagingSourceTest {
             .Refresh(
                 key = 1,
                 loadSize = pageSize,
-                placeholdersEnabled = false
+                placeholdersEnabled = false,
             )
 
         val initialSource = pagingDataSource.load(params = initialData)
@@ -88,16 +97,16 @@ class GroupListPagingSourceTest {
             .Page(
                 data = sampleGroups.take(pageSize),
                 prevKey = initialData.key?.minus(pageSize),
-                nextKey = initialData.key?.plus(pageSize)
+                nextKey = initialData.key?.plus(pageSize),
             )
 
         assertEquals(initialExpected, initialSource)
 
-        //Appending data first time
+        // Appending data first time
         val appendData = PagingSource.LoadParams.Append(
             key = initialExpected.nextKey ?: 0,
             loadSize = pageSize,
-            placeholdersEnabled = false
+            placeholdersEnabled = false,
         )
 
         val appendSource = pagingDataSource.load(params = appendData)
@@ -107,7 +116,7 @@ class GroupListPagingSourceTest {
             .Page(
                 data = sampleGroups.getPagedData(appendData.key, pageSize),
                 prevKey = appendData.key.minus(pageSize),
-                nextKey = pageSize.plus(appendData.key)
+                nextKey = pageSize.plus(appendData.key),
             )
 
         // then
@@ -119,14 +128,14 @@ class GroupListPagingSourceTest {
 
         assertEquals(
             sampleGroups.take(pageSize * 2),
-            initialExpected.data.plus(appendExpected.data)
+            initialExpected.data.plus(appendExpected.data),
         )
 
         // Prepending first time then it should same as initial data
         val prependData = PagingSource.LoadParams.Prepend(
             key = appendExpected.prevKey ?: 0,
             loadSize = pageSize,
-            placeholdersEnabled = false
+            placeholdersEnabled = false,
         )
 
         // when
@@ -137,7 +146,7 @@ class GroupListPagingSourceTest {
             .Page(
                 data = sampleGroups.getPagedData(prependData.key, pageSize),
                 prevKey = initialExpected.prevKey,
-                nextKey = initialExpected.nextKey
+                nextKey = initialExpected.nextKey,
             )
 
         assertEquals(prependExpected, prependSource)
@@ -147,7 +156,6 @@ class GroupListPagingSourceTest {
 
         // check with append data which must not be same.
         assertNotEquals(prependExpected, appendExpected)
-
     }
 
     @Test
@@ -164,5 +172,4 @@ class GroupListPagingSourceTest {
             assertNull(page)
         }
     }
-
 }

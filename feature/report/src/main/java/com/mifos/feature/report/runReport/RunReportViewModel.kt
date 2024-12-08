@@ -12,7 +12,7 @@ package com.mifos.feature.report.runReport
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.use_cases.GetReportCategoryUseCase
+import com.mifos.core.domain.useCases.GetReportCategoryUseCase
 import com.mifos.feature.report.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

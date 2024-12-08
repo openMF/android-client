@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.network.services
@@ -27,28 +32,28 @@ interface DataTableService {
     @GET(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
     suspend fun getDataOfDataTable(
         @Path("dataTableName") dataTableName: String,
-        @Path("entityId") entityId: Int
+        @Path("entityId") entityId: Int,
     ): JsonArray
 
-    //TODO Improve Body Implementation with Payload
+    // TODO Improve Body Implementation with Payload
     @POST(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
     suspend fun createEntryInDataTable(
         @Path("dataTableName") dataTableName: String,
         @Path("entityId") entityId: Int,
-        @Body requestPayload: Map<String, String>
+        @Body requestPayload: Map<String, String>,
     ): GenericResponse
 
     @DELETE(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/{dataTableRowId}")
     fun deleteEntryOfDataTableManyToMany(
         @Path("dataTableName") dataTableName: String?,
         @Path("entityId") entityId: Int,
-        @Path("dataTableRowId") dataTableRowId: Int
+        @Path("dataTableRowId") dataTableRowId: Int,
     ): Observable<GenericResponse>
 
     @POST(APIEndPoint.DATATABLES + "/user_tracking/{userId}")
     fun addUserPathTracking(
         @Path("userId") userId: Int,
-        @Body userLocation: UserLocation?
+        @Body userLocation: UserLocation?,
     ): Observable<GenericResponse>
 
     @GET(APIEndPoint.DATATABLES + "/user_tracking/{userId}")

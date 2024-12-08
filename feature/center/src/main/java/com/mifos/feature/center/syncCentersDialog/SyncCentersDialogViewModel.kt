@@ -225,6 +225,11 @@ class SyncCentersDialogViewModel @Inject constructor(
             val endPoint =
                 mMemberLoanAccountsList[mMemberLoanSyncIndex].loanType?.value
             val id = mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
+            if (id != null) {
+                syncMemberLoanAndMemberLoanRepayment(
+                    id,
+                )
+            }
             if (endPoint != null && id != null) {
                 syncSavingsAccountAndTemplate(endPoint, id)
             }

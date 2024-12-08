@@ -17,9 +17,9 @@ import androidx.lifecycle.viewModelScope
 import coil.request.ImageResult
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.use_cases.DeleteClientImageUseCase
-import com.mifos.core.domain.use_cases.GetClientDetailsUseCase
-import com.mifos.core.domain.use_cases.UploadClientImageUseCase
+import com.mifos.core.domain.useCases.DeleteClientImageUseCase
+import com.mifos.core.domain.useCases.GetClientDetailsUseCase
+import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.network.utils.ImageLoaderUtils
 import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.core.objects.accounts.savings.SavingsAccount

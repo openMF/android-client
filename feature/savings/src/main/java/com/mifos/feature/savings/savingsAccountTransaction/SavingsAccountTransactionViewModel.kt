@@ -16,9 +16,9 @@ import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.use_cases.GetSavingsAccountTransactionTemplateUseCase
-import com.mifos.core.domain.use_cases.GetSavingsAccountTransactionUseCase
-import com.mifos.core.domain.use_cases.ProcessTransactionUseCase
+import com.mifos.core.domain.useCases.GetSavingsAccountTransactionTemplateUseCase
+import com.mifos.core.domain.useCases.GetSavingsAccountTransactionUseCase
+import com.mifos.core.domain.useCases.ProcessTransactionUseCase
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
 import com.mifos.core.objects.accounts.savings.SavingsTransactionData

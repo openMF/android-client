@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.databasehelper
 
 import com.mifos.core.objects.PaymentTypeOption
@@ -31,23 +40,25 @@ class DatabaseHelperSavings @Inject constructor() {
      * @return SavingsAccountWithAssociations.
      */
     fun saveSavingsAccount(
-        savingsAccountWithAssociations: SavingsAccountWithAssociations
+        savingsAccountWithAssociations: SavingsAccountWithAssociations,
     ): Observable<SavingsAccountWithAssociations> {
         return Observable.defer {
             val transactions = savingsAccountWithAssociations.transactions
             if (transactions.isNotEmpty()) {
                 Observable.from(transactions)
-                    .subscribe(Action1 { transaction ->
-                        val savingsTransactionDate = SavingsTransactionDate(
-                            transaction?.id,
-                            transaction?.date?.get(0),
-                            transaction?.date?.get(1),
-                            transaction?.date?.get(2)
-                        )
-                        transaction?.savingsAccountId = savingsAccountWithAssociations.id
-                        transaction?.savingsTransactionDate = savingsTransactionDate
-                        transaction?.save()
-                    })
+                    .subscribe(
+                        Action1 { transaction ->
+                            val savingsTransactionDate = SavingsTransactionDate(
+                                transaction?.id,
+                                transaction?.date?.get(0),
+                                transaction?.date?.get(1),
+                                transaction?.date?.get(2),
+                            )
+                            transaction?.savingsAccountId = savingsAccountWithAssociations.id
+                            transaction?.savingsTransactionDate = savingsTransactionDate
+                            transaction?.save()
+                        },
+                    )
             }
             savingsAccountWithAssociations.summary?.savingsId = savingsAccountWithAssociations.id
             savingsAccountWithAssociations.save()
@@ -65,7 +76,7 @@ class DatabaseHelperSavings @Inject constructor() {
      * @return SavingsAccountWithAssociations SavingsAccountSummary Template.
      */
     fun readSavingsAccount(
-        savingsAccountId: Int
+        savingsAccountId: Int,
     ): Observable<SavingsAccountWithAssociations> {
         return Observable.defer {
             val savingsAccountWithAssociations = SQLite.select()
@@ -81,7 +92,7 @@ class DatabaseHelperSavings @Inject constructor() {
                     transaction.date = listOf(
                         transaction.savingsTransactionDate?.year,
                         transaction.savingsTransactionDate?.month,
-                        transaction.savingsTransactionDate?.day
+                        transaction.savingsTransactionDate?.day,
                     )
                 }
             if (savingsAccountWithAssociations != null) {
@@ -98,7 +109,7 @@ class DatabaseHelperSavings @Inject constructor() {
      * @return SavingsAccountTransactionTemplate
      */
     fun saveSavingsAccountTransactionTemplate(
-        savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate
+        savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate,
     ): Observable<SavingsAccountTransactionTemplate> {
         return Observable.defer {
             Observable.from(savingsAccountTransactionTemplate.paymentTypeOptions)
@@ -118,7 +129,7 @@ class DatabaseHelperSavings @Inject constructor() {
      * @return SavingsAccountTransactionTemplate
      */
     fun readSavingsAccountTransactionTemplate(
-        savingsAccountId: Int
+        savingsAccountId: Int,
     ): Observable<SavingsAccountTransactionTemplate> {
         return Observable.defer {
             val savingsAccountTransactionTemplate = SQLite.select()
@@ -148,9 +159,10 @@ class DatabaseHelperSavings @Inject constructor() {
      * @return SavingsAccountTransactionResponse
      */
     fun saveSavingsAccountTransaction(
-        savingsAccountType: String?, savingsAccountId: Int,
+        savingsAccountType: String?,
+        savingsAccountId: Int,
         transactionType: String?,
-        savingsAccountTransactionRequest: SavingsAccountTransactionRequest
+        savingsAccountTransactionRequest: SavingsAccountTransactionRequest,
     ): Observable<SavingsAccountTransactionResponse> {
         return Observable.defer {
             savingsAccountTransactionRequest.savingAccountId = savingsAccountId
@@ -170,15 +182,15 @@ class DatabaseHelperSavings @Inject constructor() {
      * @return SavingsAccountTransactionRequest
      */
     fun getSavingsAccountTransaction(
-        savingsAccountId: Int
+        savingsAccountId: Int,
     ): Observable<SavingsAccountTransactionRequest> {
         return Observable.defer {
             val savingsAccountTransactionRequest = SQLite.select()
                 .from(SavingsAccountTransactionRequest::class.java)
                 .where(
                     SavingsAccountTransactionRequest_Table.savingAccountId.eq(
-                        savingsAccountId
-                    )
+                        savingsAccountId,
+                    ),
                 )
                 .querySingle()
             Observable.just(savingsAccountTransactionRequest)
@@ -190,7 +202,7 @@ class DatabaseHelperSavings @Inject constructor() {
      * and give the List<SavingsAccountTransactionRequest> response.
      *
      * @return List<SavingsAccountTransactionRequest>
-    </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
+     </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
     val allSavingsAccountTransaction: Observable<List<SavingsAccountTransactionRequest>>
         get() = Observable.defer {
             val savingsAccountTransactionRequests: List<SavingsAccountTransactionRequest> =
@@ -206,16 +218,16 @@ class DatabaseHelperSavings @Inject constructor() {
      * List<SavingsAccountTransactionRequest> to DataManagerSavings and DataManagerSaving sync the
      * List<SavingsAccountTransactionRequest> to the SyncSavingsAccountTransaction.
      *
-     * @param  savingsAccountId SavingsAccount Id
+     * @param savingsAccountId SavingsAccount Id
      * @return List<SavingsAccountTransactionRequest>
-    </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest></SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
+     </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest></SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
     fun deleteAndUpdateTransaction(
-        savingsAccountId: Int
+        savingsAccountId: Int,
     ): Observable<List<SavingsAccountTransactionRequest>> {
-        return Observable.defer { //Deleting Entry from SavingsAccountTransactionRequest_Table with SavingsAccountId
+        return Observable.defer { // Deleting Entry from SavingsAccountTransactionRequest_Table with SavingsAccountId
             Delete.table(
                 SavingsAccountTransactionRequest::class.java,
-                SavingsAccountTransactionRequest_Table.savingAccountId.eq(savingsAccountId)
+                SavingsAccountTransactionRequest_Table.savingAccountId.eq(savingsAccountId),
             )
             val savingsAccountTransactionRequests = SQLite.select()
                 .from(SavingsAccountTransactionRequest::class.java)
@@ -233,7 +245,7 @@ class DatabaseHelperSavings @Inject constructor() {
      * @return SavingsAccountTransactionRequest
      */
     fun updateSavingsAccountTransaction(
-        savingsAccountTransactionRequest: SavingsAccountTransactionRequest
+        savingsAccountTransactionRequest: SavingsAccountTransactionRequest,
     ): Observable<SavingsAccountTransactionRequest> {
         return Observable.defer {
             savingsAccountTransactionRequest.update()

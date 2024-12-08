@@ -16,8 +16,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.use_cases.DeleteDataTableEntryUseCase
-import com.mifos.core.domain.use_cases.GetDataTableInfoUseCase
+import com.mifos.core.domain.useCases.DeleteDataTableEntryUseCase
+import com.mifos.core.domain.useCases.GetDataTableInfoUseCase
 import com.mifos.core.objects.navigation.DataTableDataNavigationArg
 import com.mifos.feature.data_table.R
 import dagger.hilt.android.lifecycle.HiltViewModel

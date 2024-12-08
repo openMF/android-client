@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.databasehelper
 
 import com.mifos.core.objects.PaymentTypeOption
@@ -28,27 +37,29 @@ class DatabaseHelperLoan @Inject constructor() {
      * @return LoanWithAssociation
      */
     fun saveLoanById(loanWithAssociations: LoanWithAssociations): Observable<LoanWithAssociations> {
-        return Observable.defer(Func0 { //Setting Loan Id in Summary Table
-            loanWithAssociations.summary.loanId = loanWithAssociations.id
+        return Observable.defer(
+            Func0 { // Setting Loan Id in Summary Table
+                loanWithAssociations.summary.loanId = loanWithAssociations.id
 
-            // Setting Timeline
-            val timeline = loanWithAssociations.timeline
-            timeline.loanId = loanWithAssociations.id
+                // Setting Timeline
+                val timeline = loanWithAssociations.timeline
+                timeline.loanId = loanWithAssociations.id
 
-            //Setting ActualDisbursement in Table
-            val actualDisbursementDate = ActualDisbursementDate(
-                loanWithAssociations.id,
-                loanWithAssociations.timeline.actualDisbursementDate?.get(0),
-                loanWithAssociations.timeline.actualDisbursementDate?.get(1),
-                loanWithAssociations.timeline.actualDisbursementDate?.get(2)
-            )
-            timeline.actualDisburseDate = actualDisbursementDate
-            loanWithAssociations.timeline = timeline
+                // Setting ActualDisbursement in Table
+                val actualDisbursementDate = ActualDisbursementDate(
+                    loanWithAssociations.id,
+                    loanWithAssociations.timeline.actualDisbursementDate?.get(0),
+                    loanWithAssociations.timeline.actualDisbursementDate?.get(1),
+                    loanWithAssociations.timeline.actualDisbursementDate?.get(2),
+                )
+                timeline.actualDisburseDate = actualDisbursementDate
+                loanWithAssociations.timeline = timeline
 
-            // save LoanWithAssociation
-            loanWithAssociations.save()
-            Observable.just(loanWithAssociations)
-        })
+                // save LoanWithAssociation
+                loanWithAssociations.save()
+                Observable.just(loanWithAssociations)
+            },
+        )
     }
 
     /**
@@ -68,10 +79,11 @@ class DatabaseHelperLoan @Inject constructor() {
             if (loanWithAssociations != null) {
                 loanWithAssociations.timeline.actualDisbursementDate = listOf(
                     loanWithAssociations.timeline.actualDisburseDate
-                        ?.year, loanWithAssociations.timeline
+                        ?.year,
+                    loanWithAssociations.timeline
                         .actualDisburseDate?.month,
                     loanWithAssociations
-                        .timeline.actualDisburseDate?.date
+                        .timeline.actualDisburseDate?.date,
                 )
             }
             Observable.just(loanWithAssociations)
@@ -86,13 +98,14 @@ class DatabaseHelperLoan @Inject constructor() {
      * @return LoanRepaymentResponse
      */
     fun saveLoanRepaymentTransaction(
-        loanId: Int, loanRepaymentRequest: LoanRepaymentRequest
+        loanId: Int,
+        loanRepaymentRequest: LoanRepaymentRequest,
     ): Observable<LoanRepaymentResponse> {
-        return Observable.defer { //Setting Loan Id and Time Stamp
+        return Observable.defer { // Setting Loan Id and Time Stamp
             loanRepaymentRequest.loanId = loanId
             loanRepaymentRequest.timeStamp = (System.currentTimeMillis() / 1000)
 
-            //Saving Transaction In Database Table
+            // Saving Transaction In Database Table
             loanRepaymentRequest.save()
             Observable.just(LoanRepaymentResponse())
         }
@@ -102,7 +115,7 @@ class DatabaseHelperLoan @Inject constructor() {
      * Read All LoanRepaymentRequest from Database ascending Order of TimeStamp
      *
      * @return List<LoanRepaymentRequest>
-    </LoanRepaymentRequest> */
+     </LoanRepaymentRequest> */
     fun readAllLoanRepaymentTransaction(): Observable<List<LoanRepaymentRequest>> {
         return Observable.defer {
             val loanRepaymentRequests = SQLite.select()
@@ -143,7 +156,8 @@ class DatabaseHelperLoan @Inject constructor() {
      * @return LoanRepaymentTemplate
      */
     fun saveLoanRepaymentTemplate(
-        loanId: Int, loanRepaymentTemplate: LoanRepaymentTemplate
+        loanId: Int,
+        loanRepaymentTemplate: LoanRepaymentTemplate,
     ): Observable<LoanRepaymentTemplate> {
         return Observable.defer {
             loanRepaymentTemplate.loanId = loanId
@@ -184,7 +198,7 @@ class DatabaseHelperLoan @Inject constructor() {
      * and return the list of PaymentTypeOption
      *
      * @return List<PaymentTypeOption>
-    </PaymentTypeOption> */
+     </PaymentTypeOption> */
     val paymentTypeOption: Observable<List<PaymentTypeOption>>
         get() = Observable.defer {
             val paymentTypeOptions: List<PaymentTypeOption> = SQLite.select()
@@ -200,12 +214,12 @@ class DatabaseHelperLoan @Inject constructor() {
      *
      * @param loanId loan Id of the LoanRepayment
      * @return List<LoanRepaymentRequest>
-    </LoanRepaymentRequest></LoanRepaymentRequest> */
+     </LoanRepaymentRequest></LoanRepaymentRequest> */
     fun deleteAndUpdateLoanRepayments(loanId: Int): Observable<List<LoanRepaymentRequest>> {
         return Observable.defer {
             Delete.table(
                 LoanRepaymentRequest::class.java,
-                LoanRepaymentRequest_Table.loanId.eq(loanId)
+                LoanRepaymentRequest_Table.loanId.eq(loanId),
             )
             val loanRepaymentRequests = SQLite.select()
                 .from(LoanRepaymentRequest::class.java)
@@ -224,7 +238,7 @@ class DatabaseHelperLoan @Inject constructor() {
      * @return LoanRepaymentRequest
      */
     fun updateLoanRepaymentTransaction(
-        loanRepaymentRequest: LoanRepaymentRequest
+        loanRepaymentRequest: LoanRepaymentRequest,
     ): Observable<LoanRepaymentRequest> {
         return Observable.defer {
             loanRepaymentRequest.update()

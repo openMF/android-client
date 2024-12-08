@@ -13,11 +13,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.use_cases.AllSavingsAccountTransactionsUseCase
-import com.mifos.core.domain.use_cases.DeleteAndUpdateTransactionsUseCase
-import com.mifos.core.domain.use_cases.PaymentTypeOptionUseCase
-import com.mifos.core.domain.use_cases.ProcessTransactionUseCase
-import com.mifos.core.domain.use_cases.UpdateLoanRepaymentTransactionUseCase
+import com.mifos.core.domain.useCases.AllSavingsAccountTransactionsUseCase
+import com.mifos.core.domain.useCases.DeleteAndUpdateTransactionsUseCase
+import com.mifos.core.domain.useCases.PaymentTypeOptionUseCase
+import com.mifos.core.domain.useCases.ProcessTransactionUseCase
+import com.mifos.core.domain.useCases.UpdateLoanRepaymentTransactionUseCase
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.feature.offline.R
 import dagger.hilt.android.lifecycle.HiltViewModel

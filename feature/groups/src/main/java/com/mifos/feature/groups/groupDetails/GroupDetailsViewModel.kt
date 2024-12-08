@@ -14,8 +14,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.use_cases.GetGroupAssociateClientsUseCase
-import com.mifos.core.domain.use_cases.GetGroupDetailsUseCase
+import com.mifos.core.domain.useCases.GetGroupAssociateClientsUseCase
+import com.mifos.core.domain.useCases.GetGroupDetailsUseCase
 import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.core.objects.accounts.savings.SavingsAccount
 import com.mifos.core.objects.client.Client

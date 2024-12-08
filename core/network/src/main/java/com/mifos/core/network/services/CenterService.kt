@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.network.services
@@ -33,7 +38,7 @@ interface CenterService {
     fun getCenters(
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
-        @Query("limit") limit: Int
+        @Query("limit") limit: Int,
     ): Observable<Page<Center>>
 
     @GET(APIEndPoint.CENTERS + "/{centerId}/accounts")
@@ -45,7 +50,7 @@ interface CenterService {
     @GET(APIEndPoint.CENTERS)
     suspend fun getAllCentersInOffice(
         @Query("officeId") officeId: Int,
-        @QueryMap additionalParams: Map<String, String>
+        @QueryMap additionalParams: Map<String, String>,
     ): List<Center>
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")
@@ -54,19 +59,19 @@ interface CenterService {
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=generateCollectionSheet")
     fun getCollectionSheet(
         @Path("centerId") centerId: Long,
-        @Body payload: Payload?
+        @Body payload: Payload?,
     ): Observable<CollectionSheet>
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
     fun saveCollectionSheet(
         @Path("centerId") centerId: Int,
-        @Body collectionSheetPayload: CollectionSheetPayload?
+        @Body collectionSheetPayload: CollectionSheetPayload?,
     ): Observable<SaveResponse>
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=saveCollectionSheet")
     fun saveCollectionSheetAsync(
         @Path("centerId") centerId: Int,
-        @Body collectionSheetPayload: CollectionSheetPayload?
+        @Body collectionSheetPayload: CollectionSheetPayload?,
     ): Observable<SaveResponse>
 
     /*@POST(APIEndPoint.CLIENTS + "")
@@ -80,7 +85,7 @@ interface CenterService {
         @Query("locale") locale: String?,
         @Query("meetingDate") meetingDate: String?,
         @Query("officeId") officeId: Int,
-        @Query("staffId") staffId: Int
+        @Query("staffId") staffId: Int,
     ): Observable<List<OfflineCenter>>
 
     /**
@@ -94,6 +99,6 @@ interface CenterService {
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=activate")
     fun activateCenter(
         @Path("centerId") centerId: Int,
-        @Body activatePayload: ActivatePayload?
+        @Body activatePayload: ActivatePayload?,
     ): Observable<GenericResponse>
 }

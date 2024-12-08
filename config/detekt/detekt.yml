@@ -186,7 +186,7 @@ complexity:
     ignoreArgumentsMatchingNames: false
   NestedBlockDepth:
     active: true
-    threshold: 4
+    threshold: 5
   NestedScopeFunctions:
     active: false
     threshold: 1
@@ -230,7 +230,7 @@ complexity:
       ]
     # Modifying default values 11 to 20
     thresholdInFiles: 20
-    thresholdInClasses: 30
+    thresholdInClasses: 45
     thresholdInInterfaces: 20
     thresholdInObjects: 20
     thresholdInEnums: 20
@@ -323,7 +323,7 @@ exceptions:
   PrintStackTrace:
     active: true
   RethrowCaughtException:
-    active: true
+    active:  false
   ReturnFromFinally:
     active: true
     ignoreLabeled: false

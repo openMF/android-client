@@ -15,7 +15,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.use_cases.SaveIndividualCollectionSheetUseCase
+import com.mifos.core.domain.useCases.SaveIndividualCollectionSheetUseCase
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.objects.collectionsheet.ClientCollectionSheet
 import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet

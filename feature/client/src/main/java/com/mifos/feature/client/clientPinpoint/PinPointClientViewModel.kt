@@ -13,10 +13,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.use_cases.AddClientPinpointLocationUseCase
-import com.mifos.core.domain.use_cases.DeleteClientAddressPinpointUseCase
-import com.mifos.core.domain.use_cases.GetClientPinpointLocationsUseCase
-import com.mifos.core.domain.use_cases.UpdateClientPinpointUseCase
+import com.mifos.core.domain.useCases.AddClientPinpointLocationUseCase
+import com.mifos.core.domain.useCases.DeleteClientAddressPinpointUseCase
+import com.mifos.core.domain.useCases.GetClientPinpointLocationsUseCase
+import com.mifos.core.domain.useCases.UpdateClientPinpointUseCase
 import com.mifos.core.objects.client.ClientAddressRequest
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel

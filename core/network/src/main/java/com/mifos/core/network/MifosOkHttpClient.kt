@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network
 
 import com.facebook.stetho.okhttp3.StethoInterceptor
@@ -16,20 +25,20 @@ import javax.net.ssl.X509TrustManager
  */
 class MifosOkHttpClient(private val prefManager: com.mifos.core.datastore.PrefManager) {
     // Create a trust manager that does not validate certificate chains
-    val mifosOkHttpClient: OkHttpClient
+    val okHttpClient: OkHttpClient
 
-    // Install the all-trusting trust manager
-    // Create an ssl socket factory with our all-trusting manager
+        // Install the all-trusting trust manager
+        // Create an ssl socket factory with our all-trusting manager
 
-    //Enable Full Body Logging
+        // Enable Full Body Logging
 
-    //Set SSL certificate to OkHttpClient Builder
+        // Set SSL certificate to OkHttpClient Builder
 
-    //Enable Full Body Logging
+        // Enable Full Body Logging
 
-    //Setting Timeout 30 Seconds
+        // Setting Timeout 30 Seconds
 
-        //Interceptor :> Full Body Logger and ApiRequest Header
+        // Interceptor :> Full Body Logger and ApiRequest Header
         get() {
             val builder = OkHttpClient.Builder()
             try {
@@ -39,21 +48,21 @@ class MifosOkHttpClient(private val prefManager: com.mifos.core.datastore.PrefMa
                         @Throws(CertificateException::class)
                         override fun checkClientTrusted(
                             chain: Array<X509Certificate>,
-                            authType: String
+                            authType: String,
                         ) {
                         }
 
                         @Throws(CertificateException::class)
                         override fun checkServerTrusted(
                             chain: Array<X509Certificate>,
-                            authType: String
+                            authType: String,
                         ) {
                         }
 
                         override fun getAcceptedIssuers(): Array<X509Certificate> {
                             return emptyArray()
                         }
-                    }
+                    },
                 )
 
                 // Install the all-trusting trust manager
@@ -62,11 +71,11 @@ class MifosOkHttpClient(private val prefManager: com.mifos.core.datastore.PrefMa
                 // Create an ssl socket factory with our all-trusting manager
                 val sslSocketFactory = sslContext.socketFactory
 
-                //Enable Full Body Logging
+                // Enable Full Body Logging
                 val logger = HttpLoggingInterceptor()
                 logger.level = HttpLoggingInterceptor.Level.BODY
 
-                //Set SSL certificate to OkHttpClient Builder
+                // Set SSL certificate to OkHttpClient Builder
 //                builder.sslSocketFactory(sslSocketFactory)
                 builder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
                 builder.hostnameVerifier { hostname, session -> true }
@@ -74,15 +83,15 @@ class MifosOkHttpClient(private val prefManager: com.mifos.core.datastore.PrefMa
                 throw RuntimeException(e)
             }
 
-            //Enable Full Body Logging
+            // Enable Full Body Logging
             val logger = HttpLoggingInterceptor()
             logger.level = HttpLoggingInterceptor.Level.BODY
 
-            //Setting Timeout 30 Seconds
+            // Setting Timeout 30 Seconds
             builder.connectTimeout(60, TimeUnit.SECONDS)
             builder.readTimeout(60, TimeUnit.SECONDS)
 
-            //Interceptor :> Full Body Logger and ApiRequest Header
+            // Interceptor :> Full Body Logger and ApiRequest Header
             builder.addInterceptor(logger)
             builder.addInterceptor(MifosInterceptor(prefManager))
             builder.addNetworkInterceptor(StethoInterceptor())

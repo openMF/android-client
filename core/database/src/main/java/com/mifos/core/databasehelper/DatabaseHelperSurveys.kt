@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.databasehelper
 
 import com.mifos.core.objects.survey.QuestionDatas
@@ -22,7 +31,7 @@ class DatabaseHelperSurveys @Inject constructor() {
      * @return saved Survey
      */
     fun saveSurvey(survey: Survey): Observable<Survey> {
-        return Observable.defer { //Saving Survey in Database
+        return Observable.defer { // Saving Survey in Database
             survey.save()
             Observable.just(survey)
         }
@@ -36,9 +45,9 @@ class DatabaseHelperSurveys @Inject constructor() {
      */
     fun saveQuestionData(
         surveyId: Int,
-        questionDatas: QuestionDatas
+        questionDatas: QuestionDatas,
     ): Observable<QuestionDatas> {
-        return Observable.defer { //Saving QuestionDatas in Database
+        return Observable.defer { // Saving QuestionDatas in Database
             questionDatas.surveyId = surveyId
             questionDatas.save()
             Observable.just(questionDatas)
@@ -53,9 +62,9 @@ class DatabaseHelperSurveys @Inject constructor() {
      */
     fun saveResponseData(
         questionId: Int,
-        responseDatas: ResponseDatas
+        responseDatas: ResponseDatas,
     ): Observable<ResponseDatas> {
-        return Observable.defer { //Saving ResponseDatas in Database
+        return Observable.defer { // Saving ResponseDatas in Database
             responseDatas.questionId = questionId
             responseDatas.save()
             Observable.just(responseDatas)

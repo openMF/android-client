@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperClient
@@ -28,7 +37,7 @@ class DataManagerGroups @Inject constructor(
     private val mDatabaseHelperGroups: DatabaseHelperGroups,
     private val mDatabaseHelperClient: DatabaseHelperClient,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-    private val prefManager: com.mifos.core.datastore.PrefManager
+    private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -59,7 +68,7 @@ class DataManagerGroups @Inject constructor(
                 limit,
                 null,
                 null,
-                null
+                null,
             ).map(GetGroupsResponseMapper::mapFromEntity)
 
             true -> {
@@ -80,7 +89,7 @@ class DataManagerGroups @Inject constructor(
      * read the all Groups from the Database Group table and returns the Page<Group>.
      *
      * @return Page<Group>
-    </Group></Group> */
+     </Group></Group> */
     val databaseGroups: Observable<Page<Group>>
         get() = mDatabaseHelperGroups.readAllGroups()
 
@@ -158,7 +167,7 @@ class DataManagerGroups @Inject constructor(
             .concatMap { groupAccounts ->
                 mDatabaseHelperGroups.saveGroupAccounts(
                     groupAccounts,
-                    groupId
+                    groupId,
                 )
             }
     }
@@ -185,7 +194,7 @@ class DataManagerGroups @Inject constructor(
      * This method loading the all GroupPayloads from the Database.
      *
      * @return List<GroupPayload>
-    </GroupPayload> */
+     </GroupPayload> */
     val allDatabaseGroupPayload: Observable<List<GroupPayload>>
         get() = mDatabaseHelperGroups.realAllGroupPayload()
 
@@ -219,7 +228,7 @@ class DataManagerGroups @Inject constructor(
      */
     fun activateGroup(
         groupId: Int,
-        activatePayload: ActivatePayload?
+        activatePayload: ActivatePayload?,
     ): Observable<GenericResponse> {
         return mBaseApiManager.groupApi.activateGroup(groupId, activatePayload)
     }

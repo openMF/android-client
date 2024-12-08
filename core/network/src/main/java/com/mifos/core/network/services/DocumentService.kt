@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.network.services
@@ -25,7 +30,7 @@ interface DocumentService {
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
     suspend fun getDocuments(
         @Path("entityType") entityType: String,
-        @Path("entityId") entityId: Int
+        @Path("entityId") entityId: Int,
     ): List<Document>
 
     /**
@@ -43,7 +48,7 @@ interface DocumentService {
         @Path("entityId") entityId: Int,
         @Part("name") nameOfDocument: String?,
         @Part("description") description: String?,
-        @Part typedFile: MultipartBody.Part?
+        @Part typedFile: MultipartBody.Part?,
     ): Observable<GenericResponse>
 
     /**
@@ -62,7 +67,7 @@ interface DocumentService {
     suspend fun downloadDocument(
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
-        @Path("documentId") documentId: Int
+        @Path("documentId") documentId: Int,
     ): ResponseBody
 
     /**
@@ -81,7 +86,7 @@ interface DocumentService {
     suspend fun removeDocument(
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
-        @Path("documentId") documentId: Int
+        @Path("documentId") documentId: Int,
     ): GenericResponse
 
     /**
@@ -107,6 +112,6 @@ interface DocumentService {
         @Path("documentId") documentId: Int,
         @Part("name") nameOfDocument: String?,
         @Part("description") description: String?,
-        @Part typedFile: MultipartBody.Part?
+        @Part typedFile: MultipartBody.Part?,
     ): Observable<GenericResponse>
 }
