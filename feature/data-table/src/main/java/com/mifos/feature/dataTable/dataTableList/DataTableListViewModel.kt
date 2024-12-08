@@ -1,4 +1,13 @@
-package com.mifos.feature.data_table.dataTableList
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.dataTable.dataTableList
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -50,7 +59,7 @@ class DataTableListViewModel @Inject constructor(
     private var clientPayload: ClientPayload? = null
     private var formWidgetsList: MutableList<List<FormWidget>> = ArrayList()
 
-    fun getUserStatus() : Boolean {
+    fun getUserStatus(): Boolean {
         return prefManager.userStatus
     }
 
@@ -58,7 +67,7 @@ class DataTableListViewModel @Inject constructor(
         dataTables: List<DataTable>,
         requestType: Int,
         formWidgetsList: MutableList<List<FormWidget>>,
-        payload: Any?
+        payload: Any?,
     ) {
         _dataTableList.value = dataTables
         this.requestType = requestType
@@ -135,7 +144,6 @@ class DataTableListViewModel @Inject constructor(
                         DataTableListUiState.ShowMessage(R.string.feature_data_table_loan_creation_success)
                 }
             })
-
     }
 
     private fun createClient(clientPayload: ClientPayload) {
@@ -172,7 +180,11 @@ class DataTableListViewModel @Inject constructor(
                 FormWidget.SCHEMA_KEY_INT -> {
                     payload[formWidget.propertyName] = if (formWidget.value
                         == ""
-                    ) "0" else formWidget.value.toInt()
+                    ) {
+                        "0"
+                    } else {
+                        formWidget.value.toInt()
+                    }
                 }
 
                 FormWidget.SCHEMA_KEY_DECIMAL -> {

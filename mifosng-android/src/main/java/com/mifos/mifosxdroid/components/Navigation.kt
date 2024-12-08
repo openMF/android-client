@@ -21,9 +21,9 @@ import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.client.navigation.navigateCreateClientScreen
 import com.mifos.feature.client.navigation.navigateToClientListScreen
 
-import com.mifos.feature.data_table.navigation.dataTableNavGraph
-import com.mifos.feature.data_table.navigation.navigateDataTableList
-import com.mifos.feature.data_table.navigation.navigateToDataTable
+import com.mifos.feature.dataTable.navigation.dataTableNavGraph
+import com.mifos.feature.dataTable.navigation.navigateDataTableList
+import com.mifos.feature.dataTable.navigation.navigateToDataTable
 
 
 import com.mifos.feature.document.navigation.documentListScreen

@@ -1,4 +1,13 @@
-package com.mifos.feature.data_table.dataTable
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.dataTable.dataTable
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
@@ -47,9 +56,9 @@ import com.mifos.feature.data_table.R
 
 @Composable
 fun DataTableScreen(
-    viewModel: DataTableViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
-    onClick: (table: String, entityId: Int, dataTable: DataTable) -> Unit
+    viewModel: DataTableViewModel = hiltViewModel(),
+    onClick: (table: String, entityId: Int, dataTable: DataTable) -> Unit,
 ) {
     val tableName = viewModel.args.tableName
     val entityId = viewModel.args.entityId
@@ -67,7 +76,7 @@ fun DataTableScreen(
         isRefreshing = isRefreshing,
         onClick = {
             onClick(tableName, entityId, it)
-        }
+        },
     )
 }
 
@@ -78,7 +87,8 @@ fun DataTableScreen(
     navigateBack: () -> Unit,
     onRefresh: () -> Unit,
     isRefreshing: Boolean,
-    onClick: (dataTable: DataTable) -> Unit
+    onClick: (dataTable: DataTable) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullToRefreshState()
@@ -88,19 +98,19 @@ fun DataTableScreen(
         icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_data_table_title),
         onBackPressed = navigateBack,
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) {
         Box(
-            modifier = Modifier
+            modifier = modifier // Pass the modifier here
                 .fillMaxSize()
                 .padding(it)
-                .nestedScroll(pullRefreshState.nestedScrollConnection)
+                .nestedScroll(pullRefreshState.nestedScrollConnection),
         ) {
             when (uiState) {
                 is DataTableUiState.ShowDataTables -> {
                     DataTableContent(
                         dataTable = uiState.dataTables,
-                        onClick = onClick
+                        onClick = onClick,
                     )
                 }
 
@@ -110,7 +120,8 @@ fun DataTableScreen(
 
                 is DataTableUiState.ShowError -> {
                     MifosSweetError(
-                        message = stringResource(id = uiState.message), onclick = onRefresh
+                        message = stringResource(id = uiState.message),
+                        onclick = onRefresh,
                     )
                 }
 
@@ -126,8 +137,9 @@ fun DataTableScreen(
         }
 
         LaunchedEffect(key1 = isRefreshing) {
-            if (isRefreshing)
+            if (isRefreshing) {
                 pullRefreshState.startRefresh()
+            }
         }
 
         LaunchedEffect(key1 = pullRefreshState.isRefreshing) {
@@ -150,13 +162,16 @@ fun DataTableScreen(
 @Composable
 fun DataTableContent(
     dataTable: List<DataTable>,
-    onClick: (dataTable: DataTable) -> Unit
+    onClick: (dataTable: DataTable) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    LazyColumn {
+    LazyColumn(
+        modifier = modifier,
+    ) {
         items(dataTable) { dataTable ->
             DataTableItem(
                 dataTable = dataTable,
-                onClick = onClick
+                onClick = onClick,
             )
         }
     }
@@ -165,30 +180,31 @@ fun DataTableContent(
 @Composable
 fun DataTableItem(
     dataTable: DataTable,
-    onClick: (dataTable: DataTable) -> Unit
+    onClick: (dataTable: DataTable) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(
                 horizontal = 4.dp,
-                vertical = 4.dp
+                vertical = 4.dp,
             ),
         shape = RoundedCornerShape(0.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = Color.White,
         ),
-        onClick = { onClick.invoke(dataTable) }
+        onClick = { onClick.invoke(dataTable) },
     ) {
         dataTable.registeredTableName?.let {
             Text(
                 modifier = Modifier.padding(
                     horizontal = 16.dp,
-                    vertical = 18.dp
+                    vertical = 18.dp,
                 ),
                 style = MaterialTheme.typography.bodyLarge,
-                text = it
+                text = it,
             )
         }
     }
@@ -199,18 +215,18 @@ class DataTablePreviewProvider : PreviewParameterProvider<DataTableUiState> {
         DataTable(
             applicationTableName = "AppTable1",
             columnHeaderData = listOf(),
-            registeredTableName = "registered Table Name"
+            registeredTableName = "registered Table Name",
         ),
         DataTable(
             applicationTableName = "AppTable1",
             columnHeaderData = listOf(),
-            registeredTableName = "registered Table Name"
+            registeredTableName = "registered Table Name",
         ),
         DataTable(
             applicationTableName = "AppTable1",
             columnHeaderData = listOf(),
-            registeredTableName = "registered Table Name"
-        )
+            registeredTableName = "registered Table Name",
+        ),
     )
 
     override val values: Sequence<DataTableUiState>
@@ -218,21 +234,20 @@ class DataTablePreviewProvider : PreviewParameterProvider<DataTableUiState> {
             DataTableUiState.ShowEmptyDataTables,
             DataTableUiState.ShowProgressbar,
             DataTableUiState.ShowDataTables(dataTable),
-            DataTableUiState.ShowError(R.string.feature_data_table_failed_to_fetch_data_table)
+            DataTableUiState.ShowError(R.string.feature_data_table_failed_to_fetch_data_table),
         )
 }
 
 @Composable
 @Preview(showSystemUi = true)
-fun PreviewDataTable(
-    @PreviewParameter(DataTablePreviewProvider::class) dataTableUiState: DataTableUiState
+private fun PreviewDataTable(
+    @PreviewParameter(DataTablePreviewProvider::class) dataTableUiState: DataTableUiState,
 ) {
     DataTableScreen(
         uiState = dataTableUiState,
         navigateBack = { },
         onRefresh = { },
         isRefreshing = false,
-        onClick = { }
+        onClick = { },
     )
 }
-
