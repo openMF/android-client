@@ -52,7 +52,6 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -214,7 +213,7 @@ internal fun CreateNewClientScreen(
                     Toast.makeText(
                         context,
                         stringResource(id = uiState.message),
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     )
                         .show()
                     navigateBack.invoke()
@@ -224,7 +223,7 @@ internal fun CreateNewClientScreen(
                     Toast.makeText(
                         context,
                         stringResource(id = uiState.message),
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     )
                         .show()
                     navigateBack.invoke()
@@ -246,7 +245,7 @@ internal fun CreateNewClientScreen(
                 }
             }
         }
-        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -451,7 +450,6 @@ private fun CreateNewClientContent(
             .fillMaxSize()
             .verticalScroll(state = scrollState),
     ) {
-
         ClientImageSection(selectedImageUri = selectedImageUri) {
             showImagePickerDialog = true
         }
