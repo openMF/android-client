@@ -44,15 +44,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -104,27 +104,27 @@ internal fun ClientListScreen(
 
     val state = viewModel.clientListUiState.collectAsState().value
 
-    val isInSelectionMode = remember { mutableStateOf(false) }
-    val selectedItems = remember { mutableStateListOf<Client>() }
+    var isInSelectionMode by remember { mutableStateOf(false) }
+    val selectedItems = remember { ClientSelectionState() }
 
     val resetSelectionMode = {
-        isInSelectionMode.value = false
+        isInSelectionMode = false
         selectedItems.clear()
     }
     val sync = rememberSaveable {
         mutableStateOf(false)
     }
 
-    BackHandler(enabled = isInSelectionMode.value) {
+    BackHandler(enabled = isInSelectionMode) {
         resetSelectionMode()
     }
 
     LaunchedEffect(
-        key1 = isInSelectionMode.value,
-        key2 = selectedItems.size,
+        key1 = isInSelectionMode,
+        key2 = selectedItems.size(),
     ) {
-        if (isInSelectionMode.value && selectedItems.isEmpty()) {
-            isInSelectionMode.value = false
+        if (isInSelectionMode && selectedItems.isEmpty()) {
+            isInSelectionMode = false
         }
     }
 
@@ -132,9 +132,9 @@ internal fun ClientListScreen(
         modifier = Modifier
             .padding(paddingValues),
         topBar = {
-            if (isInSelectionMode.value) {
+            if (isInSelectionMode) {
                 SelectionModeTopAppBar(
-                    currentSelectedItems = selectedItems,
+                    currentSelectedItems = selectedItems.selectedItems.value,
                     syncClicked = { sync.value = true },
                     resetSelectionMode = resetSelectionMode,
                 )
@@ -172,10 +172,14 @@ internal fun ClientListScreen(
                             clientPagingList = state.list.collectAsLazyPagingItems(),
                             isInSelectionMode = isInSelectionMode,
                             selectedItems = selectedItems,
+                            onClientSelect = {
+                                onClientSelect(it)
+                            },
                             failedRefresh = { viewModel.refreshClientList() },
-                        ) {
-                            onClientSelect(it)
-                        }
+                            selectedMode = {
+                                isInSelectionMode = true
+                            },
+                        )
                     }
 
                     is ClientListUiState.ClientListDb -> {
@@ -200,7 +204,7 @@ internal fun ClientListScreen(
                         sync.value = false
                     },
                     hide = { sync.value = false },
-                    list = selectedItems.toList(),
+                    list = selectedItems.selectedItems.value,
                 )
             }
         }
@@ -255,20 +259,46 @@ private fun SelectionModeTopAppBar(
     )
 }
 
+class ClientSelectionState(initialSelectedItems: List<Client> = emptyList()) {
+    private val _selectedItems = mutableStateListOf<Client>().also { it.addAll(initialSelectedItems) }
+    var selectedItems: State<List<Client>> = derivedStateOf { _selectedItems }
+
+    fun add(client: Client) {
+        _selectedItems.add(client)
+    }
+
+    fun remove(client: Client) {
+        _selectedItems.remove(client)
+    }
+
+    fun contains(client: Client): Boolean {
+        return _selectedItems.contains(client)
+    }
+    fun isEmpty(): Boolean {
+        return _selectedItems.isEmpty()
+    }
+
+    fun clear() {
+        _selectedItems.clear()
+    }
+
+    fun size(): Int {
+        return _selectedItems.size
+    }
+    fun toList(): List<Client> {
+        return _selectedItems.toList()
+    }
+}
+
 @Composable
 private fun LazyColumnForClientListApi(
     clientPagingList: LazyPagingItems<Client>,
-    isInSelectionMode: MutableState<Boolean>,
-    selectedItems: SnapshotStateList<Client>,
+    isInSelectionMode: Boolean,
+    selectedItems: ClientSelectionState,
     failedRefresh: () -> Unit,
     onClientSelect: (Int) -> Unit,
+    selectedMode: () -> Unit,
 ) {
-//    val selectedItems = currentSelectedItems.toMutableStateList()
-//    val isInSelectionMode = rememberSaveable {
-//        mutableStateOf(inSelectionMode)
-//    }
-    /*ToDo Remove Snapshot State and Mutable state for the parameters*/
-
     when (clientPagingList.loadState.refresh) {
         is LoadState.Error -> {
             MifosSweetError(message = "Failed to Fetch Clients") {
@@ -284,7 +314,7 @@ private fun LazyColumnForClientListApi(
     LazyColumn {
         items(clientPagingList.itemCount) { index ->
 
-            val isSelected = selectedItems.contains(clientPagingList[index])
+            val isSelected = clientPagingList[index]?.let { selectedItems.contains(it) }
             var cardColor by remember { mutableStateOf(White) }
 
             OutlinedCard(
@@ -292,9 +322,9 @@ private fun LazyColumnForClientListApi(
                     .padding(6.dp)
                     .combinedClickable(
                         onClick = {
-                            if (isInSelectionMode.value) {
-                                cardColor = if (isSelected) {
-                                    selectedItems.remove(clientPagingList[index])
+                            if (isInSelectionMode) {
+                                cardColor = if (isSelected == true) {
+                                    clientPagingList[index]?.let { selectedItems.remove(it) }
                                     White
                                 } else {
                                     clientPagingList[index]?.let { selectedItems.add(it) }
@@ -305,16 +335,16 @@ private fun LazyColumnForClientListApi(
                             }
                         },
                         onLongClick = {
-                            if (isInSelectionMode.value) {
-                                cardColor = if (isSelected) {
-                                    selectedItems.remove(clientPagingList[index])
+                            if (isInSelectionMode) {
+                                cardColor = if (isSelected == true) {
+                                    clientPagingList[index]?.let { selectedItems.remove(it) }
                                     White
                                 } else {
                                     clientPagingList[index]?.let { selectedItems.add(it) }
                                     LightGray
                                 }
                             } else {
-                                isInSelectionMode.value = true
+                                selectedMode()
                                 clientPagingList[index]?.let { selectedItems.add(it) }
                                 cardColor = LightGray
                             }

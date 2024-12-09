@@ -46,7 +46,7 @@ fun NavGraphBuilder.clientNavGraph(
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTable>, Any?, Int, MutableList<List<FormWidget>>, Unit>,
     onDocumentClicked: (Int, String) -> Unit,
-    onCardClicked: (Int, List<Survey>) -> Unit
+    onCardClicked: (Int, List<Survey>) -> Unit,
 ) {
     navigation(
         startDestination = ClientScreens.ClientListScreen.route,
@@ -165,7 +165,7 @@ fun NavGraphBuilder.clientIdentifierRoute(
     ) {
         ClientIdentifiersScreen(
             onBackPressed = onBackPressed,
-            onDocumentClicked = {onDocumentClicked(it,Constants.ENTITY_TYPE_CLIENTS)},
+            onDocumentClicked = { onDocumentClicked(it, Constants.ENTITY_TYPE_CLIENTS) },
         )
     }
 }
@@ -240,16 +240,16 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
 
 fun NavGraphBuilder.createClientRoute(
     onBackPressed: () -> Unit,
-    hasDatatables: (List<DataTable>, ClientPayload, Int,MutableList<List<FormWidget>>) -> Unit,
+    hasDatatables: (List<DataTable>, ClientPayload, Int, MutableList<List<FormWidget>>) -> Unit,
 ) {
     composable(
         route = ClientScreens.CreateClientScreen.route,
     ) {
         CreateNewClientScreen(
             navigateBack = onBackPressed,
-            hasDatatables ={ datatables, clientPayload ->
+            hasDatatables = { datatables, clientPayload ->
                 hasDatatables(datatables, clientPayload, Constants.CREATE_CLIENT, mutableListOf())
-            } ,
+            },
         )
     }
 }
