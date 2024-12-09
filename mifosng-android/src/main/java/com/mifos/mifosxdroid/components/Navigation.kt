@@ -19,6 +19,7 @@ import com.mifos.feature.checkerInboxTask.navigation.checkerInboxTaskGraph
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.client.navigation.navigateCreateClientScreen
+import com.mifos.feature.client.navigation.navigateSurveyQuestionScreen
 import com.mifos.feature.client.navigation.navigateToClientListScreen
 
 import com.mifos.feature.data_table.navigation.dataTableNavGraph
@@ -59,7 +60,7 @@ fun Navigation(
     navController: NavHostController,
     padding: PaddingValues,
     modifier: Modifier = Modifier,
-    startDestination: String = SearchScreens.SearchScreenRoute.route
+    startDestination: String = SearchScreens.SearchScreenRoute.route,
 ) {
     val context = LocalContext.current
 
@@ -99,7 +100,8 @@ fun Navigation(
             hasDatatables = navController :: navigateDataTableList,
             onDocumentClicked = navController :: navigateToDocumentListScreen,
             onCardClicked = { position, survey ->
-                //    TODO
+                val id: Int = survey[position].id
+                navController.navigateSurveyQuestionScreen(id)
             },
         )
 
@@ -123,21 +125,21 @@ fun Navigation(
             navController = navController,
             onBackPressed = navController::popBackStack,
             loadMoreSavingsAccountInfo = navController::navigateToDataTable,
-            loadDocuments = navController::navigateToDocumentListScreen
+            loadDocuments = navController::navigateToDocumentListScreen,
         )
 
         loanNavGraph(
             navController = navController,
             onMoreInfoClicked = navController::navigateToDataTable,
-            onDocumentsClicked = navController::navigateToDocumentListScreen
+            onDocumentsClicked = navController::navigateToDocumentListScreen,
         )
 
         documentListScreen(
-            onBackPressed = navController::popBackStack
+            onBackPressed = navController::popBackStack,
         )
 
         noteScreen(
-            onBackPressed = navController::popBackStack
+            onBackPressed = navController::popBackStack,
         )
 
         addLoanAccountScreen(
@@ -145,11 +147,11 @@ fun Navigation(
             dataTable = { dataTable, payload ->
 //                navController.navigateDataTableList(dataTable, payload, Constants.CLIENT_LOAN)
 //                TODO()
-            }
+            },
         )
 
         addSavingsAccountScreen(
-            onBackPressed = navController::popBackStack
+            onBackPressed = navController::popBackStack,
         )
 
         activateScreen(onBackPressed = navController::popBackStack)
@@ -163,7 +165,7 @@ fun Navigation(
             onClient = navController::navigateClientDetailsScreen,
             onLoan = navController::navigateToLoanAccountSummaryScreen,
             onGroup = navController::navigateToGroupDetailsScreen,
-            onSavings = navController::navigateClientDetailsScreen
+            onSavings = navController::navigateClientDetailsScreen,
         )
 
         centerNavGraph(
@@ -177,15 +179,15 @@ fun Navigation(
             )
 
         reportNavGraph(
-            navController = navController
+            navController = navController,
         )
 
         checkerInboxTaskGraph(
-            navController = navController
+            navController = navController,
         )
 
         pathTrackingNavGraph(
-            navController = navController
+            navController = navController,
         )
 
         settingsScreen(
@@ -196,7 +198,7 @@ fun Navigation(
         )
 
         aboutScreen(
-            onBackPressed = { navController.popBackStack() }
+            onBackPressed = { navController.popBackStack() },
         )
 
         individualCollectionSheetNavGraph(
@@ -204,7 +206,7 @@ fun Navigation(
             navController = navController,
         )
 
-        generateCollectionSheetScreen ( navController::popBackStack )
+        generateCollectionSheetScreen(navController::popBackStack)
 
         dataTableNavGraph(
             navController = navController,
@@ -213,14 +215,14 @@ fun Navigation(
                 navController.popBackStack()
                 Toast.makeText(context, context.resources.getString(R.string.client) + MifosResponseHandler.response, Toast.LENGTH_LONG).show()
 
-                if (userStatus == Constants.USER_ONLINE){
+                if (userStatus == Constants.USER_ONLINE) {
                     client.clientId?.let { navController.navigateClientDetailsScreen(it) }
                 }
-            }
+            },
         )
 
         offlineNavGraph(
-            navController = navController
+            navController = navController,
         )
     }
 }

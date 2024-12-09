@@ -231,9 +231,10 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
         route = ClientScreens.ClientSurveyQuestionScreen.route,
         arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType })),
     ) {
+        val id = it.arguments!!.getInt(Constants.CLIENT_ID)
         SurveyQuestionScreen(
             navigateBack = onBackPressed,
-            survey = Survey(),
+           id = id,
         )
     }
 }
@@ -276,6 +277,10 @@ fun NavController.navigateClientSignatureScreen(clientId: Int) {
 
 fun NavController.navigateClientSurveyListScreen(clientId: Int) {
     navigate(ClientScreens.ClientSurveyListScreen.argument(clientId))
+}
+
+fun NavController.navigateSurveyQuestionScreen(surveyId:Int){
+    navigate(ClientScreens.ClientSurveyQuestionScreen.argument(surveyId))
 }
 
 fun NavController.navigateCreateClientScreen() {

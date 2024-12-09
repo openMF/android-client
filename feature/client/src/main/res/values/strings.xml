@@ -108,6 +108,7 @@
     <string name="feature_client_select_one_survey">Select one survey</string>
     <string name="feature_client_failed_to_fetch_datatable">Failed to fetch datatable</string>
     <string name="feature_client_failed_to_fetch_surveys_list">Failed to fetch surveys list</string>
+    <string name="feature_client_failed_to_fetch_survey_questions">Failed to fetch survey Questions</string>
     <string name="feature_client_failed_to_load_db_question_data">Failed to load db question data</string>
     <string name="feature_client_survey_successfully_submitted">Survey successfully submitted</string>
     <string name="feature_client_failed_to_submit_survey">Failed to submit survey</string>

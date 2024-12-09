@@ -61,7 +61,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.gson.Gson
+import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
@@ -79,67 +81,106 @@ import java.util.Date
 @Composable
 internal fun SurveyQuestionScreen(
     navigateBack: () -> Unit,
-    survey: Survey?,
+    id: Int,
     viewModel: SurveySubmitViewModel = hiltViewModel(),
+    queViewModel: SurveyQuestionViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val uiState2 by queViewModel.surveyQuestionUiState.collectAsStateWithLifecycle()
     val uiState by viewModel.surveySubmitUiState.collectAsStateWithLifecycle()
     val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val userId by viewModel.userId.collectAsStateWithLifecycle()
     val scoreCardData: MutableList<ScorecardValues> by rememberSaveable {
         mutableStateOf(mutableListOf())
     }
+    LaunchedEffect(key1 = Unit) {
+        queViewModel.loadSurvey(id)
+    }
     var currentQuestionNumber by rememberSaveable { mutableIntStateOf(0) }
     var showSubmitScreen by rememberSaveable { mutableStateOf(false) }
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+    when (uiState2) {
 
-    if (survey != null) {
-        val (questionData, optionsData) = processSurveyData(survey)
+        is SurveyQuestionUiState.ShowQuestions -> {
+            val survey: Survey = (uiState2 as SurveyQuestionUiState.ShowQuestions).ques
+            val (questionData, optionsData) = processSurveyData(survey)
 
-        SurveyQuestionScreen(
-            uiState = uiState,
-            navigateBack = navigateBack,
-            questionNumber = currentQuestionNumber,
-            currentQuestionData = questionData,
-            currentOptionsData = optionsData,
-            currentScoreCardData = scoreCardData,
-            showSubmitScreen = showSubmitScreen,
-            gotoNextQuestion = { index ->
-                if (index != -1) {
-                    val scoreCardValue = ScorecardValues(
-                        questionId = survey.questionDatas[currentQuestionNumber].questionId,
-                        responseId = survey.questionDatas[currentQuestionNumber].responseDatas[index].responseId,
-                        value = survey.questionDatas[currentQuestionNumber].responseDatas[index].value,
-                    )
-                    scoreCardData.add(scoreCardValue)
-                }
-                if (currentQuestionNumber < questionData.size - 1) {
-                    currentQuestionNumber += 1
-                } else {
-                    showSubmitScreen = true
-                }
-            },
-            submitSurvey = {
-                if (scoreCardData.isNotEmpty()) {
-                    viewModel.submitSurvey(
-                        survey = survey.id,
-                        scorecardPayload = Scorecard(
-                            userId = userId,
-                            clientId = clientId,
-                            createdOn = Date(),
-                            scorecardValues = scoreCardData,
-                        ),
-                    )
-                } else {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.feature_client_please_attempt_at_least_one_question),
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
-            },
-        )
+            SurveyQuestionScreen(
+                uiState = uiState,
+                navigateBack = navigateBack,
+                questionNumber = currentQuestionNumber,
+                currentQuestionData = questionData,
+                currentOptionsData = optionsData,
+                currentScoreCardData = scoreCardData,
+                showSubmitScreen = showSubmitScreen,
+                gotoNextQuestion = { index ->
+                    if (index != -1) {
+                        val scoreCardValue = ScorecardValues(
+                            questionId = survey.questionDatas[currentQuestionNumber].questionId,
+                            responseId = survey.questionDatas[currentQuestionNumber].responseDatas[index].responseId,
+                            value = survey.questionDatas[currentQuestionNumber].responseDatas[index].value,
+                        )
+                        scoreCardData.add(scoreCardValue)
+                    }
+                    if (currentQuestionNumber < questionData.size - 1) {
+                        currentQuestionNumber += 1
+                    } else {
+                        showSubmitScreen = true
+                    }
+                },
+                submitSurvey = {
+                    if (scoreCardData.isNotEmpty()) {
+                        viewModel.submitSurvey(
+                            survey = survey.id,
+                            scorecardPayload = Scorecard(
+                                userId = userId,
+                                clientId = clientId,
+                                createdOn = Date(),
+                                scorecardValues = scoreCardData,
+                            ),
+                        )
+                    } else {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.feature_client_please_attempt_at_least_one_question),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                },
+            )
+        }
+
+        is SurveyQuestionUiState.ShowFetchingError -> {
+
+
+            MifosScaffold(
+                snackbarHostState = snackbarHostState,
+                icon = MifosIcons.arrowBack,
+                onBackPressed = navigateBack,
+                title = stringResource(id = R.string.feature_client_surveys),
+            ) {
+                MifosSweetError(
+                    message = stringResource(id = R.string.feature_client_failed_to_fetch_survey_questions),
+                    onclick = { queViewModel.loadSurvey(id) },
+                )
+            }
+        }
+
+        SurveyQuestionUiState.ShowProgressbar -> {
+            MifosScaffold(
+                snackbarHostState = snackbarHostState,
+                icon = MifosIcons.arrowBack,
+                onBackPressed = navigateBack,
+                title = stringResource(id = R.string.feature_client_surveys),
+            ) {
+                MifosCircularProgress()
+            }
+        }
     }
 }
+
 
 private fun processSurveyData(survey: Survey): Pair<List<String>, List<List<String>>> {
     val questionData = mutableListOf<String>()
@@ -284,7 +325,11 @@ private fun SurveyQuestionContent(
 }
 
 @Composable
-private fun RadioGroup(options: List<String>, selectedOptionIndex: Int, onOptionSelected: (Int) -> Unit) {
+private fun RadioGroup(
+    options: List<String>,
+    selectedOptionIndex: Int,
+    onOptionSelected: (Int) -> Unit,
+) {
     Column {
         options.forEachIndexed { index, option ->
             Row(
