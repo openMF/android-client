@@ -153,7 +153,7 @@ internal fun ReportDetailScreen(
     }
 
     LaunchedEffect(Unit) {
-        val reportName = "'" + reportItem.report_name + "'"
+        val reportName = "'" + reportItem.reportName + "'"
         viewModel.fetchFullParameterList(reportName, true)
     }
 
@@ -180,7 +180,7 @@ internal fun ReportDetailScreen(
         reportProducts = reportProducts,
         runReport = { mapQuery ->
             runReportEnable = true
-            reportItem.report_name?.let {
+            reportItem.reportName?.let {
                 viewModel.fetchRunReportWithQuery(it, mapQuery)
             }
         },
@@ -380,7 +380,7 @@ private fun RunReportContent(
                         .weight(1f)
                         .padding(start = 16.dp),
                 ) {
-                    reportItem.report_name?.let {
+                    reportItem.reportName?.let {
                         Text(
                             text = it,
                             style = TextStyle(
@@ -398,7 +398,7 @@ private fun RunReportContent(
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
-                            text = reportItem.report_type.toString(),
+                            text = reportItem.reportType.toString(),
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
@@ -407,7 +407,7 @@ private fun RunReportContent(
                             ),
                         )
                         Text(
-                            text = reportItem.report_category.toString(),
+                            text = reportItem.reportCategory.toString(),
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,

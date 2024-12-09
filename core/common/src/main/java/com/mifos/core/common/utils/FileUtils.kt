@@ -67,12 +67,12 @@ object FileUtils {
             when {
                 isExternalStorageDocument(uri) -> {
                     val docId = DocumentsContract.getDocumentId(uri)
-                    val split = docId.split(":")
+                    val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     val type = split[0]
                     if ("primary".equals(type, ignoreCase = true)) {
                         resultPath = "${Environment.getExternalStorageDirectory()}/${split[1]}"
                     }
-                    // Handle non-primary volumes if necessary
+                    // TODO() Handle non-primary volumes
                 }
                 isDownloadsDocument(uri) -> {
                     val id = DocumentsContract.getDocumentId(uri)
