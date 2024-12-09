@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.testing.repository
 
 import com.mifos.core.data.repository.GroupsListRepository
@@ -6,14 +15,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
 
-const val errorMessage = "Unable to load data from server"
+const val ERROR_MESSAGE = "Unable to load data from server"
 
 class TestGroupsListRepository : GroupsListRepository {
     private val data = MutableStateFlow<List<Group>?>(sampleGroups)
 
     override suspend fun getAllGroups(paged: Boolean, offset: Int, limit: Int): List<Group> {
         return if (data.value == null) {
-            throw RuntimeException(errorMessage)
+            throw RuntimeException(ERROR_MESSAGE)
         } else {
             data.value!!.getPagedData(offset, limit)
         }
@@ -178,7 +187,7 @@ val sampleGroups = listOf(
         id = 30,
         accountNo = "ACC-030",
         name = "Group 30",
-    )
+    ),
 )
 
 fun <T> List<T>.getPagedData(offset: Int, limit: Int): List<T> {
