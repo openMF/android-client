@@ -276,7 +276,7 @@ private fun RunReportCardItem(
                     .weight(1f)
                     .padding(start = 16.dp),
             ) {
-                report.report_name?.let {
+                report.reportName?.let {
                     Text(
                         text = it,
                         style = TextStyle(
@@ -294,7 +294,7 @@ private fun RunReportCardItem(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        text = report.report_type.toString(),
+                        text = report.reportType.toString(),
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
@@ -303,7 +303,7 @@ private fun RunReportCardItem(
                         ),
                     )
                     Text(
-                        text = report.report_category.toString(),
+                        text = report.reportCategory.toString(),
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
@@ -353,8 +353,8 @@ private fun RunReportPreview(
 
 val sampleRunReports = List(10) {
     ClientReportTypeItem(
-        report_name = "Report $it",
-        report_type = "Type $it",
-        report_category = "Category $it",
+        reportName = "Report $it",
+        reportType = "Type $it",
+        reportCategory = "Category $it",
     )
 }
