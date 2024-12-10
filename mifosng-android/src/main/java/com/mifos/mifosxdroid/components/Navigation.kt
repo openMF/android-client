@@ -211,7 +211,7 @@ fun Navigation(
             clientCreated = { client, userStatus ->
                 navController.popBackStack()
                 navController.popBackStack()
-                Toast.makeText(context, context.resources.getString(R.string.client) + MifosResponseHandler.response, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.resources.getString(R.string.client) + MifosResponseHandler.getResponse(userStatus), Toast.LENGTH_LONG).show()
 
                 if (userStatus == Constants.USER_ONLINE){
                     client.clientId?.let { navController.navigateClientDetailsScreen(it) }
