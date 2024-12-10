@@ -14,7 +14,7 @@ import androidx.paging.PagingSource
 import androidx.paging.testing.TestPager
 import com.mifos.core.objects.group.Group
 import com.mifos.core.testing.repository.TestGroupsListRepository
-import com.mifos.core.testing.repository.errorMessage
+import com.mifos.core.testing.repository.ERROR_MESSAGE
 import com.mifos.core.testing.repository.getPagedData
 import com.mifos.core.testing.repository.sampleGroups
 import com.mifos.core.testing.util.MainDispatcherRule
@@ -166,7 +166,7 @@ class GroupListPagingSourceTest {
             val result = pager.refresh()
             assertTrue(result is PagingSource.LoadResult.Error)
 
-            assertEquals(errorMessage, result.throwable.message)
+            assertEquals(ERROR_MESSAGE, result.throwable.message)
 
             val page = pager.getLastLoadedPage()
             assertNull(page)

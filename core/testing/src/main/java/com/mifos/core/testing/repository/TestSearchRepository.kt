@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.testing.repository
 
 import com.mifos.core.data.repository.SearchRepository
@@ -15,26 +24,29 @@ class TestSearchRepository : SearchRepository {
     override suspend fun searchResources(
         query: String,
         resources: String?,
-        exactMatch: Boolean?
+        exactMatch: Boolean?,
     ): Flow<List<SearchedEntity>> {
         return sampleResults.map { list ->
             when {
                 query.isBlank() && resources.isNullOrBlank() -> emptyList()
                 else -> {
                     list.asSequence().filter { entity ->
-                        (resources.isNullOrBlank() || entity.entityType.equals(
-                            resources,
-                            ignoreCase = true
-                        )) && (query.isBlank() || when {
-                            exactMatch == true -> entity.entityName.equals(query, ignoreCase = true) ||
+                        (
+                            resources.isNullOrBlank() || entity.entityType.equals(
+                                resources,
+                                ignoreCase = true,
+                            )
+                            ) && (
+                            query.isBlank() || when {
+                                exactMatch == true -> entity.entityName.equals(query, ignoreCase = true) ||
                                     entity.entityAccountNo.equals(query, ignoreCase = true) ||
                                     entity.parentName.equals(query, true)
 
-                            else -> entity.entityName?.contains(query, ignoreCase = true) == true ||
+                                else -> entity.entityName?.contains(query, ignoreCase = true) == true ||
                                     entity.entityAccountNo?.contains(query, ignoreCase = true) == true ||
                                     entity.parentName?.contains(query, true) == true
-                        }
-                                )
+                            }
+                            )
                     }.toList()
                 }
             }

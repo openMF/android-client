@@ -260,7 +260,7 @@ private fun PathTrackingItem(
     modifier: Modifier = Modifier,
     onPathTrackingClick: (List<UserLatLng>) -> Unit,
 ) {
-    val latLngList = getLatLngList(pathTracking.latlng)
+    val latLngList = getLatLngList(pathTracking.latLng)
     val latLng = latLngList[0]
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(latLng.lat, latLng.lng), 15f)
@@ -286,7 +286,7 @@ private fun PathTrackingItem(
         )
         Text(
             modifier = Modifier.padding(8.dp),
-            text = "${pathTracking.date} from ${pathTracking.start_time} to ${pathTracking.stop_time}",
+            text = "${pathTracking.date} from ${pathTracking.startTime} to ${pathTracking.stopTime}",
             style = TextStyle(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
@@ -335,10 +335,10 @@ private fun PathTrackingScreenPreview(
 
 val samplePathTrackingList = List(10) {
     UserLocation(
-        user_id = it,
-        latlng = "123,456",
+        userId = it,
+        latLng = "123,456",
         date = "date $it",
-        start_time = "start time $it",
-        stop_time = "stop time $it",
+        startTime = "start time $it",
+        stopTime = "stop time $it",
     )
 }
