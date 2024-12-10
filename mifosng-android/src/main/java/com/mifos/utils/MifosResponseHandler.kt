@@ -1,14 +1,13 @@
 package com.mifos.utils
 
-import com.mifos.utils.PrefManager.userStatus
-
 /**
  * Created by Rajan Maurya on 08/07/16.
  */
 object MifosResponseHandler {
-    val response: String
-        get() = when (userStatus) {
-            false -> "created successfully"
+    fun getResponse(userStatus: Boolean): String {
+        return when (userStatus) {
             true -> "Saved into DB Successfully"
+            false -> "created successfully"
         }
+    }
 }

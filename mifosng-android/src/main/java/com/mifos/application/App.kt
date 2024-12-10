@@ -14,7 +14,7 @@ import com.evernote.android.job.JobManager
 import com.facebook.stetho.Stetho
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.MaterialModule
-import com.mifos.utils.LanguageHelper.onAttach
+import com.mifos.core.common.utils.LanguageHelper.onAttach
 import com.mifos.utils.ThemeHelper
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
@@ -27,13 +27,8 @@ import dagger.hilt.android.HiltAndroidApp
 class App : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val themePref = sharedPreferences.getString("dark_mode", ThemeHelper.DEFAULT_MODE)
-        if (themePref != null) {
-            ThemeHelper.applyTheme(themePref)
-        }
+
         instance = this
-        Iconify.with(MaterialModule())
 //        JobManager.create(this).addJobCreator(OfflineJobCreator())
         //Initializing the DBFlow and SQL Cipher Encryption
         FlowManager.init(FlowConfig.Builder(this).build())
