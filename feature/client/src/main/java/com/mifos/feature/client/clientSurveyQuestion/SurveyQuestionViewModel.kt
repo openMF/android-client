@@ -1,6 +1,8 @@
 package com.mifos.feature.client.clientSurveyQuestion
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SurveyQuestionRepository
 import com.mifos.core.objects.survey.Survey
 import com.mifos.feature.client.R
@@ -14,8 +16,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SurveyQuestionViewModel @Inject constructor(
     private val surveyQuestionRepository: SurveyQuestionRepository,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-
+    val surveyId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = -1)
     private val _surveyQuestionUiState =
         MutableStateFlow<SurveyQuestionUiState>(SurveyQuestionUiState.ShowProgressbar)
     val surveyQuestionUiState: StateFlow<SurveyQuestionUiState> get() = _surveyQuestionUiState

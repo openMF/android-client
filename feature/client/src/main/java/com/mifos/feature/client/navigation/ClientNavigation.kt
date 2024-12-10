@@ -231,10 +231,8 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
         route = ClientScreens.ClientSurveyQuestionScreen.route,
         arguments = listOf(navArgument(Constants.CLIENT_ID, builder = { type = NavType.IntType })),
     ) {
-        val id = it.arguments!!.getInt(Constants.CLIENT_ID)
         SurveyQuestionScreen(
             navigateBack = onBackPressed,
-           id = id,
         )
     }
 }

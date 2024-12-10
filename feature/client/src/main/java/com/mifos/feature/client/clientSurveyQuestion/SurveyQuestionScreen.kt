@@ -81,34 +81,34 @@ import java.util.Date
 @Composable
 internal fun SurveyQuestionScreen(
     navigateBack: () -> Unit,
-    id: Int,
-    viewModel: SurveySubmitViewModel = hiltViewModel(),
-    queViewModel: SurveyQuestionViewModel = hiltViewModel(),
+    submitViewModel: SurveySubmitViewModel = hiltViewModel(),
+    questionViewModel: SurveyQuestionViewModel = hiltViewModel(),
 ) {
+    val surveyId by questionViewModel.surveyId.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val uiState2 by queViewModel.surveyQuestionUiState.collectAsStateWithLifecycle()
-    val uiState by viewModel.surveySubmitUiState.collectAsStateWithLifecycle()
-    val clientId by viewModel.clientId.collectAsStateWithLifecycle()
-    val userId by viewModel.userId.collectAsStateWithLifecycle()
+    val surveyQuestionUiState by questionViewModel.surveyQuestionUiState.collectAsStateWithLifecycle()
+    val surveySubmitUiState by submitViewModel.surveySubmitUiState.collectAsStateWithLifecycle()
+    val clientId by submitViewModel.clientId.collectAsStateWithLifecycle()
+    val userId by submitViewModel.userId.collectAsStateWithLifecycle()
     val scoreCardData: MutableList<ScorecardValues> by rememberSaveable {
         mutableStateOf(mutableListOf())
     }
     LaunchedEffect(key1 = Unit) {
-        queViewModel.loadSurvey(id)
+        questionViewModel.loadSurvey(surveyId)
     }
     var currentQuestionNumber by rememberSaveable { mutableIntStateOf(0) }
     var showSubmitScreen by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember {
         SnackbarHostState()
     }
-    when (uiState2) {
+    when (surveyQuestionUiState) {
 
         is SurveyQuestionUiState.ShowQuestions -> {
-            val survey: Survey = (uiState2 as SurveyQuestionUiState.ShowQuestions).ques
+            val survey: Survey = (surveyQuestionUiState as SurveyQuestionUiState.ShowQuestions).ques
             val (questionData, optionsData) = processSurveyData(survey)
 
             SurveyQuestionScreen(
-                uiState = uiState,
+                uiState = surveySubmitUiState,
                 navigateBack = navigateBack,
                 questionNumber = currentQuestionNumber,
                 currentQuestionData = questionData,
@@ -132,7 +132,7 @@ internal fun SurveyQuestionScreen(
                 },
                 submitSurvey = {
                     if (scoreCardData.isNotEmpty()) {
-                        viewModel.submitSurvey(
+                        submitViewModel.submitSurvey(
                             survey = survey.id,
                             scorecardPayload = Scorecard(
                                 userId = userId,
@@ -163,7 +163,7 @@ internal fun SurveyQuestionScreen(
             ) {
                 MifosSweetError(
                     message = stringResource(id = R.string.feature_client_failed_to_fetch_survey_questions),
-                    onclick = { queViewModel.loadSurvey(id) },
+                    onclick = { questionViewModel.loadSurvey(surveyId) },
                 )
             }
         }
