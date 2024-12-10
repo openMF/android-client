@@ -4,9 +4,6 @@
  */
 package com.mifos.mifosxdroid.tests
 
-import com.mifos.utils.DateHelper.getDateAsString
-import com.mifos.utils.DateHelper.getDateAsStringUsedForCollectionSheetPayload
-import com.mifos.utils.DateHelper.getMonthName
 import org.junit.Assert
 import org.junit.Test
 

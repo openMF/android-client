@@ -28,6 +28,7 @@ secrets {
 
 dependencies {
     implementation(projects.core.model)
+    implementation(libs.appcompat)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
 
