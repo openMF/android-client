@@ -81,7 +81,7 @@ class SyncClientsDialogViewModel @Inject constructor(
         updateTotalSyncProgressBarAndCount()
         if (mClientSyncIndex != mClientList.size) {
             updateClientName()
-            syncClientAccounts(mClientList[mClientSyncIndex].id)
+            mClientList[mClientSyncIndex].id?.let { syncClientAccounts(it) }
         } else {
             _syncClientData.update { it.copy(isSyncSuccess = true) }
         }
