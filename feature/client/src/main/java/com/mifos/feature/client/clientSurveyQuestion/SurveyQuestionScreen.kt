@@ -102,7 +102,6 @@ internal fun SurveyQuestionScreen(
         SnackbarHostState()
     }
     when (surveyQuestionUiState) {
-
         is SurveyQuestionUiState.ShowQuestions -> {
             val survey: Survey = (surveyQuestionUiState as SurveyQuestionUiState.ShowQuestions).ques
             val (questionData, optionsData) = processSurveyData(survey)
@@ -153,8 +152,6 @@ internal fun SurveyQuestionScreen(
         }
 
         is SurveyQuestionUiState.ShowFetchingError -> {
-
-
             MifosScaffold(
                 snackbarHostState = snackbarHostState,
                 icon = MifosIcons.arrowBack,
@@ -180,7 +177,6 @@ internal fun SurveyQuestionScreen(
         }
     }
 }
-
 
 private fun processSurveyData(survey: Survey): Pair<List<String>, List<List<String>>> {
     val questionData = mutableListOf<String>()

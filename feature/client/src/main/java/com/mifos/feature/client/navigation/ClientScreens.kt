@@ -45,8 +45,8 @@ sealed class ClientScreens(val route: String) {
         fun argument(clientId: Int) = "client_survey_list_screen/$clientId"
     }
 
-    data object ClientSurveyQuestionScreen : ClientScreens("client_survey_question_screen/{${Constants.CLIENT_ID}}"){
-        fun argument(surveyId:Int)="client_survey_question_screen/$surveyId"
+    data object ClientSurveyQuestionScreen : ClientScreens("client_survey_question_screen/{${Constants.CLIENT_ID}}") {
+        fun argument(surveyId: Int) = "client_survey_question_screen/$surveyId"
     }
 
     data object CreateClientScreen : ClientScreens("create_client_screen/{${Constants.CLIENT_ID}}")

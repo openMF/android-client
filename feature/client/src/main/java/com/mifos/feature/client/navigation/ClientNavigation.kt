@@ -277,7 +277,7 @@ fun NavController.navigateClientSurveyListScreen(clientId: Int) {
     navigate(ClientScreens.ClientSurveyListScreen.argument(clientId))
 }
 
-fun NavController.navigateSurveyQuestionScreen(surveyId:Int){
+fun NavController.navigateSurveyQuestionScreen(surveyId: Int) {
     navigate(ClientScreens.ClientSurveyQuestionScreen.argument(surveyId))
 }
 
