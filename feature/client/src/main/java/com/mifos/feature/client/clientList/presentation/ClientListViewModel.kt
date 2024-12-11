@@ -11,8 +11,10 @@ package com.mifos.feature.client.clientList.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientListRepository
 import com.mifos.core.datastore.PrefManager
+import com.mifos.core.domain.useCases.GetClientListDbUseCase
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.Page
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,14 +35,15 @@ import javax.inject.Inject
 class ClientListViewModel @Inject constructor(
     private val repository: ClientListRepository,
     private val prefManager: PrefManager,
+    private val getClientListDbUseCase: GetClientListDbUseCase,
 ) : ViewModel() {
 
     private val _clientListUiState = MutableStateFlow<ClientListUiState>(ClientListUiState.Empty)
     val clientListUiState = _clientListUiState.asStateFlow()
 
-    init {
-        getClientList()
-    }
+//    init {
+//        getClientList()
+//    }
 
     // for refresh feature
     private val _isRefreshing = MutableStateFlow(false)
@@ -65,21 +68,35 @@ class ClientListViewModel @Inject constructor(
         _clientListUiState.value = ClientListUiState.ClientListApi(response)
     }
 
+//    private fun loadClientsFromDb() = viewModelScope.launch(Dispatchers.IO) {
+//        val getClientListFormDb =  repository.allDatabaseClients()
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribeOn(Schedulers.io())
+//            .subscribe(object : Subscriber<Page<Client>>() {
+//                override fun onCompleted() {
+//                }
+//
+//                override fun onError(error: Throwable) {
+//                    _clientListUiState.value = ClientListUiState.Error("Failed to Fetch Clients")
+//                }
+//
+//                override fun onNext(clients: Page<Client>) {
+//                    _clientListUiState.value = ClientListUiState.ClientListDb(clients.pageItems)
+//                }
+//            })
+//
+//    }
+
     private fun loadClientsFromDb() = viewModelScope.launch(Dispatchers.IO) {
-        repository.allDatabaseClients()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Page<Client>>() {
-                override fun onCompleted() {
-                }
-
-                override fun onError(error: Throwable) {
+        getClientListDbUseCase.invoke().collect(){ result ->
+            when(result){
+                is Resource.Error<*> ->
                     _clientListUiState.value = ClientListUiState.Error("Failed to Fetch Clients")
-                }
+                is Resource.Loading -> _clientListUiState.value = ClientListUiState.Empty
 
-                override fun onNext(clients: Page<Client>) {
-                    _clientListUiState.value = ClientListUiState.ClientListDb(clients.pageItems)
-                }
-            })
+                is Resource.Success ->
+                    _clientListUiState.value = ClientListUiState.ClientListDb(result.data ?: emptyList())
+            }
+        }
     }
 }
