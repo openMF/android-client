@@ -74,12 +74,14 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.LightGray
 import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.client.Client
+import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.client.R
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogScreen
 
@@ -134,8 +136,19 @@ internal fun ClientListScreen(
         topBar = {
             if (isInSelectionMode) {
                 SelectionModeTopAppBar(
-                    currentSelectedItems = selectedItems.selectedItems.value,
-                    syncClicked = { sync.value = true },
+                    itemCount = selectedItems.size(),
+                    actions = {
+                        IconButton(
+                            onClick = {
+                                sync.value = true
+                            },
+                        ) {
+                            Icon(
+                                imageVector = MifosIcons.sync,
+                                contentDescription = "Sync Items",
+                            )
+                        }
+                    },
                     resetSelectionMode = resetSelectionMode,
                 )
             }
@@ -209,54 +222,6 @@ internal fun ClientListScreen(
             }
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SelectionModeTopAppBar(
-    currentSelectedItems: List<Client>,
-    syncClicked: () -> Unit,
-    resetSelectionMode: () -> Unit,
-) {
-    val selectedItems = currentSelectedItems.toMutableStateList()
-    TopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = BlueSecondary,
-        ),
-        title = {
-            Text(
-                text = "${selectedItems.size} selected",
-                style = MaterialTheme.typography.titleLarge.copy(
-                    color = MaterialTheme.colorScheme.onBackground,
-                ),
-            )
-        },
-        navigationIcon = {
-            IconButton(
-                onClick = resetSelectionMode,
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Close,
-                    contentDescription = null,
-                    tint = Black,
-                )
-            }
-        },
-        actions = {
-            IconButton(
-                onClick = {
-                    syncClicked()
-                    resetSelectionMode()
-                },
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Sync,
-                    contentDescription = null,
-                    tint = Black,
-                )
-            }
-        },
-    )
 }
 
 class ClientSelectionState(initialSelectedItems: List<Client> = emptyList()) {
