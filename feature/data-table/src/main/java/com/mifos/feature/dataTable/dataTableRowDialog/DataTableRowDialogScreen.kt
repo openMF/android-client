@@ -1,5 +1,15 @@
-package com.mifos.feature.data_table.dataTableRowDialog
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.dataTable.dataTableRowDialog
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,11 +55,10 @@ fun DataTableRowDialogScreen(
     dataTable: DataTable,
     entityId: Int,
     onDismiss: () -> Unit,
-    onSuccess: () -> Unit
+    onSuccess: () -> Unit,
+    viewModel: DataTableRowDialogViewModel = hiltViewModel(),
 ) {
-
-    val viewmodel: DataTableRowDialogViewModel = hiltViewModel()
-    val state by viewmodel.dataTableRowDialogUiState.collectAsStateWithLifecycle()
+    val state by viewModel.dataTableRowDialogUiState.collectAsStateWithLifecycle()
 
     DataTableRowDialogScreen(
         dataTable = dataTable,
@@ -58,16 +67,15 @@ fun DataTableRowDialogScreen(
         onSuccess = onSuccess,
         onRetry = { },
         onCreate = {
-            dataTable.registeredTableName?.let { it1 ->
-                viewmodel.addDataTableEntry(
-                    table = it1,
+            dataTable.registeredTableName?.let { tableName ->
+                viewModel.addDataTableEntry(
+                    table = tableName,
                     payload = it,
-                    entityId = entityId
+                    entityId = entityId,
                 )
             }
-        }
+        },
     )
-
 }
 
 @Composable
@@ -77,32 +85,34 @@ fun DataTableRowDialogScreen(
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
     onRetry: () -> Unit,
-    onCreate: (HashMap<String, String>) -> Unit
+    onCreate: (HashMap<String, String>) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-
-    Dialog(onDismissRequest = { onDismiss() }
+    Dialog(
+        onDismissRequest = { onDismiss() },
     ) {
         Surface(
+            modifier = modifier,
             shape = RoundedCornerShape(16.dp),
-            color = Color.White
+            color = Color.White,
         ) {
             Box(
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 when (state) {
                     is DataTableRowDialogUiState.DataTableEntrySuccessfully -> {
                         Toast.makeText(
                             LocalContext.current,
                             stringResource(id = R.string.feature_data_table_added_data_table_successfully),
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_SHORT,
                         ).show()
                         onSuccess()
                     }
 
                     is DataTableRowDialogUiState.Error -> MifosSweetError(
                         message = stringResource(
-                            id = state.message
-                        )
+                            id = state.message,
+                        ),
                     ) {
                         onRetry()
                     }
@@ -114,12 +124,12 @@ fun DataTableRowDialogScreen(
                                     .fillMaxWidth()
                                     .padding(bottom = 16.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text(
                                     text = stringResource(id = R.string.feature_data_table_add_data_table),
                                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                                    color = BluePrimary
+                                    color = BluePrimary,
                                 )
                                 IconButton(onClick = { onDismiss() }) {
                                     Icon(
@@ -128,13 +138,14 @@ fun DataTableRowDialogScreen(
                                         tint = colorResource(android.R.color.darker_gray),
                                         modifier = Modifier
                                             .width(30.dp)
-                                            .height(30.dp)
+                                            .height(30.dp),
                                     )
                                 }
                             }
                             DataTableRowDialogContent(
                                 table = dataTable,
-                                onCreate = onCreate
+                                onCreate = onCreate,
+                                modifier = Modifier.fillMaxWidth(),
                             )
                         }
                     }
@@ -149,8 +160,11 @@ fun DataTableRowDialogScreen(
 @Composable
 fun DataTableRowDialogContent(
     table: DataTable,
-    onCreate: (HashMap<String, String>) -> Unit
+    onCreate: (HashMap<String, String>) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
+    Log.d("DataTable", table.toString())
+    Log.d("DataTable", onCreate.toString())
 
     // TODO dataTable is now returning null for columnHeaderData, so we will correct this and then construct a form to implement.
 
@@ -158,22 +172,21 @@ fun DataTableRowDialogContent(
         onClick = {
             // TODO call onCreate with using addDataTableInput
         },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
         colors = ButtonColors(
             containerColor = BluePrimary,
             contentColor = White,
             disabledContainerColor = BluePrimary,
-            disabledContentColor = Color.Gray
-        )
+            disabledContentColor = Color.Gray,
+        ),
     ) {
         Text(text = stringResource(id = R.string.feature_data_table_submit))
     }
 }
 
-
-//private fun createForm(table: DataTable?) {
+// private fun createForm(table: DataTable?) {
 //    val formWidgets: MutableList<FormWidget> = ArrayList()
 //    if (table != null) {
 //        for (columnHeader in table.columnHeaderData) {
@@ -233,10 +246,9 @@ fun DataTableRowDialogContent(
 //        }
 //    }
 //    listFormWidgets.addAll(formWidgets)
-//}
+// }
 
-
-//private fun addDataTableInput(): HashMap<String, String> {
+// private fun addDataTableInput(): HashMap<String, String> {
 //    val formWidgets: List<FormWidget> = listFormWidgets
 //    val payload = HashMap<String, String>()
 //    payload[Constants.DATE_FORMAT] = "dd-mm-YYYY"
@@ -261,7 +273,7 @@ fun DataTableRowDialogContent(
 //        }
 //    }
 //    return payload
-//}
+// }
 
 class DataTableRowDialogUiStateProvider : PreviewParameterProvider<DataTableRowDialogUiState> {
 
@@ -270,15 +282,14 @@ class DataTableRowDialogUiStateProvider : PreviewParameterProvider<DataTableRowD
             DataTableRowDialogUiState.Initial,
             DataTableRowDialogUiState.Loading,
             DataTableRowDialogUiState.Error(R.string.feature_data_table_failed_to_add_data_table),
-            DataTableRowDialogUiState.DataTableEntrySuccessfully
+            DataTableRowDialogUiState.DataTableEntrySuccessfully,
         )
-
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun DataTableRowDialogScreenPreview(
-    @PreviewParameter(DataTableRowDialogUiStateProvider::class) state: DataTableRowDialogUiState
+    @PreviewParameter(DataTableRowDialogUiStateProvider::class) state: DataTableRowDialogUiState,
 ) {
     DataTableRowDialogScreen(
         dataTable = DataTable(),
@@ -286,6 +297,6 @@ private fun DataTableRowDialogScreenPreview(
         onDismiss = {},
         onSuccess = {},
         onRetry = {},
-        onCreate = {}
+        onCreate = {},
     )
 }
