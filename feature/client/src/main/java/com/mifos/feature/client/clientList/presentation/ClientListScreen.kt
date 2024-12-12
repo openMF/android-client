@@ -27,21 +27,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -100,11 +95,32 @@ internal fun ClientListScreen(
         viewModel.getClientList()
     }
     val isRefreshing by viewModel.isRefreshing.collectAsState()
-    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isRefreshing)
-
-    val snackbarHostState = remember { SnackbarHostState() }
-
     val state = viewModel.clientListUiState.collectAsState().value
+
+    ClientListScreen(
+        paddingValues = paddingValues,
+        state = state,
+        createNewClient = createNewClient,
+        onRefresh = {
+            viewModel.refreshClientList()
+        },
+        refreshState = isRefreshing,
+        onClientSelect = onClientSelect
+    )
+
+}
+
+@Composable
+internal fun ClientListScreen(
+    paddingValues: PaddingValues,
+    state: ClientListUiState,
+    createNewClient: () -> Unit,
+    onRefresh: () -> Unit,
+    refreshState: Boolean,
+    onClientSelect: (Int) -> Unit,
+){
+    val snackbarHostState = remember { SnackbarHostState() }
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = refreshState)
 
     var isInSelectionMode by remember { mutableStateOf(false) }
     val selectedItems = remember { ClientSelectionState() }
@@ -116,7 +132,6 @@ internal fun ClientListScreen(
     val sync = rememberSaveable {
         mutableStateOf(false)
     }
-
     BackHandler(enabled = isInSelectionMode) {
         resetSelectionMode()
     }
@@ -129,7 +144,6 @@ internal fun ClientListScreen(
             isInSelectionMode = false
         }
     }
-
     Scaffold(
         modifier = Modifier
             .padding(paddingValues),
@@ -138,7 +152,7 @@ internal fun ClientListScreen(
                 SelectionModeTopAppBar(
                     itemCount = selectedItems.size(),
                     actions = {
-                        IconButton(
+                        FilledTonalButton(
                             onClick = {
                                 sync.value = true
                             },
@@ -171,7 +185,7 @@ internal fun ClientListScreen(
         SwipeRefresh(
             state = swipeRefreshState,
             onRefresh = {
-                viewModel.refreshClientList()
+                onRefresh()
             },
         ) {
             Column(
@@ -188,7 +202,7 @@ internal fun ClientListScreen(
                             onClientSelect = {
                                 onClientSelect(it)
                             },
-                            failedRefresh = { viewModel.refreshClientList() },
+                            failedRefresh = { onRefresh() },
                             selectedMode = {
                                 isInSelectionMode = true
                             },
@@ -200,11 +214,12 @@ internal fun ClientListScreen(
                     }
 
                     ClientListUiState.Empty -> {
+                        MifosCircularProgress()
                     }
 
                     is ClientListUiState.Error -> {
                         MifosSweetError(message = state.message) {
-                            viewModel.refreshClientList()
+                            onRefresh()
                         }
                     }
                 }
@@ -212,9 +227,9 @@ internal fun ClientListScreen(
             if (sync.value) {
                 SyncClientsDialogScreen(
                     dismiss = {
-                        resetSelectionMode.invoke()
-                        selectedItems.clear()
                         sync.value = false
+                        resetSelectionMode()
+                        selectedItems.clear()
                     },
                     hide = { sync.value = false },
                     list = selectedItems.selectedItems.value,

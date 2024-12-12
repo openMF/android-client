@@ -41,9 +41,9 @@ class ClientListViewModel @Inject constructor(
     private val _clientListUiState = MutableStateFlow<ClientListUiState>(ClientListUiState.Empty)
     val clientListUiState = _clientListUiState.asStateFlow()
 
-//    init {
-//        getClientList()
-//    }
+    init {
+        getClientList()
+    }
 
     // for refresh feature
     private val _isRefreshing = MutableStateFlow(false)
@@ -88,7 +88,7 @@ class ClientListViewModel @Inject constructor(
 //    }
 
     private fun loadClientsFromDb() = viewModelScope.launch(Dispatchers.IO) {
-        getClientListDbUseCase.invoke().collect(){ result ->
+        getClientListDbUseCase.invoke().collect{ result ->
             when(result){
                 is Resource.Error<*> ->
                     _clientListUiState.value = ClientListUiState.Error("Failed to Fetch Clients")
