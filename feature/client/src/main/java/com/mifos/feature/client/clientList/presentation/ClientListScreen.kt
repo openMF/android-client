@@ -104,9 +104,8 @@ internal fun ClientListScreen(
             viewModel.refreshClientList()
         },
         refreshState = isRefreshing,
-        onClientSelect = onClientSelect
+        onClientSelect = onClientSelect,
     )
-
 }
 
 @Composable
@@ -117,7 +116,7 @@ internal fun ClientListScreen(
     onRefresh: () -> Unit,
     refreshState: Boolean,
     onClientSelect: (Int) -> Unit,
-){
+) {
     val snackbarHostState = remember { SnackbarHostState() }
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = refreshState)
 
