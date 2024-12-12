@@ -68,25 +68,6 @@ class ClientListViewModel @Inject constructor(
         _clientListUiState.value = ClientListUiState.ClientListApi(response)
     }
 
-//    private fun loadClientsFromDb() = viewModelScope.launch(Dispatchers.IO) {
-//        val getClientListFormDb =  repository.allDatabaseClients()
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribeOn(Schedulers.io())
-//            .subscribe(object : Subscriber<Page<Client>>() {
-//                override fun onCompleted() {
-//                }
-//
-//                override fun onError(error: Throwable) {
-//                    _clientListUiState.value = ClientListUiState.Error("Failed to Fetch Clients")
-//                }
-//
-//                override fun onNext(clients: Page<Client>) {
-//                    _clientListUiState.value = ClientListUiState.ClientListDb(clients.pageItems)
-//                }
-//            })
-//
-//    }
-
     private fun loadClientsFromDb() = viewModelScope.launch(Dispatchers.IO) {
         getClientListDbUseCase.invoke().collect{ result ->
             when(result){
