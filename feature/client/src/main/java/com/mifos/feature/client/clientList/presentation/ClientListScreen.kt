@@ -90,9 +90,6 @@ internal fun ClientListScreen(
     onClientSelect: (Int) -> Unit,
     viewModel: ClientListViewModel = hiltViewModel(),
 ) {
-    LaunchedEffect(key1 = true) {
-        viewModel.getClientList()
-    }
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val state = viewModel.clientListUiState.collectAsState().value
 
