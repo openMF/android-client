@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,18 +39,23 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
+import com.mifos.core.objects.group.Group
 import com.mifos.feature.groups.R
 
 @Composable
 internal fun SyncGroupDialogScreen(
     dismiss: () -> Unit,
     viewModel: SyncGroupsDialogViewModel = hiltViewModel(),
+    groups : List<Group>? = listOf(),
     hide: () -> Unit,
 ) {
     val uiState by viewModel.syncGroupsDialogUiState.collectAsStateWithLifecycle()
     val uiData by viewModel.syncGroupData.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
+        groups?.let{
+            viewModel.setGroupList(groups)
+        }
         viewModel.syncGroups()
     }
 
@@ -71,7 +77,10 @@ internal fun SyncGroupDialogScreen(
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
         SyncGroupDialogContent(
             uiData = uiData,
             okClicked = dismiss,

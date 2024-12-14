@@ -152,14 +152,6 @@ fun GroupsListScreen(
     resetSelectionMode: () -> Unit,
 ) {
     var syncGroups by rememberSaveable { mutableStateOf(false) }
-    if (syncGroups) {
-        SyncGroupDialogScreen(
-            dismiss = { syncGroups = false },
-            hide = {
-                // TODO implement hide
-            },
-        )
-    }
 
     Scaffold(
         modifier = modifier,
@@ -184,7 +176,6 @@ fun GroupsListScreen(
                         FilledTonalButton(
                             onClick = {
                                 syncGroups = true
-                                resetSelectionMode()
                             },
                         ) {
                             Icon(
@@ -194,14 +185,24 @@ fun GroupsListScreen(
                             Text(text = stringResource(id = R.string.feature_groups_sync))
                         }
                     },
+
+                )
+            }
+            if (syncGroups) {
+                SyncGroupDialogScreen(
+                    dismiss = {
+                        syncGroups = false
+                        resetSelectionMode()
+                    },
+                    hide = {
+                        syncGroups = false
+                    },
+                    groups = selectedItems
                 )
             }
         },
     ) { paddingValues ->
         SwipeRefresh(
-            modifier = Modifier.semantics {
-                contentDescription = "SwipeRefresh::GroupList"
-            },
             state = swipeRefreshState,
             onRefresh = { data.refresh() },
         ) {
