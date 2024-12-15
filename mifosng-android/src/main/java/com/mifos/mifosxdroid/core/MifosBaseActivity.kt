@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.mifos.mifosxdroid.AndroidClientActivity
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.passcode.PassCodeActivity
 import com.mifos.utils.Constants
 import com.mifos.utils.LanguageHelper
 import com.mifos.utils.PrefManager

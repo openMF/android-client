@@ -1,4 +1,4 @@
-package com.mifos.core.data.paging_source
+package com.mifos.core.data.pagingSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

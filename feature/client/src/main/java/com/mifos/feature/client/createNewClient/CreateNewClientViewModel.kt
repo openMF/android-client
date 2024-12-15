@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.core.domain.use_cases.ClientTemplateUseCase
-import com.mifos.core.domain.use_cases.GetOfficeListUseCase
+import com.mifos.core.domain.useCases.ClientTemplateUseCase
+import com.mifos.core.domain.useCases.GetOfficeListUseCase
 import com.mifos.core.domain.use_cases.GetStaffInOfficeForCreateNewClientUseCase
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
@@ -39,7 +39,7 @@ class CreateNewClientViewModel @Inject constructor(
     private val repository: CreateNewClientRepository,
     private val clientTemplateUseCase: ClientTemplateUseCase,
     private val getStaffInOffice: GetStaffInOfficeForCreateNewClientUseCase,
-    private val getOfficeListUseCase: GetOfficeListUseCase
+    private val getOfficeListUseCase: GetOfficeListUseCase,
 ) : ViewModel() {
 
     private val _createNewClientUiState =
@@ -109,46 +109,48 @@ class CreateNewClientViewModel @Inject constructor(
         repository.createClient(clientPayload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Client>() {
-                override fun onCompleted() {
-                }
-
-                override fun onError(e: Throwable) {
-                    try {
-                        if (e is HttpException) {
-                            val errorMessage = e.response()?.errorBody()
-                                ?.string() ?: ""
-                            Log.d("error", errorMessage)
-                            _createNewClientUiState.value =
-                                CreateNewClientUiState.ShowStringError(errorMessage)
-
-                        }
-                    } catch (throwable: Throwable) {
-                        RxJavaPlugins.getInstance().errorHandler.handleError(e)
+            .subscribe(
+                object : Subscriber<Client>() {
+                    override fun onCompleted() {
                     }
-                }
 
-                override fun onNext(client: Client?) {
-                    if (client != null) {
-                        if (client.clientId != null) {
-                            _createNewClientUiState.value =
-                                CreateNewClientUiState.ShowClientCreatedSuccessfully(R.string.feature_client_client_created_successfully)
+                    override fun onError(e: Throwable) {
+                        try {
+                            if (e is HttpException) {
+                                val errorMessage = e.response()?.errorBody()
+                                    ?.string() ?: ""
+                                Log.d("error", errorMessage)
+                                _createNewClientUiState.value =
+                                    CreateNewClientUiState.ShowStringError(errorMessage)
 
-                            _createNewClientUiState.value = client.clientId?.let {
-                                CreateNewClientUiState.SetClientId(
-                                    it
-                                )
-                            }!!
-                        } else {
-                            _createNewClientUiState.value = client.clientId?.let {
-                                CreateNewClientUiState.ShowWaitingForCheckerApproval(
-                                    it
-                                )
-                            }!!
+                            }
+                        } catch (throwable: Throwable) {
+                            RxJavaPlugins.getInstance().errorHandler.handleError(e)
                         }
                     }
-                }
-            })
+
+                    override fun onNext(client: Client?) {
+                        if (client != null) {
+                            if (client.clientId != null) {
+                                _createNewClientUiState.value =
+                                    CreateNewClientUiState.ShowClientCreatedSuccessfully(R.string.feature_client_client_created_successfully)
+
+                                _createNewClientUiState.value = client.clientId?.let {
+                                    CreateNewClientUiState.SetClientId(
+                                        it,
+                                    )
+                                }!!
+                            } else {
+                                _createNewClientUiState.value = client.clientId?.let {
+                                    CreateNewClientUiState.ShowWaitingForCheckerApproval(
+                                        it,
+                                    )
+                                }!!
+                            }
+                        }
+                    }
+                },
+            )
     }
 
     fun uploadImage(id: Int, pngFile: File) {
@@ -164,19 +166,21 @@ class CreateNewClientViewModel @Inject constructor(
         repository.uploadClientImage(id, body)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<ResponseBody>() {
-                override fun onCompleted() {
-                }
+            .subscribe(
+                object : Subscriber<ResponseBody>() {
+                    override fun onCompleted() {
+                    }
 
-                override fun onError(e: Throwable) {
-                    _createNewClientUiState.value =
-                        CreateNewClientUiState.ShowError(R.string.feature_client_Image_Upload_Failed)
-                }
+                    override fun onError(e: Throwable) {
+                        _createNewClientUiState.value =
+                            CreateNewClientUiState.ShowError(R.string.feature_client_Image_Upload_Failed)
+                    }
 
-                override fun onNext(t: ResponseBody) {
-                    _createNewClientUiState.value =
-                        CreateNewClientUiState.OnImageUploadSuccess(R.string.feature_client_Image_Upload_Successful)
-                }
-            })
+                    override fun onNext(t: ResponseBody) {
+                        _createNewClientUiState.value =
+                            CreateNewClientUiState.OnImageUploadSuccess(R.string.feature_client_Image_Upload_Successful)
+                    }
+                },
+            )
     }
 }

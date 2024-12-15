@@ -1,4 +1,4 @@
-package com.mifos.feature.client.sync_client_dialog
+package com.mifos.feature.client.syncClientDialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

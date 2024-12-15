@@ -1,4 +1,4 @@
-package com.mifos.feature.groups.sync_group_dialog
+package com.mifos.feature.groups.syncGroupDialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

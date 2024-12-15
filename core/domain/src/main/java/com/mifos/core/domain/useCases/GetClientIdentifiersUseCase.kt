@@ -1,4 +1,4 @@
-package com.mifos.core.domain.use_cases
+package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientIdentifiersRepository
