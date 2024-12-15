@@ -14,7 +14,6 @@ import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.objects.noncore.IdentifierCreationResponse
 import com.mifos.core.objects.noncore.IdentifierPayload
 import com.mifos.core.objects.noncore.IdentifierTemplate
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -23,7 +22,7 @@ import javax.inject.Inject
 class ClientIdentifierDialogRepositoryImp @Inject constructor(private val dataManagerClient: DataManagerClient) :
     ClientIdentifierDialogRepository {
 
-    override fun getClientIdentifierTemplate(clientId: Int): Observable<IdentifierTemplate> {
+    override suspend fun getClientIdentifierTemplate(clientId: Int): IdentifierTemplate {
         return dataManagerClient.getClientIdentifierTemplate(clientId)
     }
 

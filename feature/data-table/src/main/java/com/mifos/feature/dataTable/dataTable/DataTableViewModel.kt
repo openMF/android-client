@@ -16,16 +16,12 @@ import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.objects.navigation.DataTableNavigationArg
-import com.mifos.core.objects.noncore.DataTable
-import com.mifos.feature.data_table.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -56,24 +52,13 @@ class DataTableViewModel @Inject constructor(
         }
     }
 
-    fun loadDataTable(tableName: String?) {
+    fun loadDataTable(tableName: String?) = viewModelScope.launch(Dispatchers.IO) {
         _dataTableUiState.value = DataTableUiState.ShowProgressbar
-        repository.getDataTable(tableName).observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io()).subscribe(object : Subscriber<List<DataTable>>() {
-                override fun onCompleted() {}
-
-                override fun onError(e: Throwable) {
-                    _dataTableUiState.value =
-                        DataTableUiState.ShowError(R.string.feature_data_table_failed_to_fetch_data_table)
-                }
-
-                override fun onNext(dataTables: List<DataTable>) {
-                    if (dataTables.isNotEmpty()) {
-                        _dataTableUiState.value = DataTableUiState.ShowDataTables(dataTables)
-                    } else {
-                        _dataTableUiState.value = DataTableUiState.ShowEmptyDataTables
-                    }
-                }
-            })
+        val response = repository.getDataTable(tableName)
+        if (response.isEmpty()) {
+            _dataTableUiState.value = DataTableUiState.ShowEmptyDataTables
+        } else {
+            _dataTableUiState.value = DataTableUiState.ShowDataTables(response)
+        }
     }
 }

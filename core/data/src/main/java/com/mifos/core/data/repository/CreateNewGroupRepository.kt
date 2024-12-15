@@ -19,7 +19,7 @@ import rx.Observable
  */
 interface CreateNewGroupRepository {
 
-    fun offices(): Observable<List<Office>>
+    suspend fun offices(): List<Office>
 
     fun createGroup(groupPayload: GroupPayload): Observable<SaveResponse>
 }

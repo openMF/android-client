@@ -5,9 +5,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.GravityCompat
 import androidx.navigation.findNavController
@@ -28,7 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * Created by shashankpriyadarshi on 19/06/20.
  */
 @AndroidEntryPoint
-open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSelectedListener {
+open class HomeActivity : ComponentActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var navHeaderBinding: ViewNavDrawerHeaderBinding
@@ -42,7 +44,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(toolbar)
+//        setSupportActionBar(toolbar)
         appBarConfiguration = AppBarConfiguration.Builder()
             .setDrawerLayout(binding.drawer)
             .build()
@@ -56,7 +58,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
                 } else if (binding.navView.selectedItemId == R.id.navigation_dashboard) {
                     doubleBackToExit()
                 }
-                supportFragmentManager.popBackStackImmediate()
+//                supportFragmentManager.popBackStackImmediate()
             }
         })
     }
@@ -72,7 +74,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
             mDrawerLayout.closeDrawer(Gravity.LEFT);
             return false;
         }*/
-        clearFragmentBackStack()
+//        clearFragmentBackStack()
         when (item.itemId) {
 
             R.id.individual_collection_sheet -> {
@@ -153,23 +155,23 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
         binding.navigationView.setNavigationItemSelectedListener(this as NavigationView.OnNavigationItemSelectedListener)
 
         // setup drawer layout and sync to toolbar
-        val actionBarDrawerToggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
-            this,
-            binding.drawer, toolbar, R.string.open_drawer, R.string.close_drawer
-        ) {
-
-            override fun onDrawerOpened(drawerView: View) {
-                super.onDrawerOpened(drawerView)
-                setUserStatus(userStatusToggle)
-                hideKeyboard(binding.drawer)
-            }
-
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                if (slideOffset != 0f) super.onDrawerSlide(drawerView, slideOffset)
-            }
-        }
-        binding.drawer.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
+//        val actionBarDrawerToggle: ActionBarDrawerToggle = object : ActionBarDrawerToggle(
+//            this,
+//            binding.drawer, toolbar, R.string.open_drawer, R.string.close_drawer
+//        ) {
+//
+//            override fun onDrawerOpened(drawerView: View) {
+//                super.onDrawerOpened(drawerView)
+//                setUserStatus(userStatusToggle)
+//                hideKeyboard(binding.drawer)
+//            }
+//
+//            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+//                if (slideOffset != 0f) super.onDrawerSlide(drawerView, slideOffset)
+//            }
+//        }
+//        binding.drawer.addDrawerListener(actionBarDrawerToggle)
+//        actionBarDrawerToggle.syncState()
 
         // make an API call to fetch logged in client's details
         loadClientDetails()
@@ -183,7 +185,7 @@ open class HomeActivity : MifosBaseActivity(), NavigationView.OnNavigationItemSe
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
-            logout()
+//            logout()
         }
         return super.onOptionsItemSelected(item)
     }
