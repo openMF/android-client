@@ -1,10 +1,16 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.data_table.dataTableList
+package com.mifos.feature.dataTable.dataTableList
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import org.json.JSONObject
@@ -14,7 +20,6 @@ import java.util.Locale
  * Created by ishankhanna on 01/08/14.
  */
 abstract class FormWidget(context: Context?, name: String?) {
-
 
     /**
      * returns the un-modified name of the property this widget represents
@@ -60,7 +65,7 @@ abstract class FormWidget(context: Context?, name: String?) {
     /**
      * return LinearLayout containing this widget's view elements
      */
-    val view : View
+    val view: View
         get() = layout
 
     /**
@@ -78,7 +83,8 @@ abstract class FormWidget(context: Context?, name: String?) {
     // -----------------------------------------------
     /**
      * returns value of this widget as String
-     */// -- override
+     */
+    // -- override
     /**
      * sets value of this widget, method should be overridden in sub-class
      *
@@ -107,6 +113,7 @@ abstract class FormWidget(context: Context?, name: String?) {
      * @param modifiers
      */
     fun setModifiers(modifiers: JSONObject?) {
+        Log.d("Modifier", modifiers.toString())
         // -- override
     }
     // -----------------------------------------------
@@ -142,7 +149,7 @@ abstract class FormWidget(context: Context?, name: String?) {
     companion object {
         val defaultLayoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+            LinearLayout.LayoutParams.WRAP_CONTENT,
         )
         const val SCHEMA_KEY_TYPE = "type"
         const val SCHEMA_KEY_BOOL = "BOOLEAN"

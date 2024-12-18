@@ -40,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.objects.group.Center
 import com.mifos.feature.center.R
+import com.mifos.feature.center.sync_centers_dialog.SyncCentersDialogViewModel
 
 @Composable
 internal fun SyncCenterDialogScreen(

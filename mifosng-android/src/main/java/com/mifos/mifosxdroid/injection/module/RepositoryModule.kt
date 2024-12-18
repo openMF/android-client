@@ -84,7 +84,7 @@ class RepositoryModule {
         dataManagerStaff: DataManagerStaff
     ): CreateNewClientRepository {
         return CreateNewClientRepositoryImp(dataManagerClient, dataManagerOffices, dataManagerStaff)
-    }
+    }   
 
     @Provides
     fun providesSavingsAccountTransactionRepository(dataManagerSavings: DataManagerSavings): SavingsAccountTransactionRepository {

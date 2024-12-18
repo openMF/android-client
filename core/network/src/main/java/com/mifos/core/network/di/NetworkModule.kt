@@ -42,7 +42,7 @@ object NetworkModule {
         baseManager.createService(
             usernamePassword.first,
             usernamePassword.second,
-            prefManager.getServerConfig.getInstanceUrl(),
+            prefManager.getServerConfig.getInstanceUrl().dropLast(3),
             prefManager.getServerConfig.tenant,
             false,
         )

@@ -76,7 +76,7 @@ class SyncGroupsDialogRepositoryImp @Inject constructor(
         return dataManagerClient.syncClientInDatabase(client)
     }
 
-    override fun syncClientAccounts(clientId: Int): Observable<ClientAccounts> {
+    override suspend fun syncClientAccounts(clientId: Int): ClientAccounts {
         return dataManagerClient.getClientAccounts(clientId)
     }
 

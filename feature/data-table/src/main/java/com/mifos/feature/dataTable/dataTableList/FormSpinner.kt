@@ -1,8 +1,13 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.data_table.dataTableList
+package com.mifos.feature.dataTable.dataTableList
 
 import android.R
 import android.content.Context
@@ -17,7 +22,7 @@ class FormSpinner(
     context: Context?,
     name: String?,
     columnValues: List<String>,
-    columnValueIds: List<Int>
+    columnValueIds: List<Int>,
 ) : FormWidget(context, name) {
     private val label: TextView
     private val spinner: Spinner

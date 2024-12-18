@@ -32,11 +32,11 @@ class ClientDetailsRepositoryImp @Inject constructor(private val dataManagerClie
         return dataManagerClient.deleteClientImage(clientId)
     }
 
-    override fun getClientAccounts(clientId: Int): Observable<ClientAccounts> {
+    override suspend fun getClientAccounts(clientId: Int): ClientAccounts {
         return dataManagerClient.getClientAccounts(clientId)
     }
 
-    override fun getClient(clientId: Int): Observable<Client> {
+    override suspend fun getClient(clientId: Int): Client {
         return dataManagerClient.getClient(clientId)
     }
 }
