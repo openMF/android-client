@@ -25,7 +25,7 @@ import com.mifos.utils.PrefManager
 /**
  * @author fomenkoo
  */
-open class MifosBaseActivity :  BaseActivityCallback, AppCompatActivity() {
+open class MifosBaseActivity : AppCompatActivity(), BaseActivityCallback {
     var toolbar: Toolbar? = null
     private var progress: ProgressDialog? = null
     override fun setContentView(layoutResID: Int) {

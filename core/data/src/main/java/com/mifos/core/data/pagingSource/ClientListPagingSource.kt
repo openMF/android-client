@@ -1,12 +1,3 @@
-/*
- * Copyright 2024 Mifos Initiative
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
 package com.mifos.core.data.pagingSource
 
 import androidx.paging.PagingSource
@@ -14,7 +5,6 @@ import androidx.paging.PagingState
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.Page
-import kotlinx.coroutines.suspendCancellableCoroutine
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -27,13 +17,13 @@ import kotlin.coroutines.suspendCoroutine
  */
 
 class ClientListPagingSource(
-    private val dataManagerClient: DataManagerClient,
+    private val dataManagerClient: DataManagerClient
 ) : PagingSource<Int, Client>() {
 
     override fun getRefreshKey(state: PagingState<Int, Client>): Int? {
         return state.anchorPosition?.let { position ->
             state.closestPageToPosition(position)?.prevKey?.plus(10) ?: state.closestPageToPosition(
-                position,
+                position
             )?.nextKey?.minus(10)
         }
     }
@@ -49,7 +39,7 @@ class ClientListPagingSource(
             LoadResult.Page(
                 data = clientListWithSync,
                 prevKey = if (position <= 0) null else position - 10,
-                nextKey = if (position >= totalClients) null else position + 10,
+                nextKey = if (position >= totalClients) null else position + 10
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
@@ -57,23 +47,8 @@ class ClientListPagingSource(
     }
 
     private suspend fun getClientList(position: Int): Pair<List<Client>, Int> {
-        return suspendCancellableCoroutine { continuation ->
-            dataManagerClient.getAllClients(offset = position, 10)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Client>>() {
-                    override fun onCompleted() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                        continuation.resumeWithException(e)
-                    }
-
-                    override fun onNext(t: Page<Client>) {
-                        continuation.resume(Pair(t.pageItems, t.totalFilteredRecords))
-                    }
-                })
-        }
+        val response = dataManagerClient.getAllClients(position, 10)
+        return Pair(response.pageItems, response.totalFilteredRecords)
     }
 
     private suspend fun getClientDbList(): List<Client> {
@@ -98,7 +73,7 @@ class ClientListPagingSource(
 
     private fun getClientListWithSync(
         clientList: List<Client>,
-        clientDbList: List<Client>,
+        clientDbList: List<Client>
     ): List<Client> {
         if (clientDbList.isNotEmpty()) {
             clientList.forEach { client ->
