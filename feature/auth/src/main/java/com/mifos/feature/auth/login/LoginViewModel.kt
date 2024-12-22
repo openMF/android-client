@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.auth.login
 
+
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -86,22 +87,34 @@ class LoginViewModel @Inject constructor(
 
     fun login(username: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            loginUseCase(username, password).collect { result ->
-                when (result) {
-                    is Resource.Error -> {
-                        _loginUiState.value =
-                            LoginUiState.ShowError(R.string.feature_auth_error_login_failed)
-                        Log.e("@@@", "login: ${result.message}")
-                    }
-
-                    is Resource.Loading -> {
-                        _loginUiState.value = LoginUiState.ShowProgress
-                    }
-
-                    is Resource.Success -> {
-                        result.data?.let { onLoginSuccessful(it, username, password) }
+            try {
+                loginUseCase(username, password).collect { result ->
+                    when (result) {
+                        is Resource.Error -> {
+                            _loginUiState.value =
+                                LoginUiState.ShowError(R.string.feature_auth_error_login_failed)
+                            Log.e("@@@", "Login failed: ${result.message ?: "Unknown error"}")
+                        }
+                        is Resource.Loading -> {
+                            _loginUiState.value = LoginUiState.ShowProgress
+                            Log.d("@@@", "Login in progress...")
+                        }
+                        is Resource.Success -> {
+                            result.data?.let {
+                                onLoginSuccessful(it, username, password)
+                                Log.d("@@@", "Login successful!")
+                            } ?: run {
+                                _loginUiState.value =
+                                    LoginUiState.ShowError(R.string.feature_auth_error_login_failed)
+                                Log.e("@@@", "Login success but data is null.")
+                            }
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                Log.e("@@@", "Unexpected error during login: ${e.message}")
+                _loginUiState.value =
+                    LoginUiState.ShowError(R.string.feature_auth_error_unexpected)
             }
         }
     }
