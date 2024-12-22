@@ -10,55 +10,52 @@
 package com.mifos.core.objects.accounts.loan
 
 import android.os.Parcelable
-import com.mifos.core.database.MifosDatabase
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ForeignKey
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Table(database = MifosDatabase::class)
-@ModelContainer
+@Entity("LoanAccount")
 data class LoanAccount(
-    @Column
+    @ColumnInfo("clientId")
     var clientId: Long = 0,
 
-    @Column
+    @ColumnInfo("groupId")
     var groupId: Long = 0,
 
-    @Column
+    @ColumnInfo("centerId")
     var centerId: Long = 0,
 
     @PrimaryKey
     var id: Int? = null,
 
-    @Column
+    @ColumnInfo("accountNo")
     var accountNo: String? = null,
 
-    @Column
+    @ColumnInfo("externalId")
     var externalId: String? = null,
 
-    @Column
+    @ColumnInfo("productId")
     var productId: Int? = null,
 
-    @Column
+    @ColumnInfo("productName")
     var productName: String? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("status")
+    @Embedded
     var status: Status? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("loanType")
+    @Embedded
     var loanType: LoanType? = null,
 
-    @Column
+    @ColumnInfo("loanCycle")
     var loanCycle: Int? = null,
 
-    @Column
+    @ColumnInfo("inArrears")
     var inArrears: Boolean? = null,
 ) : MifosBaseModel(), Parcelable {
 

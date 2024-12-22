@@ -10,24 +10,21 @@
 package com.mifos.core.objects.accounts.loan
 
 import android.os.Parcelable
-import com.mifos.core.database.MifosDatabase
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Table(database = MifosDatabase::class, name = "LoanAccountLoanType")
-@ModelContainer
+@Entity("LoanType")
 data class LoanType(
     @PrimaryKey
     var id: Int? = null,
 
-    @Column
+    @ColumnInfo("code")
     var code: String? = null,
 
-    @Column
+    @ColumnInfo("value")
     var value: String? = null,
 ) : MifosBaseModel(), Parcelable

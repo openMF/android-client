@@ -10,49 +10,46 @@
 package com.mifos.core.objects.accounts.savings
 
 import android.os.Parcelable
-import com.mifos.core.database.MifosDatabase
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ForeignKey
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Table(database = MifosDatabase::class)
-@ModelContainer
+@Entity("Transaction")
 data class Transaction(
     @PrimaryKey
     var id: Int? = null,
 
-    @Column
+    @ColumnInfo("savingsAccountId")
     @Transient
     var savingsAccountId: Int? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("transactionType")
+    @Embedded
     var transactionType: TransactionType? = null,
 
     var accountId: Int? = null,
 
     var accountNo: String? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("savingsTransactionDate")
+    @Embedded
     @Transient
     var savingsTransactionDate: SavingsTransactionDate? = null,
 
     var date: List<Int?> = ArrayList(),
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("currency")
+    @Embedded
     var currency: Currency? = null,
 
-    @Column
+    @ColumnInfo("amount")
     var amount: Double? = null,
 
-    @Column
+    @ColumnInfo("runningBalance")
     var runningBalance: Double? = null,
 
     var reversed: Boolean? = null,

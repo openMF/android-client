@@ -10,13 +10,12 @@
 package com.mifos.core.objects.templates.clients
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 /*
@@ -27,8 +26,7 @@ import kotlinx.parcelize.Parcelize
  * Created by rajan on 13/3/16.
  */
 @Parcelize
-@Table(database = MifosDatabase::class, name = "ClientTemplateStaffOptions")
-@ModelContainer
+@Entity("ClientTemplateStaffOptions")
 data class StaffOptions(
     @PrimaryKey
     var id: Int = 0,
@@ -38,9 +36,9 @@ data class StaffOptions(
     val officeId: Int = 0,
     val officeName: String = "",
     @SerializedName("isLoanOfficer")
-    @Column
+    @ColumnInfo("isLoanOfficer")
     var isLoanOfficer: Boolean = false,
     @SerializedName("isActive")
-    @Column
+    @ColumnInfo("isActive")
     var isActive: Boolean = false,
 ) : MifosBaseModel(), Parcelable

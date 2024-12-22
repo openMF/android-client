@@ -10,45 +10,43 @@
 package com.mifos.core.objects.organisation
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 /**
  * Created by ishankhanna on 14/07/14.
  */
 @Parcelize
-@Table(database = MifosDatabase::class)
-@ModelContainer
+@Entity("Staff")
 data class Staff(
     @PrimaryKey
     var id: Int? = null,
 
-    @Column
+    @ColumnInfo("firstname")
     var firstname: String? = null,
 
-    @Column
+    @ColumnInfo("lastname")
     var lastname: String? = null,
 
-    @Column
+    @ColumnInfo("mobileNo")
     var mobileNo: String? = null,
 
-    @Column
+    @ColumnInfo("displayName")
     var displayName: String? = null,
 
-    @Column
+    @ColumnInfo("officeId")
     var officeId: Int? = null,
 
-    @Column
+    @ColumnInfo("officeName")
     var officeName: String? = null,
 
-    @Column
+    @ColumnInfo("isLoanOfficer")
     var isLoanOfficer: Boolean? = null,
 
-    @Column
+    @ColumnInfo("isActive")
     var isActive: Boolean? = null,
 ) : MifosBaseModel(), Parcelable

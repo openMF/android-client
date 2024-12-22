@@ -10,12 +10,10 @@
 package com.mifos.core.objects.accounts.loan
 
 import android.os.Parcelable
-import com.mifos.core.database.MifosDatabase
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -23,8 +21,7 @@ import kotlinx.parcelize.Parcelize
  *
  */
 @Parcelize
-@Table(database = MifosDatabase::class, name = "LoansAccountSummary")
-@ModelContainer
+@Entity("Summary")
 data class Summary(
     @PrimaryKey
     @Transient
@@ -32,70 +29,70 @@ data class Summary(
 
     var currency: Currency? = null,
 
-    @Column
+    @ColumnInfo("principalDisbursed")
     var principalDisbursed: Double? = null,
 
-    @Column
+    @ColumnInfo("principalPaid")
     var principalPaid: Double? = null,
 
     var principalWrittenOff: Double? = null,
 
-    @Column
+    @ColumnInfo("principalOutstanding")
     var principalOutstanding: Double? = null,
 
     var principalOverdue: Double? = null,
 
-    @Column
+    @ColumnInfo("interestCharged")
     var interestCharged: Double? = null,
 
-    @Column
+    @ColumnInfo("interestPaid")
     var interestPaid: Double? = null,
 
     var interestWaived: Double? = null,
 
     var interestWrittenOff: Double? = null,
 
-    @Column
+    @ColumnInfo("interestOutstanding")
     var interestOutstanding: Double? = null,
 
     var interestOverdue: Double? = null,
 
-    @Column
+    @ColumnInfo("feeChargesCharged")
     var feeChargesCharged: Double? = null,
 
     var feeChargesDueAtDisbursementCharged: Double? = null,
 
-    @Column
+    @ColumnInfo("feeChargesPaid")
     var feeChargesPaid: Double? = null,
 
     var feeChargesWaived: Double? = null,
 
     var feeChargesWrittenOff: Double? = null,
 
-    @Column
+    @ColumnInfo("feeChargesOutstanding")
     var feeChargesOutstanding: Double? = null,
 
     var feeChargesOverdue: Double? = null,
 
-    @Column
+    @ColumnInfo("penaltyChargesCharged")
     var penaltyChargesCharged: Double? = null,
 
-    @Column
+    @ColumnInfo("penaltyChargesPaid")
     var penaltyChargesPaid: Double? = null,
 
     var penaltyChargesWaived: Double? = null,
 
     var penaltyChargesWrittenOff: Double? = null,
 
-    @Column
+    @ColumnInfo("penaltyChargesOutstanding")
     var penaltyChargesOutstanding: Double? = null,
 
     var penaltyChargesOverdue: Double? = null,
 
-    @Column
+    @ColumnInfo("totalExpectedRepayment")
     var totalExpectedRepayment: Double? = null,
 
-    @Column
+    @ColumnInfo("totalRepayment")
     var totalRepayment: Double? = null,
 
     var totalExpectedCostOfLoan: Double? = null,
@@ -106,10 +103,10 @@ data class Summary(
 
     var totalWrittenOff: Double? = null,
 
-    @Column
+    @ColumnInfo("totalOutstanding")
     var totalOutstanding: Double? = null,
 
-    @Column
+    @ColumnInfo("totalOverdue")
     var totalOverdue: Double? = null,
 
     var overdueSinceDate: List<Int>? = null,

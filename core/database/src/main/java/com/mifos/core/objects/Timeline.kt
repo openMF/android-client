@@ -11,12 +11,13 @@ package com.mifos.core.objects
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.structure.BaseModel
+import androidx.room.Entity
 
 /**
  * Created by ishankhanna on 09/02/14.
  */
-class Timeline() : BaseModel(), Parcelable {
+@Entity("Timeline")
+class Timeline() : Parcelable {
     var submittedOnDate: MutableList<Int> = ArrayList()
     var submittedByUsername: String? = null
     var submittedByFirstname: String? = null

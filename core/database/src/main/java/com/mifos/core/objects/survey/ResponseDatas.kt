@@ -10,32 +10,32 @@
 package com.mifos.core.objects.survey
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 /**
  * Created by Nasim Banu on 27,January,2016.
  */
 @Parcelize
-@Table(database = MifosDatabase::class)
+@Entity("ResponseDatas")
 data class ResponseDatas(
     @PrimaryKey
     var responseId: Int = 0,
 
-    @Column
+    @ColumnInfo("questionId")
     @Transient
     var questionId: Int = 0,
 
-    @Column
+    @ColumnInfo("text")
     var text: String? = null,
 
-    @Column
+    @ColumnInfo("sequenceNo")
     var sequenceNo: Int = 0,
 
-    @Column
+    @ColumnInfo("value")
     var value: Int = 0,
 ) : MifosBaseModel(), Parcelable

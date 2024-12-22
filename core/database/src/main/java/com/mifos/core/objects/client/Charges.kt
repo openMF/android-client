@@ -10,13 +10,12 @@
 package com.mifos.core.objects.client
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ForeignKey
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -27,67 +26,66 @@ import kotlinx.parcelize.Parcelize
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 @Parcelize
-@Table(database = MifosDatabase::class, useBooleanGetterSetters = false)
-@ModelContainer
+@Entity("Charges")
 data class Charges(
     @PrimaryKey
     var id: Int? = null,
 
-    @Column
+    @ColumnInfo("clientId")
     var clientId: Int? = null,
 
-    @Column
+    @ColumnInfo("loanId")
     var loanId: Int? = null,
 
-    @Column
+    @ColumnInfo("chargeId")
     var chargeId: Int? = null,
 
-    @Column
+    @ColumnInfo("name")
     var name: String? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("chargeTypeId")
+    @Embedded
     var chargeTimeType: ChargeTimeType? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("chargeDueDate")
+    @Embedded
     var chargeDueDate: ClientDate? = null,
 
     var dueDate: List<Int> = ArrayList(),
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("chargeCalculationType")
+    @Embedded
     var chargeCalculationType: ChargeCalculationType? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("currency")
+    @Embedded
     var currency: Currency? = null,
 
-    @Column
+    @ColumnInfo("amount")
     var amount: Double? = null,
 
-    @Column
+    @ColumnInfo("amountPaid")
     var amountPaid: Double? = null,
 
-    @Column
+    @ColumnInfo("amountWaived")
     var amountWaived: Double? = null,
 
-    @Column
+    @ColumnInfo("amountWrittenOff")
     var amountWrittenOff: Double? = null,
 
-    @Column
+    @ColumnInfo("amountOutstanding")
     var amountOutstanding: Double? = null,
 
-    @Column
+    @ColumnInfo("penalty")
     var penalty: Boolean? = null,
 
-    @Column
+    @ColumnInfo("active")
     var active: Boolean? = null,
 
-    @Column
+    @ColumnInfo("paid")
     var paid: Boolean? = null,
 
-    @Column
+    @ColumnInfo("waived")
     var waived: Boolean? = null,
 ) : MifosBaseModel(), Parcelable {
 

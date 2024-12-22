@@ -10,54 +10,51 @@
 package com.mifos.core.objects.accounts.savings
 
 import android.os.Parcelable
-import com.mifos.core.database.MifosDatabase
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ForeignKey
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Table(database = MifosDatabase::class)
-@ModelContainer
+@Entity("SavingAccount")
 data class SavingsAccount(
-    @Column
+    @ColumnInfo("clientId")
     @Transient
     var clientId: Long = 0,
 
-    @Column
+    @ColumnInfo("groupId")
     @Transient
     var groupId: Long = 0,
 
-    @Column
+    @ColumnInfo("centerId")
     var centerId: Long = 0,
 
     @PrimaryKey
     var id: Int? = null,
 
-    @Column
+    @ColumnInfo("accountNo")
     var accountNo: String? = null,
 
-    @Column
+    @ColumnInfo("productId")
     var productId: Int? = null,
 
-    @Column
+    @ColumnInfo("productName")
     var productName: String? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("status")
+    @Embedded
     var status: Status? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("currency")
+    @Embedded
     var currency: Currency? = null,
 
-    @Column
+    @ColumnInfo("accountBalance")
     var accountBalance: Double? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("depositType")
+    @Embedded
     var depositType: DepositType? = null,
 ) : MifosBaseModel(), Parcelable

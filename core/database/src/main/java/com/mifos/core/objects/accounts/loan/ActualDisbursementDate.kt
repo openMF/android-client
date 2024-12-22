@@ -10,12 +10,10 @@
 package com.mifos.core.objects.accounts.loan
 
 import android.os.Parcelable
-import com.mifos.core.database.MifosDatabase
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -24,18 +22,17 @@ import kotlinx.parcelize.Parcelize
  * Created by Rajan Maurya on 26/07/16.
  */
 @Parcelize
-@Table(database = MifosDatabase::class)
-@ModelContainer
+@Entity("ActualDisbursementDate")
 data class ActualDisbursementDate(
     @PrimaryKey
     var loanId: Int? = null,
 
-    @Column
+    @ColumnInfo("year")
     var year: Int? = null,
 
-    @Column
+    @ColumnInfo("month")
     var month: Int? = null,
 
-    @Column
+    @ColumnInfo("date")
     var date: Int? = null,
 ) : MifosBaseModel(), Parcelable

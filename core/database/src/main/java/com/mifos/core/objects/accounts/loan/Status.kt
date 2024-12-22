@@ -10,6 +10,8 @@
 package com.mifos.core.objects.accounts.loan
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
 import com.raizlabs.android.dbflow.annotation.Column
@@ -19,40 +21,39 @@ import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Table(database = MifosDatabase::class, name = "LoanStatus")
-@ModelContainer
+@Entity("Status")
 class Status(
     @PrimaryKey
     var id: Int? = null,
 
-    @Column
+    @ColumnInfo("code")
     var code: String? = null,
 
-    @Column
+    @ColumnInfo("value")
     var value: String? = null,
 
-    @Column
+    @ColumnInfo("pendingApproval")
     var pendingApproval: Boolean? = null,
 
-    @Column
+    @ColumnInfo("waitingForDisbursal")
     var waitingForDisbursal: Boolean? = null,
 
-    @Column
+    @ColumnInfo("active")
     var active: Boolean? = null,
 
-    @Column
+    @ColumnInfo("closedObligationsMet")
     var closedObligationsMet: Boolean? = null,
 
-    @Column
+    @ColumnInfo("closedWrittenOff")
     var closedWrittenOff: Boolean? = null,
 
-    @Column
+    @ColumnInfo("closedRescheduled")
     var closedRescheduled: Boolean? = null,
 
-    @Column
+    @ColumnInfo("closed")
     var closed: Boolean? = null,
 
-    @Column
+    @ColumnInfo("overpaid")
     var overpaid: Boolean? = null,
 ) : MifosBaseModel(), Parcelable {
 

@@ -10,19 +10,17 @@
 package com.mifos.core.objects.templates.loans
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@ModelContainer
-@Table(database = MifosDatabase::class)
+@Entity("LoanRepaymentTemplate")
 data class LoanRepaymentTemplate(
-    @PrimaryKey(autoincrement = true)
+    @PrimaryKey(autoGenerate = true)
     var loanId: Int? = null,
 
     var type: Type? = null,
@@ -31,19 +29,19 @@ data class LoanRepaymentTemplate(
 
     var currency: Currency? = null,
 
-    @Column
+    @ColumnInfo("amount")
     var amount: Double? = null,
 
-    @Column
+    @ColumnInfo("principalPortion")
     var principalPortion: Double? = null,
 
-    @Column
+    @ColumnInfo("interestPortion")
     var interestPortion: Double? = null,
 
-    @Column
+    @ColumnInfo("feeChargesPortion")
     var feeChargesPortion: Double? = null,
 
-    @Column
+    @ColumnInfo("penaltyChargesPortion")
     var penaltyChargesPortion: Double? = null,
 
     var paymentTypeOptions: MutableList<com.mifos.core.objects.PaymentTypeOption>? = null,

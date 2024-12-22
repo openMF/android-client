@@ -10,39 +10,36 @@
 package com.mifos.core.objects.accounts.loan
 
 import android.os.Parcelable
-import com.mifos.core.database.MifosDatabase
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ForeignKey
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
-@Table(database = MifosDatabase::class)
-@ModelContainer
+@Entity("LoanWithAssociations")
 @Parcelize
 data class LoanWithAssociations(
     @PrimaryKey
     var id: Int = 0,
 
-    @Column
+    @ColumnInfo("accountNo")
     var accountNo: String = "",
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("status")
+    @Embedded
     var status: Status = Status(),
 
     var clientId: Int = 0,
 
-    @Column
+    @ColumnInfo("clientName")
     var clientName: String = "",
 
     var clientOfficeId: Int = 0,
 
     var loanProductId: Int = 0,
 
-    @Column
+    @ColumnInfo("loanProductName")
     var loanProductName: String = "",
 
     var loanProductDescription: String = "",
@@ -57,7 +54,7 @@ data class LoanWithAssociations(
 
     var loanOfficerId: Int = 0,
 
-    @Column
+    @ColumnInfo("loanOfficerName")
     var loanOfficerName: String = "",
 
     var loanType: LoanType = LoanType(),
@@ -96,12 +93,12 @@ data class LoanWithAssociations(
 
     var syncDisbursementWithMeeting: Boolean = false,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("timeline")
+    @Embedded
     var timeline: Timeline = Timeline(),
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("summary")
+    @Embedded
     var summary: Summary = Summary(),
 
     var repaymentSchedule: RepaymentSchedule = RepaymentSchedule(),

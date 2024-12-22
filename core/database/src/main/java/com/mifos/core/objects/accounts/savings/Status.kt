@@ -10,46 +10,39 @@
 package com.mifos.core.objects.accounts.savings
 
 import android.os.Parcelable
-import com.mifos.core.database.MifosDatabase
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Table(
-    database = MifosDatabase::class,
-    name = "SavingsAccountStatus",
-    useBooleanGetterSetters = false,
-)
-@ModelContainer
+@Entity("SavingsAccountStatus")
 data class Status(
     @PrimaryKey
     var id: Int? = null,
 
-    @Column
+    @ColumnInfo("code")
     var code: String? = null,
 
-    @Column
+    @ColumnInfo("value")
     var value: String? = null,
 
-    @Column
+    @ColumnInfo("submittedAndPendingApproval")
     var submittedAndPendingApproval: Boolean? = null,
 
-    @Column
+    @ColumnInfo("approved")
     var approved: Boolean? = null,
 
-    @Column
+    @ColumnInfo("rejected")
     var rejected: Boolean? = null,
 
-    @Column
+    @ColumnInfo("withdrawnByApplicant")
     var withdrawnByApplicant: Boolean? = null,
 
-    @Column
+    @ColumnInfo("active")
     var active: Boolean? = null,
 
-    @Column
+    @ColumnInfo("closed")
     var closed: Boolean? = null,
 ) : MifosBaseModel(), Parcelable

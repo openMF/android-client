@@ -10,67 +10,64 @@
 package com.mifos.core.objects.accounts.savings
 
 import android.os.Parcelable
-import com.mifos.core.database.MifosDatabase
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 /**
  * Created by ishankhanna on 12/06/14.
  */
 @Parcelize
-@Table(database = MifosDatabase::class)
-@ModelContainer
+@Entity("SavingAccountTransactionRequest")
 data class SavingsAccountTransactionRequest(
     @PrimaryKey
     @Transient
     var savingAccountId: Int? = null,
 
-    @Column
+    @ColumnInfo("savingsAccountType")
     @Transient
     var savingsAccountType: String? = null,
 
-    @Column
+    @ColumnInfo("transactionType")
     @Transient
     var transactionType: String? = null,
 
-    @Column
+    @ColumnInfo("dateFormat")
     var dateFormat: String? = null,
 
-    @Column
+    @ColumnInfo("locale")
     var locale: String? = null,
 
-    @Column
+    @ColumnInfo("transactionDate")
     var transactionDate: String? = null,
 
-    @Column
+    @ColumnInfo("transactionAmount")
     var transactionAmount: String? = null,
 
-    @Column
+    @ColumnInfo("paymentTypeId")
     var paymentTypeId: String? = null,
 
-    @Column
+    @ColumnInfo("note")
     var note: String? = null,
 
-    @Column
+    @ColumnInfo("accountNumber")
     var accountNumber: String? = null,
 
-    @Column
+    @ColumnInfo("checkNumber")
     var checkNumber: String? = null,
 
-    @Column
+    @ColumnInfo("routingCode")
     var routingCode: String? = null,
 
-    @Column
+    @ColumnInfo("receiptNumber")
     var receiptNumber: String? = null,
 
-    @Column
+    @ColumnInfo("bankNumber")
     var bankNumber: String? = null,
 
-    @Column
+    @ColumnInfo("errorMessage")
     @Transient
     var errorMessage: String? = null,
 ) : MifosBaseModel(), Parcelable

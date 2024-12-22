@@ -10,20 +10,19 @@
 package com.mifos.core.objects.group
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
+
 import kotlinx.parcelize.Parcelize
 
 /**
  * Created by mayankjindal on 11/07/17.
  */
 @Parcelize
-@Table(database = MifosDatabase::class)
-@ModelContainer
+@Entity("CenterDate")
 data class CenterDate(
     @PrimaryKey
     var centerId: Long = 0,
@@ -31,12 +30,12 @@ data class CenterDate(
     @PrimaryKey
     var chargeId: Long = 0,
 
-    @Column
+    @ColumnInfo("day")
     var day: Int = 0,
 
-    @Column
+    @ColumnInfo("month")
     var month: Int = 0,
 
-    @Column
+    @ColumnInfo("year")
     var year: Int = 0,
 ) : MifosBaseModel(), Parcelable
