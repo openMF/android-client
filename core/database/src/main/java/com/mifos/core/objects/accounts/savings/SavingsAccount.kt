@@ -18,7 +18,7 @@ import com.mifos.core.model.MifosBaseModel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity("SavingAccount")
+@Entity("SavingsAccount")
 data class SavingsAccount(
     @ColumnInfo("clientId")
     @Transient

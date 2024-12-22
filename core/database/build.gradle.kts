@@ -43,6 +43,8 @@ dependencies {
     implementation(libs.androidx.room.runtime.v260)
     ksp(libs.room.compiler)
     implementation(libs.androidx.room.ktx.v260)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 
     // Hilt dependency
     implementation(libs.hilt.android)
