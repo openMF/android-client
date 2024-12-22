@@ -1,6 +1,15 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package com.mifos.feature.data_table.dataTableData
+package com.mifos.feature.dataTable.dataTableData
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -66,23 +75,22 @@ import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.noncore.DataTable
 import com.mifos.core.ui.components.MifosEmptyUi
+import com.mifos.feature.dataTable.dataTableRowDialog.DataTableRowDialogScreen
 import com.mifos.feature.data_table.R
-import com.mifos.feature.data_table.dataTableRowDialog.DataTableRowDialogScreen
 
 @Composable
 fun DataTableDataScreen(
-    onBackPressed: () -> Unit
+    viewModel: DataTableDataViewModel = hiltViewModel(),
+    onBackPressed: () -> Unit,
 ) {
-
-    val viewmodel: DataTableDataViewModel = hiltViewModel()
-    val dataTable = viewmodel.arg.dataTable
-    val entityId = viewmodel.arg.entityId
-    val table = viewmodel.arg.tableName
-    val state by viewmodel.tableDataUiState.collectAsStateWithLifecycle()
-    val isRefreshing by viewmodel.isRefreshing.collectAsStateWithLifecycle()
+    val dataTable = viewModel.arg.dataTable
+    val entityId = viewModel.arg.entityId
+    val table = viewModel.arg.tableName
+    val state by viewModel.dataTableDataUiState.collectAsStateWithLifecycle()
+    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewmodel.loadDataTableInfo(table, entityId)
+        viewModel.loadDataTableInfo(table, entityId)
     }
 
     DataTableDataScreen(
@@ -91,17 +99,16 @@ fun DataTableDataScreen(
         state = state,
         onBackPressed = onBackPressed,
         onRetry = {
-            viewmodel.loadDataTableInfo(table, entityId)
+            viewModel.loadDataTableInfo(table, entityId)
         },
         onRefresh = {
-            viewmodel.refreshDataTableData(table, entityId)
+            viewModel.refreshDataTableData(table, entityId)
         },
         refreshState = isRefreshing,
         deleteDataTable = {
-            viewmodel.deleteDataTableEntry(table, entityId, it)
-        }
+            viewModel.deleteDataTableEntry(table, entityId, it)
+        },
     )
-
 }
 
 @Composable
@@ -113,17 +120,17 @@ fun DataTableDataScreen(
     onRetry: () -> Unit,
     onRefresh: () -> Unit,
     refreshState: Boolean,
-    deleteDataTable: (Int) -> Unit
+    deleteDataTable: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullRefreshState(
         refreshing = refreshState,
-        onRefresh = onRefresh
+        onRefresh = onRefresh,
     )
     var showOptionDialog by rememberSaveable { mutableStateOf(false) }
     var deleteDataTableId by rememberSaveable { mutableIntStateOf(0) }
     var showAddDataTableRowDialog by rememberSaveable { mutableStateOf(false) }
-
 
     if (showAddDataTableRowDialog) {
         DataTableRowDialogScreen(
@@ -135,7 +142,7 @@ fun DataTableDataScreen(
             onSuccess = {
                 showAddDataTableRowDialog = false
                 onRetry()
-            }
+            },
         )
     }
 
@@ -146,10 +153,9 @@ fun DataTableDataScreen(
                 deleteDataTable(deleteDataTableId)
                 showOptionDialog = false
                 onRetry()
-            }
+            },
         )
     }
-
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
@@ -162,17 +168,16 @@ fun DataTableDataScreen(
                 Icon(imageVector = MifosIcons.Add, contentDescription = null)
             }
         },
-        snackbarHostState = snackbarHostState
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
+        Column(modifier = modifier.padding(paddingValues)) { // Use the passed Modifier here
             Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
-
                 when (state) {
                     is DataTableDataUiState.DataTableDeletedSuccessfully -> {
                         Toast.makeText(
                             LocalContext.current,
                             stringResource(id = R.string.feature_data_table_data_table_created_successfully),
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_SHORT,
                         ).show()
                         onBackPressed()
                     }
@@ -183,7 +188,7 @@ fun DataTableDataScreen(
                             onDataClicked = {
                                 showOptionDialog = true
                                 deleteDataTableId = it
-                            }
+                            },
                         )
                     }
 
@@ -197,7 +202,7 @@ fun DataTableDataScreen(
                 PullRefreshIndicator(
                     refreshing = refreshState,
                     state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter)
+                    modifier = Modifier.align(Alignment.TopCenter),
                 )
             }
         }
@@ -207,23 +212,20 @@ fun DataTableDataScreen(
 @Composable
 fun DataTableDataContent(
     jsonElements: JsonArray,
-    onDataClicked: (Int) -> Unit
+    onDataClicked: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-
     val jsonElementIterator: Iterator<JsonElement> = jsonElements.iterator()
     var dataList by rememberSaveable { mutableStateOf<List<DataTableDataItem>>(emptyList()) }
-
 
     if (jsonElements.size() == 0) {
         MifosEmptyUi(
             text = stringResource(id = R.string.feature_data_table_no_data_table_details_to_show),
+            modifier = modifier,
         )
     } else {
-
         while (jsonElementIterator.hasNext()) {
-
             val dataTableDataItem = DataTableDataItem()
-
             val jsonElement: JsonElement = jsonElementIterator.next()
 
             if (jsonElement.asJsonObject.has("client_id")) {
@@ -235,13 +237,11 @@ fun DataTableDataContent(
             dataList = dataList + dataTableDataItem
         }
 
-
-
-        LazyColumn {
+        LazyColumn(modifier = modifier) {
             items(dataList) { dataItem ->
                 DataTableDataCardItem(
                     dataItem = dataItem,
-                    onDataClicked = onDataClicked
+                    onDataClicked = onDataClicked,
                 )
             }
         }
@@ -251,33 +251,33 @@ fun DataTableDataContent(
 @Composable
 fun DataTableDataCardItem(
     dataItem: DataTableDataItem,
-    onDataClicked: (Int) -> Unit
+    onDataClicked: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     OutlinedCard(
-        modifier = Modifier
+        modifier = modifier
             .padding(8.dp)
             .clickable {
                 onDataClicked(dataItem.clientId?.toInt() ?: dataItem.id?.toInt() ?: 0)
             },
-        colors = CardDefaults.cardColors(White)
+        colors = CardDefaults.cardColors(White),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    16.dp
-                ),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 16.dp)
+                    .padding(start = 16.dp),
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp), horizontalArrangement = Arrangement.SpaceBetween
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
                         modifier = Modifier.weight(1f),
@@ -286,8 +286,8 @@ fun DataTableDataCardItem(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal,
-                            color = Black
-                        )
+                            color = Black,
+                        ),
                     )
                     Text(
                         modifier = Modifier.weight(1f),
@@ -296,14 +296,14 @@ fun DataTableDataCardItem(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal,
-                            color = DarkGray
-                        )
+                            color = DarkGray,
+                        ),
                     )
                 }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp)
+                        .padding(top = 8.dp),
                 ) {
                     Text(
                         modifier = Modifier.weight(1f),
@@ -312,8 +312,8 @@ fun DataTableDataCardItem(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal,
-                            color = Black
-                        )
+                            color = Black,
+                        ),
                     )
                     Text(
                         modifier = Modifier.weight(1f),
@@ -322,15 +322,14 @@ fun DataTableDataCardItem(
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal,
-                            color = DarkGray
-                        )
+                            color = DarkGray,
+                        ),
                     )
                 }
             }
         }
     }
 }
-
 
 data class DataTableDataItem(
     var id: String? = null,
@@ -343,33 +342,33 @@ class DataTableDataUiStateProvider : PreviewParameterProvider<DataTableDataUiSta
         get() = sequenceOf(
             DataTableDataUiState.Loading,
             DataTableDataUiState.Error(R.string.feature_data_table_failed_to_delete_data_table),
-            DataTableDataUiState.DataTableInfo(JsonArray())
+            DataTableDataUiState.DataTableInfo(JsonArray()),
         )
 }
-
 
 @Composable
 fun SelectOptionsDialog(
     onDismissRequest: () -> Unit,
     deleteDataTable: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-
     Dialog(
         onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(
             dismissOnBackPress = true,
-            dismissOnClickOutside = true
-        )
+            dismissOnClickOutside = true,
+        ),
     ) {
         Card(
             colors = CardDefaults.cardColors(White),
-            shape = RoundedCornerShape(20.dp)
+            shape = RoundedCornerShape(20.dp),
+            modifier = modifier,
         ) {
             Column(
                 modifier = Modifier
                     .padding(30.dp),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = stringResource(id = R.string.feature_data_table_select_options),
@@ -377,16 +376,16 @@ fun SelectOptionsDialog(
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal
+                        fontStyle = FontStyle.Normal,
                     ),
                     color = Color.Black,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
                     onClick = { deleteDataTable() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary)
+                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_data_table_delete_data_table),
@@ -394,10 +393,10 @@ fun SelectOptionsDialog(
                         style = TextStyle(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal
+                            fontStyle = FontStyle.Normal,
                         ),
                         color = Color.Black,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
@@ -408,7 +407,7 @@ fun SelectOptionsDialog(
 @Preview(showBackground = true)
 @Composable
 private fun DataTableDataScreenPreview(
-    @PreviewParameter(DataTableDataUiStateProvider::class) state: DataTableDataUiState
+    @PreviewParameter(DataTableDataUiStateProvider::class) state: DataTableDataUiState,
 ) {
     DataTableDataScreen(
         dataTable = DataTable(),
@@ -418,6 +417,6 @@ private fun DataTableDataScreenPreview(
         onRetry = {},
         onRefresh = {},
         refreshState = false,
-        deleteDataTable = {}
+        deleteDataTable = {},
     )
 }

@@ -1,4 +1,13 @@
-package com.mifos.feature.data_table.dataTableList
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.feature.dataTable.dataTableList
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.layout.Box
@@ -50,9 +59,9 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun DataTableListScreen(
-    viewModel: DataTableListViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
-    clientCreated: (Client, Boolean) -> Unit
+    clientCreated: (Client, Boolean) -> Unit,
+    viewModel: DataTableListViewModel = hiltViewModel(),
 ) {
     val dataTables = viewModel.arg.dataTableList
     val requestType = viewModel.arg.requestType
@@ -69,8 +78,8 @@ fun DataTableListScreen(
         uiState = uiState,
         dataTableList = dataTableList ?: listOf(),
         onBackPressed = onBackPressed,
-        clientCreated = { client -> clientCreated(client, viewModel.getUserStatus() ) },
-        onSaveClicked = { viewModel.processDataTable() }
+        clientCreated = { client -> clientCreated(client, viewModel.getUserStatus()) },
+        onSaveClicked = { viewModel.processDataTable() },
     )
 }
 
@@ -80,7 +89,8 @@ fun DataTableListScreen(
     dataTableList: List<DataTable>,
     onBackPressed: () -> Unit,
     clientCreated: (Client) -> Unit,
-    onSaveClicked: () -> Unit
+    onSaveClicked: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -88,16 +98,17 @@ fun DataTableListScreen(
         icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_data_table_associated_datatables),
         onBackPressed = onBackPressed,
-        snackbarHostState = snackBarHostState
+        snackbarHostState = snackBarHostState,
     ) { paddingValues ->
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .padding(paddingValues)
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             DataTableListContent(
                 dataTableList = dataTableList,
-                onSaveClicked = onSaveClicked
+                onSaveClicked = onSaveClicked,
+                modifier = Modifier.fillMaxWidth(),
             )
 
             when (uiState) {
@@ -135,14 +146,15 @@ fun DataTableListScreen(
 @Composable
 fun DataTableListContent(
     dataTableList: List<DataTable>,
-    onSaveClicked: () -> Unit
+    onSaveClicked: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .verticalScroll(state = scrollState)
+            .verticalScroll(state = scrollState),
     ) {
         for (table in dataTableList) {
             Text(
@@ -150,7 +162,7 @@ fun DataTableListContent(
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -163,7 +175,7 @@ fun DataTableListContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
         ) {
             Text(text = stringResource(id = R.string.feature_data_table_save), color = Color.White)
         }
@@ -173,9 +185,10 @@ fun DataTableListContent(
 @Composable
 fun TableColumnHeader(
     table: DataTable,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    Column {
+    Column(modifier = modifier) {
         table.columnHeaderData.filter { it.columnPrimaryKey != null }.forEach { columnHeader ->
             when (columnHeader.columnDisplayType) {
                 FormWidget.SCHEMA_KEY_STRING, FormWidget.SCHEMA_KEY_TEXT -> {
@@ -183,7 +196,7 @@ fun TableColumnHeader(
                         value = "",
                         onValueChange = {},
                         label = columnHeader.dataTableColumnName ?: "",
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -197,7 +210,7 @@ fun TableColumnHeader(
                         keyboardType = KeyboardType.Number,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 8.dp),
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -205,13 +218,12 @@ fun TableColumnHeader(
 
                 FormWidget.SCHEMA_KEY_CODELOOKUP, FormWidget.SCHEMA_KEY_CODEVALUE -> {
                     var selectedValue by remember { mutableStateOf("") }
-                    val columnValueStrings =
-                        columnHeader.columnValues.map { it.value.orEmpty() }
+                    val columnValueStrings = columnHeader.columnValues.map { it.value.orEmpty() }
 
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
+                            .padding(vertical = 8.dp),
                     ) {
                         MifosTextFieldDropdown(
                             value = selectedValue,
@@ -220,7 +232,7 @@ fun TableColumnHeader(
                             modifier = Modifier.fillMaxWidth(),
                             readOnly = true,
                             options = columnValueStrings,
-                            onOptionSelected = { _, item -> selectedValue = item }
+                            onOptionSelected = { _, item -> selectedValue = item },
                         )
                     }
 
@@ -230,9 +242,7 @@ fun TableColumnHeader(
                 FormWidget.SCHEMA_KEY_DATE -> {
                     val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                     var selectedDate by remember {
-                        mutableStateOf(
-                            LocalDate.now().format(dateFormatter)
-                        )
+                        mutableStateOf(LocalDate.now().format(dateFormatter))
                     }
 
                     fun openDatePicker() {
@@ -244,7 +254,7 @@ fun TableColumnHeader(
                             },
                             LocalDate.now().year,
                             LocalDate.now().monthValue - 1,
-                            LocalDate.now().dayOfMonth
+                            LocalDate.now().dayOfMonth,
                         )
                         datePickerDialog.show()
                     }
@@ -252,7 +262,7 @@ fun TableColumnHeader(
                     MifosDatePickerTextField(
                         value = selectedDate,
                         labelString = columnHeader.dataTableColumnName ?: "",
-                        openDatePicker = ::openDatePicker
+                        openDatePicker = ::openDatePicker,
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -262,16 +272,16 @@ fun TableColumnHeader(
                     var checked by remember { mutableStateOf(false) }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        modifier = Modifier.padding(vertical = 8.dp),
                     ) {
                         Text(
                             text = columnHeader.dataTableColumnName ?: "",
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
                         )
 
                         Switch(
                             checked = checked,
-                            onCheckedChange = { checked = it }
+                            onCheckedChange = { checked = it },
                         )
                     }
                 }
@@ -288,22 +298,21 @@ fun DataTableListScreenPreview() {
         dataTableList = listOf(),
         onBackPressed = { },
         clientCreated = { },
-        onSaveClicked = { }
+        onSaveClicked = { },
     )
 }
 
-
-//private fun createFormWidgetList(): MutableList<List<FormWidget>> {
+// private fun createFormWidgetList(): MutableList<List<FormWidget>> {
 //    return dataTables?.map { createForm(it) }?.toMutableList() ?: mutableListOf()
-//}
+// }
 //
-//private fun createForm(table: DataTable): List<FormWidget> {
+// private fun createForm(table: DataTable): List<FormWidget> {
 //    return table.columnHeaderData
 //        .filterNot { it.columnPrimaryKey == true }
 //        .map { createFormWidget(it) }
-//}
+// }
 //
-//private fun createFormWidget(columnHeader: ColumnHeader): FormWidget {
+// private fun createFormWidget(columnHeader: ColumnHeader): FormWidget {
 //    return when (columnHeader.columnDisplayType) {
 //        FormWidget.SCHEMA_KEY_STRING, FormWidget.SCHEMA_KEY_TEXT -> FormEditText(
 //            activity,
@@ -336,9 +345,9 @@ fun DataTableListScreenPreview() {
 //
 //        else -> FormEditText(activity, columnHeader.dataTableColumnName)
 //    }
-//}
+// }
 //
-//private fun createFormSpinner(columnHeader: ColumnHeader): FormSpinner {
+// private fun createFormSpinner(columnHeader: ColumnHeader): FormSpinner {
 //    val columnValueStrings = columnHeader.columnValues.mapNotNull { it.value }
 //    val columnValueIds = columnHeader.columnValues.mapNotNull { it.id }
 //    return FormSpinner(
@@ -349,9 +358,9 @@ fun DataTableListScreenPreview() {
 //    ).apply {
 //        returnType = FormWidget.SCHEMA_KEY_CODEVALUE
 //    }
-//}
+// }
 //
-//private fun showClientCreatedSuccessfully(client: Client) {
+// private fun showClientCreatedSuccessfully(client: Client) {
 //    requireActivity().supportFragmentManager.popBackStack()
 //    requireActivity().supportFragmentManager.popBackStack()
 //    Toast.makeText(
@@ -363,4 +372,4 @@ fun DataTableListScreenPreview() {
 //        clientActivityIntent.putExtra(Constants.CLIENT_ID, client.clientId)
 //        startActivity(clientActivityIntent)
 //    }
-//}
+// }

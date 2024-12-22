@@ -1,6 +1,11 @@
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.mifos.MifosBuildType
 
+/*
+ * This project is licensed under the open source MPL V2.
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+
 plugins {
     alias(libs.plugins.mifos.android.application)
     alias(libs.plugins.mifos.android.application.compose)

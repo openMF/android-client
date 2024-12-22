@@ -25,9 +25,9 @@ interface CreateNewClientRepository {
 
     fun clientTemplate(): Observable<ClientsTemplate>
 
-    fun offices(): Observable<List<Office>>
+    suspend fun offices(): List<Office>
 
-    fun getStaffInOffice(officeId: Int): Observable<List<Staff>>
+    suspend fun getStaffInOffice(officeId: Int): List<Staff>
 
     fun createClient(clientPayload: ClientPayload): Observable<Client>
 

@@ -91,6 +91,9 @@ import com.mifos.core.data.repositoryImp.SignatureRepositoryImp
 import com.mifos.core.data.repositoryImp.SurveyListRepositoryImp
 import com.mifos.core.data.repositoryImp.SurveySubmitRepositoryImp
 import com.mifos.core.data.repository_imp.SurveyQuestionRepositoryImp
+import com.mifos.core.data.repository_imp.ActivateRepositoryImp
+import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
+import com.mifos.core.data.repository_imp.DataTableDataRepositoryImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
