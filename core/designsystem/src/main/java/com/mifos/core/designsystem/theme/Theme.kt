@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.designsystem.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -15,7 +24,7 @@ private val LightThemeColors = lightColorScheme(
     onSurface = BlueSecondary,
     onSecondary = Color.Gray,
     outlineVariant = Color.Gray,
-    surfaceTint = BlueSecondary
+    surfaceTint = BlueSecondary,
 )
 
 private val DarkThemeColors = darkColorScheme(
@@ -28,7 +37,7 @@ private val DarkThemeColors = darkColorScheme(
     onSurface = Color.White,
     onSecondary = Color.White,
     outlineVariant = Color.White,
-    surfaceTint = BlueSecondary
+    surfaceTint = BlueSecondary,
 )
 
 @Composable
@@ -43,6 +52,6 @@ fun MifosTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        content = content
+        content = content,
     )
 }
