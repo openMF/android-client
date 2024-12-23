@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.designsystem.component
 
 import androidx.compose.foundation.layout.Arrangement
@@ -26,37 +35,37 @@ import com.mifos.core.designsystem.theme.DarkGray
  */
 
 @Composable
-fun MifosPagingAppendProgress() {
+fun MifosPagingAppendProgress(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator(
             modifier = Modifier
                 .width(40.dp)
                 .height(40.dp)
                 .padding(8.dp),
-            strokeWidth = 4.dp
+            strokeWidth = 4.dp,
         )
     }
-
 }
 
 @Preview(showBackground = true)
 @Composable
 fun MifosCircularProgress(
-    contentDesc: String = "loadingIndicator",
     modifier: Modifier = Modifier
-        .fillMaxSize()
-        .semantics { contentDescription = contentDesc },
-    text: String? = null
+        .fillMaxSize(),
+    contentDesc: String = "loadingIndicator",
+    text: String? = null,
 ) {
+    val resolvedModifier = modifier.semantics { contentDescription = contentDesc }
+
     Column(
-        modifier = modifier,
+        modifier = resolvedModifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         CircularProgressIndicator(
             modifier = Modifier
@@ -65,11 +74,10 @@ fun MifosCircularProgress(
                 .height(60.dp)
                 .padding(8.dp),
             strokeWidth = 4.dp,
-            color = DarkGray
+            color = DarkGray,
         )
         text?.let {
             Text(text = text)
         }
     }
-
 }

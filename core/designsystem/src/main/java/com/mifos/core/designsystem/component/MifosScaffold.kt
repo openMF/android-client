@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 @file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.mifos.core.designsystem.component
@@ -31,19 +40,18 @@ import com.mifos.core.designsystem.theme.White
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MifosScaffold(
+    snackbarHostState: SnackbarHostState?,
     modifier: Modifier = Modifier,
     isAppBarPresent: Boolean = true,
     icon: ImageVector? = null,
     title: String? = null,
-    fontsizeInSp : Int = 24,
+    fontsizeInSp: Int = 24,
     onBackPressed: () -> Unit = {},
     actions: @Composable () -> Unit = {},
-    snackbarHostState: SnackbarHostState?,
     bottomBar: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
 ) {
-
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -70,21 +78,21 @@ fun MifosScaffold(
                                 style = TextStyle(
                                     fontSize = fontsizeInSp.sp,
                                     fontWeight = FontWeight.Medium,
-                                    fontStyle = FontStyle.Normal
+                                    fontStyle = FontStyle.Normal,
                                 ),
                                 color = Black,
-                                textAlign = TextAlign.Start
+                                textAlign = TextAlign.Start,
                             )
                         }
                     },
-                    actions = { actions() }
+                    actions = { actions() },
                 )
             }
         },
         snackbarHost = { snackbarHostState?.let { SnackbarHost(it) } },
         containerColor = White,
         bottomBar = bottomBar,
-        floatingActionButton = floatingActionButton
+        floatingActionButton = floatingActionButton,
     ) { padding ->
         content(padding)
     }
@@ -100,7 +108,7 @@ fun MifosScaffold(
     floatingActionButtonPosition: FabPosition = FabPosition.End,
     containerColor: Color = Color.White,
     contentColor: Color = contentColorFor(containerColor),
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
@@ -111,7 +119,7 @@ fun MifosScaffold(
         bottomBar = bottomBar,
         containerColor = containerColor,
         contentColor = contentColor,
-        contentWindowInsets = WindowInsets(0, 0, 0, 0)
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { padding ->
         content(padding)
     }

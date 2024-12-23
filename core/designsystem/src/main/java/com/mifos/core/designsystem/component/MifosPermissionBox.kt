@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.designsystem.component
 
 import android.app.Activity
@@ -24,9 +33,9 @@ import androidx.lifecycle.LifecycleEventObserver
 fun PermissionBox(
     requiredPermissions: List<String>,
     title: Int,
-    description: Int? = null,
     confirmButtonText: Int,
     dismissButtonText: Int,
+    description: Int? = null,
     onGranted: @Composable (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
@@ -37,9 +46,9 @@ fun PermissionBox(
             requiredPermissions.all {
                 ContextCompat.checkSelfPermission(
                     context,
-                    it
+                    it,
                 ) == PackageManager.PERMISSION_GRANTED
-            }
+            },
         )
     }
 
@@ -47,7 +56,7 @@ fun PermissionBox(
         requiredPermissions.all {
             (context as? Activity)?.let { it1 ->
                 ActivityCompat.shouldShowRequestPermissionRationale(
-                    it1, it
+                    it1, it,
                 )
             } == true
         }
@@ -58,17 +67,21 @@ fun PermissionBox(
 
     val decideCurrentPermissionStatus: (Boolean, Boolean) -> String =
         { permissionGranted, shouldShowPermissionRationale ->
-            if (permissionGranted) "Granted"
-            else if (shouldShowPermissionRationale) "Rejected"
-            else "Denied"
+            if (permissionGranted) {
+                "Granted"
+            } else if (shouldShowPermissionRationale) {
+                "Rejected"
+            } else {
+                "Denied"
+            }
         }
 
     var currentPermissionStatus by remember {
         mutableStateOf(
             decideCurrentPermissionStatus(
                 permissionGranted,
-                shouldShowPermissionRationale
-            )
+                shouldShowPermissionRationale,
+            ),
         )
     }
 
@@ -85,7 +98,7 @@ fun PermissionBox(
                     requiredPermissions.all {
                         (context as? Activity)?.let { it1 ->
                             ActivityCompat.shouldShowRequestPermissionRationale(
-                                it1, it
+                                it1, it,
                             )
                         } == false
                     }
@@ -94,9 +107,10 @@ fun PermissionBox(
                 !shouldShowPermissionRationale && !permissionGranted
             currentPermissionStatus = decideCurrentPermissionStatus(
                 permissionGranted,
-                shouldShowPermissionRationale
+                shouldShowPermissionRationale,
             )
-        })
+        },
+    )
 
     DisposableEffect(key1 = lifecycleOwner, effect = {
         val observer = LifecycleEventObserver { _, event ->
@@ -115,7 +129,7 @@ fun PermissionBox(
 
     if (shouldShowPermissionRationale) {
         MifosDialogBox(
-            showDialogState =  shouldShowPermissionRationale,
+            showDialogState = shouldShowPermissionRationale,
             onDismiss = { shouldShowPermissionRationale = false },
             title = title,
             message = description,
@@ -124,22 +138,20 @@ fun PermissionBox(
                 shouldShowPermissionRationale = false
                 multiplePermissionLauncher.launch(requiredPermissions.toTypedArray())
             },
-            dismissButtonText = dismissButtonText
+            dismissButtonText = dismissButtonText,
         )
     }
 
     if (shouldDirectUserToApplicationSettings) {
         Intent(
             Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.fromParts("package", context.packageName, null)
+            Uri.fromParts("package", context.packageName, null),
         ).also {
             context.startActivity(it)
         }
     }
 
     if (permissionGranted) {
-        if (onGranted != null) {
-            onGranted()
-        }
+        onGranted?.invoke()
     }
 }
