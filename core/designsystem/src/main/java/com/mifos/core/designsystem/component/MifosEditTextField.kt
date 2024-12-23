@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.designsystem.component
 
 import androidx.compose.animation.AnimatedVisibility
@@ -50,20 +59,20 @@ import com.mifos.core.designsystem.theme.White
 fun MifosOutlinedTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
+    label: Int,
+    modifier: Modifier = Modifier,
     maxLines: Int = 1,
     singleLine: Boolean = true,
     icon: ImageVector? = null,
-    label: Int,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null,
-    error: Int?
+    error: Int? = null,
 ) {
-
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(stringResource(id = label)) },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp),
         leadingIcon = if (icon != null) {
@@ -71,10 +80,12 @@ fun MifosOutlinedTextField(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (isSystemInDarkTheme()) White else DarkGray
+                    tint = if (isSystemInDarkTheme()) White else DarkGray,
                 )
             }
-        } else null,
+        } else {
+            null
+        },
         trailingIcon = trailingIcon,
         maxLines = maxLines,
         singleLine = singleLine,
@@ -92,18 +103,18 @@ fun MifosOutlinedTextField(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(id = error),
-                    color = MaterialTheme.colorScheme.error
+                    color = MaterialTheme.colorScheme.error,
                 )
             }
-        }
+        },
     )
 }
 
 @Composable
 fun MifosOutlinedTextField(
-    modifier: Modifier = Modifier,
     value: String,
     label: String,
+    modifier: Modifier = Modifier,
     leadingIcon: ImageVector? = null,
     maxLines: Int = 1,
     isError: Boolean = false,
@@ -154,13 +165,13 @@ fun MifosOutlinedTextField(
             if (isPasswordToggleDisplayed) {
                 PasswordToggleIcon(
                     isPasswordVisible = isPasswordVisible,
-                    onPasswordToggleClick = onPasswordToggleClick
+                    onPasswordToggleClick = onPasswordToggleClick,
                 )
             } else if (showClearIcon && isFocused) {
                 ClearIconButton(
                     showClearIcon = true,
                     clearIcon = clearIcon,
-                    onClickClearIcon = onClickClearIcon
+                    onClickClearIcon = onClickClearIcon,
                 )
             } else {
                 trailingIcon?.invoke()
@@ -206,21 +217,20 @@ fun MifosOutlinedTextField(
 
 @Composable
 fun MifosOutlinedTextField(
-    modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
     value: String,
     onValueChange: (String) -> Unit,
+    label: String,
+    error: Int?,
+    modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
     maxLines: Int = 1,
-    readOnly : Boolean = false,
+    readOnly: Boolean = false,
     singleLine: Boolean = true,
     icon: ImageVector? = null,
-    label: String,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
-    error: Int?,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
-
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
@@ -233,10 +243,12 @@ fun MifosOutlinedTextField(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (isSystemInDarkTheme()) White else DarkGray
+                    tint = if (isSystemInDarkTheme()) White else DarkGray,
                 )
             }
-        } else null,
+        } else {
+            null
+        },
         trailingIcon = trailingIcon,
         maxLines = maxLines,
         singleLine = singleLine,
@@ -248,7 +260,7 @@ fun MifosOutlinedTextField(
         textStyle = LocalDensity.current.run {
             TextStyle(fontSize = 18.sp)
         },
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next,keyboardType = keyboardType),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = keyboardType),
         visualTransformation = visualTransformation,
         isError = error != null,
         supportingText = if (error != null) {
@@ -256,20 +268,20 @@ fun MifosOutlinedTextField(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(id = error),
-                    color = MaterialTheme.colorScheme.error
+                    color = MaterialTheme.colorScheme.error,
                 )
             }
         } else {
             null
-        }
+        },
     )
 }
 
 @Composable
 private fun PasswordToggleIcon(
-    modifier: Modifier = Modifier,
     isPasswordVisible: Boolean,
-    onPasswordToggleClick: (Boolean) -> Unit
+    modifier: Modifier = Modifier,
+    onPasswordToggleClick: (Boolean) -> Unit,
 ) {
     IconButton(
         onClick = {
@@ -295,13 +307,13 @@ private fun PasswordToggleIcon(
 
 @Composable
 private fun ClearIconButton(
-    modifier: Modifier = Modifier,
     showClearIcon: Boolean,
     clearIcon: ImageVector,
+    modifier: Modifier = Modifier,
     onClickClearIcon: () -> Unit,
 ) {
     AnimatedVisibility(
-        visible = showClearIcon
+        visible = showClearIcon,
     ) {
         IconButton(
             onClick = onClickClearIcon,
@@ -309,20 +321,19 @@ private fun ClearIconButton(
         ) {
             Icon(
                 imageVector = clearIcon,
-                contentDescription = "trailingIcon"
+                contentDescription = "trailingIcon",
             )
         }
     }
-
 }
 
 @Composable
 fun MifosDatePickerTextField(
-    modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
     value: String,
+    modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
     label: Int? = null,
     labelString: String? = null,
-    openDatePicker: () -> Unit
+    openDatePicker: () -> Unit,
 ) {
     OutlinedTextField(
         value = value,
@@ -342,6 +353,6 @@ fun MifosDatePickerTextField(
             IconButton(onClick = { openDatePicker() }) {
                 Icon(imageVector = Icons.Default.CalendarToday, null)
             }
-        }
+        },
     )
 }

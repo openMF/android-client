@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 @file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.mifos.core.designsystem.component
@@ -30,22 +39,22 @@ import com.mifos.core.designsystem.theme.BluePrimaryDark
 
 @Composable
 fun MifosTextFieldDropdown(
-    modifier: Modifier = Modifier
-        .fillMaxWidth()
-        .padding(start = 16.dp, end = 16.dp),
     value: String,
     onValueChanged: (String) -> Unit,
     onOptionSelected: (Int, String) -> Unit,
+    options: List<String>,
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 16.dp, end = 16.dp),
     label: Int? = null,
     labelString: String? = null,
-    options: List<String>,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
 ) {
     var isExpended by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
         expanded = isExpended,
-        onExpandedChange = { isExpended = it }
+        onExpandedChange = { isExpended = it },
     ) {
         OutlinedTextField(
             value = value,
@@ -64,12 +73,12 @@ fun MifosTextFieldDropdown(
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(isExpended)
             },
-            readOnly = readOnly
+            readOnly = readOnly,
         )
 
         ExposedDropdownMenu(
             expanded = isExpended,
-            onDismissRequest = { isExpended = false }
+            onDismissRequest = { isExpended = false },
         ) {
             options.forEachIndexed { index, value ->
                 DropdownMenuItem(
@@ -77,7 +86,7 @@ fun MifosTextFieldDropdown(
                     onClick = {
                         isExpended = false
                         onOptionSelected(index, value)
-                    }
+                    },
                 )
             }
         }
