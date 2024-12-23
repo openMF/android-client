@@ -18,5 +18,5 @@
     <string name="feature_auth_error_password_length">Invalid password length</string>
     <string name="feature_auth_error_not_connected_internet">No Internet Connection</string>
     <string name="feature_auth_error_login_failed">Login Failed, Please Try Again Later.</string>
-    <string name="feature_auth_error_wrong_credentials">Unexpected Error Please Enter the valid Login details</string>
+    <string name="feature_auth_error_wrong_credential">Unexpected Error Please Enter the valid Login details</string>
 </resources>

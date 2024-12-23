@@ -114,7 +114,7 @@ class LoginViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e("@@@", "Unexpected error during login: ${e.message}")
                 _loginUiState.value =
-                    LoginUiState.ShowError(R.string.feature_auth_error_wrong_credentials)
+                    LoginUiState.ShowError(R.string.feature_auth_error_wrong_credential)
             }
         }
     }
