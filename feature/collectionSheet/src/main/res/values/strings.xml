@@ -33,6 +33,7 @@
     <string name="feature_collection_sheet_total_charges">Total Charges</string>
     <string name="feature_collection_sheet_total_due">Total due</string>
     <string name="feature_collection_sheet_add_payment_detail">Add Payment Detail</string>
+    <string name="feature_collection_sheet_hide_payment_detail">Hide Payment Detail</string>
     <string name="feature_collection_sheet_account_number">Account Number</string>
     <string name="feature_collection_sheet_cheque_number">Cheque Number</string>
     <string name="feature_collection_sheet_routing_code">Routing Code</string>
