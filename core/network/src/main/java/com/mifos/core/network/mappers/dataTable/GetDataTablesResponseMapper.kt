@@ -49,9 +49,9 @@ object GetDataTablesResponseMapper : AbstractMapper<GetDataTablesResponse, DataT
                     columnDisplayType = ResultsetColumnHeaderData.ColumnDisplayType.valueOf(it.columnDisplayType!!),
                     columnLength = it.columnLength?.toLong(),
                     isColumnNullable = it.columnNullable,
-                    isColumnPrimaryKey = it.columnPrimaryKey
+                    isColumnPrimaryKey = it.columnPrimaryKey,
                 )
-            }
+            },
         )
     }
 }

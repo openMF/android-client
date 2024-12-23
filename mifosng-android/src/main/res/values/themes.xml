@@ -8,6 +8,6 @@
 
     See https://github.com/openMF/android-client/blob/master/LICENSE.md
 -->
-<manifest>
-
-</manifest>
+<resources>
+    <style name="Theme.AndroidClientTheme" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>

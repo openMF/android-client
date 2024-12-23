@@ -44,8 +44,8 @@ object GroupMapper : AbstractMapper<GetGroupsPageItems, Group>() {
             status = GetGroupsStatus(
                 id = domainModel.status?.id?.toLong(),
                 code = domainModel.status?.code,
-                description = domainModel.status?.value
-            )
+                description = domainModel.status?.value,
+            ),
         )
     }
 }

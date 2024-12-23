@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.mifosxdroid
 
 import com.google.gson.Gson
@@ -25,11 +34,11 @@ class TestDataFactory {
      *
      * Object object = mTestDataFactory.getListTypePojo(
      * new TypeToken<Object>(){}, "Object.json")
-    </Object></T> */
+     </Object></T> */
     fun <T> getObjectTypePojo(model: Class<T>?, jsonName: String?): T {
-        val `in` = javaClass.classLoader.getResourceAsStream(jsonName)
+        val value = javaClass.classLoader.getResourceAsStream(jsonName)
         val reader =
-            JsonReader(InputStreamReader(`in`))
+            JsonReader(InputStreamReader(value))
         return Gson().fromJson(reader, model)
     }
 
@@ -57,14 +66,14 @@ class TestDataFactory {
      *
      * Object object = mTestDataFactory.getListTypePojo(
      * new TypeToken<Object>(){}, "Object.json")
-    </Object></Object></Object></T> */
+     </Object></Object></Object></T> */
     fun <T> getListTypePojo(
         listModel: TypeToken<T>,
-        jsonName: String?
+        jsonName: String?,
     ): T {
-        val `in` = javaClass.classLoader.getResourceAsStream(jsonName)
+        val value = javaClass.classLoader.getResourceAsStream(jsonName)
         val reader =
-            JsonReader(InputStreamReader(`in`))
+            JsonReader(InputStreamReader(value))
         return Gson().fromJson(reader, listModel.type)
     }
 }

@@ -95,14 +95,14 @@ internal fun UpdateServerConfigScreenRoute(
 @VisibleForTesting
 @Composable
 internal fun UpdateServerConfigScreenContent(
-    modifier: Modifier = Modifier,
     serverConfig: ServerConfig,
+    onEvent: (UpdateServerConfigEvent) -> Unit,
+    modifier: Modifier = Modifier,
     protocolError: Int? = null,
     apiPathError: Int? = null,
     endPointError: Int? = null,
     portError: Int? = null,
     tenantError: Int? = null,
-    onEvent: (UpdateServerConfigEvent) -> Unit,
     onCloseClick: () -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
@@ -160,7 +160,7 @@ internal fun UpdateServerConfigScreenContent(
             }
 
             LazyColumn(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp),
                 contentPadding = PaddingValues(4.dp),
@@ -277,7 +277,7 @@ internal fun UpdateServerConfigScreenContent(
                         )
                     }
 
-                    Spacer(modifier.height(8.dp))
+                    Spacer(Modifier.height(8.dp))
                 }
 
                 item {

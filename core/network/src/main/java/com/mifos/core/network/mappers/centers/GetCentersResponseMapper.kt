@@ -26,7 +26,7 @@ object GetCentersResponseMapper : AbstractMapper<GetCentersResponse, Page<Center
     override fun mapToEntity(domainModel: Page<Center>): GetCentersResponse {
         return GetCentersResponse(
             totalFilteredRecords = domainModel.totalFilteredRecords,
-            pageItems = CenterMapper.mapToEntityList(domainModel.pageItems).toSet()
+            pageItems = CenterMapper.mapToEntityList(domainModel.pageItems).toSet(),
         )
     }
 }

@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.data.pagingSource
 
 import androidx.paging.PagingSource
@@ -17,13 +26,13 @@ import kotlin.coroutines.suspendCoroutine
  */
 
 class ClientListPagingSource(
-    private val dataManagerClient: DataManagerClient
+    private val dataManagerClient: DataManagerClient,
 ) : PagingSource<Int, Client>() {
 
     override fun getRefreshKey(state: PagingState<Int, Client>): Int? {
         return state.anchorPosition?.let { position ->
             state.closestPageToPosition(position)?.prevKey?.plus(10) ?: state.closestPageToPosition(
-                position
+                position,
             )?.nextKey?.minus(10)
         }
     }
@@ -39,7 +48,7 @@ class ClientListPagingSource(
             LoadResult.Page(
                 data = clientListWithSync,
                 prevKey = if (position <= 0) null else position - 10,
-                nextKey = if (position >= totalClients) null else position + 10
+                nextKey = if (position >= totalClients) null else position + 10,
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
@@ -73,7 +82,7 @@ class ClientListPagingSource(
 
     private fun getClientListWithSync(
         clientList: List<Client>,
-        clientDbList: List<Client>
+        clientDbList: List<Client>,
     ): List<Client> {
         if (clientDbList.isNotEmpty()) {
             clientList.forEach { client ->

@@ -36,7 +36,7 @@ object StaffMapper : AbstractMapper<RetrieveOneResponse, Staff>() {
             officeId = domainModel.officeId?.toLong(),
             officeName = domainModel.officeName,
             isLoanOfficer = domainModel.isLoanOfficer,
-            isActive = domainModel.isActive
+            isActive = domainModel.isActive,
         )
     }
 }

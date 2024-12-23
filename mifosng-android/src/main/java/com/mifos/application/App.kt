@@ -1,5 +1,10 @@
 /*
- * This project is licensed under the open source MPL V2.
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.application
@@ -8,14 +13,9 @@ import android.content.Context
 import android.graphics.Typeface
 import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
-import android.preference.PreferenceManager
 import androidx.multidex.MultiDexApplication
-import com.evernote.android.job.JobManager
 import com.facebook.stetho.Stetho
-import com.joanzapata.iconify.Iconify
-import com.joanzapata.iconify.fonts.MaterialModule
-import com.mifos.utils.LanguageHelper.onAttach
-import com.mifos.utils.ThemeHelper
+import com.mifos.core.common.utils.LanguageHelper.onAttach
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import dagger.hilt.android.HiltAndroidApp
@@ -27,15 +27,10 @@ import dagger.hilt.android.HiltAndroidApp
 class App : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val themePref = sharedPreferences.getString("dark_mode", ThemeHelper.DEFAULT_MODE)
-        if (themePref != null) {
-            ThemeHelper.applyTheme(themePref)
-        }
+
         instance = this
-        Iconify.with(MaterialModule())
 //        JobManager.create(this).addJobCreator(OfflineJobCreator())
-        //Initializing the DBFlow and SQL Cipher Encryption
+        // Initializing the DBFlow and SQL Cipher Encryption
         FlowManager.init(FlowConfig.Builder(this).build())
         Stetho.initializeWithDefaults(this)
         val policy = VmPolicy.Builder()
@@ -43,7 +38,6 @@ class App : MultiDexApplication() {
             .build()
         StrictMode.setVmPolicy(policy)
     }
-
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(onAttach(base))
