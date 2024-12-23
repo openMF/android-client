@@ -272,3 +272,10 @@ dependencies {
     implementation(libs.coil.kt.compose)
 
 }
+
+dependencyGuard {
+    configuration("demoDebugCompileClasspath")
+    configuration("demoReleaseCompileClasspath")
+    configuration("prodDebugCompileClasspath")
+    configuration("prodReleaseCompileClasspath")
+}
