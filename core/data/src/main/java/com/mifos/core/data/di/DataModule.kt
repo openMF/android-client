@@ -48,6 +48,7 @@ import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.data.repository.SurveyListRepository
+import com.mifos.core.data.repository.SurveyQuestionRepository
 import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.data.repositoryImp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.CenterListRepositoryImp
@@ -86,6 +87,7 @@ import com.mifos.core.data.repositoryImp.SearchRepositoryImp
 import com.mifos.core.data.repositoryImp.SignatureRepositoryImp
 import com.mifos.core.data.repositoryImp.SurveyListRepositoryImp
 import com.mifos.core.data.repositoryImp.SurveySubmitRepositoryImp
+import com.mifos.core.data.repository_imp.SurveyQuestionRepositoryImp
 import com.mifos.core.data.repository_imp.ActivateRepositoryImp
 import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repository_imp.DataTableDataRepositoryImp
@@ -190,6 +192,9 @@ abstract class DataModule {
 
     @Binds
     internal abstract fun bindSurveyListRepository(impl: SurveyListRepositoryImp): SurveyListRepository
+
+    @Binds
+    internal abstract fun bindSurveyQuestionRepository(impl: SurveyQuestionRepositoryImp): SurveyQuestionRepository
 
     @Binds
     internal abstract fun bindSurveySubmitRepository(impl: SurveySubmitRepositoryImp): SurveySubmitRepository

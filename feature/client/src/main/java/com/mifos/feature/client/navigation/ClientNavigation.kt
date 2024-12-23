@@ -233,7 +233,6 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
     ) {
         SurveyQuestionScreen(
             navigateBack = onBackPressed,
-            survey = Survey(),
         )
     }
 }
@@ -276,6 +275,10 @@ fun NavController.navigateClientSignatureScreen(clientId: Int) {
 
 fun NavController.navigateClientSurveyListScreen(clientId: Int) {
     navigate(ClientScreens.ClientSurveyListScreen.argument(clientId))
+}
+
+fun NavController.navigateSurveyQuestionScreen(surveyId: Int) {
+    navigate(ClientScreens.ClientSurveyQuestionScreen.argument(surveyId))
 }
 
 fun NavController.navigateCreateClientScreen() {
