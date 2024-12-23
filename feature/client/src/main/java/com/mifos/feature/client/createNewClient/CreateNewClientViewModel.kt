@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.createNewClient
 
 import android.util.Log
@@ -5,14 +14,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.core.domain.useCases.ClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetOfficeListUseCase
-import com.mifos.core.domain.use_cases.GetStaffInOfficeForCreateNewClientUseCase
+import com.mifos.core.domain.useCases.GetStaffInOfficeForCreateNewClientUseCase
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
 import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.organisation.Staff
-import com.mifos.core.objects.templates.clients.ClientsTemplate
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +44,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateNewClientViewModel @Inject constructor(
     private val repository: CreateNewClientRepository,
-    private val clientTemplateUseCase: ClientTemplateUseCase,
+//    private val clientTemplateUseCase: ClientTemplateUseCase,
     private val getStaffInOffice: GetStaffInOfficeForCreateNewClientUseCase,
     private val getOfficeListUseCase: GetOfficeListUseCase,
 ) : ViewModel() {
@@ -57,19 +64,21 @@ class CreateNewClientViewModel @Inject constructor(
         loadOffices()
     }
 
-    private fun loadClientTemplate() = viewModelScope.launch(Dispatchers.IO) {
-        clientTemplateUseCase().collect { result ->
-            when (result) {
-                is Resource.Error -> _createNewClientUiState.value =
-                    CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
-
-                is Resource.Loading -> Unit
-
-                is Resource.Success -> _createNewClientUiState.value =
-                    CreateNewClientUiState.ShowClientTemplate(result.data ?: ClientsTemplate())
-            }
-        }
-    }
+//    private fun loadClientTemplate() = viewModelScope.launch(Dispatchers.IO) {
+//        clientTemplateUseCase().collect { result ->
+//            when (result) {
+//                is Resource.Error ->
+//                    _createNewClientUiState.value =
+//                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
+//
+//                is Resource.Loading -> Unit
+//
+//                is Resource.Success ->
+//                    _createNewClientUiState.value =
+//                        CreateNewClientUiState.ShowClientTemplate(result.data ?: ClientsTemplate())
+//            }
+//        }
+//    }
 
     private fun loadOffices() = viewModelScope.launch(Dispatchers.IO) {
         getOfficeListUseCase().collect { result ->
@@ -80,7 +89,6 @@ class CreateNewClientViewModel @Inject constructor(
                 }
 
                 is Resource.Loading -> {
-
                 }
 
                 is Resource.Success -> {
@@ -94,8 +102,9 @@ class CreateNewClientViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getStaffInOffice(officeId).collect { result ->
                 when (result) {
-                    is Resource.Error -> _createNewClientUiState.value =
-                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_staffs)
+                    is Resource.Error ->
+                        _createNewClientUiState.value =
+                            CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_staffs)
 
                     is Resource.Loading -> Unit
 
@@ -122,7 +131,6 @@ class CreateNewClientViewModel @Inject constructor(
                                 Log.d("error", errorMessage)
                                 _createNewClientUiState.value =
                                     CreateNewClientUiState.ShowStringError(errorMessage)
-
                             }
                         } catch (throwable: Throwable) {
                             RxJavaPlugins.getInstance().errorHandler.handleError(e)
@@ -156,7 +164,7 @@ class CreateNewClientViewModel @Inject constructor(
     fun uploadImage(id: Int, pngFile: File) {
         _createNewClientUiState.value =
             CreateNewClientUiState.ShowProgress("Uploading Client's Picture...")
-        val imagePath = pngFile.absolutePath
+//        val imagePath = pngFile.absolutePath
 
         // create RequestBody instance from file
         val requestFile = pngFile.asRequestBody("image/png".toMediaTypeOrNull())

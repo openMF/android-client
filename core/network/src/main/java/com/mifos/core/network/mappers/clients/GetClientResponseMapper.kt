@@ -26,7 +26,7 @@ object GetClientResponseMapper : AbstractMapper<GetClientsResponse, Page<Client>
     override fun mapToEntity(domainModel: Page<Client>): GetClientsResponse {
         return GetClientsResponse(
             totalFilteredRecords = domainModel.totalFilteredRecords,
-            pageItems = ClientMapper.mapToEntityList(domainModel.pageItems).toSet()
+            pageItems = ClientMapper.mapToEntityList(domainModel.pageItems).toSet(),
         )
     }
 }

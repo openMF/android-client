@@ -54,7 +54,7 @@ import com.mifos.core.designsystem.theme.aboutItemTextStyleBold
 @Composable
 internal fun AboutScreen(
     onBackPressed: () -> Unit,
-    viewModel: AboutViewModel = hiltViewModel()
+    viewModel: AboutViewModel = hiltViewModel(),
 ) {
     val state by viewModel.aboutUiState.collectAsStateWithLifecycle()
     val uriHandler = LocalUriHandler.current
@@ -128,7 +128,6 @@ private fun AboutScreenContent(
     onOptionClick: (AboutItems) -> Unit,
 ) {
     Column {
-
         Image(
             modifier = Modifier.size(100.dp),
             painter = painterResource(id = R.drawable.feature_about_ic_launcher),

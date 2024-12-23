@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 @file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.mifos.mifosxdroid.navigation
@@ -70,7 +79,7 @@ import kotlinx.coroutines.launch
 fun NavGraphBuilder.homeGraph() {
     navigation(
         startDestination = HomeScreens.HomeScreen.route,
-        route = "home_screen_route"
+        route = "home_screen_route",
     ) {
         homeNavigate()
     }
@@ -78,7 +87,7 @@ fun NavGraphBuilder.homeGraph() {
 
 fun NavGraphBuilder.homeNavigate() {
     composable(
-        route = HomeScreens.HomeScreen.route
+        route = HomeScreens.HomeScreen.route,
     ) {
         HomeNavigation()
     }
@@ -91,8 +100,9 @@ fun NavController.navigateHome() {
 }
 
 @Composable
-fun HomeNavigation() {
-
+fun HomeNavigation(
+    modifier: Modifier = Modifier,
+) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val route = navBackStackEntry?.destination?.route
@@ -109,7 +119,7 @@ fun HomeNavigation() {
             HomeDestinationsScreen.PathTrackerScreen,
             HomeDestinationsScreen.SettingsScreen,
             HomeDestinationsScreen.AboutScreen,
-            HomeDestinationsScreen.OfflineSyncScreen
+            HomeDestinationsScreen.OfflineSyncScreen,
         )
     }
 
@@ -119,19 +129,20 @@ fun HomeNavigation() {
     val scope = rememberCoroutineScope()
 
     ModalNavigationDrawer(
+        modifier = modifier,
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(modifier = Modifier.requiredWidth(320.dp)) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .height(200.dp),
                 ) {
                     Image(
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop,
                         painter = painterResource(id = R.drawable.drawer_profile_header),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                     Column(modifier = Modifier.padding(32.dp)) {
                         Image(
@@ -139,35 +150,37 @@ fun HomeNavigation() {
                                 .size(64.dp)
                                 .clip(CircleShape),
                             painter = painterResource(id = R.drawable.ic_dp_placeholder),
-                            contentDescription = null
+                            contentDescription = null,
                         )
                         Text(
-                            text = "Mifos", color = Color.White,
+                            text = "Mifos",
+                            color = Color.White,
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium,
-                                fontStyle = FontStyle.Normal
-                            )
+                                fontStyle = FontStyle.Normal,
+                            ),
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
-                                text = "Offline Mode", color = Color.White,
+                                text = "Offline Mode",
+                                color = Color.White,
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Medium,
-                                    fontStyle = FontStyle.Normal
-                                )
+                                    fontStyle = FontStyle.Normal,
+                                ),
                             )
                             Switch(
                                 checked = offline,
                                 onCheckedChange = {
                                     offline = it
-                                }
+                                },
                             )
                         }
                     }
@@ -181,7 +194,7 @@ fun HomeNavigation() {
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Medium,
-                                    fontStyle = FontStyle.Normal
+                                    fontStyle = FontStyle.Normal,
                                 ),
                                 color = Black,
                             )
@@ -211,12 +224,14 @@ fun HomeNavigation() {
                                 Icon(
                                     imageVector = if (index == selectedItemIndex) {
                                         it
-                                    } else it,
-                                    contentDescription = item.title
+                                    } else {
+                                        it
+                                    },
+                                    contentDescription = item.title,
                                 )
                             }
                         },
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                     )
                     if (index == (navigationDrawerTabs.size - 2)) {
                         HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
@@ -224,7 +239,7 @@ fun HomeNavigation() {
                 }
             }
         },
-        gesturesEnabled = isNavScreen
+        gesturesEnabled = isNavScreen,
     ) {
         Scaffold(
             topBar = {
@@ -243,7 +258,7 @@ fun HomeNavigation() {
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.Menu,
-                                    contentDescription = "Menu"
+                                    contentDescription = "Menu",
                                 )
                             }
                         },
@@ -251,11 +266,11 @@ fun HomeNavigation() {
                             IconButton(onClick = { }) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Rounded.Logout,
-                                    contentDescription = null
+                                    contentDescription = null,
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(White)
+                        colors = TopAppBarDefaults.topAppBarColors(White),
                     )
                 }
             },
@@ -280,7 +295,7 @@ fun HomeNavigation() {
                     }
                 }
             },
-            containerColor = White
+            containerColor = White,
         ) { paddingValues ->
             Navigation(navController = navController, padding = paddingValues)
         }

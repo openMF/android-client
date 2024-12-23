@@ -33,5 +33,4 @@ class LoginUseCase(private val loginRepository: LoginRepository) {
             emit(Resource.Error(e.message.toString()))
         }
     }
-
 }
