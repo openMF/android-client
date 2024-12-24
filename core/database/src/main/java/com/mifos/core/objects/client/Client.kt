@@ -10,49 +10,46 @@
 package com.mifos.core.objects.client
 
 import android.os.Parcelable
-import com.mifos.core.database.MifosDatabase
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.model.MifosBaseModel
 import com.mifos.core.objects.Timeline
 import com.mifos.core.objects.group.Group
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ForeignKey
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 /**
  * Created by ishankhanna on 08/02/14.
  */
 @Parcelize
-@Table(database = MifosDatabase::class, useBooleanGetterSetters = false)
-@ModelContainer
+@Entity("Client")
 data class Client(
     @PrimaryKey
     var id: Int = 0,
 
-    @Column
+    @ColumnInfo("groupId")
     @Transient
     var groupId: Int? = 0,
 
-    @Column
+    @ColumnInfo("accountNo")
     var accountNo: String? = null,
 
     var clientId: Int? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("status")
+    @Embedded
     var status: Status? = null,
 
-    @Column
+    @ColumnInfo("sync")
     @Transient
     var sync: Boolean = false,
 
-    @Column
+    @ColumnInfo("active")
     var active: Boolean = false,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("clientTypeId")
+    @Embedded
     var clientDate: ClientDate? = null,
 
     var activationDate: List<Int?> = ArrayList(),
@@ -63,42 +60,42 @@ data class Client(
 
     var mobileNo: String? = null,
 
-    @Column
+    @ColumnInfo("firstname")
     var firstname: String? = null,
 
-    @Column
+    @ColumnInfo("middlename")
     var middlename: String? = null,
 
-    @Column
+    @ColumnInfo("lastname")
     var lastname: String? = null,
 
-    @Column
+    @ColumnInfo("displayName")
     var displayName: String? = null,
 
-    @Column
+    @ColumnInfo("officeId")
     var officeId: Int = 0,
 
-    @Column
+    @ColumnInfo("officeName")
     var officeName: String? = null,
 
-    @Column
+    @ColumnInfo("staffId")
     var staffId: Int = 0,
 
-    @Column
+    @ColumnInfo("staffName")
     var staffName: String? = null,
 
     var timeline: Timeline? = null,
 
-    @Column
+    @ColumnInfo("fullname")
     var fullname: String? = null,
 
-    @Column
+    @ColumnInfo("imageId")
     var imageId: Int = 0,
 
-    @Column
+    @ColumnInfo("imagePresent")
     var imagePresent: Boolean = false,
 
-    @Column
+    @ColumnInfo("externalId")
     var externalId: String? = null,
 ) : MifosBaseModel(), Parcelable {
 

@@ -9,40 +9,33 @@
  */
 package com.mifos.core.database
 
-import com.mifos.core.objects.accounts.loan.LoanAccount
-import com.mifos.core.objects.accounts.savings.SavingsAccount
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mifos.core.objects.group.Center
-import com.raizlabs.android.dbflow.annotation.Migration
-import com.raizlabs.android.dbflow.sql.SQLiteType
-import com.raizlabs.android.dbflow.sql.migration.AlterTableMigration
-
 /**
  * Created by mayankjindal on 17/07/17.
  */
-class MigrationVersion2 {
-    @Migration(version = MifosDatabase.VERSION, database = MifosDatabase::class)
-    class Migration1(table: Class<LoanAccount>) : AlterTableMigration<LoanAccount>(table) {
-        override fun onPreMigrate() {
-            addColumn(SQLiteType.INTEGER, "centerId")
+object RoomMigration{
+
+    val MIGRATION_1_2 = object : Migration(1, 2) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE LoanAccount ADD COLUMN centerId INTEGER")
         }
     }
-
-    @Migration(version = MifosDatabase.VERSION, database = MifosDatabase::class)
-    class Migration2(table: Class<SavingsAccount>) : AlterTableMigration<SavingsAccount>(table) {
-        override fun onPreMigrate() {
-            addColumn(SQLiteType.INTEGER, "centerId")
+    val MIGRATION_2_3 = object : Migration(2, 3) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE SavingsAccount ADD COLUMN centerId INTEGER")
         }
     }
+    val MIGRATION_3_4 = object : Migration(3, 4) {
+        override fun migrate(db: SupportSQLiteDatabase) {
 
-    @Migration(version = MifosDatabase.VERSION, database = MifosDatabase::class)
-    class Migration3(table: Class<Center>) : AlterTableMigration<Center>(table) {
-        override fun onPreMigrate() {
-            addColumn(SQLiteType.INTEGER, "sync")
-            addColumn(SQLiteType.INTEGER, "centerDate_centerId")
-            addColumn(SQLiteType.INTEGER, "centerDate_chargeId")
-            addColumn(SQLiteType.INTEGER, "centerDate_day")
-            addColumn(SQLiteType.INTEGER, "centerDate_month")
-            addColumn(SQLiteType.INTEGER, "centerDate_year")
+            db.execSQL("ALTER TABLE Center ADD COLUMN sync INTEGER")
+            db.execSQL("ALTER TABLE Center ADD COLUMN centerDate_centerId INTEGER")
+            db.execSQL("ALTER TABLE Center ADD COLUMN centerDate_chargeId INTEGER")
+            db.execSQL("ALTER TABLE Center ADD COLUMN centerDate_day INTEGER")
+            db.execSQL("ALTER TABLE Center ADD COLUMN centerDate_month INTEGER")
+            db.execSQL("ALTER TABLE Center ADD COLUMN centerDate_year INTEGER")
         }
     }
 }

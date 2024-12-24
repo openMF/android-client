@@ -11,13 +11,11 @@ package com.mifos.core.objects.templates.clients
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 
 /*
  * This project is licensed under the open source MPL V2.
@@ -26,28 +24,25 @@ import com.raizlabs.android.dbflow.annotation.Table
 /**
  * Created by rajan on 13/3/16.
  */
-
-@Table(database = MifosDatabase::class, name = "ClientTemplateOptions")
-@ModelContainer
+@Entity("ClientTemplateOptions")
 class Options() : MifosBaseModel(), Parcelable {
 
-    @Column
     var optionType: String? = null
 
     @PrimaryKey
     var id: Int = 0
 
-    @Column
+    @ColumnInfo("name")
     var name: String = ""
 
-    @Column
+    @ColumnInfo("position")
     var position: Int = 0
 
-    @Column
+    @ColumnInfo("description")
     var description: String? = null
 
     @SerializedName("isActive")
-    @Column
+    @ColumnInfo("activeStatus")
     var activeStatus: Boolean = false
 
     // Getter for activeStatus property

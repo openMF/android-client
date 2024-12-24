@@ -10,39 +10,36 @@
 package com.mifos.core.objects.accounts.savings
 
 import android.os.Parcelable
-import com.mifos.core.database.MifosDatabase
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ForeignKey
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Table(database = MifosDatabase::class)
-@ModelContainer
+@Entity("SavingAccountWithAssociations")
 data class SavingsAccountWithAssociations(
     @PrimaryKey
     var id: Int? = null,
 
-    @Column
+    @ColumnInfo("accountNo")
     var accountNo: Int? = null,
 
     var clientId: Int? = null,
 
-    @Column
+    @ColumnInfo("clientName")
     var clientName: String? = null,
 
     var savingsProductId: Int? = null,
 
-    @Column
+    @ColumnInfo("savingsProductName")
     var savingsProductName: String? = null,
 
     var fieldOfficerId: Int? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("status")
+    @Embedded
     var status: Status? = null,
 
     var timeline: Timeline? = null,
@@ -79,8 +76,8 @@ data class SavingsAccountWithAssociations(
 
     var overdraftLimit: Int? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("summary")
+    @Embedded
     var summary: Summary? = null,
 
     var transactions: List<Transaction> = ArrayList(),

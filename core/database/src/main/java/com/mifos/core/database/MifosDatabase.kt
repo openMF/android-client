@@ -9,16 +9,33 @@
  */
 package com.mifos.core.database
 
-import com.raizlabs.android.dbflow.annotation.Database
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import com.mifos.core.data.CenterPayload
+import com.mifos.core.model.MifosBaseModel
+import com.mifos.core.objects.PaymentTypeOption
+import com.mifos.core.objects.Timeline
+import com.mifos.core.objects.client.Client
+import com.mifos.core.objects.client.ClientPayload
+import kotlin.reflect.KClass
+
 
 /**
  * Created by Rajan Maurya on 23/06/16.
  */
-@Database(name = MifosDatabase.NAME, version = MifosDatabase.VERSION, foreignKeysSupported = true)
-object MifosDatabase {
-    // database name will be Mifos.db
-    const val NAME = "Mifos"
 
+@Database(entities = [
+    CenterPayload::class,
+    Timeline::class,
+    MifosBaseModel::class,
+    CenterPayload::class,
+    PaymentTypeOption::class,
+    ClientPayload::class
+    ],
     // Always Increase the Version Number
-    const val VERSION = 2
+    version = 3, exportSchema = true,
+)
+abstract class MifosDatabase {
+// TODO add all entities
 }
+

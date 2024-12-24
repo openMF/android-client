@@ -10,22 +10,20 @@
 package com.mifos.core.objects.noncore
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 /**
  * Created by ishankhanna on 16/06/14.
  */
 @Parcelize
-@Table(database = MifosDatabase::class, useBooleanGetterSetters = false)
-@ModelContainer
+@Entity("ColumnHeader")
 data class ColumnHeader(
-    @PrimaryKey(autoincrement = true)
+    @PrimaryKey(autoGenerate = true)
     var id: Int? = null,
 
     /**
@@ -34,25 +32,25 @@ data class ColumnHeader(
      */
     var columnCode: String? = null,
 
-    @Column
+    @ColumnInfo("columnDisplayType")
     var columnDisplayType: String? = null,
 
-    @Column
+    @ColumnInfo("columnLabel")
     var columnLength: Int? = null,
 
-    @Column
+    @ColumnInfo("dataTableColumnName")
     var dataTableColumnName: String? = null,
 
-    @Column
+    @ColumnInfo("columnType")
     var columnType: String? = null,
 
-    @Column
+    @ColumnInfo("columnNullable")
     var columnNullable: Boolean? = null,
 
-    @Column
+    @ColumnInfo("columnPrimaryKey")
     var columnPrimaryKey: Boolean? = null,
 
-    @Column
+    @ColumnInfo("registeredTableName")
     var registeredTableName: String? = null,
 
     /**

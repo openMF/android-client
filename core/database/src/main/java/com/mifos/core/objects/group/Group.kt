@@ -10,15 +10,13 @@
 package com.mifos.core.objects.group
 
 import android.os.Parcelable
-import com.mifos.core.database.MifosDatabase
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.model.MifosBaseModel
 import com.mifos.core.objects.Timeline
 import com.mifos.core.objects.client.Status
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ForeignKey
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -26,56 +24,55 @@ import kotlinx.parcelize.Parcelize
  * Created by ishankhanna on 28/06/14.
  */
 @Parcelize
-@Table(database = MifosDatabase::class, useBooleanGetterSetters = false)
-@ModelContainer
+@Entity("Group")
 data class Group(
     @PrimaryKey
     var id: Int? = null,
 
-    @Column
+    @ColumnInfo("accountNo")
     var accountNo: String? = null,
 
-    @Column
+    @ColumnInfo("sync")
     @Transient
     var sync: Boolean = false,
 
-    @Column
+    @ColumnInfo("name")
     var name: String? = null,
 
     var status: Status? = null,
 
-    @Column
+    @ColumnInfo("active")
     var active: Boolean? = null,
 
-    @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ColumnInfo("groupDate")
+    @Embedded
     @Transient
     var groupDate: GroupDate? = null,
 
     var activationDate: List<Int> = ArrayList(),
 
-    @Column
+    @ColumnInfo("officeId")
     var officeId: Int? = null,
 
-    @Column
+    @ColumnInfo("officeName")
     var officeName: String? = null,
 
-    @Column
+    @ColumnInfo("centerId")
     var centerId: Int? = 0,
 
-    @Column
+    @ColumnInfo("centerName")
     var centerName: String? = null,
 
-    @Column
+    @ColumnInfo("staffId")
     var staffId: Int? = null,
 
-    @Column
+    @ColumnInfo("staffName")
     var staffName: String? = null,
 
-    @Column
+    @ColumnInfo("hierarchy")
     var hierarchy: String? = null,
 
-    @Column
+    @ColumnInfo("groupLevel")
     var groupLevel: Int = 0,
 
     var timeline: Timeline? = null,

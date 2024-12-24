@@ -10,17 +10,14 @@
 package com.mifos.core.objects.accounts.savings
 
 import android.os.Parcelable
-import com.mifos.core.database.MifosDatabase
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Table(database = MifosDatabase::class, useBooleanGetterSetters = false)
-@ModelContainer
+@Entity("TransactionType")
 data class TransactionType(
     @PrimaryKey
     var id: Int? = null,
@@ -29,10 +26,10 @@ data class TransactionType(
 
     var value: String? = null,
 
-    @Column
+    @ColumnInfo("deposit")
     var deposit: Boolean? = null,
 
-    @Column
+    @ColumnInfo("withdrawal")
     var withdrawal: Boolean? = null,
 
     var interestPosting: Boolean? = null,

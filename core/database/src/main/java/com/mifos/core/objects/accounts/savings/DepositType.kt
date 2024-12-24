@@ -10,6 +10,8 @@
 package com.mifos.core.objects.accounts.savings
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.model.MifosBaseModel
@@ -24,16 +26,15 @@ import kotlinx.parcelize.Parcelize
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 @Parcelize
-@Table(database = MifosDatabase::class, name = "SavingAccountDepositType")
-@ModelContainer
+@Entity("SavingAccountDepositType")
 class DepositType(
     @PrimaryKey
     var id: Int? = null,
 
-    @Column
+    @ColumnInfo("code")
     var code: String? = null,
 
-    @Column
+    @ColumnInfo("value")
     var value: String? = null,
 ) : MifosBaseModel(), Parcelable {
 

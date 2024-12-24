@@ -10,13 +10,12 @@
 package com.mifos.core.objects.client
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
 import com.mifos.core.objects.noncore.DataTablePayload
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 /*
@@ -27,69 +26,68 @@ import kotlinx.parcelize.Parcelize
  * Created by ADMIN on 16-Jun-15.
  */
 @Parcelize
-@Table(database = MifosDatabase::class, useBooleanGetterSetters = false)
-@ModelContainer
+@Entity("ClientPayload")
 data class ClientPayload(
-    @PrimaryKey(autoincrement = true)
+    @PrimaryKey(autoGenerate = true)
     @Transient
     var id: Int? = null,
 
-    @Column
+    @ColumnInfo("clientCreationTime")
     @Transient
     var clientCreationTime: Long? = null,
 
-    @Column
+    @ColumnInfo("errorMessage")
     @Transient
     var errorMessage: String? = null,
 
-    @Column
+    @ColumnInfo("firstname")
     var firstname: String? = null,
 
-    @Column
+    @ColumnInfo("lastname")
     var lastname: String? = null,
 
-    @Column
+    @ColumnInfo("middlename")
     var middlename: String? = null,
 
-    @Column
+    @ColumnInfo("officeId")
     var officeId: Int? = null,
 
-    @Column
+    @ColumnInfo("staffId")
     var staffId: Int? = null,
 
-    @Column
+    @ColumnInfo("genderId")
     var genderId: Int? = null,
 
-    @Column
+    @ColumnInfo("active")
     var active: Boolean? = null,
 
-    @Column
+    @ColumnInfo("activationDate")
     var activationDate: String? = null,
 
-    @Column
+    @ColumnInfo("submittedOnDate")
     var submittedOnDate: String? = null,
 
-    @Column
+    @ColumnInfo("dateOfBirth")
     var dateOfBirth: String? = null,
 
-    @Column
+    @ColumnInfo("mobileNo")
     var mobileNo: String? = null,
 
-    @Column
+    @ColumnInfo("externalId")
     var externalId: String? = null,
 
-    @Column
+    @ColumnInfo("clientTypeId")
     var clientTypeId: Int? = null,
 
-    @Column
+    @ColumnInfo("clientClassificationId")
     var clientClassificationId: Int? = null,
 
     var address: List<Address>? = ArrayList(),
 
-    @Column
+    @ColumnInfo("dateFormat")
     var dateFormat: String? = "dd MMMM YYYY",
 
-    @Column
+    @ColumnInfo("locale")
     var locale: String? = "en",
 
     var datatables: List<DataTablePayload>? = null,

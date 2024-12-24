@@ -10,50 +10,48 @@
 package com.mifos.core.objects.group
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
 /**
  * Created by nellyk on 1/22/2016.
  */
 @Parcelize
-@Table(database = MifosDatabase::class, useBooleanGetterSetters = false)
-@ModelContainer
+@Entity("GroupPayload")
 data class GroupPayload(
-    @PrimaryKey(autoincrement = true)
+    @PrimaryKey(autoGenerate = true)
     @Transient
     var id: Int = 0,
 
-    @Column
+    @ColumnInfo("errorMessage")
     @Transient
     var errorMessage: String? = null,
 
-    @Column
+    @ColumnInfo("officeId")
     var officeId: Int = 0,
 
-    @Column
+    @ColumnInfo("active")
     var active: Boolean = false,
 
-    @Column
+    @ColumnInfo("activationDate")
     var activationDate: String? = null,
 
-    @Column
+    @ColumnInfo("submittedOnDate")
     var submittedOnDate: String? = null,
 
-    @Column
+    @ColumnInfo("externalId")
     var externalId: String? = null,
 
-    @Column
+    @ColumnInfo("name")
     var name: String? = null,
 
-    @Column
+    @ColumnInfo("locale")
     var locale: String? = null,
 
-    @Column
+    @ColumnInfo("dateFormat")
     var dateFormat: String? = null,
 ) : MifosBaseModel(), Parcelable

@@ -90,6 +90,7 @@ class DataManagerCenter @Inject constructor(
      */
     fun syncCenterInDatabase(center: Center): Observable<Center> {
         return mDatabaseHelperCenter.saveCenter(center)
+
     }
 
     /**
@@ -101,10 +102,11 @@ class DataManagerCenter @Inject constructor(
      */
     fun syncCenterAccounts(centerId: Int): Observable<CenterAccounts> {
         return mBaseApiManager.centerApi.getCenterAccounts(centerId)
-            .concatMap { centerAccounts ->
+            .flatMap { centerAccounts ->
                 mDatabaseHelperCenter.saveCenterAccounts(
-                    centerAccounts,
-                    centerId,
+                    centerAccounts.loanAccounts,
+                    centerAccounts.savingsAccounts,
+                    centerAccounts.memberLoanAccounts
                 )
             }
     }
@@ -123,7 +125,7 @@ class DataManagerCenter @Inject constructor(
             .getCenterWithGroupMembersAndCollectionMeetingCalendar(id)
     }
 
-    fun createCenter(centerPayload: CenterPayload): Observable<SaveResponse> {
+    fun createCenter(centerPayload: CenterPayload): Observable<SaveResponse>  {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.centerApi.createCenter(centerPayload)
             true ->
