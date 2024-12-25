@@ -150,7 +150,8 @@ internal fun SyncSurveysDialog(
         is SyncSurveysDialogUiState.ShowSurveysSyncSuccessfully -> {
             showCancelButton = false
             LaunchedEffect(key1 = true) {
-                Toast.makeText(context, R.string.feature_settings_sync_success, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.feature_settings_sync_success, Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -162,8 +163,9 @@ internal fun SyncSurveysDialog(
             totalListSize = uiState.total
             surveySyncProgressMax = uiState.total
             totalSyncProgressMax = uiState.total
-            val totalSurveys = uiState.total.toString() + stringResource(R.string.feature_settings_space) +
-                stringResource(R.string.feature_settings_surveys)
+            val totalSurveys =
+                uiState.total.toString() + stringResource(R.string.feature_settings_space) +
+                    stringResource(R.string.feature_settings_surveys)
             totalSurveysText = totalSurveys
             syncFailedText = 0.toString()
         }
@@ -174,7 +176,9 @@ internal fun SyncSurveysDialog(
             surveyName = uiState.name
             questionSyncProgressMax = uiState.questionTotal
             val totalSyncCount =
-                context.getString(R.string.feature_settings_space) + uiState.index + context.getString(R.string.feature_settings_slash) + totalListSize
+                context.getString(R.string.feature_settings_space) + uiState.index + context.getString(
+                    R.string.feature_settings_slash,
+                ) + totalListSize
             totalProgressText = totalSyncCount
         }
 
@@ -367,8 +371,8 @@ private fun SyncSurveysDialogContent(
 private fun SyncSurveyButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
     isEnabled: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     Button(
         onClick = onClick,

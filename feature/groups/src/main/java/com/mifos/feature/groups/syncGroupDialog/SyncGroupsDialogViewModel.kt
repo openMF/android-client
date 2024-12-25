@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.groups.syncGroupDialog
 
 import androidx.lifecycle.ViewModel
@@ -37,7 +46,7 @@ import javax.inject.Inject
 class SyncGroupsDialogViewModel @Inject constructor(
     private val repository: SyncGroupsDialogRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val prefManager: PrefManager
+    private val prefManager: PrefManager,
 ) : ViewModel() {
 
     private var mGroupList: List<Group> = ArrayList()
@@ -53,12 +62,12 @@ class SyncGroupsDialogViewModel @Inject constructor(
     private var maxSingleSyncGroupProgressBar = 0
 
     private val _syncGroupsDialogUiState = MutableStateFlow<SyncGroupsDialogUiState>(
-        SyncGroupsDialogUiState.Loading
+        SyncGroupsDialogUiState.Loading,
     )
     val syncGroupsDialogUiState: StateFlow<SyncGroupsDialogUiState> = _syncGroupsDialogUiState
 
     private val _syncGroupData: MutableStateFlow<SyncGroupDialogData> = MutableStateFlow(
-        SyncGroupDialogData()
+        SyncGroupDialogData(),
     )
     val syncGroupData: StateFlow<SyncGroupDialogData> = _syncGroupData
 
@@ -93,7 +102,6 @@ class SyncGroupsDialogViewModel @Inject constructor(
         }
     }
 
-
     /**
      * This Method Checking network connection and  Syncing the LoanAndLoanRepayment.
      * If found no internet connection then stop syncing the groups and dismiss the dialog.
@@ -127,10 +135,10 @@ class SyncGroupsDialogViewModel @Inject constructor(
      */
     private fun checkAccountsSyncStatusAndSyncAccounts() {
         if (mLoanAccountList.isNotEmpty() && !mLoanAccountSyncStatus) {
-            //Sync the Active Loan and LoanRepayment
+            // Sync the Active Loan and LoanRepayment
             checkNetworkConnectionAndSyncLoanAndLoanRepayment()
         } else if (mSavingsAccountList.isNotEmpty()) {
-            //Sync the Active Savings Account
+            // Sync the Active Savings Account
             checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
         } else {
             // If LoanAccounts and SavingsAccount are null then sync Client to Database
@@ -204,18 +212,17 @@ class SyncGroupsDialogViewModel @Inject constructor(
 
                 override fun onNext(groupAccounts: GroupAccounts) {
                     mLoanAccountList = getActiveLoanAccounts(
-                        groupAccounts.loanAccounts
+                        groupAccounts.loanAccounts,
                     )
                     mSavingsAccountList = getActiveSavingsAccounts(
-                        groupAccounts.savingsAccounts
+                        groupAccounts.savingsAccounts,
                     )
 
-                    //Updating UI
+                    // Updating UI
                     maxSingleSyncGroupProgressBar = mLoanAccountList.size + mSavingsAccountList.size
                     checkAccountsSyncStatusAndSyncAccounts()
                 }
             })
-
     }
 
     /**
@@ -247,7 +254,6 @@ class SyncGroupsDialogViewModel @Inject constructor(
                     }
                 }
             })
-
     }
 
     /**
@@ -275,7 +281,6 @@ class SyncGroupsDialogViewModel @Inject constructor(
                     }
                 }
             })
-
     }
 
     /**
@@ -306,7 +311,6 @@ class SyncGroupsDialogViewModel @Inject constructor(
                     }
                 }
             })
-
     }
 
     /**
@@ -339,7 +343,6 @@ class SyncGroupsDialogViewModel @Inject constructor(
                     }
                 }
             })
-
     }
 
     /**
@@ -350,12 +353,12 @@ class SyncGroupsDialogViewModel @Inject constructor(
      */
     private fun checkAccountsSyncStatusAndSyncClientAccounts() {
         if (mLoanAccountList.isNotEmpty() && !mLoanAccountSyncStatus) {
-            //Sync the Active Loan and LoanRepayment
+            // Sync the Active Loan and LoanRepayment
             mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let {
                 syncClientLoanAndLoanRepayment(it)
             }
         } else if (mSavingsAccountList.isNotEmpty()) {
-            //Sync the Active Savings Account
+            // Sync the Active Savings Account
             mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint?.let {
                 mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
                     syncClientSavingsAccountAndTemplate(it, it1)
@@ -383,11 +386,11 @@ class SyncGroupsDialogViewModel @Inject constructor(
         val clientAccounts = repository.syncClientAccounts(clientId)
         mLoanAccountList = getActiveLoanAccounts(
             clientAccounts
-                .loanAccounts
+                .loanAccounts,
         )
         mSavingsAccountList = getSyncableSavingsAccounts(
             clientAccounts
-                .savingsAccounts
+                .savingsAccounts,
         )
         checkAccountsSyncStatusAndSyncClientAccounts()
     }
@@ -421,7 +424,6 @@ class SyncGroupsDialogViewModel @Inject constructor(
                     }
                 }
             })
-
     }
 
     /**
@@ -433,7 +435,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
      */
     private fun syncClientSavingsAccountAndTemplate(
         savingsAccountType: String,
-        savingsAccountId: Int
+        savingsAccountId: Int,
     ) {
         getSavingsAccountAndTemplate(savingsAccountType, savingsAccountId)
             .subscribe(object : Subscriber<SavingsAccountAndTransactionTemplate>() {
@@ -450,7 +452,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
                                 mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
                                     syncClientSavingsAccountAndTemplate(
                                         it,
-                                        it1
+                                        it1,
                                     )
                                 }
                             }
@@ -459,7 +461,6 @@ class SyncGroupsDialogViewModel @Inject constructor(
                     }
                 }
             })
-
     }
 
     /**
@@ -479,7 +480,6 @@ class SyncGroupsDialogViewModel @Inject constructor(
                 mGroupSyncIndex += 1
                 syncGroups()
             }
-
     }
 
     /**
@@ -491,11 +491,11 @@ class SyncGroupsDialogViewModel @Inject constructor(
     private fun getLoanAndLoanRepayment(loanId: Int): Observable<LoanAndLoanRepayment> {
         return Observable.combineLatest(
             repository.syncLoanById(loanId),
-            repository.syncLoanRepaymentTemplate(loanId)
+            repository.syncLoanRepaymentTemplate(loanId),
         ) { loanWithAssociations, loanRepaymentTemplate ->
             LoanAndLoanRepayment(
                 loanWithAssociations,
-                loanRepaymentTemplate
+                loanRepaymentTemplate,
             )
         }
             .observeOn(AndroidSchedulers.mainThread())
@@ -510,20 +510,24 @@ class SyncGroupsDialogViewModel @Inject constructor(
      * @return SavingsAccountAndTransactionTemplate
      */
     private fun getSavingsAccountAndTemplate(
-        savingsAccountType: String, savingsAccountId: Int
+        savingsAccountType: String,
+        savingsAccountId: Int,
     ): Observable<SavingsAccountAndTransactionTemplate> {
         return Observable.combineLatest(
             repository.syncSavingsAccount(
-                savingsAccountType, savingsAccountId,
-                Constants.TRANSACTIONS
+                savingsAccountType,
+                savingsAccountId,
+                Constants.TRANSACTIONS,
             ),
             repository.syncSavingsAccountTransactionTemplate(
                 savingsAccountType,
-                savingsAccountId, Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT
-            )
+                savingsAccountId,
+                Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT,
+            ),
         ) { savingsAccountWithAssociations, savingsAccountTransactionTemplate ->
             SavingsAccountAndTransactionTemplate(
-                savingsAccountWithAssociations, savingsAccountTransactionTemplate
+                savingsAccountWithAssociations,
+                savingsAccountTransactionTemplate,
             )
         }
             .observeOn(AndroidSchedulers.mainThread())
@@ -542,14 +546,14 @@ class SyncGroupsDialogViewModel @Inject constructor(
     }
 
     private fun checkNetworkConnection(
-        taskWhenOnline: () -> Unit
+        taskWhenOnline: () -> Unit,
     ) {
         if (networkUtilsWrapper.isNetworkConnected()) {
             taskWhenOnline.invoke()
         } else {
             _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.Error(
                 messageResId = R.string.feature_groups_error_not_connected_internet,
-                imageVector = MifosIcons.WifiOff
+                imageVector = MifosIcons.WifiOff,
             )
         }
     }
@@ -567,7 +571,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
                 savingsAccount.status?.active == true &&
-                        !savingsAccount.depositType!!.isRecurring
+                    !savingsAccount.depositType!!.isRecurring
             }
             .subscribe { savingsAccount -> accounts.add(savingsAccount) }
         return accounts
@@ -578,8 +582,8 @@ class SyncGroupsDialogViewModel @Inject constructor(
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
                 savingsAccount.depositType?.value == "Savings" &&
-                        savingsAccount.status?.active == true &&
-                        !savingsAccount.depositType!!.isRecurring
+                    savingsAccount.status?.active == true &&
+                    !savingsAccount.depositType!!.isRecurring
             }
             .subscribe { savingsAccount -> accounts.add(savingsAccount) }
         return accounts

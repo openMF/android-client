@@ -87,7 +87,7 @@ internal fun NoteScreen(
         title = stringResource(id = R.string.feature_note_Note),
         onBackPressed = onBackPressed,
         snackbarHostState = snackBarHostState,
-        modifier = modifier
+        modifier = modifier,
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -150,7 +150,7 @@ private fun NoteContent(
     notes: List<Note>,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn (modifier = modifier) {
+    LazyColumn(modifier = modifier) {
         items(notes) { note ->
             note.noteContent?.let { NoteItem(noteTitle = it) }
         }

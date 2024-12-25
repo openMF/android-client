@@ -66,8 +66,8 @@ internal fun SettingsScreen(
     navigateToLoginScreen: () -> Unit,
     changePasscode: (String) -> Unit,
     languageChanged: () -> Unit,
+    viewModel: SettingsViewModel = hiltViewModel(),
 ) {
-    val viewModel: SettingsViewModel = hiltViewModel()
     val baseURL by viewModel.baseUrl.collectAsStateWithLifecycle()
     val tenant by viewModel.tenant.collectAsStateWithLifecycle()
     val passcode by viewModel.passcode.collectAsStateWithLifecycle()

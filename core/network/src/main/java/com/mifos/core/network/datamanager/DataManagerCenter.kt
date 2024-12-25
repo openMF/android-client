@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.data.CenterPayload
@@ -29,7 +38,7 @@ class DataManagerCenter @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     private val mDatabaseHelperCenter: DatabaseHelperCenter,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-    private val prefManager: com.mifos.core.datastore.PrefManager
+    private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -49,11 +58,11 @@ class DataManagerCenter @Inject constructor(
      */
     suspend fun getCenters(paged: Boolean, offset: Int, limit: Int): Page<Center> {
         return baseApiManager.getCenterApi()
-                .retrieveAll23(
-                    null, null, null, null, null, paged,
-                    offset, limit, null, null, null, null, null
-                ).let(GetCentersResponseMapper::mapFromEntity)
-        }
+            .retrieveAll23(
+                null, null, null, null, null, paged,
+                offset, limit, null, null, null, null, null,
+            ).let(GetCentersResponseMapper::mapFromEntity)
+    }
 //    suspend fun getCenters(paged: Boolean, offset: Int, limit: Int): Observable<Page<Center>> {
 //        return when (prefManager.userStatus) {
 //            false -> baseApiManager.getCenterApi()
@@ -95,7 +104,7 @@ class DataManagerCenter @Inject constructor(
             .concatMap { centerAccounts ->
                 mDatabaseHelperCenter.saveCenterAccounts(
                     centerAccounts,
-                    centerId
+                    centerId,
                 )
             }
     }
@@ -159,7 +168,7 @@ class DataManagerCenter @Inject constructor(
      * This method loading the all CenterPayloads from the Database.
      *
      * @return List<CenterPayload>
-    </CenterPayload> */
+     </CenterPayload> */
     val allDatabaseCenterPayload: Observable<List<CenterPayload>>
         get() = mDatabaseHelperCenter.readAllCenterPayload()
 
@@ -193,15 +202,16 @@ class DataManagerCenter @Inject constructor(
      */
     suspend fun activateCenter(
         centerId: Int,
-        activatePayload: ActivatePayload?
+        activatePayload: ActivatePayload?,
     ): PostCentersCenterIdResponse {
         return baseApiManager.getCenterApi().activate2(
             centerId.toLong(),
             PostCentersCenterIdRequest(
                 closureDate = activatePayload?.activationDate,
                 dateFormat = activatePayload?.dateFormat,
-                locale = activatePayload?.locale
-            ), "activate"
+                locale = activatePayload?.locale,
+            ),
+            "activate",
         )
     }
 }

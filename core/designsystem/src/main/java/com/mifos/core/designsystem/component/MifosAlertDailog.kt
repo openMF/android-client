@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.designsystem.component
 
 import androidx.compose.foundation.clickable
@@ -34,10 +43,10 @@ fun MifosDialogBox(
     showDialogState: Boolean,
     onDismiss: () -> Unit,
     title: Int,
-    message: Int? = null,
     confirmButtonText: Int,
     onConfirm: () -> Unit,
-    dismissButtonText: Int
+    dismissButtonText: Int,
+    message: Int? = null,
 ) {
     if (showDialogState) {
         AlertDialog(
@@ -52,7 +61,7 @@ fun MifosDialogBox(
                 TextButton(
                     onClick = {
                         onConfirm()
-                    }
+                    },
                 ) {
                     Text(stringResource(id = confirmButtonText))
                 }
@@ -61,11 +70,10 @@ fun MifosDialogBox(
                 TextButton(onClick = onDismiss) {
                     Text(stringResource(id = dismissButtonText))
                 }
-            }
+            },
         )
     }
 }
-
 
 @Composable
 fun MifosRadioButtonDialog(
@@ -74,17 +82,18 @@ fun MifosRadioButtonDialog(
     items: Array<String>,
     selectItem: (item: String, index: Int) -> Unit,
     onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Dialog(
-        onDismissRequest = { onDismissRequest.invoke() }
+        onDismissRequest = { onDismissRequest.invoke() },
     ) {
-        Card {
+        Card(modifier = modifier) {
             Column(modifier = Modifier.padding(20.dp)) {
                 Text(text = stringResource(id = titleResId))
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = 500.dp)
+                        .heightIn(max = 500.dp),
                 ) {
                     itemsIndexed(items = items) { index, item ->
                         Row(
@@ -94,18 +103,18 @@ fun MifosRadioButtonDialog(
                                     onDismissRequest.invoke()
                                     selectItem.invoke(item, index)
                                 }
-                                .fillMaxWidth()
+                                .fillMaxWidth(),
                         ) {
                             RadioButton(
                                 selected = (item == selectedItem),
                                 onClick = {
                                     onDismissRequest.invoke()
                                     selectItem.invoke(item, index)
-                                }
+                                },
                             )
                             Text(
                                 text = item,
-                                modifier = Modifier.padding(start = 4.dp)
+                                modifier = Modifier.padding(start = 4.dp),
                             )
                         }
                     }
@@ -120,17 +129,18 @@ fun UpdateEndpointDialogScreen(
     initialBaseURL: String?,
     initialTenant: String?,
     onDismissRequest: () -> Unit,
-    handleEndpointUpdate: (baseURL: String, tenant: String) -> Unit
+    handleEndpointUpdate: (baseURL: String, tenant: String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var baseURL by rememberSaveable { mutableStateOf(initialBaseURL) }
     var tenant by rememberSaveable { mutableStateOf(initialTenant) }
 
     Dialog(
-        onDismissRequest = { onDismissRequest.invoke() }
+        onDismissRequest = { onDismissRequest.invoke() },
     ) {
         Card {
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .padding(20.dp),
             ) {
@@ -141,7 +151,7 @@ fun UpdateEndpointDialogScreen(
                     OutlinedTextField(
                         value = it,
                         onValueChange = { baseURL = it },
-                        label = { Text(text = stringResource(id = R.string.core_designsystem_enter_base_url)) }
+                        label = { Text(text = stringResource(id = R.string.core_designsystem_enter_base_url)) },
                     )
                 }
 
@@ -151,16 +161,17 @@ fun UpdateEndpointDialogScreen(
                     OutlinedTextField(
                         value = it,
                         onValueChange = { tenant = it },
-                        label = { Text(text = stringResource(id = R.string.core_designsystem_enter_tenant)) }
+                        label = { Text(text = stringResource(id = R.string.core_designsystem_enter_tenant)) },
                     )
                 }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.End,
                 ) {
                     TextButton(
-                        onClick = { onDismissRequest.invoke() }) {
+                        onClick = { onDismissRequest.invoke() },
+                    ) {
                         Text(text = stringResource(id = R.string.core_designsystem_cancel))
                     }
                     TextButton(
@@ -168,9 +179,8 @@ fun UpdateEndpointDialogScreen(
                             if (baseURL != null && tenant != null) {
                                 handleEndpointUpdate.invoke(baseURL ?: "", tenant ?: "")
                             }
-                        }
-                    )
-                    {
+                        },
+                    ) {
                         Text(text = stringResource(id = R.string.core_designsystem_dialog_action_ok))
                     }
                 }

@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.datamanager
 
 import com.google.gson.JsonArray
@@ -22,7 +31,7 @@ import javax.inject.Singleton
 class DataManagerDataTable @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     val mDatabaseHelperDataTable: DatabaseHelperDataTable,
-    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager
+    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
 ) {
     /**
      * This Method Request the REST API of Datatable and In response give the List of DataTable
@@ -32,10 +41,10 @@ class DataManagerDataTable @Inject constructor(
      * 3. m_loan
      * @param tableName DataTable Name
      * @return List<DataTable>
-    </DataTable> */
+     </DataTable> */
     suspend fun getDataTable(tableName: String?): List<DataTable> {
         return baseApiManager.getDataTableApi().getDatatables(tableName).map(
-            GetDataTablesResponseMapper::mapFromEntity
+            GetDataTablesResponseMapper::mapFromEntity,
         )
     }
 
@@ -44,7 +53,9 @@ class DataManagerDataTable @Inject constructor(
     }
 
     suspend fun addDataTableEntry(
-        table: String, entityId: Int, payload: Map<String, String>
+        table: String,
+        entityId: Int,
+        payload: Map<String, String>,
     ): GenericResponse {
         return mBaseApiManager.dataTableApi
             .createEntryInDataTable(table, entityId, payload)
@@ -53,12 +64,12 @@ class DataManagerDataTable @Inject constructor(
     suspend fun deleteDataTableEntry(
         table: String,
         entity: Int,
-        rowId: Int
+        rowId: Int,
     ): DeleteDataTablesDatatableAppTableIdDatatableIdResponse {
         return baseApiManager.getDataTableApi().deleteDatatableEntry(
             datatable = table,
             apptableId = entity.toLong(),
-            datatableId = rowId.toLong()
+            datatableId = rowId.toLong(),
         )
     }
 
@@ -71,7 +82,7 @@ class DataManagerDataTable @Inject constructor(
      */
     fun addUserPathTracking(
         userId: Int,
-        userLocation: UserLocation?
+        userLocation: UserLocation?,
     ): Observable<GenericResponse> {
         return mBaseApiManager.dataTableApi.addUserPathTracking(userId, userLocation)
     }
@@ -81,7 +92,7 @@ class DataManagerDataTable @Inject constructor(
      *
      * @param userId UserId Id
      * @return List<UserLocation>
-    </UserLocation> */
+     </UserLocation> */
     suspend fun getUserPathTracking(userId: Int): List<UserLocation> {
         return mBaseApiManager.dataTableApi.getUserPathTracking(userId)
     }

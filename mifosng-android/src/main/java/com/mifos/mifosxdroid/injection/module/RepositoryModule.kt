@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.mifosxdroid.injection.module
 
 import com.mifos.core.data.repository.CreateNewClientRepository
@@ -46,8 +55,6 @@ import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepository
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepositoryImp
-import com.mifos.mifosxdroid.online.centerlist.CenterListRepository
-import com.mifos.mifosxdroid.online.centerlist.CenterListRepositoryImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,17 +68,10 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 class RepositoryModule {
 
-
-    @Provides
-    fun providesCenterListRepository(dataManagerCenter: DataManagerCenter): CenterListRepository {
-        return CenterListRepositoryImp(dataManagerCenter)
-    }
-
     @Provides
     fun providesSavingsAccountSummaryRepository(dataManagerSavings: DataManagerSavings): SavingsAccountSummaryRepository {
         return SavingsAccountSummaryRepositoryImp(dataManagerSavings)
     }
-
 
     @Provides
     fun providesNoteRepository(dataManagerNote: DataManagerNote): NoteRepository {
@@ -87,10 +87,10 @@ class RepositoryModule {
     fun providesCreateNewClientRepository(
         dataManagerClient: DataManagerClient,
         dataManagerOffices: DataManagerOffices,
-        dataManagerStaff: DataManagerStaff
+        dataManagerStaff: DataManagerStaff,
     ): CreateNewClientRepository {
         return CreateNewClientRepositoryImp(dataManagerClient, dataManagerOffices, dataManagerStaff)
-    }   
+    }
 
     @Provides
     fun providesSavingsAccountTransactionRepository(dataManagerSavings: DataManagerSavings): SavingsAccountTransactionRepository {
@@ -112,7 +112,6 @@ class RepositoryModule {
         return DocumentDialogRepositoryImp(dataManagerDocument)
     }
 
-
     @Provides
     fun providesSyncSurveysDialogRepository(dataManagerSurvey: DataManagerSurveys): SyncSurveysDialogRepository {
         return SyncSurveysDialogRepositoryImp(dataManagerSurvey)
@@ -123,13 +122,13 @@ class RepositoryModule {
         dataManagerGroups: DataManagerGroups,
         dataManagerLoan: DataManagerLoan,
         dataManagerSavings: DataManagerSavings,
-        dataManagerClient: DataManagerClient
+        dataManagerClient: DataManagerClient,
     ): SyncGroupsDialogRepository {
         return SyncGroupsDialogRepositoryImp(
             dataManagerGroups,
             dataManagerLoan,
             dataManagerSavings,
-            dataManagerClient
+            dataManagerClient,
         )
     }
 
@@ -137,12 +136,12 @@ class RepositoryModule {
     fun providesSyncClientsDialogRepository(
         dataManagerClient: DataManagerClient,
         dataManagerLoan: DataManagerLoan,
-        dataManagerSavings: DataManagerSavings
+        dataManagerSavings: DataManagerSavings,
     ): SyncClientsDialogRepository {
         return SyncClientsDialogRepositoryImp(
             dataManagerClient,
             dataManagerLoan,
-            dataManagerSavings
+            dataManagerSavings,
         )
     }
 
@@ -152,14 +151,14 @@ class RepositoryModule {
         dataManagerLoan: DataManagerLoan,
         dataManagerSavings: DataManagerSavings,
         dataManagerGroups: DataManagerGroups,
-        dataManagerClient: DataManagerClient
+        dataManagerClient: DataManagerClient,
     ): SyncCentersDialogRepository {
         return SyncCentersDialogRepositoryImp(
             dataManagerCenter,
             dataManagerLoan,
             dataManagerSavings,
             dataManagerGroups,
-            dataManagerClient
+            dataManagerClient,
         )
     }
 
@@ -169,14 +168,14 @@ class RepositoryModule {
         dataManagerGroups: DataManagerGroups,
         dataManagerCenter: DataManagerCenter,
         dataManagerLoan: DataManagerLoan,
-        dataManagerSavings: DataManagerSavings
+        dataManagerSavings: DataManagerSavings,
     ): OfflineDashboardRepository {
         return OfflineDashboardRepositoryImp(
             dataManagerClient,
             dataManagerGroups,
             dataManagerCenter,
             dataManagerLoan,
-            dataManagerSavings
+            dataManagerSavings,
         )
     }
 
@@ -188,7 +187,7 @@ class RepositoryModule {
     @Provides
     fun providesSyncSavingsAccountTransactionRepository(
         dataManagerSavings: DataManagerSavings,
-        dataManagerLoan: DataManagerLoan
+        dataManagerLoan: DataManagerLoan,
     ): SyncSavingsAccountTransactionRepository {
         return SyncSavingsAccountTransactionRepositoryImp(dataManagerSavings, dataManagerLoan)
     }
