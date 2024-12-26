@@ -44,8 +44,8 @@ object CenterMapper : AbstractMapper<GetCentersPageItems, Center>() {
             status = GetCentersStatus(
                 id = domainModel.status?.id?.toLong(),
                 code = domainModel.status?.code,
-                description = domainModel.status?.value
-            )
+                description = domainModel.status?.value,
+            ),
         )
     }
 }

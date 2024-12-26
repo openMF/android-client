@@ -159,14 +159,20 @@ internal fun SavingsAccountSummaryScreen(
 
             if (showDropdown) {
                 DropdownMenu(expanded = showDropdown, onDismissRequest = { showDropdown = false }) {
-                    MifosMenuDropDownItem(option = stringResource(id = R.string.feature_savings_more_savings_account_info)) {
-                        showDropdown = false
-                        loadMoreSavingsAccountInfo.invoke()
-                    }
-                    MifosMenuDropDownItem(option = stringResource(id = R.string.feature_savings_documents)) {
-                        showDropdown = false
-                        loadDocuments.invoke()
-                    }
+                    MifosMenuDropDownItem(
+                        option = stringResource(id = R.string.feature_savings_more_savings_account_info),
+                        onClick = {
+                            showDropdown = false
+                            loadMoreSavingsAccountInfo.invoke()
+                        },
+                    )
+                    MifosMenuDropDownItem(
+                        option = stringResource(id = R.string.feature_savings_documents),
+                        onClick = {
+                            showDropdown = false
+                            loadDocuments.invoke()
+                        },
+                    )
                 }
             }
         },

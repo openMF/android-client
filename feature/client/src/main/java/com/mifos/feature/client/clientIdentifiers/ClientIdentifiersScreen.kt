@@ -136,9 +136,11 @@ internal fun ClientIdentifiersScreen(
         title = stringResource(id = R.string.feature_client_identifiers),
         onBackPressed = onBackPressed,
         actions = {
-            IconButton(onClick = {
-                showCreateIdentifierDialog = true
-            }) {
+            IconButton(
+                onClick = {
+                    showCreateIdentifierDialog = true
+                },
+            ) {
                 Icon(
                     imageVector = MifosIcons.Add,
                     contentDescription = null,
@@ -260,14 +262,20 @@ private fun ClientIdentifiersItem(
                     expanded = showMenu,
                     onDismissRequest = { showMenu = false },
                 ) {
-                    MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_remove)) {
-                        identifier.id?.let { onDeleteIdentifier(it) }
-                        showMenu = false
-                    }
-                    MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_documents)) {
-                        identifier.id?.let { onDocumentClicked(it) }
-                        showMenu = false
-                    }
+                    MifosMenuDropDownItem(
+                        option = stringResource(id = R.string.feature_client_remove),
+                        onClick = {
+                            identifier.id?.let { onDeleteIdentifier(it) }
+                            showMenu = false
+                        },
+                    )
+                    MifosMenuDropDownItem(
+                        option = stringResource(id = R.string.feature_client_documents),
+                        onClick = {
+                            identifier.id?.let { onDocumentClicked(it) }
+                            showMenu = false
+                        },
+                    )
                 }
             }
         }
@@ -297,7 +305,8 @@ private fun MifosIdentifierDetailsText(field: String, value: String) {
     }
 }
 
-private class ClientIdentifiersUiStateProvider : PreviewParameterProvider<ClientIdentifiersUiState> {
+private class ClientIdentifiersUiStateProvider :
+    PreviewParameterProvider<ClientIdentifiersUiState> {
 
     override val values: Sequence<ClientIdentifiersUiState>
         get() = sequenceOf(

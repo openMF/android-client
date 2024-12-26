@@ -40,9 +40,9 @@ object GetIdentifiersTemplateMapper :
                 GetClientsAllowedDocumentTypes(
                     id = it.id?.toLong(),
                     name = it.name,
-                    position = it.position
+                    position = it.position,
                 )
-            }?.toSet()
+            }?.toSet(),
         )
     }
 }

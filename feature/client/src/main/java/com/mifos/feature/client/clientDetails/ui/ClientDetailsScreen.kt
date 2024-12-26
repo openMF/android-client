@@ -236,46 +236,76 @@ internal fun ClientDetailsScreen(
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false },
             ) {
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_add_loan_account)) {
-                    addLoanAccount(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_add_savings_account)) {
-                    addSavingsAccount(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_charges)) {
-                    charges(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_documents)) {
-                    documents(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_identifiers)) {
-                    identifiers(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_more_client_info)) {
-                    moreClientInfo(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_notes)) {
-                    notes(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_pinpoint_location)) {
-                    pinpointLocation(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_survey)) {
-                    survey(clientId)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_client_upload_signature)) {
-                    uploadSignature(clientId)
-                    showMenu = false
-                }
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_client_add_loan_account),
+                    onClick = {
+                        addLoanAccount(clientId)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_client_add_savings_account),
+                    onClick = {
+                        addSavingsAccount(clientId)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_client_charges),
+                    onClick = {
+                        charges(clientId)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_client_documents),
+                    onClick = {
+                        documents(clientId)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_client_identifiers),
+                    onClick = {
+                        identifiers(clientId)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_client_more_client_info),
+                    onClick = {
+                        moreClientInfo(clientId)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_client_notes),
+                    onClick = {
+                        notes(clientId)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_client_pinpoint_location),
+                    onClick = {
+                        pinpointLocation(clientId)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_client_survey),
+                    onClick = {
+                        survey(clientId)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_client_upload_signature),
+                    onClick = {
+                        uploadSignature(clientId)
+                        showMenu = false
+                    },
+                )
             }
         },
         snackbarHostState = snackbarHostState,
@@ -378,9 +408,11 @@ private fun MifosClientDetailsScreen(
                 modifier = Modifier
                     .size(75.dp)
                     .clip(RoundedCornerShape(100))
-                    .clickable(onClick = {
-                        showSelectImageDialog = true
-                    }),
+                    .clickable(
+                        onClick = {
+                            showSelectImageDialog = true
+                        },
+                    ),
                 model = if (client?.imagePresent == true) {
                     client.clientId?.let {
                         scope.launch {
@@ -581,13 +613,15 @@ private fun MifosLoanAccountsLazyColumn(
                 Row(
                     modifier = Modifier
                         .padding(5.dp)
-                        .clickable(onClick = {
-                            loanAccount.id?.let {
-                                loanAccountSelected(
-                                    it,
-                                )
-                            }
-                        }),
+                        .clickable(
+                            onClick = {
+                                loanAccount.id?.let {
+                                    loanAccountSelected(
+                                        it,
+                                    )
+                                }
+                            },
+                        ),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Canvas(
@@ -754,16 +788,18 @@ private fun MifosSavingsAccountsLazyColumn(
                 Row(
                     modifier = Modifier
                         .padding(5.dp)
-                        .clickable(onClick = {
-                            savingsAccount.id?.let {
-                                savingsAccount.depositType?.let { it1 ->
-                                    savingsAccountSelected(
-                                        it,
-                                        it1,
-                                    )
+                        .clickable(
+                            onClick = {
+                                savingsAccount.id?.let {
+                                    savingsAccount.depositType?.let { it1 ->
+                                        savingsAccountSelected(
+                                            it,
+                                            it1,
+                                        )
+                                    }
                                 }
-                            }
-                        }),
+                            },
+                        ),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Canvas(

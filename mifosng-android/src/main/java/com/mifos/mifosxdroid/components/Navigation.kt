@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.mifosxdroid.components
 
 import android.widget.Toast
@@ -21,12 +30,9 @@ import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.client.navigation.navigateCreateClientScreen
 import com.mifos.feature.client.navigation.navigateSurveyQuestionScreen
 import com.mifos.feature.client.navigation.navigateToClientListScreen
-
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
 import com.mifos.feature.dataTable.navigation.navigateDataTableList
 import com.mifos.feature.dataTable.navigation.navigateToDataTable
-
-
 import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.groupNavGraph
@@ -77,13 +83,13 @@ fun Navigation(
             documents = {
                 navController.navigateToDocumentListScreen(
                     it,
-                    Constants.ENTITY_TYPE_CLIENTS
+                    Constants.ENTITY_TYPE_CLIENTS,
                 )
             },
             moreClientInfo = {
                 navController.navigateToDataTable(
                     Constants.DATA_TABLE_NAME_CLIENT,
-                    it
+                    it,
                 )
             },
             notes = { navController.navigateToNoteScreen(it, Constants.ENTITY_TYPE_CLIENTS) },
@@ -94,11 +100,11 @@ fun Navigation(
             activateClient = {
                 navController.navigateToActivateScreen(
                     it,
-                    Constants.ACTIVATE_CLIENT
+                    Constants.ACTIVATE_CLIENT,
                 )
             },
-            hasDatatables = navController :: navigateDataTableList,
-            onDocumentClicked = navController :: navigateToDocumentListScreen,
+            hasDatatables = navController::navigateDataTableList,
+            onDocumentClicked = navController::navigateToDocumentListScreen,
             onCardClicked = { position, survey ->
                 val id: Int = survey[position].id
                 navController.navigateSurveyQuestionScreen(id)
@@ -116,7 +122,7 @@ fun Navigation(
             loadNotes = navController::navigateToNoteScreen,
             loadLoanAccountSummary = navController::navigateToLoanAccountSummaryScreen,
             loadSavingsAccountSummary = navController::navigateToSavingsAccountSummaryScreen,
-            activateGroup = navController::navigateToActivateScreen
+            activateGroup = navController::navigateToActivateScreen,
         )
 
         groupLoanScreen { navController.popBackStack() }
@@ -176,7 +182,7 @@ fun Navigation(
                 navController.navigateToAddSavingsAccount(it, 0, true)
             },
 
-            )
+        )
 
         reportNavGraph(
             navController = navController,
@@ -213,7 +219,7 @@ fun Navigation(
             clientCreated = { client, userStatus ->
                 navController.popBackStack()
                 navController.popBackStack()
-                Toast.makeText(context, context.resources.getString(R.string.client) + MifosResponseHandler.response, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.resources.getString(R.string.client) + MifosResponseHandler.getResponse(userStatus), Toast.LENGTH_LONG).show()
 
                 if (userStatus == Constants.USER_ONLINE) {
                     client.clientId?.let { navController.navigateClientDetailsScreen(it) }

@@ -172,7 +172,7 @@ complexity:
   LongParameterList:
     active: true
     # Updating Common values based on current scenario
-    functionThreshold: 20 #6
+    functionThreshold: 30 #6
     constructorThreshold: 30 #7
     ignoreDefaultParameters: false
     ignoreDataClasses: true

@@ -174,30 +174,48 @@ internal fun GroupDetailsScreen(
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false },
             ) {
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_groups_add_loan_account)) {
-                    onMenuClick(MenuItems.ADD_LOAN_ACCOUNT)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_groups_add_savings_account)) {
-                    onMenuClick(MenuItems.ADD_SAVINGS_ACCOUNT)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_groups_documents)) {
-                    onMenuClick(MenuItems.DOCUMENTS)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_groups_group_clients)) {
-                    onMenuClick(MenuItems.GROUP_CLIENTS)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_groups_more_group_info)) {
-                    onMenuClick(MenuItems.MORE_GROUP_INFO)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_groups_notes)) {
-                    onMenuClick(MenuItems.NOTES)
-                    showMenu = false
-                }
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_groups_add_loan_account),
+                    onClick = {
+                        onMenuClick(MenuItems.ADD_LOAN_ACCOUNT)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_groups_add_savings_account),
+                    onClick = {
+                        onMenuClick(MenuItems.ADD_SAVINGS_ACCOUNT)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_groups_documents),
+                    onClick = {
+                        onMenuClick(MenuItems.DOCUMENTS)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_groups_group_clients),
+                    onClick = {
+                        onMenuClick(MenuItems.GROUP_CLIENTS)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_groups_more_group_info),
+                    onClick = {
+                        onMenuClick(MenuItems.MORE_GROUP_INFO)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_groups_notes),
+                    onClick = {
+                        onMenuClick(MenuItems.NOTES)
+                        showMenu = false
+                    },
+                )
             }
         },
         snackbarHostState = snackbarHostState,

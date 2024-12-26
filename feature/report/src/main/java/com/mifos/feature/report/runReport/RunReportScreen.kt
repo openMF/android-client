@@ -163,41 +163,62 @@ internal fun RunReportScreen(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false },
                     ) {
-                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_report_client)) {
-                            onMenuClick(MenuItems.Client)
-                            menuTitle = MenuItems.Client.name
-                            showMenu = false
-                        }
-                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_report_loan)) {
-                            onMenuClick(MenuItems.Loan)
-                            menuTitle = MenuItems.Loan.name
-                            showMenu = false
-                        }
-                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_report_savings)) {
-                            onMenuClick(MenuItems.Savings)
-                            menuTitle = MenuItems.Savings.name
-                            showMenu = false
-                        }
-                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_report_fund)) {
-                            onMenuClick(MenuItems.Fund)
-                            menuTitle = MenuItems.Fund.name
-                            showMenu = false
-                        }
-                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_report_accounting)) {
-                            onMenuClick(MenuItems.Accounting)
-                            menuTitle = MenuItems.Accounting.name
-                            showMenu = false
-                        }
-                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_report_xbrl)) {
-                            onMenuClick(MenuItems.XBRL)
-                            menuTitle = MenuItems.XBRL.name
-                            showMenu = false
-                        }
-                        MifosMenuDropDownItem(option = stringResource(id = R.string.feature_report_all)) {
-                            onMenuClick(MenuItems.All)
-                            menuTitle = MenuItems.All.name
-                            showMenu = false
-                        }
+                        MifosMenuDropDownItem(
+                            option = stringResource(id = R.string.feature_report_client),
+                            onClick = {
+                                onMenuClick(MenuItems.Client)
+                                menuTitle = MenuItems.Client.name
+                                showMenu = false
+                            },
+                        )
+                        MifosMenuDropDownItem(
+                            option = stringResource(id = R.string.feature_report_loan),
+                            onClick = {
+                                onMenuClick(MenuItems.Loan)
+                                menuTitle = MenuItems.Loan.name
+                                showMenu = false
+                            },
+                        )
+                        MifosMenuDropDownItem(
+                            option = stringResource(id = R.string.feature_report_savings),
+                            onClick = {
+                                onMenuClick(MenuItems.Savings)
+                                menuTitle = MenuItems.Savings.name
+                                showMenu = false
+                            },
+                        )
+                        MifosMenuDropDownItem(
+                            option = stringResource(id = R.string.feature_report_fund),
+                            onClick = {
+                                onMenuClick(MenuItems.Fund)
+                                menuTitle = MenuItems.Fund.name
+                                showMenu = false
+                            },
+                        )
+                        MifosMenuDropDownItem(
+                            option = stringResource(id = R.string.feature_report_accounting),
+                            onClick = {
+                                onMenuClick(MenuItems.Accounting)
+                                menuTitle = MenuItems.Accounting.name
+                                showMenu = false
+                            },
+                        )
+                        MifosMenuDropDownItem(
+                            option = stringResource(id = R.string.feature_report_xbrl),
+                            onClick = {
+                                onMenuClick(MenuItems.XBRL)
+                                menuTitle = MenuItems.XBRL.name
+                                showMenu = false
+                            },
+                        )
+                        MifosMenuDropDownItem(
+                            option = stringResource(id = R.string.feature_report_all),
+                            onClick = {
+                                onMenuClick(MenuItems.All)
+                                menuTitle = MenuItems.All.name
+                                showMenu = false
+                            },
+                        )
                     }
                 },
                 actions = {},

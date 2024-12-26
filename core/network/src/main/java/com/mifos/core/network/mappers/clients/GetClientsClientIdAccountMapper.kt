@@ -109,7 +109,7 @@ object GetClientsClientIdAccountMapper :
                     depositType = GetClientsSavingsAccountsDepositType(
                         id = it.depositType?.id?.toLong(),
                         code = it.depositType?.code,
-                        value = it.depositType?.value
+                        value = it.depositType?.value,
                     ),
                     status = GetClientsSavingsAccountsStatus(
                         id = it.status?.id?.toLong(),
@@ -120,15 +120,15 @@ object GetClientsClientIdAccountMapper :
                         rejected = it.status?.rejected,
                         withdrawnByApplicant = it.status?.withdrawnByApplicant,
                         active = it.status?.active,
-                        closed = it.status?.closed
+                        closed = it.status?.closed,
                     ),
                     currency = GetClientsSavingsAccountsCurrency(
                         code = it.currency!!.code,
                         name = it.currency!!.name,
                         nameCode = it.currency!!.nameCode,
                         decimalPlaces = it.currency!!.decimalPlaces,
-                        displaySymbol = it.currency!!.displaySymbol
-                    )
+                        displaySymbol = it.currency!!.displaySymbol,
+                    ),
                 )
             }.toSet(),
             loanAccounts = domainModel.loanAccounts.map {
@@ -154,11 +154,11 @@ object GetClientsClientIdAccountMapper :
                     loanType = GetClientsLoanAccountsType(
                         id = it.loanType?.id?.toLong(),
                         code = it.loanType?.code,
-                        description = it.loanType?.value
+                        description = it.loanType?.value,
                     ),
-                    loanCycle = it.loanCycle
+                    loanCycle = it.loanCycle,
                 )
-            }.toSet()
+            }.toSet(),
         )
     }
 }

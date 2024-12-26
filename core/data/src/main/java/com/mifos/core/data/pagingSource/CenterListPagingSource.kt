@@ -1,3 +1,12 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.data.pagingSource
 
 import androidx.paging.PagingSource
@@ -18,7 +27,7 @@ class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
     override fun getRefreshKey(state: PagingState<Int, Center>): Int? {
         return state.anchorPosition?.let { position ->
             state.closestPageToPosition(position)?.prevKey?.plus(10) ?: state.closestPageToPosition(
-                position
+                position,
             )?.nextKey?.minus(10)
         }
     }
@@ -34,7 +43,7 @@ class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
             LoadResult.Page(
                 data = centerListWithSync,
                 prevKey = if (position <= 0) null else position - 10,
-                nextKey = if (position >= totalCenters) null else position + 10
+                nextKey = if (position >= totalCenters) null else position + 10,
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
@@ -48,7 +57,6 @@ class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
 
     private suspend fun getCenterDbList(): List<Center> = suspendCoroutine { continuation ->
         try {
-
             dataManagerCenter.allDatabaseCenters
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -69,10 +77,9 @@ class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
         }
     }
 
-
     private fun getCenterListWithSync(
         centerList: List<Center>,
-        centerDbList: List<Center>
+        centerDbList: List<Center>,
     ): List<Center> {
         if (centerDbList.isNotEmpty()) {
             centerList.forEach { center ->

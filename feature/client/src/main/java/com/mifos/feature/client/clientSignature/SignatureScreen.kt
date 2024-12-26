@@ -111,15 +111,7 @@ internal fun SignatureScreen(
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val drawColor by remember { mutableStateOf(Color.Black) }
     val drawBrush by remember { mutableFloatStateOf(5f) }
-    val usedColors by remember {
-        mutableStateOf(
-            mutableSetOf(
-                Color.Black,
-                Color.White,
-                Color.Gray,
-            ),
-        )
-    }
+
     var paths by remember { mutableStateOf(mutableListOf<PathState>()) }
 
     val galleryLauncher = rememberLauncherForActivityResult(
@@ -218,8 +210,6 @@ internal fun SignatureScreen(
                     MifosDrawingCanvas(
                         drawColor = drawColor,
                         drawBrush = drawBrush,
-                        usedColors = usedColors,
-                        paths = paths,
                     )
                 }
             }

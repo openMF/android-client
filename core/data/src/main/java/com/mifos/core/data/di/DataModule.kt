@@ -50,6 +50,7 @@ import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.data.repository.SurveyQuestionRepository
 import com.mifos.core.data.repository.SurveySubmitRepository
+import com.mifos.core.data.repositoryImp.ActivateRepositoryImp
 import com.mifos.core.data.repositoryImp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.CenterListRepositoryImp
 import com.mifos.core.data.repositoryImp.ChargeDialogRepositoryImp
@@ -57,8 +58,10 @@ import com.mifos.core.data.repositoryImp.CheckerInboxRepositoryImp
 import com.mifos.core.data.repositoryImp.CheckerInboxTasksRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientChargeRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientIdentifierDialogRepositoryImp
+import com.mifos.core.data.repositoryImp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repositoryImp.CreateNewCenterRepositoryImp
 import com.mifos.core.data.repositoryImp.CreateNewGroupRepositoryImp
+import com.mifos.core.data.repositoryImp.DataTableDataRepositoryImp
 import com.mifos.core.data.repositoryImp.DataTableListRepositoryImp
 import com.mifos.core.data.repositoryImp.DataTableRepositoryImp
 import com.mifos.core.data.repositoryImp.DataTableRowDialogRepositoryImp
@@ -88,9 +91,6 @@ import com.mifos.core.data.repositoryImp.SignatureRepositoryImp
 import com.mifos.core.data.repositoryImp.SurveyListRepositoryImp
 import com.mifos.core.data.repositoryImp.SurveySubmitRepositoryImp
 import com.mifos.core.data.repository_imp.SurveyQuestionRepositoryImp
-import com.mifos.core.data.repository_imp.ActivateRepositoryImp
-import com.mifos.core.data.repository_imp.ClientIdentifiersRepositoryImp
-import com.mifos.core.data.repository_imp.DataTableDataRepositoryImp
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -43,9 +43,9 @@ object IdentifierMapper : AbstractMapper<GetClientsClientIdIdentifiersResponse, 
             documentType = domainModel.documentType?.let {
                 GetClientsDocumentType(
                     id = it.id?.toLong(),
-                    name = it.name
+                    name = it.name,
                 )
-            }
+            },
         )
     }
 }

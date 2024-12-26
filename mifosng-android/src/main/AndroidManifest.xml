@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2024 Mifos Initiative
+
+    This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at https://mozilla.org/MPL/2.0/.
+
+    See https://github.com/openMF/android-client/blob/master/LICENSE.md
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-
     <uses-feature android:name="android.hardware.camera.any"/>
 
     <uses-sdk tools:overrideLibrary="androidx.core.splashscreen" />
@@ -25,7 +26,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:windowSoftInputMode="adjustResize"
-        android:theme="@style/MaterialAppTheme">
+        android:theme="@style/Theme.AndroidClientTheme">
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -46,21 +47,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activity.home.HomeActivity"
-            android:label="home_activity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.mifos.mifosxdroid.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/feature_client_path_provider" />
-        </provider>
     </application>
 
 </manifest>

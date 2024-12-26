@@ -49,8 +49,8 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, Client>() {
             status = GetClientStatus(
                 id = domainModel.status?.id?.toLong(),
                 code = domainModel.status?.code,
-                description = domainModel.status?.value
-            )
+                description = domainModel.status?.value,
+            ),
         )
     }
 }
