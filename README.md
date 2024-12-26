@@ -43,7 +43,7 @@ After making changes in your local repository, you will need to commit them to y
 If you are unfamiliar with the process of committing changes, please refer to the [Committing Your Changes](https://github.com/openMF/android-client/wiki/Committing-Your-Changes) guide.
 
 ### Squashing Your Commits
-To ensure a clean and organized Git history, contributors are encouraged to squash their commits before merging. Instructions on how to squash commits can be found in the [Squashing Your Commits](https://github.com/openMF/mifos-mobile/wiki/Squashing-Your-Commits) guide.
+To ensure a clean and organized Git history, contributors are encouraged to squash their commits before merging. Instructions on how to squash commits can be found in the [Squashing Your Commits](https://github.com/openMF/android-client/wiki/Squashing-Your-Commits) guide.
 
 ### Resolving Merge Conflicts
 Occasionally, merge conflicts may arise when your pull request is being reviewed. These conflicts need to be resolved manually.
