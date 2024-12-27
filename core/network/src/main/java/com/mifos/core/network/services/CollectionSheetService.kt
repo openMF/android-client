@@ -10,12 +10,12 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.APIEndPoint
+import com.mifos.core.modelobjects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.core.objects.collectionsheet.CenterDetail
 import com.mifos.core.objects.collectionsheet.CollectionSheetPayload
-import com.mifos.core.modelobjects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.objects.collectionsheet.CollectionSheetResponse
 import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
 import com.mifos.core.objects.collectionsheet.ProductiveCollectionSheetPayload

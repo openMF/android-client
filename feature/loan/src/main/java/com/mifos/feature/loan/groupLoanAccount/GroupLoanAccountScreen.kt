@@ -58,7 +58,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -70,6 +69,7 @@ import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.modelobjects.organisations.LoanProducts
 import com.mifos.core.modelobjects.template.loan.GroupLoanTemplate
+import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.feature.loan.R
 import java.text.SimpleDateFormat
 import java.util.Locale

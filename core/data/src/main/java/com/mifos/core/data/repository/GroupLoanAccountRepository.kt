@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.payloads.GroupLoanPayload
-import com.mifos.core.objects.accounts.loan.Loans
 import com.mifos.core.modelobjects.template.loan.GroupLoanTemplate
+import com.mifos.core.objects.accounts.loan.Loans
+import com.mifos.core.payloads.GroupLoanPayload
 import rx.Observable
 
 /**

@@ -11,16 +11,16 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperClient
 import com.mifos.core.databasehelper.DatabaseHelperGroups
+import com.mifos.core.modelobjects.clients.ActivatePayload
+import com.mifos.core.modelobjects.clients.Page
+import com.mifos.core.modelobjects.responses.SaveResponse
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.groups.GetGroupsResponseMapper
 import com.mifos.core.objects.accounts.GroupAccounts
-import com.mifos.core.modelobjects.clients.ActivatePayload
-import com.mifos.core.modelobjects.clients.Page
 import com.mifos.core.objects.group.Group
 import com.mifos.core.objects.group.GroupPayload
 import com.mifos.core.objects.group.GroupWithAssociations
-import com.mifos.core.modelobjects.responses.SaveResponse
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton

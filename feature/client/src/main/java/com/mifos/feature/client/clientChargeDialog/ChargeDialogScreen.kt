@@ -58,7 +58,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.payloads.ChargesPayload
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -68,6 +67,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.White
 import com.mifos.core.modelobjects.template.client.ChargeTemplate
+import com.mifos.core.payloads.ChargesPayload
 import com.mifos.feature.client.R
 import java.text.SimpleDateFormat
 import java.util.Locale

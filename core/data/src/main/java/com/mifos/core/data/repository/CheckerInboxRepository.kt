@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.network.GenericResponse
 import com.mifos.core.modelobjects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.modelobjects.checkerinboxtask.CheckerTask
+import com.mifos.core.network.GenericResponse
 
 interface CheckerInboxRepository {
 

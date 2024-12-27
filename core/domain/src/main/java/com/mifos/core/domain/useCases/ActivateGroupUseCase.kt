@@ -11,8 +11,8 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ActivateRepository
-import com.mifos.core.network.GenericResponse
 import com.mifos.core.modelobjects.clients.ActivatePayload
+import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

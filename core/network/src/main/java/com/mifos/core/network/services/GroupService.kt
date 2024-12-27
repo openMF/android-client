@@ -10,14 +10,14 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.GroupAccounts
 import com.mifos.core.modelobjects.clients.ActivatePayload
 import com.mifos.core.modelobjects.clients.Page
+import com.mifos.core.modelobjects.responses.SaveResponse
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.accounts.GroupAccounts
 import com.mifos.core.objects.group.Group
 import com.mifos.core.objects.group.GroupPayload
 import com.mifos.core.objects.group.GroupWithAssociations
-import com.mifos.core.modelobjects.responses.SaveResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

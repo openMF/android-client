@@ -68,8 +68,8 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.objects.noncore.DataTable
 import com.mifos.core.modelobjects.organisations.LoanProducts
+import com.mifos.core.objects.noncore.DataTable
 import com.mifos.core.objects.templates.loans.LoanTemplate
 import com.mifos.feature.loan.R
 import java.text.SimpleDateFormat

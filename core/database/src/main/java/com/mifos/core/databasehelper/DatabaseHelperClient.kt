@@ -14,6 +14,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.MapDeserializer
+import com.mifos.core.modelobjects.clients.Page
 import com.mifos.core.objects.accounts.ClientAccounts
 import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.core.objects.accounts.loan.LoanAccount_Table
@@ -24,7 +25,6 @@ import com.mifos.core.objects.client.ClientDate
 import com.mifos.core.objects.client.ClientPayload
 import com.mifos.core.objects.client.ClientPayload_Table
 import com.mifos.core.objects.client.Client_Table
-import com.mifos.core.modelobjects.clients.Page
 import com.mifos.core.objects.group.GroupWithAssociations
 import com.mifos.core.objects.noncore.ColumnHeader
 import com.mifos.core.objects.noncore.ColumnHeader_Table

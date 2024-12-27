@@ -9,10 +9,10 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.payloads.ChargesPayload
 import com.mifos.core.data.repository.LoanChargeDialogRepository
-import com.mifos.core.network.DataManager
 import com.mifos.core.modelobjects.clients.ChargeCreationResponse
+import com.mifos.core.network.DataManager
+import com.mifos.core.payloads.ChargesPayload
 import okhttp3.ResponseBody
 import javax.inject.Inject
 

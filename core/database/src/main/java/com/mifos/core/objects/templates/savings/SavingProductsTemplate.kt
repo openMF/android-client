@@ -10,10 +10,10 @@
 package com.mifos.core.objects.templates.savings
 
 import android.os.Parcelable
-import com.mifos.core.objects.accounts.savings.Currency
 import com.mifos.core.modelobjects.account.saving.FieldOfficerOptions
 import com.mifos.core.modelobjects.commonfiles.InterestType
 import com.mifos.core.modelobjects.template.saving.AccountOptions
+import com.mifos.core.objects.accounts.savings.Currency
 import kotlinx.parcelize.Parcelize
 
 /*

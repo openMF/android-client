@@ -16,10 +16,10 @@ import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.SaveIndividualCollectionSheetUseCase
+import com.mifos.core.modelobjects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.objects.collectionsheet.ClientCollectionSheet
 import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
-import com.mifos.core.modelobjects.collectionsheets.LoanAndClientName
 import com.mifos.feature.collection_sheet.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

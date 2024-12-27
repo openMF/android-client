@@ -11,14 +11,14 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.data.LoansPayload
 import com.mifos.core.databasehelper.DatabaseHelperLoan
+import com.mifos.core.modelobjects.account.loan.LoanDisbursement
+import com.mifos.core.modelobjects.account.loan.LoanRepaymentResponse
+import com.mifos.core.modelobjects.organisations.LoanProducts
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.modelobjects.account.loan.LoanDisbursement
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.modelobjects.account.loan.LoanRepaymentResponse
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import com.mifos.core.objects.accounts.loan.Loans
-import com.mifos.core.modelobjects.organisations.LoanProducts
 import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.objects.templates.loans.LoanTemplate
 import com.mifos.core.objects.templates.loans.LoanTransactionTemplate

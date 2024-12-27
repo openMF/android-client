@@ -14,12 +14,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetGroupLoansAccountTemplateUseCase
 import com.mifos.core.modelobjects.organisations.LoanProducts
 import com.mifos.core.modelobjects.template.loan.GroupLoanTemplate
+import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.feature.loan.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

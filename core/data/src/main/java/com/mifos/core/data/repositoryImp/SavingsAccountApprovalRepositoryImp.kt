@@ -10,9 +10,9 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SavingsAccountApprovalRepository
+import com.mifos.core.modelobjects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.core.modelobjects.account.loan.SavingsApproval
 import rx.Observable
 import javax.inject.Inject
 

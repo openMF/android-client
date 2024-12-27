@@ -9,8 +9,8 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.network.GenericResponse
 import com.mifos.core.modelobjects.account.loan.SavingsApproval
+import com.mifos.core.network.GenericResponse
 import rx.Observable
 
 /**

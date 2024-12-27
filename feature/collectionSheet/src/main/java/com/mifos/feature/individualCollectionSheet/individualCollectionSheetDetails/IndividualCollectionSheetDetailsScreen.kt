@@ -65,11 +65,11 @@ import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.LightGray
 import com.mifos.core.designsystem.theme.White
 import com.mifos.core.model.BulkRepaymentTransactions
-import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.modelobjects.account.loan.PaymentTypeOptions
+import com.mifos.core.modelobjects.collectionsheets.LoanAndClientName
+import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.objects.collectionsheet.ClientCollectionSheet
 import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
-import com.mifos.core.modelobjects.collectionsheets.LoanAndClientName
 import com.mifos.feature.collection_sheet.R
 
 @Composable

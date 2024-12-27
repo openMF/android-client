@@ -19,4 +19,4 @@ import kotlinx.parcelize.Parcelize
 class IdentifierTemplate(
     var allowedDocumentTypes: List<DocumentType>? = ArrayList(),
 
-    ) : Parcelable
+) : Parcelable

@@ -9,11 +9,11 @@
  */
 package com.mifos.core.databasehelper
 
+import com.mifos.core.modelobjects.account.loan.LoanRepaymentResponse
 import com.mifos.core.objects.PaymentTypeOption
 import com.mifos.core.objects.accounts.loan.ActualDisbursementDate
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest_Table
-import com.mifos.core.modelobjects.account.loan.LoanRepaymentResponse
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations_Table
 import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate

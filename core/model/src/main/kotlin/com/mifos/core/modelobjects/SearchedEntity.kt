@@ -33,7 +33,7 @@ data class SearchedEntity(
 
     var entityStatus: InterestType? = null,
 
-    ) : Parcelable {
+) : Parcelable {
     val description: String
         get() = "#$entityId - $entityName"
 }

@@ -10,8 +10,8 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.ReportCategoryRepository
-import com.mifos.core.network.datamanager.DataManagerRunReport
 import com.mifos.core.modelobjects.runreport.client.ClientReportTypeItem
+import com.mifos.core.network.datamanager.DataManagerRunReport
 import javax.inject.Inject
 
 /**

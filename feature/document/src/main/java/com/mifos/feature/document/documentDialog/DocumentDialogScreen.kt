@@ -70,8 +70,8 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.network.GenericResponse
 import com.mifos.core.modelobjects.noncoreobjects.Document
+import com.mifos.core.network.GenericResponse
 import com.mifos.feature.document.R
 import java.io.File
 

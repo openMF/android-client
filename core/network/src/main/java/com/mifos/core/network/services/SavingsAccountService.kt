@@ -9,17 +9,17 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.payloads.SavingsPayload
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.network.GenericResponse
 import com.mifos.core.modelobjects.account.loan.SavingsApproval
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.modelobjects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.core.modelobjects.organisations.ProductSavings
+import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.objects.client.Savings
-import com.mifos.core.modelobjects.organisations.ProductSavings
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.payloads.SavingsPayload
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
