@@ -12,6 +12,12 @@ package com.mifos.core.objects.accounts.savings
 import android.os.Parcelable
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
+import com.mifos.core.modelobjects.account.saving.InterestCalculationDaysInYearType
+import com.mifos.core.modelobjects.account.saving.InterestCalculationType
+import com.mifos.core.modelobjects.account.saving.InterestCompoundingPeriodType
+import com.mifos.core.modelobjects.account.saving.InterestPostingPeriodType
+import com.mifos.core.modelobjects.account.saving.LockinPeriodFrequencyType
+import com.mifos.core.modelobjects.account.saving.Timeline
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.ForeignKey
 import com.raizlabs.android.dbflow.annotation.ModelContainer
@@ -87,4 +93,4 @@ data class SavingsAccountWithAssociations(
 
     var charges: List<Charge?> = ArrayList(),
 
-) : MifosBaseModel(), Parcelable
+    ) : MifosBaseModel(), Parcelable

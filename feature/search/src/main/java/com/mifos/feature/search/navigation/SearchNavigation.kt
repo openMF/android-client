@@ -16,7 +16,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.objects.SearchedEntity
+import com.mifos.core.modelobjects.SearchedEntity
 import com.mifos.core.ui.components.FabType
 import com.mifos.feature.search.SearchScreenRoute
 

@@ -13,7 +13,7 @@ import com.mifos.core.databasehelper.DatabaseHelperSurveys
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.objects.survey.QuestionDatas
 import com.mifos.core.objects.survey.ResponseDatas
-import com.mifos.core.objects.survey.Scorecard
+import com.mifos.core.modelobjects.surveys.Scorecard
 import com.mifos.core.objects.survey.Survey
 import rx.Observable
 import javax.inject.Inject

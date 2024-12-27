@@ -9,16 +9,16 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.data.SavingsPayload
+import com.mifos.core.payloads.SavingsPayload
 import com.mifos.core.databasehelper.DatabaseHelperSavings
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.loan.SavingsApproval
+import com.mifos.core.modelobjects.account.loan.SavingsApproval
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
+import com.mifos.core.modelobjects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.objects.client.Savings
-import com.mifos.core.objects.organisation.ProductSavings
+import com.mifos.core.modelobjects.organisations.ProductSavings
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
 import rx.Observable

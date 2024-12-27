@@ -10,6 +10,7 @@
 package com.mifos.core.objects.templates.loans
 
 import android.os.Parcelable
+import com.mifos.core.modelobjects.template.loan.Type
 import kotlinx.parcelize.Parcelize
 
 /**

@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.data.SavingsPayload
+import com.mifos.core.payloads.SavingsPayload
 import com.mifos.core.objects.client.Savings
-import com.mifos.core.objects.organisation.ProductSavings
+import com.mifos.core.modelobjects.organisations.ProductSavings
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import rx.Observable
 

@@ -10,7 +10,7 @@
 package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.data.GroupLoanPayload
+import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.core.data.repository.GroupLoanAccountRepository
 import com.mifos.core.objects.accounts.loan.Loans
 import kotlinx.coroutines.channels.awaitClose

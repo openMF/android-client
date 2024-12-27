@@ -10,7 +10,7 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.objects.SearchedEntity
+import com.mifos.core.modelobjects.SearchedEntity
 import retrofit2.http.GET
 import retrofit2.http.Query
 

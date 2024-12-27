@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.client.clientPinpoint
 
-import com.mifos.core.objects.client.ClientAddressResponse
+import com.mifos.core.modelobjects.clients.ClientAddressResponse
 
 /**
  * Created by Aditya Gupta on 08/08/23.

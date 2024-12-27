@@ -73,7 +73,7 @@ import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.objects.group.GroupPayload
 import com.mifos.core.objects.organisation.Office
-import com.mifos.core.objects.response.SaveResponse
+import com.mifos.core.modelobjects.responses.SaveResponse
 import com.mifos.feature.groups.R
 import java.text.SimpleDateFormat
 import java.util.Locale

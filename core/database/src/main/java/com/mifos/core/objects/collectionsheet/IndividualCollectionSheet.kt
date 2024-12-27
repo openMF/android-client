@@ -10,7 +10,7 @@
 package com.mifos.core.objects.collectionsheet
 
 import android.os.Parcelable
-import com.mifos.core.objects.accounts.loan.PaymentTypeOptions
+import com.mifos.core.modelobjects.account.loan.PaymentTypeOptions
 import kotlinx.parcelize.Parcelize
 
 /**

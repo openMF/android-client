@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.objects.survey.Scorecard
+import com.mifos.core.modelobjects.surveys.Scorecard
 import rx.Observable
 
 /**

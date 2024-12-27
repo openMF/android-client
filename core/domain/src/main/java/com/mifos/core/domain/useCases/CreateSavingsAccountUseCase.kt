@@ -10,7 +10,7 @@
 package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.data.SavingsPayload
+import com.mifos.core.payloads.SavingsPayload
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.objects.client.Savings
 import kotlinx.coroutines.channels.awaitClose

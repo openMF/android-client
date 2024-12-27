@@ -9,11 +9,11 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.data.SavingsPayload
+import com.mifos.core.payloads.SavingsPayload
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.objects.client.Savings
-import com.mifos.core.objects.organisation.ProductSavings
+import com.mifos.core.modelobjects.organisations.ProductSavings
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import rx.Observable
 import javax.inject.Inject

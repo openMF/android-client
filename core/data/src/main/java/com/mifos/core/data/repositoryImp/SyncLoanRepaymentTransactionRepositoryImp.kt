@@ -12,7 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.modelobjects.account.loan.LoanRepaymentResponse
 import rx.Observable
 import javax.inject.Inject
 

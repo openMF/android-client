@@ -12,7 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.objects.group.GroupPayload
-import com.mifos.core.objects.response.SaveResponse
+import com.mifos.core.modelobjects.responses.SaveResponse
 import rx.Observable
 import javax.inject.Inject
 

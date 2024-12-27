@@ -13,7 +13,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.Page
+import com.mifos.core.modelobjects.clients.Page
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers

@@ -10,7 +10,7 @@
 package com.mifos.core.testing.repository
 
 import com.mifos.core.data.repository.SearchRepository
-import com.mifos.core.objects.SearchedEntity
+import com.mifos.core.modelobjects.SearchedEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map

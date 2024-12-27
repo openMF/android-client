@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.PinPointClientRepository
-import com.mifos.core.objects.client.ClientAddressResponse
+import com.mifos.core.modelobjects.clients.ClientAddressResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

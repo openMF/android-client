@@ -12,7 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.loan.LoanApproval
+import com.mifos.core.modelobjects.account.loan.LoanApproval
 import rx.Observable
 import javax.inject.Inject
 

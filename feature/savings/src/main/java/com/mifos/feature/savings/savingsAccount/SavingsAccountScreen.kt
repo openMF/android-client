@@ -63,7 +63,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Network
-import com.mifos.core.data.SavingsPayload
+import com.mifos.core.payloads.SavingsPayload
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -73,9 +73,9 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.objects.accounts.savings.FieldOfficerOptions
+import com.mifos.core.modelobjects.account.saving.FieldOfficerOptions
 import com.mifos.core.objects.client.Savings
-import com.mifos.core.objects.organisation.ProductSavings
+import com.mifos.core.modelobjects.organisations.ProductSavings
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import com.mifos.core.objects.zipmodels.SavingProductsAndTemplate
 import com.mifos.feature.savings.R

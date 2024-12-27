@@ -19,7 +19,7 @@ import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.accounts.savings.DepositType
 import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.response.SaveResponse
+import com.mifos.core.modelobjects.responses.SaveResponse
 import com.mifos.feature.groups.createNewGroup.CreateNewGroupScreen
 import com.mifos.feature.groups.groupDetails.GroupDetailsScreen
 import com.mifos.feature.groups.groupList.GroupsListRoute

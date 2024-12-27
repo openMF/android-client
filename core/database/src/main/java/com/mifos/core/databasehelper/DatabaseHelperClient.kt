@@ -24,7 +24,7 @@ import com.mifos.core.objects.client.ClientDate
 import com.mifos.core.objects.client.ClientPayload
 import com.mifos.core.objects.client.ClientPayload_Table
 import com.mifos.core.objects.client.Client_Table
-import com.mifos.core.objects.client.Page
+import com.mifos.core.modelobjects.clients.Page
 import com.mifos.core.objects.group.GroupWithAssociations
 import com.mifos.core.objects.noncore.ColumnHeader
 import com.mifos.core.objects.noncore.ColumnHeader_Table

@@ -19,7 +19,7 @@ import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.navigation.DataTableDataNavigationArg
-import com.mifos.core.objects.navigation.DataTableNavigationArg
+import com.mifos.core.modelobjects.nav.DataTableNavigationArg
 import com.mifos.core.objects.noncore.DataTable
 import com.mifos.feature.dataTable.dataTable.DataTableScreen
 import com.mifos.feature.dataTable.dataTableData.DataTableDataScreen

@@ -53,8 +53,8 @@ import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.model.BulkRepaymentTransactions
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
-import com.mifos.core.objects.accounts.loan.PaymentTypeOptions
-import com.mifos.core.objects.collectionsheet.LoanAndClientName
+import com.mifos.core.modelobjects.account.loan.PaymentTypeOptions
+import com.mifos.core.modelobjects.collectionsheets.LoanAndClientName
 import com.mifos.feature.collection_sheet.R
 
 /**

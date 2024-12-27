@@ -9,11 +9,11 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.data.GroupLoanPayload
+import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.core.data.repository.GroupLoanAccountRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.objects.accounts.loan.Loans
-import com.mifos.core.objects.templates.loans.GroupLoanTemplate
+import com.mifos.core.modelobjects.template.loan.GroupLoanTemplate
 import rx.Observable
 import javax.inject.Inject
 

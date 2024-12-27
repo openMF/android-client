@@ -9,7 +9,7 @@
  */
 package com.mifos.core.network.mappers.centers
 
-import com.mifos.core.objects.client.Page
+import com.mifos.core.modelobjects.clients.Page
 import com.mifos.core.objects.group.Center
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetCentersResponse

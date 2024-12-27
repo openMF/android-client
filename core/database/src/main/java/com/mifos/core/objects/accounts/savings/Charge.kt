@@ -10,6 +10,8 @@
 package com.mifos.core.objects.accounts.savings
 
 import android.os.Parcelable
+import com.mifos.core.modelobjects.account.saving.ChargeCalculationType
+import com.mifos.core.modelobjects.account.saving.ChargeTimeType
 import kotlinx.parcelize.Parcelize
 import javax.annotation.processing.Generated
 

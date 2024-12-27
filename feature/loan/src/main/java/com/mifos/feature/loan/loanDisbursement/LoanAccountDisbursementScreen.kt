@@ -62,7 +62,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.objects.PaymentTypeOption
-import com.mifos.core.objects.accounts.loan.LoanDisbursement
+import com.mifos.core.modelobjects.account.loan.LoanDisbursement
 import com.mifos.core.objects.templates.loans.LoanTransactionTemplate
 import com.mifos.feature.loan.R
 import java.text.SimpleDateFormat

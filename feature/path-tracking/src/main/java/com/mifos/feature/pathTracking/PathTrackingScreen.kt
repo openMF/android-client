@@ -78,8 +78,8 @@ import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.user.UserLatLng
-import com.mifos.core.objects.user.UserLocation
+import com.mifos.core.modelobjects.users.UserLatLng
+import com.mifos.core.modelobjects.users.UserLocation
 import com.mifos.feature.path.tracking.R
 
 @Composable

@@ -10,7 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.modelobjects.account.loan.LoanRepaymentResponse
 import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
 import rx.Observable
 

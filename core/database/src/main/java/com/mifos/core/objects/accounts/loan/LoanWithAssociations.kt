@@ -12,6 +12,15 @@ package com.mifos.core.objects.accounts.loan
 import android.os.Parcelable
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
+import com.mifos.core.modelobjects.account.loan.AmortizationType
+import com.mifos.core.modelobjects.account.loan.Currency
+import com.mifos.core.modelobjects.account.loan.InterestCalculationPeriodType
+import com.mifos.core.modelobjects.account.loan.InterestRateFrequencyType
+import com.mifos.core.modelobjects.account.loan.InterestType
+import com.mifos.core.modelobjects.account.loan.RepaymentFrequencyType
+import com.mifos.core.modelobjects.account.loan.RepaymentSchedule
+import com.mifos.core.modelobjects.account.loan.TermPeriodFrequencyType
+import com.mifos.core.modelobjects.account.loan.Transaction
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.ForeignKey
 import com.raizlabs.android.dbflow.annotation.ModelContainer

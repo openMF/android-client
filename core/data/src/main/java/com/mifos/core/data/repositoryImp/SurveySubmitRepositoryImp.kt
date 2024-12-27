@@ -11,7 +11,7 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.network.datamanager.DataManagerSurveys
-import com.mifos.core.objects.survey.Scorecard
+import com.mifos.core.modelobjects.surveys.Scorecard
 import rx.Observable
 import javax.inject.Inject
 

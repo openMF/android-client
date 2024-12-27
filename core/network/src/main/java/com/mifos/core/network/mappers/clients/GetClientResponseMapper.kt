@@ -10,7 +10,7 @@
 package com.mifos.core.network.mappers.clients
 
 import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.Page
+import com.mifos.core.modelobjects.clients.Page
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetClientsResponse
 

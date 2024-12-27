@@ -13,7 +13,7 @@ import com.mifos.core.common.network.Dispatcher
 import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.network.datamanager.DataManagerSearch
-import com.mifos.core.objects.SearchedEntity
+import com.mifos.core.modelobjects.SearchedEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged

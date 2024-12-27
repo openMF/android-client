@@ -11,7 +11,7 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.data.LoansPayload
 import com.mifos.core.objects.accounts.loan.Loans
-import com.mifos.core.objects.organisation.LoanProducts
+import com.mifos.core.modelobjects.organisations.LoanProducts
 import com.mifos.core.objects.templates.loans.LoanTemplate
 import rx.Observable
 

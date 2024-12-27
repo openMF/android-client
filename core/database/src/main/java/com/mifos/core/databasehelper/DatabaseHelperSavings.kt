@@ -12,7 +12,7 @@ package com.mifos.core.databasehelper
 import com.mifos.core.objects.PaymentTypeOption
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest_Table
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
+import com.mifos.core.modelobjects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations_Table
 import com.mifos.core.objects.accounts.savings.SavingsTransactionDate

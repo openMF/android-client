@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ReportCategoryRepository
-import com.mifos.core.objects.runreports.client.ClientReportTypeItem
+import com.mifos.core.modelobjects.runreport.client.ClientReportTypeItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

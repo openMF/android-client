@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.pathTracking
 
-import com.mifos.core.objects.user.UserLocation
+import com.mifos.core.modelobjects.users.UserLocation
 
 /**
  * Created by Aditya Gupta on 06/08/23.

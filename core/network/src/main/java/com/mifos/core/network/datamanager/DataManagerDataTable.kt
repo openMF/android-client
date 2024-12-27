@@ -15,7 +15,7 @@ import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.dataTable.GetDataTablesResponseMapper
 import com.mifos.core.objects.noncore.DataTable
-import com.mifos.core.objects.user.UserLocation
+import com.mifos.core.modelobjects.users.UserLocation
 import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import rx.Observable
 import javax.inject.Inject

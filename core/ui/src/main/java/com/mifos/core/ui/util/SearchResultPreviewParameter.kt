@@ -10,7 +10,7 @@
 package com.mifos.core.ui.util
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.mifos.core.objects.SearchedEntity
+import com.mifos.core.modelobjects.SearchedEntity
 import com.mifos.core.ui.util.SearchResultPreviewData.searchResults
 
 class SearchResultPreviewParameter : PreviewParameterProvider<List<SearchedEntity>> {

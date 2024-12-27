@@ -12,6 +12,7 @@ package com.mifos.core.objects.client
 import android.os.Parcelable
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
+import com.mifos.core.modelobjects.clients.Address
 import com.mifos.core.objects.noncore.DataTablePayload
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.ModelContainer

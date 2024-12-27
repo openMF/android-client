@@ -10,8 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.client.ClientAddressRequest
-import com.mifos.core.objects.client.ClientAddressResponse
+import com.mifos.core.modelobjects.clients.ClientAddressRequest
+import com.mifos.core.modelobjects.clients.ClientAddressResponse
 
 /**
  * Created by Aditya Gupta on 08/08/23.

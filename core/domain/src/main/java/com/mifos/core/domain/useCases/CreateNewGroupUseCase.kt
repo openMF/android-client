@@ -12,7 +12,7 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.objects.group.GroupPayload
-import com.mifos.core.objects.response.SaveResponse
+import com.mifos.core.modelobjects.responses.SaveResponse
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

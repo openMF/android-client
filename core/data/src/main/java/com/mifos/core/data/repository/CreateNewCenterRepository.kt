@@ -10,7 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.data.CenterPayload
-import com.mifos.core.objects.response.SaveResponse
+import com.mifos.core.modelobjects.responses.SaveResponse
 import rx.Observable
 
 /**

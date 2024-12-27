@@ -14,13 +14,13 @@ import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.core.objects.accounts.loan.LoanAccount_Table
 import com.mifos.core.objects.accounts.savings.SavingsAccount
 import com.mifos.core.objects.accounts.savings.SavingsAccount_Table
-import com.mifos.core.objects.client.Page
+import com.mifos.core.modelobjects.clients.Page
 import com.mifos.core.objects.group.Group
 import com.mifos.core.objects.group.GroupDate
 import com.mifos.core.objects.group.GroupPayload
 import com.mifos.core.objects.group.GroupPayload_Table
 import com.mifos.core.objects.group.Group_Table
-import com.mifos.core.objects.response.SaveResponse
+import com.mifos.core.modelobjects.responses.SaveResponse
 import com.raizlabs.android.dbflow.sql.language.Delete
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import rx.Observable

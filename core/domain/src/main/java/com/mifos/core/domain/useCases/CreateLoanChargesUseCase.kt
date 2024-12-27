@@ -10,9 +10,9 @@
 package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.data.ChargesPayload
+import com.mifos.core.payloads.ChargesPayload
 import com.mifos.core.data.repository.LoanChargeDialogRepository
-import com.mifos.core.objects.client.ChargeCreationResponse
+import com.mifos.core.modelobjects.clients.ChargeCreationResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

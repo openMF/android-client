@@ -16,7 +16,7 @@ import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanRepaymentRepository
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.modelobjects.account.loan.LoanRepaymentResponse
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
 import com.mifos.feature.loan.R

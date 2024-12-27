@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.loanAccount
 
-import com.mifos.core.objects.organisation.LoanProducts
+import com.mifos.core.modelobjects.organisations.LoanProducts
 
 /**
  * Created by Aditya Gupta on 08/08/23.

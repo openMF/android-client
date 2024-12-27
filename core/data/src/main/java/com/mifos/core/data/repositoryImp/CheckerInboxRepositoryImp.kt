@@ -12,8 +12,8 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.CheckerInboxRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerCheckerInbox
-import com.mifos.core.objects.checkerinboxandtasks.CheckerInboxSearchTemplate
-import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
+import com.mifos.core.modelobjects.checkerinboxtask.CheckerInboxSearchTemplate
+import com.mifos.core.modelobjects.checkerinboxtask.CheckerTask
 import javax.inject.Inject
 
 class CheckerInboxRepositoryImp @Inject constructor(

@@ -13,7 +13,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.network.datamanager.DataManagerCheckerInbox
-import com.mifos.core.objects.checkerinboxandtasks.CheckerInboxSearchTemplate
+import com.mifos.core.modelobjects.checkerinboxtask.CheckerInboxSearchTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

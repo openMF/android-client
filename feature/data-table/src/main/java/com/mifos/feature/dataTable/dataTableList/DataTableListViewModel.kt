@@ -13,7 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.data.GroupLoanPayload
+import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.core.data.LoansPayload
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.datastore.PrefManager

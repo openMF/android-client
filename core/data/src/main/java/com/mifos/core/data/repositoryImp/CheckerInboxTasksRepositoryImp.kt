@@ -11,8 +11,8 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import com.mifos.core.network.datamanager.DataManagerCheckerInbox
-import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
-import com.mifos.core.objects.checkerinboxandtasks.RescheduleLoansTask
+import com.mifos.core.modelobjects.checkerinboxtask.CheckerTask
+import com.mifos.core.modelobjects.checkerinboxtask.RescheduleLoansTask
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

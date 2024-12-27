@@ -9,20 +9,20 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.data.GroupLoanPayload
+import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.core.data.LoansPayload
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.loan.LoanApproval
-import com.mifos.core.objects.accounts.loan.LoanDisbursement
+import com.mifos.core.modelobjects.account.loan.LoanApproval
+import com.mifos.core.modelobjects.account.loan.LoanDisbursement
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.modelobjects.account.loan.LoanRepaymentResponse
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import com.mifos.core.objects.accounts.loan.Loans
 import com.mifos.core.objects.client.Charges
-import com.mifos.core.objects.client.Page
-import com.mifos.core.objects.organisation.LoanProducts
-import com.mifos.core.objects.templates.loans.GroupLoanTemplate
+import com.mifos.core.modelobjects.clients.Page
+import com.mifos.core.modelobjects.organisations.LoanProducts
+import com.mifos.core.modelobjects.template.loan.GroupLoanTemplate
 import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.objects.templates.loans.LoanTemplate
 import com.mifos.core.objects.templates.loans.LoanTransactionTemplate

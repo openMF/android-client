@@ -12,7 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.CenterPayload
 import com.mifos.core.data.repository.SyncCenterPayloadsRepository
 import com.mifos.core.network.datamanager.DataManagerCenter
-import com.mifos.core.objects.response.SaveResponse
+import com.mifos.core.modelobjects.responses.SaveResponse
 import rx.Observable
 import javax.inject.Inject
 
