@@ -13,7 +13,7 @@ call :run_gradle_task "check -p build-logic"
 call :run_gradle_task "spotlessApply --no-configuration-cache"
 call :run_gradle_task "dependencyGuardBaseline"
 call :run_gradle_task "detekt"
-call :run_gradle_task "testDebug :lint:test :android-client:lintRelease :lint:lint"
+call :run_gradle_task "testDebug :lint:test :mifosng-android:lintRelease :lint:lint"
 call :run_gradle_task "build"
 call :run_gradle_task "updateProdReleaseBadging"
 
