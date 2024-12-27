@@ -26,7 +26,7 @@ object GetGroupsResponseMapper : AbstractMapper<GetGroupsResponse, Page<Group>>(
     override fun mapToEntity(domainModel: Page<Group>): GetGroupsResponse {
         return GetGroupsResponse(
             totalFilteredRecords = domainModel.totalFilteredRecords,
-            pageItems = GroupMapper.mapToEntityList(domainModel.pageItems).toSet()
+            pageItems = GroupMapper.mapToEntityList(domainModel.pageItems).toSet(),
         )
     }
 }

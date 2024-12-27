@@ -27,8 +27,8 @@ sealed class CollectionSheetScreens(val route: String) {
     data object PaymentDetailsScreen :
         CollectionSheetScreens(
             "payment_details_route/{${Constants.ADAPTER_POSITION}}/" +
-                    "{${Constants.PAYLOAD}}/{${Constants.PAYMENT_LIST}}/{${Constants.LOAN_AND_CLIENT}}" +
-                    "/{${Constants.PAYMENT_OPTIONS}}/{${Constants.CLIENT_ID}}",
+                "{${Constants.PAYLOAD}}/{${Constants.PAYMENT_LIST}}/{${Constants.LOAN_AND_CLIENT}}" +
+                "/{${Constants.PAYMENT_OPTIONS}}/{${Constants.CLIENT_ID}}",
         ) {
         fun argument(
             position: Int,

@@ -208,7 +208,7 @@ internal fun PaymentsDetailsScreen(
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
 
-                ) {
+            ) {
                 Column(
                     modifier = Modifier
                         .weight(1f)

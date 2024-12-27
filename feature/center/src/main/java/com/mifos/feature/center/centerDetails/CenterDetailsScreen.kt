@@ -122,14 +122,20 @@ internal fun CenterDetailsScreen(
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false },
             ) {
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_center_add_savings_account)) {
-                    onMenuClick(MenuItems.ADD_SAVINGS_ACCOUNT)
-                    showMenu = false
-                }
-                MifosMenuDropDownItem(option = stringResource(id = R.string.feature_center_group_list)) {
-                    onMenuClick(MenuItems.GROUP_LIST)
-                    showMenu = false
-                }
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_center_add_savings_account),
+                    onClick = {
+                        onMenuClick(MenuItems.ADD_SAVINGS_ACCOUNT)
+                        showMenu = false
+                    },
+                )
+                MifosMenuDropDownItem(
+                    option = stringResource(id = R.string.feature_center_group_list),
+                    onClick = {
+                        onMenuClick(MenuItems.GROUP_LIST)
+                        showMenu = false
+                    },
+                )
             }
         },
         snackbarHostState = snackbarHostState,
