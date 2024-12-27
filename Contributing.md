@@ -181,14 +181,12 @@ Tests are integrated into our continuous integration system, so you don't always
 
 In MacOS, Windows or Linux, you should run the following commands before opening a PR, and make sure to pass all the commands:
 
-[//]: # (* `./gradlew check -p build-logic` this checks build-logic configured properly.</br>)
+* `./gradlew check -p build-logic` this checks build-logic configured properly.</br>
 * `./gradlew spotlessApply --no-configuration-cache` an check and apply formatting to any file.</br>
 * `./gradlew dependencyGuardBaseline`  to generate dependency-guard baseline.</br>
 * `./gradlew detekt`  to check detekt error.</br>
 * `./gradlew build` to build the project.</br>
+* `./gradlew testDebug :lint:test :mifosng-android:lintRelease :lint:lint` to check lint and test error.</br>
+* `./gradlew updateReleaseBadging` to update the badging for the project.</br>
 
-[//]: # (* `./gradlew testDebug :lint:test :androidApp:lintRelease :lint:lint` to check lint and test error.</br>)
-
-[//]: # (* `./gradlew updateReleaseBadging` to update the badging for the project.</br>)
-
-[//]: # (*Or Run the `ci-prepush.sh` or `ci-prepush.bat` script to run all required checks in sequence.*)
+* *Or Run the `ci-prepush.sh` or `ci-prepush.bat` script to run all required checks in sequence.*
