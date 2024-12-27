@@ -280,7 +280,12 @@ internal fun PaymentsDetailsScreen(
                 showAdditionalDetails = !showAdditionalDetails
             },
         ) {
-            Text(text = stringResource(id = R.string.feature_collection_sheet_add_payment_detail))
+            Text(
+                text = if(showAdditionalDetails)
+                stringResource(id = R.string.feature_collection_sheet_hide_payment_detail)
+                else
+                stringResource(id = R.string.feature_collection_sheet_add_payment_detail)
+            )
         }
 
         if (noPaymentVisibility) {
