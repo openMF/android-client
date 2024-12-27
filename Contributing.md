@@ -89,8 +89,8 @@ Apart from the `good first issue`, the following labels are also worth looking a
 
 If you want to work on any of these issues, just drop a message saying "I'd like to work on this", and we will assign the issue to you and update the issue's status as "claimed". **You are expected to send a pull request within seven days** after that, so we can still delegate the issue to someone else if you are unavailable.
 
+![JIRA_create_issue](https://github.com/user-attachments/assets/6d6f6cc5-eb0e-49b0-8b0c-0fb407dddaa7)
 
-![jira-create-issue](https://github.com/user-attachments/assets/f2440bc1-a7d2-4815-92d3-549a72983df6)
 
 > \[!Note]
 > To know more about [Jira](https://www.atlassian.com/software/jira/guides/getting-started/basics#step-4-create-an-issue) and how to create an issue, click [here](https://mifosforge.jira.com/jira/software/c/projects/MIFOSAC/issues/)
