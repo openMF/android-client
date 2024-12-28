@@ -59,6 +59,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.dbobjects.accounts.savings.Currency
+import com.mifos.core.dbobjects.accounts.savings.DepositType
+import com.mifos.core.dbobjects.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.dbobjects.accounts.savings.Status
+import com.mifos.core.dbobjects.accounts.savings.Summary
+import com.mifos.core.dbobjects.accounts.savings.Transaction
+import com.mifos.core.dbobjects.accounts.savings.TransactionType
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -68,13 +75,6 @@ import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.objects.accounts.savings.Currency
-import com.mifos.core.objects.accounts.savings.DepositType
-import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.objects.accounts.savings.Status
-import com.mifos.core.objects.accounts.savings.Summary
-import com.mifos.core.objects.accounts.savings.Transaction
-import com.mifos.core.objects.accounts.savings.TransactionType
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.savings.R
 

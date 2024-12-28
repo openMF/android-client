@@ -10,7 +10,7 @@
 package com.mifos.feature.groups.syncGroupDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.core.objects.group.Group
+import com.mifos.core.dbobjects.group.Group
 
 /**
  * Created by Aditya Gupta on 16/08/23.

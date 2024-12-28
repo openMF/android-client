@@ -10,7 +10,7 @@
 package com.mifos.core.data
 
 import android.os.Parcelable
-import com.mifos.core.objects.noncore.DataTablePayload
+import com.mifos.core.dbobjects.noncore.DataTablePayload
 import kotlinx.parcelize.Parcelize
 
 /**

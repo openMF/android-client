@@ -10,10 +10,10 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.GroupDetailsRepository
+import com.mifos.core.dbobjects.accounts.GroupAccounts
+import com.mifos.core.dbobjects.group.Group
+import com.mifos.core.dbobjects.group.GroupWithAssociations
 import com.mifos.core.network.datamanager.DataManagerGroups
-import com.mifos.core.objects.accounts.GroupAccounts
-import com.mifos.core.objects.group.Group
-import com.mifos.core.objects.group.GroupWithAssociations
 import rx.Observable
 import javax.inject.Inject
 

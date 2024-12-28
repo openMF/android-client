@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.services
 
+import com.mifos.core.dbobjects.noncore.Note
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.objects.noncore.Note
 import retrofit2.http.GET
 import retrofit2.http.Path
 

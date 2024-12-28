@@ -10,9 +10,9 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
+import com.mifos.core.dbobjects.client.Client
+import com.mifos.core.dbobjects.client.ClientPayload
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.ClientPayload
 import rx.Observable
 import javax.inject.Inject
 

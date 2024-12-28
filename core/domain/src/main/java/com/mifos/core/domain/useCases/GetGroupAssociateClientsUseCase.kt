@@ -11,8 +11,8 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.GroupDetailsRepository
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.group.GroupWithAssociations
+import com.mifos.core.dbobjects.client.Client
+import com.mifos.core.dbobjects.group.GroupWithAssociations
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

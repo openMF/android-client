@@ -95,6 +95,9 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.mifos.core.common.utils.Utils
+import com.mifos.core.dbobjects.accounts.loan.LoanAccount
+import com.mifos.core.dbobjects.accounts.savings.DepositType
+import com.mifos.core.dbobjects.accounts.savings.SavingsAccount
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -106,9 +109,6 @@ import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.accounts.loan.LoanAccount
-import com.mifos.core.objects.accounts.savings.DepositType
-import com.mifos.core.objects.accounts.savings.SavingsAccount
 import com.mifos.feature.client.R
 import kotlinx.coroutines.launch
 import java.io.File

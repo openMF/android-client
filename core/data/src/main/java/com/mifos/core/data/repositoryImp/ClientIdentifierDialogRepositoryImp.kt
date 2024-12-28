@@ -11,9 +11,9 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.ClientIdentifierDialogRepository
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.core.objects.noncore.IdentifierCreationResponse
-import com.mifos.core.objects.noncore.IdentifierPayload
-import com.mifos.core.objects.noncore.IdentifierTemplate
+import com.mifos.core.objects.noncoreobjects.IdentifierCreationResponse
+import com.mifos.core.objects.noncoreobjects.IdentifierPayload
+import com.mifos.core.objects.noncoreobjects.IdentifierTemplate
 import javax.inject.Inject
 
 /**

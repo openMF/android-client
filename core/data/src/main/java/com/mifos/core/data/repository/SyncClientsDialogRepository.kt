@@ -9,12 +9,12 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.objects.accounts.ClientAccounts
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations
-import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.dbobjects.accounts.ClientAccounts
+import com.mifos.core.dbobjects.accounts.loan.LoanWithAssociations
+import com.mifos.core.dbobjects.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.dbobjects.client.Client
+import com.mifos.core.dbobjects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.dbobjects.templates.savings.SavingsAccountTransactionTemplate
 import rx.Observable
 
 /**

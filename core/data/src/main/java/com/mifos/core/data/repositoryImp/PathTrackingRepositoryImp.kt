@@ -11,7 +11,7 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.network.datamanager.DataManagerDataTable
-import com.mifos.core.objects.user.UserLocation
+import com.mifos.core.objects.users.UserLocation
 import javax.inject.Inject
 
 /**

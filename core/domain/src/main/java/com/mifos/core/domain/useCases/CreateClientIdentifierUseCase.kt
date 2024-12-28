@@ -11,8 +11,8 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientIdentifierDialogRepository
-import com.mifos.core.objects.noncore.IdentifierCreationResponse
-import com.mifos.core.objects.noncore.IdentifierPayload
+import com.mifos.core.objects.noncoreobjects.IdentifierCreationResponse
+import com.mifos.core.objects.noncoreobjects.IdentifierPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.mappers.groups
 
-import com.mifos.core.objects.client.Status
-import com.mifos.core.objects.group.Group
+import com.mifos.core.dbobjects.client.Status
+import com.mifos.core.dbobjects.group.Group
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetGroupsPageItems
 import org.openapitools.client.models.GetGroupsStatus

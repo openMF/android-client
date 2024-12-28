@@ -64,9 +64,9 @@ import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.runreports.DataRow
-import com.mifos.core.objects.runreports.FullParameterListResponse
-import com.mifos.core.objects.runreports.client.ClientReportTypeItem
+import com.mifos.core.objects.runreport.DataRow
+import com.mifos.core.objects.runreport.FullParameterListResponse
+import com.mifos.core.objects.runreport.client.ClientReportTypeItem
 import com.mifos.feature.report.R
 
 @Composable

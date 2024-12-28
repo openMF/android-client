@@ -9,7 +9,7 @@
  */
 package com.mifos.core.network.mappers.staffs
 
-import com.mifos.core.objects.organisation.Staff
+import com.mifos.core.dbobjects.organisation.Staff
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.RetrieveOneResponse
 

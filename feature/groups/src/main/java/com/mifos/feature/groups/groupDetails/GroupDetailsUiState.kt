@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.groups.groupDetails
 
-import com.mifos.core.objects.group.Group
+import com.mifos.core.dbobjects.group.Group
 
 /**
  * Created by Aditya Gupta on 06/08/23.

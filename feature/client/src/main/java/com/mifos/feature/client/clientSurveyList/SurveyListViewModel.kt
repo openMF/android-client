@@ -12,9 +12,9 @@ package com.mifos.feature.client.clientSurveyList
 import androidx.lifecycle.ViewModel
 import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.objects.survey.QuestionDatas
-import com.mifos.core.objects.survey.ResponseDatas
-import com.mifos.core.objects.survey.Survey
+import com.mifos.core.dbobjects.survey.QuestionDatas
+import com.mifos.core.dbobjects.survey.ResponseDatas
+import com.mifos.core.dbobjects.survey.Survey
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

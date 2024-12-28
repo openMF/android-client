@@ -14,12 +14,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
+import com.mifos.core.dbobjects.accounts.loan.LoanAccount
+import com.mifos.core.dbobjects.accounts.savings.SavingsAccount
+import com.mifos.core.dbobjects.client.Client
+import com.mifos.core.dbobjects.group.Group
 import com.mifos.core.domain.useCases.GetGroupAssociateClientsUseCase
 import com.mifos.core.domain.useCases.GetGroupDetailsUseCase
-import com.mifos.core.objects.accounts.loan.LoanAccount
-import com.mifos.core.objects.accounts.savings.SavingsAccount
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.group.Group
 import com.mifos.feature.groups.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

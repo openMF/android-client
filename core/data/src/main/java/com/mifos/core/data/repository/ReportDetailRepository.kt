@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.objects.runreports.FullParameterListResponse
+import com.mifos.core.objects.runreport.FullParameterListResponse
 
 /**
  * Created by Aditya Gupta on 12/08/23.

@@ -10,7 +10,7 @@
 package com.mifos.core.data.repository
 
 import androidx.paging.PagingData
-import com.mifos.core.objects.client.Charges
+import com.mifos.core.dbobjects.client.Charges
 import kotlinx.coroutines.flow.Flow
 
 /**

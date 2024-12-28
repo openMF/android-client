@@ -56,6 +56,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.mifos.core.dbobjects.collectionsheet.ClientCollectionSheet
+import com.mifos.core.dbobjects.collectionsheet.IndividualCollectionSheet
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -66,10 +68,8 @@ import com.mifos.core.designsystem.theme.LightGray
 import com.mifos.core.designsystem.theme.White
 import com.mifos.core.model.BulkRepaymentTransactions
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
-import com.mifos.core.objects.accounts.loan.PaymentTypeOptions
-import com.mifos.core.objects.collectionsheet.ClientCollectionSheet
-import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
-import com.mifos.core.objects.collectionsheet.LoanAndClientName
+import com.mifos.core.objects.account.loan.PaymentTypeOptions
+import com.mifos.core.objects.collectionsheets.LoanAndClientName
 import com.mifos.feature.collection_sheet.R
 
 @Composable
