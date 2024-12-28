@@ -9,8 +9,8 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.`object`.checkerinboxtask.CheckerTask
-import com.mifos.core.`object`.checkerinboxtask.RescheduleLoansTask
+import com.mifos.core.objects.checkerinboxtask.CheckerTask
+import com.mifos.core.objects.checkerinboxtask.RescheduleLoansTask
 import kotlinx.coroutines.flow.Flow
 
 /**

@@ -10,10 +10,10 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.data.CenterPayload
-import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.group.GroupPayload
+import com.mifos.core.dbobjects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.dbobjects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.dbobjects.client.ClientPayload
+import com.mifos.core.dbobjects.group.GroupPayload
 import rx.Observable
 
 /**

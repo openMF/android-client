@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.mappers.clients
 
-import com.mifos.core.`object`.noncoreobjects.DocumentType
-import com.mifos.core.`object`.noncoreobjects.Identifier
+import com.mifos.core.objects.noncoreobjects.DocumentType
+import com.mifos.core.objects.noncoreobjects.Identifier
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetClientsClientIdIdentifiersResponse
 import org.openapitools.client.models.GetClientsDocumentType

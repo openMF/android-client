@@ -9,17 +9,17 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.`object`.collectionsheets.CollectionSheetRequestPayload
+import com.mifos.core.dbobjects.collectionsheet.CenterDetail
+import com.mifos.core.dbobjects.collectionsheet.CollectionSheetPayload
+import com.mifos.core.dbobjects.collectionsheet.CollectionSheetResponse
+import com.mifos.core.dbobjects.collectionsheet.IndividualCollectionSheet
+import com.mifos.core.dbobjects.collectionsheet.ProductiveCollectionSheetPayload
+import com.mifos.core.dbobjects.group.CenterWithAssociations
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.network.model.RequestCollectionSheetPayload
-import com.mifos.core.objects.collectionsheet.CenterDetail
-import com.mifos.core.objects.collectionsheet.CollectionSheetPayload
-import com.mifos.core.objects.collectionsheet.CollectionSheetResponse
-import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
-import com.mifos.core.objects.collectionsheet.ProductiveCollectionSheetPayload
-import com.mifos.core.objects.group.CenterWithAssociations
+import com.mifos.core.objects.collectionsheets.CollectionSheetRequestPayload
 import javax.inject.Inject
 import javax.inject.Singleton
 

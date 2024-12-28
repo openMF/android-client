@@ -9,11 +9,11 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.`object`.checkerinboxtask.CheckerInboxSearchTemplate
-import com.mifos.core.`object`.checkerinboxtask.CheckerTask
-import com.mifos.core.`object`.checkerinboxtask.RescheduleLoansTask
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.checkerinboxtask.CheckerInboxSearchTemplate
+import com.mifos.core.objects.checkerinboxtask.CheckerTask
+import com.mifos.core.objects.checkerinboxtask.RescheduleLoansTask
 import rx.Observable
 import javax.inject.Inject
 

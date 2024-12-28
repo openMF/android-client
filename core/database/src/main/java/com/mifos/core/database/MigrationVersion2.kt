@@ -9,9 +9,9 @@
  */
 package com.mifos.core.database
 
-import com.mifos.core.objects.accounts.loan.LoanAccount
-import com.mifos.core.objects.accounts.savings.SavingsAccount
-import com.mifos.core.objects.group.Center
+import com.mifos.core.dbobjects.accounts.loan.LoanAccount
+import com.mifos.core.dbobjects.accounts.savings.SavingsAccount
+import com.mifos.core.dbobjects.group.Center
 import com.raizlabs.android.dbflow.annotation.Migration
 import com.raizlabs.android.dbflow.sql.SQLiteType
 import com.raizlabs.android.dbflow.sql.migration.AlterTableMigration

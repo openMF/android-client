@@ -67,8 +67,8 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.`object`.organisations.LoanProducts
-import com.mifos.core.`object`.template.loan.GroupLoanTemplate
+import com.mifos.core.objects.organisations.LoanProducts
+import com.mifos.core.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.feature.loan.R
 import java.text.SimpleDateFormat

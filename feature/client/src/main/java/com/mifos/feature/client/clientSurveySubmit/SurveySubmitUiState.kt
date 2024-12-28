@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.client.clientSurveySubmit
 
-import com.mifos.core.`object`.surveys.Scorecard
+import com.mifos.core.objects.surveys.Scorecard
 
 /**
  * Created by Aditya Gupta on 13/08/23.

@@ -55,8 +55,8 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.`object`.noncoreobjects.IdentifierPayload
-import com.mifos.core.`object`.noncoreobjects.IdentifierTemplate
+import com.mifos.core.objects.noncoreobjects.IdentifierPayload
+import com.mifos.core.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.feature.client.R
 
 @Composable

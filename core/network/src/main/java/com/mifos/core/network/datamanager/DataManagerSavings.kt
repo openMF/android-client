@@ -10,16 +10,16 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperSavings
-import com.mifos.core.`object`.account.loan.SavingsApproval
-import com.mifos.core.`object`.account.saving.SavingsAccountTransactionResponse
-import com.mifos.core.`object`.organisations.ProductSavings
+import com.mifos.core.dbobjects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.dbobjects.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.dbobjects.client.Savings
+import com.mifos.core.dbobjects.templates.savings.SavingProductsTemplate
+import com.mifos.core.dbobjects.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.objects.client.Savings
-import com.mifos.core.objects.templates.savings.SavingProductsTemplate
-import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.objects.account.loan.SavingsApproval
+import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.core.objects.organisations.ProductSavings
 import com.mifos.core.payloads.SavingsPayload
 import rx.Observable
 import javax.inject.Inject

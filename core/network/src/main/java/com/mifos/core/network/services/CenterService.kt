@@ -10,18 +10,18 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.data.CenterPayload
+import com.mifos.core.dbobjects.accounts.CenterAccounts
+import com.mifos.core.dbobjects.group.Center
+import com.mifos.core.dbobjects.group.CenterWithAssociations
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.`object`.clients.ActivatePayload
-import com.mifos.core.`object`.clients.Page
-import com.mifos.core.`object`.databaseobjects.CollectionSheet
-import com.mifos.core.`object`.databaseobjects.OfflineCenter
-import com.mifos.core.`object`.responses.SaveResponse
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload
-import com.mifos.core.objects.accounts.CenterAccounts
-import com.mifos.core.objects.group.Center
-import com.mifos.core.objects.group.CenterWithAssociations
+import com.mifos.core.objects.clients.ActivatePayload
+import com.mifos.core.objects.clients.Page
+import com.mifos.core.objects.databaseobjects.CollectionSheet
+import com.mifos.core.objects.databaseobjects.OfflineCenter
+import com.mifos.core.objects.responses.SaveResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

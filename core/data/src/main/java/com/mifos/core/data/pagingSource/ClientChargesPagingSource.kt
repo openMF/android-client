@@ -11,9 +11,9 @@ package com.mifos.core.data.pagingSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.mifos.core.`object`.clients.Page
+import com.mifos.core.dbobjects.client.Charges
 import com.mifos.core.network.datamanager.DataManagerCharge
-import com.mifos.core.objects.client.Charges
+import com.mifos.core.objects.clients.Page
 import kotlinx.coroutines.suspendCancellableCoroutine
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers

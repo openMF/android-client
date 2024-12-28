@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.loan.loanRepayment
 
-import com.mifos.core.`object`.account.loan.LoanRepaymentResponse
-import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.dbobjects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 
 /**
  * Created by Aditya Gupta on 10/08/23.

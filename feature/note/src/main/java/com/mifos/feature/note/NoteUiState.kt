@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.note
 
-import com.mifos.core.objects.noncore.Note
+import com.mifos.core.dbobjects.noncore.Note
 
 /**
  * Created by Aditya Gupta on 08/08/23.

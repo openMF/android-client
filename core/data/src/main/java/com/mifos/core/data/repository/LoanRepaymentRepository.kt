@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.`object`.account.loan.LoanRepaymentResponse
-import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.dbobjects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.dbobjects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import rx.Observable
 
 /**

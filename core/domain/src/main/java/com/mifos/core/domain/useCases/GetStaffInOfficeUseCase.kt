@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
-import com.mifos.core.objects.organisation.Staff
+import com.mifos.core.dbobjects.organisation.Staff
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

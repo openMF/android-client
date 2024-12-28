@@ -59,6 +59,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Network
+import com.mifos.core.dbobjects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.dbobjects.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -70,9 +72,7 @@ import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.`object`.account.saving.SavingsAccountTransactionResponse
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.feature.savings.R
 import java.text.SimpleDateFormat
 import java.util.Locale

@@ -58,15 +58,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.dbobjects.accounts.loan.LoanWithAssociations
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.`object`.account.loan.Transaction
-import com.mifos.core.`object`.account.loan.Type
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations
+import com.mifos.core.objects.account.loan.Transaction
+import com.mifos.core.objects.account.loan.Type
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.loan.R
 

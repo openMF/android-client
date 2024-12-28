@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ReportDetailRepository
-import com.mifos.core.`object`.runreport.FullParameterListResponse
+import com.mifos.core.objects.runreport.FullParameterListResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

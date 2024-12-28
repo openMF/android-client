@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.GroupLoanAccountRepository
-import com.mifos.core.`object`.template.loan.GroupLoanTemplate
+import com.mifos.core.objects.template.loan.GroupLoanTemplate
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

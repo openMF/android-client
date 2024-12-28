@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.`object`.surveys.Scorecard
+import com.mifos.core.objects.surveys.Scorecard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

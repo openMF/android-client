@@ -9,11 +9,11 @@
  */
 package com.mifos.core.network.services
 
+import com.mifos.core.dbobjects.client.Charges
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.`object`.clients.ChargeCreationResponse
-import com.mifos.core.`object`.clients.Page
-import com.mifos.core.`object`.template.client.ChargeTemplate
-import com.mifos.core.objects.client.Charges
+import com.mifos.core.objects.clients.ChargeCreationResponse
+import com.mifos.core.objects.clients.Page
+import com.mifos.core.objects.template.client.ChargeTemplate
 import com.mifos.core.payloads.ChargesPayload
 import okhttp3.ResponseBody
 import retrofit2.http.Body

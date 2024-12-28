@@ -10,11 +10,11 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperSurveys
-import com.mifos.core.`object`.surveys.Scorecard
+import com.mifos.core.dbobjects.survey.QuestionDatas
+import com.mifos.core.dbobjects.survey.ResponseDatas
+import com.mifos.core.dbobjects.survey.Survey
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.objects.survey.QuestionDatas
-import com.mifos.core.objects.survey.ResponseDatas
-import com.mifos.core.objects.survey.Survey
+import com.mifos.core.objects.surveys.Scorecard
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton

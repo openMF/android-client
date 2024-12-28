@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.loan.loanDisbursement
 
+import com.mifos.core.dbobjects.templates.loans.LoanTransactionTemplate
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.templates.loans.LoanTransactionTemplate
 
 /**
  * Created by Aditya Gupta on 10/08/23.

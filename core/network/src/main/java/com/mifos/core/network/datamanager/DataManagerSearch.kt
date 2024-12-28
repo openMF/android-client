@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.`object`.SearchedEntity
 import com.mifos.core.network.BaseApiManager
+import com.mifos.core.objects.SearchedEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 

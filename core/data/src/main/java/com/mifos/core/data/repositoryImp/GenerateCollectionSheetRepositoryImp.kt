@@ -10,17 +10,17 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
-import com.mifos.core.`object`.collectionsheets.CollectionSheetRequestPayload
+import com.mifos.core.dbobjects.collectionsheet.CenterDetail
+import com.mifos.core.dbobjects.collectionsheet.CollectionSheetPayload
+import com.mifos.core.dbobjects.collectionsheet.CollectionSheetResponse
+import com.mifos.core.dbobjects.collectionsheet.ProductiveCollectionSheetPayload
+import com.mifos.core.dbobjects.group.Center
+import com.mifos.core.dbobjects.group.CenterWithAssociations
+import com.mifos.core.dbobjects.group.Group
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerCollectionSheet
-import com.mifos.core.objects.collectionsheet.CenterDetail
-import com.mifos.core.objects.collectionsheet.CollectionSheetPayload
-import com.mifos.core.objects.collectionsheet.CollectionSheetResponse
-import com.mifos.core.objects.collectionsheet.ProductiveCollectionSheetPayload
-import com.mifos.core.objects.group.Center
-import com.mifos.core.objects.group.CenterWithAssociations
-import com.mifos.core.objects.group.Group
+import com.mifos.core.objects.collectionsheets.CollectionSheetRequestPayload
 import javax.inject.Inject
 
 /**

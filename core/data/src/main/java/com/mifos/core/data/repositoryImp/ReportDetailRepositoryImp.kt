@@ -10,8 +10,8 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.ReportDetailRepository
-import com.mifos.core.`object`.runreport.FullParameterListResponse
 import com.mifos.core.network.datamanager.DataManagerRunReport
+import com.mifos.core.objects.runreport.FullParameterListResponse
 import javax.inject.Inject
 
 /**

@@ -10,9 +10,9 @@
 package com.mifos.core.data.repository
 
 import androidx.paging.PagingData
-import com.mifos.core.`object`.clients.Page
-import com.mifos.core.objects.group.Center
-import com.mifos.core.objects.group.CenterWithAssociations
+import com.mifos.core.dbobjects.group.Center
+import com.mifos.core.dbobjects.group.CenterWithAssociations
+import com.mifos.core.objects.clients.Page
 import kotlinx.coroutines.flow.Flow
 import rx.Observable
 

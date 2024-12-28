@@ -10,10 +10,10 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.`object`.checkerinboxtask.CheckerInboxSearchTemplate
-import com.mifos.core.`object`.checkerinboxtask.CheckerTask
-import com.mifos.core.`object`.checkerinboxtask.RescheduleLoansTask
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.checkerinboxtask.CheckerInboxSearchTemplate
+import com.mifos.core.objects.checkerinboxtask.CheckerTask
+import com.mifos.core.objects.checkerinboxtask.RescheduleLoansTask
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST

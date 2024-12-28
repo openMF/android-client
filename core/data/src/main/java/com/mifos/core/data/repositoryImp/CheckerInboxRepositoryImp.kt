@@ -10,10 +10,10 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.CheckerInboxRepository
-import com.mifos.core.`object`.checkerinboxtask.CheckerInboxSearchTemplate
-import com.mifos.core.`object`.checkerinboxtask.CheckerTask
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerCheckerInbox
+import com.mifos.core.objects.checkerinboxtask.CheckerInboxSearchTemplate
+import com.mifos.core.objects.checkerinboxtask.CheckerTask
 import javax.inject.Inject
 
 class CheckerInboxRepositoryImp @Inject constructor(

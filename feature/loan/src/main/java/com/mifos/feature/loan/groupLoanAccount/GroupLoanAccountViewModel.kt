@@ -17,8 +17,8 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetGroupLoansAccountTemplateUseCase
-import com.mifos.core.`object`.organisations.LoanProducts
-import com.mifos.core.`object`.template.loan.GroupLoanTemplate
+import com.mifos.core.objects.organisations.LoanProducts
+import com.mifos.core.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.feature.loan.R
 import dagger.hilt.android.lifecycle.HiltViewModel

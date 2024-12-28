@@ -10,10 +10,10 @@
 package com.mifos.core.databasehelper
 
 import android.os.AsyncTask
-import com.mifos.core.`object`.clients.Page
-import com.mifos.core.objects.client.Charges
-import com.mifos.core.objects.client.Charges_Table
-import com.mifos.core.objects.client.ClientDate
+import com.mifos.core.dbobjects.client.Charges
+import com.mifos.core.dbobjects.client.Charges_Table
+import com.mifos.core.dbobjects.client.ClientDate
+import com.mifos.core.objects.clients.Page
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import rx.Observable
 import javax.inject.Inject

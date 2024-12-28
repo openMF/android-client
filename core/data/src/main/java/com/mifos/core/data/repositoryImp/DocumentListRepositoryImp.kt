@@ -10,9 +10,9 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.DocumentListRepository
-import com.mifos.core.`object`.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
+import com.mifos.core.objects.noncoreobjects.Document
 import okhttp3.ResponseBody
 import javax.inject.Inject
 

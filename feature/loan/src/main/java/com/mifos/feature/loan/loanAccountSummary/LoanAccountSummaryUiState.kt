@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.loanAccountSummary
 
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations
+import com.mifos.core.dbobjects.accounts.loan.LoanWithAssociations
 
 /**
  * Created by Aditya Gupta on 08/08/23.

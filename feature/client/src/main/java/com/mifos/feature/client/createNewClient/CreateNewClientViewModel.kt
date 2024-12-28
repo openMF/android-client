@@ -14,12 +14,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewClientRepository
+import com.mifos.core.dbobjects.client.Client
+import com.mifos.core.dbobjects.client.ClientPayload
+import com.mifos.core.dbobjects.organisation.Office
+import com.mifos.core.dbobjects.organisation.Staff
 import com.mifos.core.domain.useCases.GetOfficeListUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeForCreateNewClientUseCase
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.organisation.Office
-import com.mifos.core.objects.organisation.Staff
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

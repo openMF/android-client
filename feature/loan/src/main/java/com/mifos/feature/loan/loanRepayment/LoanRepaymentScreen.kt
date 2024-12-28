@@ -58,6 +58,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Network
+import com.mifos.core.dbobjects.PaymentTypeOption
+import com.mifos.core.dbobjects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.dbobjects.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -69,10 +72,7 @@ import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.`object`.account.loan.LoanRepaymentResponse
-import com.mifos.core.objects.PaymentTypeOption
-import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.feature.loan.R
 import java.text.SimpleDateFormat
 import java.util.Locale

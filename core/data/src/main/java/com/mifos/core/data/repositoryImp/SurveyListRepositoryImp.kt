@@ -10,10 +10,10 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SurveyListRepository
+import com.mifos.core.dbobjects.survey.QuestionDatas
+import com.mifos.core.dbobjects.survey.ResponseDatas
+import com.mifos.core.dbobjects.survey.Survey
 import com.mifos.core.network.datamanager.DataManagerSurveys
-import com.mifos.core.objects.survey.QuestionDatas
-import com.mifos.core.objects.survey.ResponseDatas
-import com.mifos.core.objects.survey.Survey
 import rx.Observable
 import javax.inject.Inject
 

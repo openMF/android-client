@@ -55,7 +55,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.`object`.clients.ActivatePayload
+import com.mifos.core.objects.clients.ActivatePayload
 import java.text.SimpleDateFormat
 import java.util.Locale
 

@@ -10,11 +10,11 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.ActivateRepository
-import com.mifos.core.`object`.clients.ActivatePayload
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
+import com.mifos.core.objects.clients.ActivatePayload
 import org.openapitools.client.models.PostCentersCenterIdResponse
 import org.openapitools.client.models.PostClientsClientIdResponse
 import rx.Observable

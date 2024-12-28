@@ -41,14 +41,14 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.dbobjects.client.Client
+import com.mifos.core.dbobjects.client.Status
+import com.mifos.core.dbobjects.group.CenterWithAssociations
+import com.mifos.core.dbobjects.group.Group
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.Status
-import com.mifos.core.objects.group.CenterWithAssociations
-import com.mifos.core.objects.group.Group
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.center.R
 

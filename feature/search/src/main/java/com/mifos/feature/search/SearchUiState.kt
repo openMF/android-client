@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.search
 
-import com.mifos.core.`object`.SearchedEntity
+import com.mifos.core.objects.SearchedEntity
 
 data class SearchUiState(
     val isLoading: Boolean = false,

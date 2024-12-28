@@ -9,18 +9,18 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.objects.accounts.CenterAccounts
-import com.mifos.core.objects.accounts.ClientAccounts
-import com.mifos.core.objects.accounts.GroupAccounts
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations
-import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.group.Center
-import com.mifos.core.objects.group.CenterWithAssociations
-import com.mifos.core.objects.group.Group
-import com.mifos.core.objects.group.GroupWithAssociations
-import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.dbobjects.accounts.CenterAccounts
+import com.mifos.core.dbobjects.accounts.ClientAccounts
+import com.mifos.core.dbobjects.accounts.GroupAccounts
+import com.mifos.core.dbobjects.accounts.loan.LoanWithAssociations
+import com.mifos.core.dbobjects.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.dbobjects.client.Client
+import com.mifos.core.dbobjects.group.Center
+import com.mifos.core.dbobjects.group.CenterWithAssociations
+import com.mifos.core.dbobjects.group.Group
+import com.mifos.core.dbobjects.group.GroupWithAssociations
+import com.mifos.core.dbobjects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.dbobjects.templates.savings.SavingsAccountTransactionTemplate
 import rx.Observable
 
 /**

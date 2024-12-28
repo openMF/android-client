@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.savings.savingsAccountTransaction
 
-import com.mifos.core.`object`.account.saving.SavingsAccountTransactionResponse
-import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.dbobjects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 
 /**
  * Created by Aditya Gupta on 13/08/23.

@@ -92,6 +92,11 @@ import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
+import com.mifos.core.dbobjects.client.ClientPayload
+import com.mifos.core.dbobjects.noncore.DataTable
+import com.mifos.core.dbobjects.organisation.Office
+import com.mifos.core.dbobjects.organisation.Staff
+import com.mifos.core.dbobjects.templates.clients.ClientsTemplate
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -104,11 +109,6 @@ import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.noncore.DataTable
-import com.mifos.core.objects.organisation.Office
-import com.mifos.core.objects.organisation.Staff
-import com.mifos.core.objects.templates.clients.ClientsTemplate
 import com.mifos.feature.client.R
 import kotlinx.coroutines.launch
 import java.io.File

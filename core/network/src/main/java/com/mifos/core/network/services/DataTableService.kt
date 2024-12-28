@@ -10,10 +10,10 @@
 package com.mifos.core.network.services
 
 import com.google.gson.JsonArray
+import com.mifos.core.dbobjects.noncore.DataTable
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.`object`.users.UserLocation
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.noncore.DataTable
+import com.mifos.core.objects.users.UserLocation
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET

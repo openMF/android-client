@@ -9,8 +9,8 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.`object`.account.saving.SavingsAccountTransactionResponse
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.dbobjects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import rx.Observable
 
 /**
@@ -20,7 +20,7 @@ interface SyncSavingsAccountTransactionRepository {
 
     fun allSavingsAccountTransactions(): Observable<List<SavingsAccountTransactionRequest>>
 
-    fun paymentTypeOption(): Observable<List<com.mifos.core.objects.PaymentTypeOption>>
+    fun paymentTypeOption(): Observable<List<com.mifos.core.dbobjects.PaymentTypeOption>>
 
     fun processTransaction(
         savingsAccountType: String?,

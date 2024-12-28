@@ -10,9 +10,9 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.data.LoansPayload
-import com.mifos.core.objects.accounts.loan.Loans
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.ClientPayload
+import com.mifos.core.dbobjects.accounts.loan.Loans
+import com.mifos.core.dbobjects.client.Client
+import com.mifos.core.dbobjects.client.ClientPayload
 import com.mifos.core.payloads.GroupLoanPayload
 import rx.Observable
 

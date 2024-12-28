@@ -9,15 +9,15 @@
  */
 package com.mifos.core.databasehelper
 
-import com.mifos.core.`object`.account.loan.LoanRepaymentResponse
-import com.mifos.core.objects.PaymentTypeOption
-import com.mifos.core.objects.accounts.loan.ActualDisbursementDate
-import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest_Table
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations_Table
-import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate_Table
+import com.mifos.core.dbobjects.PaymentTypeOption
+import com.mifos.core.dbobjects.accounts.loan.ActualDisbursementDate
+import com.mifos.core.dbobjects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.dbobjects.accounts.loan.LoanRepaymentRequest_Table
+import com.mifos.core.dbobjects.accounts.loan.LoanWithAssociations
+import com.mifos.core.dbobjects.accounts.loan.LoanWithAssociations_Table
+import com.mifos.core.dbobjects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.dbobjects.templates.loans.LoanRepaymentTemplate_Table
+import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.raizlabs.android.dbflow.sql.language.Delete
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import rx.Observable

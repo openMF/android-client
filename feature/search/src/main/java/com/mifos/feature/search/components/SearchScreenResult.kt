@@ -35,7 +35,7 @@ import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.core.`object`.SearchedEntity
+import com.mifos.core.objects.SearchedEntity
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.util.DevicePreviews
 import com.mifos.core.ui.util.SearchResultPreviewParameter

@@ -9,9 +9,9 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.`object`.noncoreobjects.Document
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.objects.noncoreobjects.Document
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import rx.Observable

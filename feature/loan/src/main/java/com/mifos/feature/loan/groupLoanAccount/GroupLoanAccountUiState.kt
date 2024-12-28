@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.groupLoanAccount
 
-import com.mifos.core.`object`.template.loan.GroupLoanTemplate
+import com.mifos.core.objects.template.loan.GroupLoanTemplate
 
 /**
  * Created by Aditya Gupta on 08/08/23.

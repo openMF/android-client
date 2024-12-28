@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.`object`.noncoreobjects.IdentifierCreationResponse
-import com.mifos.core.`object`.noncoreobjects.IdentifierPayload
-import com.mifos.core.`object`.noncoreobjects.IdentifierTemplate
+import com.mifos.core.objects.noncoreobjects.IdentifierCreationResponse
+import com.mifos.core.objects.noncoreobjects.IdentifierPayload
+import com.mifos.core.objects.noncoreobjects.IdentifierTemplate
 
 /**
  * Created by Aditya Gupta on 16/08/23.

@@ -10,10 +10,10 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
-import com.mifos.core.`object`.account.saving.SavingsAccountTransactionResponse
+import com.mifos.core.dbobjects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import rx.Observable
 import javax.inject.Inject
 
@@ -29,7 +29,7 @@ class SyncSavingsAccountTransactionRepositoryImp @Inject constructor(
         return dataManagerSavings.allSavingsAccountTransactions
     }
 
-    override fun paymentTypeOption(): Observable<List<com.mifos.core.objects.PaymentTypeOption>> {
+    override fun paymentTypeOption(): Observable<List<com.mifos.core.dbobjects.PaymentTypeOption>> {
         return dataManagerLoan.paymentTypeOption
     }
 

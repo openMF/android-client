@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.groups.createNewGroup
 
-import com.mifos.core.`object`.responses.SaveResponse
-import com.mifos.core.objects.organisation.Office
+import com.mifos.core.dbobjects.organisation.Office
+import com.mifos.core.objects.responses.SaveResponse
 
 /**
  * Created by Aditya Gupta on 10/08/23.

@@ -10,10 +10,10 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.ClientIdentifierDialogRepository
-import com.mifos.core.`object`.noncoreobjects.IdentifierCreationResponse
-import com.mifos.core.`object`.noncoreobjects.IdentifierPayload
-import com.mifos.core.`object`.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.core.objects.noncoreobjects.IdentifierCreationResponse
+import com.mifos.core.objects.noncoreobjects.IdentifierPayload
+import com.mifos.core.objects.noncoreobjects.IdentifierTemplate
 import javax.inject.Inject
 
 /**

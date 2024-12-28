@@ -66,7 +66,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.`object`.template.client.ChargeTemplate
+import com.mifos.core.objects.template.client.ChargeTemplate
 import com.mifos.core.payloads.ChargesPayload
 import com.mifos.feature.client.R
 import java.text.SimpleDateFormat

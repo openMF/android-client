@@ -9,11 +9,11 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.organisation.Office
-import com.mifos.core.objects.organisation.Staff
-import com.mifos.core.objects.templates.clients.ClientsTemplate
+import com.mifos.core.dbobjects.client.Client
+import com.mifos.core.dbobjects.client.ClientPayload
+import com.mifos.core.dbobjects.organisation.Office
+import com.mifos.core.dbobjects.organisation.Staff
+import com.mifos.core.dbobjects.templates.clients.ClientsTemplate
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import rx.Observable

@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.savings.savingsAccountSummary
 
-import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.dbobjects.accounts.savings.SavingsAccountWithAssociations
 
 /**
  * Created by Aditya Gupta on 08/08/23.

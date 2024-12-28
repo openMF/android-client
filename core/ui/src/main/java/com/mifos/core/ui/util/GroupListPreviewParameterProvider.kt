@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
-import com.mifos.core.objects.group.Group
+import com.mifos.core.dbobjects.group.Group
 import com.mifos.core.testing.repository.sampleGroups
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf

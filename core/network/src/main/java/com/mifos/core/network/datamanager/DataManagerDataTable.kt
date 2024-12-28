@@ -11,11 +11,11 @@ package com.mifos.core.network.datamanager
 
 import com.google.gson.JsonArray
 import com.mifos.core.databasehelper.DatabaseHelperDataTable
-import com.mifos.core.`object`.users.UserLocation
+import com.mifos.core.dbobjects.noncore.DataTable
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.dataTable.GetDataTablesResponseMapper
-import com.mifos.core.objects.noncore.DataTable
+import com.mifos.core.objects.users.UserLocation
 import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import rx.Observable
 import javax.inject.Inject

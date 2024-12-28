@@ -11,16 +11,16 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.data.CenterPayload
 import com.mifos.core.databasehelper.DatabaseHelperCenter
-import com.mifos.core.`object`.clients.ActivatePayload
-import com.mifos.core.`object`.clients.Page
-import com.mifos.core.`object`.responses.SaveResponse
+import com.mifos.core.dbobjects.accounts.CenterAccounts
+import com.mifos.core.dbobjects.group.Center
+import com.mifos.core.dbobjects.group.CenterWithAssociations
+import com.mifos.core.dbobjects.organisation.Office
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.centers.GetCentersResponseMapper
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
-import com.mifos.core.objects.accounts.CenterAccounts
-import com.mifos.core.objects.group.Center
-import com.mifos.core.objects.group.CenterWithAssociations
-import com.mifos.core.objects.organisation.Office
+import com.mifos.core.objects.clients.ActivatePayload
+import com.mifos.core.objects.clients.Page
+import com.mifos.core.objects.responses.SaveResponse
 import org.openapitools.client.models.PostCentersCenterIdRequest
 import org.openapitools.client.models.PostCentersCenterIdResponse
 import rx.Observable

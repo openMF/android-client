@@ -61,7 +61,7 @@ import com.mifos.core.designsystem.theme.LightGreen
 import com.mifos.core.designsystem.theme.White
 import com.mifos.core.designsystem.theme.identifierTextStyleDark
 import com.mifos.core.designsystem.theme.identifierTextStyleLight
-import com.mifos.core.`object`.noncoreobjects.Identifier
+import com.mifos.core.objects.noncoreobjects.Identifier
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.client.R
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen

@@ -10,9 +10,9 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.`object`.groups.CenterInfo
-import com.mifos.core.`object`.runreport.FullParameterListResponse
-import com.mifos.core.`object`.runreport.client.ClientReportTypeItem
+import com.mifos.core.objects.groups.CenterInfo
+import com.mifos.core.objects.runreport.FullParameterListResponse
+import com.mifos.core.objects.runreport.client.ClientReportTypeItem
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

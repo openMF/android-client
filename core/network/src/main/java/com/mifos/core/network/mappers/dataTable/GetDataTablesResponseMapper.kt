@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.mappers.dataTable
 
-import com.mifos.core.objects.noncore.ColumnHeader
-import com.mifos.core.objects.noncore.DataTable
+import com.mifos.core.dbobjects.noncore.ColumnHeader
+import com.mifos.core.dbobjects.noncore.DataTable
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetDataTablesResponse
 import org.openapitools.client.models.ResultsetColumnHeaderData

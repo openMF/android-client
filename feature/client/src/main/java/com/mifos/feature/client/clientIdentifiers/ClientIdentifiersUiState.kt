@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.client.clientIdentifiers
 
-import com.mifos.core.`object`.noncoreobjects.Identifier
+import com.mifos.core.objects.noncoreobjects.Identifier
 
 /**
  * Created by Aditya Gupta on 08/08/23.

@@ -11,7 +11,7 @@ package com.mifos.feature.individualCollectionSheet.navigation
 
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.core.dbobjects.collectionsheet.IndividualCollectionSheet
 
 /**
  * Created by Pronay Sarker on 20/08/2024 (4:11 PM)

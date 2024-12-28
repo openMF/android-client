@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.services
 
+import com.mifos.core.dbobjects.accounts.ClientAccounts
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.objects.accounts.ClientAccounts
 import retrofit2.http.GET
 import retrofit2.http.Path
 import rx.Observable
