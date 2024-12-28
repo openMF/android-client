@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ChargeDialogRepository
-import com.mifos.core.modelobjects.template.client.ChargeTemplate
+import com.mifos.core.`object`.template.client.ChargeTemplate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

@@ -10,7 +10,7 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
-import com.mifos.core.modelobjects.account.loan.LoanApproval
+import com.mifos.core.`object`.account.loan.LoanApproval
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.GenericResponse
 import rx.Observable

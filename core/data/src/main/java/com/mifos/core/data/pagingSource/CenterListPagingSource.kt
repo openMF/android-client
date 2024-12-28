@@ -11,7 +11,7 @@ package com.mifos.core.data.pagingSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.mifos.core.modelobjects.clients.Page
+import com.mifos.core.`object`.clients.Page
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.objects.group.Center
 import rx.Subscriber

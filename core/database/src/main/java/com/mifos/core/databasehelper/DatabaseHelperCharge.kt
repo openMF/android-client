@@ -10,7 +10,7 @@
 package com.mifos.core.databasehelper
 
 import android.os.AsyncTask
-import com.mifos.core.modelobjects.clients.Page
+import com.mifos.core.`object`.clients.Page
 import com.mifos.core.objects.client.Charges
 import com.mifos.core.objects.client.Charges_Table
 import com.mifos.core.objects.client.ClientDate

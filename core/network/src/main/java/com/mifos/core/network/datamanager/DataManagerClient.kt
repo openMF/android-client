@@ -10,14 +10,14 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperClient
-import com.mifos.core.modelobjects.clients.ActivatePayload
-import com.mifos.core.modelobjects.clients.ClientAddressRequest
-import com.mifos.core.modelobjects.clients.ClientAddressResponse
-import com.mifos.core.modelobjects.clients.Page
-import com.mifos.core.modelobjects.noncoreobjects.Identifier
-import com.mifos.core.modelobjects.noncoreobjects.IdentifierCreationResponse
-import com.mifos.core.modelobjects.noncoreobjects.IdentifierPayload
-import com.mifos.core.modelobjects.noncoreobjects.IdentifierTemplate
+import com.mifos.core.`object`.clients.ActivatePayload
+import com.mifos.core.`object`.clients.ClientAddressRequest
+import com.mifos.core.`object`.clients.ClientAddressResponse
+import com.mifos.core.`object`.clients.Page
+import com.mifos.core.`object`.noncoreobjects.Identifier
+import com.mifos.core.`object`.noncoreobjects.IdentifierCreationResponse
+import com.mifos.core.`object`.noncoreobjects.IdentifierPayload
+import com.mifos.core.`object`.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.clients.GetClientResponseMapper

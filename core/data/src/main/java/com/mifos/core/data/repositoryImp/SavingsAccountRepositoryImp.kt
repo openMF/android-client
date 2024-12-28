@@ -10,7 +10,7 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SavingsAccountRepository
-import com.mifos.core.modelobjects.organisations.ProductSavings
+import com.mifos.core.`object`.organisations.ProductSavings
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.objects.client.Savings
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate

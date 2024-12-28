@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.loanRepayment
 
-import com.mifos.core.modelobjects.account.loan.LoanRepaymentResponse
+import com.mifos.core.`object`.account.loan.LoanRepaymentResponse
 import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
 
 /**

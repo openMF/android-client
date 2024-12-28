@@ -9,7 +9,7 @@
  */
 package com.mifos.core.databasehelper
 
-import com.mifos.core.modelobjects.account.loan.LoanRepaymentResponse
+import com.mifos.core.`object`.account.loan.LoanRepaymentResponse
 import com.mifos.core.objects.PaymentTypeOption
 import com.mifos.core.objects.accounts.loan.ActualDisbursementDate
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest

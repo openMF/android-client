@@ -72,8 +72,8 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.modelobjects.account.saving.FieldOfficerOptions
-import com.mifos.core.modelobjects.organisations.ProductSavings
+import com.mifos.core.`object`.account.saving.FieldOfficerOptions
+import com.mifos.core.`object`.organisations.ProductSavings
 import com.mifos.core.objects.client.Savings
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import com.mifos.core.objects.zipmodels.SavingProductsAndTemplate

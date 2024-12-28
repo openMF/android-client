@@ -20,9 +20,9 @@ import com.mifos.core.domain.useCases.GetReportParameterDetailsUseCase
 import com.mifos.core.domain.useCases.GetRunReportOfficesUseCase
 import com.mifos.core.domain.useCases.GetRunReportProductUseCase
 import com.mifos.core.domain.useCases.GetRunReportWithQueryUseCase
-import com.mifos.core.modelobjects.runreport.DataRow
-import com.mifos.core.modelobjects.runreport.FullParameterListResponse
-import com.mifos.core.modelobjects.runreport.client.ClientReportTypeItem
+import com.mifos.core.`object`.runreport.DataRow
+import com.mifos.core.`object`.runreport.FullParameterListResponse
+import com.mifos.core.`object`.runreport.client.ClientReportTypeItem
 import com.mifos.feature.report.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

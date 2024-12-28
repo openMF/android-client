@@ -11,9 +11,9 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.data.CenterPayload
 import com.mifos.core.databasehelper.DatabaseHelperCenter
-import com.mifos.core.modelobjects.clients.ActivatePayload
-import com.mifos.core.modelobjects.clients.Page
-import com.mifos.core.modelobjects.responses.SaveResponse
+import com.mifos.core.`object`.clients.ActivatePayload
+import com.mifos.core.`object`.clients.Page
+import com.mifos.core.`object`.responses.SaveResponse
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.centers.GetCentersResponseMapper
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper

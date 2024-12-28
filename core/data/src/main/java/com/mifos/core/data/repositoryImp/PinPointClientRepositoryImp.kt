@@ -10,8 +10,8 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.PinPointClientRepository
-import com.mifos.core.modelobjects.clients.ClientAddressRequest
-import com.mifos.core.modelobjects.clients.ClientAddressResponse
+import com.mifos.core.`object`.clients.ClientAddressRequest
+import com.mifos.core.`object`.clients.ClientAddressResponse
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerClient
 import javax.inject.Inject

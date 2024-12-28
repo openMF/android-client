@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.modelobjects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.core.`object`.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
 import rx.Observable

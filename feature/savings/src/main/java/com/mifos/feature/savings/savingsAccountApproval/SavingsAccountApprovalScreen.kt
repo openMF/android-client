@@ -57,7 +57,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.modelobjects.account.loan.SavingsApproval
+import com.mifos.core.`object`.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
 import com.mifos.feature.savings.R
 import java.text.SimpleDateFormat

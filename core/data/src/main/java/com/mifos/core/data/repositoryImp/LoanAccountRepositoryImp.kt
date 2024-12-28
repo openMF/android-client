@@ -11,7 +11,7 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.LoansPayload
 import com.mifos.core.data.repository.LoanAccountRepository
-import com.mifos.core.modelobjects.organisations.LoanProducts
+import com.mifos.core.`object`.organisations.LoanProducts
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.objects.accounts.loan.Loans
 import com.mifos.core.objects.templates.loans.LoanTemplate

@@ -9,9 +9,9 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.modelobjects.checkerinboxtask.CheckerInboxSearchTemplate
-import com.mifos.core.modelobjects.checkerinboxtask.CheckerTask
-import com.mifos.core.modelobjects.checkerinboxtask.RescheduleLoansTask
+import com.mifos.core.`object`.checkerinboxtask.CheckerInboxSearchTemplate
+import com.mifos.core.`object`.checkerinboxtask.CheckerTask
+import com.mifos.core.`object`.checkerinboxtask.RescheduleLoansTask
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import rx.Observable

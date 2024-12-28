@@ -12,7 +12,7 @@ package com.mifos.core.objects.collectionsheet
 import android.os.Parcelable
 import com.mifos.core.model.BulkRepaymentTransactions
 import com.mifos.core.model.ClientsAttendance
-import com.mifos.core.modelobjects.collectionsheets.BulkSavingsDueTransaction
+import com.mifos.core.`object`.collectionsheets.BulkSavingsDueTransaction
 import kotlinx.parcelize.Parcelize
 
 /**

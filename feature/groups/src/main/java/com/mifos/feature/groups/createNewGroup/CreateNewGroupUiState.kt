@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.groups.createNewGroup
 
-import com.mifos.core.modelobjects.responses.SaveResponse
+import com.mifos.core.`object`.responses.SaveResponse
 import com.mifos.core.objects.organisation.Office
 
 /**

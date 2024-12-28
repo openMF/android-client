@@ -9,7 +9,7 @@
  */
 package com.mifos.core.network.model
 
-import com.mifos.core.modelobjects.surveys.ScorecardValues
+import com.mifos.core.`object`.surveys.ScorecardValues
 import java.util.Date
 
 /**

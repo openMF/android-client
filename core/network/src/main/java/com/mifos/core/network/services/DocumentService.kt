@@ -10,7 +10,7 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.modelobjects.noncoreobjects.Document
+import com.mifos.core.`object`.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody

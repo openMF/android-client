@@ -17,7 +17,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.modelobjects.nav.DataTableNavigationArg
+import com.mifos.core.`object`.nav.DataTableNavigationArg
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.navigation.DataTableDataNavigationArg
 import com.mifos.core.objects.noncore.DataTable

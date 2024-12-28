@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.center.centerDetails
 
-import com.mifos.core.modelobjects.groups.CenterInfo
+import com.mifos.core.`object`.groups.CenterInfo
 import com.mifos.core.objects.group.CenterWithAssociations
 
 /**

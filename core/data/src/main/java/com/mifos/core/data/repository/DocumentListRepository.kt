@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.modelobjects.noncoreobjects.Document
+import com.mifos.core.`object`.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
 import okhttp3.ResponseBody
 

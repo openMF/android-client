@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.client.clientIdentifiersDialog
 
-import com.mifos.core.modelobjects.noncoreobjects.IdentifierTemplate
+import com.mifos.core.`object`.noncoreobjects.IdentifierTemplate
 
 /**
  * Created by Aditya Gupta on 16/08/23.

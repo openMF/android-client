@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.modelobjects.organisations.ProductSavings
+import com.mifos.core.`object`.organisations.ProductSavings
 import com.mifos.core.objects.client.Savings
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 import com.mifos.core.payloads.SavingsPayload

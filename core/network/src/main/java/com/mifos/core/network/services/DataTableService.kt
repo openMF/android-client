@@ -11,7 +11,7 @@ package com.mifos.core.network.services
 
 import com.google.gson.JsonArray
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.modelobjects.users.UserLocation
+import com.mifos.core.`object`.users.UserLocation
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.noncore.DataTable
 import retrofit2.http.Body

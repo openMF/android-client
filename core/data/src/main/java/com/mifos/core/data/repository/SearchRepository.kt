@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.modelobjects.SearchedEntity
+import com.mifos.core.`object`.SearchedEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

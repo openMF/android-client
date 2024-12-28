@@ -10,7 +10,7 @@
 package com.mifos.core.objects.group
 
 import android.os.Parcelable
-import com.mifos.core.modelobjects.collectionsheets.CollectionMeetingCalendar
+import com.mifos.core.`object`.collectionsheets.CollectionMeetingCalendar
 import com.mifos.core.objects.Timeline
 import com.mifos.core.objects.client.Status
 import kotlinx.parcelize.Parcelize

@@ -10,9 +10,9 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.modelobjects.clients.ChargeCreationResponse
-import com.mifos.core.modelobjects.clients.Page
-import com.mifos.core.modelobjects.template.client.ChargeTemplate
+import com.mifos.core.`object`.clients.ChargeCreationResponse
+import com.mifos.core.`object`.clients.Page
+import com.mifos.core.`object`.template.client.ChargeTemplate
 import com.mifos.core.objects.client.Charges
 import com.mifos.core.payloads.ChargesPayload
 import okhttp3.ResponseBody

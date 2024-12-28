@@ -10,9 +10,9 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.modelobjects.account.loan.SavingsApproval
-import com.mifos.core.modelobjects.account.saving.SavingsAccountTransactionResponse
-import com.mifos.core.modelobjects.organisations.ProductSavings
+import com.mifos.core.`object`.account.loan.SavingsApproval
+import com.mifos.core.`object`.account.saving.SavingsAccountTransactionResponse
+import com.mifos.core.`object`.organisations.ProductSavings
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations

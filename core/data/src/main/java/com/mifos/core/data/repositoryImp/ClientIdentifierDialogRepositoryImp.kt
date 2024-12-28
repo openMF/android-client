@@ -10,9 +10,9 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.ClientIdentifierDialogRepository
-import com.mifos.core.modelobjects.noncoreobjects.IdentifierCreationResponse
-import com.mifos.core.modelobjects.noncoreobjects.IdentifierPayload
-import com.mifos.core.modelobjects.noncoreobjects.IdentifierTemplate
+import com.mifos.core.`object`.noncoreobjects.IdentifierCreationResponse
+import com.mifos.core.`object`.noncoreobjects.IdentifierPayload
+import com.mifos.core.`object`.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
 import javax.inject.Inject
 

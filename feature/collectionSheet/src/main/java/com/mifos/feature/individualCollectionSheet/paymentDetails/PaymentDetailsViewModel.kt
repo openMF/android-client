@@ -15,8 +15,8 @@ import androidx.lifecycle.viewModelScope
 import coil.request.ImageResult
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.modelobjects.account.loan.PaymentTypeOptions
-import com.mifos.core.modelobjects.collectionsheets.LoanAndClientName
+import com.mifos.core.`object`.account.loan.PaymentTypeOptions
+import com.mifos.core.`object`.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.network.utils.ImageLoaderUtils
 import dagger.hilt.android.lifecycle.HiltViewModel

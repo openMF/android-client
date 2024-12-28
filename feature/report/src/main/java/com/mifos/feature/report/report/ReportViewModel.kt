@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.modelobjects.runreport.FullParameterListResponse
+import com.mifos.core.`object`.runreport.FullParameterListResponse
 import com.mifos.feature.report.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

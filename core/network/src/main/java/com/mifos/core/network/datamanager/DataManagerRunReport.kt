@@ -9,9 +9,9 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.modelobjects.groups.CenterInfo
-import com.mifos.core.modelobjects.runreport.FullParameterListResponse
-import com.mifos.core.modelobjects.runreport.client.ClientReportTypeItem
+import com.mifos.core.`object`.groups.CenterInfo
+import com.mifos.core.`object`.runreport.FullParameterListResponse
+import com.mifos.core.`object`.runreport.client.ClientReportTypeItem
 import com.mifos.core.network.BaseApiManager
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
-import com.mifos.core.modelobjects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.core.`object`.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

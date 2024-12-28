@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
-import com.mifos.core.modelobjects.collectionsheets.CollectionSheetRequestPayload
+import com.mifos.core.`object`.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.objects.collectionsheet.CollectionSheetResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

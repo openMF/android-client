@@ -58,7 +58,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.modelobjects.collectionsheets.CollectionSheetRequestPayload
+import com.mifos.core.`object`.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.objects.collectionsheet.CenterDetail
 import com.mifos.core.objects.collectionsheet.CollectionSheetPayload
 import com.mifos.core.objects.collectionsheet.CollectionSheetResponse

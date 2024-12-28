@@ -11,9 +11,9 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.data.LoansPayload
 import com.mifos.core.databasehelper.DatabaseHelperLoan
-import com.mifos.core.modelobjects.account.loan.LoanDisbursement
-import com.mifos.core.modelobjects.account.loan.LoanRepaymentResponse
-import com.mifos.core.modelobjects.organisations.LoanProducts
+import com.mifos.core.`object`.account.loan.LoanDisbursement
+import com.mifos.core.`object`.account.loan.LoanRepaymentResponse
+import com.mifos.core.`object`.organisations.LoanProducts
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest

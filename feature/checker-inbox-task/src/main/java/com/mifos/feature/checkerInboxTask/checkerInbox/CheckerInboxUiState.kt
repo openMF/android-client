@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.checkerInboxTask.checkerInbox
 
-import com.mifos.core.modelobjects.checkerinboxtask.CheckerTask
+import com.mifos.core.`object`.checkerinboxtask.CheckerTask
 
 sealed class CheckerInboxUiState {
 

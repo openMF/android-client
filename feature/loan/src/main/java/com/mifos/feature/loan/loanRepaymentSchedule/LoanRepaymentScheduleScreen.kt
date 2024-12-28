@@ -45,8 +45,8 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.modelobjects.account.loan.Period
-import com.mifos.core.modelobjects.account.loan.RepaymentSchedule
+import com.mifos.core.`object`.account.loan.Period
+import com.mifos.core.`object`.account.loan.RepaymentSchedule
 import com.mifos.core.objects.accounts.loan.LoanWithAssociations
 import com.mifos.feature.loan.R
 

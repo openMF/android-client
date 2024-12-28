@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CenterDetailsRepository
-import com.mifos.core.modelobjects.groups.CenterInfo
+import com.mifos.core.`object`.groups.CenterInfo
 import com.mifos.core.objects.group.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

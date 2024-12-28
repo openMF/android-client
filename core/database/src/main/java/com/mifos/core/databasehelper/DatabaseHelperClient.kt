@@ -14,7 +14,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.MapDeserializer
-import com.mifos.core.modelobjects.clients.Page
+import com.mifos.core.`object`.clients.Page
 import com.mifos.core.objects.accounts.ClientAccounts
 import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.core.objects.accounts.loan.LoanAccount_Table

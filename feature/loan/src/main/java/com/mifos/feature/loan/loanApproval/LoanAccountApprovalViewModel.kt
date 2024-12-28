@@ -13,7 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
-import com.mifos.core.modelobjects.account.loan.LoanApproval
+import com.mifos.core.`object`.account.loan.LoanApproval
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.accounts.loan.LoanApprovalData
 import dagger.hilt.android.lifecycle.HiltViewModel

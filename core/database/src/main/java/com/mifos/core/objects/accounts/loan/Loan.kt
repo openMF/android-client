@@ -9,13 +9,13 @@
  */
 package com.mifos.core.objects.accounts.loan
 
-import com.mifos.core.modelobjects.account.loan.AmortizationType
-import com.mifos.core.modelobjects.account.loan.Currency
-import com.mifos.core.modelobjects.account.loan.InterestCalculationPeriodType
-import com.mifos.core.modelobjects.account.loan.InterestRateFrequencyType
-import com.mifos.core.modelobjects.account.loan.InterestType
-import com.mifos.core.modelobjects.account.loan.RepaymentFrequencyType
-import com.mifos.core.modelobjects.account.loan.TermPeriodFrequencyType
+import com.mifos.core.`object`.account.loan.AmortizationType
+import com.mifos.core.`object`.account.loan.Currency
+import com.mifos.core.`object`.account.loan.InterestCalculationPeriodType
+import com.mifos.core.`object`.account.loan.InterestRateFrequencyType
+import com.mifos.core.`object`.account.loan.InterestType
+import com.mifos.core.`object`.account.loan.RepaymentFrequencyType
+import com.mifos.core.`object`.account.loan.TermPeriodFrequencyType
 
 data class Loan(
     var id: Int? = null,

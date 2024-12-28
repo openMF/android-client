@@ -10,7 +10,7 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.PathTrackingRepository
-import com.mifos.core.modelobjects.users.UserLocation
+import com.mifos.core.`object`.users.UserLocation
 import com.mifos.core.network.datamanager.DataManagerDataTable
 import javax.inject.Inject
 

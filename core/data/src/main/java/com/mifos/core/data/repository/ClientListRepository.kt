@@ -10,7 +10,7 @@
 package com.mifos.core.data.repository
 
 import androidx.paging.PagingData
-import com.mifos.core.modelobjects.clients.Page
+import com.mifos.core.`object`.clients.Page
 import com.mifos.core.objects.client.Client
 import kotlinx.coroutines.flow.Flow
 import rx.Observable

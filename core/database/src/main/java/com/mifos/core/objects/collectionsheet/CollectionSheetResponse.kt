@@ -10,9 +10,9 @@
 package com.mifos.core.objects.collectionsheet
 
 import android.os.Parcelable
-import com.mifos.core.modelobjects.collectionsheets.AttendanceTypeOption
-import com.mifos.core.modelobjects.collectionsheets.SavingsProduct
-import com.mifos.core.modelobjects.organisations.LoanProducts
+import com.mifos.core.`object`.collectionsheets.AttendanceTypeOption
+import com.mifos.core.`object`.collectionsheets.SavingsProduct
+import com.mifos.core.`object`.organisations.LoanProducts
 import kotlinx.parcelize.Parcelize
 
 /**

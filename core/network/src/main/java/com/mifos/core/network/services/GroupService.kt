@@ -10,9 +10,9 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.modelobjects.clients.ActivatePayload
-import com.mifos.core.modelobjects.clients.Page
-import com.mifos.core.modelobjects.responses.SaveResponse
+import com.mifos.core.`object`.clients.ActivatePayload
+import com.mifos.core.`object`.clients.Page
+import com.mifos.core.`object`.responses.SaveResponse
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.accounts.GroupAccounts
 import com.mifos.core.objects.group.Group

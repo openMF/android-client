@@ -9,15 +9,15 @@
  */
 package com.mifos.core.network
 
-import com.mifos.core.modelobjects.account.loan.LoanApproval
-import com.mifos.core.modelobjects.clients.ChargeCreationResponse
-import com.mifos.core.modelobjects.clients.Page
-import com.mifos.core.modelobjects.databaseobjects.CollectionSheet
-import com.mifos.core.modelobjects.databaseobjects.OfflineCenter
-import com.mifos.core.modelobjects.organisations.LoanProducts
-import com.mifos.core.modelobjects.responses.SaveResponse
-import com.mifos.core.modelobjects.template.client.ChargeTemplate
-import com.mifos.core.modelobjects.template.loan.GroupLoanTemplate
+import com.mifos.core.`object`.account.loan.LoanApproval
+import com.mifos.core.`object`.clients.ChargeCreationResponse
+import com.mifos.core.`object`.clients.Page
+import com.mifos.core.`object`.databaseobjects.CollectionSheet
+import com.mifos.core.`object`.databaseobjects.OfflineCenter
+import com.mifos.core.`object`.organisations.LoanProducts
+import com.mifos.core.`object`.responses.SaveResponse
+import com.mifos.core.`object`.template.client.ChargeTemplate
+import com.mifos.core.`object`.template.loan.GroupLoanTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload

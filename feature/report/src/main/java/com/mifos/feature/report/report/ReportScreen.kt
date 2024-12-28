@@ -47,7 +47,7 @@ import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.modelobjects.runreport.FullParameterListResponse
+import com.mifos.core.`object`.runreport.FullParameterListResponse
 import com.mifos.feature.report.R
 import kotlinx.coroutines.launch
 

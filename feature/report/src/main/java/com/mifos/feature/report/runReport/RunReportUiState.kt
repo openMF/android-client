@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.report.runReport
 
-import com.mifos.core.modelobjects.runreport.client.ClientReportTypeItem
+import com.mifos.core.`object`.runreport.client.ClientReportTypeItem
 
 sealed class RunReportUiState {
 

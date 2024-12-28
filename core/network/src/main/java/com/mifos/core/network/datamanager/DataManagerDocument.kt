@@ -9,7 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.modelobjects.noncoreobjects.Document
+import com.mifos.core.`object`.noncoreobjects.Document
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import okhttp3.MultipartBody

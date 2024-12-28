@@ -14,7 +14,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.mifos.core.data.pagingSource.CenterListPagingSource
 import com.mifos.core.data.repository.CenterListRepository
-import com.mifos.core.modelobjects.clients.Page
+import com.mifos.core.`object`.clients.Page
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.objects.group.Center
 import com.mifos.core.objects.group.CenterWithAssociations

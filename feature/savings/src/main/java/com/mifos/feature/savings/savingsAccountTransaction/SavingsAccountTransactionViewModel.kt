@@ -19,7 +19,7 @@ import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.GetSavingsAccountTransactionTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsAccountTransactionUseCase
 import com.mifos.core.domain.useCases.ProcessTransactionUseCase
-import com.mifos.core.modelobjects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.core.`object`.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.accounts.savings.SavingsTransactionData
 import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate

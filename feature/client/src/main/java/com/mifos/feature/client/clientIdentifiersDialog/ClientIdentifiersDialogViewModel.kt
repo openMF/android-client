@@ -14,8 +14,8 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
 import com.mifos.core.domain.useCases.GetClientIdentifierTemplateUseCase
-import com.mifos.core.modelobjects.noncoreobjects.IdentifierPayload
-import com.mifos.core.modelobjects.noncoreobjects.IdentifierTemplate
+import com.mifos.core.`object`.noncoreobjects.IdentifierPayload
+import com.mifos.core.`object`.noncoreobjects.IdentifierTemplate
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

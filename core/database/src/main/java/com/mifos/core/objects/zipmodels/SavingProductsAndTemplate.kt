@@ -9,7 +9,7 @@
  */
 package com.mifos.core.objects.zipmodels
 
-import com.mifos.core.modelobjects.organisations.ProductSavings
+import com.mifos.core.`object`.organisations.ProductSavings
 import com.mifos.core.objects.templates.savings.SavingProductsTemplate
 
 /**

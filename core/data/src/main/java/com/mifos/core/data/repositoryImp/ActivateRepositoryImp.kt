@@ -10,7 +10,7 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.ActivateRepository
-import com.mifos.core.modelobjects.clients.ActivatePayload
+import com.mifos.core.`object`.clients.ActivatePayload
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerClient

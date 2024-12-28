@@ -12,7 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.common.network.Dispatcher
 import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.data.repository.SearchRepository
-import com.mifos.core.modelobjects.SearchedEntity
+import com.mifos.core.`object`.SearchedEntity
 import com.mifos.core.network.datamanager.DataManagerSearch
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow

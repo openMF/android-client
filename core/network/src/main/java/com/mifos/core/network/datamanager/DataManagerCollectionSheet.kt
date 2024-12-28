@@ -9,7 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.modelobjects.collectionsheets.CollectionSheetRequestPayload
+import com.mifos.core.`object`.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.IndividualCollectionSheetPayload

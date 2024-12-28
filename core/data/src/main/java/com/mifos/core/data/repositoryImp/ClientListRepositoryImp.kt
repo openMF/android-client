@@ -14,7 +14,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.mifos.core.data.pagingSource.ClientListPagingSource
 import com.mifos.core.data.repository.ClientListRepository
-import com.mifos.core.modelobjects.clients.Page
+import com.mifos.core.`object`.clients.Page
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.objects.client.Client
 import kotlinx.coroutines.flow.Flow

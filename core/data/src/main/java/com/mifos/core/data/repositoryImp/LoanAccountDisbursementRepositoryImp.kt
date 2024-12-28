@@ -10,7 +10,7 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.LoanAccountDisbursementRepository
-import com.mifos.core.modelobjects.account.loan.LoanDisbursement
+import com.mifos.core.`object`.account.loan.LoanDisbursement
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.objects.templates.loans.LoanTransactionTemplate

@@ -11,11 +11,11 @@ package com.mifos.core.network.services
 
 import com.mifos.core.data.CenterPayload
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.modelobjects.clients.ActivatePayload
-import com.mifos.core.modelobjects.clients.Page
-import com.mifos.core.modelobjects.databaseobjects.CollectionSheet
-import com.mifos.core.modelobjects.databaseobjects.OfflineCenter
-import com.mifos.core.modelobjects.responses.SaveResponse
+import com.mifos.core.`object`.clients.ActivatePayload
+import com.mifos.core.`object`.clients.Page
+import com.mifos.core.`object`.databaseobjects.CollectionSheet
+import com.mifos.core.`object`.databaseobjects.OfflineCenter
+import com.mifos.core.`object`.responses.SaveResponse
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload

@@ -9,8 +9,8 @@
  */
 package com.mifos.core.databasehelper
 
-import com.mifos.core.modelobjects.clients.Page
-import com.mifos.core.modelobjects.responses.SaveResponse
+import com.mifos.core.`object`.clients.Page
+import com.mifos.core.`object`.responses.SaveResponse
 import com.mifos.core.objects.accounts.GroupAccounts
 import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.core.objects.accounts.loan.LoanAccount_Table

@@ -12,8 +12,8 @@ package com.mifos.core.databasehelper
 import android.os.AsyncTask
 import com.mifos.core.data.CenterPayload
 import com.mifos.core.data.CenterPayload_Table
-import com.mifos.core.modelobjects.clients.Page
-import com.mifos.core.modelobjects.responses.SaveResponse
+import com.mifos.core.`object`.clients.Page
+import com.mifos.core.`object`.responses.SaveResponse
 import com.mifos.core.objects.accounts.CenterAccounts
 import com.mifos.core.objects.group.Center
 import com.mifos.core.objects.group.CenterDate

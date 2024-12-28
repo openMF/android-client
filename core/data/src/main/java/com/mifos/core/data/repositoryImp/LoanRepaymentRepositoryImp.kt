@@ -10,7 +10,7 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.LoanRepaymentRepository
-import com.mifos.core.modelobjects.account.loan.LoanRepaymentResponse
+import com.mifos.core.`object`.account.loan.LoanRepaymentResponse
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
