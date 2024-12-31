@@ -20,5 +20,5 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.wire) apply false
-    alias(libs.plugins.ktrofit) apply false
+    alias(libs.plugins.ktorfit) apply false
 }
