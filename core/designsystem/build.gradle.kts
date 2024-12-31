@@ -43,3 +43,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test)
     androidTestImplementation(projects.core.testing)
 }
+
+composeCompiler {
+    stabilityConfigurationFile = rootProject.layout.projectDirectory.file("compose_compiler_config.conf")
+}

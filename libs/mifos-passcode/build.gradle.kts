@@ -33,3 +33,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
 }
+
+composeCompiler {
+    stabilityConfigurationFile = rootProject.layout.projectDirectory.file("compose_compiler_config.conf")
+}
