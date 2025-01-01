@@ -1,4 +1,4 @@
-package com.mifos.core.data.repository_imp
+package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SurveyQuestionRepository
 import com.mifos.core.network.datamanager.DataManagerSurveys
