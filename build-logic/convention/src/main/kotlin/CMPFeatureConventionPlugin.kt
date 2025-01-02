@@ -3,9 +3,6 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 import org.mifos.libs
 
-/**
- * Created by Pronay Sarker on 30/12/2024 (6:04 PM)
- */
 class CMPFeatureConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {

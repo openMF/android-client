@@ -7,9 +7,7 @@ import org.mifos.configureFlavors
 import org.mifos.configureKotlinAndroid
 import org.mifos.configureKotlinMultiplatform
 import org.mifos.libs
-/**
- * Created by Pronay Sarker on 30/12/2024 (7:33 PM)
- */
+
 class KMPLibraryConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {

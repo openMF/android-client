@@ -3,9 +3,6 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 import org.mifos.libs
 
-/**
- * Created by Pronay Sarker on 30/12/2024 (7:30 PM)
- */
 class KMPKoinConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
