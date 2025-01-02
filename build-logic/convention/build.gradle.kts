@@ -24,7 +24,7 @@ dependencies {
     compileOnly(libs.firebase.crashlytics.gradlePlugin)
     compileOnly(libs.firebase.performance.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
-//    compileOnly(libs.compose.gradlePlugin)
+    compileOnly(libs.compose.gradlePlugin)
     compileOnly(libs.ksp.gradlePlugin)
     compileOnly(libs.room.gradlePlugin)
     compileOnly(libs.detekt.gradlePlugin)
@@ -117,6 +117,20 @@ gradlePlugin {
             id = "mifos.git.hooks"
             implementationClass = "MifosGitHooksConventionPlugin"
             description = "Installs git hooks for the project"
+        }
+
+        // KMP & CMP Plugins
+        register("cmpFeature") {
+            id = "mifos.cmp.feature"
+            implementationClass = "CMPFeatureConventionPlugin"
+        }
+        register("kmpKoin") {
+            id = "mifos.kmp.koin"
+            implementationClass = "KMPKoinConventionPlugin"
+        }
+        register("kmpLibrary") {
+            id = "mifos.kmp.library"
+            implementationClass = "KMPLibraryConventionPlugin"
         }
     }
 }
