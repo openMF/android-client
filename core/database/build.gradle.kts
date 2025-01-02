@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.mifos.android.library)
     alias(libs.plugins.mifos.android.hilt)
     alias(libs.plugins.mifos.android.library.jacoco)
+    alias(libs.plugins.ksp)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
 }
 
@@ -37,6 +38,12 @@ dependencies {
     kapt(libs.dbflow.processor)
     implementation(libs.dbflow)
     kapt(libs.github.dbflow.processor)
+
+    //room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    kspTest(libs.androidx.room.compiler)
 
     // Hilt dependency
     implementation(libs.hilt.android)
