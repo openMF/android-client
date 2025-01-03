@@ -197,7 +197,7 @@ fun GroupsListScreen(
                     hide = {
                         syncGroups = false
                     },
-                    groups = selectedItems
+                    groups = selectedItems,
                 )
             }
         },

@@ -46,14 +46,14 @@ import com.mifos.feature.groups.R
 internal fun SyncGroupDialogScreen(
     dismiss: () -> Unit,
     viewModel: SyncGroupsDialogViewModel = hiltViewModel(),
-    groups : List<Group>? = listOf(),
+    groups: List<Group>? = listOf(),
     hide: () -> Unit,
 ) {
     val uiState by viewModel.syncGroupsDialogUiState.collectAsStateWithLifecycle()
     val uiData by viewModel.syncGroupData.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        groups?.let{
+        groups?.let {
             viewModel.setGroupList(groups)
         }
         viewModel.syncGroups()
@@ -79,7 +79,7 @@ internal fun SyncGroupDialogScreen(
 
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         SyncGroupDialogContent(
             uiData = uiData,
