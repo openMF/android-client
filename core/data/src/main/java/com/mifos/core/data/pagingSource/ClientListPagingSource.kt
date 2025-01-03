@@ -14,7 +14,6 @@ import androidx.paging.PagingState
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.Page
-import kotlinx.coroutines.suspendCancellableCoroutine
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -57,23 +56,8 @@ class ClientListPagingSource(
     }
 
     private suspend fun getClientList(position: Int): Pair<List<Client>, Int> {
-        return suspendCancellableCoroutine { continuation ->
-            dataManagerClient.getAllClients(offset = position, 10)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Client>>() {
-                    override fun onCompleted() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                        continuation.resumeWithException(e)
-                    }
-
-                    override fun onNext(t: Page<Client>) {
-                        continuation.resume(Pair(t.pageItems, t.totalFilteredRecords))
-                    }
-                })
-        }
+        val response = dataManagerClient.getAllClients(position, 10)
+        return Pair(response.pageItems, response.totalFilteredRecords)
     }
 
     private suspend fun getClientDbList(): List<Client> {

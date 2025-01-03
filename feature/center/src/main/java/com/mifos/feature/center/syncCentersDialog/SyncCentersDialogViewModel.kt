@@ -10,13 +10,13 @@
 package com.mifos.feature.center.syncCentersDialog
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncCentersDialogRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.objects.accounts.CenterAccounts
-import com.mifos.core.objects.accounts.ClientAccounts
 import com.mifos.core.objects.accounts.GroupAccounts
 import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.core.objects.accounts.savings.SavingsAccount
@@ -29,9 +29,11 @@ import com.mifos.core.objects.zipmodels.LoanAndLoanRepayment
 import com.mifos.core.objects.zipmodels.SavingsAccountAndTransactionTemplate
 import com.mifos.feature.center.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
@@ -225,11 +227,6 @@ class SyncCentersDialogViewModel @Inject constructor(
             val endPoint =
                 mMemberLoanAccountsList[mMemberLoanSyncIndex].loanType?.value
             val id = mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
-            if (id != null) {
-                syncMemberLoanAndMemberLoanRepayment(
-                    id,
-                )
-            }
             if (endPoint != null && id != null) {
                 syncSavingsAccountAndTemplate(endPoint, id)
             }
@@ -301,34 +298,34 @@ class SyncCentersDialogViewModel @Inject constructor(
             })
     }
 
-    /**
-     * This Method Syncing the Member's Loan and their LoanRepayment. This is the
-     * Observable.combineLatest In Which two request is going to server Loans and LoanRepayment
-     * and This request will not complete till that both request completed successfully with
-     * response (200 OK). If one will fail then response will come in onError. and If both
-     * request is 200 response then response will come in onNext.
-     *
-     * @param loanId Loan Id
-     */
-    private fun syncMemberLoanAndMemberLoanRepayment(loanId: Int) {
-        getLoanAndLoanRepayment(loanId)
-            .subscribe(object : Subscriber<LoanAndLoanRepayment>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    onAccountSyncFailed(e)
-                }
-
-                override fun onNext(loanAndLoanRepayment: LoanAndLoanRepayment) {
-                    mMemberLoanSyncIndex += 1
-                    _syncCenterData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex + mMemberLoanSyncIndex) }
-                    if (mMemberLoanSyncIndex != mMemberLoanAccountsList.size) {
-                        checkNetworkConnectionAndSyncMemberLoanAndMemberLoanRepayment()
-                    } else {
-                        mCenterList[mCenterSyncIndex].id?.let { loadCenterAssociateGroups(it) }
-                    }
-                }
-            })
-    }
+//    /**
+//     * This Method Syncing the Member's Loan and their LoanRepayment. This is the
+//     * Observable.combineLatest In Which two request is going to server Loans and LoanRepayment
+//     * and This request will not complete till that both request completed successfully with
+//     * response (200 OK). If one will fail then response will come in onError. and If both
+//     * request is 200 response then response will come in onNext.
+//     *
+//     * @param loanId Loan Id
+//     */
+//    private fun syncMemberLoanAndMemberLoanRepayment(loanId: Int) {
+//        getLoanAndLoanRepayment(loanId)
+//            .subscribe(object : Subscriber<LoanAndLoanRepayment>() {
+//                override fun onCompleted() {}
+//                override fun onError(e: Throwable) {
+//                    onAccountSyncFailed(e)
+//                }
+//
+//                override fun onNext(loanAndLoanRepayment: LoanAndLoanRepayment) {
+//                    mMemberLoanSyncIndex += 1
+//                    _syncCenterData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex + mMemberLoanSyncIndex) }
+//                    if (mMemberLoanSyncIndex != mMemberLoanAccountsList.size) {
+//                        checkNetworkConnectionAndSyncMemberLoanAndMemberLoanRepayment()
+//                    } else {
+//                        mCenterList[mCenterSyncIndex].id?.let { loadCenterAssociateGroups(it) }
+//                    }
+//                }
+//            })
+//    }
 
     /**
      * This Method Fetching the  SavingsAccount and SavingsAccountTransactionTemplate and Syncing
@@ -539,28 +536,17 @@ class SyncCentersDialogViewModel @Inject constructor(
      *
      * @param clientId Client Id
      */
-    private fun syncClientAccounts(clientId: Int) {
-        repository.syncClientAccounts(clientId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<ClientAccounts>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    onAccountSyncFailed(e)
-                }
-
-                override fun onNext(clientAccounts: ClientAccounts) {
-                    mLoanAccountList = getActiveLoanAccounts(
-                        clientAccounts
-                            .loanAccounts,
-                    )
-                    mSavingsAccountList = getSyncableSavingsAccounts(
-                        clientAccounts
-                            .savingsAccounts,
-                    )
-                    checkAccountsSyncStatusAndSyncClientAccounts()
-                }
-            })
+    private fun syncClientAccounts(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val clientAccounts = repository.syncClientAccounts(clientId)
+        mLoanAccountList = getActiveLoanAccounts(
+            clientAccounts
+                .loanAccounts,
+        )
+        mSavingsAccountList = getSyncableSavingsAccounts(
+            clientAccounts
+                .savingsAccounts,
+        )
+        checkAccountsSyncStatusAndSyncClientAccounts()
     }
 
     /**

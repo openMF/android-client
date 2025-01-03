@@ -12,13 +12,9 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.objects.client.ActivatePayload
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import org.apache.fineract.client.models.PostCentersCenterIdResponse
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import kotlinx.coroutines.flow.flow
+import org.openapitools.client.models.PostCentersCenterIdResponse
 import javax.inject.Inject
 
 class ActivateCenterUseCase @Inject constructor(private val activateRepository: ActivateRepository) {
@@ -26,26 +22,13 @@ class ActivateCenterUseCase @Inject constructor(private val activateRepository: 
     suspend operator fun invoke(
         centerId: Int,
         centerPayload: ActivatePayload,
-    ): Flow<Resource<PostCentersCenterIdResponse>> = callbackFlow {
+    ): Flow<Resource<PostCentersCenterIdResponse>> = flow {
         try {
-            trySend(Resource.Loading())
-            activateRepository.activateCenter(centerId, centerPayload)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(Schedulers.io())
-                .subscribe(object : Subscriber<PostCentersCenterIdResponse>() {
-                    override fun onCompleted() {}
-
-                    override fun onError(exception: Throwable) {
-                        trySend(Resource.Error(exception.message.toString()))
-                    }
-
-                    override fun onNext(response: PostCentersCenterIdResponse) {
-                        trySend(Resource.Success(response))
-                    }
-                })
-            awaitClose { channel.close() }
+            emit(Resource.Loading())
+            val response = activateRepository.activateCenter(centerId, centerPayload)
+            emit(Resource.Success(response))
         } catch (exception: Exception) {
-            trySend(Resource.Error(exception.message.toString()))
+            emit(Resource.Error(exception.message.toString()))
         }
     }
 }

@@ -14,13 +14,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.core.domain.useCases.ClientTemplateUseCase
+import com.mifos.core.domain.useCases.GetOfficeListUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeForCreateNewClientUseCase
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
 import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.organisation.Staff
-import com.mifos.core.objects.templates.clients.ClientsTemplate
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -45,11 +44,13 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateNewClientViewModel @Inject constructor(
     private val repository: CreateNewClientRepository,
-    private val clientTemplateUseCase: ClientTemplateUseCase,
+//    private val clientTemplateUseCase: ClientTemplateUseCase,
     private val getStaffInOffice: GetStaffInOfficeForCreateNewClientUseCase,
+    private val getOfficeListUseCase: GetOfficeListUseCase,
 ) : ViewModel() {
 
-    private val _createNewClientUiState = MutableStateFlow<CreateNewClientUiState>(CreateNewClientUiState.ShowProgressbar)
+    private val _createNewClientUiState =
+        MutableStateFlow<CreateNewClientUiState>(CreateNewClientUiState.ShowProgressbar)
     val createNewClientUiState: StateFlow<CreateNewClientUiState> get() = _createNewClientUiState
 
     private val _staffInOffices = MutableStateFlow<List<Staff>>(emptyList())
@@ -63,40 +64,38 @@ class CreateNewClientViewModel @Inject constructor(
         loadOffices()
     }
 
-    private fun loadClientTemplate() = viewModelScope.launch(Dispatchers.IO) {
-        clientTemplateUseCase().collect { result ->
+//    private fun loadClientTemplate() = viewModelScope.launch(Dispatchers.IO) {
+//        clientTemplateUseCase().collect { result ->
+//            when (result) {
+//                is Resource.Error ->
+//                    _createNewClientUiState.value =
+//                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
+//
+//                is Resource.Loading -> Unit
+//
+//                is Resource.Success ->
+//                    _createNewClientUiState.value =
+//                        CreateNewClientUiState.ShowClientTemplate(result.data ?: ClientsTemplate())
+//            }
+//        }
+//    }
+
+    private fun loadOffices() = viewModelScope.launch(Dispatchers.IO) {
+        getOfficeListUseCase().collect { result ->
             when (result) {
-                is Resource.Error ->
-                    _createNewClientUiState.value =
-                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
-
-                is Resource.Loading -> Unit
-
-                is Resource.Success ->
-                    _createNewClientUiState.value =
-                        CreateNewClientUiState.ShowClientTemplate(result.data ?: ClientsTemplate())
-            }
-        }
-    }
-
-    private fun loadOffices() {
-        repository.offices()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<Office>>() {
-                override fun onCompleted() {
-                    loadClientTemplate()
-                }
-
-                override fun onError(e: Throwable) {
+                is Resource.Error -> {
                     _createNewClientUiState.value =
                         CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_offices)
                 }
 
-                override fun onNext(officeList: List<Office>) {
-                    _showOffices.value = officeList
+                is Resource.Loading -> {
                 }
-            })
+
+                is Resource.Success -> {
+                    _showOffices.value = result.data ?: emptyList()
+                }
+            }
+        }
     }
 
     fun loadStaffInOffices(officeId: Int) =
@@ -119,50 +118,53 @@ class CreateNewClientViewModel @Inject constructor(
         repository.createClient(clientPayload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Client>() {
-                override fun onCompleted() {
-                }
-
-                override fun onError(e: Throwable) {
-                    try {
-                        if (e is HttpException) {
-                            val errorMessage = e.response()?.errorBody()
-                                ?.string() ?: ""
-                            Log.d("error", errorMessage)
-                            _createNewClientUiState.value =
-                                CreateNewClientUiState.ShowStringError(errorMessage)
-                        }
-                    } catch (throwable: Throwable) {
-                        RxJavaPlugins.getInstance().errorHandler.handleError(e)
+            .subscribe(
+                object : Subscriber<Client>() {
+                    override fun onCompleted() {
                     }
-                }
 
-                override fun onNext(client: Client?) {
-                    if (client != null) {
-                        if (client.clientId != null) {
-                            _createNewClientUiState.value =
-                                CreateNewClientUiState.ShowClientCreatedSuccessfully(R.string.feature_client_client_created_successfully)
-
-                            _createNewClientUiState.value = client.clientId?.let {
-                                CreateNewClientUiState.SetClientId(
-                                    it,
-                                )
-                            }!!
-                        } else {
-                            _createNewClientUiState.value = client.clientId?.let {
-                                CreateNewClientUiState.ShowWaitingForCheckerApproval(
-                                    it,
-                                )
-                            }!!
+                    override fun onError(e: Throwable) {
+                        try {
+                            if (e is HttpException) {
+                                val errorMessage = e.response()?.errorBody()
+                                    ?.string() ?: ""
+                                Log.d("error", errorMessage)
+                                _createNewClientUiState.value =
+                                    CreateNewClientUiState.ShowStringError(errorMessage)
+                            }
+                        } catch (throwable: Throwable) {
+                            RxJavaPlugins.getInstance().errorHandler.handleError(e)
                         }
                     }
-                }
-            })
+
+                    override fun onNext(client: Client?) {
+                        if (client != null) {
+                            if (client.clientId != null) {
+                                _createNewClientUiState.value =
+                                    CreateNewClientUiState.ShowClientCreatedSuccessfully(R.string.feature_client_client_created_successfully)
+
+                                _createNewClientUiState.value = client.clientId?.let {
+                                    CreateNewClientUiState.SetClientId(
+                                        it,
+                                    )
+                                }!!
+                            } else {
+                                _createNewClientUiState.value = client.clientId?.let {
+                                    CreateNewClientUiState.ShowWaitingForCheckerApproval(
+                                        it,
+                                    )
+                                }!!
+                            }
+                        }
+                    }
+                },
+            )
     }
 
     fun uploadImage(id: Int, pngFile: File) {
         _createNewClientUiState.value =
             CreateNewClientUiState.ShowProgress("Uploading Client's Picture...")
+//        val imagePath = pngFile.absolutePath
 
         // create RequestBody instance from file
         val requestFile = pngFile.asRequestBody("image/png".toMediaTypeOrNull())
@@ -172,19 +174,21 @@ class CreateNewClientViewModel @Inject constructor(
         repository.uploadClientImage(id, body)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<ResponseBody>() {
-                override fun onCompleted() {
-                }
+            .subscribe(
+                object : Subscriber<ResponseBody>() {
+                    override fun onCompleted() {
+                    }
 
-                override fun onError(e: Throwable) {
-                    _createNewClientUiState.value =
-                        CreateNewClientUiState.ShowError(R.string.feature_client_Image_Upload_Failed)
-                }
+                    override fun onError(e: Throwable) {
+                        _createNewClientUiState.value =
+                            CreateNewClientUiState.ShowError(R.string.feature_client_Image_Upload_Failed)
+                    }
 
-                override fun onNext(t: ResponseBody) {
-                    _createNewClientUiState.value =
-                        CreateNewClientUiState.OnImageUploadSuccess(R.string.feature_client_Image_Upload_Successful)
-                }
-            })
+                    override fun onNext(t: ResponseBody) {
+                        _createNewClientUiState.value =
+                            CreateNewClientUiState.OnImageUploadSuccess(R.string.feature_client_Image_Upload_Successful)
+                    }
+                },
+            )
     }
 }

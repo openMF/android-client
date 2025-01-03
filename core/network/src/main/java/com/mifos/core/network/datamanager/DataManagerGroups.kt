@@ -55,34 +55,49 @@ class DataManagerGroups @Inject constructor(
      * @param limit  Maximum Number of clients will come in response
      * @return Groups List page from offset to max Limit
      */
-    fun getGroups(paged: Boolean, offset: Int, limit: Int): Observable<Page<Group>> {
-        return when (prefManager.userStatus) {
-            false -> baseApiManager.getGroupApi().retrieveAll24(
-                null,
-                null,
-                null,
-                null,
-                null,
-                paged,
-                offset,
-                limit,
-                null,
-                null,
-                null,
-            ).map(GetGroupsResponseMapper::mapFromEntity)
-
-            true -> {
-                /**
-                 * offset : is the value from which position we want to fetch the list, It means
-                 * if offset is 0 and User is in the Offline Mode So fetch all groups
-                 * Return All Groups List from DatabaseHelperGroups only one time.
-                 * If offset is zero this means this is first request and
-                 * return all clients from DatabaseHelperClient
-                 */
-                mDatabaseHelperGroups.readAllGroups(offset, limit)
-            }
-        }
+    suspend fun getGroups(paged: Boolean, offset: Int, limit: Int): Page<Group> {
+        return baseApiManager.getGroupApi().retrieveAll24(
+            null,
+            null,
+            null,
+            null,
+            null,
+            paged,
+            offset,
+            limit,
+            null,
+            null,
+            null,
+        ).let(GetGroupsResponseMapper::mapFromEntity)
     }
+//    suspend fun getGroups(paged: Boolean, offset: Int, limit: Int): Observable<Page<Group>> {
+//        return when (prefManager.userStatus) {
+//            false -> baseApiManager.getGroupApi().retrieveAll24(
+//                null,
+//                null,
+//                null,
+//                null,
+//                null,
+//                paged,
+//                offset,
+//                limit,
+//                null,
+//                null,
+//                null
+//            ).map(GetGroupsResponseMapper::mapFromEntity)
+//
+//            true -> {
+//                /**
+//                 * offset : is the value from which position we want to fetch the list, It means
+//                 * if offset is 0 and User is in the Offline Mode So fetch all groups
+//                 * Return All Groups List from DatabaseHelperGroups only one time.
+//                 * If offset is zero this means this is first request and
+//                 * return all clients from DatabaseHelperClient
+//                 */
+//                mDatabaseHelperGroups.readAllGroups(offset, limit)
+//            }
+//        }
+//    }
 
     /**
      * This method call the DatabaseHelperGroups Helper and mDatabaseHelperGroups.readAllGroups()

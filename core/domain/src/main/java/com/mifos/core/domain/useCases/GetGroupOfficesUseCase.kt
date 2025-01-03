@@ -12,12 +12,8 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.objects.organisation.Office
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -26,28 +22,13 @@ import javax.inject.Inject
 
 class GetGroupOfficesUseCase @Inject constructor(private val repository: CreateNewGroupRepository) {
 
-    suspend operator fun invoke(): Flow<Resource<List<Office>>> = callbackFlow {
+    suspend operator fun invoke(): Flow<Resource<List<Office>>> = flow {
         try {
-            trySend(Resource.Loading())
-
-            repository.offices()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<List<Office>>() {
-                    override fun onCompleted() { }
-
-                    override fun onError(e: Throwable) {
-                        trySend(Resource.Error(e.message.toString()))
-                    }
-
-                    override fun onNext(offices: List<Office>) {
-                        trySend(Resource.Success(offices))
-                    }
-                })
-
-            awaitClose { channel.close() }
+            emit(Resource.Loading())
+            val response = repository.offices()
+            emit(Resource.Success(response))
         } catch (e: Exception) {
-            trySend(Resource.Error(e.message.toString()))
+            emit(Resource.Error(e.message.toString()))
         }
     }
 }

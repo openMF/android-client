@@ -242,7 +242,7 @@ private fun LazyListScope.refreshState(data: LazyPagingItems<Group>) {
 
         is LoadState.Loading -> {
             item {
-                MifosCircularProgress("GroupItems::Loading")
+                MifosCircularProgress(text = "GroupItems::Loading")
             }
         }
 

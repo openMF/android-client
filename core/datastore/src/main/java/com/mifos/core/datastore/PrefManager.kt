@@ -20,9 +20,9 @@ import com.mifos.core.model.ServerConfig
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.apache.fineract.client.models.PostAuthenticationResponse
 import org.mifos.core.sharedpreference.Key
 import org.mifos.core.sharedpreference.UserPreferences
+import org.openapitools.client.models.PostAuthenticationResponse
 import javax.inject.Inject
 
 /**

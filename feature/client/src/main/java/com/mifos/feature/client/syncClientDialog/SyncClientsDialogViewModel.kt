@@ -10,12 +10,12 @@
 package com.mifos.feature.client.syncClientDialog
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncClientsDialogRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.objects.accounts.ClientAccounts
 import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.core.objects.accounts.savings.SavingsAccount
 import com.mifos.core.objects.client.Client
@@ -23,9 +23,11 @@ import com.mifos.core.objects.zipmodels.LoanAndLoanRepayment
 import com.mifos.core.objects.zipmodels.SavingsAccountAndTransactionTemplate
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
@@ -158,32 +160,21 @@ class SyncClientsDialogViewModel @Inject constructor(
      *
      * @param clientId Client Id
      */
-    private fun syncClientAccounts(clientId: Int) {
-        repository.syncClientAccounts(clientId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<ClientAccounts>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    onAccountSyncFailed(e)
-                }
+    private fun syncClientAccounts(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val clientAccounts = repository.syncClientAccounts(clientId)
+        mLoanAccountList = getActiveLoanAccounts(
+            clientAccounts
+                .loanAccounts,
+        )
+        mSavingsAccountList = getSyncableSavingsAccounts(
+            clientAccounts
+                .savingsAccounts,
+        )
 
-                override fun onNext(clientAccounts: ClientAccounts) {
-                    mLoanAccountList = getActiveLoanAccounts(
-                        clientAccounts
-                            .loanAccounts,
-                    )
-                    mSavingsAccountList = getSyncableSavingsAccounts(
-                        clientAccounts
-                            .savingsAccounts,
-                    )
-
-                    // Updating UI
-                    maxSingleSyncClientProgressBar = mLoanAccountList.size +
-                        mSavingsAccountList.size
-                    checkAccountsSyncStatusAndSyncAccounts()
-                }
-            })
+        // Updating UI
+        maxSingleSyncClientProgressBar = mLoanAccountList.size +
+            mSavingsAccountList.size
+        checkAccountsSyncStatusAndSyncAccounts()
     }
 
     /**

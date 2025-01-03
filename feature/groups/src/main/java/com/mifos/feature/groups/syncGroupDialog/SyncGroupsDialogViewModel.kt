@@ -10,12 +10,12 @@
 package com.mifos.feature.groups.syncGroupDialog
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.objects.accounts.ClientAccounts
 import com.mifos.core.objects.accounts.GroupAccounts
 import com.mifos.core.objects.accounts.loan.LoanAccount
 import com.mifos.core.objects.accounts.savings.SavingsAccount
@@ -26,9 +26,11 @@ import com.mifos.core.objects.zipmodels.LoanAndLoanRepayment
 import com.mifos.core.objects.zipmodels.SavingsAccountAndTransactionTemplate
 import com.mifos.feature.groups.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
@@ -116,7 +118,8 @@ class SyncGroupsDialogViewModel @Inject constructor(
      */
     private fun checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate() {
         checkNetworkConnection {
-            val endPoint = mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint
+            val endPoint =
+                mSavingsAccountList[mSavingsAndTransactionSyncIndex].depositType?.endpoint
             val id = mSavingsAccountList[mSavingsAndTransactionSyncIndex].id
             if (endPoint != null && id != null) {
                 syncSavingsAccountAndTemplate(endPoint, id)
@@ -325,7 +328,8 @@ class SyncGroupsDialogViewModel @Inject constructor(
             .subscribe(object : Subscriber<Client>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.Error(message = e.message.toString())
+                    _syncGroupsDialogUiState.value =
+                        SyncGroupsDialogUiState.Error(message = e.message.toString())
                 }
 
                 override fun onNext(client: Client) {
@@ -378,28 +382,17 @@ class SyncGroupsDialogViewModel @Inject constructor(
      *
      * @param clientId Client Id
      */
-    private fun syncClientAccounts(clientId: Int) {
-        repository.syncClientAccounts(clientId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<ClientAccounts>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    onAccountSyncFailed(e)
-                }
-
-                override fun onNext(clientAccounts: ClientAccounts) {
-                    mLoanAccountList = getActiveLoanAccounts(
-                        clientAccounts
-                            .loanAccounts,
-                    )
-                    mSavingsAccountList = getSyncableSavingsAccounts(
-                        clientAccounts
-                            .savingsAccounts,
-                    )
-                    checkAccountsSyncStatusAndSyncClientAccounts()
-                }
-            })
+    private fun syncClientAccounts(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val clientAccounts = repository.syncClientAccounts(clientId)
+        mLoanAccountList = getActiveLoanAccounts(
+            clientAccounts
+                .loanAccounts,
+        )
+        mSavingsAccountList = getSyncableSavingsAccounts(
+            clientAccounts
+                .savingsAccounts,
+        )
+        checkAccountsSyncStatusAndSyncClientAccounts()
     }
 
     /**

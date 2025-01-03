@@ -9,10 +9,9 @@
  */
 package com.mifos.core.network.datamanager
 
-import org.apache.fineract.client.models.PostAuthenticationRequest
-import org.apache.fineract.client.models.PostAuthenticationResponse
 import org.mifos.core.apimanager.BaseApiManager
-import rx.Observable
+import org.openapitools.client.models.PostAuthenticationRequest
+import org.openapitools.client.models.PostAuthenticationResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,11 +25,8 @@ class DataManagerAuth @Inject constructor(private val baseApiManager: BaseApiMan
      * @param password Password
      * @return Basic OAuth
      */
-    fun login(username: String, password: String): Observable<PostAuthenticationResponse> {
-        val body = PostAuthenticationRequest().apply {
-            this.username = username
-            this.password = password
-        }
+    suspend fun login(username: String, password: String): PostAuthenticationResponse {
+        val body = PostAuthenticationRequest(username = username, password = password)
         return baseApiManager.getAuthApi().authenticate(body, true)
     }
 }

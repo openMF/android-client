@@ -21,8 +21,8 @@ import com.mifos.core.objects.group.Center
 import com.mifos.core.objects.group.CenterWithAssociations
 import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.response.SaveResponse
-import org.apache.fineract.client.models.PostCentersCenterIdRequest
-import org.apache.fineract.client.models.PostCentersCenterIdResponse
+import org.openapitools.client.models.PostCentersCenterIdRequest
+import org.openapitools.client.models.PostCentersCenterIdResponse
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,24 +56,31 @@ class DataManagerCenter @Inject constructor(
      * @param limit  Maximum Number of centers will come in response
      * @return Centers List page from offset to max Limit
      */
-    fun getCenters(paged: Boolean, offset: Int, limit: Int): Observable<Page<Center>> {
-        return when (prefManager.userStatus) {
-            false -> baseApiManager.getCenterApi()
-                .retrieveAll23(
-                    null, null, null, null, null, paged,
-                    offset, limit, null, null, null, null, null,
-                ).map(GetCentersResponseMapper::mapFromEntity)
-
-            true -> {
-                /**
-                 * Return All Centers List from DatabaseHelperCenter only one time.
-                 * If offset is zero this means this is first request and
-                 * return all centers from DatabaseHelperCenter
-                 */
-                if (offset == 0) mDatabaseHelperCenter.readAllCenters() else Observable.just(Page())
-            }
-        }
+    suspend fun getCenters(paged: Boolean, offset: Int, limit: Int): Page<Center> {
+        return baseApiManager.getCenterApi()
+            .retrieveAll23(
+                null, null, null, null, null, paged,
+                offset, limit, null, null, null, null, null,
+            ).let(GetCentersResponseMapper::mapFromEntity)
     }
+//    suspend fun getCenters(paged: Boolean, offset: Int, limit: Int): Observable<Page<Center>> {
+//        return when (prefManager.userStatus) {
+//            false -> baseApiManager.getCenterApi()
+//                .retrieveAll23(
+//                    null, null, null, null, null, paged,
+//                    offset, limit, null, null, null, null, null
+//                ).map(GetCentersResponseMapper::mapFromEntity)
+//
+//            true -> {
+//                /**
+//                 * Return All Centers List from DatabaseHelperCenter only one time.
+//                 * If offset is zero this means this is first request and
+//                 * return all centers from DatabaseHelperCenter
+//                 */
+//                if (offset == 0) mDatabaseHelperCenter.readAllCenters() else Observable.just(Page())
+//            }
+//        }
+//    }
 
     /**
      * This method save the single Center in Database.
@@ -152,9 +159,10 @@ class DataManagerCenter @Inject constructor(
     val allDatabaseCenters: Observable<Page<Center>>
         get() = mDatabaseHelperCenter.readAllCenters()
 
-    val offices: Observable<List<Office>>
-        get() = baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
-            .map(GetOfficeResponseMapper::mapFromEntityList)
+    suspend fun offices(): List<Office> {
+        return baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
+            .map(GetOfficeResponseMapper::mapFromEntity)
+    }
 
     /**
      * This method loading the all CenterPayloads from the Database.
@@ -192,17 +200,17 @@ class DataManagerCenter @Inject constructor(
      * @param centerId
      * @return GenericResponse
      */
-    fun activateCenter(
+    suspend fun activateCenter(
         centerId: Int,
         activatePayload: ActivatePayload?,
-    ): Observable<PostCentersCenterIdResponse> {
+    ): PostCentersCenterIdResponse {
         return baseApiManager.getCenterApi().activate2(
             centerId.toLong(),
-            PostCentersCenterIdRequest().apply {
-                closureDate = activatePayload?.activationDate
-                dateFormat = activatePayload?.dateFormat
-                locale = activatePayload?.locale
-            },
+            PostCentersCenterIdRequest(
+                closureDate = activatePayload?.activationDate,
+                dateFormat = activatePayload?.dateFormat,
+                locale = activatePayload?.locale,
+            ),
             "activate",
         )
     }

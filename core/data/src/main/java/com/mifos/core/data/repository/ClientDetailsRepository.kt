@@ -24,7 +24,7 @@ interface ClientDetailsRepository {
 
     fun deleteClientImage(clientId: Int): Observable<ResponseBody>
 
-    fun getClientAccounts(clientId: Int): Observable<ClientAccounts>
+    suspend fun getClientAccounts(clientId: Int): ClientAccounts
 
-    fun getClient(clientId: Int): Observable<Client>
+    suspend fun getClient(clientId: Int): Client
 }

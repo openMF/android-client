@@ -12,8 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.google.gson.JsonArray
 import com.mifos.core.data.repository.DataTableDataRepository
 import com.mifos.core.network.datamanager.DataManagerDataTable
-import org.apache.fineract.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
-import rx.Observable
+import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import javax.inject.Inject
 
 /**
@@ -26,11 +25,11 @@ class DataTableDataRepositoryImp @Inject constructor(private val dataManagerData
         return dataManagerDataTable.getDataTableInfo(table, entityId)
     }
 
-    override fun deleteDataTableEntry(
-        table: String?,
+    override suspend fun deleteDataTableEntry(
+        table: String,
         entity: Int,
         rowId: Int,
-    ): Observable<DeleteDataTablesDatatableAppTableIdDatatableIdResponse> {
+    ): DeleteDataTablesDatatableAppTableIdDatatableIdResponse {
         return dataManagerDataTable.deleteDataTableEntry(table, entity, rowId)
     }
 }

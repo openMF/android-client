@@ -54,7 +54,7 @@ interface ClientService {
     ): Observable<Page<Client>>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
-    fun getClient(@Path("clientId") clientId: Int): Observable<Client>
+    suspend fun getClient(@Path("clientId") clientId: Int): Client
 
     @Multipart
     @POST(APIEndPoint.CLIENTS + "/{clientId}/images")

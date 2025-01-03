@@ -50,33 +50,10 @@ class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
         }
     }
 
-    private suspend fun getCenterList(position: Int): Pair<List<Center>, Int> =
-        suspendCoroutine { continuation ->
-            try {
-                dataManagerCenter.getCenters(true, position, 10)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(object : Subscriber<Page<Center>>() {
-                        override fun onCompleted() {
-                        }
-
-                        override fun onError(exception: Throwable) {
-                            continuation.resumeWithException(exception)
-                        }
-
-                        override fun onNext(center: Page<Center>) {
-                            continuation.resume(
-                                Pair(
-                                    center.pageItems,
-                                    center.totalFilteredRecords,
-                                ),
-                            )
-                        }
-                    })
-            } catch (exception: Exception) {
-                continuation.resumeWithException(exception)
-            }
-        }
+    private suspend fun getCenterList(position: Int): Pair<List<Center>, Int> {
+        val pagedClient = dataManagerCenter.getCenters(true, position, 10)
+        return Pair(pagedClient.pageItems, pagedClient.totalFilteredRecords)
+    }
 
     private suspend fun getCenterDbList(): List<Center> = suspendCoroutine { continuation ->
         try {

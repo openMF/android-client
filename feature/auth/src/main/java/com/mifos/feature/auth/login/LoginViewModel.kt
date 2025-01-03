@@ -10,6 +10,7 @@
 package com.mifos.feature.auth.login
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Network
@@ -25,8 +26,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.apache.fineract.client.models.PostAuthenticationResponse
 import org.mifos.core.apimanager.BaseApiManager
+import org.openapitools.client.models.PostAuthenticationResponse
 import javax.inject.Inject
 
 /**
@@ -71,7 +72,7 @@ class LoginViewModel @Inject constructor(
         baseApiManager.createService(
             username,
             password,
-            prefManager.getServerConfig.getInstanceUrl(),
+            prefManager.getServerConfig.getInstanceUrl().dropLast(3),
             prefManager.getServerConfig.tenant,
             true,
         )
@@ -90,6 +91,7 @@ class LoginViewModel @Inject constructor(
                     is Resource.Error -> {
                         _loginUiState.value =
                             LoginUiState.ShowError(R.string.feature_auth_error_login_failed)
+                        Log.e("@@@", "login: ${result.message}")
                     }
 
                     is Resource.Loading -> {

@@ -12,13 +12,11 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.objects.zipmodels.ClientAndClientAccounts
-import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -27,34 +25,24 @@ import javax.inject.Inject
 
 class GetClientDetailsUseCase @Inject constructor(private val repository: ClientDetailsRepository) {
 
-    operator fun invoke(clientId: Int): Flow<Resource<ClientAndClientAccounts>> = callbackFlow {
+    operator fun invoke(clientId: Int): Flow<Resource<ClientAndClientAccounts>> = flow {
         try {
-            trySend(Resource.Loading())
+            emit(Resource.Loading())
+            val clientAndClientAccounts = withContext(Dispatchers.IO) {
+                val clientAccountsDeferred = async { repository.getClientAccounts(clientId) }
+                val clientDeferred = async { repository.getClient(clientId) }
 
-            Observable.zip(
-                repository.getClientAccounts(clientId),
-                repository.getClient(clientId),
-            ) { clientAccounts, client ->
-                val clientAndClientAccounts = ClientAndClientAccounts()
-                clientAndClientAccounts.client = client
-                clientAndClientAccounts.clientAccounts = clientAccounts
-                clientAndClientAccounts
+                val clientAccounts = clientAccountsDeferred.await()
+                val client = clientDeferred.await()
+
+                ClientAndClientAccounts().apply {
+                    this.client = client
+                    this.clientAccounts = clientAccounts
+                }
             }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<ClientAndClientAccounts>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        trySend(Resource.Error(e.message.toString()))
-                    }
-
-                    override fun onNext(clientAndClientAccounts: ClientAndClientAccounts) {
-                        trySend(Resource.Success(clientAndClientAccounts))
-                    }
-                })
-            awaitClose { channel.close() }
+            emit(Resource.Success(clientAndClientAccounts))
         } catch (e: Exception) {
-            trySend(Resource.Error(e.message.toString()))
+            emit(Resource.Error(e.message.toString()))
         }
     }
 }

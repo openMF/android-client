@@ -11,9 +11,9 @@ package com.mifos.core.network.mappers.clients
 
 import com.mifos.core.objects.noncore.DocumentType
 import com.mifos.core.objects.noncore.IdentifierTemplate
-import org.apache.fineract.client.models.GetClientsAllowedDocumentTypes
-import org.apache.fineract.client.models.GetClientsClientIdIdentifiersTemplateResponse
 import org.mifos.core.data.AbstractMapper
+import org.openapitools.client.models.GetClientsAllowedDocumentTypes
+import org.openapitools.client.models.GetClientsClientIdIdentifiersTemplateResponse
 
 /**
  * Created by Aditya Gupta on 30/08/23.
@@ -26,7 +26,7 @@ object GetIdentifiersTemplateMapper :
         return IdentifierTemplate().apply {
             allowedDocumentTypes = entity.allowedDocumentTypes?.map {
                 DocumentType().apply {
-                    id = it.id
+                    id = it.id?.toInt()
                     name = it.name
                     position = it.position
                 }
@@ -35,14 +35,14 @@ object GetIdentifiersTemplateMapper :
     }
 
     override fun mapToEntity(domainModel: IdentifierTemplate): GetClientsClientIdIdentifiersTemplateResponse {
-        return GetClientsClientIdIdentifiersTemplateResponse().apply {
+        return GetClientsClientIdIdentifiersTemplateResponse(
             allowedDocumentTypes = domainModel.allowedDocumentTypes?.map {
-                GetClientsAllowedDocumentTypes().apply {
-                    id = it.id
-                    name = it.name
-                    position = it.position
-                }
-            }
-        }
+                GetClientsAllowedDocumentTypes(
+                    id = it.id?.toLong(),
+                    name = it.name,
+                    position = it.position,
+                )
+            }?.toSet(),
+        )
     }
 }

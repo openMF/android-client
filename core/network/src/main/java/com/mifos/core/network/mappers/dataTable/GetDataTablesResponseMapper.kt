@@ -11,9 +11,9 @@ package com.mifos.core.network.mappers.dataTable
 
 import com.mifos.core.objects.noncore.ColumnHeader
 import com.mifos.core.objects.noncore.DataTable
-import org.apache.fineract.client.models.GetDataTablesResponse
-import org.apache.fineract.client.models.ResultsetColumnHeaderData
 import org.mifos.core.data.AbstractMapper
+import org.openapitools.client.models.GetDataTablesResponse
+import org.openapitools.client.models.ResultsetColumnHeaderData
 
 /**
  * Created by Aditya Gupta on 31/08/23.
@@ -28,8 +28,8 @@ object GetDataTablesResponseMapper : AbstractMapper<GetDataTablesResponse, DataT
             columnHeaderData = entity.columnHeaderData!!.map {
                 ColumnHeader().apply {
                     columnCode = it.columnCode
-                    columnType = it.columnType
-                    columnDisplayType = it.columnDisplayType
+                    columnType = it.columnType?.name
+                    columnDisplayType = it.columnDisplayType?.name
                     columnLength = it.columnLength?.toInt()
                     columnNullable = it.isColumnNullable
                     columnPrimaryKey = it.isColumnPrimaryKey
@@ -39,19 +39,19 @@ object GetDataTablesResponseMapper : AbstractMapper<GetDataTablesResponse, DataT
     }
 
     override fun mapToEntity(domainModel: DataTable): GetDataTablesResponse {
-        return GetDataTablesResponse().apply {
-            applicationTableName = domainModel.applicationTableName
-            registeredTableName = domainModel.registeredTableName
+        return GetDataTablesResponse(
+            applicationTableName = domainModel.applicationTableName,
+            registeredTableName = domainModel.registeredTableName,
             columnHeaderData = domainModel.columnHeaderData.map {
-                ResultsetColumnHeaderData().apply {
-                    columnCode = it.columnCode
-                    columnType = it.columnType
-                    columnDisplayType = it.columnDisplayType
-                    columnLength = it.columnLength?.toLong()
-                    isColumnNullable = it.columnNullable
-                    isColumnPrimaryKey = it.columnPrimaryKey
-                }
-            }
-        }
+                ResultsetColumnHeaderData(
+                    columnCode = it.columnCode,
+                    columnType = ResultsetColumnHeaderData.ColumnType.valueOf(it.columnType!!),
+                    columnDisplayType = ResultsetColumnHeaderData.ColumnDisplayType.valueOf(it.columnDisplayType!!),
+                    columnLength = it.columnLength?.toLong(),
+                    isColumnNullable = it.columnNullable,
+                    isColumnPrimaryKey = it.columnPrimaryKey,
+                )
+            },
+        )
     }
 }

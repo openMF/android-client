@@ -30,9 +30,9 @@ import com.mifos.core.objects.noncore.IdentifierTemplate
 import com.mifos.core.objects.templates.clients.ClientsTemplate
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
-import org.apache.fineract.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
-import org.apache.fineract.client.models.PostClientsClientIdRequest
-import org.apache.fineract.client.models.PostClientsClientIdResponse
+import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
+import org.openapitools.client.models.PostClientsClientIdRequest
+import org.openapitools.client.models.PostClientsClientIdResponse
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -65,25 +65,33 @@ class DataManagerClient @Inject constructor(
      * @param limit  Maximum Number of clients will come in response
      * @return Client List from offset to max Limit
      */
-    fun getAllClients(offset: Int, limit: Int): Observable<Page<Client>> {
-        return when (prefManager.userStatus) {
-            false -> baseApiManager.getClientsApi().retrieveAll21(
-                null, null, null,
-                null, null, null,
-                null, null, offset,
-                limit, null, null, null,
-            ).map(GetClientResponseMapper::mapFromEntity)
-
-            true -> {
-                /**
-                 * Return All Clients List from DatabaseHelperClient only one time.
-                 * If offset is zero this means this is first request and
-                 * return all clients from DatabaseHelperClient
-                 */
-                if (offset == 0) mDatabaseHelperClient.readAllClients() else Observable.just(Page())
-            }
-        }
+    suspend fun getAllClients(offset: Int, limit: Int): Page<Client> {
+        return baseApiManager.getClientsApi().retrieveAll21(
+            null, null, null,
+            null, null, null,
+            null, offset,
+            limit, null, null, null,
+        ).let(GetClientResponseMapper::mapFromEntity)
     }
+//    fun getAllClients(offset: Int, limit: Int): Observable<Page<Client>> {
+//        return when (prefManager.userStatus) {
+//            false -> baseApiManager.getClientsApi().retrieveAll21(
+//                null, null, null,
+//                null, null, null,
+//                null, null, offset,
+//                limit, null, null, null
+//            ).map(GetClientResponseMapper::mapFromEntity)
+//
+//            true -> {
+//                /**
+//                 * Return All Clients List from DatabaseHelperClient only one time.
+//                 * If offset is zero this means this is first request and
+//                 * return all clients from DatabaseHelperClient
+//                 */
+//                if (offset == 0) mDatabaseHelperClient.readAllClients() else Observable.just(Page())
+//            }
+//        }
+//    }
 
     /**
      * This Method Request to the DatabaseHelperClient and DatabaseHelperClient Read the All
@@ -100,18 +108,21 @@ class DataManagerClient @Inject constructor(
      * @param clientId for Query in database or REST API request.
      * @return The Client Details
      */
-    fun getClient(clientId: Int): Observable<Client> {
-        return when (prefManager.userStatus) {
-            false -> mBaseApiManager.clientsApi.getClient(clientId)
-                .concatMap { client -> Observable.just(client) }
-
-            true ->
-                /**
-                 * Return Clients from DatabaseHelperClient only one time.
-                 */
-                mDatabaseHelperClient.getClient(clientId)
-        }
+    suspend fun getClient(clientId: Int): Client {
+        return mBaseApiManager.clientsApi.getClient(clientId)
     }
+//    fun getClient(clientId: Int): Observable<Client> {
+//        return when (prefManager.userStatus) {
+//            false -> mBaseApiManager.clientsApi.getClient(clientId)
+//                .concatMap { client -> Observable.just(client) }
+//
+//            true ->
+//                /**
+//                 * Return Clients from DatabaseHelperClient only one time.
+//                 */
+//                mDatabaseHelperClient.getClient(clientId)
+//        }
+//    }
 
     fun syncClientInDatabase(client: Client): Observable<Client> {
         return mDatabaseHelperClient.saveClient(client)
@@ -128,18 +139,22 @@ class DataManagerClient @Inject constructor(
      * @param clientId Client Id
      * @return All Clients Account, Like Savings, Loan etc Accounts.
      */
-    fun getClientAccounts(clientId: Int): Observable<ClientAccounts> {
-        return when (prefManager.userStatus) {
-            false -> baseApiManager.getClientsApi().retrieveAssociatedAccounts(clientId.toLong())
-                .map(GetClientsClientIdAccountMapper::mapFromEntity)
-
-            true ->
-                /**
-                 * Return Clients from DatabaseHelperClient only one time.
-                 */
-                mDatabaseHelperClient.realClientAccounts(clientId)
-        }
+    suspend fun getClientAccounts(clientId: Int): ClientAccounts {
+        return baseApiManager.getClientsApi().retrieveAssociatedAccounts(clientId.toLong())
+            .let(GetClientsClientIdAccountMapper::mapFromEntity)
     }
+//    fun getClientAccounts(clientId: Int): Observable<ClientAccounts> {
+//        return when (prefManager.userStatus) {
+//            false -> baseApiManager.getClientsApi().retrieveAssociatedAccounts(clientId.toLong())
+//                .map(GetClientsClientIdAccountMapper::mapFromEntity)
+//
+//            true ->
+//                /**
+//                 * Return Clients from DatabaseHelperClient only one time.
+//                 */
+//                mDatabaseHelperClient.realClientAccounts(clientId)
+//        }
+//    }
 
     /**
      * This Method Fetching the Client Accounts (Loan, saving, etc Accounts ) from REST API
@@ -149,16 +164,20 @@ class DataManagerClient @Inject constructor(
      * @param clientId Client Id
      * @return ClientAccounts
      */
-    fun syncClientAccounts(clientId: Int): Observable<ClientAccounts> {
+    suspend fun syncClientAccounts(clientId: Int): ClientAccounts {
         return baseApiManager.getClientsApi().retrieveAssociatedAccounts(clientId.toLong())
-            .map(GetClientsClientIdAccountMapper::mapFromEntity)
-            .concatMap { clientAccounts ->
-                mDatabaseHelperClient.saveClientAccounts(
-                    clientAccounts,
-                    clientId,
-                )
-            }
+            .let(GetClientsClientIdAccountMapper::mapFromEntity)
     }
+//    fun syncClientAccounts(clientId: Int): Observable<ClientAccounts> {
+//        return baseApiManager.getClientsApi().retrieveAssociatedAccounts(clientId.toLong())
+//            .map(GetClientsClientIdAccountMapper::mapFromEntity)
+//            .concatMap { clientAccounts ->
+//                mDatabaseHelperClient.saveClientAccounts(
+//                    clientAccounts,
+//                    clientId
+//                )
+//            }
+//    }
 
     /**
      * This Method for removing the Client Image from his profile on server
@@ -277,9 +296,9 @@ class DataManagerClient @Inject constructor(
      * @param clientId Client Id
      * @return List<Identifier>
      </Identifier> */
-    fun getClientIdentifiers(clientId: Int): Observable<List<Identifier>> {
+    suspend fun getClientIdentifiers(clientId: Int): List<Identifier> {
         return baseApiManager.getClient().clientIdentifiers.retrieveAllClientIdentifiers(clientId.toLong())
-            .map(IdentifierMapper::mapFromEntityList)
+            .map(IdentifierMapper::mapFromEntity)
     }
 
     /**
@@ -302,9 +321,9 @@ class DataManagerClient @Inject constructor(
      * @param clientId Client Id
      * @return IdentifierTemplate
      */
-    fun getClientIdentifierTemplate(clientId: Int): Observable<IdentifierTemplate> {
+    suspend fun getClientIdentifierTemplate(clientId: Int): IdentifierTemplate {
         return baseApiManager.getClient().clientIdentifiers.newClientIdentifierDetails(clientId.toLong())
-            .map(GetIdentifiersTemplateMapper::mapFromEntity)
+            .let(GetIdentifiersTemplateMapper::mapFromEntity)
     }
 
     /**
@@ -314,10 +333,10 @@ class DataManagerClient @Inject constructor(
      * @param identifierId Identifier Id
      * @return GenericResponse
      */
-    fun deleteClientIdentifier(
+    suspend fun deleteClientIdentifier(
         clientId: Int,
         identifierId: Int,
-    ): Observable<DeleteClientsClientIdIdentifiersIdentifierIdResponse> {
+    ): DeleteClientsClientIdIdentifiersIdentifierIdResponse {
         return baseApiManager.getClient().clientIdentifiers.deleteClientIdentifier(
             clientId.toLong(),
             identifierId.toLong(),
@@ -390,17 +409,17 @@ class DataManagerClient @Inject constructor(
      * @param clientId
      * @return GenericResponse
      */
-    fun activateClient(
+    suspend fun activateClient(
         clientId: Int,
         clientActivate: ActivatePayload?,
-    ): Observable<PostClientsClientIdResponse> {
+    ): PostClientsClientIdResponse {
         return baseApiManager.getClientsApi().activate1(
             clientId.toLong(),
-            PostClientsClientIdRequest().apply {
-                activationDate = clientActivate?.activationDate
-                dateFormat = clientActivate?.dateFormat
-                locale = clientActivate?.locale
-            },
+            PostClientsClientIdRequest(
+                activationDate = clientActivate?.activationDate,
+                dateFormat = clientActivate?.dateFormat,
+                locale = clientActivate?.locale,
+            ),
             "activate",
         )
     }

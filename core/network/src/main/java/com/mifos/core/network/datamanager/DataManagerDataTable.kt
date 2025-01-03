@@ -16,7 +16,7 @@ import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.dataTable.GetDataTablesResponseMapper
 import com.mifos.core.objects.noncore.DataTable
 import com.mifos.core.objects.user.UserLocation
-import org.apache.fineract.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
+import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,9 +42,9 @@ class DataManagerDataTable @Inject constructor(
      * @param tableName DataTable Name
      * @return List<DataTable>
      </DataTable> */
-    fun getDataTable(tableName: String?): Observable<List<DataTable>> {
+    suspend fun getDataTable(tableName: String?): List<DataTable> {
         return baseApiManager.getDataTableApi().getDatatables(tableName).map(
-            GetDataTablesResponseMapper::mapFromEntityList,
+            GetDataTablesResponseMapper::mapFromEntity,
         )
     }
 
@@ -61,13 +61,16 @@ class DataManagerDataTable @Inject constructor(
             .createEntryInDataTable(table, entityId, payload)
     }
 
-    fun deleteDataTableEntry(
-        table: String?,
+    suspend fun deleteDataTableEntry(
+        table: String,
         entity: Int,
         rowId: Int,
-    ): Observable<DeleteDataTablesDatatableAppTableIdDatatableIdResponse> {
-        return baseApiManager.getDataTableApi()
-            .deleteDatatableEntries1(table, entity.toLong(), rowId.toLong())
+    ): DeleteDataTablesDatatableAppTableIdDatatableIdResponse {
+        return baseApiManager.getDataTableApi().deleteDatatableEntry(
+            datatable = table,
+            apptableId = entity.toLong(),
+            datatableId = rowId.toLong(),
+        )
     }
 
     /**

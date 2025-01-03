@@ -12,8 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.objects.noncore.Identifier
-import org.apache.fineract.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
-import rx.Observable
+import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import javax.inject.Inject
 
 /**
@@ -22,14 +21,14 @@ import javax.inject.Inject
 class ClientIdentifiersRepositoryImp @Inject constructor(private val dataManagerClient: DataManagerClient) :
     ClientIdentifiersRepository {
 
-    override fun getClientIdentifiers(clientId: Int): Observable<List<Identifier>> {
+    override suspend fun getClientIdentifiers(clientId: Int): List<Identifier> {
         return dataManagerClient.getClientIdentifiers(clientId)
     }
 
-    override fun deleteClientIdentifier(
+    override suspend fun deleteClientIdentifier(
         clientId: Int,
         identifierId: Int,
-    ): Observable<DeleteClientsClientIdIdentifiersIdentifierIdResponse> {
+    ): DeleteClientsClientIdIdentifiersIdentifierIdResponse {
         return dataManagerClient.deleteClientIdentifier(clientId, identifierId)
     }
 }
