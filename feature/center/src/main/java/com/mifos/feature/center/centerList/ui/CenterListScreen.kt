@@ -584,7 +584,7 @@ private fun CenterListDbContent(
     }
 }
 
-class CenterListUiStateProvider :
+private class CenterListUiStateProvider :
     PreviewParameterProvider<CenterListUiState> {
 
     override val values: Sequence<CenterListUiState>
