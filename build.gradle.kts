@@ -14,18 +14,11 @@ plugins {
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.spotless) apply false
     alias(libs.plugins.ktlint) apply false
-    alias(libs.plugins.gms) apply false
-}
 
-object DynamicVersion {
-    fun setDynamicVersion(file: File, version: String) {
-        val cleanedVersion = version.split('+')[0]
-        file.writeText(cleanedVersion)
-    }
-}
-
-tasks.register("versionFile") {
-    val file = File(projectDir, "version.txt")
-
-    DynamicVersion.setDynamicVersion(file, project.version.toString())
+    //Multiplatform Plugins
+    alias(libs.plugins.jetbrainsCompose) apply false
+    alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(libs.plugins.wire) apply false
+    alias(libs.plugins.ktorfit) apply false
 }
