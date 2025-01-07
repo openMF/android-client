@@ -106,7 +106,7 @@ fun Navigation(
             hasDatatables = navController::navigateDataTableList,
             onDocumentClicked = navController::navigateToDocumentListScreen,
             onCardClicked = { position, survey ->
-                val id: Int = survey[position].id
+                val id = survey[position].id
                 navController.navigateSurveyQuestionScreen(id)
             },
         )

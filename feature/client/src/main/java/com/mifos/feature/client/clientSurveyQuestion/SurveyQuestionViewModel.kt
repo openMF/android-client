@@ -28,7 +28,7 @@ class SurveyQuestionViewModel @Inject constructor(
     private val surveyQuestionRepository: SurveyQuestionRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    val surveyId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = -1)
+    val surveyId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = 0)
     private val _surveyQuestionUiState =
         MutableStateFlow<SurveyQuestionUiState>(SurveyQuestionUiState.ShowProgressbar)
     val surveyQuestionUiState: StateFlow<SurveyQuestionUiState> get() = _surveyQuestionUiState
