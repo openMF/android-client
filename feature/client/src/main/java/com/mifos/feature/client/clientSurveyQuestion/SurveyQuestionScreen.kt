@@ -93,9 +93,6 @@ internal fun SurveyQuestionScreen(
     val scoreCardData: MutableList<ScorecardValues> by rememberSaveable {
         mutableStateOf(mutableListOf())
     }
-    LaunchedEffect(key1 = Unit) {
-        questionViewModel.loadSurvey(surveyId)
-    }
     var currentQuestionNumber by rememberSaveable { mutableIntStateOf(0) }
     var showSubmitScreen by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember {

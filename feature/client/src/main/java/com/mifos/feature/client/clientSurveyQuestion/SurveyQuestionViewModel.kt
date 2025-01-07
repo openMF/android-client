@@ -33,6 +33,10 @@ class SurveyQuestionViewModel @Inject constructor(
         MutableStateFlow<SurveyQuestionUiState>(SurveyQuestionUiState.ShowProgressbar)
     val surveyQuestionUiState: StateFlow<SurveyQuestionUiState> get() = _surveyQuestionUiState
 
+    init {
+        loadSurvey(surveyId.value)
+    }
+
     private lateinit var mSyncSurvey: Survey
 
     fun loadSurvey(surveyId: Int) {
