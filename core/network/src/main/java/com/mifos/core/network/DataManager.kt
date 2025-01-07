@@ -9,15 +9,15 @@
  */
 package com.mifos.core.network
 
-import com.mifos.core.dbobjects.accounts.loan.LoanWithAssociations
-import com.mifos.core.dbobjects.accounts.loan.Loans
-import com.mifos.core.dbobjects.client.Charges
-import com.mifos.core.dbobjects.group.Center
-import com.mifos.core.dbobjects.group.CenterWithAssociations
-import com.mifos.core.dbobjects.group.Group
-import com.mifos.core.dbobjects.group.GroupWithAssociations
-import com.mifos.core.dbobjects.organisation.Office
-import com.mifos.core.dbobjects.organisation.Staff
+import com.mifos.core.entity.accounts.loan.LoanWithAssociations
+import com.mifos.core.entity.accounts.loan.Loans
+import com.mifos.core.entity.client.Charges
+import com.mifos.core.entity.group.Center
+import com.mifos.core.entity.group.CenterWithAssociations
+import com.mifos.core.entity.group.Group
+import com.mifos.core.entity.group.GroupWithAssociations
+import com.mifos.core.entity.organisation.Office
+import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload

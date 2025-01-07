@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountRepository
-import com.mifos.core.dbobjects.client.Savings
+import com.mifos.core.entity.client.Savings
 import com.mifos.core.payloads.SavingsPayload
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

@@ -61,12 +61,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.gson.Gson
-import com.mifos.core.dbobjects.survey.Survey
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.White
+import com.mifos.core.entity.survey.Survey
 import com.mifos.core.objects.surveys.Scorecard
 import com.mifos.core.objects.surveys.ScorecardValues
 import com.mifos.feature.client.R

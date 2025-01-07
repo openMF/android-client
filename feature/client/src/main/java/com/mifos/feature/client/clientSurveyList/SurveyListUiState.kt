@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.client.clientSurveyList
 
-import com.mifos.core.dbobjects.survey.Survey
+import com.mifos.core.entity.survey.Survey
 
 /**
  * Created by Aditya Gupta on 08/08/23.

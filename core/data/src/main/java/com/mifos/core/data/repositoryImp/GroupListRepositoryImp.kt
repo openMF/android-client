@@ -10,8 +10,8 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.GroupListRepository
-import com.mifos.core.dbobjects.group.CenterWithAssociations
-import com.mifos.core.dbobjects.group.GroupWithAssociations
+import com.mifos.core.entity.group.CenterWithAssociations
+import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.core.network.DataManager
 import rx.Observable
 import javax.inject.Inject

@@ -9,16 +9,16 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.data.LoansPayload
-import com.mifos.core.dbobjects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.dbobjects.accounts.loan.LoanWithAssociations
-import com.mifos.core.dbobjects.accounts.loan.Loans
-import com.mifos.core.dbobjects.client.Charges
-import com.mifos.core.dbobjects.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.dbobjects.templates.loans.LoanTemplate
-import com.mifos.core.dbobjects.templates.loans.LoanTransactionTemplate
+import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.entity.accounts.loan.LoanWithAssociations
+import com.mifos.core.entity.accounts.loan.Loans
+import com.mifos.core.entity.client.Charges
+import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.entity.templates.loans.LoanTemplate
+import com.mifos.core.entity.templates.loans.LoanTransactionTemplate
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.objects.account.loan.LoanApproval
 import com.mifos.core.objects.account.loan.LoanDisbursement
 import com.mifos.core.objects.account.loan.LoanRepaymentResponse

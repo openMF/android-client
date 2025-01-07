@@ -12,7 +12,7 @@ package com.mifos.core.domain
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.testing.TestPager
-import com.mifos.core.dbobjects.group.Group
+import com.mifos.core.entity.group.Group
 import com.mifos.core.testing.repository.ERROR_MESSAGE
 import com.mifos.core.testing.repository.TestGroupsListRepository
 import com.mifos.core.testing.repository.getPagedData

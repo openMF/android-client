@@ -10,7 +10,7 @@
 package com.mifos.feature.client.clientList.presentation
 
 import androidx.paging.PagingData
-import com.mifos.core.dbobjects.client.Client
+import com.mifos.core.entity.client.Client
 import kotlinx.coroutines.flow.Flow
 
 /**

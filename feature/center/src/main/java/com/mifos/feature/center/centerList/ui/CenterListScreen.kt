@@ -70,7 +70,6 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.mifos.core.dbobjects.group.Center
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -80,6 +79,7 @@ import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.LightGray
 import com.mifos.core.designsystem.theme.White
+import com.mifos.core.entity.group.Center
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.R
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen

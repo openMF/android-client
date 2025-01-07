@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountRepository
-import com.mifos.core.dbobjects.templates.savings.SavingProductsTemplate
+import com.mifos.core.entity.templates.savings.SavingProductsTemplate
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

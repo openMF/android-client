@@ -9,14 +9,14 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.data.LoansPayload
 import com.mifos.core.data.repository.DataTableListRepository
-import com.mifos.core.dbobjects.accounts.loan.Loans
-import com.mifos.core.dbobjects.client.Client
-import com.mifos.core.dbobjects.client.ClientPayload
+import com.mifos.core.entity.accounts.loan.Loans
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.client.ClientPayload
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerLoan
+import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.payloads.GroupLoanPayload
 import rx.Observable
 import javax.inject.Inject

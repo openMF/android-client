@@ -42,11 +42,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Network
-import com.mifos.core.dbobjects.noncore.Note
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.entity.noncore.Note
 import com.mifos.core.ui.components.MifosEmptyUi
 
 @Composable

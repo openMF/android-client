@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.mappers.centers
 
-import com.mifos.core.dbobjects.client.Status
-import com.mifos.core.dbobjects.group.Center
+import com.mifos.core.entity.client.Status
+import com.mifos.core.entity.group.Center
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetCentersPageItems
 import org.openapitools.client.models.GetCentersStatus

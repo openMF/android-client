@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.GroupLoanAccountRepository
-import com.mifos.core.dbobjects.accounts.loan.Loans
+import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.payloads.GroupLoanPayload
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

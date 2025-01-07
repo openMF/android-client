@@ -13,9 +13,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.dbobjects.group.GroupPayload
 import com.mifos.core.domain.useCases.CreateNewGroupUseCase
 import com.mifos.core.domain.useCases.GetGroupOfficesUseCase
+import com.mifos.core.entity.group.GroupPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

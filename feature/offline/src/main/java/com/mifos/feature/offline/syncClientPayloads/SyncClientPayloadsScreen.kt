@@ -51,10 +51,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Network
-import com.mifos.core.dbobjects.client.ClientPayload
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.entity.client.ClientPayload
 import com.mifos.feature.offline.R
 
 @Composable

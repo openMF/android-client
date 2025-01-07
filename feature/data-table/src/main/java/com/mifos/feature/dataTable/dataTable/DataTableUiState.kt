@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.dataTable.dataTable
 
-import com.mifos.core.dbobjects.noncore.DataTable
+import com.mifos.core.entity.noncore.DataTable
 
 /**
  * Created by Aditya Gupta on 08/08/23.

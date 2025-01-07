@@ -9,11 +9,11 @@
  */
 package com.mifos.core.databasehelper
 
-import com.mifos.core.dbobjects.survey.QuestionDatas
-import com.mifos.core.dbobjects.survey.QuestionDatas_Table
-import com.mifos.core.dbobjects.survey.ResponseDatas
-import com.mifos.core.dbobjects.survey.ResponseDatas_Table
-import com.mifos.core.dbobjects.survey.Survey
+import com.mifos.core.entity.survey.QuestionDatas
+import com.mifos.core.entity.survey.QuestionDatas_Table
+import com.mifos.core.entity.survey.ResponseDatas
+import com.mifos.core.entity.survey.ResponseDatas_Table
+import com.mifos.core.entity.survey.Survey
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import rx.Observable
 import javax.inject.Inject

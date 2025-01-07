@@ -10,7 +10,7 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperCharge
-import com.mifos.core.dbobjects.client.Charges
+import com.mifos.core.entity.client.Charges
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.objects.clients.Page
 import rx.Observable

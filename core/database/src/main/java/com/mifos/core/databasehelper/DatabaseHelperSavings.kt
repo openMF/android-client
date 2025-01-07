@@ -9,16 +9,16 @@
  */
 package com.mifos.core.databasehelper
 
-import com.mifos.core.dbobjects.PaymentTypeOption
-import com.mifos.core.dbobjects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.dbobjects.accounts.savings.SavingsAccountTransactionRequest_Table
-import com.mifos.core.dbobjects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.dbobjects.accounts.savings.SavingsAccountWithAssociations_Table
-import com.mifos.core.dbobjects.accounts.savings.SavingsTransactionDate
-import com.mifos.core.dbobjects.accounts.savings.Transaction
-import com.mifos.core.dbobjects.accounts.savings.Transaction_Table
-import com.mifos.core.dbobjects.templates.savings.SavingsAccountTransactionTemplate
-import com.mifos.core.dbobjects.templates.savings.SavingsAccountTransactionTemplate_Table
+import com.mifos.core.entity.PaymentTypeOption
+import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest_Table
+import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations_Table
+import com.mifos.core.entity.accounts.savings.SavingsTransactionDate
+import com.mifos.core.entity.accounts.savings.Transaction
+import com.mifos.core.entity.accounts.savings.Transaction_Table
+import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate_Table
 import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import com.raizlabs.android.dbflow.sql.language.Delete
 import com.raizlabs.android.dbflow.sql.language.SQLite

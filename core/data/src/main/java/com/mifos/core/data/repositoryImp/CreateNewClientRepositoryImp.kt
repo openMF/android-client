@@ -10,11 +10,11 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.core.dbobjects.client.Client
-import com.mifos.core.dbobjects.client.ClientPayload
-import com.mifos.core.dbobjects.organisation.Office
-import com.mifos.core.dbobjects.organisation.Staff
-import com.mifos.core.dbobjects.templates.clients.ClientsTemplate
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.client.ClientPayload
+import com.mifos.core.entity.organisation.Office
+import com.mifos.core.entity.organisation.Staff
+import com.mifos.core.entity.templates.clients.ClientsTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerOffices
 import com.mifos.core.network.datamanager.DataManagerStaff

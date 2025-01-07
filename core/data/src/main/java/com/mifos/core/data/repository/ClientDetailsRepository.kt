@@ -9,8 +9,8 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.dbobjects.accounts.ClientAccounts
-import com.mifos.core.dbobjects.client.Client
+import com.mifos.core.entity.accounts.ClientAccounts
+import com.mifos.core.entity.client.Client
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import rx.Observable

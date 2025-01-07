@@ -10,7 +10,7 @@
 package com.mifos.core.network.services
 
 import com.google.gson.JsonArray
-import com.mifos.core.dbobjects.noncore.DataTable
+import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.users.UserLocation

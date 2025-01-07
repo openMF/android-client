@@ -14,10 +14,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.dbobjects.group.CenterWithAssociations
-import com.mifos.core.dbobjects.group.GroupWithAssociations
 import com.mifos.core.domain.useCases.GetGroupsByCenterUseCase
 import com.mifos.core.domain.useCases.GetGroupsUseCase
+import com.mifos.core.entity.group.CenterWithAssociations
+import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.feature.center.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

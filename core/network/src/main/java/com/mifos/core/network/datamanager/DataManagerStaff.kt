@@ -9,7 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.dbobjects.organisation.Staff
+import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.staffs.StaffMapper
 import javax.inject.Inject

@@ -10,7 +10,7 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.NoteRepository
-import com.mifos.core.dbobjects.noncore.Note
+import com.mifos.core.entity.noncore.Note
 import com.mifos.core.network.datamanager.DataManagerNote
 import javax.inject.Inject
 

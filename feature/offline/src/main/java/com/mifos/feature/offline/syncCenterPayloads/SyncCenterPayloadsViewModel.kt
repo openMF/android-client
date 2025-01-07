@@ -14,12 +14,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.FileUtils.LOG_TAG
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.data.CenterPayload
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.AllDatabaseCenterPayloadUseCase
 import com.mifos.core.domain.useCases.CreateCenterUseCase
 import com.mifos.core.domain.useCases.DeleteAndUpdateCenterPayloadsUseCase
 import com.mifos.core.domain.useCases.UpdateCenterPayloadUseCase
+import com.mifos.core.entity.center.CenterPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

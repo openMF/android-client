@@ -11,7 +11,7 @@ package com.mifos.core.network.datamanager
 
 import com.google.gson.JsonArray
 import com.mifos.core.databasehelper.DatabaseHelperDataTable
-import com.mifos.core.dbobjects.noncore.DataTable
+import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.dataTable.GetDataTablesResponseMapper

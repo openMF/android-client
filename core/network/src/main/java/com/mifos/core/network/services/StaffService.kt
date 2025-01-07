@@ -9,7 +9,7 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.dbobjects.organisation.Staff
+import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.model.APIEndPoint
 import retrofit2.http.GET
 import retrofit2.http.Query

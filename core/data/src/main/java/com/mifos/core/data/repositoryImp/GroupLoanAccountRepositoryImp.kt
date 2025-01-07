@@ -10,7 +10,7 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.GroupLoanAccountRepository
-import com.mifos.core.dbobjects.accounts.loan.Loans
+import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.network.DataManager
 import com.mifos.core.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.payloads.GroupLoanPayload

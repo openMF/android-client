@@ -17,7 +17,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.dbobjects.collectionsheet.IndividualCollectionSheet
+import com.mifos.core.entity.collectionsheet.IndividualCollectionSheet
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.objects.collectionsheets.LoanAndClientName

@@ -14,8 +14,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.mifos.core.data.pagingSource.CenterListPagingSource
 import com.mifos.core.data.repository.CenterListRepository
-import com.mifos.core.dbobjects.group.Center
-import com.mifos.core.dbobjects.group.CenterWithAssociations
+import com.mifos.core.entity.group.Center
+import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.objects.clients.Page
 import kotlinx.coroutines.flow.Flow

@@ -9,10 +9,10 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.dbobjects.accounts.GroupAccounts
-import com.mifos.core.dbobjects.group.Group
-import com.mifos.core.dbobjects.group.GroupPayload
-import com.mifos.core.dbobjects.group.GroupWithAssociations
+import com.mifos.core.entity.accounts.GroupAccounts
+import com.mifos.core.entity.group.Group
+import com.mifos.core.entity.group.GroupPayload
+import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.clients.ActivatePayload

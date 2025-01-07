@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.offline.syncGroupPayloads
 
-import com.mifos.core.dbobjects.group.GroupPayload
+import com.mifos.core.entity.group.GroupPayload
 import com.mifos.feature.offline.R
 
 /**

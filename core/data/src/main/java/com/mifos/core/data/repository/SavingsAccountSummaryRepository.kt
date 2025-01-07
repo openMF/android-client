@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.dbobjects.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import rx.Observable
 
 /**

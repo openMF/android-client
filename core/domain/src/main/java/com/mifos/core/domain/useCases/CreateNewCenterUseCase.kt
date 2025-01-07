@@ -10,8 +10,8 @@
 package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.data.CenterPayload
 import com.mifos.core.data.repository.CreateNewCenterRepository
+import com.mifos.core.entity.center.CenterPayload
 import com.mifos.core.objects.responses.SaveResponse
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

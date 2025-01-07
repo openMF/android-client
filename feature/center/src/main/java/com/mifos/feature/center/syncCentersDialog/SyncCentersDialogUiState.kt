@@ -10,7 +10,7 @@
 package com.mifos.feature.center.syncCentersDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.core.dbobjects.group.Center
+import com.mifos.core.entity.group.Center
 
 /**
  * Created by Aditya Gupta on 16/08/23.

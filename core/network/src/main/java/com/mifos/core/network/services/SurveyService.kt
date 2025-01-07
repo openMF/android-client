@@ -9,7 +9,7 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.dbobjects.survey.Survey
+import com.mifos.core.entity.survey.Survey
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.objects.surveys.Scorecard
 import retrofit2.http.Body

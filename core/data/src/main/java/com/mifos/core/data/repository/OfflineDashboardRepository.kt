@@ -9,11 +9,11 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.data.CenterPayload
-import com.mifos.core.dbobjects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.dbobjects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.dbobjects.client.ClientPayload
-import com.mifos.core.dbobjects.group.GroupPayload
+import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.entity.center.CenterPayload
+import com.mifos.core.entity.client.ClientPayload
+import com.mifos.core.entity.group.GroupPayload
 import rx.Observable
 
 /**

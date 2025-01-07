@@ -10,12 +10,12 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncClientsDialogRepository
-import com.mifos.core.dbobjects.accounts.ClientAccounts
-import com.mifos.core.dbobjects.accounts.loan.LoanWithAssociations
-import com.mifos.core.dbobjects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.dbobjects.client.Client
-import com.mifos.core.dbobjects.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.dbobjects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.entity.accounts.ClientAccounts
+import com.mifos.core.entity.accounts.loan.LoanWithAssociations
+import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings

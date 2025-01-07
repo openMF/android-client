@@ -14,8 +14,8 @@ import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.FileUtils.LOG_TAG
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.dbobjects.client.Client
-import com.mifos.core.dbobjects.client.ClientPayload
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.client.ClientPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -9,11 +9,11 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.data.LoansPayload
 import com.mifos.core.data.repository.LoanAccountRepository
-import com.mifos.core.dbobjects.accounts.loan.Loans
-import com.mifos.core.dbobjects.templates.loans.LoanTemplate
+import com.mifos.core.entity.accounts.loan.Loans
+import com.mifos.core.entity.templates.loans.LoanTemplate
 import com.mifos.core.network.datamanager.DataManagerLoan
+import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.objects.organisations.LoanProducts
 import rx.Observable
 import javax.inject.Inject

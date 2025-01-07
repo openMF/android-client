@@ -55,7 +55,6 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.mifos.core.dbobjects.client.Charges
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -64,6 +63,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
+import com.mifos.core.entity.client.Charges
 import com.mifos.feature.client.R
 import com.mifos.feature.client.clientChargeDialog.ChargeDialogScreen
 import kotlinx.coroutines.flow.flowOf

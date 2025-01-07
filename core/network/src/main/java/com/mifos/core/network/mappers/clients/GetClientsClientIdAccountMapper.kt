@@ -9,13 +9,13 @@
  */
 package com.mifos.core.network.mappers.clients
 
-import com.mifos.core.dbobjects.accounts.ClientAccounts
-import com.mifos.core.dbobjects.accounts.loan.LoanAccount
-import com.mifos.core.dbobjects.accounts.loan.LoanType
-import com.mifos.core.dbobjects.accounts.savings.Currency
-import com.mifos.core.dbobjects.accounts.savings.DepositType
-import com.mifos.core.dbobjects.accounts.savings.SavingsAccount
-import com.mifos.core.dbobjects.accounts.savings.Status
+import com.mifos.core.entity.accounts.ClientAccounts
+import com.mifos.core.entity.accounts.loan.LoanAccount
+import com.mifos.core.entity.accounts.loan.LoanType
+import com.mifos.core.entity.accounts.savings.Currency
+import com.mifos.core.entity.accounts.savings.DepositType
+import com.mifos.core.entity.accounts.savings.SavingsAccount
+import com.mifos.core.entity.accounts.savings.Status
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetClientsClientIdAccountsResponse
 import org.openapitools.client.models.GetClientsLoanAccounts
@@ -74,7 +74,7 @@ object GetClientsClientIdAccountMapper :
                     externalId = it.externalId.toString()
                     productId = it.productId?.toInt()
                     productName = it.productName
-                    status = com.mifos.core.dbobjects.accounts.loan.Status().apply {
+                    status = com.mifos.core.entity.accounts.loan.Status().apply {
                         id = it.status?.id?.toInt()
                         code = it.status?.code
                         value = it.status?.description

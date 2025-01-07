@@ -11,12 +11,12 @@ package com.mifos.feature.offline.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.data.CenterPayload
 import com.mifos.core.data.repository.OfflineDashboardRepository
-import com.mifos.core.dbobjects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.dbobjects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.dbobjects.client.ClientPayload
-import com.mifos.core.dbobjects.group.GroupPayload
+import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.entity.center.CenterPayload
+import com.mifos.core.entity.client.ClientPayload
+import com.mifos.core.entity.group.GroupPayload
 import com.mifos.feature.offline.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

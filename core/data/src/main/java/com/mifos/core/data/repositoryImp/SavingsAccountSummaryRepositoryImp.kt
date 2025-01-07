@@ -10,7 +10,7 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
-import com.mifos.core.dbobjects.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.network.datamanager.DataManagerSavings
 import rx.Observable
 import javax.inject.Inject

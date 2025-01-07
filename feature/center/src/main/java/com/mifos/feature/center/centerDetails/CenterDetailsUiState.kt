@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.center.centerDetails
 
-import com.mifos.core.dbobjects.group.CenterWithAssociations
+import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.objects.groups.CenterInfo
 
 /**

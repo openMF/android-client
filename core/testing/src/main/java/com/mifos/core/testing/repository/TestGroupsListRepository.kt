@@ -10,7 +10,7 @@
 package com.mifos.core.testing.repository
 
 import com.mifos.core.data.repository.GroupsListRepository
-import com.mifos.core.dbobjects.group.Group
+import com.mifos.core.entity.group.Group
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow

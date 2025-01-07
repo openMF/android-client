@@ -9,11 +9,11 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.dbobjects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.dbobjects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.dbobjects.client.Savings
-import com.mifos.core.dbobjects.templates.savings.SavingProductsTemplate
-import com.mifos.core.dbobjects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.entity.client.Savings
+import com.mifos.core.entity.templates.savings.SavingProductsTemplate
+import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.account.loan.SavingsApproval

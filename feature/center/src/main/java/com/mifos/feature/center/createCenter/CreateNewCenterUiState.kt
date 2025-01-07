@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.center.createCenter
 
-import com.mifos.core.dbobjects.organisation.Office
+import com.mifos.core.entity.organisation.Office
 
 /**
  * Created by Aditya Gupta on 10/08/23.

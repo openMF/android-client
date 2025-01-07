@@ -9,12 +9,12 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.data.CenterPayload
 import com.mifos.core.databasehelper.DatabaseHelperCenter
-import com.mifos.core.dbobjects.accounts.CenterAccounts
-import com.mifos.core.dbobjects.group.Center
-import com.mifos.core.dbobjects.group.CenterWithAssociations
-import com.mifos.core.dbobjects.organisation.Office
+import com.mifos.core.entity.accounts.CenterAccounts
+import com.mifos.core.entity.center.CenterPayload
+import com.mifos.core.entity.group.Center
+import com.mifos.core.entity.group.CenterWithAssociations
+import com.mifos.core.entity.organisation.Office
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.centers.GetCentersResponseMapper
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper

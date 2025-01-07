@@ -55,9 +55,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.dbobjects.collectionsheet.IndividualCollectionSheet
-import com.mifos.core.dbobjects.organisation.Office
-import com.mifos.core.dbobjects.organisation.Staff
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -65,6 +62,9 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
+import com.mifos.core.entity.collectionsheet.IndividualCollectionSheet
+import com.mifos.core.entity.organisation.Office
+import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.feature.collection_sheet.R
 import java.text.SimpleDateFormat

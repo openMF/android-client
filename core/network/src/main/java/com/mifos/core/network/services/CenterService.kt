@@ -9,10 +9,10 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.data.CenterPayload
-import com.mifos.core.dbobjects.accounts.CenterAccounts
-import com.mifos.core.dbobjects.group.Center
-import com.mifos.core.dbobjects.group.CenterWithAssociations
+import com.mifos.core.entity.accounts.CenterAccounts
+import com.mifos.core.entity.center.CenterPayload
+import com.mifos.core.entity.group.Center
+import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.CollectionSheetPayload

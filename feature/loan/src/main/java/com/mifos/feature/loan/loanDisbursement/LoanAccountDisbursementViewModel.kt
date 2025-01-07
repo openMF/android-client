@@ -13,7 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanAccountDisbursementRepository
-import com.mifos.core.dbobjects.templates.loans.LoanTransactionTemplate
+import com.mifos.core.entity.templates.loans.LoanTransactionTemplate
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.account.loan.LoanDisbursement

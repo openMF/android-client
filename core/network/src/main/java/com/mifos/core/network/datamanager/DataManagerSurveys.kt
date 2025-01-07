@@ -10,9 +10,9 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperSurveys
-import com.mifos.core.dbobjects.survey.QuestionDatas
-import com.mifos.core.dbobjects.survey.ResponseDatas
-import com.mifos.core.dbobjects.survey.Survey
+import com.mifos.core.entity.survey.QuestionDatas
+import com.mifos.core.entity.survey.ResponseDatas
+import com.mifos.core.entity.survey.Survey
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.objects.surveys.Scorecard
 import rx.Observable

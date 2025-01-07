@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.data.LoansPayload
-import com.mifos.core.dbobjects.accounts.loan.Loans
-import com.mifos.core.dbobjects.templates.loans.LoanTemplate
+import com.mifos.core.entity.accounts.loan.Loans
+import com.mifos.core.entity.templates.loans.LoanTemplate
+import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.objects.organisations.LoanProducts
 import rx.Observable
 

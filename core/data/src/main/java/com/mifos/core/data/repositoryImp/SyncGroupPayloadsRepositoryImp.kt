@@ -10,7 +10,7 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
-import com.mifos.core.dbobjects.group.GroupPayload
+import com.mifos.core.entity.group.GroupPayload
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.objects.responses.SaveResponse
 import rx.Observable

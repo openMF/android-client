@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.loanChargeDialog
 
-import com.mifos.core.dbobjects.client.Charges
+import com.mifos.core.entity.client.Charges
 
 /**
  * Created by Aditya Gupta on 16/08/23.

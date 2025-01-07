@@ -9,12 +9,12 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.dbobjects.collectionsheet.CenterDetail
-import com.mifos.core.dbobjects.collectionsheet.CollectionSheetPayload
-import com.mifos.core.dbobjects.collectionsheet.CollectionSheetResponse
-import com.mifos.core.dbobjects.collectionsheet.IndividualCollectionSheet
-import com.mifos.core.dbobjects.collectionsheet.ProductiveCollectionSheetPayload
-import com.mifos.core.dbobjects.group.CenterWithAssociations
+import com.mifos.core.entity.collectionsheet.CenterDetail
+import com.mifos.core.entity.collectionsheet.CollectionSheetPayload
+import com.mifos.core.entity.collectionsheet.CollectionSheetResponse
+import com.mifos.core.entity.collectionsheet.IndividualCollectionSheet
+import com.mifos.core.entity.collectionsheet.ProductiveCollectionSheetPayload
+import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.IndividualCollectionSheetPayload

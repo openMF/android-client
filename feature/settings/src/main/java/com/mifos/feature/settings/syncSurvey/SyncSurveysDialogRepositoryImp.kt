@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.settings.syncSurvey
 
-import com.mifos.core.dbobjects.survey.QuestionDatas
-import com.mifos.core.dbobjects.survey.ResponseDatas
-import com.mifos.core.dbobjects.survey.Survey
+import com.mifos.core.entity.survey.QuestionDatas
+import com.mifos.core.entity.survey.ResponseDatas
+import com.mifos.core.entity.survey.Survey
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import rx.Observable
 import javax.inject.Inject
