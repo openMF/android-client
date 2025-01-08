@@ -79,7 +79,7 @@ import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.LightGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.client.Client
+import com.mifos.core.entity.client.Client
 import com.mifos.feature.client.R
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogScreen
 

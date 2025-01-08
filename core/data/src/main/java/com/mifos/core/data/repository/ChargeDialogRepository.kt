@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.data.ChargesPayload
-import com.mifos.core.objects.client.ChargeCreationResponse
-import com.mifos.core.objects.templates.clients.ChargeTemplate
+import com.mifos.core.objects.clients.ChargeCreationResponse
+import com.mifos.core.objects.template.client.ChargeTemplate
+import com.mifos.core.payloads.ChargesPayload
 
 /**
  * Created by Aditya Gupta on 13/08/23.

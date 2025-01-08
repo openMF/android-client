@@ -11,9 +11,9 @@ package com.mifos.feature.settings.syncSurvey
 
 import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.NetworkUtilsWrapper
-import com.mifos.core.objects.survey.QuestionDatas
-import com.mifos.core.objects.survey.ResponseDatas
-import com.mifos.core.objects.survey.Survey
+import com.mifos.core.entity.survey.QuestionDatas
+import com.mifos.core.entity.survey.ResponseDatas
+import com.mifos.core.entity.survey.Survey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

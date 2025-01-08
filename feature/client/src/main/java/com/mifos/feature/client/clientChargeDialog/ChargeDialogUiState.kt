@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.client.clientChargeDialog
 
-import com.mifos.core.objects.templates.clients.ChargeTemplate
+import com.mifos.core.objects.template.client.ChargeTemplate
 
 /**
  * Created by Aditya Gupta on 13/08/23.

@@ -9,10 +9,10 @@
  */
 package com.mifos.core.data.repository
 
+import com.mifos.core.entity.collectionsheet.IndividualCollectionSheet
+import com.mifos.core.entity.organisation.Office
+import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.network.model.RequestCollectionSheetPayload
-import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
-import com.mifos.core.objects.organisation.Office
-import com.mifos.core.objects.organisation.Staff
 
 /**
  * Created by Aditya Gupta on 10/08/23.

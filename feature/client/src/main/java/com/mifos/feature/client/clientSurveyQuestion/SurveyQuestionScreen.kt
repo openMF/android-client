@@ -66,9 +66,9 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.survey.Scorecard
-import com.mifos.core.objects.survey.ScorecardValues
-import com.mifos.core.objects.survey.Survey
+import com.mifos.core.entity.survey.Survey
+import com.mifos.core.objects.surveys.Scorecard
+import com.mifos.core.objects.surveys.ScorecardValues
 import com.mifos.feature.client.R
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitScreen
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitUiState

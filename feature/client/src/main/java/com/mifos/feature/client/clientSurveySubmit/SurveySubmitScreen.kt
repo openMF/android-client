@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.survey.Scorecard
+import com.mifos.core.objects.surveys.Scorecard
 import com.mifos.feature.client.R
 
 @Composable

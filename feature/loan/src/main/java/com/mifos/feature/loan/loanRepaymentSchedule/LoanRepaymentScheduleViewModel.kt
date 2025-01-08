@@ -13,7 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations
+import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

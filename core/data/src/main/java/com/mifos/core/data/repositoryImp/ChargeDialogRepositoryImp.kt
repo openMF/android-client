@@ -9,11 +9,11 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.data.ChargesPayload
 import com.mifos.core.data.repository.ChargeDialogRepository
 import com.mifos.core.network.DataManager
-import com.mifos.core.objects.client.ChargeCreationResponse
-import com.mifos.core.objects.templates.clients.ChargeTemplate
+import com.mifos.core.objects.clients.ChargeCreationResponse
+import com.mifos.core.objects.template.client.ChargeTemplate
+import com.mifos.core.payloads.ChargesPayload
 import javax.inject.Inject
 
 /**
