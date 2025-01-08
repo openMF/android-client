@@ -78,7 +78,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.LightGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
+import com.mifos.core.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.checkerInboxTask.checkerInboxDialog.CheckerInboxTasksFilterDialog
 import com.mifos.feature.checker_inbox_task.R

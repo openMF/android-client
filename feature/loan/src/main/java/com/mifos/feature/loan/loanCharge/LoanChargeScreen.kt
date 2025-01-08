@@ -59,7 +59,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.objects.client.Charges
+import com.mifos.core.entity.client.Charges
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.loan.R
 import com.mifos.feature.loan.loanChargeDialog.LoanChargeDialogScreen

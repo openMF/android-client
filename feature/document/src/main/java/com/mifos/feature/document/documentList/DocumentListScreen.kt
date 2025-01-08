@@ -71,7 +71,7 @@ import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.noncore.Document
+import com.mifos.core.objects.noncoreobjects.Document
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.document.R
 import com.mifos.feature.document.documentDialog.DocumentDialogScreen

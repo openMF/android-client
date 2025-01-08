@@ -26,7 +26,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTabRow
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.utility.TabContent
-import com.mifos.core.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.core.entity.collectionsheet.IndividualCollectionSheet
 import com.mifos.feature.collection_sheet.R
 import com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet.ui.NewIndividualCollectionSheetScreen
 import com.mifos.feature.individualCollectionSheet.savedIndividualCollectionSheet.ui.SavedIndividualCollectionSheetCompose

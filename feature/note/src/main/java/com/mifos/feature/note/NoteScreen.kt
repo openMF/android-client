@@ -46,7 +46,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.objects.noncore.Note
+import com.mifos.core.entity.noncore.Note
 import com.mifos.core.ui.components.MifosEmptyUi
 
 @Composable

@@ -69,10 +69,10 @@ import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.objects.PaymentTypeOption
-import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
-import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.entity.PaymentTypeOption
+import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.feature.loan.R
 import java.text.SimpleDateFormat
 import java.util.Locale

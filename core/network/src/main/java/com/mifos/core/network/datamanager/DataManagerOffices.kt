@@ -9,9 +9,9 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.entity.organisation.Office
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
-import com.mifos.core.objects.organisation.Office
 import javax.inject.Inject
 import javax.inject.Singleton
 

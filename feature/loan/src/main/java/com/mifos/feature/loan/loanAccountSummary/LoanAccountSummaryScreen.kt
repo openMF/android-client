@@ -67,9 +67,9 @@ import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations
-import com.mifos.core.objects.accounts.loan.Status
-import com.mifos.core.objects.accounts.loan.Summary
+import com.mifos.core.entity.accounts.loan.LoanWithAssociations
+import com.mifos.core.entity.accounts.loan.Status
+import com.mifos.core.entity.accounts.loan.Summary
 import com.mifos.feature.loan.R
 
 /**

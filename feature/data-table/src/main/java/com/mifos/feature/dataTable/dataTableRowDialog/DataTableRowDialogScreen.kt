@@ -47,7 +47,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.noncore.DataTable
+import com.mifos.core.entity.noncore.DataTable
 import com.mifos.feature.data_table.R
 
 @Composable

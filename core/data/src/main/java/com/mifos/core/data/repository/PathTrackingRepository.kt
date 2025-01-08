@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.objects.user.UserLocation
+import com.mifos.core.objects.users.UserLocation
 
 /**
  * Created by Aditya Gupta on 06/08/23.

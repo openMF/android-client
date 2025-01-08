@@ -104,11 +104,11 @@ import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.noncore.DataTable
-import com.mifos.core.objects.organisation.Office
-import com.mifos.core.objects.organisation.Staff
-import com.mifos.core.objects.templates.clients.ClientsTemplate
+import com.mifos.core.entity.client.ClientPayload
+import com.mifos.core.entity.noncore.DataTable
+import com.mifos.core.entity.organisation.Office
+import com.mifos.core.entity.organisation.Staff
+import com.mifos.core.entity.templates.clients.ClientsTemplate
 import com.mifos.feature.client.R
 import kotlinx.coroutines.launch
 import java.io.File

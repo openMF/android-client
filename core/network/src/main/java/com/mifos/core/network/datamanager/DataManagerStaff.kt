@@ -9,9 +9,9 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.staffs.StaffMapper
-import com.mifos.core.objects.organisation.Staff
 import javax.inject.Inject
 import javax.inject.Singleton
 

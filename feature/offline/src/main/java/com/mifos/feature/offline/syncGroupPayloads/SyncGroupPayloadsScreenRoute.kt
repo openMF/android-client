@@ -49,7 +49,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosErrorContent
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.objects.group.GroupPayload
+import com.mifos.core.entity.group.GroupPayload
 import com.mifos.feature.offline.R
 
 @Composable

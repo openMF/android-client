@@ -12,12 +12,12 @@ package com.mifos.feature.offline.syncLoanRepaymentTransaction
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.FileUtils.LOG_TAG
-import com.mifos.core.data.CenterPayload_Table.errorMessage
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.objects.PaymentTypeOption
-import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.entity.PaymentTypeOption
+import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.entity.center.CenterPayload_Table.errorMessage
+import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.feature.offline.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

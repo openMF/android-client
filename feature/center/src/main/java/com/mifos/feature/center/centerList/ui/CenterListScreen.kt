@@ -79,7 +79,7 @@ import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.LightGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.group.Center
+import com.mifos.core.entity.group.Center
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.R
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen

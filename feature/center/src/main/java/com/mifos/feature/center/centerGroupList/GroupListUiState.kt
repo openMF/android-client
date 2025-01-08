@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.center.centerGroupList
 
-import com.mifos.core.objects.group.CenterWithAssociations
+import com.mifos.core.entity.group.CenterWithAssociations
 
 /**
  * Created by Aditya Gupta on 06/08/23.
