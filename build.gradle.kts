@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.spotless) apply false
     alias(libs.plugins.ktlint) apply false
+    alias(libs.plugins.module.graph) apply true // Plugin for module dependency graph generation
 
     //Multiplatform Plugins
     alias(libs.plugins.jetbrainsCompose) apply false
