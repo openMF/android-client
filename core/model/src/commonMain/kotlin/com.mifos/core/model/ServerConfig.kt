@@ -9,13 +9,15 @@
  */
 package com.mifos.core.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ServerConfig(
     val protocol: String,
-    @SerializedName("end_point")
+    @SerialName("end_point")
     val endPoint: String,
-    @SerializedName("api_path")
+    @SerialName("api_path")
     val apiPath: String,
     val port: String,
     val tenant: String,

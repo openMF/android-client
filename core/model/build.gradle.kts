@@ -8,12 +8,18 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.library)
+    alias(libs.plugins.mifos.kmp.library)
+    id("kotlinx-serialization")
 }
+
 android{
     namespace = "com.mifos.core.model"
-
 }
-dependencies {
-    implementation(libs.converter.gson)
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.json)
+        }
+    }
 }
