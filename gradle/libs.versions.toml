@@ -1,117 +1,117 @@
 [versions]
-accompanistDrawablepainter = "0.34.0"
-accompanistSwiperefresh = "0.25.1"
+accompanistDrawablepainter = "0.36.0"
+accompanistSwiperefresh = "0.27.0"
 accompanistPermission = "0.34.0"
 adapterRxjava = "2.9.0"
-androidDesugarJdkLibs = "2.0.4"
+androidDesugarJdkLibs = "2.1.4"
 androidIconifyMaterial = "2.2.2"
 androidJob = "1.2.6"
 androidMapsUtils = "0.4.2"
-androidGradlePlugin = "8.5.2"
-androidTools = "31.6.0"
-androidxActivity = "1.8.2"
-androidxAppCompat = "1.6.1"
+androidGradlePlugin = "8.8.0"
+androidTools = "31.8.0"
+androidxActivity = "1.9.3"
+androidxAppCompat = "1.7.0"
 androidxArchCore = '2.2.0'
-androidxComposeBom = "2024.02.01"
+androidxComposeBom = "2024.12.01"
 androidxComposeCompiler = "1.5.8"
-androidxComposeUi = "1.6.2"
-androidxComposeRuntime = "1.6.2"
-androidxComposeRuntimeTracing = "1.0.0-beta01"
-androidxComposeMaterial3 = "1.2.1"
-androidxCore = "1.12.0"
+androidxComposeUi = "1.7.6"
+androidxComposeRuntime = "1.7.6"
+androidxComposeRuntimeTracing = "1.7.6"
+androidxComposeMaterial3 = "1.3.1"
+androidxCore = "1.15.0"
 androidxCoreSplashscreen = "1.0.1"
-androidxEspresso = "3.5.1"
+androidxEspresso = "3.6.1"
 androidxHiltNavigationCompose = "1.2.0"
-androidxLifecycle = "2.7.0"
-androidxMacroBenchmark = "1.2.3"
-androidxBaselineProfile = "1.2.3"
-androidxBenchmark = "1.2.3"
+androidxLifecycle = "2.8.7"
+androidxMacroBenchmark = "1.3.3"
+androidxBaselineProfile = "1.3.3"
+androidxBenchmark = "1.3.3"
 androidxBenchmarkJunit4 = "1.1.1"
 androidxMaterial = "1.6.7"
-androidxMaterialVersion = "1.6.8"
+androidxMaterialVersion = "1.7.6"
 androidxMetrics = "1.0.0-beta01"
-androidxNavigation = "2.7.7"
-androidxProfileinstaller = "1.3.1"
-androidxStartup = "1.1.1"
-androidxTestCore = "1.5.0"
-androidxTestExt = "1.1.5"
-androidxTestRules = "1.5.0"
-androidxTestRunner = "1.5.2"
+androidxNavigation = "2.8.5"
+androidxProfileinstaller = "1.4.1"
+androidxStartup = "1.2.0"
+androidxTestCore = "1.6.1"
+androidxTestExt = "1.2.1"
+androidxTestRules = "1.6.1"
+androidxTestRunner = "1.6.2"
 androidxTracing = "1.2.0"
 androidxUiAutomator = "2.3.0"
-androidxWindowManager = "1.2.0"
-androidxWork = "2.9.0"
-annotation = "1.7.1"
-compiler = "1.5.10"
-converterGson = "2.9.0"
-converterScalars = "2.9.0"
+androidxWindowManager = "1.3.0"
+androidxWork = "2.10.0"
+annotation = "1.9.1"
+compiler = "1.5.15"
+converterGson = "2.11.0"
+converterScalars = "2.11.0"
 coreTesting = "2.2.0"
-coil-compose = "2.5.0"
+coil-compose = "2.6.0"
 dbflow = "3.1.1"
 dbflowProcessor = "4.2.4"
-espressoIdlingResource = "3.5.1"
-espressoIntents = "3.5.1"
+espressoIdlingResource = "3.6.1"
+espressoIntents = "3.6.1"
 fineractClientVersion = "0.0.1"
-firebaseBom = "32.7.3"
-firebaseCrashlyticsPlugin = "2.9.9"
+firebaseBom = "33.7.0"
+firebaseCrashlyticsPlugin = "3.0.2"
 firebasePerfPlugin = "1.4.2"
 fliptables = "1.0.1"
 glide = "4.15.1"
-gmsPlugin = "4.4.1"
-googleOss = "17.0.1"
+gmsPlugin = "4.4.2"
+googleOss = "17.1.0"
 googleOssPlugin = "0.10.6"
-hilt = "2.51"
+hilt = "2.54"
 hiltExt = "1.2.0"
 jacoco = "0.8.7"
 junit4 = "4.13.2"
 junitJupiter = "5.8.2"
-junitVersion = "1.1.5"
-kotlinxCoroutinesCoreVersion = "1.5.1"
+junitVersion = "1.2.1"
+kotlinxCoroutinesCoreVersion = "1.10.1"
 kotlinxCoroutinesRx2 = "1.5.1"
 legacySupportV4 = "1.0.0"
-lifecycleCommonJava8 = "2.7.0"
+lifecycleCommonJava8 = "2.8.7"
 lifecycleExtensions = "2.2.0"
-lifecycleReactivestreamsKtx = "2.7.0"
+lifecycleReactivestreamsKtx = "2.8.7"
 lint = "31.3.0"
 libphonenumberAndroidVersion = "8.13.35"
 leakcanaryVersion = '2.10'
-mapsCompose = "4.3.3"
-material = "1.11.0"
+mapsCompose = "4.4.1"
+material = "1.12.0"
 materialIconsExtended = "1.6.2"
 materialshowcaseview = "1.3.7"
-materialVersion = "1.6.7"
+materialVersion = "1.7.6"
 mifosAndroidSdkArchVersion = "0.0.1"
 mifosPasscode = "1.0.0"
-mockitoCore = "5.5.0"
-moshiVersion = '1.15.0'
+mockitoCore = "5.6.0"
+moshiVersion = '1.15.1'
 mockkVersion = "1.13.5"
 multidex = "2.0.1"
-navigationFragmentKtx = "2.7.7"
-navigationUiKtx = "2.7.7"
+navigationFragmentKtx = "2.8.5"
+navigationUiKtx = "2.8.5"
 okhttpVersion = "4.12.0"
-pagingRuntimeKtx = "3.2.1"
-playServicesLocation = "21.1.0"
-playServicesMaps = "18.2.0"
-playServicesPlaces = "17.0.0"
+pagingRuntimeKtx = "3.3.5"
+playServicesLocation = "21.3.0"
+playServicesMaps = "19.0.0"
+playServicesPlaces = "17.1.0"
 preferenceKtx = "1.2.1"
-protobuf = "3.24.4"
+protobuf = "4.26.1"
 protobufPlugin = "0.9.4"
-playIntegrity = '1.3.0'
+playIntegrity = '1.4.0'
 playUpdate = "2.1.0"
 playScanner = "16.1.0"
-playService = "18.3.0"
+playService = "18.5.0"
 realmVersion = "1.13.0"
 recyclerview = "1.3.2"
 room = "2.6.1"
-retrofit = "2.9.0"
+retrofit = "2.11.0"
 rxandroidVersion = "1.1.0"
 rxjava = "1.3.8"
 rxjava3 = "3.1.8" # 1.3.8
 rxandroid = "3.0.2" # 1.1.0
 dependencyGuard = "0.5.0"
-spotlessVersion = "6.23.3"
+spotlessVersion = "6.25.0"
 ktlint = "12.1.1"
-detekt = "1.23.5"
+detekt = "1.23.7"
 twitter-detekt-compose = "0.0.26"
 moduleGraph = "2.7.1"
 
@@ -120,10 +120,10 @@ stetho = "1.3.1"
 stethoOkhttp3 = "1.3.1"
 sweetError = "1.0.9"
 textdrawable = "558677ea31"
-turbine = "1.0.0"
+turbine = "1.1.0"
 timberVersion = '5.0.1'
-truthVersion = '1.1.5'
-runtimeLivedata = "1.6.8"
+truthVersion = '1.4.4'
+runtimeLivedata = "1.7.6"
 appcompat = "1.7.0"
 
 # Kotlin KMP Dependencies
@@ -146,7 +146,7 @@ koinAnnotationsVersion = "1.4.0-RC4"
 
 # CMP Libraries
 compose-plugin = "1.7.0-rc01"
-coil = "3.0.0-alpha10"
+coil = "3.0.4"
 backHandlerVersion = "2.1.0"
 constraintLayout = "0.4.0"
 multiplatformSettings = "1.2.0"
@@ -160,7 +160,7 @@ wire = "5.0.0"
 # Jetbrains CMP
 windowsSizeClass = "0.5.0"
 uiDesktopVersion = "1.7.0"
-composeJB = "1.7.0"
+composeJB = "1.7.3"
 composeLifecycle = "2.8.3"
 composeNavigation = "2.8.0-alpha10"
 jbCoreBundle = "1.0.1"
@@ -168,7 +168,7 @@ jbSavedState = "1.2.2"
 
 # Desktop Version
 packageName = "AndroidClient"
-packageNamespace = "org.mifos.desktop"
+packageNamespace = "org.mifos.client.desktop"
 packageVersion = "1.0.0"
 
 [libraries]
@@ -210,8 +210,6 @@ android-maps-utils = { module = "com.google.maps.android:android-maps-utils", ve
 android-iconify-material = { module = "com.joanzapata.iconify:android-iconify-material", version.ref = "androidIconifyMaterial" }
 
 #RxAndroid
-kotlinx-coroutines-core-v151 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCoreVersion" }
-kotlinx-coroutines-rx2 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2", version.ref = "kotlinxCoroutinesRx2" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 rxandroid = { module = "io.reactivex:rxandroid", version.ref = "rxandroidVersion" }
 rxjava = { module = "io.reactivex:rxjava", version.ref = "rxjava" }
@@ -425,7 +423,6 @@ android-tools-common = { group = "com.android.tools", name = "common", version.r
 firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsPlugin" }
 firebase-performance-gradlePlugin = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebasePerfPlugin" }
 room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
-androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 # [New KMP Dependencies]
@@ -553,9 +550,6 @@ mifos-android-feature = { id = "mifos.android.feature", version = "unspecified" 
 kotlin-kapt = { id = "kotlin-kapt", version.ref = "kotlin" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 realm = { id = "io.realm.kotlin", version.ref = "realmVersion" }
-spotless = { id = "com.diffplug.spotless", version.ref = "spotlessVersion" }
-dependencyGuard = { id = "com.dropbox.dependency-guard", version.ref = "dependencyGuard" }
-module-graph = { id = "com.jraska.module.graph.assertion", version.ref = "moduleGraph" }
 
 # KMP & CMP Plugins
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
@@ -575,11 +569,13 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
 firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePerfPlugin" }
 gms = { id = "com.google.gms.google-services", version.ref = "gmsPlugin" }
-dependencyGuard = { id = "com.dropbox.dependency-guard", version.ref = "dependencyGuard" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
 
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotlessVersion" }
+module-graph = { id = "com.jraska.module.graph.assertion", version.ref = "moduleGraph" }
+dependencyGuard = { id = "com.dropbox.dependency-guard", version.ref = "dependencyGuard" }
 
 # Plugins defined by this project
 
