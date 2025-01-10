@@ -26,16 +26,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -124,59 +122,39 @@ internal fun SyncGroupPayloadsScreen(
     ) { paddingValues ->
         Box(
             modifier = Modifier
-                .padding(paddingValues)
-                .nestedScroll(pullRefreshState.nestedScrollConnection),
+                .padding(paddingValues),
         ) {
-            when (uiState) {
-                is SyncGroupPayloadsUiState.Loading -> {
-                    MifosCircularProgress()
-                }
+            PullToRefreshBox(
+                state = pullRefreshState,
+                isRefreshing = refreshState,
+                onRefresh = onRefresh,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                when (uiState) {
+                    is SyncGroupPayloadsUiState.Loading -> {
+                        MifosCircularProgress()
+                    }
 
-                is SyncGroupPayloadsUiState.Error -> {
-                    MifosErrorContent(
-                        message = stringResource(id = uiState.messageResId),
-                        onRefresh = onRefresh,
-                        refreshButtonText = stringResource(id = R.string.feature_offline_click_to_refresh),
-                    )
-                }
-
-                is SyncGroupPayloadsUiState.Success -> {
-                    if (uiState.emptyState != null) {
+                    is SyncGroupPayloadsUiState.Error -> {
                         MifosErrorContent(
-                            imageVector = ImageVector.vectorResource(id = uiState.emptyState.iconResId),
-                            message = stringResource(id = uiState.emptyState.messageResId),
-                            isRefreshEnabled = false,
+                            message = stringResource(id = uiState.messageResId),
+                            onRefresh = onRefresh,
+                            refreshButtonText = stringResource(id = R.string.feature_offline_click_to_refresh),
                         )
-                    } else {
-                        GroupPayloadsContent(groupPayloadsList)
+                    }
+
+                    is SyncGroupPayloadsUiState.Success -> {
+                        if (uiState.emptyState != null) {
+                            MifosErrorContent(
+                                imageVector = ImageVector.vectorResource(id = uiState.emptyState.iconResId),
+                                message = stringResource(id = uiState.emptyState.messageResId),
+                                isRefreshEnabled = false,
+                            )
+                        } else {
+                            GroupPayloadsContent(groupPayloadsList)
+                        }
                     }
                 }
-            }
-
-            PullToRefreshContainer(
-                state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter),
-            )
-        }
-
-        LaunchedEffect(key1 = refreshState) {
-            if (refreshState) {
-                pullRefreshState.startRefresh()
-            }
-        }
-
-        LaunchedEffect(key1 = pullRefreshState.isRefreshing) {
-            if (pullRefreshState.isRefreshing) {
-                if (Network.isOnline(context)) {
-                    onRefresh()
-                } else {
-                    Toast.makeText(
-                        context,
-                        context.resources.getText(R.string.feature_offline_error_not_connected_internet),
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
-                pullRefreshState.endRefresh()
             }
         }
     }
