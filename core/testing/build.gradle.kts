@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.mifos.android.library)
     alias(libs.plugins.mifos.android.library.compose)
     alias(libs.plugins.mifos.android.hilt)
+    id("kotlin-kapt")
 }
 
 android {
