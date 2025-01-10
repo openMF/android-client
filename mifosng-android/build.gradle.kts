@@ -28,17 +28,16 @@ plugins {
 
 android {
     namespace = "com.mifos.mifosxdroid"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.mifos.mifosxdroid"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 6
         versionName = "1.0.1"
 
         multiDexEnabled = true
-        compileSdkPreview = "UpsideDownCake"
         // A test runner provided by https://code.google.com/p/android-test-kit/
         testInstrumentationRunner = "com.mifos.core.testing.MifosTestRunner"
         vectorDrawables.useSupportLibrary = true
