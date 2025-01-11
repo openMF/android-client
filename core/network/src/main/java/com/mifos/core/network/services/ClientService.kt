@@ -9,20 +9,20 @@
  */
 package com.mifos.core.network.services
 
+import com.mifos.core.entity.accounts.ClientAccounts
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.client.ClientPayload
+import com.mifos.core.entity.templates.clients.ClientsTemplate
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.ClientAccounts
-import com.mifos.core.objects.client.ActivatePayload
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.ClientAddressRequest
-import com.mifos.core.objects.client.ClientAddressResponse
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.client.Page
-import com.mifos.core.objects.noncore.Identifier
-import com.mifos.core.objects.noncore.IdentifierCreationResponse
-import com.mifos.core.objects.noncore.IdentifierPayload
-import com.mifos.core.objects.noncore.IdentifierTemplate
-import com.mifos.core.objects.templates.clients.ClientsTemplate
+import com.mifos.core.objects.clients.ActivatePayload
+import com.mifos.core.objects.clients.ClientAddressRequest
+import com.mifos.core.objects.clients.ClientAddressResponse
+import com.mifos.core.objects.clients.Page
+import com.mifos.core.objects.noncoreobjects.Identifier
+import com.mifos.core.objects.noncoreobjects.IdentifierCreationResponse
+import com.mifos.core.objects.noncoreobjects.IdentifierPayload
+import com.mifos.core.objects.noncoreobjects.IdentifierTemplate
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.http.Body

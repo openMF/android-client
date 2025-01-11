@@ -9,15 +9,15 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
+import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import rx.Observable
 
 interface SyncLoanRepaymentTransactionRepository {
 
     fun databaseLoanRepayments(): Observable<List<LoanRepaymentRequest>>
 
-    fun paymentTypeOption(): Observable<List<com.mifos.core.objects.PaymentTypeOption>>
+    fun paymentTypeOption(): Observable<List<com.mifos.core.entity.PaymentTypeOption>>
 
     fun submitPayment(
         loanId: Int,

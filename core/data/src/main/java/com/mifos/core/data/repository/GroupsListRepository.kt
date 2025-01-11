@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.objects.group.Group
+import com.mifos.core.entity.group.Group
 import kotlinx.coroutines.flow.Flow
 
 interface GroupsListRepository {

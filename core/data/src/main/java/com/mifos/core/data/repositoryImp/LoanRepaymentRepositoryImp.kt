@@ -10,10 +10,10 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.LoanRepaymentRepository
+import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.network.datamanager.DataManagerLoan
-import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
-import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import rx.Observable
 import javax.inject.Inject
 

@@ -10,8 +10,8 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.NoteRepository
+import com.mifos.core.entity.noncore.Note
 import com.mifos.core.network.datamanager.DataManagerNote
-import com.mifos.core.objects.noncore.Note
 import javax.inject.Inject
 
 class NoteRepositoryImp @Inject constructor(private val dataManagerNote: DataManagerNote) :

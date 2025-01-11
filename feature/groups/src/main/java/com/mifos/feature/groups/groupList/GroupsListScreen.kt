@@ -77,7 +77,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.objects.group.Group
+import com.mifos.core.entity.group.Group
 import com.mifos.core.testing.repository.sampleGroups
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosFAB

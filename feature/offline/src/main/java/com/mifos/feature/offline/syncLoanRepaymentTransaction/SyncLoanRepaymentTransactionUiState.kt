@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
-import com.mifos.core.objects.PaymentTypeOption
-import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.entity.PaymentTypeOption
+import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
 
 /**
  * Created by Aditya Gupta on 16/08/23.

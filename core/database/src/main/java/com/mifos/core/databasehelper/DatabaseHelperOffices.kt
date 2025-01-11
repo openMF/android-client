@@ -10,8 +10,8 @@
 package com.mifos.core.databasehelper
 
 import android.os.AsyncTask
-import com.mifos.core.objects.organisation.Office
-import com.mifos.core.objects.organisation.OfficeOpeningDate
+import com.mifos.core.entity.organisation.Office
+import com.mifos.core.entity.organisation.OfficeOpeningDate
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import rx.Observable
 import javax.inject.Inject

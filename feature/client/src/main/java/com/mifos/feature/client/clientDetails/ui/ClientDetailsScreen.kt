@@ -106,9 +106,9 @@ import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.accounts.loan.LoanAccount
-import com.mifos.core.objects.accounts.savings.DepositType
-import com.mifos.core.objects.accounts.savings.SavingsAccount
+import com.mifos.core.entity.accounts.loan.LoanAccount
+import com.mifos.core.entity.accounts.savings.DepositType
+import com.mifos.core.entity.accounts.savings.SavingsAccount
 import com.mifos.feature.client.R
 import kotlinx.coroutines.launch
 import java.io.File
