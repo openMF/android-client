@@ -28,6 +28,7 @@ import com.mifos.feature.checkerInboxTask.navigation.checkerInboxTaskGraph
 import com.mifos.feature.client.navigation.clientNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.client.navigation.navigateCreateClientScreen
+import com.mifos.feature.client.navigation.navigateSurveyQuestionScreen
 import com.mifos.feature.client.navigation.navigateToClientListScreen
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
 import com.mifos.feature.dataTable.navigation.navigateDataTableList
@@ -105,7 +106,8 @@ fun Navigation(
             hasDatatables = navController::navigateDataTableList,
             onDocumentClicked = navController::navigateToDocumentListScreen,
             onCardClicked = { position, survey ->
-                //    TODO
+                val id = survey[position].id
+                navController.navigateSurveyQuestionScreen(id)
             },
         )
 
