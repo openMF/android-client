@@ -9,19 +9,19 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.data.CenterPayload
+import com.mifos.core.entity.accounts.CenterAccounts
+import com.mifos.core.entity.center.CenterPayload
+import com.mifos.core.entity.group.Center
+import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.model.APIEndPoint
+import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload
-import com.mifos.core.objects.accounts.CenterAccounts
-import com.mifos.core.objects.db.CollectionSheet
-import com.mifos.core.objects.db.OfflineCenter
-import com.mifos.core.objects.group.Center
-import com.mifos.core.objects.group.CenterWithAssociations
-import com.mifos.core.objects.response.SaveResponse
-import org.openapitools.client.models.GetCentersResponse
-import org.openapitools.client.models.PostCentersCenterIdRequest
-import org.openapitools.client.models.PostCentersCenterIdResponse
+import com.mifos.core.objects.clients.ActivatePayload
+import com.mifos.core.objects.clients.Page
+import com.mifos.core.objects.databaseobjects.CollectionSheet
+import com.mifos.core.objects.databaseobjects.OfflineCenter
+import com.mifos.core.objects.responses.SaveResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -35,11 +35,11 @@ import rx.Observable
  */
 interface CenterService {
     @GET(APIEndPoint.CENTERS)
-    suspend fun getCenters(
+    fun getCenters(
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): GetCentersResponse
+    ): Observable<Page<Center>>
 
     @GET(APIEndPoint.CENTERS + "/{centerId}/accounts")
     fun getCenterAccounts(@Path("centerId") centerId: Int): Observable<CenterAccounts>
@@ -96,10 +96,9 @@ interface CenterService {
      * @param centerId
      * @return GenericResponse
      */
-    @POST(APIEndPoint.CENTERS + "/{centerId}")
-    suspend fun activateCenter(
-        @Path("centerId") centerId: Long,
-        @Body postCentersCenterIdRequest: PostCentersCenterIdRequest,
-        @Query("command") command: String? = null,
-    ): PostCentersCenterIdResponse
+    @POST(APIEndPoint.CENTERS + "/{centerId}?command=activate")
+    fun activateCenter(
+        @Path("centerId") centerId: Int,
+        @Body activatePayload: ActivatePayload?,
+    ): Observable<GenericResponse>
 }

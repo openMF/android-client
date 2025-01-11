@@ -10,11 +10,10 @@
 package com.mifos.core.network.services
 
 import com.google.gson.JsonArray
+import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.user.UserLocation
-import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
-import org.openapitools.client.models.GetDataTablesResponse
+import com.mifos.core.objects.users.UserLocation
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -28,7 +27,7 @@ import rx.Observable
  */
 interface DataTableService {
     @GET(APIEndPoint.DATATABLES)
-    suspend fun getDatatables(@Query("apptable") apptable: String? = null): List<GetDataTablesResponse>
+    fun getTableOf(@Query("apptable") table: String?): Observable<List<DataTable>>
 
     @GET(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
     suspend fun getDataOfDataTable(
@@ -45,11 +44,11 @@ interface DataTableService {
     ): GenericResponse
 
     @DELETE(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/{dataTableRowId}")
-    suspend fun deleteDatatableEntry(
-        @Path("datatable") datatable: String,
-        @Path("apptableId") apptableId: Long,
-        @Path("datatableId") datatableId: Long,
-    ): DeleteDataTablesDatatableAppTableIdDatatableIdResponse
+    fun deleteEntryOfDataTableManyToMany(
+        @Path("dataTableName") dataTableName: String?,
+        @Path("entityId") entityId: Int,
+        @Path("dataTableRowId") dataTableRowId: Int,
+    ): Observable<GenericResponse>
 
     @POST(APIEndPoint.DATATABLES + "/user_tracking/{userId}")
     fun addUserPathTracking(

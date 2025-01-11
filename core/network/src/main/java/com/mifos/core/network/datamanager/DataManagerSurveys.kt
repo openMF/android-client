@@ -10,12 +10,11 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperSurveys
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.entity.survey.QuestionDatas
+import com.mifos.core.entity.survey.ResponseDatas
+import com.mifos.core.entity.survey.Survey
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.objects.survey.QuestionDatas
-import com.mifos.core.objects.survey.ResponseDatas
-import com.mifos.core.objects.survey.Scorecard
-import com.mifos.core.objects.survey.Survey
+import com.mifos.core.objects.surveys.Scorecard
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,7 +29,7 @@ import javax.inject.Singleton
 class DataManagerSurveys @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     private val mDatabaseHelperSurveys: DatabaseHelperSurveys,
-    private val prefManager: PrefManager,
+    private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**
      * This Method sending the Request to REST API :

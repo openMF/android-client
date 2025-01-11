@@ -81,11 +81,11 @@ import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.accounts.loan.LoanAccount
-import com.mifos.core.objects.accounts.savings.DepositType
-import com.mifos.core.objects.accounts.savings.SavingsAccount
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.group.Group
+import com.mifos.core.entity.accounts.loan.LoanAccount
+import com.mifos.core.entity.accounts.savings.DepositType
+import com.mifos.core.entity.accounts.savings.SavingsAccount
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.group.Group
 import com.mifos.feature.groups.R
 
 @Composable

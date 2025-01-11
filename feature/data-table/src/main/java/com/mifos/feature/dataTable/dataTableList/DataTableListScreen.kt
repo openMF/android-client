@@ -51,8 +51,8 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.noncore.DataTable
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.noncore.DataTable
 import com.mifos.feature.data_table.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

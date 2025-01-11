@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
-import com.mifos.core.objects.client.Client
+import com.mifos.core.entity.client.Client
 
 /**
  * Created by Aditya Gupta on 10/08/23.

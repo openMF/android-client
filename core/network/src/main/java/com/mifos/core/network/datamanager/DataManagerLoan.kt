@@ -9,19 +9,19 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.data.LoansPayload
 import com.mifos.core.databasehelper.DatabaseHelperLoan
+import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.entity.accounts.loan.LoanWithAssociations
+import com.mifos.core.entity.accounts.loan.Loans
+import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.entity.templates.loans.LoanTemplate
+import com.mifos.core.entity.templates.loans.LoanTransactionTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.loan.LoanDisbursement
-import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations
-import com.mifos.core.objects.accounts.loan.Loans
-import com.mifos.core.objects.organisation.LoanProducts
-import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.objects.templates.loans.LoanTemplate
-import com.mifos.core.objects.templates.loans.LoanTransactionTemplate
+import com.mifos.core.network.model.LoansPayload
+import com.mifos.core.objects.account.loan.LoanDisbursement
+import com.mifos.core.objects.account.loan.LoanRepaymentResponse
+import com.mifos.core.objects.organisations.LoanProducts
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -208,7 +208,7 @@ class DataManagerLoan @Inject constructor(
      *
      * @return List<PaymentTypeOption>
      </PaymentTypeOption> */
-    val paymentTypeOption: Observable<List<com.mifos.core.objects.PaymentTypeOption>>
+    val paymentTypeOption: Observable<List<com.mifos.core.entity.PaymentTypeOption>>
         get() = mDatabaseHelperLoan.paymentTypeOption
 
     /**

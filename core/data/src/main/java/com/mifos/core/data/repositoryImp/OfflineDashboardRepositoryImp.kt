@@ -9,17 +9,17 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.data.CenterPayload
 import com.mifos.core.data.repository.OfflineDashboardRepository
+import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.entity.center.CenterPayload
+import com.mifos.core.entity.client.ClientPayload
+import com.mifos.core.entity.group.GroupPayload
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.group.GroupPayload
 import rx.Observable
 import javax.inject.Inject
 

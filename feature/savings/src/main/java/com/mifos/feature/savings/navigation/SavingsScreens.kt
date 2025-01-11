@@ -11,10 +11,10 @@ package com.mifos.feature.savings.navigation
 
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.objects.accounts.savings.DepositType
-import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.objects.accounts.savings.SavingsSummaryData
-import com.mifos.core.objects.accounts.savings.SavingsTransactionData
+import com.mifos.core.entity.accounts.savings.DepositType
+import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.entity.accounts.savings.SavingsSummaryData
+import com.mifos.core.entity.accounts.savings.SavingsTransactionData
 
 /**
  * Created by Pronay Sarker on 14/08/2024 (1:11 PM)

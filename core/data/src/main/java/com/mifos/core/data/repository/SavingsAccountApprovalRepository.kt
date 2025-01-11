@@ -10,7 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.loan.SavingsApproval
+import com.mifos.core.objects.account.loan.SavingsApproval
 import rx.Observable
 
 /**

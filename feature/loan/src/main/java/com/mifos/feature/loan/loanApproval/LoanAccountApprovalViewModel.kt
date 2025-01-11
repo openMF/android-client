@@ -13,9 +13,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
+import com.mifos.core.entity.accounts.loan.LoanApprovalData
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.loan.LoanApproval
-import com.mifos.core.objects.accounts.loan.LoanApprovalData
+import com.mifos.core.objects.account.loan.LoanApproval
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

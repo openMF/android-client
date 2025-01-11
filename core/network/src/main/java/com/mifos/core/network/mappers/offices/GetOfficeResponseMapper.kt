@@ -9,7 +9,7 @@
  */
 package com.mifos.core.network.mappers.offices
 
-import com.mifos.core.objects.organisation.Office
+import com.mifos.core.entity.organisation.Office
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetOfficesResponse
 

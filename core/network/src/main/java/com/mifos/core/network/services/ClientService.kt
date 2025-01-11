@@ -9,27 +9,22 @@
  */
 package com.mifos.core.network.services
 
+import com.mifos.core.entity.accounts.ClientAccounts
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.client.ClientPayload
+import com.mifos.core.entity.templates.clients.ClientsTemplate
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.ClientAccounts
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.ClientAddressRequest
-import com.mifos.core.objects.client.ClientAddressResponse
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.noncore.Identifier
-import com.mifos.core.objects.noncore.IdentifierCreationResponse
-import com.mifos.core.objects.noncore.IdentifierPayload
-import com.mifos.core.objects.noncore.IdentifierTemplate
-import com.mifos.core.objects.templates.clients.AddressConfiguration
-import com.mifos.core.objects.templates.clients.AddressTemplate
-import com.mifos.core.objects.templates.clients.ClientsTemplate
-import kotlinx.coroutines.flow.Flow
+import com.mifos.core.objects.clients.ActivatePayload
+import com.mifos.core.objects.clients.ClientAddressRequest
+import com.mifos.core.objects.clients.ClientAddressResponse
+import com.mifos.core.objects.clients.Page
+import com.mifos.core.objects.noncoreobjects.Identifier
+import com.mifos.core.objects.noncoreobjects.IdentifierCreationResponse
+import com.mifos.core.objects.noncoreobjects.IdentifierPayload
+import com.mifos.core.objects.noncoreobjects.IdentifierTemplate
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
-import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
-import org.openapitools.client.models.GetClientsResponse
-import org.openapitools.client.models.PostClientsClientIdRequest
-import org.openapitools.client.models.PostClientsClientIdResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -52,11 +47,11 @@ interface ClientService {
      * @return List of Clients
      */
     @GET(APIEndPoint.CLIENTS)
-    suspend fun getAllClients(
+    fun getAllClients(
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): GetClientsResponse
+    ): Observable<Page<Client>>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
     suspend fun getClient(@Path("clientId") clientId: Int): Client
@@ -81,7 +76,7 @@ interface ClientService {
     val clientTemplate: Observable<ClientsTemplate>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/accounts")
-    suspend fun getClientAccounts(@Path("clientId") clientId: Int): ClientAccounts
+    fun getClientAccounts(@Path("clientId") clientId: Int): Observable<ClientAccounts>
 
     /**
      * This Service is for fetching the List of Identifiers.
@@ -92,7 +87,7 @@ interface ClientService {
      * @return List<Identifier>
      </Identifier> */
     @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
-    suspend fun getClientIdentifiers(@Path("clientId") clientId: Int): List<Identifier>
+    fun getClientIdentifiers(@Path("clientId") clientId: Int): Observable<List<Identifier>>
 
     /**
      * This Service is for Creating the Client Identifier.
@@ -104,10 +99,10 @@ interface ClientService {
      * @return IdentifierCreationResponse
      */
     @POST(APIEndPoint.CLIENTS + "/{clientId}/identifiers")
-    fun createClientIdentifier(
+    suspend fun createClientIdentifier(
         @Path("clientId") clientId: Int,
         @Body identifierPayload: IdentifierPayload,
-    ): Flow<IdentifierCreationResponse>
+    ): IdentifierCreationResponse
 
     /**
      * This Service is for the Fetching the Client Identifier Template.
@@ -118,7 +113,7 @@ interface ClientService {
      * @return IdentifierTemplate
      */
     @GET(APIEndPoint.CLIENTS + "/{clientId}/identifiers/template")
-    fun getClientIdentifierTemplate(@Path("clientId") clientId: Int): Flow<IdentifierTemplate>
+    fun getClientIdentifierTemplate(@Path("clientId") clientId: Int): Observable<IdentifierTemplate>
 
     /**
      * This Service for Deleting the Client Identifier.
@@ -131,10 +126,10 @@ interface ClientService {
      * @return GenericResponse
      */
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS + "/{identifierId}")
-    suspend fun deleteClientIdentifier(
+    fun deleteClientIdentifier(
         @Path("clientId") clientId: Int,
         @Path("identifierId") identifierId: Int,
-    ): DeleteClientsClientIdIdentifiersIdentifierIdResponse
+    ): Observable<GenericResponse>
 
     /**
      * This is the service for fetching the client pinpoint locations from the dataTable
@@ -216,27 +211,9 @@ interface ClientService {
      * @param clientId
      * @return GenericResponse
      */
-    @POST(APIEndPoint.CLIENTS + "/{clientId}")
-    suspend fun activateClient(
-        @Path("clientId") clientId: Long,
-        @Body clientActivate: PostClientsClientIdRequest,
-        @Query("command") command: String? = null,
-    ): PostClientsClientIdResponse
-
-    /**
-     * Retrieves address configuration from Global Configuration.
-     *
-     * @return The AddressConfiguration object
-     */
-    @GET("configurations/name/enable-address")
-    suspend fun getAddressConfiguration(): AddressConfiguration
-
-    /**
-     * Retrieves an address template.
-     * This template can be used to pre-fill address forms or guide users in providing address information.
-     *
-     * @return An [AddressTemplate] object containing the structure for an address.
-     */
-    @GET("client/addresses/template")
-    suspend fun getAddressTemplate(): AddressTemplate
+    @POST(APIEndPoint.CLIENTS + "/{clientId}?command=activate")
+    fun activateClient(
+        @Path("clientId") clientId: Int,
+        @Body clientActivate: ActivatePayload?,
+    ): Observable<GenericResponse>
 }

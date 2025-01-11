@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.objects.survey.QuestionDatas
-import com.mifos.core.objects.survey.ResponseDatas
-import com.mifos.core.objects.survey.Survey
+import com.mifos.core.entity.survey.QuestionDatas
+import com.mifos.core.entity.survey.ResponseDatas
+import com.mifos.core.entity.survey.Survey
 import rx.Observable
 
 /**

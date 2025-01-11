@@ -10,8 +10,8 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.LoanChargeRepository
+import com.mifos.core.entity.client.Charges
 import com.mifos.core.network.DataManager
-import com.mifos.core.objects.client.Charges
 import javax.inject.Inject
 
 /**

@@ -17,7 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.objects.client.Client
+import com.mifos.core.entity.client.Client
 import com.mifos.feature.center.centerDetails.CenterDetailsScreen
 import com.mifos.feature.center.centerGroupList.GroupListScreen
 import com.mifos.feature.center.centerList.ui.CenterListScreen

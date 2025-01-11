@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.mappers.groups
 
-import com.mifos.core.objects.client.Page
-import com.mifos.core.objects.group.Group
+import com.mifos.core.entity.group.Group
+import com.mifos.core.objects.clients.Page
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetGroupsResponse
 

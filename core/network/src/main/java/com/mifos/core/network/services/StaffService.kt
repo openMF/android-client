@@ -9,9 +9,8 @@
  */
 package com.mifos.core.network.services
 
+import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.objects.organisation.Staff
-import com.mifos.core.objects.organisation.StaffResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 import rx.Observable
@@ -28,9 +27,4 @@ interface StaffService {
 
     @get:GET(APIEndPoint.STAFF + "?isLoanOfficer=true")
     val fieldStaffForOffice: Observable<List<Staff>>
-
-    @GET(APIEndPoint.STAFF)
-    suspend fun getAllStaff(
-        @Query("officeId") officeId: Long? = null,
-    ): List<StaffResponse>
 }

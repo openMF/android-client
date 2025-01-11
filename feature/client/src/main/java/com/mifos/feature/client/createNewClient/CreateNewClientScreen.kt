@@ -14,7 +14,6 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.telephony.PhoneNumberUtils
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -93,7 +92,6 @@ import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -101,19 +99,16 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.component.PermissionBox
-import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.client.Address
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.noncore.DataTable
-import com.mifos.core.objects.organisation.Office
-import com.mifos.core.objects.organisation.Staff
-import com.mifos.core.objects.templates.clients.AddressTemplate
-import com.mifos.core.objects.templates.clients.ClientsTemplate
+import com.mifos.core.entity.client.ClientPayload
+import com.mifos.core.entity.noncore.DataTable
+import com.mifos.core.entity.organisation.Office
+import com.mifos.core.entity.organisation.Staff
+import com.mifos.core.entity.templates.clients.ClientsTemplate
 import com.mifos.feature.client.R
 import kotlinx.coroutines.launch
 import java.io.File
@@ -174,8 +169,6 @@ internal fun CreateNewClientScreen(
     MifosScaffold(
         title = stringResource(id = R.string.feature_client_create_new_client),
         snackbarHostState = snackbarHostState,
-        icon = MifosIcons.arrowBack,
-        onBackPressed = navigateBack,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (uiState) {
@@ -192,8 +185,6 @@ internal fun CreateNewClientScreen(
                         officeList = officeList,
                         staffInOffices = staffInOffices,
                         clientTemplate = uiState.clientsTemplate,
-                        addressTemplate = uiState.addressTemplate,
-                        isAddressEnabled = uiState.isAddressEnabled,
                         loadStaffInOffice = loadStaffInOffice,
                         createClient = createClient,
                         onHasDatatables = hasDatatables,
@@ -263,8 +254,6 @@ private fun CreateNewClientContent(
     officeList: List<Office>,
     staffInOffices: List<Staff>,
     clientTemplate: ClientsTemplate,
-    addressTemplate: AddressTemplate?,
-    isAddressEnabled: Boolean,
     loadStaffInOffice: (officeId: Int) -> Unit,
     createClient: (clientPayload: ClientPayload) -> Unit,
     onHasDatatables: (datatables: List<DataTable>, clientPayload: ClientPayload) -> Unit,
@@ -278,21 +267,8 @@ private fun CreateNewClientContent(
     var gender by rememberSaveable { mutableStateOf("") }
     var genderId by rememberSaveable { mutableIntStateOf(0) }
 
-    var selectedAddressType by rememberSaveable { mutableStateOf("") }
-    var selectedAddressTypeId by rememberSaveable { mutableIntStateOf(0) }
-    var addressLine1 by rememberSaveable { mutableStateOf("") }
-    var addressLine2 by rememberSaveable { mutableStateOf("") }
-    var addressLine3 by rememberSaveable { mutableStateOf("") }
-    var city by rememberSaveable { mutableStateOf("") }
-    var selectedStateName by rememberSaveable { mutableStateOf("") }
-    var selectedStateProvinceId by rememberSaveable { mutableIntStateOf(0) }
-    var selectedCountryName by rememberSaveable { mutableStateOf("") }
-    var selectedCountryId by rememberSaveable { mutableIntStateOf(0) }
-    var postalCode by rememberSaveable { mutableStateOf("") }
-    var isAddressActive by rememberSaveable { mutableStateOf(false) }
-
-    var clientType by rememberSaveable { mutableStateOf("") }
-    var selectedClientTypeId by rememberSaveable { mutableIntStateOf(0) }
+    var client by rememberSaveable { mutableStateOf("") }
+    var selectedClientId by rememberSaveable { mutableIntStateOf(0) }
     var clientClassification by rememberSaveable { mutableStateOf("") }
     var selectedClientClassificationId by rememberSaveable { mutableIntStateOf(0) }
     var selectedOffice by rememberSaveable { mutableStateOf("") }
@@ -320,12 +296,9 @@ private fun CreateNewClientContent(
     val file = context.createTempImageFile()
     val imgUri = FileProvider.getUriForFile(
         Objects.requireNonNull(context),
-        context.packageName + ".provider",
+        "com.mifos.mifosxdroid" + ".provider",
         file,
     )
-
-    Log.d("Debuguripath", context.packageName)
-
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
@@ -356,15 +329,9 @@ private fun CreateNewClientContent(
             officeList[0].id?.let { loadStaffInOffice.invoke(it) }
         }
     }
-
     LaunchedEffect(key1 = staffInOffices) {
         if (staffInOffices.isEmpty()) {
-            Toast.makeText(
-                context,
-                context.resources
-                    .getString(R.string.feature_client_no_staff_associated_with_office),
-                Toast.LENGTH_SHORT,
-            ).show()
+            Toast.makeText(context, context.resources.getString(R.string.feature_client_no_staff_associated_with_office), Toast.LENGTH_SHORT).show()
             staff = ""
             selectedStaffId = 0
         }
@@ -397,7 +364,7 @@ private fun CreateNewClientContent(
             onGranted = {
                 LaunchedEffect(key1 = Unit) {
                     if (imagePickerActionType == ImagePickerType.GALLERY) {
-                        imagePickerLauncher.launch("my_images/png")
+                        imagePickerLauncher.launch("image/png")
                     } else {
                         cameraLauncher.launch(imgUri)
                     }
@@ -486,7 +453,6 @@ private fun CreateNewClientContent(
         ClientImageSection(selectedImageUri = selectedImageUri) {
             showImagePickerDialog = true
         }
-
         ClientInputTextFields(
             firstName = firstName,
             middleName = middleName,
@@ -499,55 +465,6 @@ private fun CreateNewClientContent(
             onMobileNumberChange = { mobileNumber = it },
             onExternalIdChange = { externalId = it },
         )
-
-        if (isAddressEnabled && addressTemplate != null) {
-            val sortedAddressTypeOptions = addressTemplate.addressTypeIdOptions.sortedBy { it.name }
-            val sortedCountryOptions = addressTemplate.countryIdOptions.sortedBy { it.name }
-            val sortedStateOptions = addressTemplate.stateProvinceIdOptions.sortedBy { it.name }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            AddressInputTextFields(
-                addressLine1 = addressLine1,
-                onAddressLine1Change = { addressLine1 = it },
-                addressLine2 = addressLine2,
-                onAddressLine2Change = { addressLine2 = it },
-                addressLine3 = addressLine3,
-                onAddressLine3Change = { addressLine3 = it },
-                city = city,
-                onCityChange = { city = it },
-                postalCode = postalCode,
-                onPostalCodeChange = { postalCode = it },
-                selectedAddressType = selectedAddressType,
-                onAddressTypeChanged = { selectedAddressType = it },
-                onAddressTypeSelected = { index, value ->
-                    selectedAddressType = value
-                    selectedAddressTypeId = sortedAddressTypeOptions[index].id
-                },
-                addressTypeOptions = sortedAddressTypeOptions.map { it.name },
-                selectedStateName = selectedStateName,
-                onStateNameChanged = { selectedStateName = it },
-                onStateSelected = { index, value ->
-                    selectedStateName = value
-                    selectedStateProvinceId = sortedStateOptions[index].id
-                },
-                stateOptions = sortedStateOptions.map { it.name },
-
-                selectedCountryName = selectedCountryName,
-                onCountryNameChanged = { selectedCountryName = it },
-                onCountrySelected = { index, value ->
-                    selectedCountryName = value
-                    selectedCountryId = sortedCountryOptions[index].id
-                },
-                countryOptions = sortedCountryOptions.map { it.name },
-
-                isAddressActive = isAddressActive,
-                onAddressActiveChange = { isAddressActive = it },
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         MifosTextFieldDropdown(
             value = gender,
             onValueChanged = { gender = it },
@@ -573,13 +490,13 @@ private fun CreateNewClientContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         MifosTextFieldDropdown(
-            value = clientType,
-            onValueChanged = { clientType = it },
+            value = client,
+            onValueChanged = { client = it },
             onOptionSelected = { index, value ->
-                clientType = value
-                selectedClientTypeId = clientTemplate.clientTypeOptions[index].id
+                client = value
+                selectedClientId = clientTemplate.clientTypeOptions[index].id
             },
-            label = R.string.feature_client_client_type,
+            label = R.string.feature_client_client,
             options = clientTemplate.clientTypeOptions.sortedBy { it.name }.map { it.name },
             readOnly = true,
         )
@@ -687,11 +604,9 @@ private fun CreateNewClientContent(
                 handleSubmitClick(
                     context, clientNames, clientTemplate, createClient, isActive, onHasDatatables,
                     selectedImageUri, setUriForUpload, staffInOffices, hasDatatables,
-                    selectedOfficeId, selectedClientTypeId, selectedClientClassificationId, genderId,
-                    selectedStaffId, activationDate, dateOfBirth, mobileNumber, externalId,
-                    isAddressEnabled, isAddressActive, selectedAddressTypeId, addressLine1,
-                    addressLine2, addressLine3, city, selectedStateProvinceId,
-                    selectedCountryId, postalCode,
+                    selectedOfficeId, selectedClientId, selectedClientClassificationId,
+                    genderId, selectedStaffId, activationDate, dateOfBirth,
+                    mobileNumber, externalId,
                 )
             },
         ) {
@@ -699,13 +614,11 @@ private fun CreateNewClientContent(
         }
     }
 }
-
 data class Name(
     val firstName: String,
     val lastName: String,
     val middleName: String,
 )
-
 private fun handleSubmitClick(
     context: Context,
     clientNames: Name,
@@ -726,29 +639,12 @@ private fun handleSubmitClick(
     dateOfBirth: Long,
     mobileNumber: String,
     externalId: String,
-    isAddressEnabled: Boolean,
-    isAddressActive: Boolean,
-    addressTypeId: Int,
-    addressLine1: String,
-    addressLine2: String,
-    addressLine3: String,
-    city: String,
-    stateProvinceId: Int,
-    countryId: Int,
-    postalCode: String,
 ) {
-    if (!isAllFieldsValid(
-            context,
-            clientNames.firstName,
-            clientNames.middleName,
-            clientNames.lastName,
-            addressTypeId = addressTypeId,
-        )
-    ) {
+    if (!isAllFieldsValid(context, clientNames.firstName, clientNames.middleName, clientNames.lastName)) {
         return
     }
 
-    if (!Network.isOnline(context)) {
+    if (!com.mifos.core.common.utils.Network.isOnline(context)) {
         Toast.makeText(
             context,
             context.resources.getString(R.string.feature_client_error_not_connected_internet),
@@ -759,10 +655,9 @@ private fun handleSubmitClick(
 
     val clientPayload = createClientPayload(
         clientNames.firstName, clientNames.lastName, selectedOfficeId, staffInOffices, isActive,
-        activationDate, dateOfBirth, clientNames.middleName, mobileNumber, externalId,
-        clientTemplate, genderId, selectedStaffId, selectedClientId,
-        selectedClientClassificationId, isAddressEnabled, isAddressActive, addressTypeId, addressLine1, addressLine2,
-        addressLine3, city, stateProvinceId, countryId, postalCode,
+        activationDate, dateOfBirth, clientNames.middleName, mobileNumber,
+        externalId, clientTemplate, genderId, selectedStaffId,
+        selectedClientId, selectedClientClassificationId,
     )
 
     if (hasDatatables) {
@@ -790,16 +685,6 @@ private fun createClientPayload(
     selectedStaffId: Int?,
     selectedClientId: Int,
     selectedClientClassificationId: Int,
-    isAddressEnabled: Boolean,
-    isAddressActive: Boolean,
-    addressTypeId: Int,
-    addressLine1: String,
-    addressLine2: String,
-    addressLine3: String,
-    city: String,
-    stateProvinceId: Int,
-    countryId: Int,
-    postalCode: String,
 ): ClientPayload {
     val clientPayload = ClientPayload()
 
@@ -810,25 +695,8 @@ private fun createClientPayload(
 
     // Optional fields with default values
     clientPayload.active = isActive
-
-    if (isAddressEnabled) {
-        val address = Address()
-        address.addressTypeId = addressTypeId
-        address.addressLine1 = addressLine1
-        address.addressLine2 = addressLine2
-        address.addressLine3 = addressLine3
-        address.city = city
-        address.stateProvinceId = stateProvinceId
-        address.countryId = countryId
-        address.postalCode = postalCode
-        address.isActive = isAddressActive
-        clientPayload.address = listOf(address)
-    }
-
-    clientPayload.activationDate =
-        SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(activationDate)
-    clientPayload.dateOfBirth =
-        SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(dateOfBirth)
+    clientPayload.activationDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(activationDate)
+    clientPayload.dateOfBirth = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(dateOfBirth)
 
     // Optional fields
     if (middleName.isNotEmpty()) {
@@ -914,129 +782,8 @@ private fun ClientInputTextFields(
             label = stringResource(id = R.string.feature_client_external_id),
             error = null,
         )
-    }
-}
-
-@Composable
-private fun AddressInputTextFields(
-    addressLine1: String,
-    onAddressLine1Change: (String) -> Unit,
-    addressLine2: String,
-    onAddressLine2Change: (String) -> Unit,
-    addressLine3: String,
-    onAddressLine3Change: (String) -> Unit,
-    city: String,
-    onCityChange: (String) -> Unit,
-    postalCode: String,
-    onPostalCodeChange: (String) -> Unit,
-    selectedAddressType: String,
-    onAddressTypeChanged: (String) -> Unit,
-    onAddressTypeSelected: (Int, String) -> Unit,
-    addressTypeOptions: List<String>,
-    selectedStateName: String,
-    onStateNameChanged: (String) -> Unit,
-    onStateSelected: (Int, String) -> Unit,
-    stateOptions: List<String>,
-    selectedCountryName: String,
-    onCountryNameChanged: (String) -> Unit,
-    onCountrySelected: (Int, String) -> Unit,
-    countryOptions: List<String>,
-    isAddressActive: Boolean,
-    onAddressActiveChange: (Boolean) -> Unit,
-) {
-    Column {
-        MifosTextFieldDropdown(
-            value = selectedAddressType,
-            onValueChanged = onAddressTypeChanged,
-            onOptionSelected = onAddressTypeSelected,
-            label = R.string.feature_client_address_type,
-            options = addressTypeOptions,
-            readOnly = true,
-        )
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        MifosOutlinedTextField(
-            value = addressLine1,
-            onValueChange = onAddressLine1Change,
-            label = stringResource(id = R.string.feature_client_address_line_1),
-            error = null,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        MifosOutlinedTextField(
-            value = addressLine2,
-            onValueChange = onAddressLine2Change,
-            label = stringResource(id = R.string.feature_client_address_line_2),
-            error = null,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        MifosOutlinedTextField(
-            value = addressLine3,
-            onValueChange = onAddressLine3Change,
-            label = stringResource(id = R.string.feature_client_address_line_3),
-            error = null,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        MifosOutlinedTextField(
-            value = city,
-            onValueChange = onCityChange,
-            label = stringResource(id = R.string.feature_client_city),
-            error = null,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        MifosOutlinedTextField(
-            value = postalCode,
-            onValueChange = onPostalCodeChange,
-            label = stringResource(id = R.string.feature_client_postal_code),
-            error = null,
-            keyboardType = KeyboardType.Number,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        MifosTextFieldDropdown(
-            value = selectedStateName,
-            onValueChanged = onStateNameChanged,
-            onOptionSelected = onStateSelected,
-            options = stateOptions,
-            label = R.string.feature_client_state_province,
-            readOnly = true,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        MifosTextFieldDropdown(
-            value = selectedCountryName,
-            onValueChanged = onCountryNameChanged,
-            onOptionSelected = onCountrySelected,
-            options = countryOptions,
-            label = R.string.feature_client_country,
-            readOnly = true,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Checkbox(
-                checked = isAddressActive,
-                onCheckedChange = { onAddressActiveChange(!isAddressActive) },
-                colors = CheckboxDefaults.colors(
-                    if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
-            )
-            Text(text = stringResource(id = R.string.feature_client_address_active))
-        }
     }
 }
 
@@ -1177,7 +924,6 @@ private fun isAllFieldsValid(
     firstName: String,
     middleName: String,
     lastName: String,
-    addressTypeId: Int,
 ): Boolean {
     return when {
         !isFirstNameValid(firstName, context) -> {
@@ -1189,10 +935,6 @@ private fun isAllFieldsValid(
         }
 
         !isLastNameValid(lastName, context) -> {
-            false
-        }
-
-        !isAddressTypeIdValid(addressTypeId, context) -> {
             false
         }
 
@@ -1267,22 +1009,7 @@ private fun isMiddleNameValid(name: String, context: Context): Boolean {
     }
 }
 
-private fun isAddressTypeIdValid(addressTypeId: Int, context: Context): Boolean {
-    return when {
-        addressTypeId < 0 -> {
-            Toast.makeText(
-                context,
-                context.resources.getString(R.string.feature_client_error_address_type_is_required),
-                Toast.LENGTH_SHORT,
-            ).show()
-            return false
-        }
-        else -> true
-    }
-}
-
-private class CreateNewClientScreenPreviewProvider :
-    PreviewParameterProvider<CreateNewClientUiState> {
+private class CreateNewClientScreenPreviewProvider : PreviewParameterProvider<CreateNewClientUiState> {
     override val values: Sequence<CreateNewClientUiState>
         get() = sequenceOf(
             CreateNewClientUiState.ShowClientTemplate(
@@ -1296,8 +1023,6 @@ private class CreateNewClientScreenPreviewProvider :
                     savingProductOptions = listOf(),
                     dataTables = listOf(),
                 ),
-                isAddressEnabled = false,
-                addressTemplate = AddressTemplate(),
             ),
             CreateNewClientUiState.ShowProgressbar,
             CreateNewClientUiState.ShowClientCreatedSuccessfully(R.string.feature_client_client_created_successfully),
@@ -1311,7 +1036,7 @@ private class CreateNewClientScreenPreviewProvider :
 private fun PreviewCreateNewClientScreen(
     @PreviewParameter(CreateNewClientScreenPreviewProvider::class) createNewClientUiState: CreateNewClientUiState,
 ) {
-    // TODO : Fix Preview
+    // ToDo : FIX Preview
 
     CreateNewClientScreen(
         uiState = createNewClientUiState,

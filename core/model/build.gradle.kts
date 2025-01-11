@@ -9,16 +9,16 @@
  */
 plugins {
     alias(libs.plugins.mifos.android.library)
-    id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    id(libs.plugins.kotlin.parcelize.get().pluginId)
 }
 android{
     namespace = "com.mifos.core.model"
-
     defaultConfig {
         consumerProguardFiles("consumer-rules.pro")
     }
 }
-
 dependencies {
     implementation(libs.converter.gson)
 }

@@ -9,18 +9,18 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.data.CenterPayload
 import com.mifos.core.databasehelper.DatabaseHelperCenter
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.entity.accounts.CenterAccounts
+import com.mifos.core.entity.center.CenterPayload
+import com.mifos.core.entity.group.Center
+import com.mifos.core.entity.group.CenterWithAssociations
+import com.mifos.core.entity.organisation.Office
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.centers.GetCentersResponseMapper
-import com.mifos.core.objects.accounts.CenterAccounts
-import com.mifos.core.objects.client.ActivatePayload
-import com.mifos.core.objects.client.Page
-import com.mifos.core.objects.group.Center
-import com.mifos.core.objects.group.CenterWithAssociations
-import com.mifos.core.objects.organisation.Office
-import com.mifos.core.objects.response.SaveResponse
+import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
+import com.mifos.core.objects.clients.ActivatePayload
+import com.mifos.core.objects.clients.Page
+import com.mifos.core.objects.responses.SaveResponse
 import org.openapitools.client.models.PostCentersCenterIdRequest
 import org.openapitools.client.models.PostCentersCenterIdResponse
 import rx.Observable
@@ -37,7 +37,8 @@ import javax.inject.Singleton
 class DataManagerCenter @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     private val mDatabaseHelperCenter: DatabaseHelperCenter,
-    private val prefManager: PrefManager,
+    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
+    private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -56,9 +57,30 @@ class DataManagerCenter @Inject constructor(
      * @return Centers List page from offset to max Limit
      */
     suspend fun getCenters(paged: Boolean, offset: Int, limit: Int): Page<Center> {
-        return mBaseApiManager.centerApi.getCenters(paged, offset, limit)
-            .let(GetCentersResponseMapper::mapFromEntity)
+        return baseApiManager.getCenterApi()
+            .retrieveAll23(
+                null, null, null, null, null, paged,
+                offset, limit, null, null, null, null, null,
+            ).let(GetCentersResponseMapper::mapFromEntity)
     }
+//    suspend fun getCenters(paged: Boolean, offset: Int, limit: Int): Observable<Page<Center>> {
+//        return when (prefManager.userStatus) {
+//            false -> baseApiManager.getCenterApi()
+//                .retrieveAll23(
+//                    null, null, null, null, null, paged,
+//                    offset, limit, null, null, null, null, null
+//                ).map(GetCentersResponseMapper::mapFromEntity)
+//
+//            true -> {
+//                /**
+//                 * Return All Centers List from DatabaseHelperCenter only one time.
+//                 * If offset is zero this means this is first request and
+//                 * return all centers from DatabaseHelperCenter
+//                 */
+//                if (offset == 0) mDatabaseHelperCenter.readAllCenters() else Observable.just(Page())
+//            }
+//        }
+//    }
 
     /**
      * This method save the single Center in Database.
@@ -138,7 +160,8 @@ class DataManagerCenter @Inject constructor(
         get() = mDatabaseHelperCenter.readAllCenters()
 
     suspend fun offices(): List<Office> {
-        return mBaseApiManager.officeApi.allOffices()
+        return baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
+            .map(GetOfficeResponseMapper::mapFromEntity)
     }
 
     /**
@@ -181,7 +204,7 @@ class DataManagerCenter @Inject constructor(
         centerId: Int,
         activatePayload: ActivatePayload?,
     ): PostCentersCenterIdResponse {
-        return mBaseApiManager.centerApi.activateCenter(
+        return baseApiManager.getCenterApi().activate2(
             centerId.toLong(),
             PostCentersCenterIdRequest(
                 closureDate = activatePayload?.activationDate,

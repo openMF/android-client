@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.objects.accounts.GroupAccounts
-import com.mifos.core.objects.group.Group
-import com.mifos.core.objects.group.GroupWithAssociations
+import com.mifos.core.entity.accounts.GroupAccounts
+import com.mifos.core.entity.group.Group
+import com.mifos.core.entity.group.GroupWithAssociations
 import rx.Observable
 
 /**

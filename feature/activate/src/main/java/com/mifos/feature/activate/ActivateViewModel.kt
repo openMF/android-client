@@ -17,7 +17,7 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.ActivateCenterUseCase
 import com.mifos.core.domain.useCases.ActivateClientUseCase
 import com.mifos.core.domain.useCases.ActivateGroupUseCase
-import com.mifos.core.objects.client.ActivatePayload
+import com.mifos.core.objects.clients.ActivatePayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

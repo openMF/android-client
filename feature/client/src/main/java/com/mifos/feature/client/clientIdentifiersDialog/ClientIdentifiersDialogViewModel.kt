@@ -12,9 +12,10 @@ package com.mifos.feature.client.clientIdentifiersDialog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.data.repository.ClientIdentifierDialogRepository
-import com.mifos.core.objects.noncore.IdentifierPayload
-import com.mifos.core.objects.noncore.IdentifierTemplate
+import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
+import com.mifos.core.domain.useCases.GetClientIdentifierTemplateUseCase
+import com.mifos.core.objects.noncoreobjects.IdentifierPayload
+import com.mifos.core.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +26,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ClientIdentifiersDialogViewModel @Inject constructor(
-    private val repository: ClientIdentifierDialogRepository,
+    private val getClientIdentifierTemplateUseCase: GetClientIdentifierTemplateUseCase,
+    private val createClientIdentifierUseCase: CreateClientIdentifierUseCase,
 ) : ViewModel() {
 
     private val _clientIdentifierDialogUiState =
@@ -33,7 +35,7 @@ class ClientIdentifiersDialogViewModel @Inject constructor(
     val clientIdentifierDialogUiState = _clientIdentifierDialogUiState.asStateFlow()
 
     fun loadClientIdentifierTemplate(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        repository.getClientIdentifierTemplate(clientId).collect { result ->
+        getClientIdentifierTemplateUseCase(clientId).collect { result ->
             when (result) {
                 is Resource.Error ->
                     _clientIdentifierDialogUiState.value =
@@ -54,7 +56,7 @@ class ClientIdentifiersDialogViewModel @Inject constructor(
 
     fun createClientIdentifier(clientId: Int, identifierPayload: IdentifierPayload) =
         viewModelScope.launch(Dispatchers.IO) {
-            repository.createClientIdentifier(clientId, identifierPayload).collect { result ->
+            createClientIdentifierUseCase(clientId, identifierPayload).collect { result ->
                 when (result) {
                     is Resource.Error ->
                         _clientIdentifierDialogUiState.value =

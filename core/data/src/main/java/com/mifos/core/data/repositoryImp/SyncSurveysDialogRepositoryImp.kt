@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2024 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,13 +7,12 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.data.repositoryImp
+package com.mifos.feature.settings.syncSurvey
 
-import com.mifos.core.data.repository.SyncSurveysDialogRepository
+import com.mifos.core.entity.survey.QuestionDatas
+import com.mifos.core.entity.survey.ResponseDatas
+import com.mifos.core.entity.survey.Survey
 import com.mifos.core.network.datamanager.DataManagerSurveys
-import com.mifos.core.objects.survey.QuestionDatas
-import com.mifos.core.objects.survey.ResponseDatas
-import com.mifos.core.objects.survey.Survey
 import rx.Observable
 import javax.inject.Inject
 

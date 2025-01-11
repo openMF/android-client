@@ -15,10 +15,10 @@ import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanRepaymentRepository
-import com.mifos.core.objects.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.accounts.loan.LoanRepaymentResponse
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations
-import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
+import com.mifos.core.entity.accounts.loan.LoanWithAssociations
+import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.feature.loan.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

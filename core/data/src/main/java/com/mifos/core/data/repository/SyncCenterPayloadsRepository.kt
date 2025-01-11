@@ -9,8 +9,8 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.data.CenterPayload
-import com.mifos.core.objects.response.SaveResponse
+import com.mifos.core.entity.center.CenterPayload
+import com.mifos.core.objects.responses.SaveResponse
 import rx.Observable
 
 /**

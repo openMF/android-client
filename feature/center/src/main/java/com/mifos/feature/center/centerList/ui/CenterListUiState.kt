@@ -10,7 +10,7 @@
 package com.mifos.feature.center.centerList.ui
 
 import androidx.paging.PagingData
-import com.mifos.core.objects.group.Center
+import com.mifos.core.entity.group.Center
 import kotlinx.coroutines.flow.Flow
 
 /**

@@ -11,7 +11,7 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.network.datamanager.DataManagerRunReport
-import com.mifos.core.objects.runreports.client.ClientReportTypeItem
+import com.mifos.core.objects.runreport.client.ClientReportTypeItem
 import javax.inject.Inject
 
 /**

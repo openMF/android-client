@@ -14,15 +14,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.core.domain.useCases.ClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetOfficeListUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeForCreateNewClientUseCase
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.organisation.Office
-import com.mifos.core.objects.organisation.Staff
-import com.mifos.core.objects.templates.clients.AddressTemplate
-import com.mifos.core.objects.templates.clients.ClientsTemplate
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.client.ClientPayload
+import com.mifos.core.entity.organisation.Office
+import com.mifos.core.entity.organisation.Staff
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +44,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateNewClientViewModel @Inject constructor(
     private val repository: CreateNewClientRepository,
-    private val clientTemplateUseCase: ClientTemplateUseCase,
+//    private val clientTemplateUseCase: ClientTemplateUseCase,
     private val getStaffInOffice: GetStaffInOfficeForCreateNewClientUseCase,
     private val getOfficeListUseCase: GetOfficeListUseCase,
 ) : ViewModel() {
@@ -62,45 +59,26 @@ class CreateNewClientViewModel @Inject constructor(
     private val _showOffices = MutableStateFlow<List<Office>>(emptyList())
     val showOffices: StateFlow<List<Office>> get() = _showOffices
 
-    private val _isAddressEnabled = MutableStateFlow(false)
-    val isAddressEnabled: StateFlow<Boolean> get() = _isAddressEnabled
-
-    private val _addressTemplate = MutableStateFlow<AddressTemplate?>(null)
-    val addressTemplate: StateFlow<AddressTemplate?> get() = _addressTemplate
-
-    private val _clientsTemplate = MutableStateFlow<ClientsTemplate?>(null)
-    val clientsTemplate: StateFlow<ClientsTemplate?> get() = _clientsTemplate
-
     fun loadOfficeAndClientTemplate() {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
-        loadClientTemplate()
         loadOffices()
     }
 
-    private fun loadClientTemplate() = viewModelScope.launch(Dispatchers.IO) {
-        clientTemplateUseCase().collect { result ->
-            when (result) {
-                is Resource.Error ->
-                    _createNewClientUiState.value =
-                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
-
-                is Resource.Loading -> Unit
-
-                is Resource.Success -> {
-                    _clientsTemplate.value = result.data
-
-                    loadAddressConfiguration()
-
-                    _createNewClientUiState.value =
-                        CreateNewClientUiState.ShowClientTemplate(
-                            result.data ?: ClientsTemplate(),
-                            isAddressEnabled = _isAddressEnabled.value,
-                            addressTemplate = _addressTemplate.value ?: AddressTemplate(),
-                        )
-                }
-            }
-        }
-    }
+//    private fun loadClientTemplate() = viewModelScope.launch(Dispatchers.IO) {
+//        clientTemplateUseCase().collect { result ->
+//            when (result) {
+//                is Resource.Error ->
+//                    _createNewClientUiState.value =
+//                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
+//
+//                is Resource.Loading -> Unit
+//
+//                is Resource.Success ->
+//                    _createNewClientUiState.value =
+//                        CreateNewClientUiState.ShowClientTemplate(result.data ?: ClientsTemplate())
+//            }
+//        }
+//    }
 
     private fun loadOffices() = viewModelScope.launch(Dispatchers.IO) {
         getOfficeListUseCase().collect { result ->
@@ -137,7 +115,6 @@ class CreateNewClientViewModel @Inject constructor(
 
     fun createClient(clientPayload: ClientPayload) {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
-
         repository.createClient(clientPayload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -213,31 +190,5 @@ class CreateNewClientViewModel @Inject constructor(
                     }
                 },
             )
-    }
-
-    suspend fun loadAddressConfiguration() {
-        try {
-            val addressConfig = repository.getAddressConfiguration()
-            _isAddressEnabled.value = addressConfig.enabled
-
-            if (addressConfig.enabled) {
-                loadAddressTemplate()
-            }
-        } catch (e: Exception) {
-            _createNewClientUiState.value =
-                CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_address_configuration)
-            Log.e("CreateNewClientViewModel", "Error checking address configuration", e)
-        }
-    }
-
-    suspend fun loadAddressTemplate() {
-        try {
-            val template = repository.getAddressTemplate()
-            _addressTemplate.value = template
-        } catch (e: Exception) {
-            _createNewClientUiState.value =
-                CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_address_template)
-            Log.e("CreateNewClientViewModel", "Error loading address template", e)
-        }
     }
 }

@@ -9,15 +9,15 @@
  */
 package com.mifos.core.network.services
 
+import com.mifos.core.entity.accounts.GroupAccounts
+import com.mifos.core.entity.group.Group
+import com.mifos.core.entity.group.GroupPayload
+import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.GroupAccounts
-import com.mifos.core.objects.client.ActivatePayload
-import com.mifos.core.objects.group.Group
-import com.mifos.core.objects.group.GroupPayload
-import com.mifos.core.objects.group.GroupWithAssociations
-import com.mifos.core.objects.response.SaveResponse
-import org.openapitools.client.models.GetGroupsResponse
+import com.mifos.core.objects.clients.ActivatePayload
+import com.mifos.core.objects.clients.Page
+import com.mifos.core.objects.responses.SaveResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -31,19 +31,11 @@ import rx.Observable
  */
 interface GroupService {
     @GET(APIEndPoint.GROUPS)
-    suspend fun getGroups(
-        @Query("officeId") officeId: Long? = null,
-        @Query("staffId") staffId: Long? = null,
-        @Query("externalId") externalId: String? = null,
-        @Query("name") name: String? = null,
-        @Query("underHierarchy") underHierarchy: String? = null,
-        @Query("paged") paged: Boolean? = null,
-        @Query("offset") offset: Int? = null,
-        @Query("limit") limit: Int? = null,
-        @Query("orderBy") orderBy: String? = null,
-        @Query("sortOrder") sortOrder: String? = null,
-        @Query("orphansOnly") orphansOnly: Boolean? = null,
-    ): GetGroupsResponse
+    fun getGroups(
+        @Query("paged") b: Boolean,
+        @Query("offset") offset: Int,
+        @Query("limit") limit: Int,
+    ): Observable<Page<Group>>
 
     @GET(APIEndPoint.GROUPS + "/{groupId}?associations=all")
     fun getGroupWithAssociations(@Path("groupId") groupId: Int): Observable<GroupWithAssociations>

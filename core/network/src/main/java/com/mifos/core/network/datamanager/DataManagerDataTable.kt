@@ -10,11 +10,12 @@
 package com.mifos.core.network.datamanager
 
 import com.google.gson.JsonArray
+import com.mifos.core.databasehelper.DatabaseHelperDataTable
+import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.dataTable.GetDataTablesResponseMapper
-import com.mifos.core.objects.noncore.DataTable
-import com.mifos.core.objects.user.UserLocation
+import com.mifos.core.objects.users.UserLocation
 import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import rx.Observable
 import javax.inject.Inject
@@ -29,6 +30,8 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerDataTable @Inject constructor(
     val mBaseApiManager: BaseApiManager,
+    val mDatabaseHelperDataTable: DatabaseHelperDataTable,
+    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
 ) {
     /**
      * This Method Request the REST API of Datatable and In response give the List of DataTable
@@ -40,7 +43,7 @@ class DataManagerDataTable @Inject constructor(
      * @return List<DataTable>
      </DataTable> */
     suspend fun getDataTable(tableName: String?): List<DataTable> {
-        return mBaseApiManager.dataTableApi.getDatatables(tableName).map(
+        return baseApiManager.getDataTableApi().getDatatables(tableName).map(
             GetDataTablesResponseMapper::mapFromEntity,
         )
     }
@@ -63,7 +66,7 @@ class DataManagerDataTable @Inject constructor(
         entity: Int,
         rowId: Int,
     ): DeleteDataTablesDatatableAppTableIdDatatableIdResponse {
-        return mBaseApiManager.dataTableApi.deleteDatatableEntry(
+        return baseApiManager.getDataTableApi().deleteDatatableEntry(
             datatable = table,
             apptableId = entity.toLong(),
             datatableId = rowId.toLong(),

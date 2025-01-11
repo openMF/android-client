@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.offline.syncClientPayloads
 
-import com.mifos.core.objects.client.ClientPayload
+import com.mifos.core.entity.client.ClientPayload
 
 /**
  * Created by Aditya Gupta on 16/08/23.

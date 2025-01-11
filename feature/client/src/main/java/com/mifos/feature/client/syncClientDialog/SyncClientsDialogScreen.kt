@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.core.objects.client.Client
+import com.mifos.core.entity.client.Client
 import com.mifos.feature.client.R
 
 @Composable

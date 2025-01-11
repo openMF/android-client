@@ -9,21 +9,19 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.Resource
-import com.mifos.core.objects.noncore.IdentifierCreationResponse
-import com.mifos.core.objects.noncore.IdentifierPayload
-import com.mifos.core.objects.noncore.IdentifierTemplate
-import kotlinx.coroutines.flow.Flow
+import com.mifos.core.objects.noncoreobjects.IdentifierCreationResponse
+import com.mifos.core.objects.noncoreobjects.IdentifierPayload
+import com.mifos.core.objects.noncoreobjects.IdentifierTemplate
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
 interface ClientIdentifierDialogRepository {
 
-    fun getClientIdentifierTemplate(clientId: Int): Flow<Resource<IdentifierTemplate>>
+    suspend fun getClientIdentifierTemplate(clientId: Int): IdentifierTemplate
 
-    fun createClientIdentifier(
+    suspend fun createClientIdentifier(
         clientId: Int,
         identifierPayload: IdentifierPayload,
-    ): Flow<Resource<IdentifierCreationResponse>>
+    ): IdentifierCreationResponse
 }

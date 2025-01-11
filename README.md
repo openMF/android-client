@@ -1,7 +1,7 @@
 <div align="center">
 <img src="https://user-images.githubusercontent.com/37406965/51083189-d5dc3a80-173b-11e9-8ca0-28015e0893ac.png" alt="Android Client" />
 
-# Android-Client - Field Officer Application For MifosX
+# Android-Client Android Application for MifosX
 
 This Android application is built on the powerful [MifosX](https://mifosforge.jira.com/wiki/spaces/MIFOSX/overview) platform and written in Kotlin. MifosX is a comprehensive core banking platform designed for field officers to efficiently process transactions, manage client data, track center records, group details, and handle various types of accounts such as loans, savings, and recurring accounts. The application's primary goal is to streamline field operations, making them easier and more efficient.
 
@@ -19,21 +19,14 @@ One of the standout features of this application is its offline capability, allo
 [![PR Checks](https://github.com/openMF/android-client/actions/workflows/pr-check-android.yml/badge.svg)](https://github.com/openMF/android-client/actions/workflows/pr-check-android.yml)
 [![Slack](https://img.shields.io/badge/Slack-4A154B?style=flat-square&logo=slack&logoColor=white)](https://join.slack.com/t/mifos/shared_invite/zt-2wvi9t82t-DuSBdqdQVOY9fsqsLjkKPA)
 [![Jira](https://img.shields.io/badge/jira-%230A0FFF.svg?style=flat-square&logo=jira&logoColor=white)](https://mifosforge.jira.com/jira/software/c/projects/MIFOSAC/issues/?filter=allissues&jql=project%20%3D%20%22MM%22%20ORDER%20BY%20created%20DESC)
-[![Zoom](https://img.shields.io/badge/Zoom-2D8CFF?style=flat-square&logo=zoom&logoColor=white)](https://us02web.zoom.us/meeting/register/xV5scn0XQpGXM5aUDFmUIA)
-
 </div>
 
-> \[!Important]
+> \[!Note]
 > **We're moving towards to Jira for issue tracking. Please use [Jira](https://mifosforge.jira.com/jira/software/c/projects/MIFOSAC/issues/) for issue tracking.**
 > **And Join our [slack](https://join.slack.com/t/mifos/shared_invite/zt-2wvi9t82t-DuSBdqdQVOY9fsqsLjkKPA) community channel `android-client` to discuss all things about Android Client development. Please keep discussions focused and avoid cross-posting across channels.**
-> **Please join our daily Mobile Stand-Up on [Zoom](https://us02web.zoom.us/meeting/register/xV5scn0XQpGXM5aUDFmUIA).**
 
-## Download The Latest App
-[<img  alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height="80" />](https://play.google.com/store/apps/details?id=com.mifos.mifosxdroid)
-[<img alt='Get it on Github' src='https://github.com/user-attachments/assets/28de125a-29d3-42a6-9a2b-66f06c72325f' height="80" />](https://github.com/openMF/android-client/releases/latest)
-
-## Demo Credentials
-- **Fineract Instance**: `tt.mifos.community`
+## Demo credentials
+- **Fineract Instance**: `gsoc.mifos.community`
 - **Username**: `mifos`
 - **Password**: `password`
 
@@ -76,11 +69,3 @@ Special thanks to the incredible code contributors who continue to drive this pr
 <a href="https://github.com/openMF/android-client/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=openMF/android-client" />
 </a>
-
----
-## Join the beta
-Try new features before they're officially released and give feedback.
-
-[<img src="https://github.com/user-attachments/assets/a123e5a9-1c99-4b1b-880b-2fdd6e3f56cb" alt="firebase" />](https://appdistribution.firebase.dev/i/0786ea6feeba9468)
-![]()
-[<img src="https://github.com/user-attachments/assets/4a3c98aa-699c-464c-b171-0252383bd52d" alt="playstore" />](https://play.google.com/apps/testing/com.mifos.mifosxdroid)

@@ -20,17 +20,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -38,24 +35,28 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -71,11 +72,14 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.Black
+import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.objects.group.Center
+import com.mifos.core.designsystem.theme.LightGray
+import com.mifos.core.designsystem.theme.White
+import com.mifos.core.entity.group.Center
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.R
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
@@ -90,6 +94,10 @@ internal fun CenterListScreen(
 ) {
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val state by viewModel.centerListUiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(key1 = true) {
+        viewModel.getCenterList()
+    }
 
     CenterListScreen(
         paddingValues = paddingValues,
@@ -114,13 +122,17 @@ internal fun CenterListScreen(
     onCenterSelect: (Int) -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    var isInSelectionMode by rememberSaveable { mutableStateOf(false) }
     val selectedItems = remember { SelectedItemsState() }
+    val resetSelectionMode = {
+        isInSelectionMode = false
+        selectedItems.clear()
+    }
     val sync = rememberSaveable {
         mutableStateOf(false)
     }
-
-    BackHandler(enabled = selectedItems.size() > 0) {
-        selectedItems.clear()
+    BackHandler(enabled = isInSelectionMode) {
+        resetSelectionMode()
     }
 
     val pullRefreshState = rememberPullRefreshState(
@@ -128,13 +140,22 @@ internal fun CenterListScreen(
         onRefresh = onRefresh,
     )
 
-    MifosScaffold(
+    LaunchedEffect(
+        key1 = isInSelectionMode,
+        key2 = selectedItems.size(),
+    ) {
+        if (isInSelectionMode && selectedItems.isEmpty()) {
+            isInSelectionMode = false
+        }
+    }
+
+    Scaffold(
         modifier = Modifier.padding(paddingValues),
         topBar = {
-            if (selectedItems.size() > 0) {
+            if (isInSelectionMode) {
                 SelectionModeTopAppBar(
                     itemCount = selectedItems.size(),
-                    resetSelectionMode = selectedItems::clear,
+                    resetSelectionMode = resetSelectionMode,
                     actions = {
                         FilledTonalButton(
                             onClick = {
@@ -151,10 +172,11 @@ internal fun CenterListScreen(
                 )
             }
         },
-        snackbarHostState = snackbarHostState,
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = createNewCenter,
+                onClick = { createNewCenter() },
+                containerColor = BlueSecondary,
             ) {
                 Icon(
                     imageVector = MifosIcons.Add,
@@ -165,7 +187,6 @@ internal fun CenterListScreen(
     ) { paddingValue ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(paddingValue),
             verticalArrangement = Arrangement.Center,
         ) {
@@ -183,25 +204,29 @@ internal fun CenterListScreen(
 
                     is CenterListUiState.CenterList -> {
                         CenterListContent(
-                            modifier = Modifier,
                             centerPagingList = state.centers.collectAsLazyPagingItems(),
+                            isInSelectionMode = isInSelectionMode,
                             selectedItems = selectedItems,
-                            onRefresh = onRefresh,
-                            onCenterClick = {
+                            onRefresh = {
+                                onRefresh()
+                            },
+                            onCenterSelect = {
                                 onCenterSelect(it)
+                            },
+                            selectedMode = {
+                                isInSelectionMode = true
                             },
                         )
                     }
 
-                    is CenterListUiState.CenterListDb -> {
-                        CenterListDbContent(centerList = state.centers)
-                    }
+                    is CenterListUiState.CenterListDb -> CenterListDbContent(centerList = state.centers)
                 }
                 if (sync.value) {
                     SyncCenterDialogScreen(
                         dismiss = {
                             sync.value = false
                             selectedItems.clear()
+                            resetSelectionMode()
                         },
                         hide = { sync.value = false },
                         centers = selectedItems.toList(),
@@ -218,50 +243,49 @@ internal fun CenterListScreen(
 }
 
 private class SelectedItemsState(initialSelectedItems: List<Center> = emptyList()) {
-    private val selectedItems = mutableStateListOf<Center>().also {
-        it.addAll(initialSelectedItems)
-    }
+    private val _selectedItems = mutableStateListOf<Center>().also { it.addAll(initialSelectedItems) }
+    val selectedItems: State<List<Center>> = derivedStateOf { _selectedItems }
 
     fun add(item: Center) {
-        if (item in selectedItems) {
-            selectedItems.remove(item)
-        } else {
-            selectedItems.add(item)
-        }
+        _selectedItems.add(item)
     }
 
+    fun remove(item: Center) {
+        _selectedItems.remove(item)
+    }
     fun toList(): List<Center> {
-        return selectedItems.toList()
+        return _selectedItems.toList()
     }
-
     fun contains(item: Center): Boolean {
-        return selectedItems.contains(item)
+        return _selectedItems.contains(item)
     }
 
     fun clear() {
-        selectedItems.clear()
+        _selectedItems.clear()
     }
 
     fun size(): Int {
-        return selectedItems.size
+        return _selectedItems.size
+    }
+    fun isEmpty(): Boolean {
+        return _selectedItems.isEmpty()
     }
 }
 
 @Composable
 private fun CenterListContent(
     centerPagingList: LazyPagingItems<Center>,
+    isInSelectionMode: Boolean,
     selectedItems: SelectedItemsState,
     onRefresh: () -> Unit,
-    onCenterClick: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-    lazyListState: LazyListState = rememberLazyListState(),
+    onCenterSelect: (Int) -> Unit,
+    selectedMode: () -> Unit,
 ) {
     when (centerPagingList.loadState.refresh) {
         is LoadState.Error -> {
-            MifosSweetError(
-                message = stringResource(id = R.string.feature_center_error_loading_centers),
-                onclick = onRefresh,
-            )
+            MifosSweetError(message = stringResource(id = R.string.feature_center_error_loading_centers)) {
+                onRefresh()
+            }
         }
 
         is LoadState.Loading -> MifosCircularProgress()
@@ -269,31 +293,150 @@ private fun CenterListContent(
         is LoadState.NotLoading -> Unit
     }
 
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        state = lazyListState,
-        contentPadding = PaddingValues(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        items(
-            count = centerPagingList.itemCount,
-            key = {
-                centerPagingList[it]?.id ?: it
-            },
-        ) { index ->
-            val center: Center = centerPagingList[index]!!
+    LazyColumn {
+        items(centerPagingList.itemCount) { index ->
 
-            CenterCard(
-                center = center,
-                selected = selectedItems.contains(center),
-                isInSelectionMode = selectedItems.size() > 0,
-                onSelect = {
-                    selectedItems.add(it)
-                },
-                onClick = {
-                    onCenterClick(it.id ?: 0)
-                },
-            )
+            val isSelected = selectedItems.contains(centerPagingList[index]!!)
+            var cardColor by remember { mutableStateOf(White) }
+
+            OutlinedCard(
+                modifier = Modifier
+                    .padding(6.dp)
+                    .combinedClickable(
+                        onClick = {
+                            if (isInSelectionMode) {
+                                cardColor = if (isSelected) {
+                                    centerPagingList[index]?.let { selectedItems.remove(it) }
+                                    White
+                                } else {
+                                    centerPagingList[index]?.let { selectedItems.add(it) }
+                                    LightGray
+                                }
+                            } else {
+                                centerPagingList[index]?.id?.let { onCenterSelect(it) }
+                            }
+                        },
+                        onLongClick = {
+                            if (isInSelectionMode) {
+                                cardColor = if (isSelected) {
+                                    centerPagingList[index]?.let { selectedItems.remove(it) }
+                                    White
+                                } else {
+                                    centerPagingList[index]?.let { selectedItems.add(it) }
+                                    LightGray
+                                }
+                            } else {
+                                selectedMode()
+                                centerPagingList[index]?.let { selectedItems.add(it) }
+                                cardColor = LightGray
+                            }
+                        },
+                    ),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (selectedItems.isEmpty()) {
+                        cardColor = White
+                        White
+                    } else {
+                        cardColor
+                    },
+                ),
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 24.dp,
+                            bottom = 24.dp,
+                        ),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Canvas(
+                        modifier = Modifier.size(16.dp),
+                        onDraw = {
+                            drawCircle(
+                                color = if (centerPagingList[index]?.active == true) Color.Green else Color.Red,
+                            )
+                        },
+                    )
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 16.dp),
+                    ) {
+                        centerPagingList[index]?.name?.let {
+                            Text(
+                                text = it,
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = Black,
+                                ),
+                            )
+                        }
+                        Text(
+                            text = centerPagingList[index]?.accountNo.toString(),
+                            style = TextStyle(
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal,
+                                color = DarkGray,
+                            ),
+                        )
+                        Row {
+                            Text(
+                                text = centerPagingList[index]?.officeName.toString(),
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = DarkGray,
+                                ),
+                            )
+                            Spacer(modifier = Modifier.width(26.dp))
+                            Text(
+                                text = centerPagingList[index]?.officeId.toString(),
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = DarkGray,
+                                ),
+                            )
+                        }
+                        Row {
+                            Text(
+                                text = centerPagingList[index]?.staffName.toString(),
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = DarkGray,
+                                ),
+                            )
+                            Spacer(modifier = Modifier.width(26.dp))
+                            Text(
+                                text = centerPagingList[index]?.staffId.toString(),
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = DarkGray,
+                                ),
+                            )
+                        }
+                    }
+                    if (centerPagingList[index]?.sync == true) {
+                        AsyncImage(
+                            modifier = Modifier.size(20.dp),
+                            model = R.drawable.feature_center_ic_done_all_black_24dp,
+                            contentDescription = null,
+                        )
+                    }
+                }
+            }
         }
 
         when (centerPagingList.loadState.append) {
@@ -332,109 +475,118 @@ private fun CenterListContent(
 @Composable
 private fun CenterListDbContent(
     centerList: List<Center>,
-    modifier: Modifier = Modifier,
-    lazyListState: LazyListState = rememberLazyListState(),
 ) {
-    LazyColumn(
-        modifier = modifier,
-        state = lazyListState,
-    ) {
-        items(
-            items = centerList,
-            key = {
-                it.id ?: it.hashCode()
-            },
-        ) { center ->
-            CenterCard(
-                center = center,
-                selected = false,
-                isInSelectionMode = false,
-                onSelect = {},
-                onClick = {},
-            )
+    LazyColumn {
+        items(centerList) { center ->
+
+            OutlinedCard(
+                modifier = Modifier
+                    .padding(6.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = White,
+                ),
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 24.dp,
+                            bottom = 24.dp,
+                        ),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Canvas(
+                        modifier = Modifier.size(16.dp),
+                        onDraw = {
+                            drawCircle(
+                                color = if (center.active == true) Color.Green else Color.Red,
+                            )
+                        },
+                    )
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 16.dp),
+                    ) {
+                        center.name?.let {
+                            Text(
+                                text = it,
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = Black,
+                                ),
+                            )
+                        }
+                        Text(
+                            text = center.accountNo.toString(),
+                            style = TextStyle(
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontStyle = FontStyle.Normal,
+                                color = DarkGray,
+                            ),
+                        )
+                        Row {
+                            Text(
+                                text = center.officeName.toString(),
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = DarkGray,
+                                ),
+                            )
+                            Spacer(modifier = Modifier.width(26.dp))
+                            Text(
+                                text = center.officeId.toString(),
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = DarkGray,
+                                ),
+                            )
+                        }
+                        Row {
+                            Text(
+                                text = center.staffName.toString(),
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = DarkGray,
+                                ),
+                            )
+                            Spacer(modifier = Modifier.width(26.dp))
+                            Text(
+                                text = center.staffId.toString(),
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    color = DarkGray,
+                                ),
+                            )
+                        }
+                    }
+                    AsyncImage(
+                        modifier = Modifier.size(20.dp),
+                        model = R.drawable.feature_center_ic_done_all_black_24dp,
+                        contentDescription = null,
+                    )
+                }
+            }
         }
     }
 }
 
-@Composable
-private fun CenterCard(
-    center: Center,
-    selected: Boolean,
-    isInSelectionMode: Boolean,
-    onSelect: (Center) -> Unit,
-    modifier: Modifier = Modifier,
-    selectedColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-    unselectedColor: Color = MaterialTheme.colorScheme.surface,
-    onClick: (Center) -> Unit,
-) {
-    val containerColor = if (selected) selectedColor else unselectedColor
+class CenterListUiStateProvider :
+    PreviewParameterProvider<CenterListUiState> {
 
-    OutlinedCard(
-        modifier = modifier
-            .clip(CardDefaults.outlinedShape)
-            .combinedClickable(
-                onClick = {
-                    if (isInSelectionMode) {
-                        onSelect(center)
-                    } else {
-                        onClick(center)
-                    }
-                },
-                onLongClick = {
-                    onSelect(center)
-                },
-            ),
-        colors = CardDefaults.cardColors(
-            containerColor = containerColor,
-        ),
-    ) {
-        ListItem(
-            leadingContent = {
-                Canvas(
-                    modifier = Modifier.size(16.dp),
-                    onDraw = {
-                        drawCircle(
-                            color = if (center.active == true) Color.Green else Color.Red,
-                        )
-                    },
-                )
-            },
-            headlineContent = {
-                Text(text = center.name.toString())
-            },
-            supportingContent = center.accountNo?.let {
-                { Text(text = it) }
-            },
-            overlineContent = center.officeName?.let {
-                { Text(text = it) }
-            },
-            trailingContent = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    if (center.sync == true) {
-                        AsyncImage(
-                            modifier = Modifier.size(20.dp),
-                            model = R.drawable.feature_center_ic_done_all_black_24dp,
-                            contentDescription = null,
-                        )
-                    }
-
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowRight,
-                        contentDescription = null,
-                    )
-                }
-            },
-            colors = ListItemDefaults.colors(
-                containerColor = Color.Unspecified,
-            ),
-        )
-    }
-}
-
-class CenterListUiStateProvider : PreviewParameterProvider<CenterListUiState> {
     override val values: Sequence<CenterListUiState>
         get() = sequenceOf(
             CenterListUiState.Loading,
@@ -449,9 +601,11 @@ class CenterListUiStateProvider : PreviewParameterProvider<CenterListUiState> {
 private fun CenterListContentPreview() {
     CenterListContent(
         centerPagingList = sampleCenterList.collectAsLazyPagingItems(),
+        isInSelectionMode = false,
         selectedItems = SelectedItemsState(),
         onRefresh = {},
-        onCenterClick = {},
+        onCenterSelect = {},
+        selectedMode = {},
     )
 }
 
@@ -464,8 +618,7 @@ private fun CenterListDbContentPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun CenterListScreenPreview(
-    @PreviewParameter(CenterListUiStateProvider::class)
-    centerListUiState: CenterListUiState,
+    @PreviewParameter(CenterListUiStateProvider::class) centerListUiState: CenterListUiState,
 ) {
     CenterListScreen(
         paddingValues = PaddingValues(),

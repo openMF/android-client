@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.repository
 
+import com.mifos.core.entity.templates.loans.LoanTransactionTemplate
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.loan.LoanDisbursement
-import com.mifos.core.objects.templates.loans.LoanTransactionTemplate
+import com.mifos.core.objects.account.loan.LoanDisbursement
 import rx.Observable
 
 /**

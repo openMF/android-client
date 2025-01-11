@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.services
 
+import com.mifos.core.entity.organisation.Office
 import com.mifos.core.model.APIEndPoint
-import com.mifos.core.objects.organisation.Office
 import retrofit2.http.GET
 
 /**

@@ -9,8 +9,8 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.ClientPayload
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.client.ClientPayload
 import rx.Observable
 
 interface SyncClientPayloadsRepository {

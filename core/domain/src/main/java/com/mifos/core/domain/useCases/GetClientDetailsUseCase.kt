@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientDetailsRepository
-import com.mifos.core.objects.zipmodels.ClientAndClientAccounts
+import com.mifos.core.entity.zipmodels.ClientAndClientAccounts
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow

@@ -10,9 +10,9 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.GroupsListRepository
+import com.mifos.core.entity.group.Group
 import com.mifos.core.network.datamanager.DataManagerGroups
-import com.mifos.core.objects.client.Page
-import com.mifos.core.objects.group.Group
+import com.mifos.core.objects.clients.Page
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import rx.Subscriber

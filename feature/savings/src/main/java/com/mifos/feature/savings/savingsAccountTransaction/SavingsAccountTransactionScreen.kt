@@ -70,9 +70,9 @@ import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
-import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.feature.savings.R
 import java.text.SimpleDateFormat
 import java.util.Locale

@@ -9,8 +9,7 @@
  */
 package com.mifos.feature.client.createNewClient
 
-import com.mifos.core.objects.templates.clients.AddressTemplate
-import com.mifos.core.objects.templates.clients.ClientsTemplate
+import com.mifos.core.entity.templates.clients.ClientsTemplate
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -27,11 +26,7 @@ sealed class CreateNewClientUiState {
 
     data class OnImageUploadSuccess(val message: Int) : CreateNewClientUiState()
 
-    data class ShowClientTemplate(
-        val clientsTemplate: ClientsTemplate,
-        val isAddressEnabled: Boolean,
-        val addressTemplate: AddressTemplate? = null,
-    ) : CreateNewClientUiState()
+    data class ShowClientTemplate(val clientsTemplate: ClientsTemplate) : CreateNewClientUiState()
 
     data class ShowClientCreatedSuccessfully(val message: Int) : CreateNewClientUiState()
 

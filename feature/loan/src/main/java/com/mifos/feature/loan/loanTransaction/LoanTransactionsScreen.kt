@@ -64,9 +64,9 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations
-import com.mifos.core.objects.accounts.loan.Transaction
-import com.mifos.core.objects.accounts.loan.Type
+import com.mifos.core.entity.accounts.loan.LoanWithAssociations
+import com.mifos.core.objects.account.loan.Transaction
+import com.mifos.core.objects.account.loan.Type
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.loan.R
 

@@ -10,16 +10,14 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.CreateNewClientRepository
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.client.ClientPayload
+import com.mifos.core.entity.organisation.Office
+import com.mifos.core.entity.organisation.Staff
+import com.mifos.core.entity.templates.clients.ClientsTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerOffices
 import com.mifos.core.network.datamanager.DataManagerStaff
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.organisation.Office
-import com.mifos.core.objects.organisation.Staff
-import com.mifos.core.objects.templates.clients.AddressConfiguration
-import com.mifos.core.objects.templates.clients.AddressTemplate
-import com.mifos.core.objects.templates.clients.ClientsTemplate
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import rx.Observable
@@ -52,13 +50,5 @@ class CreateNewClientRepositoryImp @Inject constructor(
 
     override fun uploadClientImage(id: Int, file: MultipartBody.Part?): Observable<ResponseBody> {
         return dataManagerClient.uploadClientImage(id, file)
-    }
-
-    override suspend fun getAddressConfiguration(): AddressConfiguration {
-        return dataManagerClient.getAddressConfiguration()
-    }
-
-    override suspend fun getAddressTemplate(): AddressTemplate {
-        return dataManagerClient.getAddressTemplate()
     }
 }

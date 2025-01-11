@@ -41,7 +41,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.objects.noncore.DataTable
+import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.data_table.R
 

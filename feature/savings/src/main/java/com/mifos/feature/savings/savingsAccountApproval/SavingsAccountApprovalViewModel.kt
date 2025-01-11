@@ -16,7 +16,7 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.loan.SavingsApproval
+import com.mifos.core.objects.account.loan.SavingsApproval
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

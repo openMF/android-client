@@ -10,10 +10,10 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.CenterDetailsRepository
+import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerRunReport
-import com.mifos.core.objects.group.CenterInfo
-import com.mifos.core.objects.group.CenterWithAssociations
+import com.mifos.core.objects.groups.CenterInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

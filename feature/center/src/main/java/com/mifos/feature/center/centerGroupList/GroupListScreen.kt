@@ -45,10 +45,10 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.Status
-import com.mifos.core.objects.group.CenterWithAssociations
-import com.mifos.core.objects.group.Group
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.client.Status
+import com.mifos.core.entity.group.CenterWithAssociations
+import com.mifos.core.entity.group.Group
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.center.R
 

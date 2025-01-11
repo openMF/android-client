@@ -17,10 +17,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.objects.accounts.savings.DepositType
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.noncore.DataTable
-import com.mifos.core.objects.survey.Survey
+import com.mifos.core.entity.accounts.savings.DepositType
+import com.mifos.core.entity.client.ClientPayload
+import com.mifos.core.entity.noncore.DataTable
+import com.mifos.core.entity.survey.Survey
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientDetails.ui.ClientDetailsScreen
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen

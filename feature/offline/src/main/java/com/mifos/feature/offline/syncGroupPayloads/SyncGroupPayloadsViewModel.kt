@@ -17,7 +17,7 @@ import com.mifos.core.domain.useCases.AllDatabaseGroupPayloadUseCase
 import com.mifos.core.domain.useCases.CreateGroupUseCase
 import com.mifos.core.domain.useCases.DeleteAndUpdateGroupPayloadUseCase
 import com.mifos.core.domain.useCases.UpdateGroupPayloadUseCase
-import com.mifos.core.objects.group.GroupPayload
+import com.mifos.core.entity.group.GroupPayload
 import com.mifos.feature.offline.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
