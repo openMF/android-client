@@ -10,7 +10,7 @@
 package com.mifos.feature.client.syncClientDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.core.objects.client.Client
+import com.mifos.core.entity.client.Client
 
 /**
  * Created by Aditya Gupta on 16/08/23.

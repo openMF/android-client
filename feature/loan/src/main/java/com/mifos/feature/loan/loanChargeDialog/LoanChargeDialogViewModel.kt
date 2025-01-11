@@ -12,10 +12,10 @@ package com.mifos.feature.loan.loanChargeDialog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.data.ChargesPayload
 import com.mifos.core.domain.useCases.CreateLoanChargesUseCase
 import com.mifos.core.domain.useCases.GetAllChargesV3UseCase
-import com.mifos.core.objects.client.Charges
+import com.mifos.core.entity.client.Charges
+import com.mifos.core.payloads.ChargesPayload
 import com.mifos.feature.loan.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

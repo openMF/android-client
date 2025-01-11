@@ -16,9 +16,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.data.LoansPayload
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations
-import com.mifos.core.objects.noncore.DataTable
+import com.mifos.core.entity.accounts.loan.LoanWithAssociations
+import com.mifos.core.entity.noncore.DataTable
+import com.mifos.core.network.model.LoansPayload
 import com.mifos.feature.loan.groupLoanAccount.GroupLoanAccountScreen
 import com.mifos.feature.loan.loanAccount.LoanAccountScreen
 import com.mifos.feature.loan.loanAccountSummary.LoanAccountSummaryScreen

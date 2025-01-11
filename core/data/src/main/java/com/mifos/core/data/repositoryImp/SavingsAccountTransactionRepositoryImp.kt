@@ -10,10 +10,10 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
+import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.objects.accounts.savings.SavingsAccountTransactionResponse
-import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import rx.Observable
 import javax.inject.Inject
 

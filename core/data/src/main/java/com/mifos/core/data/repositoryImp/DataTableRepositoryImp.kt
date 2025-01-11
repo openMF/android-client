@@ -10,8 +10,8 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.DataTableRepository
+import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.network.datamanager.DataManagerDataTable
-import com.mifos.core.objects.noncore.DataTable
 import javax.inject.Inject
 
 /**

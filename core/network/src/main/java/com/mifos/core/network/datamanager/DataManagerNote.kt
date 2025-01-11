@@ -10,8 +10,8 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperNote
+import com.mifos.core.entity.noncore.Note
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.objects.noncore.Note
 import javax.inject.Inject
 import javax.inject.Singleton
 

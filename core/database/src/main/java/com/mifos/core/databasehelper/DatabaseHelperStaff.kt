@@ -10,8 +10,8 @@
 package com.mifos.core.databasehelper
 
 import android.os.AsyncTask
-import com.mifos.core.objects.organisation.Staff
-import com.mifos.core.objects.organisation.Staff_Table
+import com.mifos.core.entity.organisation.Staff
+import com.mifos.core.entity.organisation.Staff_Table
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import rx.Observable
 import javax.inject.Inject

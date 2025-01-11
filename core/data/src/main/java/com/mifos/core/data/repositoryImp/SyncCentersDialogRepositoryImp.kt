@@ -10,23 +10,23 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncCentersDialogRepository
+import com.mifos.core.entity.accounts.CenterAccounts
+import com.mifos.core.entity.accounts.ClientAccounts
+import com.mifos.core.entity.accounts.GroupAccounts
+import com.mifos.core.entity.accounts.loan.LoanWithAssociations
+import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.group.Center
+import com.mifos.core.entity.group.CenterWithAssociations
+import com.mifos.core.entity.group.Group
+import com.mifos.core.entity.group.GroupWithAssociations
+import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
+import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.core.objects.accounts.CenterAccounts
-import com.mifos.core.objects.accounts.ClientAccounts
-import com.mifos.core.objects.accounts.GroupAccounts
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations
-import com.mifos.core.objects.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.group.Center
-import com.mifos.core.objects.group.CenterWithAssociations
-import com.mifos.core.objects.group.Group
-import com.mifos.core.objects.group.GroupWithAssociations
-import com.mifos.core.objects.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.objects.templates.savings.SavingsAccountTransactionTemplate
 import rx.Observable
 import javax.inject.Inject
 

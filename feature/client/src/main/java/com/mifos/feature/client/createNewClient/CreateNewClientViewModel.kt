@@ -16,10 +16,10 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.domain.useCases.GetOfficeListUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeForCreateNewClientUseCase
-import com.mifos.core.objects.client.Client
-import com.mifos.core.objects.client.ClientPayload
-import com.mifos.core.objects.organisation.Office
-import com.mifos.core.objects.organisation.Staff
+import com.mifos.core.entity.client.Client
+import com.mifos.core.entity.client.ClientPayload
+import com.mifos.core.entity.organisation.Office
+import com.mifos.core.entity.organisation.Staff
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

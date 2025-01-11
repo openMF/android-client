@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.note
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,17 +22,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -41,12 +37,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.objects.noncore.Note
+import com.mifos.core.entity.noncore.Note
 import com.mifos.core.ui.components.MifosEmptyUi
 
 @Composable
@@ -80,7 +75,6 @@ internal fun NoteScreen(
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullToRefreshState()
-    val context = LocalContext.current
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
@@ -92,54 +86,34 @@ internal fun NoteScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .nestedScroll(pullRefreshState.nestedScrollConnection),
+                .padding(paddingValues),
         ) {
-            when (uiState) {
-                NoteUiState.ShowProgressbar -> {
-                    MifosCircularProgress()
-                }
-
-                NoteUiState.ShowEmptyNotes -> {
-                    MifosEmptyUi(text = stringResource(id = R.string.feature_note_no_notes_found))
-                }
-
-                is NoteUiState.ShowError -> {
-                    MifosSweetError(
-                        message = stringResource(id = uiState.message),
-                        onclick = refresh,
-                    )
-                }
-
-                is NoteUiState.ShowNote -> {
-                    NoteContent(uiState.note)
-                }
-            }
-
-            PullToRefreshContainer(
+            PullToRefreshBox(
                 state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter),
-            )
-        }
+                modifier = Modifier.fillMaxSize(),
+                isRefreshing = isRefreshing,
+                onRefresh = refresh,
+            ) {
+                when (uiState) {
+                    NoteUiState.ShowProgressbar -> {
+                        MifosCircularProgress()
+                    }
 
-        LaunchedEffect(key1 = isRefreshing) {
-            if (isRefreshing) {
-                pullRefreshState.startRefresh()
-            }
-        }
+                    NoteUiState.ShowEmptyNotes -> {
+                        MifosEmptyUi(text = stringResource(id = R.string.feature_note_no_notes_found))
+                    }
 
-        LaunchedEffect(key1 = pullRefreshState.isRefreshing) {
-            if (pullRefreshState.isRefreshing) {
-                if (Network.isOnline(context)) {
-                    refresh()
-                } else {
-                    Toast.makeText(
-                        context,
-                        context.resources.getText(R.string.feature_note_internet_not_connected),
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    is NoteUiState.ShowError -> {
+                        MifosSweetError(
+                            message = stringResource(id = uiState.message),
+                            onclick = refresh,
+                        )
+                    }
+
+                    is NoteUiState.ShowNote -> {
+                        NoteContent(uiState.note)
+                    }
                 }
-                pullRefreshState.endRefresh()
             }
         }
     }

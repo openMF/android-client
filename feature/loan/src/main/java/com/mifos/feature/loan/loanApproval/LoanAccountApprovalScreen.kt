@@ -59,9 +59,9 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
+import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.accounts.loan.LoanApproval
-import com.mifos.core.objects.accounts.loan.LoanWithAssociations
+import com.mifos.core.objects.account.loan.LoanApproval
 import com.mifos.feature.loan.R
 import java.text.SimpleDateFormat
 import java.util.Locale
