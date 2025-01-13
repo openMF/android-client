@@ -32,5 +32,4 @@ object DatabaseModule {
             name = "mifos-database",
         ).build()
     }
-
 }
