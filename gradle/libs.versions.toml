@@ -103,6 +103,9 @@ playService = "18.5.0"
 realmVersion = "1.13.0"
 recyclerview = "1.3.2"
 room = "2.7.0-alpha12"
+roomKtxVersion = "2.7.0-alpha12"
+roomRuntimeVersion = "2.7.0-alpha12"
+roomTestingVersion = "2.7.0-alpha12"
 retrofit = "2.11.0"
 rxandroidVersion = "1.1.0"
 rxjava = "1.3.8"
@@ -271,7 +274,13 @@ androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx",
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
 androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "androidxNavigation" }
 
+#room
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtxVersion" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntimeVersion" }
+androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "roomTestingVersion" }
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 
 androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "androidxProfileinstaller" }
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
@@ -386,12 +395,6 @@ play-services-places = { module = "com.google.android.gms:play-services-places",
 #Protobuf
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
-
-# Room Database
-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 
 # Realm
 realm-library-base = { group = "io.realm.kotlin", name = "library-base", version.ref = "realmVersion" }
@@ -536,6 +539,7 @@ androidx-navigation = {id = "androidx.navigation.safeargs", version.ref = "andro
 
 # Hilt & Room Plugins
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+room = { id = "androidx.room", version.ref = "room" }
 
 mifos-android-hilt = { id = "mifos.android.hilt", version = "unspecified" }
 mifos-android-room = { id = "mifos.android.room", version = "unspecified" }

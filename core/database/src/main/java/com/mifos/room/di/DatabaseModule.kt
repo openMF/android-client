@@ -10,7 +10,7 @@
 package com.mifos.room.di
 
 import android.content.Context
-import com.mifos.room.dao.ColumnValueDao
+import androidx.room.Room
 import com.mifos.room.db.MifosDatabase
 import dagger.Module
 import dagger.Provides
@@ -19,21 +19,18 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-object DbModule {
-    @Module
-    @InstallIn(SingletonComponent::class)
-    object DatabaseModule {
+@Module
+@InstallIn(SingletonComponent::class)
+object DatabaseModule {
 
-        @Provides
-        @Singleton
-        fun providesDatabase(@ApplicationContext context: Context): MifosDatabase {
-            return MifosDatabase.getDatabase(context)
-        }
-
-        @Provides
-        @Singleton
-        fun providesColumnValueDao(database: MifosDatabase): ColumnValueDao {
-            return database.columnValueDao()
-        }
+    @Provides
+    @Singleton
+    fun providesDatabase(@ApplicationContext context: Context): MifosDatabase {
+        return Room.databaseBuilder(
+            context = context,
+            klass = MifosDatabase::class.java,
+            name = "mifos-database",
+        ).build()
     }
+
 }

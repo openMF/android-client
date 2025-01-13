@@ -10,26 +10,18 @@
 package com.mifos.room.utils.typeconverters
 
 import androidx.room.TypeConverter
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
-class TypeConverters {
-
-    @TypeConverter
-    fun fromList(list: List<Int>?): String {
-        val gson = Gson()
-        val type = object : TypeToken<List<Int>>() {}.type
-        return gson.toJson(list, type)
-    }
+class ListTypeConverters {
 
     @TypeConverter
     fun fromIntList(value: String): ArrayList<Int?> {
-        val listType = object : TypeToken<ArrayList<Int?>>() {}.type
-        return Gson().fromJson(value, listType)
+        return Json.decodeFromString(value)
     }
 
     @TypeConverter
     fun toIntList(list: ArrayList<Int?>): String {
-        return Gson().toJson(list)
+        return Json.encodeToString(list)
     }
 }

@@ -9,51 +9,27 @@
  */
 package com.mifos.room.db
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.entities.noncore.ColumnValue
-import com.mifos.room.utils.typeconverters.StringListConverter
+import com.mifos.room.utils.typeconverters.ListTypeConverters
 
 @Database(
     // [TODO -> add other entities ]
     entities = [ColumnValue::class],
-    version = 1,
-    exportSchema = false,
+    version = MifosDatabase.VERSION,
+    exportSchema = true,
+    autoMigrations = [],
 )
-@TypeConverters(StringListConverter::class)
+@TypeConverters(ListTypeConverters::class)
 // ( TODO -> add type converters here )
 
 abstract class MifosDatabase : RoomDatabase() {
     abstract fun columnValueDao(): ColumnValueDao
 
     companion object {
-
-        private const val NAME: String = "Mifos"
-
-        @Volatile
-        private var instance: MifosDatabase? = null
-
-        fun getDatabase(context: Context): MifosDatabase {
-            return instance ?: synchronized(this) {
-                val currentInstance = Room.databaseBuilder(
-                    context.applicationContext,
-                    MifosDatabase::class.java,
-                    NAME,
-                )
-                    .addMigrations(
-                        MIGRATION_1_2,
-                        MIGRATION_2_3,
-                        MIGRATION_3_4,
-                    )
-                    .build()
-                instance = currentInstance
-
-                currentInstance
-            }
-        }
+        const val VERSION = 1
     }
 }
