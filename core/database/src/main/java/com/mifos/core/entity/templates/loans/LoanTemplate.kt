@@ -11,29 +11,20 @@ package com.mifos.core.entity.templates.loans
 
 import android.os.Parcelable
 import com.mifos.core.entity.noncore.DataTable
-import com.mifos.core.objects.account.loan.AccountLinkingOptions
 import com.mifos.core.objects.template.loan.AmortizationType
 import com.mifos.core.objects.template.loan.AmortizationTypeOptions
 import com.mifos.core.objects.template.loan.ChargeOptions
 import com.mifos.core.objects.template.loan.Currency
 import com.mifos.core.objects.template.loan.DaysInMonthType
-import com.mifos.core.objects.template.loan.DaysInYearType
 import com.mifos.core.objects.template.loan.FundOptions
 import com.mifos.core.objects.template.loan.InterestCalculationPeriodType
-import com.mifos.core.objects.template.loan.InterestRateFrequencyType
 import com.mifos.core.objects.template.loan.InterestRateFrequencyTypeOptions
-import com.mifos.core.objects.template.loan.InterestType
-import com.mifos.core.objects.template.loan.InterestTypeOptions
-import com.mifos.core.objects.template.loan.LoanCollateralOptions
 import com.mifos.core.objects.template.loan.LoanOfficerOptions
 import com.mifos.core.objects.template.loan.LoanPurposeOptions
-import com.mifos.core.objects.template.loan.Product
-import com.mifos.core.objects.template.loan.ProductOptions
 import com.mifos.core.objects.template.loan.RepaymentFrequencyDaysOfWeekTypeOptions
 import com.mifos.core.objects.template.loan.RepaymentFrequencyNthDayTypeOptions
 import com.mifos.core.objects.template.loan.RepaymentFrequencyType
 import com.mifos.core.objects.template.loan.RepaymentFrequencyTypeOptions
-import com.mifos.core.objects.template.loan.TermFrequencyTypeOptions
 import com.mifos.core.objects.template.loan.TermPeriodFrequencyType
 import com.mifos.core.objects.template.loan.Timeline
 import com.mifos.core.objects.template.loan.TransactionProcessingStrategyOptions
@@ -82,7 +73,7 @@ data class LoanTemplate(
 
     var interestRatePerPeriod: Double? = null,
 
-    var interestRateFrequencyType: InterestRateFrequencyType? = null,
+    var interestRateFrequencyType: com.mifos.core.model.objects.template.loan.InterestRateFrequencyType? = null,
 
     var annualInterestRate: Double? = null,
 
@@ -90,7 +81,7 @@ data class LoanTemplate(
 
     var amortizationType: AmortizationType? = null,
 
-    var interestType: InterestType? = null,
+    var interestType: com.mifos.core.model.objects.template.loan.InterestType? = null,
 
     var interestCalculationPeriodType: InterestCalculationPeriodType? = null,
 
@@ -102,7 +93,7 @@ data class LoanTemplate(
 
     var timeline: Timeline? = null,
 
-    var productOptions: List<ProductOptions> = ArrayList(),
+    var productOptions: List<com.mifos.core.model.objects.template.loan.ProductOptions> = ArrayList(),
 
     var dataTables: ArrayList<DataTable> = ArrayList(),
 
@@ -112,7 +103,7 @@ data class LoanTemplate(
 
     var fundOptions: List<FundOptions> = ArrayList(),
 
-    var termFrequencyTypeOptions: List<TermFrequencyTypeOptions> = ArrayList(),
+    var termFrequencyTypeOptions: List<com.mifos.core.model.objects.template.loan.TermFrequencyTypeOptions> = ArrayList(),
 
     var repaymentFrequencyTypeOptions: List<RepaymentFrequencyTypeOptions> = ArrayList(),
 
@@ -124,7 +115,7 @@ data class LoanTemplate(
 
     var amortizationTypeOptions: List<AmortizationTypeOptions> = ArrayList(),
 
-    var interestTypeOptions: List<InterestTypeOptions> = ArrayList(),
+    var interestTypeOptions: List<com.mifos.core.model.objects.template.loan.InterestTypeOptions> = ArrayList(),
 
     var interestCalculationPeriodTypeOptions: List<InterestCalculationPeriodType> = ArrayList(),
 
@@ -132,7 +123,7 @@ data class LoanTemplate(
 
     var chargeOptions: List<ChargeOptions> = ArrayList(),
 
-    var loanCollateralOptions: List<LoanCollateralOptions> = ArrayList(),
+    var loanCollateralOptions: List<com.mifos.core.model.objects.template.loan.LoanCollateralOptions> = ArrayList(),
 
     var multiDisburseLoan: Boolean? = null,
 
@@ -140,11 +131,11 @@ data class LoanTemplate(
 
     var canDisburse: Boolean? = null,
 
-    var product: Product? = null,
+    var product: com.mifos.core.model.objects.template.loan.Product? = null,
 
     var daysInMonthType: DaysInMonthType? = null,
 
-    var daysInYearType: DaysInYearType? = null,
+    var daysInYearType: com.mifos.core.model.objects.template.loan.DaysInYearType? = null,
 
     var isInterestRecalculationEnabled: Boolean? = null,
 
@@ -154,5 +145,5 @@ data class LoanTemplate(
 
     var maximumGap: Int? = null,
 
-    var accountLinkingOptions: List<AccountLinkingOptions> = ArrayList(),
+    var accountLinkingOptions: List<com.mifos.core.model.objects.account.loan.AccountLinkingOptions> = ArrayList(),
 ) : Parcelable

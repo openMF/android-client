@@ -54,9 +54,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.model.ServerConfig
 import com.mifos.core.ui.util.DevicePreviews
 import com.mifos.feature.settings.R
+import com.mifos.core.model.ServerConfig
 
 @Composable
 internal fun UpdateServerConfigScreenRoute(
@@ -95,7 +95,7 @@ internal fun UpdateServerConfigScreenRoute(
 @VisibleForTesting
 @Composable
 internal fun UpdateServerConfigScreenContent(
-    serverConfig: ServerConfig,
+    serverConfig: com.mifos.core.model.ServerConfig,
     onEvent: (UpdateServerConfigEvent) -> Unit,
     modifier: Modifier = Modifier,
     protocolError: Int? = null,
@@ -312,7 +312,7 @@ internal fun UpdateServerConfigScreenContent(
 private fun UpdateServerConfigScreenEmptyData() {
     MaterialTheme {
         UpdateServerConfigScreenContent(
-            serverConfig = ServerConfig(
+            serverConfig = com.mifos.core.model.ServerConfig(
                 protocol = "",
                 endPoint = "",
                 apiPath = "",

@@ -17,7 +17,7 @@ import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.core.payloads.GroupLoanPayload
+import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import rx.Observable
 import javax.inject.Inject
 

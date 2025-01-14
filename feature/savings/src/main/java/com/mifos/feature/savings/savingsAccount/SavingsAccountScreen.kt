@@ -77,8 +77,8 @@ import com.mifos.core.entity.templates.savings.SavingProductsTemplate
 import com.mifos.core.entity.zipmodels.SavingProductsAndTemplate
 import com.mifos.core.objects.account.saving.FieldOfficerOptions
 import com.mifos.core.objects.organisations.ProductSavings
-import com.mifos.core.payloads.SavingsPayload
 import com.mifos.feature.savings.R
+import com.mifos.core.model.objects.payloads.SavingsPayload
 import java.text.SimpleDateFormat
 import java.util.Locale
 

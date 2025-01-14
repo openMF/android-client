@@ -10,7 +10,6 @@
 package com.mifos.core.network
 
 import com.google.gson.GsonBuilder
-import com.mifos.core.model.getInstanceUrl
 import com.mifos.core.network.services.CenterService
 import com.mifos.core.network.services.ChargeService
 import com.mifos.core.network.services.CheckerInboxService
@@ -28,6 +27,7 @@ import com.mifos.core.network.services.SavingsAccountService
 import com.mifos.core.network.services.SearchService
 import com.mifos.core.network.services.StaffService
 import com.mifos.core.network.services.SurveyService
+import com.mifos.core.model.getInstanceUrl
 import org.mifos.core.utils.JsonDateSerializer
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory

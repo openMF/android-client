@@ -11,7 +11,6 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import rx.Observable
 
 /**
@@ -24,7 +23,7 @@ interface LoanRepaymentRepository {
     fun submitPayment(
         loanId: Int,
         request: LoanRepaymentRequest,
-    ): Observable<LoanRepaymentResponse>
+    ): Observable<com.mifos.core.model.objects.account.loan.LoanRepaymentResponse>
 
     fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Observable<LoanRepaymentRequest>
 }

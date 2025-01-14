@@ -12,7 +12,6 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.clients.ClientAddressRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -21,7 +20,7 @@ class AddClientPinpointLocationUseCase @Inject constructor(private val pinPointC
 
     suspend operator fun invoke(
         clientId: Int,
-        address: ClientAddressRequest,
+        address: com.mifos.core.model.objects.clients.ClientAddressRequest,
     ): Flow<Resource<GenericResponse>> = flow {
         try {
             emit(Resource.Loading())

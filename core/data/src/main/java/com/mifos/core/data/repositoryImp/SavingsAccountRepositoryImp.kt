@@ -14,7 +14,7 @@ import com.mifos.core.entity.client.Savings
 import com.mifos.core.entity.templates.savings.SavingProductsTemplate
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.objects.organisations.ProductSavings
-import com.mifos.core.payloads.SavingsPayload
+import com.mifos.core.model.objects.payloads.SavingsPayload
 import rx.Observable
 import javax.inject.Inject
 

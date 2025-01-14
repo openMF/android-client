@@ -11,7 +11,6 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.LoanAccountRepository
-import com.mifos.core.objects.organisations.LoanProducts
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -22,20 +21,20 @@ import javax.inject.Inject
 
 class GetAllLoanUseCase @Inject constructor(private val loanAccountRepository: LoanAccountRepository) {
 
-    suspend operator fun invoke(): Flow<Resource<List<LoanProducts>>> = callbackFlow {
+    suspend operator fun invoke(): Flow<Resource<List<com.mifos.core.model.objects.organisations.LoanProducts>>> = callbackFlow {
         try {
             trySend(Resource.Loading())
             loanAccountRepository.allLoans()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<List<LoanProducts>>() {
+                .subscribe(object : Subscriber<List<com.mifos.core.model.objects.organisations.LoanProducts>>() {
                     override fun onCompleted() {}
 
                     override fun onError(exception: Throwable) {
                         trySend(Resource.Error(exception.message.toString()))
                     }
 
-                    override fun onNext(products: List<LoanProducts>) {
+                    override fun onNext(products: List<com.mifos.core.model.objects.organisations.LoanProducts>) {
                         trySend(Resource.Success(products))
                     }
                 })

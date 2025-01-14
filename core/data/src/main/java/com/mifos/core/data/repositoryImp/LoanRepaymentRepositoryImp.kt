@@ -13,7 +13,6 @@ import com.mifos.core.data.repository.LoanRepaymentRepository
 import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.network.datamanager.DataManagerLoan
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import rx.Observable
 import javax.inject.Inject
 
@@ -30,7 +29,7 @@ class LoanRepaymentRepositoryImp @Inject constructor(private val dataManagerLoan
     override fun submitPayment(
         loanId: Int,
         request: LoanRepaymentRequest,
-    ): Observable<LoanRepaymentResponse> {
+    ): Observable<com.mifos.core.model.objects.account.loan.LoanRepaymentResponse> {
         return submitPayment(loanId, request)
     }
 

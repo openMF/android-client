@@ -17,7 +17,6 @@ import com.mifos.core.datastore.PrefManager
 import com.mifos.core.entity.PaymentTypeOption
 import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.entity.center.CenterPayload_Table.errorMessage
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.feature.offline.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -124,7 +123,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
         repository.submitPayment(loanId, loanRepaymentRequest!!)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<LoanRepaymentResponse>() {
+            .subscribe(object : Subscriber<com.mifos.core.model.objects.account.loan.LoanRepaymentResponse>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
                     val eLoanRepaymentRequest = mLoanRepaymentRequests[mClientSyncIndex]
@@ -132,7 +131,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
                     updateLoanRepayment(eLoanRepaymentRequest)
                 }
 
-                override fun onNext(loanRepaymentResponse: LoanRepaymentResponse) {
+                override fun onNext(loanRepaymentResponse: com.mifos.core.model.objects.account.loan.LoanRepaymentResponse) {
                     mLoanRepaymentRequests[mClientSyncIndex].loanId?.let {
                         deleteAndUpdateLoanRepayments(
                             it,

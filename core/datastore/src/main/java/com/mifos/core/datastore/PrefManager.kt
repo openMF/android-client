@@ -78,12 +78,12 @@ class PrefManager @Inject constructor(
             preference.edit().putString(AUTH_PASSWORD, value.second).apply()
         }
 
-    val getServerConfig: ServerConfig =
+    val getServerConfig: com.mifos.core.model.ServerConfig =
         preference.getString(serverConfigKey.value, null)?.let {
-            gson.fromJson(it, ServerConfig::class.java)
+            gson.fromJson(it, com.mifos.core.model.ServerConfig::class.java)
         } ?: BuildConfig.DEMO_SERVER_CONFIG.asServerConfig()
 
-    fun updateServerConfig(config: ServerConfig?) {
+    fun updateServerConfig(config: com.mifos.core.model.ServerConfig?) {
         this.put(serverConfigKey, config)
     }
 

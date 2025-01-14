@@ -17,7 +17,6 @@ import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.network.utils.ImageLoaderUtils
-import com.mifos.core.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.objects.collectionsheets.LoanAndClientName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +42,7 @@ class PaymentDetailsViewModel @Inject constructor(
         Gson().fromJson(payloadArg.value, IndividualCollectionSheetPayload::class.java)
     val paymentTypeOptionsName = Gson().fromJson(paymentListArg.value, Array<String>::class.java).toList()
     val loanAndClientName: LoanAndClientName = Gson().fromJson(loanAndClientNameArg.value, LoanAndClientName::class.java)
-    val paymentTypeOptions = Gson().fromJson(paymentOptionsArg.value, Array<PaymentTypeOptions>::class.java).toList()
+    val paymentTypeOptions = Gson().fromJson(paymentOptionsArg.value, Array<com.mifos.core.model.objects.account.loan.PaymentTypeOptions>::class.java).toList()
 
     fun getClientImageUrl(clientId: Int): ImageResult? {
         var image: ImageResult? = null

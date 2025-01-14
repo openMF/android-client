@@ -10,7 +10,6 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import rx.Observable
 
 interface SyncLoanRepaymentTransactionRepository {
@@ -22,7 +21,7 @@ interface SyncLoanRepaymentTransactionRepository {
     fun submitPayment(
         loanId: Int,
         request: LoanRepaymentRequest,
-    ): Observable<LoanRepaymentResponse>
+    ): Observable<com.mifos.core.model.objects.account.loan.LoanRepaymentResponse>
 
     fun deleteAndUpdateLoanRepayments(loanId: Int): Observable<List<LoanRepaymentRequest>>
 

@@ -35,7 +35,7 @@ class UpdateServerConfigViewModel @Inject constructor(
     private val serverConfig = prefManager.getServerConfig
 
     private val _state = mutableStateOf(serverConfig)
-    val state: State<ServerConfig> get() = _state
+    val state: State<com.mifos.core.model.ServerConfig> get() = _state
 
     private val _result = MutableSharedFlow<Boolean>()
     val result = _result.asSharedFlow()

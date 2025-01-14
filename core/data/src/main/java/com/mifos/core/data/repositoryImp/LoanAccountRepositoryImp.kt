@@ -14,7 +14,6 @@ import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.entity.templates.loans.LoanTemplate
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.core.objects.organisations.LoanProducts
 import rx.Observable
 import javax.inject.Inject
 
@@ -24,7 +23,7 @@ import javax.inject.Inject
 class LoanAccountRepositoryImp @Inject constructor(private val dataManagerLoan: DataManagerLoan) :
     LoanAccountRepository {
 
-    override suspend fun allLoans(): Observable<List<LoanProducts>> {
+    override suspend fun allLoans(): Observable<List<com.mifos.core.model.objects.organisations.LoanProducts>> {
         return dataManagerLoan.allLoans
     }
 

@@ -68,14 +68,13 @@ import com.mifos.core.entity.collectionsheet.ClientCollectionSheet
 import com.mifos.core.entity.collectionsheet.IndividualCollectionSheet
 import com.mifos.core.model.BulkRepaymentTransactions
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
-import com.mifos.core.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.objects.collectionsheets.LoanAndClientName
 import com.mifos.feature.collection_sheet.R
 
 @Composable
 internal fun IndividualCollectionSheetDetailsScreen(
     onBackPressed: () -> Unit,
-    submit: (Int, IndividualCollectionSheetPayload, List<String>, LoanAndClientName, List<PaymentTypeOptions>, Int) -> Unit,
+    submit: (Int, IndividualCollectionSheetPayload, List<String>, LoanAndClientName, List<com.mifos.core.model.objects.account.loan.PaymentTypeOptions>, Int) -> Unit,
     viewModel: IndividualCollectionSheetDetailsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.individualCollectionSheetDetailsUiState.collectAsStateWithLifecycle()
@@ -102,7 +101,7 @@ internal fun IndividualCollectionSheetDetailsScreen(
     state: IndividualCollectionSheetDetailsUiState,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
-    submit: (Int, IndividualCollectionSheetPayload, List<String>, LoanAndClientName, List<PaymentTypeOptions>, Int) -> Unit,
+    submit: (Int, IndividualCollectionSheetPayload, List<String>, LoanAndClientName, List<com.mifos.core.model.objects.account.loan.PaymentTypeOptions>, Int) -> Unit,
     modifier: Modifier = Modifier,
     onSave: (IndividualCollectionSheetPayload) -> Unit,
 ) {
