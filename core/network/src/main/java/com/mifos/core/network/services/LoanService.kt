@@ -17,12 +17,12 @@ import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.entity.templates.loans.LoanTemplate
 import com.mifos.core.entity.templates.loans.LoanTransactionTemplate
 import com.mifos.core.model.APIEndPoint
+import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.objects.account.loan.LoanDisbursement
 import com.mifos.core.objects.clients.Page
 import com.mifos.core.objects.template.loan.GroupLoanTemplate
-import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

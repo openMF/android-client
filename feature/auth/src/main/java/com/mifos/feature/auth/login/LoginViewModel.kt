@@ -18,8 +18,8 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
-import com.mifos.feature.auth.R
 import com.mifos.core.model.getInstanceUrl
+import com.mifos.feature.auth.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers

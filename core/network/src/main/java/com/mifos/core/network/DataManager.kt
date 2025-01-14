@@ -18,6 +18,7 @@ import com.mifos.core.entity.group.Group
 import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.core.entity.organisation.Office
 import com.mifos.core.entity.organisation.Staff
+import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload
@@ -29,7 +30,6 @@ import com.mifos.core.objects.responses.SaveResponse
 import com.mifos.core.objects.template.client.ChargeTemplate
 import com.mifos.core.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.payloads.ChargesPayload
-import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import okhttp3.ResponseBody
 import rx.Observable
 import javax.inject.Inject
