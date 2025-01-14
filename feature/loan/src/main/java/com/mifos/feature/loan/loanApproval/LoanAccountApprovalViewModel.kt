@@ -15,7 +15,6 @@ import com.google.gson.Gson
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.core.entity.accounts.loan.LoanApprovalData
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.account.loan.LoanApproval
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,7 +44,7 @@ class LoanAccountApprovalViewModel @Inject constructor(
     var loanId = loanAccountData.loanID
     var loanWithAssociations = loanAccountData.loanWithAssociations
 
-    fun approveLoan(loanApproval: LoanApproval?) {
+    fun approveLoan(loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval?) {
         _loanAccountApprovalUiState.value = LoanAccountApprovalUiState.ShowProgressbar
         repository.approveLoan(loanId, loanApproval)
             .observeOn(AndroidSchedulers.mainThread())

@@ -9,6 +9,7 @@
  */
 package com.mifos.core.databasehelper
 
+import com.mifos.core.entity.PaymentTypeOption
 import com.mifos.core.entity.accounts.loan.ActualDisbursementDate
 import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest_Table
@@ -16,8 +17,6 @@ import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.loan.LoanWithAssociations_Table
 import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate_Table
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
 import com.raizlabs.android.dbflow.sql.language.Delete
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import rx.Observable
@@ -100,14 +99,14 @@ class DatabaseHelperLoan @Inject constructor() {
     fun saveLoanRepaymentTransaction(
         loanId: Int,
         loanRepaymentRequest: LoanRepaymentRequest,
-    ): Observable<LoanRepaymentResponse> {
+    ): Observable<com.mifos.core.model.objects.account.loan.LoanRepaymentResponse> {
         return Observable.defer { // Setting Loan Id and Time Stamp
             loanRepaymentRequest.loanId = loanId
             loanRepaymentRequest.timeStamp = (System.currentTimeMillis() / 1000)
 
             // Saving Transaction In Database Table
             loanRepaymentRequest.save()
-            Observable.just(LoanRepaymentResponse())
+            Observable.just(com.mifos.core.model.objects.account.loan.LoanRepaymentResponse())
         }
     }
 

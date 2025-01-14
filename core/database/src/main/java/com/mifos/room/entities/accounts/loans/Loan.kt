@@ -13,12 +13,12 @@ import com.mifos.core.entity.accounts.loan.LoanType
 import com.mifos.core.entity.accounts.loan.Status
 import com.mifos.core.entity.accounts.loan.Summary
 import com.mifos.core.entity.accounts.loan.Timeline
+import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
 import com.mifos.core.objects.account.loan.AmortizationType
 import com.mifos.core.objects.account.loan.Currency
 import com.mifos.core.objects.account.loan.InterestCalculationPeriodType
 import com.mifos.core.objects.account.loan.InterestRateFrequencyType
 import com.mifos.core.objects.account.loan.InterestType
-import com.mifos.core.objects.account.loan.RepaymentFrequencyType
 import com.mifos.core.objects.account.loan.TermPeriodFrequencyType
 
 data class Loan(

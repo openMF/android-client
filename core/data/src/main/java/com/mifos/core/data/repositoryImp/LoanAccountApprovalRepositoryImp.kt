@@ -12,7 +12,6 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.account.loan.LoanApproval
 import rx.Observable
 import javax.inject.Inject
 
@@ -24,7 +23,7 @@ class LoanAccountApprovalRepositoryImp @Inject constructor(private val dataManag
 
     override fun approveLoan(
         loanId: Int,
-        loanApproval: LoanApproval?,
+        loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval?,
     ): Observable<GenericResponse> {
         return dataManager.approveLoan(loanId, loanApproval)
     }

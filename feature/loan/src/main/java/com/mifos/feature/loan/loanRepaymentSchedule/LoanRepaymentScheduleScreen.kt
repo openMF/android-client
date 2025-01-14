@@ -45,10 +45,9 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.objects.account.loan.Period
+import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.objects.account.loan.RepaymentSchedule
 import com.mifos.feature.loan.R
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 
 /**
  * Created by Pronay Sarker on 03/07/2024 (9:18 AM)
@@ -114,7 +113,7 @@ internal fun LoanRepaymentScheduleScreen(
 
 @Composable
 private fun LoanRepaymentScheduleContent(
-    periods: List<Period>,
+    periods: List<com.mifos.core.model.objects.account.loan.Period>,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -310,31 +309,31 @@ private class LoanRepaymentSchedulePreviewProvider :
     val loanWithAssociations = LoanWithAssociations(
         repaymentSchedule = RepaymentSchedule(
             periods = listOf(
-                Period(
+                com.mifos.core.model.objects.account.loan.Period(
                     complete = true,
                     totalDueForPeriod = 123.232,
                     totalPaidForPeriod = 34343.3434,
                     dueDate = listOf(2024, 6, 1),
                 ),
-                Period(
+                com.mifos.core.model.objects.account.loan.Period(
                     complete = true,
                     totalDueForPeriod = 123.232,
                     totalPaidForPeriod = 34343.3434,
                     dueDate = listOf(2024, 6, 1),
                 ),
-                Period(
+                com.mifos.core.model.objects.account.loan.Period(
                     complete = true,
                     totalDueForPeriod = 123.232,
                     totalPaidForPeriod = 34343.3434,
                     dueDate = listOf(2024, 6, 1),
                 ),
-                Period(
+                com.mifos.core.model.objects.account.loan.Period(
                     complete = true,
                     totalDueForPeriod = 123.232,
                     totalPaidForPeriod = 34343.3434,
                     dueDate = listOf(2024, 6, 1),
                 ),
-                Period(
+                com.mifos.core.model.objects.account.loan.Period(
                     complete = true,
                     totalDueForPeriod = 123.232,
                     totalPaidForPeriod = 34343.3434,

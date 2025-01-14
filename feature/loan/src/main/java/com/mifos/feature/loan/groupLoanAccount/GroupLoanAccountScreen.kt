@@ -67,9 +67,8 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.objects.organisations.LoanProducts
+import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.objects.template.loan.GroupLoanTemplate
-import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.feature.loan.R
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -114,7 +113,7 @@ internal fun GroupLoanAccountScreen(
 internal fun GroupLoanAccountScreen(
     groupId: Int,
     state: GroupLoanAccountUiState,
-    loanProducts: List<LoanProducts>,
+    loanProducts: List<com.mifos.core.model.objects.organisations.LoanProducts>,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
     onLoanProductSelected: (Int) -> Unit,
@@ -172,7 +171,7 @@ internal fun GroupLoanAccountScreen(
 @Composable
 private fun GroupLoanAccountContent(
     groupId: Int,
-    productLoans: List<LoanProducts>,
+    productLoans: List<com.mifos.core.model.objects.organisations.LoanProducts>,
     loanTemplate: GroupLoanTemplate,
     onLoanProductSelected: (Int) -> Unit,
     createLoanAccount: (GroupLoanPayload) -> Unit,

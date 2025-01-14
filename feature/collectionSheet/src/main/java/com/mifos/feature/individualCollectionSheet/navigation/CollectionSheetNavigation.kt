@@ -18,7 +18,6 @@ import androidx.navigation.navigation
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
-import com.mifos.core.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.objects.collectionsheets.LoanAndClientName
 import com.mifos.feature.individualCollectionSheet.generateCollectionSheet.GenerateCollectionSheetScreen
 import com.mifos.feature.individualCollectionSheet.individualCollectionSheet.ui.IndividualCollectionSheetScreen
@@ -70,7 +69,7 @@ private fun NavGraphBuilder.individualCollectionSheetScreen(
 
 private fun NavGraphBuilder.individualCollectionSheetDetailScreen(
     onBackPressed: () -> Unit,
-    submit: (Int, IndividualCollectionSheetPayload, List<String>, LoanAndClientName, List<PaymentTypeOptions>, Int) -> Unit,
+    submit: (Int, IndividualCollectionSheetPayload, List<String>, LoanAndClientName, List<com.mifos.core.model.objects.account.loan.PaymentTypeOptions>, Int) -> Unit,
 ) {
     composable(
         route = CollectionSheetScreens.IndividualCollectionSheetDetailScreen.route,
@@ -120,7 +119,7 @@ fun NavController.navigateToPaymentDetailsScreen(
     payload: IndividualCollectionSheetPayload,
     paymentTypeOptionsName: List<String>,
     loansAndClientName: LoanAndClientName,
-    paymentTypeOptions: List<PaymentTypeOptions>,
+    paymentTypeOptions: List<com.mifos.core.model.objects.account.loan.PaymentTypeOptions>,
     clientId: Int,
 ) {
     val payloadInGsonString = Gson().toJson(payload)

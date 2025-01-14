@@ -76,8 +76,6 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.clients.ClientAddressRequest
-import com.mifos.core.objects.clients.ClientAddressResponse
 import com.mifos.feature.client.R
 
 @Composable
@@ -132,8 +130,8 @@ internal fun PinpointClientScreen(
     onRefresh: () -> Unit,
     refreshState: Boolean,
     onRetry: () -> Unit,
-    onAddAddress: (ClientAddressRequest) -> Unit,
-    onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
+    onAddAddress: (com.mifos.core.model.objects.clients.ClientAddressRequest) -> Unit,
+    onUpdateAddress: (Int, Int, com.mifos.core.model.objects.clients.ClientAddressRequest) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -157,7 +155,7 @@ internal fun PinpointClientScreen(
                 showPermissionDialog = false
                 onAddAddress(
                     // TODO Implement Place picker intent and fetch data and put into ClientAddressRequest
-                    ClientAddressRequest(),
+                    com.mifos.core.model.objects.clients.ClientAddressRequest(),
                 )
             },
         )
@@ -217,8 +215,8 @@ internal fun PinpointClientScreen(
 
 @Composable
 private fun PinPointClientContent(
-    pinpointLocations: List<ClientAddressResponse>,
-    onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
+    pinpointLocations: List<com.mifos.core.model.objects.clients.ClientAddressResponse>,
+    onUpdateAddress: (Int, Int, com.mifos.core.model.objects.clients.ClientAddressRequest) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
 ) {
     LazyColumn {
@@ -234,8 +232,8 @@ private fun PinPointClientContent(
 
 @Composable
 private fun PinpointLocationItem(
-    pinpointLocation: ClientAddressResponse,
-    onUpdateAddress: (Int, Int, ClientAddressRequest) -> Unit,
+    pinpointLocation: com.mifos.core.model.objects.clients.ClientAddressResponse,
+    onUpdateAddress: (Int, Int, com.mifos.core.model.objects.clients.ClientAddressRequest) -> Unit,
     onDeleteAddress: (Int, Int) -> Unit,
 ) {
     val cameraPositionState = rememberCameraPositionState {
@@ -261,7 +259,7 @@ private fun PinpointLocationItem(
                         onUpdateAddress(
                             clientId,
                             id,
-                            ClientAddressRequest(),
+                            com.mifos.core.model.objects.clients.ClientAddressRequest(),
                         )
                     }
                 }
@@ -414,5 +412,9 @@ private fun PinpointClientScreenPreview(
 }
 
 val samplePinpointLocations = List(10) {
-    ClientAddressResponse(placeAddress = "Address $it", latitude = 0.0, longitude = 0.0)
+    com.mifos.core.model.objects.clients.ClientAddressResponse(
+        placeAddress = "Address $it",
+        latitude = 0.0,
+        longitude = 0.0,
+    )
 }

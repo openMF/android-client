@@ -10,9 +10,9 @@
 package com.mifos.core.common.utils
 
 import com.google.gson.Gson
-import com.mifos.core.model.ServerConfig
+import core.mifos.core.model.ServerConfig
 
-fun String.asServerConfig(): ServerConfig {
+fun String.asServerConfig(): core.mifos.core.model.ServerConfig {
     val jsonString = this.replace("'", "\"")
-    return Gson().fromJson(jsonString, ServerConfig::class.java)
+    return Gson().fromJson(jsonString, core.mifos.core.model.ServerConfig::class.java)
 }

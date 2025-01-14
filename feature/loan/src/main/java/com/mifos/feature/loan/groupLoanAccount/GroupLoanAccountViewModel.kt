@@ -17,9 +17,8 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetGroupLoansAccountTemplateUseCase
-import com.mifos.core.objects.organisations.LoanProducts
+import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.objects.template.loan.GroupLoanTemplate
-import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.feature.loan.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +41,7 @@ class GroupLoanAccountViewModel @Inject constructor(
         MutableStateFlow<GroupLoanAccountUiState>(GroupLoanAccountUiState.Loading)
     val groupLoanAccountUiState = _groupLoanAccountUiState.asStateFlow()
 
-    private val _loanProducts = MutableStateFlow<List<LoanProducts>>(emptyList())
+    private val _loanProducts = MutableStateFlow<List<com.mifos.core.model.objects.organisations.LoanProducts>>(emptyList())
     val loanProducts = _loanProducts.asStateFlow()
 
     fun loadAllLoans() = viewModelScope.launch(Dispatchers.IO) {

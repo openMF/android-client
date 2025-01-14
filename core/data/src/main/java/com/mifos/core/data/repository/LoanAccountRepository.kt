@@ -10,9 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.entity.accounts.loan.Loans
+import com.mifos.core.entity.templates.loans.LoanTemplate
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.core.objects.organisations.LoanProducts
-import com.mifos.room.entities.templates.loans.LoanTemplate
 import rx.Observable
 
 /**
@@ -20,7 +19,7 @@ import rx.Observable
  */
 interface LoanAccountRepository {
 
-    suspend fun allLoans(): Observable<List<LoanProducts>>
+    suspend fun allLoans(): Observable<List<com.mifos.core.model.objects.organisations.LoanProducts>>
 
     suspend fun getLoansAccountTemplate(clientId: Int, productId: Int): Observable<LoanTemplate>
 
