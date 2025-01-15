@@ -10,6 +10,8 @@
 plugins {
     alias(libs.plugins.mifos.android.library)
     alias(libs.plugins.mifos.android.hilt)
+    alias(libs.plugins.mifos.android.room)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.mifos.android.library.jacoco)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
 }
@@ -29,6 +31,7 @@ dependencies {
 
     implementation(libs.converter.gson)
 
+    implementation(libs.kotlinx.serialization.json)
     //rxjava dependencies
     implementation(libs.rxandroid)
     implementation(libs.rxjava)
@@ -37,6 +40,12 @@ dependencies {
     kapt(libs.dbflow.processor)
     implementation(libs.dbflow)
     kapt(libs.github.dbflow.processor)
+
+    //room dependencies
+//    implementation(libs.room.runtime)
+//    implementation(libs.room.ktx)
+//    ksp(libs.room.compiler)
+//    kspTest(libs.room.compiler)
 
     // Hilt dependency
     implementation(libs.hilt.android)
