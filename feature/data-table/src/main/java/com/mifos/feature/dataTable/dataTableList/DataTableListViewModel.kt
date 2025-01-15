@@ -20,8 +20,8 @@ import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.client.ClientPayload
 import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.entity.noncore.DataTablePayload
+import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.feature.data_table.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -12,8 +12,6 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.core.objects.clients.ClientAddressRequest
-import com.mifos.core.objects.clients.ClientAddressResponse
 import javax.inject.Inject
 
 /**
@@ -22,13 +20,13 @@ import javax.inject.Inject
 class PinPointClientRepositoryImp @Inject constructor(private val dataManagerClient: DataManagerClient) :
     PinPointClientRepository {
 
-    override suspend fun getClientPinpointLocations(clientId: Int): List<ClientAddressResponse> {
+    override suspend fun getClientPinpointLocations(clientId: Int): List<com.mifos.core.model.objects.clients.ClientAddressResponse> {
         return dataManagerClient.getClientPinpointLocations(clientId)
     }
 
     override suspend fun addClientPinpointLocation(
         clientId: Int,
-        address: ClientAddressRequest,
+        address: com.mifos.core.model.objects.clients.ClientAddressRequest,
     ): GenericResponse {
         return dataManagerClient.addClientPinpointLocation(clientId, address)
     }
@@ -43,7 +41,7 @@ class PinPointClientRepositoryImp @Inject constructor(private val dataManagerCli
     override suspend fun updateClientPinpointLocation(
         apptableId: Int,
         datatableId: Int,
-        address: ClientAddressRequest,
+        address: com.mifos.core.model.objects.clients.ClientAddressRequest,
     ): GenericResponse {
         return dataManagerClient.updateClientPinpointLocation(apptableId, datatableId, address)
     }

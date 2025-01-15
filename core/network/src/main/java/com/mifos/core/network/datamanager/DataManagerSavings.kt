@@ -15,12 +15,12 @@ import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.client.Savings
 import com.mifos.core.entity.templates.savings.SavingProductsTemplate
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.account.loan.SavingsApproval
 import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.objects.organisations.ProductSavings
-import com.mifos.core.payloads.SavingsPayload
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton

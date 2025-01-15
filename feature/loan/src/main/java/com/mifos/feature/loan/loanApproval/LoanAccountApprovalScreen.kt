@@ -61,7 +61,6 @@ import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.account.loan.LoanApproval
 import com.mifos.feature.loan.R
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -92,7 +91,7 @@ internal fun LoanAccountApprovalScreen(
     uiState: LoanAccountApprovalUiState,
     loanWithAssociations: LoanWithAssociations?,
     navigateBack: () -> Unit,
-    onLoanApprove: (loanApproval: LoanApproval) -> Unit,
+    onLoanApprove: (loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval) -> Unit,
 ) {
     val snackBarHostState = remember {
         SnackbarHostState()
@@ -153,7 +152,7 @@ internal fun LoanAccountApprovalScreen(
 @Composable
 private fun LoanAccountApprovalContent(
     loanWithAssociations: LoanWithAssociations?,
-    onLoanApprove: (loanApproval: LoanApproval) -> Unit,
+    onLoanApprove: (loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval) -> Unit,
 ) {
     var approvedAmount by rememberSaveable {
         mutableStateOf(loanWithAssociations?.approvedPrincipal.toString())
@@ -327,7 +326,7 @@ private fun LoanAccountApprovalContent(
                         )
 
                         onLoanApprove.invoke(
-                            LoanApproval(
+                            com.mifos.core.model.objects.account.loan.LoanApproval(
                                 note = note,
                                 approvedOnDate = approvedOnDate,
                                 approvedLoanAmount = approvedAmount,

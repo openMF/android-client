@@ -10,7 +10,6 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.objects.checkerinboxtask.CheckerTask
-import com.mifos.core.objects.checkerinboxtask.RescheduleLoansTask
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -19,7 +18,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CheckerInboxTasksRepository {
 
-    suspend fun getRescheduleLoansTaskList(): Flow<List<RescheduleLoansTask>>
+    suspend fun getRescheduleLoansTaskList(): Flow<List<com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask>>
 
     suspend fun getCheckerTaskList(
         actionName: String? = null,

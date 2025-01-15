@@ -20,8 +20,6 @@ import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.objects.account.loan.LoanDisbursement
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
-import com.mifos.core.objects.organisations.LoanProducts
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -79,7 +77,7 @@ class DataManagerLoan @Inject constructor(
             }
     }
 
-    val allLoans: Observable<List<LoanProducts>>
+    val allLoans: Observable<List<com.mifos.core.model.objects.organisations.LoanProducts>>
         get() = mBaseApiManager.loanApi.allLoans
 
     fun getLoansAccountTemplate(clientId: Int, productId: Int): Observable<LoanTemplate> {
@@ -160,7 +158,7 @@ class DataManagerLoan @Inject constructor(
     fun submitPayment(
         loanId: Int,
         request: LoanRepaymentRequest,
-    ): Observable<LoanRepaymentResponse> {
+    ): Observable<com.mifos.core.model.objects.account.loan.LoanRepaymentResponse> {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.loanApi.submitPayment(loanId, request)
                 .concatMap { loanRepaymentResponse -> Observable.just(loanRepaymentResponse) }

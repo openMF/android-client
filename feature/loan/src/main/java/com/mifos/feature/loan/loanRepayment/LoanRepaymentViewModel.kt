@@ -18,7 +18,6 @@ import com.mifos.core.data.repository.LoanRepaymentRepository
 import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.feature.loan.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -82,7 +81,7 @@ class LoanRepaymentViewModel @Inject constructor(
         repository.submitPayment(loanId, request)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<LoanRepaymentResponse?>() {
+            .subscribe(object : Subscriber<com.mifos.core.model.objects.account.loan.LoanRepaymentResponse?>() {
                 override fun onCompleted() {
                 }
 
@@ -91,7 +90,7 @@ class LoanRepaymentViewModel @Inject constructor(
                         LoanRepaymentUiState.ShowError(R.string.feature_loan_payment_failed)
                 }
 
-                override fun onNext(loanRepaymentResponse: LoanRepaymentResponse?) {
+                override fun onNext(loanRepaymentResponse: com.mifos.core.model.objects.account.loan.LoanRepaymentResponse?) {
                     _loanRepaymentUiState.value =
                         LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully(loanRepaymentResponse)
                 }

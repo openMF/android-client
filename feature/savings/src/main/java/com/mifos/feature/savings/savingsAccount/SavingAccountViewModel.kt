@@ -19,7 +19,7 @@ import com.mifos.core.domain.useCases.GetClientSavingsAccountTemplateByProductUs
 import com.mifos.core.domain.useCases.GetGroupSavingsAccountTemplateByProductUseCase
 import com.mifos.core.domain.useCases.LoadSavingsAccountsAndTemplateUseCase
 import com.mifos.core.entity.templates.savings.SavingProductsTemplate
-import com.mifos.core.payloads.SavingsPayload
+import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.feature.savings.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

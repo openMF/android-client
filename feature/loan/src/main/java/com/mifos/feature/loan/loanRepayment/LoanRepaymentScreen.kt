@@ -72,7 +72,6 @@ import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.entity.PaymentTypeOption
 import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.feature.loan.R
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -620,7 +619,7 @@ private class LoanRepaymentScreenPreviewProvider :
             LoanRepaymentUiState.ShowError(R.string.feature_loan_failed_to_load_loan_repayment),
             LoanRepaymentUiState.ShowLoanRepaymentDoesNotExistInDatabase,
             LoanRepaymentUiState.ShowProgressbar,
-            LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully(LoanRepaymentResponse()),
+            LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully(com.mifos.core.model.objects.account.loan.LoanRepaymentResponse()),
         )
 }
 

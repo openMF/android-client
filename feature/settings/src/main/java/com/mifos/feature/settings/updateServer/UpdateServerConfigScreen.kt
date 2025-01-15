@@ -95,7 +95,7 @@ internal fun UpdateServerConfigScreenRoute(
 @VisibleForTesting
 @Composable
 internal fun UpdateServerConfigScreenContent(
-    serverConfig: ServerConfig,
+    serverConfig: com.mifos.core.model.ServerConfig,
     onEvent: (UpdateServerConfigEvent) -> Unit,
     modifier: Modifier = Modifier,
     protocolError: Int? = null,
@@ -312,7 +312,7 @@ internal fun UpdateServerConfigScreenContent(
 private fun UpdateServerConfigScreenEmptyData() {
     MaterialTheme {
         UpdateServerConfigScreenContent(
-            serverConfig = ServerConfig(
+            serverConfig = com.mifos.core.model.ServerConfig(
                 protocol = "",
                 endPoint = "",
                 apiPath = "",

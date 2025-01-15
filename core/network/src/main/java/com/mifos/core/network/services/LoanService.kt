@@ -17,15 +17,12 @@ import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.entity.templates.loans.LoanTemplate
 import com.mifos.core.entity.templates.loans.LoanTransactionTemplate
 import com.mifos.core.model.APIEndPoint
+import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.core.objects.account.loan.LoanApproval
 import com.mifos.core.objects.account.loan.LoanDisbursement
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.core.objects.clients.Page
-import com.mifos.core.objects.organisations.LoanProducts
 import com.mifos.core.objects.template.loan.GroupLoanTemplate
-import com.mifos.core.payloads.GroupLoanPayload
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -48,7 +45,7 @@ interface LoanService {
     @POST(APIEndPoint.LOANS + "/{loanId}?command=approve")
     fun approveLoanApplication(
         @Path("loanId") loanId: Int,
-        @Body loanApproval: LoanApproval?,
+        @Body loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval?,
     ): Observable<GenericResponse>
 
     //  Mandatory Fields
@@ -63,7 +60,7 @@ interface LoanService {
     fun submitPayment(
         @Path("loanId") loanId: Int,
         @Body loanRepaymentRequest: LoanRepaymentRequest?,
-    ): Observable<LoanRepaymentResponse>
+    ): Observable<com.mifos.core.model.objects.account.loan.LoanRepaymentResponse>
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
     fun getLoanRepaymentSchedule(@Path("loanId") loanId: Int): Observable<LoanWithAssociations>
@@ -72,7 +69,7 @@ interface LoanService {
     fun getLoanWithTransactions(@Path("loanId") loanId: Int): Observable<LoanWithAssociations>
 
     @get:GET(APIEndPoint.CREATE_LOANS_PRODUCTS)
-    val allLoans: Observable<List<LoanProducts>>
+    val allLoans: Observable<List<com.mifos.core.model.objects.organisations.LoanProducts>>
 
     @POST(APIEndPoint.CREATE_LOANS_ACCOUNTS)
     fun createLoansAccount(@Body loansPayload: LoansPayload?): Observable<Loans>
