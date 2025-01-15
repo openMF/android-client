@@ -20,9 +20,9 @@ import com.mifos.core.domain.useCases.GetSavingsAccountTransactionTemplateUseCas
 import com.mifos.core.domain.useCases.GetSavingsAccountTransactionUseCase
 import com.mifos.core.domain.useCases.ProcessTransactionUseCase
 import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.entity.accounts.savings.SavingsTransactionData
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.room.entities.accounts.savings.SavingsTransactionData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

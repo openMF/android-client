@@ -7,9 +7,10 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.accounts.savings
+package com.mifos.room.entities.accounts.savings
 
 import android.os.Parcelable
+import com.mifos.core.entity.accounts.savings.Currency
 import com.mifos.core.objects.account.saving.ChargeCalculationType
 import com.mifos.core.objects.account.saving.ChargeTimeType
 import kotlinx.parcelize.Parcelize

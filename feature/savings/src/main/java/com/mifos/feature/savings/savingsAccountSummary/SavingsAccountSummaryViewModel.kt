@@ -17,8 +17,8 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetSavingsAccountUseCase
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.entity.accounts.savings.SavingsSummaryData
 import com.mifos.feature.savings.R
+import com.mifos.room.entities.accounts.savings.SavingsSummaryData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

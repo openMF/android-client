@@ -9,8 +9,8 @@
  */
 package com.mifos.core.entity.zipmodels
 
-import com.mifos.core.entity.accounts.ClientAccounts
 import com.mifos.core.entity.client.Client
+import com.mifos.room.entities.accounts.ClientAccounts
 
 /**
  * Model for Observable.zip. This Model used to combine the Client and ClientAccount in response

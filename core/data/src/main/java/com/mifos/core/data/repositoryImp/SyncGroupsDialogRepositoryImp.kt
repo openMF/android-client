@@ -10,8 +10,6 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
-import com.mifos.core.entity.accounts.ClientAccounts
-import com.mifos.core.entity.accounts.GroupAccounts
 import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.client.Client
@@ -23,6 +21,8 @@ import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
+import com.mifos.room.entities.accounts.ClientAccounts
+import com.mifos.room.entities.accounts.GroupAccounts
 import rx.Observable
 import javax.inject.Inject
 

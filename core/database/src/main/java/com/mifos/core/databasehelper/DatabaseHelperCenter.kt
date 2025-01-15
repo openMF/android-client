@@ -10,7 +10,6 @@
 package com.mifos.core.databasehelper
 
 import android.os.AsyncTask
-import com.mifos.core.entity.accounts.CenterAccounts
 import com.mifos.core.entity.center.CenterPayload
 import com.mifos.core.entity.center.CenterPayload_Table
 import com.mifos.core.entity.group.Center
@@ -20,6 +19,7 @@ import com.mifos.core.entity.group.Group
 import com.mifos.core.entity.group.Group_Table
 import com.mifos.core.objects.clients.Page
 import com.mifos.core.objects.responses.SaveResponse
+import com.mifos.room.entities.accounts.CenterAccounts
 import com.raizlabs.android.dbflow.sql.language.Delete
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import rx.Observable

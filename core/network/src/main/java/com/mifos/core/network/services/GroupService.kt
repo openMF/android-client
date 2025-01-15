@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.accounts.GroupAccounts
 import com.mifos.core.entity.group.Group
 import com.mifos.core.entity.group.GroupPayload
 import com.mifos.core.entity.group.GroupWithAssociations
@@ -18,6 +17,7 @@ import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.clients.ActivatePayload
 import com.mifos.core.objects.clients.Page
 import com.mifos.core.objects.responses.SaveResponse
+import com.mifos.room.entities.accounts.GroupAccounts
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.accounts.CenterAccounts
 import com.mifos.core.entity.center.CenterPayload
 import com.mifos.core.entity.group.Center
 import com.mifos.core.entity.group.CenterWithAssociations
@@ -22,6 +21,7 @@ import com.mifos.core.objects.clients.Page
 import com.mifos.core.objects.databaseobjects.CollectionSheet
 import com.mifos.core.objects.databaseobjects.OfflineCenter
 import com.mifos.core.objects.responses.SaveResponse
+import com.mifos.room.entities.accounts.CenterAccounts
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

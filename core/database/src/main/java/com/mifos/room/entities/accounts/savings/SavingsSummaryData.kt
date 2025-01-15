@@ -7,17 +7,14 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.accounts.savings
+package com.mifos.room.entities.accounts.savings
 
 import android.os.Parcelable
+import com.mifos.core.entity.accounts.savings.DepositType
 import kotlinx.parcelize.Parcelize
 
 /**
- * Created by Pronay Sarker on 15/08/2024 (11:12 PM)
+ * Created by Pronay Sarker on 15/08/2024 (9:49 PM)
  */
 @Parcelize
-data class SavingsTransactionData(
-    val savingsAccountWithAssociations: SavingsAccountWithAssociations,
-    val depositType: DepositType?,
-    val transactionType: String,
-) : Parcelable
+data class SavingsSummaryData(val id: Int, val type: DepositType) : Parcelable

@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.accounts
+package com.mifos.room.entities.accounts
 
 import android.os.Parcelable
 import com.mifos.core.entity.accounts.loan.LoanAccount

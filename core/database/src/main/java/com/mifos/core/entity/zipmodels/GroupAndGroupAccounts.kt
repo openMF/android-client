@@ -12,8 +12,8 @@ package com.mifos.core.entity.zipmodels
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.Creator
-import com.mifos.core.entity.accounts.GroupAccounts
 import com.mifos.core.entity.group.Group
+import com.mifos.room.entities.accounts.GroupAccounts
 
 /**
  * Created by Rajan Maurya on 11/09/16.

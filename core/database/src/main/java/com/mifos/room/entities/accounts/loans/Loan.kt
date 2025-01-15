@@ -7,8 +7,12 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.accounts.loan
+package com.mifos.room.entities.accounts.loans
 
+import com.mifos.core.entity.accounts.loan.LoanType
+import com.mifos.core.entity.accounts.loan.Status
+import com.mifos.core.entity.accounts.loan.Summary
+import com.mifos.core.entity.accounts.loan.Timeline
 import com.mifos.core.objects.account.loan.AmortizationType
 import com.mifos.core.objects.account.loan.Currency
 import com.mifos.core.objects.account.loan.InterestCalculationPeriodType

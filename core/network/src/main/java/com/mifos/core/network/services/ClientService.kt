@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.accounts.ClientAccounts
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.client.ClientPayload
 import com.mifos.core.entity.templates.clients.ClientsTemplate
@@ -23,6 +22,7 @@ import com.mifos.core.objects.noncoreobjects.Identifier
 import com.mifos.core.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.objects.noncoreobjects.IdentifierTemplate
+import com.mifos.room.entities.accounts.ClientAccounts
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.http.Body

@@ -7,21 +7,19 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.accounts
+package com.mifos.room.entities.accounts.savings
 
 import android.os.Parcelable
-import com.mifos.core.entity.accounts.loan.LoanAccount
-import com.mifos.core.entity.accounts.savings.SavingsAccount
+import com.mifos.core.entity.accounts.savings.DepositType
+import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import kotlinx.parcelize.Parcelize
 
 /**
- * Created by mayankjindal on 11/07/17.
+ * Created by Pronay Sarker on 15/08/2024 (11:12 PM)
  */
 @Parcelize
-data class CenterAccounts(
-    var loanAccounts: List<LoanAccount> = ArrayList(),
-
-    var savingsAccounts: List<SavingsAccount> = ArrayList(),
-
-    var memberLoanAccounts: List<LoanAccount> = ArrayList(),
+data class SavingsTransactionData(
+    val savingsAccountWithAssociations: SavingsAccountWithAssociations,
+    val depositType: DepositType?,
+    val transactionType: String,
 ) : Parcelable
