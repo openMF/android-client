@@ -14,6 +14,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.entities.noncore.ColumnValue
+import com.mifos.room.utils.typeconverters.DueDateConverter
 import com.mifos.room.utils.typeconverters.ListTypeConverters
 import com.mifos.room.utils.typeconverters.ServerTypesConverters
 
@@ -24,7 +25,7 @@ import com.mifos.room.utils.typeconverters.ServerTypesConverters
     exportSchema = true,
     autoMigrations = [],
 )
-@TypeConverters(ListTypeConverters::class, ServerTypesConverters::class)
+@TypeConverters(ListTypeConverters::class, ServerTypesConverters::class, DueDateConverter::class)
 // ( TODO -> add type converters here )
 
 abstract class MifosDatabase : RoomDatabase() {
