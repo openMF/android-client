@@ -7,9 +7,10 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.client
+package com.mifos.room.entities.client
 
-import com.mifos.core.entity.Timeline
+import com.mifos.core.entity.client.Status
+import com.mifos.room.entities.Timeline
 
 /**
  * Created by ishankhanna on 09/02/14.

@@ -10,8 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.room.entities.accounts.GroupAccounts
+import com.mifos.room.entities.group.GroupWithAssociations
 import rx.Observable
 
 /**

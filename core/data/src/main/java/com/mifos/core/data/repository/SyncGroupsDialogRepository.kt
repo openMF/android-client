@@ -13,11 +13,11 @@ import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
+import com.mifos.room.entities.group.GroupWithAssociations
 import rx.Observable
 
 /**

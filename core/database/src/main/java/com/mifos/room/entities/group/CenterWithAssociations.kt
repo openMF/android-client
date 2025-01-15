@@ -7,30 +7,27 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.group
+package com.mifos.room.entities.group
 
 import android.os.Parcelable
-import com.mifos.core.entity.Timeline
-import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.client.Status
+import com.mifos.core.entity.group.Group
+import com.mifos.core.objects.collectionsheets.CollectionMeetingCalendar
+import com.mifos.room.entities.Timeline
 import kotlinx.parcelize.Parcelize
 
 /**
- * Created by ishankhanna on 29/06/14.
+ * Created by ishankhanna on 28/06/14.
  */
 @Parcelize
-data class GroupWithAssociations(
+data class CenterWithAssociations(
     var id: Int? = null,
 
     var accountNo: String? = null,
 
     var name: String? = null,
 
-    var status: Status? = null,
-
-    var active: Boolean? = null,
-
-    var activationDate: List<Int?> = ArrayList(),
+    var externalId: String? = null,
 
     var officeId: Int? = null,
 
@@ -42,9 +39,15 @@ data class GroupWithAssociations(
 
     var hierarchy: String? = null,
 
-    var groupLevel: Int? = null,
+    var status: Status? = null,
 
-    var clientMembers: List<Client> = ArrayList(),
+    var active: Boolean? = null,
+
+    var activationDate: List<Int> = ArrayList(),
 
     var timeline: Timeline? = null,
+
+    var groupMembers: List<Group> = ArrayList(),
+
+    var collectionMeetingCalendar: CollectionMeetingCalendar = CollectionMeetingCalendar(),
 ) : Parcelable

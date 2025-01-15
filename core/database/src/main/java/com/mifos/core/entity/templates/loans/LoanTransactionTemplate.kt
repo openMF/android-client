@@ -11,6 +11,7 @@ package com.mifos.core.entity.templates.loans
 
 import android.os.Parcelable
 import com.mifos.core.objects.template.loan.Type
+import com.mifos.room.entities.PaymentTypeOption
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -28,5 +29,5 @@ data class LoanTransactionTemplate(
 
     var possibleNextRepaymentDate: List<Int> = ArrayList(),
 
-    var paymentTypeOptions: List<com.mifos.core.entity.PaymentTypeOption> = ArrayList(),
+    var paymentTypeOptions: List<PaymentTypeOption> = ArrayList(),
 ) : Parcelable

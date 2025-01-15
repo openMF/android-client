@@ -22,6 +22,7 @@ import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.objects.account.loan.LoanDisbursement
 import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.core.objects.organisations.LoanProducts
+import com.mifos.room.entities.PaymentTypeOption
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -208,7 +209,7 @@ class DataManagerLoan @Inject constructor(
      *
      * @return List<PaymentTypeOption>
      </PaymentTypeOption> */
-    val paymentTypeOption: Observable<List<com.mifos.core.entity.PaymentTypeOption>>
+    val paymentTypeOption: Observable<List<PaymentTypeOption>>
         get() = mDatabaseHelperLoan.paymentTypeOption
 
     /**

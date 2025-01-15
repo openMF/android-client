@@ -7,12 +7,13 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.collectionsheet
+package com.mifos.room.entities.collectionsheet
 
 import android.os.Parcelable
 import com.mifos.core.objects.collectionsheets.AttendanceTypeOption
 import com.mifos.core.objects.collectionsheets.SavingsProduct
 import com.mifos.core.objects.organisations.LoanProducts
+import com.mifos.room.entities.PaymentTypeOption
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -28,7 +29,7 @@ data class CollectionSheetResponse(
 
     var loanProducts: List<LoanProducts> = ArrayList(),
 
-    var paymentTypeOptions: List<com.mifos.core.entity.PaymentTypeOption> = ArrayList(),
+    var paymentTypeOptions: List<PaymentTypeOption> = ArrayList(),
 
     var savingsProducts: List<SavingsProduct> = ArrayList(),
 ) : Parcelable

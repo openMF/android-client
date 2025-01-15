@@ -7,19 +7,28 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.navigation
+package com.mifos.room.entities.collectionsheet
 
 import android.os.Parcelable
-import com.mifos.core.entity.client.Client
 import kotlinx.parcelize.Parcelize
 
-/*
- * Created by Aditya Gupta on 22/7/23.
-*/
+/**
+ * Created by Tarun on 25-07-2017.
+ */
 
 @Parcelize
-data class ClientListArgs(
-    var clientsList: List<Client> = ArrayList(),
+data class GroupCollectionSheet(
+    var clients: MutableList<ClientCollectionSheet> = ArrayList(),
 
-    var isParentFragment: Boolean = false,
+    var groupId: Int = 0,
+
+    var groupName: String? = null,
+
+    var levelId: Int = 0,
+
+    var levelName: String? = null,
+
+    var staffId: Int = 0,
+
+    var staffName: String? = null,
 ) : Parcelable

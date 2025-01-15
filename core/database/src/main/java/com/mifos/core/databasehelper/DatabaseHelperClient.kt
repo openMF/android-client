@@ -23,7 +23,6 @@ import com.mifos.core.entity.client.ClientDate
 import com.mifos.core.entity.client.ClientPayload
 import com.mifos.core.entity.client.ClientPayload_Table
 import com.mifos.core.entity.client.Client_Table
-import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.core.entity.noncore.ColumnHeader
 import com.mifos.core.entity.noncore.ColumnHeader_Table
 import com.mifos.core.entity.noncore.ColumnValue
@@ -41,6 +40,7 @@ import com.mifos.core.entity.templates.clients.SavingProductOptions
 import com.mifos.core.entity.templates.clients.StaffOptions
 import com.mifos.core.objects.clients.Page
 import com.mifos.room.entities.accounts.ClientAccounts
+import com.mifos.room.entities.group.GroupWithAssociations
 import com.raizlabs.android.dbflow.sql.language.Delete
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import rx.Observable

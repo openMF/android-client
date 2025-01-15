@@ -7,28 +7,20 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.collectionsheet
+package com.mifos.room.entities.collectionsheet
 
 import android.os.Parcelable
+import com.mifos.core.objects.account.loan.PaymentTypeOptions
 import kotlinx.parcelize.Parcelize
 
 /**
- * Created by Tarun on 25-07-2017.
+ * Created by Tarun on 06-07-2017.
  */
-
 @Parcelize
-data class GroupCollectionSheet(
-    var clients: MutableList<ClientCollectionSheet> = ArrayList(),
+data class IndividualCollectionSheet(
+    var dueDate: IntArray? = null,
 
-    var groupId: Int = 0,
+    var clients: ArrayList<ClientCollectionSheet>? = null,
 
-    var groupName: String? = null,
-
-    var levelId: Int = 0,
-
-    var levelName: String? = null,
-
-    var staffId: Int = 0,
-
-    var staffName: String? = null,
+    var paymentTypeOptions: ArrayList<PaymentTypeOptions>? = null,
 ) : Parcelable

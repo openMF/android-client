@@ -7,24 +7,19 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.collectionsheet
+package com.mifos.room.entities.collectionsheet
 
 import android.os.Parcelable
-import com.mifos.core.model.BulkRepaymentTransactions
 import kotlinx.parcelize.Parcelize
 
 /**
  * Created by Tarun on 25-07-2017.
  */
 @Parcelize
-data class ProductiveCollectionSheetPayload(
-    var bulkRepaymentTransactions: MutableList<BulkRepaymentTransactions> = ArrayList(),
+data class CenterDetail(
+    var staffId: Int = 0,
 
-    var calendarId: Int? = 0,
+    var staffName: String? = null,
 
-    var dateFormat: String? = "dd MMMM yyyy",
-
-    var locale: String? = "en",
-
-    var transactionDate: String? = null,
+    var meetingFallCenters: List<MeetingFallCalendar>? = ArrayList(),
 ) : Parcelable

@@ -14,6 +14,7 @@ import com.mifos.core.entity.accounts.savings.Currency
 import com.mifos.core.objects.account.saving.FieldOfficerOptions
 import com.mifos.core.objects.commonfiles.InterestType
 import com.mifos.core.objects.template.saving.AccountOptions
+import com.mifos.room.entities.PaymentTypeOption
 import kotlinx.parcelize.Parcelize
 
 /*
@@ -51,7 +52,7 @@ class SavingProductsTemplate(
 
     var withdrawalFeeTypeOptions: List<InterestType>? = null,
 
-    var paymentTypeOptions: List<com.mifos.core.entity.PaymentTypeOption>? = null,
+    var paymentTypeOptions: List<PaymentTypeOption>? = null,
 
     var accountingRuleOptions: List<InterestType>? = null,
 

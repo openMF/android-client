@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.navigation
+package com.mifos.room.entities.navigation
 
 import com.mifos.core.entity.noncore.DataTable
 

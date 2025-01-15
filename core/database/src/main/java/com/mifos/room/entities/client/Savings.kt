@@ -7,9 +7,11 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.client
+package com.mifos.room.entities.client
 
 import com.mifos.core.entity.accounts.savings.DepositType
+import com.mifos.core.entity.client.Currency
+import com.mifos.core.entity.client.Status
 
 /**
  * Created by nellyk on 2/19/2016.

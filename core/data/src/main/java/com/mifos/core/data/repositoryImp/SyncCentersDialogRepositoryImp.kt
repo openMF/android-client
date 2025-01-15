@@ -14,9 +14,7 @@ import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.group.Center
-import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.network.datamanager.DataManagerCenter
@@ -27,6 +25,8 @@ import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.accounts.CenterAccounts
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
+import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.group.GroupWithAssociations
 import rx.Observable
 import javax.inject.Inject
 

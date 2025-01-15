@@ -13,6 +13,7 @@ import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.objects.account.loan.LoanRepaymentResponse
+import com.mifos.room.entities.PaymentTypeOption
 import rx.Observable
 import javax.inject.Inject
 
@@ -23,7 +24,7 @@ class SyncLoanRepaymentTransactionRepositoryImp @Inject constructor(private val 
         return dataManagerLoan.databaseLoanRepayments
     }
 
-    override fun paymentTypeOption(): Observable<List<com.mifos.core.entity.PaymentTypeOption>> {
+    override fun paymentTypeOption(): Observable<List<PaymentTypeOption>> {
         return dataManagerLoan.paymentTypeOption
     }
 

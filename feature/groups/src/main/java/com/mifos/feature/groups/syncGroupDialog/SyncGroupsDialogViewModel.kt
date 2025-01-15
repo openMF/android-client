@@ -20,11 +20,11 @@ import com.mifos.core.entity.accounts.loan.LoanAccount
 import com.mifos.core.entity.accounts.savings.SavingsAccount
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.core.entity.zipmodels.LoanAndLoanRepayment
 import com.mifos.core.entity.zipmodels.SavingsAccountAndTransactionTemplate
 import com.mifos.feature.groups.R
 import com.mifos.room.entities.accounts.GroupAccounts
+import com.mifos.room.entities.group.GroupWithAssociations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

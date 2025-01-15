@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.collectionsheet
+package com.mifos.room.entities.collectionsheet
 
 import android.os.Parcelable
 import com.mifos.core.entity.accounts.savings.Currency

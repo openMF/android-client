@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity
+package com.mifos.room.entities
 
 import android.os.Parcel
 import android.os.Parcelable

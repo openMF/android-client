@@ -10,9 +10,9 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.GroupListRepository
-import com.mifos.core.entity.group.CenterWithAssociations
-import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.core.network.DataManager
+import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.group.GroupWithAssociations
 import rx.Observable
 import javax.inject.Inject
 
