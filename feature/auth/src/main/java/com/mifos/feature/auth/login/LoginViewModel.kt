@@ -100,7 +100,7 @@ class LoginViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        if (result.data?.authenticated == true && result.data != null){
+                        if (result.data?.authenticated == true && result.data != null) {
                             onLoginSuccessful(result.data!!, username, password)
                         } else {
                             _loginUiState.value =
