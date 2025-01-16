@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.templates.loans
+package com.mifos.room.entities.templates.loans
 
 import android.os.Parcelable
 import com.mifos.core.entity.noncore.DataTable

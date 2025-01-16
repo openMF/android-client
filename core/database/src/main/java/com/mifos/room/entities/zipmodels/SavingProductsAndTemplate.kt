@@ -7,10 +7,10 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.entity.zipmodels
+package com.mifos.room.entities.zipmodels
 
-import com.mifos.core.entity.templates.savings.SavingProductsTemplate
 import com.mifos.core.objects.organisations.ProductSavings
+import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 
 /**
  * Created by Rajan Maurya on 02/09/16.

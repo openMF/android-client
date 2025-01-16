@@ -10,11 +10,11 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SavingsAccountRepository
-import com.mifos.core.entity.templates.savings.SavingProductsTemplate
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.objects.organisations.ProductSavings
 import com.mifos.core.payloads.SavingsPayload
 import com.mifos.room.entities.client.Savings
+import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import rx.Observable
 import javax.inject.Inject
 

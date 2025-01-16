@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.savings.savingsAccount
 
-import com.mifos.core.entity.zipmodels.SavingProductsAndTemplate
 import com.mifos.room.entities.client.Savings
+import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
 
 /**
  * Created by Aditya Gupta on 08/08/23.
