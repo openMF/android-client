@@ -16,6 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Network
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
+import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
 import com.mifos.core.model.getInstanceUrl
@@ -41,7 +42,7 @@ class LoginViewModel @Inject constructor(
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val baseApiManager: BaseApiManager,
-    private val loginUseCase: com.mifos.core.domain.useCases.LoginUseCase,
+    private val loginUseCase: LoginUseCase,
 ) :
     ViewModel() {
 
@@ -99,7 +100,12 @@ class LoginViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        result.data?.let { onLoginSuccessful(it, username, password) }
+                        if (result.data?.authenticated == true && result.data != null){
+                            onLoginSuccessful(result.data!!, username, password)
+                        } else {
+                            _loginUiState.value =
+                                LoginUiState.ShowError(R.string.feature_auth_error_login_failed)
+                        }
                     }
                 }
             }
