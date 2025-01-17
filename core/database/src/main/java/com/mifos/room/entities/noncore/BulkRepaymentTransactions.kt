@@ -7,15 +7,28 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.model
+package com.mifos.room.entities.noncore
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class ClientsAttendance(
+data class BulkRepaymentTransactions(
 
-    var attendanceType: Int,
+    var loanId: Int = 0,
 
-    var clientId: Int,
+    var transactionAmount: Double = 0.0,
+
+    // Optional fields
+    var accountNumber: String? = null,
+
+    var bankNumber: String? = null,
+
+    var checkNumber: String? = null,
+
+    var paymentTypeId: Int? = null,
+
+    var receiptNumber: String? = null,
+
+    var routingCode: String? = null,
 ) : Parcelable

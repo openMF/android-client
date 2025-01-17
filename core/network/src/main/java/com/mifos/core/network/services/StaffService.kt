@@ -10,7 +10,7 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.entity.organisation.Staff
-import com.mifos.core.model.APIEndPoint
+import com.mifos.room.basemodel.APIEndPoint
 import retrofit2.http.GET
 import retrofit2.http.Query
 import rx.Observable

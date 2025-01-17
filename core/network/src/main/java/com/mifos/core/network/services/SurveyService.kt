@@ -10,8 +10,8 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.entity.survey.Survey
-import com.mifos.core.model.APIEndPoint
 import com.mifos.core.objects.surveys.Scorecard
+import com.mifos.room.basemodel.APIEndPoint
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

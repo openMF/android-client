@@ -12,7 +12,7 @@ package com.mifos.room.entities.accounts.savings
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mifos.core.model.APIEndPoint
+import com.mifos.room.basemodel.APIEndPoint
 
 @Entity(tableName = "SavingAccountDepositType")
 data class DepositType(

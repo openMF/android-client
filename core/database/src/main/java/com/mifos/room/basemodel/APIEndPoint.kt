@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.model
+package com.mifos.room.basemodel
 
 /**
  * Created by ishankhanna on 23/06/14.

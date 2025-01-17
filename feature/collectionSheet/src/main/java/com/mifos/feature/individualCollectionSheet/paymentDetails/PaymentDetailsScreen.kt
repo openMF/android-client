@@ -51,11 +51,11 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.model.BulkRepaymentTransactions
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.objects.collectionsheets.LoanAndClientName
 import com.mifos.feature.collection_sheet.R
+import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 
 /**
  * Created by Pronay Sarker on 24/08/2024 (4:20 PM)

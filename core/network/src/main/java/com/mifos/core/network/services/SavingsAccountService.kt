@@ -12,12 +12,12 @@ package com.mifos.core.network.services
 import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
-import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.account.loan.SavingsApproval
 import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.objects.organisations.ProductSavings
 import com.mifos.core.payloads.SavingsPayload
+import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import retrofit2.http.Body

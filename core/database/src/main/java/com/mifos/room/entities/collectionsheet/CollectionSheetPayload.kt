@@ -10,9 +10,9 @@
 package com.mifos.room.entities.collectionsheet
 
 import android.os.Parcelable
-import com.mifos.core.model.BulkRepaymentTransactions
-import com.mifos.core.model.ClientsAttendance
 import com.mifos.core.objects.collectionsheets.BulkSavingsDueTransaction
+import com.mifos.room.entities.client.ClientsAttendance
+import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 import kotlinx.parcelize.Parcelize
 
 /**

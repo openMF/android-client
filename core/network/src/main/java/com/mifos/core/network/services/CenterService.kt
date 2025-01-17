@@ -11,7 +11,6 @@ package com.mifos.core.network.services
 
 import com.mifos.core.entity.center.CenterPayload
 import com.mifos.core.entity.group.Center
-import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload
@@ -20,6 +19,7 @@ import com.mifos.core.objects.clients.Page
 import com.mifos.core.objects.databaseobjects.CollectionSheet
 import com.mifos.core.objects.databaseobjects.OfflineCenter
 import com.mifos.core.objects.responses.SaveResponse
+import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.CenterAccounts
 import com.mifos.room.entities.group.CenterWithAssociations
 import retrofit2.http.Body
