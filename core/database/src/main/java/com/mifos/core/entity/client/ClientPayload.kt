@@ -20,13 +20,6 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
 import kotlinx.parcelize.Parcelize
 
-/*
- * This project is licensed under the open source MPL V2.
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
-/**
- * Created by ADMIN on 16-Jun-15.
- */
 @Parcelize
 @Table(database = MifosDatabase::class, useBooleanGetterSetters = false)
 @ModelContainer

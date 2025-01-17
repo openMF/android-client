@@ -9,13 +9,13 @@
  */
 package com.mifos.core.network.mappers.clients
 
-import com.mifos.core.entity.accounts.ClientAccounts
 import com.mifos.core.entity.accounts.loan.LoanAccount
 import com.mifos.core.entity.accounts.loan.LoanType
 import com.mifos.core.entity.accounts.savings.Currency
 import com.mifos.core.entity.accounts.savings.DepositType
 import com.mifos.core.entity.accounts.savings.SavingsAccount
 import com.mifos.core.entity.accounts.savings.Status
+import com.mifos.room.entities.accounts.ClientAccounts
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetClientsClientIdAccountsResponse
 import org.openapitools.client.models.GetClientsLoanAccounts

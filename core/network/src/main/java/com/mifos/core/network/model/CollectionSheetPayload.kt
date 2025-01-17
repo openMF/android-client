@@ -10,7 +10,7 @@
 package com.mifos.core.network.model
 
 import com.google.gson.Gson
-import com.mifos.core.model.BulkRepaymentTransactions
+import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 
 class CollectionSheetPayload : Payload() {
     var actualDisbursementDate: String? = null

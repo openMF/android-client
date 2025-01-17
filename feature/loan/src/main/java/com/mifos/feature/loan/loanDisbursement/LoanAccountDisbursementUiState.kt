@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.loan.loanDisbursement
 
-import com.mifos.core.entity.templates.loans.LoanTransactionTemplate
 import com.mifos.core.network.GenericResponse
+import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 
 /**
  * Created by Aditya Gupta on 10/08/23.

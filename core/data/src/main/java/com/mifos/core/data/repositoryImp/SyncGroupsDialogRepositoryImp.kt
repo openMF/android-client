@@ -10,19 +10,19 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
-import com.mifos.core.entity.accounts.ClientAccounts
-import com.mifos.core.entity.accounts.GroupAccounts
 import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
+import com.mifos.room.entities.accounts.ClientAccounts
+import com.mifos.room.entities.accounts.GroupAccounts
+import com.mifos.room.entities.group.GroupWithAssociations
 import rx.Observable
 import javax.inject.Inject
 

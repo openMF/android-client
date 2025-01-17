@@ -60,9 +60,9 @@ import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.objects.groups.CenterInfo
 import com.mifos.feature.center.R
+import com.mifos.room.entities.group.CenterWithAssociations
 
 @Composable
 internal fun CenterDetailsScreen(

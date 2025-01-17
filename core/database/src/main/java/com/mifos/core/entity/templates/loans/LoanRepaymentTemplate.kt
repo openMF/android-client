@@ -14,6 +14,7 @@ import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
 import com.mifos.core.objects.template.loan.Currency
 import com.mifos.core.objects.template.loan.Type
+import com.mifos.room.entities.PaymentTypeOption
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.ModelContainer
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
@@ -48,5 +49,5 @@ data class LoanRepaymentTemplate(
     @Column
     var penaltyChargesPortion: Double? = null,
 
-    var paymentTypeOptions: MutableList<com.mifos.core.entity.PaymentTypeOption>? = null,
+    var paymentTypeOptions: MutableList<PaymentTypeOption>? = null,
 ) : MifosBaseModel(), Parcelable

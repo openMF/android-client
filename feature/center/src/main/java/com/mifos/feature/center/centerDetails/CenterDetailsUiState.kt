@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.center.centerDetails
 
-import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.objects.groups.CenterInfo
+import com.mifos.room.entities.group.CenterWithAssociations
 
 /**
  * Created by Aditya Gupta on 06/08/23.

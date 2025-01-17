@@ -47,10 +47,10 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.client.Status
-import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.entity.group.Group
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.center.R
+import com.mifos.room.entities.group.CenterWithAssociations
 
 @Composable
 internal fun GroupListScreen(

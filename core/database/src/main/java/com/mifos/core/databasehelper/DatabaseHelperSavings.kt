@@ -9,7 +9,6 @@
  */
 package com.mifos.core.databasehelper
 
-import com.mifos.core.entity.PaymentTypeOption
 import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest_Table
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
@@ -20,6 +19,7 @@ import com.mifos.core.entity.accounts.savings.Transaction_Table
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate_Table
 import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.room.entities.PaymentTypeOption
 import com.raizlabs.android.dbflow.sql.language.Delete
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import rx.Observable

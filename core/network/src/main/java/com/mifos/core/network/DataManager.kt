@@ -13,9 +13,7 @@ import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.entity.client.Charges
 import com.mifos.core.entity.group.Center
-import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.core.entity.organisation.Office
 import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.network.datamanager.DataManagerClient
@@ -32,6 +30,8 @@ import com.mifos.core.objects.template.client.ChargeTemplate
 import com.mifos.core.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.payloads.ChargesPayload
 import com.mifos.core.payloads.GroupLoanPayload
+import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.group.GroupWithAssociations
 import okhttp3.ResponseBody
 import rx.Observable
 import javax.inject.Inject

@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet.ui
 
-import com.mifos.core.entity.collectionsheet.IndividualCollectionSheet
 import com.mifos.core.entity.organisation.Office
 import com.mifos.core.entity.organisation.Staff
+import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 
 /**
  * Created by Aditya Gupta on 10/08/23.

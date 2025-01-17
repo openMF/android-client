@@ -18,6 +18,7 @@ import com.mifos.core.objects.account.saving.InterestCompoundingPeriodType
 import com.mifos.core.objects.account.saving.InterestPostingPeriodType
 import com.mifos.core.objects.account.saving.LockinPeriodFrequencyType
 import com.mifos.core.objects.account.saving.Timeline
+import com.mifos.room.entities.accounts.savings.Charge
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.ForeignKey
 import com.raizlabs.android.dbflow.annotation.ModelContainer

@@ -62,11 +62,11 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.entity.collectionsheet.IndividualCollectionSheet
 import com.mifos.core.entity.organisation.Office
 import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.feature.collection_sheet.R
+import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import java.text.SimpleDateFormat
 import java.util.Locale
 

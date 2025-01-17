@@ -19,9 +19,9 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.entity.accounts.loan.LoanAccount
 import com.mifos.core.entity.accounts.savings.SavingsAccount
 import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.zipmodels.LoanAndLoanRepayment
-import com.mifos.core.entity.zipmodels.SavingsAccountAndTransactionTemplate
 import com.mifos.feature.client.R
+import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
+import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

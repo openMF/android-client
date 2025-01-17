@@ -10,9 +10,9 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.ClientDetailsRepository
-import com.mifos.core.entity.accounts.ClientAccounts
 import com.mifos.core.entity.client.Client
 import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.room.entities.accounts.ClientAccounts
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import rx.Observable

@@ -12,8 +12,6 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.databasehelper.DatabaseHelperSavings
 import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.entity.client.Savings
-import com.mifos.core.entity.templates.savings.SavingProductsTemplate
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
@@ -21,6 +19,8 @@ import com.mifos.core.objects.account.loan.SavingsApproval
 import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.objects.organisations.ProductSavings
 import com.mifos.core.payloads.SavingsPayload
+import com.mifos.room.entities.client.Savings
+import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton

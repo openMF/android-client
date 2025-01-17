@@ -9,8 +9,8 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.group.CenterWithAssociations
-import com.mifos.core.entity.group.GroupWithAssociations
+import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.group.GroupWithAssociations
 import rx.Observable
 
 /**
