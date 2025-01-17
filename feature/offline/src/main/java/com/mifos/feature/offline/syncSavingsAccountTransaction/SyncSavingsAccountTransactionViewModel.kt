@@ -20,6 +20,7 @@ import com.mifos.core.domain.useCases.ProcessTransactionUseCase
 import com.mifos.core.domain.useCases.UpdateLoanRepaymentTransactionUseCase
 import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.feature.offline.R
+import com.mifos.room.entities.PaymentTypeOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,7 +48,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
     val syncSavingsAccountTransactionUiState: StateFlow<SyncSavingsAccountTransactionUiState>
         get() = _syncSavingsAccountTransactionUiState
 
-    private var mPaymentTypeOptions: List<com.mifos.core.entity.PaymentTypeOption> = emptyList()
+    private var mPaymentTypeOptions: List<PaymentTypeOption> = emptyList()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()

@@ -11,8 +11,8 @@ package com.mifos.core.entity.accounts.savings
 
 import android.os.Parcelable
 import com.mifos.core.database.MifosDatabase
-import com.mifos.core.model.APIEndPoint
 import com.mifos.core.model.MifosBaseModel
+import com.mifos.room.basemodel.APIEndPoint
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.ModelContainer
 import com.raizlabs.android.dbflow.annotation.PrimaryKey

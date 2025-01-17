@@ -14,14 +14,15 @@ import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.entity.templates.loans.LoanTemplate
-import com.mifos.core.entity.templates.loans.LoanTransactionTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.objects.account.loan.LoanDisbursement
 import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.core.objects.organisations.LoanProducts
+import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.templates.loans.LoanTemplate
+import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -208,7 +209,7 @@ class DataManagerLoan @Inject constructor(
      *
      * @return List<PaymentTypeOption>
      </PaymentTypeOption> */
-    val paymentTypeOption: Observable<List<com.mifos.core.entity.PaymentTypeOption>>
+    val paymentTypeOption: Observable<List<PaymentTypeOption>>
         get() = mDatabaseHelperLoan.paymentTypeOption
 
     /**

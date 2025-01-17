@@ -12,6 +12,7 @@ package com.mifos.core.entity.templates.savings
 import android.os.Parcelable
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
+import com.mifos.room.entities.PaymentTypeOption
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.ModelContainer
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
@@ -36,7 +37,7 @@ class SavingsAccountTransactionTemplate(
     @Column
     var reversed: Boolean? = null,
 
-    var paymentTypeOptions: List<com.mifos.core.entity.PaymentTypeOption> = ArrayList(),
+    var paymentTypeOptions: List<PaymentTypeOption> = ArrayList(),
 
 ) : MifosBaseModel(), Parcelable {
 

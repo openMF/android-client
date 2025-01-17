@@ -9,8 +9,8 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.objects.groups.CenterInfo
+import com.mifos.room.entities.group.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
 
 /**

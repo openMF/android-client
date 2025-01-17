@@ -10,7 +10,7 @@
 package com.mifos.core.network.model
 
 import android.os.Parcelable
-import com.mifos.core.model.BulkRepaymentTransactions
+import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 import kotlinx.parcelize.Parcelize
 
 /**
