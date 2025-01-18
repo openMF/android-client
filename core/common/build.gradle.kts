@@ -8,10 +8,11 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.library)
+    alias(libs.plugins.mifos.kmp.library)
     alias(libs.plugins.mifos.android.hilt)
-    alias(libs.plugins.mifos.android.library.jacoco)
-    alias(libs.plugins.secrets)
+//    alias(libs.plugins.mifos.android.library.jacoco)
+//    alias(libs.plugins.secrets)
+    id(libs.plugins.kotlin.parcelize.get().pluginId)
 }
 
 android {
@@ -22,19 +23,52 @@ android {
     }
 }
 
-secrets {
-    defaultPropertiesFileName = "secrets.defaults.properties"
+//secrets {
+//    defaultPropertiesFileName = "secrets.defaults.properties"
+//}
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core)
+            api(libs.coil.kt)
+            api(libs.coil.core)
+            api(libs.coil.svg)
+            api(libs.coil.network.ktor)
+            api(libs.kermit.logging)
+            api(libs.squareup.okio)
+            api(libs.jb.kotlin.stdlib)
+            api(libs.kotlinx.datetime)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.kotlinx.coroutines.android)
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlinx.coroutines.test)
+        }
+        iosMain.dependencies {
+            api(libs.kermit.simple)
+        }
+        desktopMain.dependencies {
+            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.kotlin.reflect)
+        }
+        jsMain.dependencies {
+            api(libs.jb.kotlin.stdlib.js)
+            api(libs.jb.kotlin.dom)
+        }
+    }
 }
-
-dependencies {
-    implementation(projects.core.model)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.turbine)
-
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
-
-    implementation(libs.converter.gson)
-
-    implementation(libs.javax.inject)
-}
+//dependencies {
+//    implementation(projects.core.model)
+//    testImplementation(libs.kotlinx.coroutines.test)
+//    testImplementation(libs.turbine)
+//
+//    androidTestImplementation(libs.androidx.junit)
+//    androidTestImplementation(libs.androidx.test.espresso.core)
+//
+//    implementation(libs.converter.gson)
+//
+//    implementation(libs.javax.inject)
+//}

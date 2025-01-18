@@ -92,6 +92,7 @@ import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
+import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -644,7 +645,7 @@ private fun handleSubmitClick(
         return
     }
 
-    if (!com.mifos.core.common.utils.Network.isOnline(context)) {
+    if (!Network.isOnline(context)) {
         Toast.makeText(
             context,
             context.resources.getString(R.string.feature_client_error_not_connected_internet),

@@ -9,7 +9,7 @@
  */
 package com.mifos.core.common.network
 
-import javax.inject.Qualifier
+import org.koin.core.annotation.Qualifier
 import kotlin.annotation.AnnotationRetention.RUNTIME
 
 @Qualifier
@@ -20,3 +20,4 @@ enum class MifosDispatchers {
     Default,
     IO,
 }
+
