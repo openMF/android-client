@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -318,7 +319,7 @@ private fun LoanAccountApprovalContent(
                 if (isFieldValid(amount = approvedAmount, context = context) &&
                     isFieldValid(amount = transactionAmount, context = context)
                 ) {
-                    if (com.mifos.core.common.utils.Network.isOnline(context)) {
+                    if (Network.isOnline(context)) {
                         val approvedOnDate = SimpleDateFormat(
                             "dd MMMM yyyy",
                             Locale.getDefault(),
