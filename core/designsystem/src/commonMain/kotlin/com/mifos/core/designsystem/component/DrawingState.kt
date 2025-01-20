@@ -7,6 +7,8 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
+package com.mifos.core.designsystem.component
+
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf

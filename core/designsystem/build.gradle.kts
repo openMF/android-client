@@ -8,38 +8,60 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.library)
-    alias(libs.plugins.mifos.android.library.compose)
-    alias(libs.plugins.mifos.android.library.jacoco)
+    alias(libs.plugins.mifos.kmp.library)
+    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.roborazzi)
 }
 
 android {
-    namespace = "com.mifos.core.designsystem"
-
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    namespace = "com.mifos.core.designsystem"
 }
 
-dependencies {
-    lintPublish(projects.lint)
+kotlin {
+    sourceSets {
+        androidMain.dependencies {
+            implementation(libs.androidx.compose.ui.tooling.preview)
+            implementation(libs.androidx.activity.compose)
+        }
+        androidInstrumentedTest.dependencies {
+            implementation(libs.androidx.compose.ui.test)
+        }
+        androidUnitTest.dependencies {
+            implementation(libs.androidx.compose.ui.test)
+        }
+        commonMain.dependencies {
+            implementation(libs.coil.kt.compose)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.ui)
+            implementation(compose.uiUtil)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
+            api(libs.back.handler)
+            api(libs.window.size)
+        }
 
-    api(libs.androidx.compose.foundation)
-    api(libs.androidx.compose.foundation.layout)
-    api(libs.androidx.compose.material.iconsExtended)
-    api(libs.androidx.compose.material3)
-    api(libs.androidx.compose.runtime)
-    api(libs.androidx.compose.ui.util)
-    api(libs.androidx.activity.compose)
+        nativeMain.dependencies {
+            implementation(compose.runtime)
+        }
 
-    // coil
-    implementation(libs.coil.kt.compose)
+        jsMain.dependencies {
+            implementation(compose.runtime)
+        }
 
-    testImplementation(libs.androidx.compose.ui.test)
-    testImplementation(libs.androidx.compose.ui.test.manifest)
-    testImplementation(libs.hilt.android.testing)
-    testImplementation(projects.core.testing)
+        wasmJsMain.dependencies {
+            implementation(compose.runtime)
+        }
+    }
+}
 
-    androidTestImplementation(libs.androidx.compose.ui.test)
-    androidTestImplementation(projects.core.testing)
+compose.resources {
+    publicResClass = true
+    generateResClass = always
 }
