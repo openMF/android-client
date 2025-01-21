@@ -24,9 +24,9 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import org.mifos.core.datastore.UserPreferencesDataSource.Companion.DEFAULT_ACCOUNT
 import org.mifos.core.datastore.model.ClientPreferences
 import org.mifos.core.datastore.model.UserInfoPreferences
-//import org.mifos.core.datastore.model.Client
+import org.mifos.core.datastore.Client
 //import org.mifos.core.datastore.model.UpdatedClient
-import org.mifos.core.model.user.UserInfo
+import org.mifos.core.datastore.UserInfo
 
 private const val USER_INFO_KEY = "userInfo"
 private const val CLIENT_INFO_KEY = "clientInfo"

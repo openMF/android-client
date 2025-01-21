@@ -12,9 +12,8 @@ package org.mifos.core.datastore
 import org.mifos.core.datastore.model.ClientPreferences
 import org.mifos.core.datastore.model.RolePreferences
 import org.mifos.core.datastore.model.UserInfoPreferences
-import org.mifos.core.model.client.Client
-import org.mifos.core.model.user.RoleInfo
-import org.mifos.core.model.user.UserInfo
+
+
 
 fun ClientPreferences.toClientInfo(): Client {
     return Client(

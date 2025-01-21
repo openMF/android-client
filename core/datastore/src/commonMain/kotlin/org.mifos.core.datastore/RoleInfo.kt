@@ -17,4 +17,4 @@ data class RoleInfo(
     val name: String,
     val description: String,
     val disabled: Boolean,
-) : Parcelable
+)

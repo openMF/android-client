@@ -9,8 +9,7 @@
  */
 package org.mifos.core.datastore
 
-import org.mifospay.core.datastore.Parcelable
-import org.mifospay.core.datastore.Parcelize
+
 
 @Parcelize
 data class UpdatedClient(
@@ -19,4 +18,4 @@ data class UpdatedClient(
     val externalId: String,
     val mobileNo: String,
     val emailAddress: String,
-) : Parcelable
+)

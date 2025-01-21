@@ -24,4 +24,4 @@ data class UserInfo(
     val clients: List<Long>,
     val shouldRenewPassword: Boolean,
     val isTwoFactorAuthenticationRequired: Boolean,
-) : Parcelable
+)

@@ -14,8 +14,8 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.mifos.core.datastore.MifosDispatchers
 import org.mifos.core.datastore.UserPreferencesDataSource
-import org.mifospay.core.datastore.UserPreferencesRepository
-import org.mifospay.core.datastore.UserPreferencesRepositoryImpl
+import org.mifos.core.datastore.UserPreferencesRepository
+import org.mifos.core.datastore.UserPreferencesRepositoryImpl
 
 
 val PreferencesModule = module {
