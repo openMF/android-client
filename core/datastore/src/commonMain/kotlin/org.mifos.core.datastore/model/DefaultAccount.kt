@@ -17,11 +17,5 @@ import org.mifos.core.datastore.Parcelize
 data class DefaultAccount(
     val accountId: Long,
     val accountNo: String,
-) : Parcelable {
-    companion object {
-        val DEFAULT = DefaultAccount(
-            accountId = 0,
-            accountNo = "",
-        )
-    }
-}
+)
+

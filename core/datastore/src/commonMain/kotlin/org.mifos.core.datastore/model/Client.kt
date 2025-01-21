@@ -9,8 +9,7 @@
  */
 package org.mifos.core.datastore
 
-import org.mifos.core.datastore.Parcelable
-import org.mifos.core.datastore.Parcelize
+
 
 @Parcelize
 data class Client(
@@ -28,8 +27,5 @@ data class Client(
     val isStaff: Boolean,
     val officeId: Long,
     val officeName: String,
-    val savingsProductName: String,
-    val timeline: ClientTimeline = ClientTimeline(),
-    val status: ClientStatus = ClientStatus(),
-    val legalForm: ClientStatus = ClientStatus(),
-) : Parcelable
+    val savingsProductName: String
+)

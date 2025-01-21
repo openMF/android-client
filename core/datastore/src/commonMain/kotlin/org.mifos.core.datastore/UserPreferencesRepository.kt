@@ -7,15 +7,15 @@
  *
  * See https://github.com/openMF/mobile-wallet/blob/master/LICENSE.md
  */
-package org.mifospay.core.datastore
+package org.mifos.core.datastore
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
-import org.mifospay.core.common.DataState
-import org.mifospay.core.model.account.DefaultAccount
-import org.mifospay.core.model.client.Client
-import org.mifospay.core.model.client.UpdatedClient
-import org.mifospay.core.model.user.UserInfo
+//import org.mifos.core.datastore
+//import org.mifospay.core.model.account.DefaultAccount
+//import org.mifospay.core.model.client.Client
+//import org.mifospay.core.model.client.UpdatedClient
+//import org.mifospay.core.model.user.UserInfo
 
 interface UserPreferencesRepository {
     val userInfo: Flow<UserInfo>
