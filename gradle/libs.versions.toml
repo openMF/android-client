@@ -309,7 +309,7 @@ converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref
 converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
 
 # Coil Compose
-coil-kt-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil-compose" }
+coil-kt-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 
 # DBFlow
 dbflow = { module = "com.github.raizlabs.dbflow.dbflow:dbflow", version.ref = "dbflow" }
