@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.designsystem.component
 
@@ -22,9 +22,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
  * Now in Android navigation bar item with icon and label content slots. Wraps Material 3

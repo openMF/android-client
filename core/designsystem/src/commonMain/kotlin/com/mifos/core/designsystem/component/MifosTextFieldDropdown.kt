@@ -34,8 +34,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mifos.core.designsystem.theme.primaryLight
 import com.mifos.core.designsystem.theme.primaryDark
+import com.mifos.core.designsystem.theme.primaryLight
 
 @Composable
 fun MifosTextFieldDropdown(

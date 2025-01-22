@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.designsystem.component
 
@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import com.mifos.core.designsystem.theme.MifosTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MifosBasicDialog(

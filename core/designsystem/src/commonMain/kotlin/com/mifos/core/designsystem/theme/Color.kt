@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mobile-mobile/blob/master/LICENSE.md
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.designsystem.theme
 
@@ -226,7 +226,6 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF1E1F25)
 val surfaceContainerDarkHighContrast = Color(0xFF2F3036)
 val surfaceContainerHighDarkHighContrast = Color(0xFF3A3B41)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF45474C)
-
 
 /*
 Older colors

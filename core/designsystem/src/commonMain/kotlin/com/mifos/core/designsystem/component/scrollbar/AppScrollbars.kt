@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mobile-mobile/blob/master/LICENSE.md
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.designsystem.component.scrollbar
 
@@ -47,10 +47,10 @@ import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.invalidateDraw
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 import com.mifos.core.designsystem.component.scrollbar.ThumbState.Active
 import com.mifos.core.designsystem.component.scrollbar.ThumbState.Dormant
 import com.mifos.core.designsystem.component.scrollbar.ThumbState.Inactive
+import kotlinx.coroutines.delay
 import org.mifos.core.designsystem.component.scrollbar.Scrollbar
 import org.mifos.core.designsystem.component.scrollbar.ScrollbarState
 

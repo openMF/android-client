@@ -5,17 +5,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mobile-wallet/blob/master/LICENSE.md
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.designsystem.theme
 
-import androidx.compose.material3.Typography
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
-import androidx.compose.ui.unit.sp
 import androidclient.core.designsystem.generated.resources.Res
 import androidclient.core.designsystem.generated.resources.poppins_black
 import androidclient.core.designsystem.generated.resources.poppins_bold
@@ -26,6 +19,13 @@ import androidclient.core.designsystem.generated.resources.poppins_medium
 import androidclient.core.designsystem.generated.resources.poppins_regular
 import androidclient.core.designsystem.generated.resources.poppins_semi_bold
 import androidclient.core.designsystem.generated.resources.poppins_thin
+import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.Font
 
 @Composable

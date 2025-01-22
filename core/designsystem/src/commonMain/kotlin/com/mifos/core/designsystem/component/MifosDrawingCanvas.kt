@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import com.mifos.core.designsystem.utils.PathState
 
-
 @ExperimentalComposeUiApi
 @Composable
 fun MifosDrawingCanvas(

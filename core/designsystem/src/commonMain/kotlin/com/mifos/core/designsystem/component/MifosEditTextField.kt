@@ -46,10 +46,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mifos.core.designsystem.theme.primaryLight
-import com.mifos.core.designsystem.theme.primaryDark
-import com.mifos.core.designsystem.theme.secondaryLight
 import com.mifos.core.designsystem.theme.onPrimaryLight
+import com.mifos.core.designsystem.theme.primaryDark
+import com.mifos.core.designsystem.theme.primaryLight
+import com.mifos.core.designsystem.theme.secondaryLight
 
 /**
  * Created by Aditya Gupta on 21/02/24.

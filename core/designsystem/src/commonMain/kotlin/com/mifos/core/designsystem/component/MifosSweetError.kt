@@ -40,8 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mifos.core.designsystem.R
-import com.mifos.core.designsystem.theme.primaryLight
 import com.mifos.core.designsystem.theme.primaryDark
+import com.mifos.core.designsystem.theme.primaryLight
 import com.mifos.core.designsystem.theme.secondaryLight
 
 @Composable
