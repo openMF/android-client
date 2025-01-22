@@ -40,9 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mifos.core.designsystem.R
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGray
+import com.mifos.core.designsystem.theme.primaryLight
+import com.mifos.core.designsystem.theme.primaryDark
+import com.mifos.core.designsystem.theme.secondaryLight
 
 @Composable
 fun MifosSweetError(
@@ -73,7 +73,7 @@ fun MifosSweetError(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
-                color = DarkGray,
+                color = secondaryLight,
             ),
         )
         Text(
@@ -82,7 +82,7 @@ fun MifosSweetError(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
-                color = DarkGray,
+                color = secondaryLight,
             ),
         )
         if (isRetryEnabled) {
@@ -91,7 +91,7 @@ fun MifosSweetError(
                 onClick = { onclick() },
                 contentPadding = PaddingValues(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+                    containerColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
                 ),
             ) {
                 Text(
@@ -127,14 +127,14 @@ fun MifosPaginationSweetError(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
-                color = DarkGray,
+                color = secondaryLight,
             ),
         )
         Button(
             onClick = { onclick() },
             contentPadding = PaddingValues(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+                containerColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
             ),
         ) {
             Text(

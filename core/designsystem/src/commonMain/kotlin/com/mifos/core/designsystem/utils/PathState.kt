@@ -7,13 +7,13 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.designsystem.utility
+package com.mifos.core.designsystem.utils
 
-import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 
-data class TabContent(
-
-    val tabName: String,
-
-    val content: @Composable () -> Unit,
+data class PathState(
+    val path: Path,
+    val color: Color,
+    val stroke: Float,
 )

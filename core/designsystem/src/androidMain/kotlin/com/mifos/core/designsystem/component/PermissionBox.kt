@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mobile-wallet/blob/master/LICENSE.md
  */
 package com.mifos.core.designsystem.component
 
@@ -22,20 +22,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 
+// TODO:: Support for compose multiplatform
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 @Composable
 fun PermissionBox(
+    title: String,
+    confirmButtonText: String,
+    dismissButtonText: String,
     requiredPermissions: List<String>,
-    title: Int,
-    confirmButtonText: Int,
-    dismissButtonText: Int,
-    description: Int? = null,
+    modifier: Modifier = Modifier,
+    description: String? = null,
     onGranted: @Composable (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
@@ -56,7 +60,8 @@ fun PermissionBox(
         requiredPermissions.all {
             (context as? Activity)?.let { it1 ->
                 ActivityCompat.shouldShowRequestPermissionRationale(
-                    it1, it,
+                    it1,
+                    it,
                 )
             } == true
         }
@@ -66,10 +71,10 @@ fun PermissionBox(
     }
 
     val decideCurrentPermissionStatus: (Boolean, Boolean) -> String =
-        { permissionGranted, shouldShowPermissionRationale ->
-            if (permissionGranted) {
+        { granted, rationale ->
+            if (granted) {
                 "Granted"
-            } else if (shouldShowPermissionRationale) {
+            } else if (rationale) {
                 "Rejected"
             } else {
                 "Denied"
@@ -85,62 +90,67 @@ fun PermissionBox(
         )
     }
 
-    val multiplePermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions(),
-        onResult = { permissionResults ->
-            val isGranted =
-                requiredPermissions.all { permissionResults[it] ?: false }
+    val multiplePermissionLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestMultiplePermissions(),
+            onResult = { permissionResults ->
+                val isGranted =
+                    requiredPermissions.all { permissionResults[it] ?: false }
 
-            permissionGranted = isGranted
+                permissionGranted = isGranted
 
-            if (!isGranted) {
-                shouldShowPermissionRationale =
-                    requiredPermissions.all {
-                        (context as? Activity)?.let { it1 ->
+                if (!isGranted) {
+                    shouldShowPermissionRationale =
+                        requiredPermissions.all {
                             ActivityCompat.shouldShowRequestPermissionRationale(
-                                it1, it,
+                                context as Activity,
+                                it,
                             )
-                        } == false
+                        }
+                }
+                shouldDirectUserToApplicationSettings =
+                    !shouldShowPermissionRationale &&
+                    !permissionGranted
+                currentPermissionStatus =
+                    decideCurrentPermissionStatus(
+                        permissionGranted,
+                        shouldShowPermissionRationale,
+                    )
+            },
+        )
+
+    DisposableEffect(
+        key1 = lifecycleOwner,
+        effect = {
+            val observer =
+                LifecycleEventObserver { _, event ->
+                    if (event == Lifecycle.Event.ON_START &&
+                        !permissionGranted &&
+                        !shouldShowPermissionRationale
+                    ) {
+                        multiplePermissionLauncher.launch(requiredPermissions.toTypedArray())
                     }
+                }
+            lifecycleOwner.lifecycle.addObserver(observer)
+            onDispose {
+                lifecycleOwner.lifecycle.removeObserver(observer)
             }
-            shouldDirectUserToApplicationSettings =
-                !shouldShowPermissionRationale && !permissionGranted
-            currentPermissionStatus = decideCurrentPermissionStatus(
-                permissionGranted,
-                shouldShowPermissionRationale,
-            )
         },
     )
 
-    DisposableEffect(key1 = lifecycleOwner, effect = {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_START &&
-                !permissionGranted &&
-                !shouldShowPermissionRationale
-            ) {
-                multiplePermissionLauncher.launch(requiredPermissions.toTypedArray())
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    })
-
-    if (shouldShowPermissionRationale) {
-        MifosDialogBox(
-            showDialogState = shouldShowPermissionRationale,
-            onDismiss = { shouldShowPermissionRationale = false },
-            title = title,
-            message = description,
-            confirmButtonText = confirmButtonText,
-            onConfirm = {
-                shouldShowPermissionRationale = false
-                multiplePermissionLauncher.launch(requiredPermissions.toTypedArray())
-            },
-            dismissButtonText = dismissButtonText,
-        )
-    }
+    MifosDialogBox(
+        showDialogState = shouldShowPermissionRationale,
+        onDismiss = { shouldShowPermissionRationale = false },
+        title = title,
+        confirmButtonText = confirmButtonText,
+        onConfirm = {
+            shouldShowPermissionRationale = false
+            multiplePermissionLauncher.launch(requiredPermissions.toTypedArray())
+        },
+        dismissButtonText = dismissButtonText,
+        message = description,
+        modifier = modifier,
+    )
 
     if (shouldDirectUserToApplicationSettings) {
         Intent(
@@ -152,6 +162,8 @@ fun PermissionBox(
     }
 
     if (permissionGranted) {
-        onGranted?.invoke()
+        if (onGranted != null) {
+            onGranted()
+        }
     }
 }

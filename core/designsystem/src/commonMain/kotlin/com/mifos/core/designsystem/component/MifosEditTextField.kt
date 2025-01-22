@@ -46,10 +46,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
+import com.mifos.core.designsystem.theme.primaryLight
+import com.mifos.core.designsystem.theme.primaryDark
+import com.mifos.core.designsystem.theme.secondaryLight
+import com.mifos.core.designsystem.theme.onPrimaryLight
 
 /**
  * Created by Aditya Gupta on 21/02/24.
@@ -80,7 +80,7 @@ fun MifosOutlinedTextField(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (isSystemInDarkTheme()) White else DarkGray,
+                    tint = if (isSystemInDarkTheme()) onPrimaryLight else secondaryLight,
                 )
             }
         } else {
@@ -90,7 +90,7 @@ fun MifosOutlinedTextField(
         maxLines = maxLines,
         singleLine = singleLine,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+            focusedBorderColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
         ),
         textStyle = LocalDensity.current.run {
             TextStyle(fontSize = 18.sp)
@@ -243,7 +243,7 @@ fun MifosOutlinedTextField(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (isSystemInDarkTheme()) White else DarkGray,
+                    tint = if (isSystemInDarkTheme()) onPrimaryLight else secondaryLight,
                 )
             }
         } else {
@@ -253,9 +253,9 @@ fun MifosOutlinedTextField(
         maxLines = maxLines,
         singleLine = singleLine,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            focusedLabelColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            cursorColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+            focusedBorderColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
+            focusedLabelColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
+            cursorColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
         ),
         textStyle = LocalDensity.current.run {
             TextStyle(fontSize = 18.sp)
@@ -343,7 +343,7 @@ fun MifosDatePickerTextField(
         modifier = modifier,
         maxLines = 1,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+            focusedBorderColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
         ),
         textStyle = LocalDensity.current.run {
             TextStyle(fontSize = 18.sp)

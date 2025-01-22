@@ -23,8 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.utility.TabContent
+import com.mifos.core.designsystem.theme.primaryLight
+import com.mifos.core.designsystem.utils.TabContent
 import kotlinx.coroutines.launch
 
 @Composable
@@ -33,7 +33,7 @@ fun MifosTabRow(
     pagerState: PagerState,
     modifier: Modifier = Modifier,
     containerColor: Color = Color.White,
-    selectedContentColor: Color = BluePrimary,
+    selectedContentColor: Color = primaryLight,
     unselectedContentColor: Color = Color.LightGray,
 ) {
     val scope = rememberCoroutineScope()

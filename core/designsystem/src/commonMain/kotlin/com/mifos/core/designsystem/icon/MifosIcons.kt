@@ -10,6 +10,7 @@
 package com.mifos.core.designsystem.icon
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.filled.CloudDownload
@@ -24,12 +25,14 @@ import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.Bedtime
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Error
 import androidx.compose.material.icons.rounded.FileUpload
 import androidx.compose.material.icons.rounded.FilterList
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Lock
@@ -38,6 +41,13 @@ import androidx.compose.material.icons.rounded.PersonOutline
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material.icons.rounded.Translate
+import androidx.compose.material.icons.outlined.Wallet
+import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.SwapHoriz
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.ui.graphics.vector.ImageVector
 
 object MifosIcons {
     val Add = Icons.Rounded.Add
@@ -69,4 +79,15 @@ object MifosIcons {
     val gallery = Icons.Filled.Image
     val ArrowDropDown = Icons.Default.ArrowDropDown
     val assignmentTurnedIn = Icons.Default.AssignmentTurnedIn
+
+    // Recently added
+    val Close: ImageVector = Icons.Filled.Close
+    val ArrowBack2 = Icons.Filled.ChevronLeft
+    val Back = Icons.AutoMirrored.Outlined.ArrowBack
+    val Home = Icons.Outlined.Home
+    val HomeBoarder = Icons.Rounded.Home
+    val Payment = Icons.Rounded.SwapHoriz
+    val Finance = Icons.Outlined.Wallet
+    val Profile = Icons.Outlined.AccountCircle
+    val ProfileBoarder = Icons.Rounded.AccountCircle
 }

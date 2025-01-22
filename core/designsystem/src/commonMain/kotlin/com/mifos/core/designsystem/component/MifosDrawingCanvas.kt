@@ -9,8 +9,6 @@
  */
 package com.mifos.core.designsystem.component
 
-import DrawingState
-import PathState
 import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +21,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import com.mifos.core.designsystem.utils.PathState
+
 
 @ExperimentalComposeUiApi
 @Composable

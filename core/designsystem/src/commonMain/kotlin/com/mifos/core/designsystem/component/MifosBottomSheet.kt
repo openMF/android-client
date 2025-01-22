@@ -5,13 +5,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.mifos.core.designsystem.component
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
@@ -27,14 +24,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.arkivanov.essenty.backhandler.BackCallback
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MifosBottomSheet(
-    content: @Composable () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -49,14 +48,11 @@ fun MifosBottomSheet(
         onDismiss.invoke()
     }
 
-    BackHandler(modalSheetState.isVisible) {
+    BackCallback(modalSheetState.isVisible) {
         dismissSheet()
     }
 
-    AnimatedVisibility(
-        modifier = modifier,
-        visible = showBottomSheet,
-    ) {
+    AnimatedVisibility(visible = showBottomSheet) {
         ModalBottomSheet(
             containerColor = Color.White,
             onDismissRequest = {
@@ -64,6 +60,7 @@ fun MifosBottomSheet(
                 dismissSheet()
             },
             sheetState = modalSheetState,
+            modifier = modifier,
         ) {
             content()
         }
@@ -74,11 +71,11 @@ fun MifosBottomSheet(
 @Composable
 fun MifosBottomSheetPreview() {
     MifosBottomSheet(
-        {
+        content = {
             Box {
                 Modifier.height(100.dp)
             }
         },
-        {},
+        onDismiss = {},
     )
 }

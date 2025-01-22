@@ -34,8 +34,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
+import com.mifos.core.designsystem.theme.primaryLight
+import com.mifos.core.designsystem.theme.primaryDark
 
 @Composable
 fun MifosTextFieldDropdown(
@@ -63,8 +63,8 @@ fun MifosTextFieldDropdown(
             modifier = modifier.menuAnchor(),
             maxLines = 1,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                focusedLabelColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+                focusedBorderColor = if (isSystemInDarkTheme()) primaryLight else primaryDark,
+                focusedLabelColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
             ),
             textStyle = LocalDensity.current.run {
                 TextStyle(fontSize = 18.sp)
