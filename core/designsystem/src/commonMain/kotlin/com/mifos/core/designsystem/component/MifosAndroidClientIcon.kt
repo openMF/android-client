@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun MifosAndroidClientIcon(painter: Painter, modifier: Modifier = Modifier) {
-        Image(
+    Image(
         painter = painter,
         contentDescription = null,
         modifier = modifier.then(Modifier.size(200.dp, 100.dp)),

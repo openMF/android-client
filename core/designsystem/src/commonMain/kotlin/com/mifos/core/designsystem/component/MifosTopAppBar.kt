@@ -33,8 +33,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.utils.mirrorIfRtl
 import org.jetbrains.compose.ui.tooling.preview.Preview
 

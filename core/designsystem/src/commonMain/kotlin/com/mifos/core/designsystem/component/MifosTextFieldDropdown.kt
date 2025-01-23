@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.theme.primaryDark
 import com.mifos.core.designsystem.theme.primaryLight
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MifosTextFieldDropdown(
@@ -97,4 +96,3 @@ fun MifosTextFieldDropdown(
         }
     }
 }
-

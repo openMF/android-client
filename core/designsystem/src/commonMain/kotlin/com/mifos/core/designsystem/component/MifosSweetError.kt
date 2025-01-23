@@ -9,6 +9,10 @@
  */
 package com.mifos.core.designsystem.component
 
+import androidclient.core.designsystem.generated.resources.Res
+import androidclient.core.designsystem.generated.resources.core_designsystem_ic_error_black_24dp
+import androidclient.core.designsystem.generated.resources.core_designsystem_try_again
+import androidclient.core.designsystem.generated.resources.core_designsystem_unable_to_load
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,15 +41,11 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.jetbrains.compose.resources.stringResource
-import androidclient.core.designsystem.generated.resources.Res
-import androidclient.core.designsystem.generated.resources.core_designsystem_ic_error_black_24dp
-import androidclient.core.designsystem.generated.resources.core_designsystem_try_again
-import androidclient.core.designsystem.generated.resources.core_designsystem_unable_to_load
 import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.theme.primaryDark
 import com.mifos.core.designsystem.theme.primaryLight
 import com.mifos.core.designsystem.theme.secondaryLight
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MifosSweetError(
