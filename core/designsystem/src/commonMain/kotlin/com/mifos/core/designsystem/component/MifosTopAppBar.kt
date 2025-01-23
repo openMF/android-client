@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.MifosTheme
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.utils.mirrorIfRtl
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -219,7 +220,7 @@ private fun MifosTopAppBar_preview() {
                     rememberTopAppBarState(),
                 ),
             navigationIcon = NavigationIcon(
-                navigationIcon = AppIcons.Back,
+                navigationIcon = MifosIcons.Back,
                 navigationIconContentDescription = "Back",
                 onNavigationIconClick = { },
             ),
@@ -239,7 +240,7 @@ private fun MifosTopAppBarOverflow_preview() {
                     rememberTopAppBarState(),
                 ),
             navigationIcon = NavigationIcon(
-                navigationIcon = AppIcons.Close,
+                navigationIcon = MifosIcons.Close,
                 navigationIconContentDescription = "Close",
                 onNavigationIconClick = { },
             ),
@@ -259,7 +260,7 @@ private fun MifosTopAppBarOverflowCutoff_preview() {
                     rememberTopAppBarState(),
                 ),
             navigationIcon = NavigationIcon(
-                navigationIcon = AppIcons.Close,
+                navigationIcon = MifosIcons.Close,
                 navigationIconContentDescription = "Close",
                 onNavigationIconClick = { },
             ),

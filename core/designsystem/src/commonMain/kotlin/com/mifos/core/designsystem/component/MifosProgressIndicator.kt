@@ -30,10 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.secondaryLight
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-/**
- * Created by Aditya Gupta on 21/02/24.
- */
-
 @Composable
 fun MifosPagingAppendProgress(modifier: Modifier = Modifier) {
     Box(

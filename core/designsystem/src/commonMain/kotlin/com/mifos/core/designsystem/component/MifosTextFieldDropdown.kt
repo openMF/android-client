@@ -29,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -37,6 +36,8 @@ import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.theme.primaryDark
 import com.mifos.core.designsystem.theme.primaryLight
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MifosTextFieldDropdown(
     value: String,
@@ -59,7 +60,11 @@ fun MifosTextFieldDropdown(
         OutlinedTextField(
             value = value,
             onValueChange = { onValueChanged(it) },
-            label = { Text(text = labelString ?: label?.let { stringResource(id = label) } ?: "") },
+            label = {
+                if (labelString != null) {
+                    Text(text = labelString)
+                }
+            },
             modifier = modifier.menuAnchor(),
             maxLines = 1,
             colors = OutlinedTextFieldDefaults.colors(
@@ -92,3 +97,4 @@ fun MifosTextFieldDropdown(
         }
     }
 }
+

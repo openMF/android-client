@@ -13,17 +13,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 
-/**
- * Created by Aditya Gupta on 21/02/24.
- */
-
 @Composable
-fun MifosAndroidClientIcon(id: Int, modifier: Modifier = Modifier) {
-    Image(
-        painter = painterResource(id = id),
+fun MifosAndroidClientIcon(painter: Painter, modifier: Modifier = Modifier) {
+        Image(
+        painter = painter,
         contentDescription = null,
         modifier = modifier.then(Modifier.size(200.dp, 100.dp)),
     )

@@ -117,7 +117,7 @@ fun MifosTextField(
     enabled: Boolean = true,
     showClearIcon: Boolean = true,
     readOnly: Boolean = false,
-    clearIcon: ImageVector = AppIcons.Close,
+    clearIcon: ImageVector = MifosIcons.Close,
     isError: Boolean = false,
     errorText: String? = null,
     onClickClearIcon: () -> Unit = { onValueChange("") },

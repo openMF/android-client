@@ -30,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
@@ -38,8 +37,12 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import com.mifos.core.designsystem.R
+import org.jetbrains.compose.resources.stringResource
+import androidclient.core.designsystem.generated.resources.Res
+import androidclient.core.designsystem.generated.resources.core_designsystem_ic_error_black_24dp
+import androidclient.core.designsystem.generated.resources.core_designsystem_try_again
+import androidclient.core.designsystem.generated.resources.core_designsystem_unable_to_load
+import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.theme.primaryDark
 import com.mifos.core.designsystem.theme.primaryLight
 import com.mifos.core.designsystem.theme.secondaryLight
@@ -52,7 +55,7 @@ fun MifosSweetError(
         .padding(18.dp)
         .semantics { contentDescription = "MifosSweetError" },
     isRetryEnabled: Boolean = true,
-    buttonText: String = stringResource(id = R.string.core_designsystem_try_again),
+    buttonText: String = stringResource(Res.string.core_designsystem_try_again),
     onclick: () -> Unit = {},
 ) {
     Column(
@@ -62,13 +65,13 @@ fun MifosSweetError(
     ) {
         AsyncImage(
             modifier = Modifier.size(70.dp),
-            model = R.drawable.core_designsystem_ic_error_black_24dp,
+            model = Res.drawable.core_designsystem_ic_error_black_24dp,
             contentDescription = null,
             colorFilter = ColorFilter.tint(Color.Gray),
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = stringResource(id = R.string.core_designsystem_unable_to_load),
+            text = stringResource(Res.string.core_designsystem_unable_to_load),
             style = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
@@ -122,7 +125,7 @@ fun MifosPaginationSweetError(
             tint = Color.Gray,
         )
         Text(
-            text = stringResource(id = R.string.core_designsystem_unable_to_load),
+            text = stringResource(Res.string.core_designsystem_unable_to_load),
             style = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
@@ -140,7 +143,7 @@ fun MifosPaginationSweetError(
             Text(
                 modifier = Modifier
                     .padding(start = 20.dp, end = 20.dp),
-                text = stringResource(id = R.string.core_designsystem_try_again),
+                text = stringResource(Res.string.core_designsystem_try_again),
                 fontSize = 15.sp,
             )
         }

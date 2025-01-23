@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -51,27 +50,23 @@ import com.mifos.core.designsystem.theme.primaryDark
 import com.mifos.core.designsystem.theme.primaryLight
 import com.mifos.core.designsystem.theme.secondaryLight
 
-/**
- * Created by Aditya Gupta on 21/02/24.
- */
-
 @Composable
 fun MifosOutlinedTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
-    label: Int,
+    label: String,
     modifier: Modifier = Modifier,
     maxLines: Int = 1,
     singleLine: Boolean = true,
     icon: ImageVector? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable (() -> Unit)? = null,
-    error: Int? = null,
+    error: String? = null,
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(stringResource(id = label)) },
+        label = { Text(label) },
         modifier = modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp),
@@ -102,7 +97,7 @@ fun MifosOutlinedTextField(
             if (error != null) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(id = error),
+                    text = error,
                     color = MaterialTheme.colorScheme.error,
                 )
             }
@@ -220,7 +215,7 @@ fun MifosOutlinedTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    error: Int?,
+    error: String?,
     modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
     maxLines: Int = 1,
     readOnly: Boolean = false,
@@ -267,7 +262,7 @@ fun MifosOutlinedTextField(
             {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(id = error),
+                    text = error,
                     color = MaterialTheme.colorScheme.error,
                 )
             }
@@ -331,14 +326,14 @@ private fun ClearIconButton(
 fun MifosDatePickerTextField(
     value: String,
     modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
-    label: Int? = null,
+    label: String? = null,
     labelString: String? = null,
     openDatePicker: () -> Unit,
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = { },
-        label = { Text(text = labelString ?: label?.let { stringResource(id = label) } ?: "") },
+        label = { Text(text = labelString ?: label?.let { label } ?: "") },
         readOnly = true,
         modifier = modifier,
         maxLines = 1,
