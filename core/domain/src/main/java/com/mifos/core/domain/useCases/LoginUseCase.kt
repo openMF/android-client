@@ -12,6 +12,7 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.LoginRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import org.openapitools.client.models.PostAuthenticationResponse
 
@@ -25,12 +26,10 @@ class LoginUseCase(private val loginRepository: LoginRepository) {
         username: String,
         password: String,
     ): Flow<Resource<PostAuthenticationResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val result = loginRepository.login(username, password)
-            emit(Resource.Success(result))
-        } catch (e: Exception) {
-            emit(Resource.Error(e.message.toString()))
-        }
+        emit(Resource.Loading())
+        val result = loginRepository.login(username, password)
+        emit(Resource.Success(result))
+    }.catch { e ->
+        emit(Resource.Error(e.message.toString()))
     }
 }
