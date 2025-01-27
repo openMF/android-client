@@ -54,7 +54,7 @@ android {
         // TODO:: Fix the proguard rules for release build
         release {
             isMinifyEnabled = false
-            isDebuggable = true
+            isDebuggable = false
             isShrinkResources = false
             applicationIdSuffix = MifosBuildType.RELEASE.applicationIdSuffix
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
