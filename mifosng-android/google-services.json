@@ -38,6 +38,35 @@
       "client_info": {
         "mobilesdk_app_id": "kjdslkds8392kjlds",
         "android_client_info": {
+          "package_name": "com.mifos.mifosxdroid.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "shjdkldhsdsld3209dkjs",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "djksdhkjdjskhkfjsh38sdkjs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "ds783892jhkdsssssssssdkj982hdshdskjsd",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "kjdslkds8392kjlds",
+        "android_client_info": {
           "package_name": "com.mifos.mifosxdroid.demo.debug"
         }
       },
