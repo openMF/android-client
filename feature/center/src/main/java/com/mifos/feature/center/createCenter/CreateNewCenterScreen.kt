@@ -60,6 +60,7 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.objects.organisation.Office
@@ -70,6 +71,7 @@ import java.util.Locale
 @Composable
 internal fun CreateNewCenterScreen(
     onCreateSuccess: () -> Unit,
+    onNavigateBack: () -> Unit,
     viewModel: CreateNewCenterViewModel = hiltViewModel(),
 ) {
     val state by viewModel.createNewCenterUiState.collectAsStateWithLifecycle()
@@ -87,6 +89,7 @@ internal fun CreateNewCenterScreen(
             viewModel.createNewCenter(it)
         },
         onCreateSuccess = onCreateSuccess,
+        onNavigateBack = onNavigateBack,
     )
 }
 
@@ -96,12 +99,15 @@ internal fun CreateNewCenterScreen(
     onRetry: () -> Unit,
     createCenter: (CenterPayload) -> Unit,
     onCreateSuccess: () -> Unit,
+    onNavigateBack: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
         title = stringResource(id = R.string.feature_center_create_new_center),
         snackbarHostState = snackbarHostState,
+        icon = MifosIcons.arrowBack,
+        onBackPressed = onNavigateBack,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
@@ -324,6 +330,7 @@ private fun CreateNewCenterPreview(
         onRetry = {},
         createCenter = {},
         onCreateSuccess = {},
+        onNavigateBack = {},
     )
 }
 

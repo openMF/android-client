@@ -9,15 +9,14 @@
  */
 package org.mifos.library.passcode.data
 
-import org.mifos.library.passcode.utility.PreferenceManager
 import javax.inject.Inject
 
 class PasscodeRepositoryImpl @Inject constructor(
-    private val preferenceManager: PreferenceManager,
+    private val preferenceManager: PasscodeManager,
 ) : PasscodeRepository {
 
     override val hasPasscode: Boolean
-        get() = preferenceManager.hasPasscode
+        get() = preferenceManager.getSavedPasscode().isNotEmpty()
 
     override fun getSavedPasscode(): String {
         return preferenceManager.getSavedPasscode()

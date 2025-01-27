@@ -21,6 +21,7 @@ import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
 import com.mifos.core.model.getInstanceUrl
 import com.mifos.feature.auth.R
+import com.mifos.feature.auth.login.LoginUiState.ShowError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +29,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.mifos.core.apimanager.BaseApiManager
-import org.openapitools.client.models.PostAuthenticationResponse
 import javax.inject.Inject
 
 /**
@@ -43,8 +43,7 @@ class LoginViewModel @Inject constructor(
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val baseApiManager: BaseApiManager,
     private val loginUseCase: LoginUseCase,
-) :
-    ViewModel() {
+) : ViewModel() {
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
     val loginUiState = _loginUiState.asStateFlow()
@@ -69,19 +68,10 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun setupPrefManger(username: String, password: String) {
-        // Updating Services
-        baseApiManager.createService(
-            username,
-            password,
-            prefManager.getServerConfig.getInstanceUrl().dropLast(3),
-            prefManager.getServerConfig.tenant,
-            true,
-        )
         if (Network.isOnline(context)) {
             login(username, password)
         } else {
-            _loginUiState.value =
-                LoginUiState.ShowError(R.string.feature_auth_error_not_connected_internet)
+            _loginUiState.value = ShowError(R.string.feature_auth_error_not_connected_internet)
         }
     }
 
@@ -90,9 +80,7 @@ class LoginViewModel @Inject constructor(
             loginUseCase(username, password).collect { result ->
                 when (result) {
                     is Resource.Error -> {
-                        _loginUiState.value =
-                            LoginUiState.ShowError(R.string.feature_auth_error_login_failed)
-                        Log.e("@@@", "login: ${result.message}")
+                        _loginUiState.value = ShowError(R.string.feature_auth_error_login_failed)
                     }
 
                     is Resource.Loading -> {
@@ -100,36 +88,24 @@ class LoginViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        if (result.data?.authenticated == true && result.data != null) {
-                            onLoginSuccessful(result.data!!, username, password)
-                        } else {
-                            _loginUiState.value =
-                                LoginUiState.ShowError(R.string.feature_auth_error_login_failed)
+                        result.data?.let {
+                            Log.d("Android", "$it")
+                            prefManager.saveUserDetails(it)
+                            // Saving username password
+                            prefManager.usernamePassword = Pair(username, password)
+                            // Updating Services
+                            baseApiManager.createService(
+                                username,
+                                password,
+                                baseUrl = prefManager.serverConfig.getInstanceUrl().dropLast(3),
+                                tenant = prefManager.serverConfig.tenant,
+                                secured = true,
+                            )
+                            _loginUiState.value = LoginUiState.Success
                         }
                     }
                 }
             }
-        }
-    }
-
-    private fun onLoginSuccessful(
-        user: PostAuthenticationResponse,
-        username: String,
-        password: String,
-    ) {
-        // Saving username password
-        prefManager.usernamePassword = Pair(username, password)
-        // Saving userID
-        prefManager.setUserId(user.userId!!.toInt())
-        // Saving user's token
-        prefManager.saveToken("Basic " + user.base64EncodedAuthenticationKey)
-        // Saving user
-        prefManager.savePostAuthenticationResponse(user)
-
-        if (prefManager.getPassCodeStatus()) {
-            _loginUiState.value = LoginUiState.HomeActivityIntent
-        } else {
-            _loginUiState.value = LoginUiState.PassCodeActivityIntent
         }
     }
 }

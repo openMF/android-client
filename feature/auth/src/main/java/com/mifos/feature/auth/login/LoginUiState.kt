@@ -21,10 +21,10 @@ sealed class LoginUiState {
 
     data class ShowError(val message: Int) : LoginUiState()
 
-    data class ShowValidationError(val usernameError: Int? = null, val passwordError: Int? = null) :
-        LoginUiState()
+    data class ShowValidationError(
+        val usernameError: Int? = null,
+        val passwordError: Int? = null,
+    ) : LoginUiState()
 
-    data object HomeActivityIntent : LoginUiState()
-
-    data object PassCodeActivityIntent : LoginUiState()
+    data object Success : LoginUiState()
 }

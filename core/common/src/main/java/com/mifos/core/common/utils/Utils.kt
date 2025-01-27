@@ -14,18 +14,28 @@ import java.util.Calendar
 import java.util.TimeZone
 
 object Utils {
-    fun getStringOfDate(dateObj: List<Int?>): String {
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-        dateObj.getOrNull(0)?.let { year ->
-            calendar.set(Calendar.YEAR, year)
+    // Create a single DateFormat instance to reuse
+    private val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
+
+    fun getStringOfDate(dateObj: List<Int?>?): String {
+        if (dateObj == null) {
+            return ""
         }
-        dateObj.getOrNull(1)?.let { month ->
-            calendar.set(Calendar.MONTH, month - 1)
+
+        return synchronized(dateFormat) {
+            val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+
+            if (dateObj.getOrNull(0) != null) {
+                calendar.set(Calendar.YEAR, dateObj[0]!!)
+            }
+            if (dateObj.getOrNull(1) != null) {
+                calendar.set(Calendar.MONTH, dateObj[1]!! - 1)
+            }
+            if (dateObj.getOrNull(2) != null) {
+                calendar.set(Calendar.DAY_OF_MONTH, dateObj[2]!!)
+            }
+
+            dateFormat.format(calendar.time)
         }
-        dateObj.getOrNull(2)?.let { day ->
-            calendar.set(Calendar.DAY_OF_MONTH, day)
-        }
-        val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
-        return dateFormat.format(calendar.time)
     }
 }

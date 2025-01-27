@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.mifos.android.hilt)
     alias(libs.plugins.mifos.android.library.jacoco)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -42,11 +43,7 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
-    // fineract sdk dependencies
-    implementation(libs.mifos.android.sdk.arch)
-
-    // sdk client
-    implementation(libs.fineract.client)
+    implementation(libs.kotlinx.serialization.json)
 
     androidTestImplementation(projects.core.testing)
 }

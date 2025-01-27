@@ -10,7 +10,9 @@
 package com.mifos.core.network
 
 import com.google.gson.GsonBuilder
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.model.getInstanceUrl
+import com.mifos.core.network.adapter.FlowCallAdapterFactory
 import com.mifos.core.network.services.CenterService
 import com.mifos.core.network.services.ChargeService
 import com.mifos.core.network.services.CheckerInboxService
@@ -28,10 +30,13 @@ import com.mifos.core.network.services.SavingsAccountService
 import com.mifos.core.network.services.SearchService
 import com.mifos.core.network.services.StaffService
 import com.mifos.core.network.services.SurveyService
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import org.mifos.core.utils.JsonDateSerializer
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.Date
 import javax.inject.Inject
@@ -39,8 +44,9 @@ import javax.inject.Inject
 /**
  * @author fomenkoo
  */
-class BaseApiManager @Inject constructor(private val prefManager: com.mifos.core.datastore.PrefManager) {
-
+class BaseApiManager @Inject constructor(
+    prefManager: PrefManager,
+) {
     init {
         createService(prefManager)
     }
@@ -158,14 +164,18 @@ class BaseApiManager @Inject constructor(private val prefManager: com.mifos.core
             return mRetrofit!!.create(clazz)
         }
 
-        fun createService(prefManager: com.mifos.core.datastore.PrefManager) {
+        fun createService(prefManager: PrefManager) {
             val gson = GsonBuilder()
                 .registerTypeAdapter(Date::class.java, JsonDateSerializer()).create()
+            val json = Json { ignoreUnknownKeys = true }
+
             mRetrofit = Retrofit.Builder()
-                .baseUrl(prefManager.getServerConfig.getInstanceUrl())
+                .baseUrl(prefManager.serverConfig.getInstanceUrl())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(FlowCallAdapterFactory())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
                 .client(MifosOkHttpClient(prefManager).okHttpClient)
                 .build()
             init()

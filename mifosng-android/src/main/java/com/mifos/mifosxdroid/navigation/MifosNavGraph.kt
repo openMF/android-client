@@ -14,4 +14,5 @@ internal object MifosNavGraph {
     const val AUTH_GRAPH = "auth_graph"
     const val PASSCODE_GRAPH = "passcode_graph"
     const val MAIN_GRAPH = "home_screen_route"
+    const val SETTINGS_GRAPH = "settings_screen_route"
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,41 +9,50 @@
  */
 package com.mifos.mifosxdroid
 
-import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
-import com.mifos.feature.auth.navigation.authNavGraph
-import com.mifos.feature.auth.navigation.navigateToLogin
-import com.mifos.feature.splash.navigation.SplashScreens
-import com.mifos.feature.splash.navigation.splashNavGraph
-import com.mifos.mifosxdroid.navigation.homeGraph
-import com.mifos.mifosxdroid.navigation.navigateHome
-import com.mifos.mifosxdroid.navigation.passcodeNavGraph
-import org.mifos.library.passcode.navigateToPasscodeScreen
+import android.content.Context
+import android.graphics.Typeface
+import android.os.StrictMode
+import androidx.multidex.MultiDexApplication
+import com.mifos.core.common.utils.LanguageHelper
+import com.raizlabs.android.dbflow.config.FlowConfig
+import com.raizlabs.android.dbflow.config.FlowManager
+import dagger.hilt.android.HiltAndroidApp
 
-@Composable
-fun AndroidClient() {
-    val navController = rememberNavController()
+/**
+ * Created by ishankhanna on 13/03/15.
+ */
+@HiltAndroidApp
+class AndroidClient : MultiDexApplication() {
+    override fun onCreate() {
+        super.onCreate()
 
-    NavHost(
-        navController = navController,
-        startDestination = SplashScreens.SplashScreenRoute.route,
-    ) {
-        splashNavGraph(
-            navigatePasscode = navController::navigateHome,
-            navigateLogin = navController::navigateToLogin,
-        )
+        instance = this
+        // Initializing the DBFlow and SQL Cipher Encryption
+        FlowManager.init(FlowConfig.Builder(this).build())
+        val policy = StrictMode.VmPolicy.Builder()
+            .detectFileUriExposure()
+            .build()
+        StrictMode.setVmPolicy(policy)
+    }
 
-        passcodeNavGraph(
-            navController = navController,
-        )
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(LanguageHelper.onAttach(base))
+    }
 
-        authNavGraph(
-            navigatePasscode = navController::navigateToPasscodeScreen,
-            navigateHome = navController::navigateHome,
-            updateServerConfig = {},
-        )
+    companion object {
+        @JvmField
+        val typefaceManager: MutableMap<Int, Typeface?> = HashMap()
 
-        homeGraph()
+        @JvmStatic
+        var instance: AndroidClient? = null
+
+        @JvmStatic
+        val context: AndroidClient?
+            get() = instance
+
+        @JvmStatic
+        operator fun get(context: Context): AndroidClient {
+            return context.applicationContext as AndroidClient
+        }
     }
 }

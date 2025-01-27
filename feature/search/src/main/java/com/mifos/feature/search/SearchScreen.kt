@@ -67,7 +67,9 @@ internal fun SearchScreenContent(
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    var fabButtonState by remember { mutableStateOf<FabButtonState>(FabButtonState.Collapsed) }
+    var fabButtonState by remember {
+        mutableStateOf<FabButtonState>(FabButtonState.Collapsed)
+    }
 
     MifosScaffold(
         modifier = modifier,

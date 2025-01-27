@@ -27,6 +27,7 @@ import javax.inject.Inject
 internal class PasscodeViewModel @Inject constructor(
     private val passcodeRepository: PasscodeRepository,
 ) : ViewModel() {
+    val hasPasscode: Boolean = passcodeRepository.hasPasscode
 
     private val mOnPasscodeConfirmed = MutableSharedFlow<String>()
     val onPasscodeConfirmed = mOnPasscodeConfirmed.asSharedFlow()

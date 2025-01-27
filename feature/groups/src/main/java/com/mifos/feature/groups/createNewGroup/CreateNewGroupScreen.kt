@@ -69,6 +69,7 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.objects.group.GroupPayload
@@ -84,8 +85,10 @@ import java.util.Locale
 
 @Composable
 internal fun CreateNewGroupScreen(
-    viewModel: CreateNewGroupViewModel = hiltViewModel(),
     onGroupCreated: (group: SaveResponse?, userStatus: Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: CreateNewGroupViewModel = hiltViewModel(),
+    navigateBack: () -> Unit,
 ) {
     val uiState by viewModel.createNewGroupUiState.collectAsStateWithLifecycle()
 
@@ -94,6 +97,7 @@ internal fun CreateNewGroupScreen(
     }
 
     CreateNewGroupScreen(
+        modifier = modifier,
         uiState = uiState,
         onRetry = { viewModel.loadOffices() },
         invokeGroupCreation = { groupPayload ->
@@ -101,6 +105,7 @@ internal fun CreateNewGroupScreen(
         },
         onGroupCreated = { onGroupCreated(it, viewModel.getUserStatus()) },
         getResponse = { viewModel.getResponse() },
+        navigateBack = navigateBack,
     )
 }
 
@@ -110,8 +115,9 @@ internal fun CreateNewGroupScreen(
     onRetry: () -> Unit,
     invokeGroupCreation: (GroupPayload) -> Unit,
     onGroupCreated: (group: SaveResponse?) -> Unit,
-    modifier: Modifier = Modifier,
     getResponse: () -> String,
+    modifier: Modifier = Modifier,
+    navigateBack: () -> Unit,
 ) {
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -120,6 +126,8 @@ internal fun CreateNewGroupScreen(
         modifier = modifier,
         title = stringResource(id = R.string.feature_groups_create_new_group),
         snackbarHostState = snackbarHostState,
+        icon = MifosIcons.arrowBack,
+        onBackPressed = navigateBack,
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -392,7 +400,11 @@ private fun CreateNewGroupContent(
     }
 }
 
-private fun validateFields(groupName: String, officeName: String, context: Context): Boolean {
+private fun validateFields(
+    groupName: String,
+    officeName: String,
+    context: Context,
+): Boolean {
     return when {
         groupName.isEmpty() -> {
             Toast.makeText(
@@ -434,7 +446,8 @@ private fun validateFields(groupName: String, officeName: String, context: Conte
     }
 }
 
-private class CreateNewGroupScreenPreviewProvider : PreviewParameterProvider<CreateNewGroupUiState> {
+private class CreateNewGroupScreenPreviewProvider :
+    PreviewParameterProvider<CreateNewGroupUiState> {
     override val values: Sequence<CreateNewGroupUiState>
         get() = sequenceOf(
             CreateNewGroupUiState.ShowProgressbar,
@@ -447,7 +460,8 @@ private class CreateNewGroupScreenPreviewProvider : PreviewParameterProvider<Cre
 @Composable
 @Preview(showSystemUi = true)
 private fun PreviewCreateNewGroupScreen(
-    @PreviewParameter(CreateNewGroupScreenPreviewProvider::class) createNewGroupUiState: CreateNewGroupUiState,
+    @PreviewParameter(CreateNewGroupScreenPreviewProvider::class)
+    createNewGroupUiState: CreateNewGroupUiState,
 ) {
     CreateNewGroupScreen(
         uiState = createNewGroupUiState,
@@ -456,5 +470,6 @@ private fun PreviewCreateNewGroupScreen(
         onGroupCreated = { _ ->
         },
         getResponse = { "" },
+        navigateBack = {},
     )
 }

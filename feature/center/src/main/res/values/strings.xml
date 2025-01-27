@@ -15,7 +15,7 @@
 
     <string name="feature_center_add_savings_account">Add Savings Account</string>
     <string name="feature_center_group_list">Group List</string>
-    <string name="feature_center_center">Center</string>
+    <string name="feature_center_center">Center Details</string>
 
     <string name="feature_center_activation_date">Activation Date</string>
     <string name="feature_center_next_meeting_on">Next Meeting On</string>

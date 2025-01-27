@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network
 
+import com.mifos.core.datastore.PrefManager
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
@@ -16,14 +17,13 @@ import java.io.IOException
 /**
  * @author fomenkoo
  */
-class MifosInterceptor(private val prefManager: com.mifos.core.datastore.PrefManager) : Interceptor {
-
+class MifosInterceptor(private val prefManager: PrefManager) : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val chianrequest = chain.request()
         val builder = chianrequest.newBuilder()
-            .header(HEADER_TENANT, prefManager.getServerConfig.tenant)
-        if (prefManager.isAuthenticated()) builder.header(HEADER_AUTH, prefManager.getToken())
+            .header(HEADER_TENANT, prefManager.serverConfig.tenant)
+        if (prefManager.isAuthenticated) builder.header(HEADER_AUTH, prefManager.token)
         val request = builder.build()
         return chain.proceed(request)
     }

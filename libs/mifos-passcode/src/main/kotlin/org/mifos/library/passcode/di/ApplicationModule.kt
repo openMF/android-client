@@ -15,9 +15,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import org.mifos.library.passcode.data.PasscodeManager
 import org.mifos.library.passcode.data.PasscodeRepository
 import org.mifos.library.passcode.data.PasscodeRepositoryImpl
-import org.mifos.library.passcode.utility.PreferenceManager
 import javax.inject.Singleton
 
 @Module
@@ -25,13 +25,13 @@ import javax.inject.Singleton
 object ApplicationModule {
     @Provides
     @Singleton
-    fun providePrefManager(@ApplicationContext context: Context): PreferenceManager {
-        return PreferenceManager(context)
+    fun providePasscodeManager(@ApplicationContext context: Context): PasscodeManager {
+        return PasscodeManager(context)
     }
 
     @Provides
     @Singleton
-    fun providesPasscodeRepository(preferenceManager: PreferenceManager): PasscodeRepository {
+    fun providesPasscodeRepository(preferenceManager: PasscodeManager): PasscodeRepository {
         return PasscodeRepositoryImpl(preferenceManager)
     }
 }

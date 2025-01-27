@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.EventRepeat
@@ -40,6 +41,7 @@ import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material.icons.rounded.Translate
 
 object MifosIcons {
+    val Link = Icons.Default.Link
     val Add = Icons.Rounded.Add
     val person = Icons.Rounded.PersonOutline
     val group = Icons.Outlined.Group

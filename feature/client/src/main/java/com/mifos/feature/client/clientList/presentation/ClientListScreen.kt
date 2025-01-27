@@ -12,6 +12,7 @@
 package com.mifos.feature.client.clientList.presentation
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
@@ -23,10 +24,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material3.CardDefaults
@@ -34,10 +40,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -52,11 +58,11 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -73,8 +79,10 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.Black
+import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.LightGray
@@ -104,46 +112,31 @@ internal fun ClientListScreen(
 
     val state = viewModel.clientListUiState.collectAsState().value
 
-    var isInSelectionMode by remember { mutableStateOf(false) }
     val selectedItems = remember { ClientSelectionState() }
 
-    val resetSelectionMode = {
-        isInSelectionMode = false
-        selectedItems.clear()
-    }
     val sync = rememberSaveable {
         mutableStateOf(false)
     }
 
-    BackHandler(enabled = isInSelectionMode) {
-        resetSelectionMode()
+    BackHandler(enabled = selectedItems.size() > 0) {
+        selectedItems.clear()
     }
 
-    LaunchedEffect(
-        key1 = isInSelectionMode,
-        key2 = selectedItems.size(),
-    ) {
-        if (isInSelectionMode && selectedItems.isEmpty()) {
-            isInSelectionMode = false
-        }
-    }
-
-    Scaffold(
+    MifosScaffold(
         modifier = Modifier
             .padding(paddingValues),
         topBar = {
-            if (isInSelectionMode) {
+            if (selectedItems.size() > 0) {
                 SelectionModeTopAppBar(
                     currentSelectedItems = selectedItems.selectedItems.value,
                     syncClicked = { sync.value = true },
-                    resetSelectionMode = resetSelectionMode,
+                    resetSelectionMode = selectedItems::clear,
                 )
             }
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { createNewClient() },
-                containerColor = BlueSecondary,
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
@@ -151,10 +144,8 @@ internal fun ClientListScreen(
                 )
             }
         },
-        containerColor = White,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-    ) { padding ->
-
+        snackbarHostState = snackbarHostState,
+    ) {
         SwipeRefresh(
             state = swipeRefreshState,
             onRefresh = {
@@ -162,23 +153,18 @@ internal fun ClientListScreen(
             },
         ) {
             Column(
-                modifier = Modifier
-                    .padding(padding),
+                modifier = Modifier,
                 verticalArrangement = Arrangement.Center,
             ) {
                 when (state) {
                     is ClientListUiState.ClientListApi -> {
                         LazyColumnForClientListApi(
                             clientPagingList = state.list.collectAsLazyPagingItems(),
-                            isInSelectionMode = isInSelectionMode,
                             selectedItems = selectedItems,
-                            onClientSelect = {
+                            onClientClick = {
                                 onClientSelect(it)
                             },
                             failedRefresh = { viewModel.refreshClientList() },
-                            selectedMode = {
-                                isInSelectionMode = true
-                            },
                         )
                     }
 
@@ -199,7 +185,6 @@ internal fun ClientListScreen(
             if (sync.value) {
                 SyncClientsDialogScreen(
                     dismiss = {
-                        resetSelectionMode.invoke()
                         selectedItems.clear()
                         sync.value = false
                     },
@@ -260,11 +245,16 @@ private fun SelectionModeTopAppBar(
 }
 
 class ClientSelectionState(initialSelectedItems: List<Client> = emptyList()) {
-    private val _selectedItems = mutableStateListOf<Client>().also { it.addAll(initialSelectedItems) }
+    private val _selectedItems =
+        mutableStateListOf<Client>().also { it.addAll(initialSelectedItems) }
     var selectedItems: State<List<Client>> = derivedStateOf { _selectedItems }
 
     fun add(client: Client) {
-        _selectedItems.add(client)
+        if (_selectedItems.contains(client)) {
+            _selectedItems.remove(client)
+        } else {
+            _selectedItems.add(client)
+        }
     }
 
     fun remove(client: Client) {
@@ -274,9 +264,6 @@ class ClientSelectionState(initialSelectedItems: List<Client> = emptyList()) {
     fun contains(client: Client): Boolean {
         return _selectedItems.contains(client)
     }
-    fun isEmpty(): Boolean {
-        return _selectedItems.isEmpty()
-    }
 
     fun clear() {
         _selectedItems.clear()
@@ -285,19 +272,16 @@ class ClientSelectionState(initialSelectedItems: List<Client> = emptyList()) {
     fun size(): Int {
         return _selectedItems.size
     }
-    fun toList(): List<Client> {
-        return _selectedItems.toList()
-    }
 }
 
 @Composable
 private fun LazyColumnForClientListApi(
     clientPagingList: LazyPagingItems<Client>,
-    isInSelectionMode: Boolean,
     selectedItems: ClientSelectionState,
     failedRefresh: () -> Unit,
-    onClientSelect: (Int) -> Unit,
-    selectedMode: () -> Unit,
+    onClientClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    lazyListState: LazyListState = rememberLazyListState(),
 ) {
     when (clientPagingList.loadState.refresh) {
         is LoadState.Error -> {
@@ -311,113 +295,35 @@ private fun LazyColumnForClientListApi(
         is LoadState.NotLoading -> Unit
     }
 
-    LazyColumn {
-        items(clientPagingList.itemCount) { index ->
+    LazyColumn(
+        modifier = modifier,
+        state = lazyListState,
+        contentPadding = PaddingValues(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        items(
+            count = clientPagingList.itemCount,
+            key = {
+                clientPagingList[it]?.id ?: it
+            },
+        ) { index ->
+            val client = clientPagingList[index]!!
 
-            val isSelected = clientPagingList[index]?.let { selectedItems.contains(it) }
-            var cardColor by remember { mutableStateOf(White) }
-
-            OutlinedCard(
-                modifier = Modifier
-                    .padding(6.dp)
-                    .combinedClickable(
-                        onClick = {
-                            if (isInSelectionMode) {
-                                cardColor = if (isSelected == true) {
-                                    clientPagingList[index]?.let { selectedItems.remove(it) }
-                                    White
-                                } else {
-                                    clientPagingList[index]?.let { selectedItems.add(it) }
-                                    LightGray
-                                }
-                            } else {
-                                clientPagingList[index]?.id?.let { onClientSelect(it) }
-                            }
-                        },
-                        onLongClick = {
-                            if (isInSelectionMode) {
-                                cardColor = if (isSelected == true) {
-                                    clientPagingList[index]?.let { selectedItems.remove(it) }
-                                    White
-                                } else {
-                                    clientPagingList[index]?.let { selectedItems.add(it) }
-                                    LightGray
-                                }
-                            } else {
-                                selectedMode()
-                                clientPagingList[index]?.let { selectedItems.add(it) }
-                                cardColor = LightGray
-                            }
-                        },
-                    ),
-                colors = CardDefaults.cardColors(
-                    containerColor = if (selectedItems.isEmpty()) {
-                        cardColor = White
-                        White
-                    } else {
-                        cardColor
-                    },
-                ),
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 24.dp,
-                            bottom = 24.dp,
-                        ),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    AsyncImage(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .border(width = 1.dp, LightGray, shape = CircleShape),
-                        model = R.drawable.feature_client_ic_dp_placeholder,
-                        contentDescription = null,
-                    )
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 16.dp),
-                    ) {
-                        clientPagingList[index]?.displayName?.let {
-                            Text(
-                                text = it,
-                                style = TextStyle(
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    fontStyle = FontStyle.Normal,
-                                    color = Black,
-                                ),
-                            )
-                        }
-                        Text(
-                            text = clientPagingList[index]?.accountNo.toString(),
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                color = DarkGray,
-                            ),
-                        )
-                    }
-                    if (clientPagingList[index]?.sync == true) {
-                        AsyncImage(
-                            modifier = Modifier.size(20.dp),
-                            model = R.drawable.feature_client_ic_done_all_black_24dp,
-                            contentDescription = null,
-                        )
-                    }
-                }
-            }
+            ClientItem(
+                client = client,
+                selected = selectedItems.contains(client),
+                inSelectionMode = selectedItems.size() > 0,
+                onClientClick = {
+                    onClientClick(client.id)
+                },
+                onSelectItem = {
+                    selectedItems.add(client)
+                },
+            )
         }
 
         when (clientPagingList.loadState.append) {
-            is LoadState.Error -> {
-            }
+            is LoadState.Error -> {}
 
             is LoadState.Loading -> {
                 item {
@@ -446,6 +352,86 @@ private fun LazyColumnForClientListApi(
 
             false -> Unit
         }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ClientItem(
+    client: Client,
+    selected: Boolean,
+    inSelectionMode: Boolean,
+    onClientClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onSelectItem: () -> Unit,
+) {
+    val borderStroke = if (selected) {
+        BorderStroke(1.dp, BluePrimary)
+    } else {
+        CardDefaults.outlinedCardBorder()
+    }
+    val containerColor = if (selected) {
+        MaterialTheme.colorScheme.secondaryContainer
+    } else {
+        Color.Unspecified
+    }
+
+    OutlinedCard(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .combinedClickable(
+                onClick = {
+                    if (inSelectionMode) {
+                        onSelectItem()
+                    } else {
+                        onClientClick()
+                    }
+                },
+                onLongClick = onSelectItem,
+            ),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.outlinedCardColors(
+            containerColor = containerColor,
+        ),
+        border = borderStroke,
+    ) {
+        ListItem(
+            leadingContent = {
+                AsyncImage(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .border(width = 1.dp, LightGray, shape = CircleShape),
+                    model = R.drawable.feature_client_ic_dp_placeholder,
+                    contentDescription = null,
+                )
+            },
+            headlineContent = {
+                Text(text = client.displayName.toString())
+            },
+            supportingContent = client.accountNo?.let {
+                { Text(text = it) }
+            },
+            trailingContent = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    if (client.sync == true) {
+                        Icon(imageVector = Icons.Default.DoneAll, contentDescription = "Sync")
+                    }
+
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                        contentDescription = null,
+                    )
+                }
+            },
+            colors = ListItemDefaults.colors(
+                containerColor = Color.Unspecified,
+            ),
+        )
     }
 }
 

@@ -28,7 +28,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mifos.core.designsystem.theme.DarkGray
 
 /**
  * Created by Aditya Gupta on 21/02/24.
@@ -74,7 +73,6 @@ fun MifosCircularProgress(
                 .height(60.dp)
                 .padding(8.dp),
             strokeWidth = 4.dp,
-            color = DarkGray,
         )
         text?.let {
             Text(text = text)

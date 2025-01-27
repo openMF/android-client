@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.checkerInboxTask.checkerInboxTasks
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,13 +18,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -84,7 +85,11 @@ internal fun CheckerInboxTasksScreen(
                 }
 
                 is CheckerInboxTasksUiState.Success -> {
-                    Column(modifier = Modifier.padding(padding)) {
+                    Column(
+                        modifier = Modifier
+                            .padding(padding),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
                         TaskOptions(
                             leadingIcon = R.drawable.feature_checker_inbox_task_ic_mail_outline_24dp,
                             option = stringResource(id = R.string.feature_checker_inbox_task_checker_Inbox),
@@ -124,10 +129,14 @@ internal fun CheckerInboxTasksScreen(
 }
 
 @Composable
-private fun TaskOptions(leadingIcon: Int, option: String, badge: String, onClick: () -> Unit) {
+private fun TaskOptions(
+    leadingIcon: Int,
+    option: String,
+    badge: String,
+    onClick: () -> Unit,
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(White),
         onClick = {
             onClick()
         },
@@ -155,7 +164,9 @@ private fun TaskOptions(leadingIcon: Int, option: String, badge: String, onClick
                 ),
             )
             Card(
-                colors = CardDefaults.cardColors(Color.Red),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                ),
                 shape = RoundedCornerShape(10.dp),
             ) {
                 Text(

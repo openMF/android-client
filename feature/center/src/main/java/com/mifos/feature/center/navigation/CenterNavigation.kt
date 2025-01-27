@@ -50,6 +50,7 @@ fun NavGraphBuilder.centerNavGraph(
         )
         createCenterScreenRoute(
             onCreateSuccess = navController::popBackStack,
+            onNavigateBack = navController::popBackStack,
         )
     }
 }
@@ -106,12 +107,14 @@ fun NavGraphBuilder.centerGroupListScreenRoute(
 
 fun NavGraphBuilder.createCenterScreenRoute(
     onCreateSuccess: () -> Unit,
+    onNavigateBack: () -> Unit,
 ) {
     composable(
         route = CenterScreens.CreateCenterScreen.route,
     ) {
         CreateNewCenterScreen(
             onCreateSuccess = onCreateSuccess,
+            onNavigateBack = onNavigateBack,
         )
     }
 }

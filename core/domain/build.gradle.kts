@@ -25,8 +25,10 @@ dependencies {
 
     implementation(libs.dbflow)
 
+    implementation(libs.mifos.android.sdk.arch)
+
     // sdk client
-//    implementation(libs.fineract.client)
+    implementation(libs.fineract.client)
 
     implementation(libs.rxandroid)
     implementation(libs.rxjava)

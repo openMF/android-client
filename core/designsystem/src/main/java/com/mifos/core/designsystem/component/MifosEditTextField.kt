@@ -12,7 +12,6 @@ package com.mifos.core.designsystem.component
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,7 +25,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,10 +44,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
 
 /**
  * Created by Aditya Gupta on 21/02/24.
@@ -80,7 +74,6 @@ fun MifosOutlinedTextField(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (isSystemInDarkTheme()) White else DarkGray,
                 )
             }
         } else {
@@ -89,9 +82,6 @@ fun MifosOutlinedTextField(
         trailingIcon = trailingIcon,
         maxLines = maxLines,
         singleLine = singleLine,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-        ),
         textStyle = LocalDensity.current.run {
             TextStyle(fontSize = 18.sp)
         },
@@ -221,7 +211,9 @@ fun MifosOutlinedTextField(
     onValueChange: (String) -> Unit,
     label: String,
     error: Int?,
-    modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 16.dp, end = 16.dp),
     maxLines: Int = 1,
     readOnly: Boolean = false,
     singleLine: Boolean = true,
@@ -243,7 +235,6 @@ fun MifosOutlinedTextField(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (isSystemInDarkTheme()) White else DarkGray,
                 )
             }
         } else {
@@ -252,11 +243,6 @@ fun MifosOutlinedTextField(
         trailingIcon = trailingIcon,
         maxLines = maxLines,
         singleLine = singleLine,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            focusedLabelColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            cursorColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-        ),
         textStyle = LocalDensity.current.run {
             TextStyle(fontSize = 18.sp)
         },
@@ -330,7 +316,7 @@ private fun ClearIconButton(
 @Composable
 fun MifosDatePickerTextField(
     value: String,
-    modifier: Modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+    modifier: Modifier = Modifier,
     label: Int? = null,
     labelString: String? = null,
     openDatePicker: () -> Unit,
@@ -340,11 +326,10 @@ fun MifosDatePickerTextField(
         onValueChange = { },
         label = { Text(text = labelString ?: label?.let { stringResource(id = label) } ?: "") },
         readOnly = true,
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp),
         maxLines = 1,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-        ),
         textStyle = LocalDensity.current.run {
             TextStyle(fontSize = 18.sp)
         },

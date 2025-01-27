@@ -43,6 +43,10 @@ class CenterListViewModel @Inject constructor(
     private val _centerListUiState = MutableStateFlow<CenterListUiState>(CenterListUiState.Loading)
     val centerListUiState = _centerListUiState.asStateFlow()
 
+    init {
+        getCenterList()
+    }
+
     fun getCenterList() {
         if (prefManager.userStatus) {
             loadCentersFromDb()
