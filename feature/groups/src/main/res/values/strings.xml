@@ -32,7 +32,7 @@
     <string name="feature_groups_failed_to_load_client">Failed to Load Client</string>
     <string name="feature_groups_activate_group">Activate Group</string>
     <string name="feature_groups_sync">Sync</string>
-    <string name="feature_groups_group">Group</string>
+    <string name="feature_groups_group">Group Details</string>
     <string name="feature_groups_name">Name</string>
     <string name="feature_groups_error_not_connected_internet">Not connected to Network</string>
     <string name="feature_groups_office_name_mandatory">Office*</string>

@@ -16,9 +16,12 @@ import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.CreateNewGroupUseCase
 import com.mifos.core.domain.useCases.GetGroupOfficesUseCase
 import com.mifos.core.objects.group.GroupPayload
+import com.mifos.feature.groups.createNewGroup.CreateNewGroupUiState.ShowFetchingError
+import com.mifos.feature.groups.createNewGroup.CreateNewGroupUiState.ShowGroupCreatedSuccessfully
+import com.mifos.feature.groups.createNewGroup.CreateNewGroupUiState.ShowOffices
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,8 +38,7 @@ class CreateNewGroupViewModel @Inject constructor(
     private val _createNewGroupUiState = MutableStateFlow<CreateNewGroupUiState>(
         CreateNewGroupUiState.ShowProgressbar,
     )
-    val createNewGroupUiState: StateFlow<CreateNewGroupUiState>
-        get() = _createNewGroupUiState
+    val createNewGroupUiState = _createNewGroupUiState.asStateFlow()
 
     fun getUserStatus() = prefManager.userStatus
 
@@ -50,17 +52,17 @@ class CreateNewGroupViewModel @Inject constructor(
     fun loadOffices() = viewModelScope.launch {
         getGroupOfficesUseCase().collect { result ->
             when (result) {
-                is Resource.Loading ->
-                    _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowProgressbar
+                is Resource.Loading -> {
+                    _createNewGroupUiState.value = CreateNewGroupUiState.ShowProgressbar
+                }
 
-                is Resource.Error ->
-                    _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowFetchingError(result.message.toString())
+                is Resource.Error -> {
+                    _createNewGroupUiState.value = ShowFetchingError(result.message.toString())
+                }
 
-                is Resource.Success ->
-                    _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowOffices(result.data ?: emptyList())
+                is Resource.Success -> {
+                    _createNewGroupUiState.value = ShowOffices(result.data ?: emptyList())
+                }
             }
         }
     }
@@ -68,17 +70,19 @@ class CreateNewGroupViewModel @Inject constructor(
     fun createGroup(groupPayload: GroupPayload) = viewModelScope.launch {
         createNewGroupUseCase(groupPayload).collect { result ->
             when (result) {
-                is Resource.Error ->
-                    _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowFetchingError(result.message.toString())
+                is Resource.Error -> {
+                    _createNewGroupUiState.value = ShowFetchingError(result.message.toString())
+                }
 
-                is Resource.Loading ->
-                    _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowProgressbar
+                is Resource.Loading -> {
+                    _createNewGroupUiState.value = CreateNewGroupUiState.ShowProgressbar
+                }
 
-                is Resource.Success ->
-                    _createNewGroupUiState.value =
-                        result.data?.let { CreateNewGroupUiState.ShowGroupCreatedSuccessfully(it) }!!
+                is Resource.Success -> {
+                    _createNewGroupUiState.value = result.data?.let {
+                        ShowGroupCreatedSuccessfully(it)
+                    }!!
+                }
             }
         }
     }

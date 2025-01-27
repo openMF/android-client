@@ -18,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -50,7 +49,6 @@ fun MifosErrorContent(
             Text(
                 text = message,
                 modifier = Modifier.padding(vertical = 16.dp),
-                color = MaterialTheme.colorScheme.onBackground,
             )
             Button(onClick = onRefresh) {
                 Text(text = refreshButtonText)

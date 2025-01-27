@@ -55,7 +55,6 @@ import org.mifos.library.passcode.component.PasscodeSkipButton
 import org.mifos.library.passcode.component.PasscodeToolbar
 import org.mifos.library.passcode.theme.blueTint
 import org.mifos.library.passcode.utility.Constants.PASSCODE_LENGTH
-import org.mifos.library.passcode.utility.PreferenceManager
 import org.mifos.library.passcode.utility.ShakeAnimation.performShakeAnimation
 import org.mifos.library.passcode.utility.VibrationFeedback.vibrateFeedback
 import org.mifos.library.passcode.viewmodels.PasscodeViewModel
@@ -70,7 +69,7 @@ internal fun PasscodeScreen(
     viewModel: PasscodeViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
-    val preferenceManager = remember { PreferenceManager(context) }
+    val hasPasscode = viewModel.hasPasscode
 
     val activeStep by viewModel.activeStep.collectAsStateWithLifecycle()
     val filledDots by viewModel.filledDots.collectAsStateWithLifecycle()
@@ -106,10 +105,13 @@ internal fun PasscodeScreen(
                 .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            PasscodeToolbar(activeStep = activeStep, preferenceManager.hasPasscode)
+            PasscodeToolbar(
+                activeStep = activeStep,
+                hasPasscode,
+            )
 
             PasscodeSkipButton(
-                hasPassCode = preferenceManager.hasPasscode,
+                hasPassCode = hasPasscode,
                 onSkipButton = onSkipButton,
             )
 
@@ -123,7 +125,7 @@ internal fun PasscodeScreen(
             ) {
                 PasscodeHeader(
                     activeStep = activeStep,
-                    isPasscodeAlreadySet = preferenceManager.hasPasscode,
+                    isPasscodeAlreadySet = hasPasscode,
                 )
                 PasscodeView(
                     restart = { viewModel.restart() },
@@ -149,7 +151,7 @@ internal fun PasscodeScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             PasscodeForgotButton(
-                hasPassCode = preferenceManager.hasPasscode,
+                hasPassCode = hasPasscode,
                 onForgotButton = onForgotButton,
             )
         }

@@ -15,6 +15,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,23 +23,25 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -72,10 +75,10 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPaginationSweetError
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BlueSecondary
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.objects.group.Group
 import com.mifos.core.testing.repository.sampleGroups
@@ -161,7 +164,7 @@ fun GroupsListScreen(
         )
     }
 
-    Scaffold(
+    MifosScaffold(
         modifier = modifier,
         floatingActionButton = {
             MifosFAB(icon = Icons.Default.Add, onClick = onAddGroupClick)
@@ -210,7 +213,13 @@ fun GroupsListScreen(
                     .fillMaxSize()
                     .padding(paddingValues),
                 state = lazyListState,
-                verticalArrangement = if (data.itemCount < 1) Arrangement.Center else Arrangement.Top,
+                contentPadding = PaddingValues(12.dp),
+                verticalArrangement = if (data.itemCount < 1) {
+                    Arrangement.Center
+                } else {
+                    Arrangement.spacedBy(12.dp, Alignment.Top)
+                },
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 refreshState(data)
 
@@ -300,6 +309,7 @@ private fun LazyListScope.successState(
 ) {
     items(
         count = pagingItems.itemCount,
+        key = { index -> pagingItems[index]?.id ?: index },
     ) { index ->
         pagingItems[index]?.let { group ->
             GroupItem(
@@ -332,15 +342,17 @@ private fun GroupItem(
     } else {
         CardDefaults.outlinedCardBorder()
     }
-    val containerColor = if (doesSelected) BlueSecondary else Color.Unspecified
+    val containerColor = if (doesSelected) {
+        MaterialTheme.colorScheme.secondaryContainer
+    } else {
+        Color.Unspecified
+    }
 
     group.name?.let {
         OutlinedCard(
             modifier = modifier
                 .testTag(it)
                 .fillMaxWidth()
-                .padding(8.dp)
-                .height(70.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .combinedClickable(
                     onClick = {
@@ -358,22 +370,45 @@ private fun GroupItem(
             ),
             border = borderStroke,
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.titleMedium,
-                )
+            ListItem(
+                leadingContent = {
+                    Canvas(
+                        modifier = Modifier.size(16.dp),
+                        onDraw = {
+                            drawCircle(
+                                color = if (group.active == true) Color.Green else Color.Red,
+                            )
+                        },
+                    )
+                },
+                headlineContent = {
+                    Text(text = it)
+                },
+                supportingContent = group.accountNo?.let {
+                    { Text(text = it) }
+                },
+                overlineContent = group.officeName?.let {
+                    { Text(text = it) }
+                },
+                trailingContent = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        if (group.sync == true) {
+                            Icon(imageVector = Icons.Default.DoneAll, contentDescription = "Sync")
+                        }
 
-                if (group.sync) {
-                    Icon(imageVector = Icons.Default.DoneAll, contentDescription = "Sync")
-                }
-            }
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = null,
+                        )
+                    }
+                },
+                colors = ListItemDefaults.colors(
+                    containerColor = Color.Unspecified,
+                ),
+            )
         }
     }
 }

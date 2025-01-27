@@ -13,7 +13,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.GetSavingsAccountTransactionTemplateUseCase
@@ -56,7 +55,7 @@ class SavingsAccountTransactionViewModel @Inject constructor(
     val savingsAccountTransactionUiState: StateFlow<SavingsAccountTransactionUiState> get() = _savingsAccountTransactionUiState
 
     fun setUserOffline() {
-        prefManager.userStatus = Constants.USER_OFFLINE
+        prefManager.updateUserStatus(true)
     }
 
     fun loadSavingAccountTemplate() =

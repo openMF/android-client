@@ -9,8 +9,6 @@
  */
 package com.mifos.mifosxdroid.components
 
-import com.mifos.mifosxdroid.HomeDestinationsScreen
-
 object NavigationConstants {
 
     private val NavScreenRoutes = listOf(
@@ -22,5 +20,15 @@ object NavigationConstants {
 
     fun isNavScreen(route: String?): Boolean {
         return NavScreenRoutes.contains(route)
+    }
+
+    fun getNavTitle(route: String?): String {
+        return when (route) {
+            HomeDestinationsScreen.SearchScreen.route -> "Dashboard" // Override the title
+            HomeDestinationsScreen.ClientListScreen.route -> HomeDestinationsScreen.ClientListScreen.title
+            HomeDestinationsScreen.CenterListScreen.route -> HomeDestinationsScreen.CenterListScreen.title
+            HomeDestinationsScreen.GroupListScreen.route -> HomeDestinationsScreen.GroupListScreen.title
+            else -> ""
+        }
     }
 }

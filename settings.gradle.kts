@@ -1,3 +1,5 @@
+import org.ajoberstar.reckon.gradle.ReckonExtension
+
 pluginManagement {
     includeBuild("build-logic")
     repositories {
@@ -15,6 +17,20 @@ dependencyResolutionManagement {
             setUrl("https://jitpack.io")
         }
     }
+}
+
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version("0.8.0")
+    id("org.ajoberstar.reckon.settings") version("0.18.3")
+}
+
+extensions.configure<ReckonExtension> {
+    setDefaultInferredScope("patch")
+    stages("beta", "final")
+    setScopeCalc { java.util.Optional.of(org.ajoberstar.reckon.core.Scope.PATCH) }
+    setScopeCalc(calcScopeFromProp().or(calcScopeFromCommitMessages()))
+    setStageCalc(calcStageFromProp())
+    setTagWriter { it.toString() }
 }
 
 rootProject.name = "AndroidClient"
@@ -59,5 +75,3 @@ include(":feature:report")
 include(":feature:savings")
 include(":feature:search")
 include(":feature:settings")
-include(":feature:splash")
-//include(":feature:passcode")

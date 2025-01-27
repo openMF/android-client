@@ -151,7 +151,6 @@ internal fun SavingsAccountSummaryScreen(
         onBackPressed = navigateBack,
         title = stringResource(id = R.string.feature_savings_savingsAccountSummary),
         icon = MifosIcons.arrowBack,
-        fontsizeInSp = 22,
         actions = {
             IconButton(onClick = { showDropdown = !showDropdown }) {
                 Icon(imageVector = MifosIcons.moreVert, contentDescription = "")

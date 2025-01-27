@@ -18,10 +18,10 @@ package com.mifos.feature.checkerInboxTask.checkerInbox
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,14 +36,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -61,7 +59,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,11 +70,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDialogBox
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.LightGray
-import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.checkerinboxandtasks.CheckerTask
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.checkerInboxTask.checkerInboxDialog.CheckerInboxTasksFilterDialog
@@ -276,40 +272,43 @@ private fun CheckerInboxScreen(
         dismissButtonText = R.string.feature_checker_inbox_task_no,
     )
 
-    Scaffold(
+    MifosScaffold(
         topBar = {
             if (isInSelectionMode) {
                 SelectionModeTopAppBar(
                     itemCount = selectedItemsState.size(),
                     resetSelectionMode = resetSelectionMode,
                     actions = {
-                        IconButton(onClick = {
-                            onApproveList(selectedItemsState.selectedItems.value)
-                            resetSelectionMode()
-                        }) {
+                        IconButton(
+                            onClick = {
+                                onApproveList(selectedItemsState.selectedItems.value)
+                                resetSelectionMode()
+                            },
+                        ) {
                             Icon(
                                 imageVector = MifosIcons.check,
-                                tint = Color.Green,
                                 contentDescription = null,
                             )
                         }
-                        IconButton(onClick = {
-                            onRejectList(selectedItemsState.selectedItems.value)
-                            resetSelectionMode()
-                        }) {
+                        IconButton(
+                            onClick = {
+                                onRejectList(selectedItemsState.selectedItems.value)
+                                resetSelectionMode()
+                            },
+                        ) {
                             Icon(
                                 imageVector = MifosIcons.close,
-                                tint = Color.Yellow,
                                 contentDescription = null,
                             )
                         }
-                        IconButton(onClick = {
-                            onDeleteList(selectedItemsState.selectedItems.value)
-                            resetSelectionMode()
-                        }) {
+                        IconButton(
+                            onClick = {
+                                onDeleteList(selectedItemsState.selectedItems.value)
+                                resetSelectionMode()
+                            },
+                        ) {
                             Icon(
                                 imageVector = MifosIcons.delete,
-                                tint = Color.Red,
                                 contentDescription = null,
                             )
                         }
@@ -317,7 +316,6 @@ private fun CheckerInboxScreen(
                 )
             } else {
                 TopAppBar(
-                    colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = White),
                     navigationIcon = {
                         IconButton(
                             onClick = { onBackPressed() },
@@ -325,41 +323,29 @@ private fun CheckerInboxScreen(
                             Icon(
                                 imageVector = MifosIcons.arrowBack,
                                 contentDescription = null,
-                                tint = Black,
                             )
                         }
                     },
                     title = {
-                        Text(
-                            text = stringResource(id = R.string.feature_checker_inbox_task_checker_inbox),
-                            style = TextStyle(
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Medium,
-                                fontStyle = FontStyle.Normal,
-                            ),
-                            color = Black,
-                            textAlign = TextAlign.Start,
-                        )
+                        Text(text = stringResource(id = R.string.feature_checker_inbox_task_checker_inbox))
                     },
                     actions = { },
                 )
             }
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentColor = Color.White,
+        snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             ElevatedCard(
                 modifier = Modifier.padding(8.dp),
                 elevation = CardDefaults.elevatedCardElevation(4.dp),
-                colors = CardDefaults.elevatedCardColors(White),
             ) {
                 Row(
                     modifier = Modifier.padding(4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Image(
+                    Icon(
                         modifier = Modifier.weight(1f),
                         imageVector = MifosIcons.search,
                         contentDescription = null,
@@ -374,11 +360,9 @@ private fun CheckerInboxScreen(
                             search.invoke(it)
                         },
                         placeholder = { Text(stringResource(id = R.string.feature_checker_inbox_task_search_by_user)) },
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = White,
-                            unfocusedContainerColor = White,
-                            focusedIndicatorColor = Color.White,
-                            unfocusedIndicatorColor = Color.White,
+                        colors = TextFieldDefaults.colors().copy(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
                         ),
                     )
                     IconButton(
@@ -398,6 +382,8 @@ private fun CheckerInboxScreen(
                     fetchedList = state.checkerTasks
                     setList.invoke(fetchedList)
                     CheckerInboxContent(
+                        isInSelectionMode = isInSelectionMode,
+                        selectedItemsState = selectedItemsState,
                         checkerTaskList = if (isFiltered || isSearching) filteredList else fetchedList,
                         onApprove = {
                             approveId = it
@@ -411,12 +397,9 @@ private fun CheckerInboxScreen(
                             deleteId = it
                             showDeleteDialog = true
                         },
-                        isInSelectionMode = isInSelectionMode,
-                        selectedItemsState = selectedItemsState,
-                        selectedMode = {
-                            isInSelectionMode = true
-                        },
-                    )
+                    ) {
+                        isInSelectionMode = true
+                    }
                 }
 
                 is CheckerInboxUiState.Error -> {
@@ -444,16 +427,24 @@ private fun CheckerInboxScreen(
 
 @Composable
 private fun CheckerInboxContent(
+    isInSelectionMode: Boolean,
+    selectedItemsState: SelectedItemsState,
     checkerTaskList: List<CheckerTask>,
     onApprove: (Int) -> Unit,
     onReject: (Int) -> Unit,
     onDelete: (Int) -> Unit,
-    isInSelectionMode: Boolean,
-    selectedItemsState: SelectedItemsState,
+    modifier: Modifier = Modifier,
     selectedMode: () -> Unit,
 ) {
-    LazyColumn {
-        items(checkerTaskList.size) { index ->
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        items(
+            count = checkerTaskList.size,
+            key = { index -> checkerTaskList[index].id },
+        ) { index ->
             CheckerInboxItem(
                 checkerTask = checkerTaskList[index],
                 onApprove = onApprove,
@@ -502,10 +493,13 @@ private fun CheckerInboxItem(
     selectedItemsState: SelectedItemsState,
     selectedMode: () -> Unit,
 ) {
+    val selectedColor = MaterialTheme.colorScheme.primaryContainer
+    val unselectedColor = MaterialTheme.colorScheme.surface
+
     val selectedItems by selectedItemsState.selectedItems
     val isSelected = selectedItemsState.contains(checkerTask.id)
 
-    var cardColor by remember { mutableStateOf(White) }
+    var cardColor by remember { mutableStateOf(unselectedColor) }
 
     var expendCheckerTask by remember { mutableStateOf(false) }
 
@@ -517,10 +511,10 @@ private fun CheckerInboxItem(
                     if (isInSelectionMode) {
                         cardColor = if (isSelected) {
                             selectedItemsState.remove(checkerTask.id)
-                            White
+                            unselectedColor
                         } else {
                             selectedItemsState.add(checkerTask.id)
-                            LightGray
+                            selectedColor
                         }
                     } else {
                         expendCheckerTask = expendCheckerTask.not()
@@ -530,22 +524,22 @@ private fun CheckerInboxItem(
                     if (isInSelectionMode) {
                         cardColor = if (isSelected) {
                             selectedItemsState.remove(checkerTask.id)
-                            White
+                            unselectedColor
                         } else {
                             selectedItemsState.add(checkerTask.id)
-                            LightGray
+                            selectedColor
                         }
                     } else {
                         selectedMode()
                         selectedItemsState.add(checkerTask.id)
-                        cardColor = LightGray
+                        cardColor = selectedColor
                     }
                 },
             ),
         colors = CardDefaults.cardColors(
             containerColor = if (selectedItems.isEmpty()) {
-                cardColor = White
-                White
+                cardColor = unselectedColor
+                unselectedColor
             } else {
                 cardColor
             },
@@ -555,13 +549,6 @@ private fun CheckerInboxItem(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Card(
-                modifier = Modifier
-                    .width(8.dp)
-                    .height(60.dp),
-                colors = CardDefaults.cardColors(Color.Yellow),
-            ) {
-            }
             Column(
                 modifier = Modifier.padding(16.dp),
             ) {
@@ -570,7 +557,6 @@ private fun CheckerInboxItem(
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Black,
                     ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -732,14 +718,13 @@ private fun CheckerInboxItemPreview() {
 @Composable
 private fun CheckerInboxContentPreview() {
     CheckerInboxContent(
+        isInSelectionMode = false,
+        selectedItemsState = SelectedItemsState(),
         checkerTaskList = sampleCheckerTaskList,
         onApprove = {},
         onReject = {},
         onDelete = {},
-        isInSelectionMode = false,
-        selectedItemsState = SelectedItemsState(),
-        selectedMode = {},
-    )
+    ) {}
 }
 
 @Preview(showBackground = true)

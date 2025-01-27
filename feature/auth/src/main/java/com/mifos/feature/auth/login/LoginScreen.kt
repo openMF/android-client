@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.auth.login
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,14 +29,11 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -69,8 +65,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mifos.core.designsystem.component.MifosAndroidClientIcon
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
 import com.mifos.feature.auth.R
@@ -81,8 +76,7 @@ import com.mifos.feature.auth.R
 
 @Composable
 internal fun LoginScreen(
-    homeIntent: () -> Unit,
-    passcodeIntent: () -> Unit,
+    navigatePasscode: () -> Unit,
     onClickToUpdateServerConfig: () -> Unit,
     modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel = hiltViewModel(),
@@ -128,45 +122,40 @@ internal fun LoginScreen(
             passwordError.value = state.passwordError
         }
 
-        LoginUiState.HomeActivityIntent -> {
+        is LoginUiState.Success -> {
+            navigatePasscode()
             showDialog.value = false
-            homeIntent()
-        }
-
-        LoginUiState.PassCodeActivityIntent -> {
-            showDialog.value = false
-            passcodeIntent()
         }
     }
 
-    Scaffold(
+    MifosScaffold(
         modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        containerColor = Color.White,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+            .fillMaxSize(),
+        snackbarHostState = snackbarHostState,
         bottomBar = {
-            Box(
+            NavigationBar(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center,
+                containerColor = Color.Transparent,
             ) {
-                FilledTonalButton(
-                    onClick = onClickToUpdateServerConfig,
+                Box(
                     modifier = Modifier
-                        .align(Alignment.Center),
-                    colors = ButtonDefaults.filledTonalButtonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        contentColor = MaterialTheme.colorScheme.tertiary,
-                    ),
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Text(text = "Update Server Configuration")
+                    FilledTonalButton(
+                        onClick = onClickToUpdateServerConfig,
+                        modifier = Modifier.heightIn(44.dp),
+                    ) {
+                        Text(text = "Update Server Configuration")
 
-                    Spacer(modifier = Modifier.width(4.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
 
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = "ArrowForward",
-                    )
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = "ArrowForward",
+                        )
+                    }
                 }
             }
         },
@@ -175,9 +164,9 @@ internal fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(it)
+                .padding(12.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
-
         ) {
             Spacer(modifier = Modifier.height(80.dp))
 
@@ -221,7 +210,11 @@ internal fun LoginScreen(
                 onValueChange = { value ->
                     password = value
                 },
-                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                visualTransformation = if (passwordVisibility) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
                 icon = Icons.Filled.Lock,
                 label = R.string.feature_auth_password,
                 error = passwordError.value,
@@ -244,19 +237,22 @@ internal fun LoginScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(
-                onClick = { loginViewModel.validateUserInputs(userName.text, password.text) },
+                onClick = {
+                    loginViewModel.validateUserInputs(
+                        username = userName.text,
+                        password = password.text,
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(44.dp)
                     .padding(start = 16.dp, end = 16.dp),
                 contentPadding = PaddingValues(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
             ) {
                 Text(text = "Login", fontSize = 16.sp)
             }
         }
+
         if (showDialog.value) {
             Dialog(
                 onDismissRequest = { showDialog.value },
@@ -271,8 +267,11 @@ internal fun LoginScreen(
     }
 }
 
-@Preview(showSystemUi = true, device = "id:pixel_7")
+@Preview
 @Composable
 private fun LoginScreenPreview() {
-    LoginScreen({}, {}, {})
+    LoginScreen(
+        navigatePasscode = {},
+        onClickToUpdateServerConfig = {},
+    )
 }

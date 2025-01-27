@@ -9,7 +9,6 @@
  */
 package com.mifos.core.designsystem.component
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,14 +21,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -40,9 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mifos.core.designsystem.R
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGray
 
 @Composable
 fun MifosSweetError(
@@ -64,7 +58,6 @@ fun MifosSweetError(
             modifier = Modifier.size(70.dp),
             model = R.drawable.core_designsystem_ic_error_black_24dp,
             contentDescription = null,
-            colorFilter = ColorFilter.tint(Color.Gray),
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
@@ -73,7 +66,6 @@ fun MifosSweetError(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
-                color = DarkGray,
             ),
         )
         Text(
@@ -82,7 +74,6 @@ fun MifosSweetError(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
-                color = DarkGray,
             ),
         )
         if (isRetryEnabled) {
@@ -90,9 +81,6 @@ fun MifosSweetError(
             Button(
                 onClick = { onclick() },
                 contentPadding = PaddingValues(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
             ) {
                 Text(
                     modifier = Modifier.padding(start = 20.dp, end = 20.dp),
@@ -123,19 +111,10 @@ fun MifosPaginationSweetError(
         )
         Text(
             text = stringResource(id = R.string.core_designsystem_unable_to_load),
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal,
-                color = DarkGray,
-            ),
         )
         Button(
             onClick = { onclick() },
             contentPadding = PaddingValues(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
         ) {
             Text(
                 modifier = Modifier

@@ -16,24 +16,22 @@ import androidx.navigation.navigation
 import com.mifos.feature.auth.login.LoginScreen
 
 fun NavGraphBuilder.authNavGraph(
-    navigateHome: () -> Unit,
+    route: String,
     navigatePasscode: () -> Unit,
     updateServerConfig: () -> Unit,
 ) {
     navigation(
         startDestination = AuthScreens.LoginScreen.route,
-        route = AuthScreens.LoginScreenRoute.route,
+        route = route,
     ) {
         loginRoute(
             navigatePasscode = navigatePasscode,
-            navigateHome = navigateHome,
             updateServerConfig = updateServerConfig,
         )
     }
 }
 
 private fun NavGraphBuilder.loginRoute(
-    navigateHome: () -> Unit,
     navigatePasscode: () -> Unit,
     updateServerConfig: () -> Unit,
 ) {
@@ -41,8 +39,7 @@ private fun NavGraphBuilder.loginRoute(
         route = AuthScreens.LoginScreen.route,
     ) {
         LoginScreen(
-            homeIntent = navigateHome,
-            passcodeIntent = navigatePasscode,
+            navigatePasscode = navigatePasscode,
             onClickToUpdateServerConfig = updateServerConfig,
         )
     }

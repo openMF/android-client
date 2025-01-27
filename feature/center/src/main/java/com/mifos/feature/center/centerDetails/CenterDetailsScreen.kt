@@ -59,7 +59,6 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
 import com.mifos.core.objects.group.CenterInfo
 import com.mifos.core.objects.group.CenterWithAssociations
@@ -297,7 +296,11 @@ private fun CenterDetailsContent(
 }
 
 @Composable
-private fun MifosCenterDetailsText(icon: ImageVector, field: String, value: String) {
+private fun MifosCenterDetailsText(
+    icon: ImageVector,
+    field: String,
+    value: String,
+) {
     Row(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
@@ -308,7 +311,6 @@ private fun MifosCenterDetailsText(icon: ImageVector, field: String, value: Stri
             modifier = Modifier.size(18.dp),
             imageVector = icon,
             contentDescription = null,
-            tint = DarkGray,
         )
         Text(
             modifier = Modifier
@@ -320,20 +322,19 @@ private fun MifosCenterDetailsText(icon: ImageVector, field: String, value: Stri
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
             ),
-            color = Black,
             textAlign = TextAlign.Start,
         )
-        Text(
-
-            text = value,
-            style = TextStyle(
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal,
-            ),
-            color = DarkGray,
-            textAlign = TextAlign.Start,
-        )
+        if (value.isNotEmpty()) {
+            Text(
+                text = value,
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontStyle = FontStyle.Normal,
+                ),
+                textAlign = TextAlign.Start,
+            )
+        }
     }
 }
 

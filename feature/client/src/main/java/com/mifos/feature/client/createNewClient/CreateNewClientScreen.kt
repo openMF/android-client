@@ -99,6 +99,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.component.PermissionBox
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.BlueSecondary
@@ -169,6 +170,8 @@ internal fun CreateNewClientScreen(
     MifosScaffold(
         title = stringResource(id = R.string.feature_client_create_new_client),
         snackbarHostState = snackbarHostState,
+        icon = MifosIcons.arrowBack,
+        onBackPressed = navigateBack,
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (uiState) {
@@ -331,7 +334,11 @@ private fun CreateNewClientContent(
     }
     LaunchedEffect(key1 = staffInOffices) {
         if (staffInOffices.isEmpty()) {
-            Toast.makeText(context, context.resources.getString(R.string.feature_client_no_staff_associated_with_office), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.resources.getString(R.string.feature_client_no_staff_associated_with_office),
+                Toast.LENGTH_SHORT,
+            ).show()
             staff = ""
             selectedStaffId = 0
         }
@@ -614,11 +621,13 @@ private fun CreateNewClientContent(
         }
     }
 }
+
 data class Name(
     val firstName: String,
     val lastName: String,
     val middleName: String,
 )
+
 private fun handleSubmitClick(
     context: Context,
     clientNames: Name,
@@ -640,7 +649,13 @@ private fun handleSubmitClick(
     mobileNumber: String,
     externalId: String,
 ) {
-    if (!isAllFieldsValid(context, clientNames.firstName, clientNames.middleName, clientNames.lastName)) {
+    if (!isAllFieldsValid(
+            context,
+            clientNames.firstName,
+            clientNames.middleName,
+            clientNames.lastName,
+        )
+    ) {
         return
     }
 
@@ -695,8 +710,10 @@ private fun createClientPayload(
 
     // Optional fields with default values
     clientPayload.active = isActive
-    clientPayload.activationDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(activationDate)
-    clientPayload.dateOfBirth = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(dateOfBirth)
+    clientPayload.activationDate =
+        SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(activationDate)
+    clientPayload.dateOfBirth =
+        SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(dateOfBirth)
 
     // Optional fields
     if (middleName.isNotEmpty()) {
@@ -1009,7 +1026,8 @@ private fun isMiddleNameValid(name: String, context: Context): Boolean {
     }
 }
 
-private class CreateNewClientScreenPreviewProvider : PreviewParameterProvider<CreateNewClientUiState> {
+private class CreateNewClientScreenPreviewProvider :
+    PreviewParameterProvider<CreateNewClientUiState> {
     override val values: Sequence<CreateNewClientUiState>
         get() = sequenceOf(
             CreateNewClientUiState.ShowClientTemplate(

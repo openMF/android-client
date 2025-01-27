@@ -20,7 +20,6 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.feature.about.navigation.aboutScreen
 import com.mifos.feature.activate.navigation.activateScreen
 import com.mifos.feature.activate.navigation.navigateToActivateScreen
-import com.mifos.feature.auth.navigation.navigateToLogin
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute
@@ -56,9 +55,10 @@ import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScree
 import com.mifos.feature.savings.navigation.savingsNavGraph
 import com.mifos.feature.search.navigation.SearchScreens
 import com.mifos.feature.search.navigation.searchNavGraph
+import com.mifos.feature.settings.navigation.navigateToUpdateServerConfig
 import com.mifos.feature.settings.navigation.settingsScreen
 import com.mifos.mifosxdroid.R
-import com.mifos.utils.MifosResponseHandler
+import com.mifos.mifosxdroid.utils.MifosResponseHandler
 
 @Composable
 fun Navigation(
@@ -66,6 +66,7 @@ fun Navigation(
     padding: PaddingValues,
     modifier: Modifier = Modifier,
     startDestination: String = SearchScreens.SearchScreenRoute.route,
+    onUpdateConfig: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -104,8 +105,8 @@ fun Navigation(
             },
             hasDatatables = navController::navigateDataTableList,
             onDocumentClicked = navController::navigateToDocumentListScreen,
-            onCardClicked = { position, survey ->
-                //    TODO
+            onCardClicked = { _, _ ->
+                // TODO:: Add Card Click
             },
         )
 
@@ -148,7 +149,7 @@ fun Navigation(
 
         addLoanAccountScreen(
             onBackPressed = navController::popBackStack,
-            dataTable = { dataTable, payload ->
+            dataTable = { _, _ ->
 //                navController.navigateDataTableList(dataTable, payload, Constants.CLIENT_LOAN)
 //                TODO()
             },
@@ -179,7 +180,6 @@ fun Navigation(
             addSavingsAccount = {
                 navController.navigateToAddSavingsAccount(it, 0, true)
             },
-
         )
 
         reportNavGraph(
@@ -196,9 +196,10 @@ fun Navigation(
 
         settingsScreen(
             navigateBack = navController::popBackStack,
-            navigateToLoginScreen = { navController.navigateToLogin() },
+            onUpdateConfig = onUpdateConfig,
+            onClickUpdateConfig = navController::navigateToUpdateServerConfig,
+            // TODO:: Add change passcode route
             changePasscode = { },
-            languageChanged = { },
         )
 
         aboutScreen(
@@ -217,7 +218,13 @@ fun Navigation(
             clientCreated = { client, userStatus ->
                 navController.popBackStack()
                 navController.popBackStack()
-                Toast.makeText(context, context.resources.getString(R.string.client) + MifosResponseHandler.getResponse(userStatus), Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    context,
+                    context.resources.getString(R.string.client) + MifosResponseHandler.getResponse(
+                        userStatus,
+                    ),
+                    Toast.LENGTH_LONG,
+                ).show()
 
                 if (userStatus == Constants.USER_ONLINE) {
                     client.clientId?.let { navController.navigateClientDetailsScreen(it) }

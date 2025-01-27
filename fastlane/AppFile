@@ -1,0 +1,2 @@
+json_key_file("secrets/playStorePublishServiceCredentialsFile.json")
+package_name("com.mifos.mifosxdroid") # e.g. cmp.android.app

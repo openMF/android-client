@@ -66,10 +66,10 @@ fun PermissionBox(
     }
 
     val decideCurrentPermissionStatus: (Boolean, Boolean) -> String =
-        { permissionGranted, shouldShowPermissionRationale ->
-            if (permissionGranted) {
+        { granted, rationale ->
+            if (granted) {
                 "Granted"
-            } else if (shouldShowPermissionRationale) {
+            } else if (rationale) {
                 "Rejected"
             } else {
                 "Denied"
@@ -89,7 +89,7 @@ fun PermissionBox(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { permissionResults ->
             val isGranted =
-                requiredPermissions.all { permissionResults[it] ?: false }
+                requiredPermissions.all { permissionResults[it] == true }
 
             permissionGranted = isGranted
 
@@ -112,24 +112,27 @@ fun PermissionBox(
         },
     )
 
-    DisposableEffect(key1 = lifecycleOwner, effect = {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_START &&
-                !permissionGranted &&
-                !shouldShowPermissionRationale
-            ) {
-                multiplePermissionLauncher.launch(requiredPermissions.toTypedArray())
+    DisposableEffect(
+        key1 = lifecycleOwner,
+        effect = {
+            val observer = LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_START &&
+                    !permissionGranted &&
+                    !shouldShowPermissionRationale
+                ) {
+                    multiplePermissionLauncher.launch(requiredPermissions.toTypedArray())
+                }
             }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    })
+            lifecycleOwner.lifecycle.addObserver(observer)
+            onDispose {
+                lifecycleOwner.lifecycle.removeObserver(observer)
+            }
+        },
+    )
 
     if (shouldShowPermissionRationale) {
         MifosDialogBox(
-            showDialogState = shouldShowPermissionRationale,
+            showDialogState = true,
             onDismiss = { shouldShowPermissionRationale = false },
             title = title,
             message = description,

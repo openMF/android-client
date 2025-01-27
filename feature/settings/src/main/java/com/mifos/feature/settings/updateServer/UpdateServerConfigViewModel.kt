@@ -32,9 +32,13 @@ class UpdateServerConfigViewModel @Inject constructor(
     private val validator: ServerConfigValidatorUseCase,
 ) : ViewModel() {
 
-    private val serverConfig = prefManager.getServerConfig
+    private val serverConfig = prefManager.serverConfigFlow.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = ServerConfig.DEFAULT,
+    )
 
-    private val _state = mutableStateOf(serverConfig)
+    private val _state = mutableStateOf(serverConfig.value)
     val state: State<ServerConfig> get() = _state
 
     private val _result = MutableSharedFlow<Boolean>()

@@ -20,8 +20,9 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class GroupDetailsRepositoryImp @Inject constructor(private val dataManagerGroups: DataManagerGroups) :
-    GroupDetailsRepository {
+class GroupDetailsRepositoryImp @Inject constructor(
+    private val dataManagerGroups: DataManagerGroups,
+) : GroupDetailsRepository {
 
     override fun getGroup(groupId: Int): Observable<Group> {
         return dataManagerGroups.getGroup(groupId)

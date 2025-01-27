@@ -9,29 +9,28 @@
  */
 package com.mifos.feature.settings.settings
 
-import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.CountDownTimer
-import android.widget.Toast
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,85 +44,67 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.enums.MifosAppLanguage
 import com.mifos.core.common.utils.LanguageHelper
 import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.model.DarkThemeConfig
+import com.mifos.core.model.MifosAppLanguage
+import com.mifos.core.model.ThemeBrand
+import com.mifos.core.model.UserData
 import com.mifos.feature.settings.R
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
-import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import java.util.Locale
 
 @Composable
 internal fun SettingsScreen(
     onBackPressed: () -> Unit,
-    navigateToLoginScreen: () -> Unit,
-    changePasscode: (String) -> Unit,
-    languageChanged: () -> Unit,
+    changePasscode: () -> Unit,
+    onClickUpdateConfig: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
-    val baseURL by viewModel.baseUrl.collectAsStateWithLifecycle()
-    val tenant by viewModel.tenant.collectAsStateWithLifecycle()
-    val passcode by viewModel.passcode.collectAsStateWithLifecycle()
-    val theme by viewModel.theme.collectAsStateWithLifecycle()
-    val language by viewModel.language.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val userData by viewModel.userData.collectAsStateWithLifecycle()
 
     SettingsScreen(
+        userData = userData,
         onBackPressed = onBackPressed,
-        selectedLanguage = language ?: "System Language",
-        selectedTheme = theme ?: "System Theme",
-        baseURL = baseURL ?: "",
-        tenant = tenant ?: "",
-        changePasscode = { changePasscode(passcode ?: "") },
-        handleEndpointUpdate = { baseURL, tenant ->
-            if (viewModel.tryUpdatingEndpoint(selectedBaseUrl = baseURL, selectedTenant = tenant)) {
-                navigateToLoginScreen()
-            }
-        },
-        updateTheme = {
-            viewModel.updateTheme(it)
-        },
-        updateLanguage = {
-            val isSystemLanguage = viewModel.updateLanguage(it.code)
+        updateTheme = viewModel::changeThemeBrand,
+        updateThemeConfig = viewModel::changeDarkThemeConfig,
+        updateLanguage = { language ->
+            viewModel.changeLanguage(language)
             updateLanguageLocale(
                 context = context,
-                language = it.code,
-                isSystemLanguage = isSystemLanguage,
+                language = language.code,
+                isSystemLanguage = language == MifosAppLanguage.SYSTEM_LANGUAGE,
             )
-            languageChanged()
         },
+        changePasscode = changePasscode,
+        onClickUpdateConfig = onClickUpdateConfig,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SettingsScreen(
-    onBackPressed: () -> Unit,
-    selectedLanguage: String,
-    selectedTheme: String,
-    baseURL: String,
-    tenant: String,
-    changePasscode: () -> Unit,
-    handleEndpointUpdate: (baseURL: String, tenant: String) -> Unit,
-    updateTheme: (theme: AppTheme) -> Unit,
+    userData: UserData,
+    updateTheme: (theme: ThemeBrand) -> Unit,
+    updateThemeConfig: (darkThemeConfig: DarkThemeConfig) -> Unit,
     updateLanguage: (language: MifosAppLanguage) -> Unit,
+    changePasscode: () -> Unit,
+    onBackPressed: () -> Unit,
+    onClickUpdateConfig: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var showLanguageUpdateDialog by rememberSaveable { mutableStateOf(false) }
-    var showEndpointUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showThemeUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showSyncSurveyDialog by rememberSaveable { mutableStateOf(false) }
-    var showServerConfig by rememberSaveable { mutableStateOf(false) }
-
-    val sheetState = rememberModalBottomSheetState()
-    val context = LocalContext.current
 
     MifosScaffold(
         icon = MifosIcons.arrowBack,
@@ -145,9 +126,7 @@ internal fun SettingsScreen(
 
                         SettingsCardItem.PASSCODE -> changePasscode()
 
-                        SettingsCardItem.ENDPOINT -> showEndpointUpdateDialog = true
-
-                        SettingsCardItem.SERVER_CONFIG -> showServerConfig = true
+                        SettingsCardItem.SERVER_CONFIG -> onClickUpdateConfig()
                     }
                 },
             )
@@ -162,47 +141,25 @@ internal fun SettingsScreen(
         )
     }
 
-    if (showServerConfig) {
-        ModalBottomSheet(
-            onDismissRequest = { showServerConfig = false },
-            sheetState = sheetState,
-        ) {
-            UpdateServerConfigScreenRoute(
-                onCloseClick = { showServerConfig = false },
-                onSuccessful = {
-                    showServerConfig = false
-                    showRestartCountdownToast(context, 2)
-                },
-            )
-        }
-    }
-
     if (showLanguageUpdateDialog) {
         MifosRadioButtonDialog(
             titleResId = R.string.feature_settings_choose_language,
             items = stringArrayResource(R.array.feature_settings_languages),
             selectItem = { _, index -> updateLanguage(MifosAppLanguage.entries[index]) },
             onDismissRequest = { showLanguageUpdateDialog = false },
-            selectedItem = MifosAppLanguage.fromCode(selectedLanguage).displayName,
+            selectedItem = userData.language.displayName,
         )
     }
 
     if (showThemeUpdateDialog) {
-        MifosRadioButtonDialog(
-            titleResId = R.string.feature_settings_change_app_theme,
-            items = AppTheme.entries.map { it.themeName }.toTypedArray(),
-            selectItem = { _, index -> updateTheme(AppTheme.entries[index]) },
+        ThemeDialog(
+            selectedTheme = userData.themeBrand,
+            darkThemeConfig = userData.darkThemeConfig,
+            onThemeSelected = { theme -> updateTheme(theme) },
+            onDarkThemeConfigSelected = { darkThemeConfig ->
+                updateThemeConfig(darkThemeConfig)
+            },
             onDismissRequest = { showThemeUpdateDialog = false },
-            selectedItem = selectedTheme,
-        )
-    }
-
-    if (showEndpointUpdateDialog) {
-        UpdateEndpointDialogScreen(
-            initialBaseURL = baseURL,
-            initialTenant = tenant,
-            onDismissRequest = { showEndpointUpdateDialog = false },
-            handleEndpointUpdate = handleEndpointUpdate,
         )
     }
 }
@@ -258,6 +215,7 @@ private fun SettingsCardItem(
                 Text(
                     text = stringResource(id = title),
                     style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
                 )
                 Text(
                     modifier = Modifier.padding(end = 16.dp),
@@ -270,7 +228,11 @@ private fun SettingsCardItem(
     }
 }
 
-private fun updateLanguageLocale(context: Context, language: String, isSystemLanguage: Boolean) {
+private fun updateLanguageLocale(
+    context: Context,
+    language: String,
+    isSystemLanguage: Boolean,
+) {
     if (isSystemLanguage) {
         LanguageHelper.setLocale(context, language)
     } else {
@@ -283,45 +245,98 @@ private fun updateLanguageLocale(context: Context, language: String, isSystemLan
     }
 }
 
-private fun showRestartCountdownToast(context: Context, seconds: Int) {
-    val countDownTimer = object : CountDownTimer((seconds * 1000).toLong(), 1000) {
-        override fun onTick(millisUntilFinished: Long) {
-            val secondsRemaining = millisUntilFinished / 1000
-            Toast.makeText(
-                context,
-                "Restarting app in $secondsRemaining seconds",
-                Toast.LENGTH_SHORT,
-            ).show()
-        }
+@Composable
+private fun ThemeDialog(
+    selectedTheme: ThemeBrand,
+    darkThemeConfig: DarkThemeConfig,
+    onThemeSelected: (ThemeBrand) -> Unit,
+    onDarkThemeConfigSelected: (DarkThemeConfig) -> Unit,
+    modifier: Modifier = Modifier,
+    onDismissRequest: () -> Unit,
+) {
+    Dialog(
+        onDismissRequest = onDismissRequest,
+    ) {
+        Card(modifier = modifier) {
+            Column(modifier = Modifier.padding(20.dp)) {
+                Text(text = stringResource(id = R.string.feature_settings_change_app_theme))
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 500.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    itemsIndexed(
+                        items = ThemeBrand.entries,
+                    ) { index, item ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .clickable {
+                                    onDismissRequest.invoke()
+                                    onThemeSelected(item)
+                                }
+                                .fillMaxWidth(),
+                        ) {
+                            RadioButton(
+                                selected = (item == selectedTheme),
+                                onClick = {
+                                    onDismissRequest.invoke()
+                                    onThemeSelected(item)
+                                },
+                            )
+                            Text(
+                                text = item.name,
+                                modifier = Modifier.padding(start = 4.dp),
+                            )
+                        }
+                    }
 
-        override fun onFinish() {
-            context.restartApplication()
+                    item {
+                        HorizontalDivider()
+                    }
+
+                    itemsIndexed(
+                        items = DarkThemeConfig.entries,
+                    ) { index, item ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .clickable {
+                                    onDismissRequest.invoke()
+                                    onDarkThemeConfigSelected(item)
+                                }
+                                .fillMaxWidth(),
+                        ) {
+                            RadioButton(
+                                selected = (item == darkThemeConfig),
+                                onClick = {
+                                    onDismissRequest.invoke()
+                                    onDarkThemeConfigSelected(item)
+                                },
+                            )
+                            Text(
+                                text = item.name,
+                                modifier = Modifier.padding(start = 4.dp),
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
-    countDownTimer.start()
-}
-
-private fun Context.restartApplication() {
-    val packageManager: PackageManager = this.packageManager
-    val intent: Intent = packageManager.getLaunchIntentForPackage(this.packageName)!!
-    val componentName: ComponentName = intent.component!!
-    val restartIntent: Intent = Intent.makeRestartActivityTask(componentName)
-    this.startActivity(restartIntent)
-    Runtime.getRuntime().exit(0)
 }
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
 private fun PreviewSettingsScreen() {
     SettingsScreen(
-        onBackPressed = {},
-        selectedLanguage = "",
-        selectedTheme = "",
-        baseURL = "",
-        tenant = "",
-        handleEndpointUpdate = { _, _ -> },
-        updateLanguage = {},
+        userData = UserData.DEFAULT,
         updateTheme = {},
+        updateThemeConfig = {},
+        updateLanguage = {},
         changePasscode = {},
+        onBackPressed = {},
+        onClickUpdateConfig = {},
     )
 }

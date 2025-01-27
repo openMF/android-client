@@ -7,72 +7,60 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.mifos.MifosBuildType
-
-/*
- * This project is licensed under the open source MPL V2.
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
+import org.mifos.dynamicVersion
 
 plugins {
     alias(libs.plugins.mifos.android.application)
     alias(libs.plugins.mifos.android.application.compose)
     alias(libs.plugins.mifos.android.application.flavors)
-//    alias(libs.plugins.mifos.android.application.jacoco)
     alias(libs.plugins.mifos.android.hilt)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.secrets)
     alias(libs.plugins.androidx.navigation)
+    alias(libs.plugins.gms)
 }
 
 android {
     namespace = "com.mifos.mifosxdroid"
-    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.mifos.mifosxdroid"
-        minSdk = 26
-        targetSdk = 34
-        versionCode = 6
-        versionName = "1.0.1"
-
-        multiDexEnabled = true
-        compileSdkPreview = "UpsideDownCake"
-        // A test runner provided by https://code.google.com/p/android-test-kit/
-        testInstrumentationRunner = "com.mifos.core.testing.MifosTestRunner"
+        versionName = project.dynamicVersion
+        versionCode = System.getenv("VERSION_CODE")?.toIntOrNull() ?: 1
         vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled = true
     }
 
     signingConfigs {
         create("release") {
-            storeFile = file("../default_key_store.jks")
-            storePassword = "mifos1234"
-            keyAlias = "mifos"
-            keyPassword = "mifos1234"
+            storeFile =
+                file(System.getenv("KEYSTORE_PATH") ?: "../keystores/release_keystore.keystore")
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "mifos1234"
+            keyAlias = System.getenv("KEYSTORE_ALIAS") ?: "mifos"
+            keyPassword = System.getenv("KEYSTORE_ALIAS_PASSWORD") ?: "mifos1234"
+            enableV1Signing = true
+            enableV2Signing = true
         }
     }
 
     buildTypes {
-
         debug {
             isMinifyEnabled = false
             applicationIdSuffix = MifosBuildType.DEBUG.applicationIdSuffix
-            // TODO  Uses new built-in shrinker, To Enable update buils tools to 2.2
-            // TODO http://tools.android.com/tech-docs/new-build-system/built-in-shrinker
-            //useProguard false
-            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            //testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
 
+        // TODO:: Fix the proguard rules for release build
         release {
             isMinifyEnabled = false
-            isDebuggable = false
+            isDebuggable = true
+            isShrinkResources = false
             applicationIdSuffix = MifosBuildType.RELEASE.applicationIdSuffix
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             testProguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
-                "proguardTest-rules.pro"
+                "proguardTest-rules.pro",
             )
         }
     }
@@ -86,38 +74,9 @@ android {
         resources.excludes.add("META-INF/dbflow-kotlinextensions-compileReleaseKotlin.kotlin_module")
     }
 
-    useLibrary("org.apache.http.legacy")
-
-    // Always show the result of every unit test, even if it passes.
-    testOptions.unitTests.all {
-        it.apply {
-            testLogging.events = setOf(
-                TestLogEvent.PASSED,
-                TestLogEvent.SKIPPED,
-                TestLogEvent.FAILED,
-                TestLogEvent.STANDARD_OUT,
-                TestLogEvent.STANDARD_ERROR
-            )
-        }
-    }
-
     buildFeatures {
-        viewBinding = true
-        buildConfig = true
         compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
+        buildConfig = true
     }
 }
 
@@ -144,7 +103,6 @@ dependencies {
     implementation(projects.feature.document)
     implementation(projects.feature.dataTable)
     implementation(projects.feature.search)
-    implementation(projects.feature.splash)
 
     implementation(projects.libs.mifosPasscode)
 
@@ -160,65 +118,8 @@ dependencies {
     // Multidex dependency
     implementation(libs.androidx.multidex)
 
-    // Text drawable dependency
-    implementation(libs.textdrawable)
-
-    // Kotlin standard library
-    implementation(libs.kotlin.stdlib)
-
-    //DBFlow dependencies
-    kapt(libs.dbflow.processor)
-    implementation(libs.dbflow)
-
     // App's Support dependencies, including test
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.legacy.support.v4)
-    implementation(libs.androidx.recyclerview)
-    implementation(libs.material)
-    implementation(libs.play.services.places)
-    implementation(libs.play.services.location)
-    implementation(libs.play.services.maps)
-    implementation(libs.android.maps.utils)
-    implementation(libs.androidx.espresso.idling.resource)
-
-    //LifeCycle
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.extensions)
-    implementation(libs.androidx.lifecycle.reactivestreams.ktx)
-    implementation(libs.androidx.lifecycle.common.java8)
-
-    //Square dependencies
-    implementation("com.squareup.retrofit2:retrofit:2.9.0") {
-        // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
-        exclude(module = "okhttp")
-    }
-    implementation(libs.converter.gson)
-    implementation(libs.converter.scalars)
-    implementation(libs.adapter.rxjava)
-    implementation(libs.squareup.okhttp)
-    implementation(libs.logging.interceptor)
-
-    implementation(libs.fliptables)
-
-    //sweet error dependency
-    implementation(libs.sweet.error)
-
-    //rxjava dependencies
-    implementation(libs.rxandroid)
-    implementation(libs.rxjava)
-
-    //stetho dependencies
-    implementation(libs.stetho)
-    implementation(libs.stetho.okhttp3)
-
-    //showcase View dependency
-    implementation(libs.materialshowcaseview)
-
-    //Iconify dependency
-    implementation(libs.android.iconify.material)
-
-    //glide dependency
-    implementation(libs.glide)
 
     // Mockito and jUnit dependencies
     testImplementation(libs.junit4)
@@ -226,51 +127,29 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.androidx.core.testing)
 
-    //Android-Jobs
-    implementation(libs.android.job)
-
-    // androidx annotations
-    implementation(libs.androidx.annotation)
-
-    //preferences
-    implementation(libs.androidx.preference.ktx)
-
     //Splash Screen
     implementation(libs.androidx.core.splashscreen)
-
-    // Navigation Components
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
 
     // Hilt dependency
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
-    // fineract sdk dependencies
-    implementation(libs.mifos.android.sdk.arch)
-
-    // sdk client
-    implementation(libs.fineract.client)
-
     // Jetpack Compose
-    implementation(libs.androidx.material)
     implementation(libs.androidx.compiler)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.activity.compose)
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.androidx.compose.material.iconsExtended)
+    implementation(libs.androidx.navigation.compose)
 
     // ViewModel utilities for Compose
-    implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    //LifeCycle
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.androidx.lifecycle.runtimeCompose)
-
-    //coil
-    implementation(libs.coil.kt.compose)
-
 }
 
 dependencyGuard {

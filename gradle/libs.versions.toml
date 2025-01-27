@@ -7,8 +7,8 @@ androidDesugarJdkLibs = "2.0.4"
 androidIconifyMaterial = "2.2.2"
 androidJob = "1.2.6"
 androidMapsUtils = "0.4.2"
-androidGradlePlugin = "8.5.0"
-androidTools = "31.6.0"
+androidGradlePlugin = "8.7.0"
+androidTools = "31.7.0"
 androidxActivity = "1.8.2"
 androidxAppCompat = "1.6.1"
 androidxArchCore = '2.2.0'
@@ -57,7 +57,7 @@ firebaseCrashlyticsPlugin = "2.9.9"
 firebasePerfPlugin = "1.4.2"
 fliptables = "1.0.1"
 glide = "4.15.1"
-gmsPlugin = "4.4.1"
+gmsPlugin = "4.4.2"
 googleOss = "17.0.1"
 googleOssPlugin = "0.10.6"
 hilt = "2.51"
@@ -105,11 +105,11 @@ protobufPlugin = "0.9.4"
 playIntegrity = '1.3.0'
 playUpdate = "2.1.0"
 playScanner = "16.1.0"
-playService = "18.3.0"
+playService = "18.5.0"
 realmVersion = "1.13.0"
 recyclerview = "1.3.2"
 room = "2.6.1"
-retrofit = "2.9.0"
+retrofit = "2.11.0"
 rxandroidVersion = "1.1.0"
 rxjava = "1.3.8"
 rxjava3 = "3.1.8" # 1.3.8
@@ -255,6 +255,7 @@ retrofit-core = { module = "com.squareup.retrofit2:retrofit", version.ref = "ret
 adapter-rxjava = { module = "com.squareup.retrofit2:adapter-rxjava", version.ref = "adapterRxjava" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
+converter-json = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofit" }
 
 # Coil Compose
 coil-kt-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil-compose" }
@@ -414,7 +415,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-kapt = { id = "kotlin-kapt", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kotlin-parcelize = { id = "kotlin-parcelize", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 realm = { id = "io.realm.kotlin", version.ref = "realmVersion" }

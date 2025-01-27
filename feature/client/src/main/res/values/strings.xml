@@ -10,7 +10,7 @@
 -->
 <resources>
     <string name="feature_client_failed_to_load_client">Failed To Load Clients</string>
-    <string name="feature_client">Client</string>
+    <string name="feature_client">Client Details</string>
     <string name="feature_client_failed_to_load_db_clients">Failed to load Database Clients</string>
     <string name="feature_client_no_more_clients_available">No more Clients Available</string>
 

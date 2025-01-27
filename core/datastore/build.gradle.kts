@@ -17,7 +17,7 @@ android {
     namespace = "com.mifos.core.datastore"
 
     defaultConfig {
-        consumerProguardFiles("consumer-proguard-rules.pro")
+        consumerProguardFiles("consumer-rules.pro")
     }
     testOptions {
         unitTests {
@@ -27,8 +27,9 @@ android {
 }
 
 dependencies {
-    api(projects.core.model)
-    api(projects.core.common)
+    implementation(projects.core.model)
+    implementation(projects.core.common)
+    implementation(libs.androidx.preference.ktx)
 
     api(libs.converter.gson)
 
