@@ -9,10 +9,13 @@
  */
 package com.mifos.room.entities.accounts.loans
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Entity(
@@ -26,58 +29,60 @@ import kotlinx.serialization.Transient
         ),
     ],
 )
+@Serializable
+@Parcelize
 data class Timeline(
     @PrimaryKey
     @Transient
-    var loanId: Int? = null,
+    val loanId: Int? = null,
 
     @ColumnInfo(name = "submittedOnDate")
-    var submittedOnDate: List<Int>? = null,
+    val submittedOnDate: List<Int>? = null,
 
     @ColumnInfo(name = "submittedByUsername")
-    var submittedByUsername: String? = null,
+    val submittedByUsername: String? = null,
 
     @ColumnInfo(name = "submittedByFirstname")
-    var submittedByFirstname: String? = null,
+    val submittedByFirstname: String? = null,
 
     @ColumnInfo(name = "submittedByLastname")
-    var submittedByLastname: String? = null,
+    val submittedByLastname: String? = null,
 
     @ColumnInfo(name = "approvedOnDate")
-    var approvedOnDate: List<Int>? = null,
+    val approvedOnDate: List<Int>? = null,
 
     @ColumnInfo(name = "approvedByUsername")
-    var approvedByUsername: String? = null,
+    val approvedByUsername: String? = null,
 
     @ColumnInfo(name = "approvedByFirstname")
-    var approvedByFirstname: String? = null,
+    val approvedByFirstname: String? = null,
 
     @ColumnInfo(name = "approvedByLastname")
-    var approvedByLastname: String? = null,
+    val approvedByLastname: String? = null,
 
     @ColumnInfo(name = "expectedDisbursementDate")
-    var expectedDisbursementDate: List<Int>? = null,
+    val expectedDisbursementDate: List<Int>? = null,
 
 // todo check if its int
     @ColumnInfo(name = "actualDisburseDate", index = true)
     @Transient
-    var actualDisburseDate: ActualDisbursementDate? = null,
+    val actualDisburseDate: ActualDisbursementDate? = null,
 
     @ColumnInfo(name = "actualDisbursementDate")
-    var actualDisbursementDate: List<Int?>? = null,
+    val actualDisbursementDate: List<Int?>? = null,
 
     @ColumnInfo(name = "disbursedByUsername")
-    var disbursedByUsername: String? = null,
+    val disbursedByUsername: String? = null,
 
     @ColumnInfo(name = "disbursedByFirstname")
-    var disbursedByFirstname: String? = null,
+    val disbursedByFirstname: String? = null,
 
     @ColumnInfo(name = "disbursedByLastname")
-    var disbursedByLastname: String? = null,
+    val disbursedByLastname: String? = null,
 
     @ColumnInfo(name = "closedOnDate")
-    var closedOnDate: List<Int>? = null,
+    val closedOnDate: List<Int>? = null,
 
     @ColumnInfo(name = "expectedMaturityDate")
-    var expectedMaturityDate: List<Int>? = null,
-)
+    val expectedMaturityDate: List<Int>? = null,
+) : Parcelable

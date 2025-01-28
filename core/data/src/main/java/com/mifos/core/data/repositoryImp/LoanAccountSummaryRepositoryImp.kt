@@ -9,19 +9,27 @@
  */
 package com.mifos.core.data.repositoryImp
 
+import com.mifos.core.common.network.Dispatcher
+import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.network.datamanager.DataManagerLoan
-import rx.Observable
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class LoanAccountSummaryRepositoryImp @Inject constructor(private val dataManagerLoan: DataManagerLoan) :
-    LoanAccountSummaryRepository {
+class LoanAccountSummaryRepositoryImp @Inject constructor(
+    private val dataManagerLoan: DataManagerLoan,
+    @Dispatcher(MifosDispatchers.IO)
+    private val ioDispatcher: CoroutineDispatcher,
+) : LoanAccountSummaryRepository {
 
-    override fun getLoanById(loanId: Int): Observable<LoanWithAssociations> {
+    override fun getLoanById(loanId: Int): Flow<LoanWithAssociations?> {
         return dataManagerLoan.getLoanById(loanId)
+            .flowOn(ioDispatcher)
     }
 }

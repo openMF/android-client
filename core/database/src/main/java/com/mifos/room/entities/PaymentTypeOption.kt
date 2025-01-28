@@ -11,36 +11,34 @@ package com.mifos.room.entities
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
-import com.raizlabs.android.dbflow.annotation.Column
-import com.raizlabs.android.dbflow.annotation.ModelContainer
-import com.raizlabs.android.dbflow.annotation.PrimaryKey
-import com.raizlabs.android.dbflow.annotation.Table
 
-@Table(database = MifosDatabase::class)
-@ModelContainer
+@Entity(tableName = "PaymentTypeOption")
 data class PaymentTypeOption(
     @SerializedName("id")
     @PrimaryKey
-    var id: Int = 0,
+    @ColumnInfo(name = "id")
+    val id: Int = 0,
 
     @SerializedName("name")
-    @Column
-    var name: String = "",
+    @ColumnInfo(name = "name")
+    val name: String = "",
 
     @SerializedName("description")
-    @Column
-    var description: String? = null,
+    @ColumnInfo(name = "description")
+    val description: String? = null,
 
     @SerializedName("isCashPayment")
-    @Column
-    var isCashPayment: Boolean? = null,
+    @ColumnInfo(name = "is_cash_payment")
+    val isCashPayment: Boolean? = null,
 
     @SerializedName("position")
-    @Column
-    var position: Int? = null,
+    @ColumnInfo(name = "position")
+    val position: Int? = null,
 ) : MifosBaseModel(), Comparable<PaymentTypeOption>, Parcelable {
 
     override fun compareTo(another: PaymentTypeOption): Int {

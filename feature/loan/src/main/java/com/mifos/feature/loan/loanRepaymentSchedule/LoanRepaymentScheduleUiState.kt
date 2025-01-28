@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.loanRepaymentSchedule
 
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 
 /**
  * Created by Aditya Gupta on 12/08/23.

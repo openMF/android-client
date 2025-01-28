@@ -16,7 +16,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.feature.loan.groupLoanAccount.GroupLoanAccountScreen
@@ -28,6 +27,7 @@ import com.mifos.feature.loan.loanDisbursement.LoanAccountDisbursementScreen
 import com.mifos.feature.loan.loanRepayment.LoanRepaymentScreen
 import com.mifos.feature.loan.loanRepaymentSchedule.LoanRepaymentScheduleScreen
 import com.mifos.feature.loan.loanTransaction.LoanTransactionsScreen
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 
 /**
  * Created by Pronay Sarker on 16/08/2024 (2:24 AM)

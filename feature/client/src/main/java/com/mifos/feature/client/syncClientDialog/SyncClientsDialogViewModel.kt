@@ -26,6 +26,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -187,34 +189,31 @@ class SyncClientsDialogViewModel @Inject constructor(
      * @param loanId Loan Id
      */
     private fun syncLoanAndLoanRepayment(loanId: Int) {
-        Observable.combineLatest(
-            repository.syncLoanById(loanId),
-            repository.syncLoanRepaymentTemplate(loanId),
-        ) { loanWithAssociations, loanRepaymentTemplate ->
-            val loanAndLoanRepayment = LoanAndLoanRepayment()
-            loanAndLoanRepayment.loanWithAssociations = loanWithAssociations
-            loanAndLoanRepayment.loanRepaymentTemplate = loanRepaymentTemplate
-            loanAndLoanRepayment
-        }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<LoanAndLoanRepayment>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    onAccountSyncFailed(e)
-                }
-
-                override fun onNext(loanAndLoanRepayment: LoanAndLoanRepayment) {
-                    mLoanAndRepaymentSyncIndex += 1
-                    _syncClientData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex) }
-                    if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
-                        checkNetworkConnectionAndSyncLoanAndLoanRepayment()
-                    } else {
-                        setLoanAccountSyncStatusTrue()
-                        checkAccountsSyncStatusAndSyncAccounts()
+        viewModelScope.launch {
+            try {
+                combine(
+                    repository.syncLoanById(loanId),
+                    repository.syncLoanRepaymentTemplate(loanId),
+                ) { loanWithAssociations, loanRepaymentTemplate ->
+                    LoanAndLoanRepayment().apply {
+                        this.loanWithAssociations = loanWithAssociations
+                        this.loanRepaymentTemplate = loanRepaymentTemplate
                     }
-                }
-            })
+                }.flowOn(Dispatchers.IO)
+                    .collect { loanAndLoanRepayment ->
+                        mLoanAndRepaymentSyncIndex += 1
+                        _syncClientData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex) }
+                        if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
+                            checkNetworkConnectionAndSyncLoanAndLoanRepayment()
+                        } else {
+                            setLoanAccountSyncStatusTrue()
+                            checkAccountsSyncStatusAndSyncAccounts()
+                        }
+                    }
+            } catch (e: Throwable) {
+                onAccountSyncFailed(e)
+            }
+        }
     }
 
     /**
@@ -246,22 +245,24 @@ class SyncClientsDialogViewModel @Inject constructor(
         }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<SavingsAccountAndTransactionTemplate>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    onAccountSyncFailed(e)
-                }
-
-                override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
-                    mSavingsAndTransactionSyncIndex += 1
-                    _syncClientData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex) }
-                    if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
-                        checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
-                    } else {
-                        syncClient(mClientList[mClientSyncIndex])
+            .subscribe(
+                object : Subscriber<SavingsAccountAndTransactionTemplate>() {
+                    override fun onCompleted() {}
+                    override fun onError(e: Throwable) {
+                        onAccountSyncFailed(e)
                     }
-                }
-            })
+
+                    override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
+                        mSavingsAndTransactionSyncIndex += 1
+                        _syncClientData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex) }
+                        if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
+                            checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
+                        } else {
+                            syncClient(mClientList[mClientSyncIndex])
+                        }
+                    }
+                },
+            )
     }
 
     /**
@@ -276,20 +277,22 @@ class SyncClientsDialogViewModel @Inject constructor(
         repository.syncClientInDatabase(client)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Client>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _syncClientsDialogUiState.value =
-                        SyncClientsDialogUiState.Error(message = e.message.toString())
-                }
+            .subscribe(
+                object : Subscriber<Client>() {
+                    override fun onCompleted() {}
+                    override fun onError(e: Throwable) {
+                        _syncClientsDialogUiState.value =
+                            SyncClientsDialogUiState.Error(message = e.message.toString())
+                    }
 
-                override fun onNext(client: Client) {
-                    val singleSyncClientMax = maxSingleSyncClientProgressBar
-                    _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
-                    mClientSyncIndex += 1
-                    syncClient()
-                }
-            })
+                    override fun onNext(client: Client) {
+                        val singleSyncClientMax = maxSingleSyncClientProgressBar
+                        _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
+                        mClientSyncIndex += 1
+                        syncClient()
+                    }
+                },
+            )
     }
 
     private fun updateTotalSyncProgressBarAndCount() {

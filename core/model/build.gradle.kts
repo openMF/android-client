@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
+    id("kotlinx-serialization")
 }
 android{
     namespace = "com.mifos.core.model"
@@ -21,4 +22,5 @@ android{
 }
 dependencies {
     implementation(libs.converter.gson)
+    implementation(libs.kotlinx.serialization.json)
 }

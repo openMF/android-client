@@ -9,42 +9,47 @@
  */
 package com.mifos.room.entities.accounts.loans
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Entity(tableName = "LoanStatus")
+@Serializable
+@Parcelize
 data class Status(
     @PrimaryKey
-    var id: Int? = null,
+    val id: Int? = null,
 
     @ColumnInfo(name = "code")
-    var code: String? = null,
+    val code: String? = null,
 
     @ColumnInfo(name = "value")
-    var value: String? = null,
+    val value: String? = null,
 
     @ColumnInfo(name = "pendingApproval")
-    var pendingApproval: Boolean? = null,
+    val pendingApproval: Boolean? = null,
 
     @ColumnInfo(name = "waitingForDisbursal")
-    var waitingForDisbursal: Boolean? = null,
+    val waitingForDisbursal: Boolean? = null,
 
     @ColumnInfo(name = "active")
-    var active: Boolean? = null,
+    val active: Boolean? = null,
 
     @ColumnInfo(name = "closedObligationsMet")
-    var closedObligationsMet: Boolean? = null,
+    val closedObligationsMet: Boolean? = null,
 
     @ColumnInfo(name = "closedWrittenOff")
-    var closedWrittenOff: Boolean? = null,
+    val closedWrittenOff: Boolean? = null,
 
     @ColumnInfo(name = "closedRescheduled")
-    var closedRescheduled: Boolean? = null,
+    val closedRescheduled: Boolean? = null,
 
     @ColumnInfo(name = "closed")
-    var closed: Boolean? = null,
+    val closed: Boolean? = null,
 
     @ColumnInfo(name = "overpaid")
-    var overpaid: Boolean? = null,
-)
+    val overpaid: Boolean? = null,
+) : Parcelable

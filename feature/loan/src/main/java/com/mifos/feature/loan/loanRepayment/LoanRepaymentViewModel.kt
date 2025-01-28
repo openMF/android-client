@@ -12,20 +12,21 @@ package com.mifos.feature.loan.loanRepayment
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanRepaymentRepository
-import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.entity.accounts.loan.LoanWithAssociations
-import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.feature.loan.R
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -33,12 +34,14 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class LoanRepaymentViewModel @Inject constructor(
-    private val repository: LoanRepaymentRepository,
     savedStateHandle: SavedStateHandle,
+    private val repository: LoanRepaymentRepository,
 ) : ViewModel() {
 
-    val arg = savedStateHandle.getStateFlow(key = Constants.LOAN_WITH_ASSOCIATIONS, initialValue = "")
-    val loanWithAssociations: LoanWithAssociations = Gson().fromJson(arg.value, LoanWithAssociations::class.java)
+    val arg =
+        savedStateHandle.getStateFlow(key = Constants.LOAN_WITH_ASSOCIATIONS, initialValue = "")
+    val loanWithAssociations: LoanWithAssociations =
+        Gson().fromJson(arg.value, LoanWithAssociations::class.java)
 
     private val _loanRepaymentUiState =
         MutableStateFlow<LoanRepaymentUiState>(LoanRepaymentUiState.ShowProgressbar)
@@ -51,66 +54,56 @@ class LoanRepaymentViewModel @Inject constructor(
     var amountInArrears = loanWithAssociations.summary.totalOverdue
 
     fun loanLoanRepaymentTemplate() {
-        _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
-        repository.getLoanRepayTemplate(loanId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<LoanRepaymentTemplate?>() {
-                override fun onCompleted() {
-                }
+        viewModelScope.launch {
+            _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
 
-                override fun onError(e: Throwable) {
-                    Log.d("loanRepaymentLog ", ", $loanId $e")
+            repository.getLoanRepayTemplate(loanId)
+                .catch {
+                    Log.d("loanRepaymentLog ", ", $loanId ${it.message}")
                     _loanRepaymentUiState.value =
                         LoanRepaymentUiState.ShowError(R.string.feature_loan_failed_to_load_loan_repayment)
                 }
-
-                override fun onNext(loanRepaymentTemplate: LoanRepaymentTemplate?) {
+                .collect {
                     _loanRepaymentUiState.value =
                         LoanRepaymentUiState.ShowLoanRepayTemplate(
-                            loanRepaymentTemplate ?: LoanRepaymentTemplate(),
+                            it ?: LoanRepaymentTemplate(),
                         )
                 }
-            })
+        }
     }
 
     /**
      *   app crashes on submit click
      */
     fun submitPayment(request: LoanRepaymentRequest) {
-        _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
-        repository.submitPayment(loanId, request)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<LoanRepaymentResponse?>() {
-                override fun onCompleted() {
-                }
+        viewModelScope.launch {
+            _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
 
-                override fun onError(e: Throwable) {
-                    _loanRepaymentUiState.value =
-                        LoanRepaymentUiState.ShowError(R.string.feature_loan_payment_failed)
-                }
-
-                override fun onNext(loanRepaymentResponse: LoanRepaymentResponse?) {
-                    _loanRepaymentUiState.value =
-                        LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully(loanRepaymentResponse)
-                }
-            })
+            try {
+                val loanRepaymentResponse = repository.submitPayment(loanId, request)
+                _loanRepaymentUiState.value =
+                    LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully(
+                        loanRepaymentResponse,
+                    )
+            } catch (e: Exception) {
+                _loanRepaymentUiState.value =
+                    LoanRepaymentUiState.ShowError(R.string.feature_loan_payment_failed)
+            }
+        }
     }
 
     fun checkDatabaseLoanRepaymentByLoanId() {
-        _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
-        repository.getDatabaseLoanRepaymentByLoanId(loanId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<LoanRepaymentRequest?>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
+        viewModelScope.launch {
+            _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
+
+            repository.getDatabaseLoanRepaymentByLoanId(loanId)
+                .flowOn(Dispatchers.IO)
+                .catch {
+                    Log.d("loanRepaymentLog ", ", $loanId ${it.message}")
                     _loanRepaymentUiState.value =
                         LoanRepaymentUiState.ShowError(R.string.feature_loan_failed_to_load_loan_repayment)
                 }
-
-                override fun onNext(loanRepaymentRequest: LoanRepaymentRequest?) {
+                .collect { loanRepaymentRequest ->
                     if (loanRepaymentRequest != null) {
                         _loanRepaymentUiState.value =
                             LoanRepaymentUiState.ShowLoanRepaymentExistInDatabase
@@ -119,6 +112,6 @@ class LoanRepaymentViewModel @Inject constructor(
                             LoanRepaymentUiState.ShowLoanRepaymentDoesNotExistInDatabase
                     }
                 }
-            })
+        }
     }
 }

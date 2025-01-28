@@ -10,11 +10,9 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
@@ -22,7 +20,10 @@ import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import com.mifos.room.entities.group.GroupWithAssociations
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 import javax.inject.Inject
 
@@ -40,11 +41,11 @@ class SyncGroupsDialogRepositoryImp @Inject constructor(
         return dataManagerGroups.syncGroupAccounts(groupId)
     }
 
-    override fun syncLoanById(loanId: Int): Observable<LoanWithAssociations> {
+    override fun syncLoanById(loanId: Int): Flow<LoanWithAssociations> {
         return dataManagerLoan.syncLoanById(loanId)
     }
 
-    override fun syncLoanRepaymentTemplate(loanId: Int): Observable<LoanRepaymentTemplate> {
+    override fun syncLoanRepaymentTemplate(loanId: Int): Flow<LoanRepaymentTemplate> {
         return dataManagerLoan.syncLoanRepaymentTemplate(loanId)
     }
 

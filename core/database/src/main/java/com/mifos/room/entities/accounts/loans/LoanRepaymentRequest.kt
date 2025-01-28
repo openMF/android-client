@@ -18,51 +18,51 @@ data class LoanRepaymentRequest(
 
 // TODO(check this out)
 //    @PrimaryKey(autoGenerate = true)
-//    var id: Int = 0,
+//    val id: Int = 0,
 
     @ColumnInfo(name = "timeStamp")
     @PrimaryKey
     @Transient
-    var timeStamp: Long = 0,
+    val timeStamp: Long = 0,
 
     @ColumnInfo(name = "loanId")
     @Transient
-    var loanId: Int? = null,
+    val loanId: Int? = null,
 
     @ColumnInfo(name = "errorMessage")
     @Transient
-    var errorMessage: String? = null,
+    val errorMessage: String? = null,
 
     @ColumnInfo(name = "dateFormat")
-    var dateFormat: String? = null,
+    val dateFormat: String? = null,
 
     @ColumnInfo(name = "locale")
-    var locale: String? = null,
+    val locale: String? = null,
 
     @ColumnInfo(name = "transactionDate")
-    var transactionDate: String? = null,
+    val transactionDate: String? = null,
 
     @ColumnInfo(name = "transactionAmount")
-    var transactionAmount: String? = null,
+    val transactionAmount: String? = null,
 
     @ColumnInfo(name = "paymentTypeId")
-    var paymentTypeId: String? = null,
+    val paymentTypeId: String? = null,
 
     @ColumnInfo(name = "note")
-    var note: String? = null,
+    val note: String? = null,
 
     @ColumnInfo(name = "accountNumber")
-    var accountNumber: String? = null,
+    val accountNumber: String? = null,
 
     @ColumnInfo(name = "checkNumber")
-    var checkNumber: String? = null,
+    val checkNumber: String? = null,
 
     @ColumnInfo(name = "routingCode")
-    var routingCode: String? = null,
+    val routingCode: String? = null,
 
     @ColumnInfo(name = "receiptNumber")
-    var receiptNumber: String? = null,
+    val receiptNumber: String? = null,
 
     @ColumnInfo(name = "bankNumber")
-    var bankNumber: String? = null,
+    val bankNumber: String? = null,
 )

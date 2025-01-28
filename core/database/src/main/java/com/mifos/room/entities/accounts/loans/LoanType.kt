@@ -9,18 +9,22 @@
  */
 package com.mifos.room.entities.accounts.loans
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Entity(tableName = "LoanAccountLoanType")
+@Serializable
+@Parcelize
 data class LoanType(
-    @PrimaryKey
-    var id: Int? = null,
+
+    val id: Int? = null,
 
     @ColumnInfo("code")
-    var code: String? = null,
+    val code: String? = null,
 
     @ColumnInfo("value")
-    var value: String? = null,
-)
+    val value: String? = null,
+) : Parcelable

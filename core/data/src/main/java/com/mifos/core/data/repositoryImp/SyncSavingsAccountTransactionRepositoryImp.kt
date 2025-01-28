@@ -15,6 +15,7 @@ import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.room.entities.PaymentTypeOption
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 import javax.inject.Inject
 
@@ -30,7 +31,7 @@ class SyncSavingsAccountTransactionRepositoryImp @Inject constructor(
         return dataManagerSavings.allSavingsAccountTransactions
     }
 
-    override fun paymentTypeOption(): Observable<List<PaymentTypeOption>> {
+    override fun paymentTypeOption(): Flow<List<PaymentTypeOption>> {
         return dataManagerLoan.paymentTypeOption
     }
 
