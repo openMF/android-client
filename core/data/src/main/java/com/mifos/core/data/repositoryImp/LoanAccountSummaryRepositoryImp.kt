@@ -24,12 +24,9 @@ import javax.inject.Inject
  */
 class LoanAccountSummaryRepositoryImp @Inject constructor(
     private val dataManagerLoan: DataManagerLoan,
-    @Dispatcher(MifosDispatchers.IO)
-    private val ioDispatcher: CoroutineDispatcher,
 ) : LoanAccountSummaryRepository {
 
     override fun getLoanById(loanId: Int): Flow<LoanWithAssociations?> {
         return dataManagerLoan.getLoanById(loanId)
-            .flowOn(ioDispatcher)
     }
 }
