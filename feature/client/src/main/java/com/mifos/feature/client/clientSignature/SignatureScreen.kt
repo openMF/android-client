@@ -57,7 +57,7 @@ import com.mifos.core.designsystem.component.MifosDrawingCanvas
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.utils.PathState
+import com.mifos.core.designsystem.utility.PathState
 import com.mifos.feature.client.R
 import java.io.ByteArrayOutputStream
 import java.io.File

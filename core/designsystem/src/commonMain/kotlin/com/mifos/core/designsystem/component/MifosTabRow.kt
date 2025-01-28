@@ -24,7 +24,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.mifos.core.designsystem.theme.primaryLight
-import com.mifos.core.designsystem.utils.TabContent
+import com.mifos.core.designsystem.utility.TabContent
 import kotlinx.coroutines.launch
 
 @Composable

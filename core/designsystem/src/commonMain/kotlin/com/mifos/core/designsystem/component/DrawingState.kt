@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import com.mifos.core.designsystem.utility.PathState
 
 class DrawingState {
     var usedColors: MutableState<Set<Color>> = mutableStateOf(setOf())
@@ -40,9 +41,3 @@ class DrawingState {
         currentPath.value = Path()
     }
 }
-
-data class PathState(
-    val path: Path,
-    val color: Color,
-    val stroke: Float,
-)
