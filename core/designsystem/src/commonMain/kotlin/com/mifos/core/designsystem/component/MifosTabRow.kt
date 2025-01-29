@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -23,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.mifos.core.designsystem.theme.primaryLight
 import com.mifos.core.designsystem.utility.TabContent
 import kotlinx.coroutines.launch
 
@@ -32,9 +32,9 @@ fun MifosTabRow(
     tabContents: List<TabContent>,
     pagerState: PagerState,
     modifier: Modifier = Modifier,
-    containerColor: Color = Color.White,
-    selectedContentColor: Color = primaryLight,
-    unselectedContentColor: Color = Color.LightGray,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+    selectedContentColor: Color = MaterialTheme.colorScheme.primary,
+    unselectedContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
 ) {
     val scope = rememberCoroutineScope()
 

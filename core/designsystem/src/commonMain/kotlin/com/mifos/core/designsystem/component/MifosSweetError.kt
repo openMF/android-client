@@ -9,11 +9,6 @@
  */
 package com.mifos.core.designsystem.component
 
-import androidclient.core.designsystem.generated.resources.Res
-import androidclient.core.designsystem.generated.resources.core_designsystem_ic_error_black_24dp
-import androidclient.core.designsystem.generated.resources.core_designsystem_try_again
-import androidclient.core.designsystem.generated.resources.core_designsystem_unable_to_load
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,8 +21,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,15 +31,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.mifos.core.designsystem.theme.primaryDark
-import com.mifos.core.designsystem.theme.primaryLight
-import com.mifos.core.designsystem.theme.secondaryLight
+import core.designsystem.generated.resources.Res
+import core.designsystem.generated.resources.core_designsystem_ic_error_black_24dp
+import core.designsystem.generated.resources.core_designsystem_try_again
+import core.designsystem.generated.resources.core_designsystem_unable_to_load
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -72,35 +64,24 @@ fun MifosSweetError(
         Spacer(modifier = Modifier.height(20.dp))
         Text(
             text = stringResource(Res.string.core_designsystem_unable_to_load),
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal,
-                color = secondaryLight,
-            ),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.secondary,
         )
         Text(
             text = message,
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal,
-                color = secondaryLight,
-            ),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.secondary,
         )
         if (isRetryEnabled) {
             Spacer(modifier = Modifier.height(20.dp))
             Button(
                 onClick = { onclick() },
                 contentPadding = PaddingValues(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
-                ),
             ) {
                 Text(
                     modifier = Modifier.padding(start = 20.dp, end = 20.dp),
                     text = buttonText,
-                    fontSize = 15.sp,
+                    style = MaterialTheme.typography.labelMedium,
                 )
             }
         }
@@ -122,29 +103,21 @@ fun MifosPaginationSweetError(
         Icon(
             imageVector = Icons.Default.Info,
             contentDescription = "Info Image",
-            tint = Color.Gray,
         )
         Text(
             text = stringResource(Res.string.core_designsystem_unable_to_load),
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                fontStyle = FontStyle.Normal,
-                color = secondaryLight,
-            ),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.secondary,
         )
         Button(
             onClick = { onclick() },
             contentPadding = PaddingValues(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
-            ),
         ) {
             Text(
                 modifier = Modifier
                     .padding(start = 20.dp, end = 20.dp),
                 text = stringResource(Res.string.core_designsystem_try_again),
-                fontSize = 15.sp,
+                style = MaterialTheme.typography.labelMedium,
             )
         }
     }

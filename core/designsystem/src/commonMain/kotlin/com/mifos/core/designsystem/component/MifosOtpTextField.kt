@@ -29,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -98,7 +97,6 @@ fun MifosOtpTextField(
             Text(
                 text = "Invalid OTP",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Red,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 8.dp),
             )
@@ -125,9 +123,9 @@ private fun CharView(
         text = char,
         style = MaterialTheme.typography.headlineSmall,
         color = if (isFocused) {
-            Color.DarkGray
+            MaterialTheme.colorScheme.secondary
         } else {
-            Color.LightGray
+            MaterialTheme.colorScheme.tertiary
         },
         textAlign = TextAlign.Center,
     )

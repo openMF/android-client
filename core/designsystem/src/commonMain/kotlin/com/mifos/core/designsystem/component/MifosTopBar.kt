@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.mifos.core.designsystem.icon.MifosIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,7 +47,7 @@ fun MifosTopBar(
             }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = Color.Transparent,
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0f),
         ),
         actions = actions,
         modifier = modifier,

@@ -12,7 +12,6 @@ package com.mifos.core.designsystem.component
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,7 +25,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,10 +43,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mifos.core.designsystem.theme.onPrimaryLight
-import com.mifos.core.designsystem.theme.primaryDark
-import com.mifos.core.designsystem.theme.primaryLight
-import com.mifos.core.designsystem.theme.secondaryLight
 
 @Composable
 fun MifosOutlinedTextField(
@@ -75,7 +69,6 @@ fun MifosOutlinedTextField(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (isSystemInDarkTheme()) onPrimaryLight else secondaryLight,
                 )
             }
         } else {
@@ -84,9 +77,6 @@ fun MifosOutlinedTextField(
         trailingIcon = trailingIcon,
         maxLines = maxLines,
         singleLine = singleLine,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
-        ),
         textStyle = LocalDensity.current.run {
             TextStyle(fontSize = 18.sp)
         },
@@ -238,7 +228,6 @@ fun MifosOutlinedTextField(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (isSystemInDarkTheme()) onPrimaryLight else secondaryLight,
                 )
             }
         } else {
@@ -247,11 +236,6 @@ fun MifosOutlinedTextField(
         trailingIcon = trailingIcon,
         maxLines = maxLines,
         singleLine = singleLine,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
-            focusedLabelColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
-            cursorColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
-        ),
         textStyle = LocalDensity.current.run {
             TextStyle(fontSize = 18.sp)
         },
@@ -337,9 +321,6 @@ fun MifosDatePickerTextField(
         readOnly = true,
         modifier = modifier,
         maxLines = 1,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
-        ),
         textStyle = LocalDensity.current.run {
             TextStyle(fontSize = 18.sp)
         },

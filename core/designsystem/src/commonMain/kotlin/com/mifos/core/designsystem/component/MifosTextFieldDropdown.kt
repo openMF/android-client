@@ -11,7 +11,6 @@
 
 package com.mifos.core.designsystem.component
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,7 +19,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,8 +31,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mifos.core.designsystem.theme.primaryDark
-import com.mifos.core.designsystem.theme.primaryLight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,10 +62,6 @@ fun MifosTextFieldDropdown(
             },
             modifier = modifier.menuAnchor(),
             maxLines = 1,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = if (isSystemInDarkTheme()) primaryLight else primaryDark,
-                focusedLabelColor = if (isSystemInDarkTheme()) primaryDark else primaryLight,
-            ),
             textStyle = LocalDensity.current.run {
                 TextStyle(fontSize = 18.sp)
             },
