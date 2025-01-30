@@ -12,7 +12,6 @@ package org.mifos.core.datastore.di
 import com.russhwolf.settings.Settings
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import org.mifos.core.datastore.MifosDispatchers
 import org.mifos.core.datastore.UserPreferencesDataSource
 import org.mifos.core.datastore.UserPreferencesRepository
 import org.mifos.core.datastore.UserPreferencesRepositoryImpl
@@ -30,4 +29,10 @@ val PreferencesModule = module {
             unconfinedDispatcher = get(named(MifosDispatchers.Unconfined.name)),
         )
     }
+}
+
+enum class MifosDispatchers {
+    Default,
+    IO,
+    Unconfined,
 }

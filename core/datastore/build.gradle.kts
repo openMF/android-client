@@ -9,7 +9,7 @@
  */
 plugins {
     alias(libs.plugins.mifos.kmp.library)
-    id(libs.plugins.kotlin.parcelize.get().pluginId)
+    //id(libs.plugins.kotlin.parcelize.get().pluginId)
     id("kotlinx-serialization")
 }
 
