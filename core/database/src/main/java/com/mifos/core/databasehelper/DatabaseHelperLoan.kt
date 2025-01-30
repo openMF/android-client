@@ -16,8 +16,8 @@ import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.loan.LoanWithAssociations_Table
 import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate_Table
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
 import com.raizlabs.android.dbflow.sql.language.Delete
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import rx.Observable

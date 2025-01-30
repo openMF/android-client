@@ -12,12 +12,12 @@ package com.mifos.feature.offline.syncSavingsAccountTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
+import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.AllSavingsAccountTransactionsUseCase
 import com.mifos.core.domain.useCases.DeleteAndUpdateTransactionsUseCase
-import com.mifos.core.domain.useCases.PaymentTypeOptionUseCase
 import com.mifos.core.domain.useCases.ProcessTransactionUseCase
-import com.mifos.core.domain.useCases.UpdateLoanRepaymentTransactionUseCase
+import com.mifos.core.domain.useCases.UpdateLoanRepaymentTransactionSavingsUseCase
 import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.PaymentTypeOption
@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import rx.Observable
 import javax.inject.Inject
@@ -35,11 +36,11 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SyncSavingsAccountTransactionViewModel @Inject constructor(
-    private val paymentTypeOptionUseCase: PaymentTypeOptionUseCase,
     private val processTransactionUseCase: ProcessTransactionUseCase,
     private val allSavingsAccountTransactionsUseCase: AllSavingsAccountTransactionsUseCase,
-    private val updateLoanRepaymentTransactionUseCase: UpdateLoanRepaymentTransactionUseCase,
+    private val updateLoanRepaymentTransactionSavingsUseCase: UpdateLoanRepaymentTransactionSavingsUseCase,
     private val deleteAndUpdateTransactionsUseCase: DeleteAndUpdateTransactionsUseCase,
+    private val repository: SyncSavingsAccountTransactionRepository,
     private val prefManager: PrefManager,
 ) : ViewModel() {
 
@@ -212,21 +213,15 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
      * and update the UI.
      */
     fun loadPaymentTypeOption() = viewModelScope.launch(Dispatchers.IO) {
-        paymentTypeOptionUseCase().collect { result ->
-            when (result) {
-                is Resource.Error ->
-                    _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_paymentoptions)
+        _syncSavingsAccountTransactionUiState.value =
+            SyncSavingsAccountTransactionUiState.Loading
 
-                is Resource.Loading ->
-                    _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.Loading
-
-                is Resource.Success -> {
-                    mPaymentTypeOptions = result.data ?: emptyList()
-                    updateUiState()
-                }
-            }
+        repository.paymentTypeOption().catch {
+            _syncSavingsAccountTransactionUiState.value =
+                SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_paymentoptions)
+        }.collect { list ->
+            mPaymentTypeOptions = list
+            updateUiState()
         }
     }
 
@@ -312,7 +307,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
      */
     private fun updateSavingsAccountTransaction(request: SavingsAccountTransactionRequest?) =
         viewModelScope.launch(Dispatchers.IO) {
-            updateLoanRepaymentTransactionUseCase(request).collect { result ->
+            updateLoanRepaymentTransactionSavingsUseCase(request).collect { result ->
                 when (result) {
                     is Resource.Error ->
                         _syncSavingsAccountTransactionUiState.value =

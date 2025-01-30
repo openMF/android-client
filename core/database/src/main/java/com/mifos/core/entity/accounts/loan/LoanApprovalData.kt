@@ -10,6 +10,7 @@
 package com.mifos.core.entity.accounts.loan
 
 import android.os.Parcelable
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import kotlinx.parcelize.Parcelize
 
 /**

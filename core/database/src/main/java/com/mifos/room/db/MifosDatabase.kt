@@ -13,23 +13,50 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mifos.room.dao.ColumnValueDao
+import com.mifos.room.dao.LoanDao
+import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.accounts.loans.ActualDisbursementDate
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.Status
+import com.mifos.room.entities.accounts.loans.Summary
+import com.mifos.room.entities.accounts.loans.Timeline
 import com.mifos.room.entities.noncore.ColumnValue
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import com.mifos.room.utils.typeconverters.DueDateConverter
 import com.mifos.room.utils.typeconverters.ListTypeConverters
+import com.mifos.room.utils.typeconverters.LoanTypeConverters
 import com.mifos.room.utils.typeconverters.ServerTypesConverters
 
 @Database(
     // [TODO -> add other entities ]
-    entities = [ColumnValue::class],
+    entities = [
+        ColumnValue::class,
+        // loan
+        LoanWithAssociations::class,
+        LoanRepaymentRequest::class,
+        LoanRepaymentTemplate::class,
+        PaymentTypeOption::class,
+        ActualDisbursementDate::class,
+        Timeline::class,
+        Status::class,
+        Summary::class,
+    ],
     version = MifosDatabase.VERSION,
     exportSchema = true,
     autoMigrations = [],
 )
-@TypeConverters(ListTypeConverters::class, ServerTypesConverters::class, DueDateConverter::class)
+@TypeConverters(
+    ListTypeConverters::class,
+    ServerTypesConverters::class,
+    DueDateConverter::class,
+    LoanTypeConverters::class,
+)
 // ( TODO -> add type converters here )
 
 abstract class MifosDatabase : RoomDatabase() {
     abstract fun columnValueDao(): ColumnValueDao
+    abstract fun loanDao(): LoanDao
 
     companion object {
         const val VERSION = 1

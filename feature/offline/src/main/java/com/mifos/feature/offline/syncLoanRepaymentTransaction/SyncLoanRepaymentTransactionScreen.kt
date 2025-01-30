@@ -59,10 +59,10 @@ import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
 import com.mifos.feature.offline.R
 import com.mifos.feature.offline.syncSavingsAccountTransaction.getPaymentTypeName
 import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
 
 @Composable
 internal fun SyncLoanRepaymentTransactionScreenRoute(

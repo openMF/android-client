@@ -43,7 +43,7 @@ data class Office(
     var nameDecorated: String? = null,
 
     @ColumnInfo(name = "officeOpeningDate")
-    var officeOpeningDate: Int? = null,
+    var officeOpeningDate: OfficeOpeningDate? = null,
 
     @ColumnInfo(name = "openingDate")
     var openingDate: List<Int?> = ArrayList(),

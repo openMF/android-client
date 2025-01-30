@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import rx.Observable
 
 /**

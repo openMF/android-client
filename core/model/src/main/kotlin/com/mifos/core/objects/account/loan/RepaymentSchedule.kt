@@ -10,12 +10,15 @@
 package com.mifos.core.objects.account.loan
 
 import android.os.Parcelable
+import com.mifos.core.objects.template.loan.Currency
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by ishankhanna on 19/06/14.
  */
 @Parcelize
+@Serializable
 data class RepaymentSchedule(
     var currency: Currency? = null,
 

@@ -9,17 +9,18 @@
  */
 package com.mifos.feature.loan.loanAccountSummary
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -27,11 +28,12 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class LoanAccountSummaryViewModel @Inject constructor(
-    private val repository: LoanAccountSummaryRepository,
     savedStateHandle: SavedStateHandle,
+    private val repository: LoanAccountSummaryRepository,
 ) : ViewModel() {
 
-    val loanAccountNumber = savedStateHandle.getStateFlow(key = Constants.LOAN_ACCOUNT_NUMBER, initialValue = 0)
+    val loanAccountNumber =
+        savedStateHandle.getStateFlow(key = Constants.LOAN_ACCOUNT_NUMBER, initialValue = 0)
 
     private val _loanAccountSummaryUiState =
         MutableStateFlow<LoanAccountSummaryUiState>(LoanAccountSummaryUiState.ShowProgressbar)
@@ -40,24 +42,20 @@ class LoanAccountSummaryViewModel @Inject constructor(
         get() = _loanAccountSummaryUiState
 
     fun loadLoanById(loanAccountNumber: Int) {
-        _loanAccountSummaryUiState.value = LoanAccountSummaryUiState.ShowProgressbar
-        repository.getLoanById(loanAccountNumber)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<LoanWithAssociations?>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
+        viewModelScope.launch {
+            _loanAccountSummaryUiState.value = LoanAccountSummaryUiState.ShowProgressbar
+
+            repository.getLoanById(loanAccountNumber)
+                .catch {
+                    Log.d("ErrorDebug", it.message.toString())
                     _loanAccountSummaryUiState.value =
                         LoanAccountSummaryUiState.ShowFetchingError("Loan Account not found.")
-                }
-
-                override fun onNext(loanWithAssociations: LoanWithAssociations?) {
-                    _loanAccountSummaryUiState.value = loanWithAssociations?.let {
+                }.collect { loanWithAssociations ->
+                    _loanAccountSummaryUiState.value =
                         LoanAccountSummaryUiState.ShowLoanById(
-                            it,
+                            loanWithAssociations ?: LoanWithAssociations(),
                         )
-                    }!!
                 }
-            })
+        }
     }
 }

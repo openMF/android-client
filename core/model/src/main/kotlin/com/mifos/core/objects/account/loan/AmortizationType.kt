@@ -11,8 +11,10 @@ package com.mifos.core.objects.account.loan
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 class AmortizationType(
     var id: Int? = null,
 

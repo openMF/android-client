@@ -9,13 +9,13 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
-import rx.Observable
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
 interface LoanAccountSummaryRepository {
 
-    fun getLoanById(loanId: Int): Observable<LoanWithAssociations>
+    fun getLoanById(loanId: Int): Flow<LoanWithAssociations?>
 }

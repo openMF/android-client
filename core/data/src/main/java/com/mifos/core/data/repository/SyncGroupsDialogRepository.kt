@@ -9,15 +9,16 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import com.mifos.room.entities.group.GroupWithAssociations
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
 /**
@@ -27,9 +28,9 @@ interface SyncGroupsDialogRepository {
 
     fun syncGroupAccounts(groupId: Int): Observable<GroupAccounts>
 
-    fun syncLoanById(loanId: Int): Observable<LoanWithAssociations>
+    fun syncLoanById(loanId: Int): Flow<LoanWithAssociations>
 
-    fun syncLoanRepaymentTemplate(loanId: Int): Observable<LoanRepaymentTemplate>
+    fun syncLoanRepaymentTemplate(loanId: Int): Flow<LoanRepaymentTemplate>
 
     fun syncSavingsAccount(
         type: String?,

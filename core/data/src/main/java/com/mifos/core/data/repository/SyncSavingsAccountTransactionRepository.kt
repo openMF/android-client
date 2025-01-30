@@ -12,6 +12,7 @@ package com.mifos.core.data.repository
 import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.room.entities.PaymentTypeOption
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
 /**
@@ -21,7 +22,7 @@ interface SyncSavingsAccountTransactionRepository {
 
     fun allSavingsAccountTransactions(): Observable<List<SavingsAccountTransactionRequest>>
 
-    fun paymentTypeOption(): Observable<List<PaymentTypeOption>>
+    fun paymentTypeOption(): Flow<List<PaymentTypeOption>>
 
     fun processTransaction(
         savingsAccountType: String?,

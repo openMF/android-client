@@ -10,7 +10,7 @@
 package com.mifos.room.utils.typeconverters
 
 import androidx.room.TypeConverter
-import com.mifos.room.entities.accounts.savings.Currency
+import com.mifos.room.entities.group.Center
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -27,12 +27,12 @@ class ListTypeConverters {
     }
 
     @TypeConverter
-    fun currencyToJson(currency: Currency?): String? {
-        return currency?.let { Json.encodeToString(it) }
+    fun fromCenterList(centers: List<Center?>): String {
+        return centers.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun jsonToCurrency(json: String?): Currency? {
-        return json?.let { Json.decodeFromString(it) }
+    fun toCenterList(json: String): List<Center?> {
+        return json.let { Json.decodeFromString(it) }
     }
 }

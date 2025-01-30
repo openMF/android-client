@@ -13,7 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +31,8 @@ class LoanRepaymentScheduleViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val loanId = savedStateHandle.getStateFlow(key = Constants.LOAN_ACCOUNT_NUMBER, initialValue = 0)
+    val loanId =
+        savedStateHandle.getStateFlow(key = Constants.LOAN_ACCOUNT_NUMBER, initialValue = 0)
 
     private val _loanRepaymentScheduleUiState =
         MutableStateFlow<LoanRepaymentScheduleUiState>(LoanRepaymentScheduleUiState.ShowProgressbar)
@@ -42,19 +43,21 @@ class LoanRepaymentScheduleViewModel @Inject constructor(
         repository.getLoanRepaySchedule(loanId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<LoanWithAssociations>() {
-                override fun onCompleted() {
-                }
+            .subscribe(
+                object : Subscriber<LoanWithAssociations>() {
+                    override fun onCompleted() {
+                    }
 
-                override fun onError(e: Throwable) {
-                    _loanRepaymentScheduleUiState.value =
-                        LoanRepaymentScheduleUiState.ShowFetchingError(e.message.toString())
-                }
+                    override fun onError(e: Throwable) {
+                        _loanRepaymentScheduleUiState.value =
+                            LoanRepaymentScheduleUiState.ShowFetchingError(e.message.toString())
+                    }
 
-                override fun onNext(loanWithAssociations: LoanWithAssociations) {
-                    _loanRepaymentScheduleUiState.value =
-                        LoanRepaymentScheduleUiState.ShowLoanRepaySchedule(loanWithAssociations)
-                }
-            })
+                    override fun onNext(loanWithAssociations: LoanWithAssociations) {
+                        _loanRepaymentScheduleUiState.value =
+                            LoanRepaymentScheduleUiState.ShowLoanRepaySchedule(loanWithAssociations)
+                    }
+                },
+            )
     }
 }

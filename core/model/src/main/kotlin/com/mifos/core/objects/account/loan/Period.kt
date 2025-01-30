@@ -11,11 +11,13 @@ package com.mifos.core.objects.account.loan
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by ishankhanna on 19/06/14.
  */
 @Parcelize
+@Serializable
 data class Period(
     var complete: Boolean? = null,
 

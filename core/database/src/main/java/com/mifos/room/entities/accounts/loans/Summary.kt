@@ -9,116 +9,121 @@
  */
 package com.mifos.room.entities.accounts.loans
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mifos.core.objects.account.loan.Currency
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Entity(tableName = "LoansAccountSummary")
+@Serializable
+@Parcelize
 data class Summary(
     @PrimaryKey
-    var loanId: Int? = null,
+    val loanId: Int? = null,
 
     @Embedded
-    var currency: Currency? = null,
+    val currency: Currency? = null,
 
     @ColumnInfo(name = "principalDisbursed")
-    var principalDisbursed: Double? = null,
+    val principalDisbursed: Double? = null,
 
     @ColumnInfo(name = "principalPaid")
-    var principalPaid: Double? = null,
+    val principalPaid: Double? = null,
 
     @ColumnInfo(name = "principalWrittenOff")
-    var principalWrittenOff: Double? = null,
+    val principalWrittenOff: Double? = null,
 
     @ColumnInfo(name = "principalOutstanding")
-    var principalOutstanding: Double? = null,
+    val principalOutstanding: Double? = null,
 
     @ColumnInfo(name = "principalOverdue")
-    var principalOverdue: Double? = null,
+    val principalOverdue: Double? = null,
 
     @ColumnInfo(name = "interestCharged")
-    var interestCharged: Double? = null,
+    val interestCharged: Double? = null,
 
     @ColumnInfo(name = "interestPaid")
-    var interestPaid: Double? = null,
+    val interestPaid: Double? = null,
 
     @ColumnInfo(name = "interestWaived")
-    var interestWaived: Double? = null,
+    val interestWaived: Double? = null,
 
     @ColumnInfo(name = "interestWrittenOff")
-    var interestWrittenOff: Double? = null,
+    val interestWrittenOff: Double? = null,
 
     @ColumnInfo(name = "interestOutstanding")
-    var interestOutstanding: Double? = null,
+    val interestOutstanding: Double? = null,
 
     @ColumnInfo(name = "interestOverdue")
-    var interestOverdue: Double? = null,
+    val interestOverdue: Double? = null,
 
     @ColumnInfo(name = "feeChargesCharged")
-    var feeChargesCharged: Double? = null,
+    val feeChargesCharged: Double? = null,
 
     @ColumnInfo(name = "feeChargesDueAtDisbursementCharged")
-    var feeChargesDueAtDisbursementCharged: Double? = null,
+    val feeChargesDueAtDisbursementCharged: Double? = null,
 
     @ColumnInfo(name = "feeChargesPaid")
-    var feeChargesPaid: Double? = null,
+    val feeChargesPaid: Double? = null,
 
     @ColumnInfo(name = "feeChargesWaived")
-    var feeChargesWaived: Double? = null,
+    val feeChargesWaived: Double? = null,
 
     @ColumnInfo(name = "feeChargesWrittenOff")
-    var feeChargesWrittenOff: Double? = null,
+    val feeChargesWrittenOff: Double? = null,
 
     @ColumnInfo(name = "feeChargesOutstanding")
-    var feeChargesOutstanding: Double? = null,
+    val feeChargesOutstanding: Double? = null,
 
     @ColumnInfo(name = "feeChargesOverdue")
-    var feeChargesOverdue: Double? = null,
+    val feeChargesOverdue: Double? = null,
 
     @ColumnInfo(name = "penaltyChargesCharged")
-    var penaltyChargesCharged: Double? = null,
+    val penaltyChargesCharged: Double? = null,
 
     @ColumnInfo(name = "penaltyChargesPaid")
-    var penaltyChargesPaid: Double? = null,
+    val penaltyChargesPaid: Double? = null,
 
     @ColumnInfo(name = "penaltyChargesWaived")
-    var penaltyChargesWaived: Double? = null,
+    val penaltyChargesWaived: Double? = null,
 
     @ColumnInfo(name = "penaltyChargesWrittenOff")
-    var penaltyChargesWrittenOff: Double? = null,
+    val penaltyChargesWrittenOff: Double? = null,
 
     @ColumnInfo(name = "penaltyChargesOutstanding")
-    var penaltyChargesOutstanding: Double? = null,
+    val penaltyChargesOutstanding: Double? = null,
 
     @ColumnInfo(name = "penaltyChargesOverdue")
-    var penaltyChargesOverdue: Double? = null,
+    val penaltyChargesOverdue: Double? = null,
 
     @ColumnInfo(name = "totalExpectedRepayment")
-    var totalExpectedRepayment: Double? = null,
+    val totalExpectedRepayment: Double? = null,
 
     @ColumnInfo(name = "totalRepayment")
-    var totalRepayment: Double? = null,
+    val totalRepayment: Double? = null,
 
     @ColumnInfo(name = "totalExpectedCostOfLoan")
-    var totalExpectedCostOfLoan: Double? = null,
+    val totalExpectedCostOfLoan: Double? = null,
 
     @ColumnInfo(name = "totalCostOfLoan")
-    var totalCostOfLoan: Double? = null,
+    val totalCostOfLoan: Double? = null,
 
     @ColumnInfo(name = "totalWaived")
-    var totalWaived: Double? = null,
+    val totalWaived: Double? = null,
 
     @ColumnInfo(name = "totalWrittenOff")
-    var totalWrittenOff: Double? = null,
+    val totalWrittenOff: Double? = null,
 
     @ColumnInfo(name = "totalOutstanding")
-    var totalOutstanding: Double? = null,
+    val totalOutstanding: Double? = null,
 
     @ColumnInfo(name = "totalOverdue")
-    var totalOverdue: Double? = null,
+    val totalOverdue: Double? = null,
 
     @ColumnInfo(name = "overdueSinceDate")
-    var overdueSinceDate: List<Int>? = null,
-)
+    val overdueSinceDate: List<Int>? = null,
+) : Parcelable

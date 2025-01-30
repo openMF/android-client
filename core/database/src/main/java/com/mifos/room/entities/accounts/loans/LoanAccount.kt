@@ -32,38 +32,29 @@ import androidx.room.PrimaryKey
 )
 data class LoanAccount(
     @PrimaryKey
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "clientId")
-    var clientId: Long = 0,
+    val clientId: Long = 0,
 
-    @ColumnInfo(name = "groupId")
-    var groupId: Long = 0,
+    val groupId: Long = 0,
 
-    @ColumnInfo(name = "centerId")
-    var centerId: Long = 0,
+    val centerId: Long = 0,
 
-    @ColumnInfo(name = "accountNo")
-    var accountNo: String? = null,
+    val accountNo: String? = null,
 
-    @ColumnInfo(name = "externalId")
-    var externalId: String? = null,
+    val externalId: String? = null,
 
-    @ColumnInfo(name = "productId")
-    var productId: Int? = null,
+    val productId: Int? = null,
 
-    @ColumnInfo(name = "productName")
-    var productName: String? = null,
+    val productName: String? = null,
 
-    @ColumnInfo(name = "status", index = true)
-    var status: Status? = null,
+    @ColumnInfo(index = true)
+    val status: Status? = null,
 
-    @ColumnInfo(name = "loanType", index = true)
-    var loanType: LoanType? = null,
+    @ColumnInfo(index = true)
+    val loanType: LoanType? = null,
 
-    @ColumnInfo(name = "loanCycle")
-    var loanCycle: Int? = null,
+    val loanCycle: Int? = null,
 
-    @ColumnInfo(name = "inArrears")
-    var inArrears: Boolean? = null,
+    val inArrears: Boolean? = null,
 )

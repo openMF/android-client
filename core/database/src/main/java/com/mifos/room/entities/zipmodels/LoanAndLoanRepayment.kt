@@ -9,8 +9,8 @@
  */
 package com.mifos.room.entities.zipmodels
 
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
-import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 
 /**
  *

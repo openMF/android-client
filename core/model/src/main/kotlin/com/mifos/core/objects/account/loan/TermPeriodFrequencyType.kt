@@ -11,9 +11,12 @@ package com.mifos.core.objects.account.loan
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class TermPeriodFrequencyType(
+
     var id: Int? = null,
 
     var code: String? = null,
