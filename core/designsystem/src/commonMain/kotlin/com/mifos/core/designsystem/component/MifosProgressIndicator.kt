@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -69,6 +70,7 @@ fun MifosCircularProgress(
                 .height(60.dp)
                 .padding(8.dp),
             strokeWidth = 4.dp,
+            color = MaterialTheme.colorScheme.secondary,
         )
         text?.let {
             Text(text = text)

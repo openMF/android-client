@@ -64,12 +64,12 @@ fun MifosSweetError(
         Spacer(modifier = Modifier.height(20.dp))
         Text(
             text = stringResource(Res.string.core_designsystem_unable_to_load),
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.secondary,
         )
         Text(
             text = message,
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.secondary,
         )
         if (isRetryEnabled) {
@@ -81,7 +81,7 @@ fun MifosSweetError(
                 Text(
                     modifier = Modifier.padding(start = 20.dp, end = 20.dp),
                     text = buttonText,
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelLarge,
                 )
             }
         }
@@ -106,7 +106,7 @@ fun MifosPaginationSweetError(
         )
         Text(
             text = stringResource(Res.string.core_designsystem_unable_to_load),
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.secondary,
         )
         Button(
@@ -117,7 +117,7 @@ fun MifosPaginationSweetError(
                 modifier = Modifier
                     .padding(start = 20.dp, end = 20.dp),
                 text = stringResource(Res.string.core_designsystem_try_again),
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.bodyLarge,
             )
         }
     }

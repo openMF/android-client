@@ -93,10 +93,11 @@ fun MifosOtpTextField(
             },
         )
         if (isError) {
-            // display erro message in text
+            // display error message in text
             Text(
                 text = "Invalid OTP",
                 style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 8.dp),
             )
