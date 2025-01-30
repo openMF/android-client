@@ -102,37 +102,37 @@ data class LoanTemplate(
 
     val timeline: Timeline? = null,
 
-    val productOptions: List<ProductOptions> = ArrayList(),
+    val productOptions: List<ProductOptions> = emptyList(),
 
     val dataTables: ArrayList<DataTable> = ArrayList(),
 
-    val loanOfficerOptions: List<LoanOfficerOptions> = ArrayList(),
+    val loanOfficerOptions: List<LoanOfficerOptions> = emptyList(),
 
-    val loanPurposeOptions: List<LoanPurposeOptions> = ArrayList(),
+    val loanPurposeOptions: List<LoanPurposeOptions> = emptyList(),
 
-    val fundOptions: List<FundOptions> = ArrayList(),
+    val fundOptions: List<FundOptions> = emptyList(),
 
-    val termFrequencyTypeOptions: List<TermFrequencyTypeOptions> = ArrayList(),
+    val termFrequencyTypeOptions: List<TermFrequencyTypeOptions> = emptyList(),
 
-    val repaymentFrequencyTypeOptions: List<RepaymentFrequencyTypeOptions> = ArrayList(),
+    val repaymentFrequencyTypeOptions: List<RepaymentFrequencyTypeOptions> = emptyList(),
 
-    val repaymentFrequencyNthDayTypeOptions: List<RepaymentFrequencyNthDayTypeOptions> = ArrayList(),
+    val repaymentFrequencyNthDayTypeOptions: List<RepaymentFrequencyNthDayTypeOptions> = emptyList(),
 
-    val repaymentFrequencyDaysOfWeekTypeOptions: List<RepaymentFrequencyDaysOfWeekTypeOptions> = ArrayList(),
+    val repaymentFrequencyDaysOfWeekTypeOptions: List<RepaymentFrequencyDaysOfWeekTypeOptions> = emptyList(),
 
-    val interestRateFrequencyTypeOptions: List<InterestRateFrequencyTypeOptions> = ArrayList(),
+    val interestRateFrequencyTypeOptions: List<InterestRateFrequencyTypeOptions> = emptyList(),
 
-    val amortizationTypeOptions: List<AmortizationTypeOptions> = ArrayList(),
+    val amortizationTypeOptions: List<AmortizationTypeOptions> = emptyList(),
 
-    val interestTypeOptions: List<InterestTypeOptions> = ArrayList(),
+    val interestTypeOptions: List<InterestTypeOptions> = emptyList(),
 
-    val interestCalculationPeriodTypeOptions: List<InterestCalculationPeriodType> = ArrayList(),
+    val interestCalculationPeriodTypeOptions: List<InterestCalculationPeriodType> = emptyList(),
 
-    val transactionProcessingStrategyOptions: List<TransactionProcessingStrategyOptions> = ArrayList(),
+    val transactionProcessingStrategyOptions: List<TransactionProcessingStrategyOptions> = emptyList(),
 
-    val chargeOptions: List<ChargeOptions> = ArrayList(),
+    val chargeOptions: List<ChargeOptions> = emptyList(),
 
-    val loanCollateralOptions: List<LoanCollateralOptions> = ArrayList(),
+    val loanCollateralOptions: List<LoanCollateralOptions> = emptyList(),
 
     val multiDisburseLoan: Boolean? = null,
 
@@ -154,5 +154,5 @@ data class LoanTemplate(
 
     val maximumGap: Int? = null,
 
-    val accountLinkingOptions: List<AccountLinkingOptions> = ArrayList(),
+    val accountLinkingOptions: List<AccountLinkingOptions> = emptyList(),
 ) : Parcelable

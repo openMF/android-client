@@ -10,7 +10,6 @@
 package com.mifos.room.entities.accounts.loans
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -23,33 +22,23 @@ data class Status(
     @PrimaryKey
     val id: Int? = null,
 
-    @ColumnInfo(name = "code")
     val code: String? = null,
 
-    @ColumnInfo(name = "value")
     val value: String? = null,
 
-    @ColumnInfo(name = "pendingApproval")
     val pendingApproval: Boolean? = null,
 
-    @ColumnInfo(name = "waitingForDisbursal")
     val waitingForDisbursal: Boolean? = null,
 
-    @ColumnInfo(name = "active")
     val active: Boolean? = null,
 
-    @ColumnInfo(name = "closedObligationsMet")
     val closedObligationsMet: Boolean? = null,
 
-    @ColumnInfo(name = "closedWrittenOff")
     val closedWrittenOff: Boolean? = null,
 
-    @ColumnInfo(name = "closedRescheduled")
     val closedRescheduled: Boolean? = null,
 
-    @ColumnInfo(name = "closed")
     val closed: Boolean? = null,
 
-    @ColumnInfo(name = "overpaid")
     val overpaid: Boolean? = null,
 ) : Parcelable

@@ -36,53 +36,38 @@ data class Timeline(
     @Transient
     val loanId: Int? = null,
 
-    @ColumnInfo(name = "submittedOnDate")
     val submittedOnDate: List<Int>? = null,
 
-    @ColumnInfo(name = "submittedByUsername")
     val submittedByUsername: String? = null,
 
-    @ColumnInfo(name = "submittedByFirstname")
     val submittedByFirstname: String? = null,
 
-    @ColumnInfo(name = "submittedByLastname")
     val submittedByLastname: String? = null,
 
-    @ColumnInfo(name = "approvedOnDate")
     val approvedOnDate: List<Int>? = null,
 
-    @ColumnInfo(name = "approvedByUsername")
     val approvedByUsername: String? = null,
 
-    @ColumnInfo(name = "approvedByFirstname")
     val approvedByFirstname: String? = null,
 
-    @ColumnInfo(name = "approvedByLastname")
     val approvedByLastname: String? = null,
 
-    @ColumnInfo(name = "expectedDisbursementDate")
     val expectedDisbursementDate: List<Int>? = null,
 
 // todo check if its int
-    @ColumnInfo(name = "actualDisburseDate", index = true)
+    @ColumnInfo(index = true)
     @Transient
     val actualDisburseDate: ActualDisbursementDate? = null,
 
-    @ColumnInfo(name = "actualDisbursementDate")
     val actualDisbursementDate: List<Int?>? = null,
 
-    @ColumnInfo(name = "disbursedByUsername")
     val disbursedByUsername: String? = null,
 
-    @ColumnInfo(name = "disbursedByFirstname")
     val disbursedByFirstname: String? = null,
 
-    @ColumnInfo(name = "disbursedByLastname")
     val disbursedByLastname: String? = null,
 
-    @ColumnInfo(name = "closedOnDate")
     val closedOnDate: List<Int>? = null,
 
-    @ColumnInfo(name = "expectedMaturityDate")
     val expectedMaturityDate: List<Int>? = null,
 ) : Parcelable

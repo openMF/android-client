@@ -11,38 +11,27 @@ package com.mifos.room.entities
 
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 import com.mifos.core.model.MifosBaseModel
 
 @Entity(tableName = "PaymentTypeOption")
 data class PaymentTypeOption(
-    @SerializedName("id")
     @PrimaryKey
-    @ColumnInfo(name = "id")
     val id: Int = 0,
 
-    @SerializedName("name")
-    @ColumnInfo(name = "name")
     val name: String = "",
 
-    @SerializedName("description")
-    @ColumnInfo(name = "description")
     val description: String? = null,
 
-    @SerializedName("isCashPayment")
-    @ColumnInfo(name = "is_cash_payment")
     val isCashPayment: Boolean? = null,
 
-    @SerializedName("position")
-    @ColumnInfo(name = "position")
     val position: Int? = null,
+
 ) : MifosBaseModel(), Comparable<PaymentTypeOption>, Parcelable {
 
-    override fun compareTo(another: PaymentTypeOption): Int {
-        return position?.compareTo(another.position ?: 0) ?: 0
+    override fun compareTo(other: PaymentTypeOption): Int {
+        return position?.compareTo(other.position ?: 0) ?: 0
     }
 
     override fun toString(): String {

@@ -102,7 +102,7 @@ data class Loan(
 
     val isNPA: Boolean? = null,
 
-    val overdueCharges: List<Any> = ArrayList(),
+    val overdueCharges: List<Any> = emptyList(),
 
-    private val additionalProperties: MutableMap<String, Any> = HashMap(),
+    private val additionalProperties: MutableMap<String, Any> = mutableMapOf(),
 )

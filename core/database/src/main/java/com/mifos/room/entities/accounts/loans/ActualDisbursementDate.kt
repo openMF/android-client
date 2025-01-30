@@ -10,7 +10,6 @@
 package com.mifos.room.entities.accounts.loans
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -20,13 +19,7 @@ import kotlinx.parcelize.Parcelize
 data class ActualDisbursementDate(
     @PrimaryKey
     val loanId: Int? = null,
-
-    @ColumnInfo(name = "year")
     val year: Int? = null,
-
-    @ColumnInfo(name = "month")
     val month: Int? = null,
-
-    @ColumnInfo(name = "date")
     val date: Int? = null,
 ) : Parcelable

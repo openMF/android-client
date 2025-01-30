@@ -34,36 +34,27 @@ data class LoanAccount(
     @PrimaryKey
     val id: Int? = null,
 
-    @ColumnInfo(name = "clientId")
     val clientId: Long = 0,
 
-    @ColumnInfo(name = "groupId")
     val groupId: Long = 0,
 
-    @ColumnInfo(name = "centerId")
     val centerId: Long = 0,
 
-    @ColumnInfo(name = "accountNo")
     val accountNo: String? = null,
 
-    @ColumnInfo(name = "externalId")
     val externalId: String? = null,
 
-    @ColumnInfo(name = "productId")
     val productId: Int? = null,
 
-    @ColumnInfo(name = "productName")
     val productName: String? = null,
 
-    @ColumnInfo(name = "status", index = true)
+    @ColumnInfo(index = true)
     val status: Status? = null,
 
-    @ColumnInfo(name = "loanType", index = true)
+    @ColumnInfo(index = true)
     val loanType: LoanType? = null,
 
-    @ColumnInfo(name = "loanCycle")
     val loanCycle: Int? = null,
 
-    @ColumnInfo(name = "inArrears")
     val inArrears: Boolean? = null,
 )

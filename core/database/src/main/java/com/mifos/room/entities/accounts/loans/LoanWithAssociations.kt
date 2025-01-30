@@ -68,46 +68,33 @@ data class LoanWithAssociations(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
-    @ColumnInfo(name = "accountNo")
     val accountNo: String = "",
 
-    @ColumnInfo(name = "status", index = true)
+    @ColumnInfo(index = true)
     val status: Status = Status(),
 
-    @ColumnInfo(name = "clientId")
     val clientId: Int = 0,
 
-    @ColumnInfo(name = "clientName")
     val clientName: String = "",
 
-    @ColumnInfo(name = "clientOfficeId")
     val clientOfficeId: Int = 0,
 
-    @ColumnInfo(name = "loanProductId")
     val loanProductId: Int = 0,
 
-    @ColumnInfo(name = "loanProductName")
     val loanProductName: String = "",
 
-    @ColumnInfo(name = "loanProductDescription")
     val loanProductDescription: String = "",
 
-    @ColumnInfo(name = "fundId")
     val fundId: Int = 0,
 
-    @ColumnInfo(name = "fundName")
     val fundName: String = "",
 
-    @ColumnInfo(name = "loanPurposeId")
     val loanPurposeId: Int = 0,
 
-    @ColumnInfo(name = "loanPurposeName")
     val loanPurposeName: String = "",
 
-    @ColumnInfo(name = "loanOfficerId")
     val loanOfficerId: Int = 0,
 
-    @ColumnInfo(name = "loanOfficerName")
     val loanOfficerName: String = "",
 
     @Embedded(prefix = "LoanType_")
@@ -116,34 +103,27 @@ data class LoanWithAssociations(
     @Embedded(prefix = "Currency_")
     val currency: Currency = Currency(),
 
-    @ColumnInfo(name = "principal")
     val principal: Double = 0.0,
 
-    @ColumnInfo(name = "approvedPrincipal")
     val approvedPrincipal: Double = 0.0,
 
-    @ColumnInfo(name = "termFrequency")
     val termFrequency: Int = 0,
 
     @Embedded(prefix = "termPeriodFrequencyType_")
     val termPeriodFrequencyType: TermPeriodFrequencyType = TermPeriodFrequencyType(),
 
-    @ColumnInfo(name = "numberOfRepayments")
     val numberOfRepayments: Int = 0,
 
-    @ColumnInfo(name = "repaymentEvery")
     val repaymentEvery: Int = 0,
 
     @Embedded(prefix = "repaymentFrequencyType_")
     val repaymentFrequencyType: RepaymentFrequencyType = RepaymentFrequencyType(),
 
-    @ColumnInfo(name = "interestRatePerPeriod")
     val interestRatePerPeriod: Double = 0.0,
 
     @Embedded(prefix = "interestRateFrequencyType_")
     val interestRateFrequencyType: InterestRateFrequencyType = InterestRateFrequencyType(),
 
-    @ColumnInfo(name = "annualInterestRate")
     val annualInterestRate: Double = 0.0,
 
     @Embedded(prefix = "amortization_type_")
@@ -155,48 +135,36 @@ data class LoanWithAssociations(
     @Embedded(prefix = "interestCalculationPeriodType_")
     val interestCalculationPeriodType: InterestCalculationPeriodType = InterestCalculationPeriodType(),
 
-    @ColumnInfo(name = "transactionProcessingStrategyId")
     val transactionProcessingStrategyId: Int = 0,
 
-    @ColumnInfo(name = "transactionProcessingStrategyName")
     val transactionProcessingStrategyName: String = "",
 
-    @ColumnInfo(name = "syncDisbursementWithMeeting")
     val syncDisbursementWithMeeting: Boolean = false,
 
-    @ColumnInfo(name = "timeline", index = true)
+    @ColumnInfo(index = true)
     val timeline: Timeline = Timeline(),
 
-    @ColumnInfo(name = "summary", index = true)
+    @ColumnInfo(index = true)
     val summary: Summary = Summary(),
 
     @Embedded(prefix = "repaymentSchedule_")
     val repaymentSchedule: RepaymentSchedule = RepaymentSchedule(),
 
-    @ColumnInfo(name = "transactions")
-    val transactions: List<Transaction> = ArrayList(),
+    val transactions: List<Transaction> = emptyList(),
 
-    @ColumnInfo(name = "feeChargesAtDisbursementCharged")
     val feeChargesAtDisbursementCharged: Double = 0.0,
 
-    @ColumnInfo(name = "totalOverpaid")
     val totalOverpaid: Double = 0.0,
 
-    @ColumnInfo(name = "loanCounter")
     val loanCounter: Int = 0,
 
-    @ColumnInfo(name = "loanProductCounter")
     val loanProductCounter: Int = 0,
 
-    @ColumnInfo(name = "multiDisburseLoan")
     val multiDisburseLoan: Boolean = false,
 
-    @ColumnInfo(name = "canDisburse")
     val canDisburse: Boolean = false,
 
-    @ColumnInfo(name = "inArrears")
     val inArrears: Boolean = false,
 
-    @ColumnInfo(name = "isNPA")
     val isNPA: Boolean = false,
 ) : Parcelable
