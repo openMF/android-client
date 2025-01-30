@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2024 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,14 +11,18 @@ package com.mifos.room.entities.accounts.loans
 
 import android.os.Parcelable
 import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.mifos.core.objects.Changes
 import kotlinx.parcelize.Parcelize
-import kotlinx.serialization.Serializable
 
-@Entity(tableName = "LoanAccountLoanType")
-@Serializable
+@Entity(tableName = "LoanRepaymentResponse")
 @Parcelize
-data class LoanType(
-    val id: Int? = null,
-    val code: String? = null,
-    val value: String? = null,
+data class LoanRepaymentResponse(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val officeId: Int? = null,
+    val clientId: Int? = null,
+    val loanId: Int? = null,
+    val resourceId: Int? = null,
+    val changes: Changes? = null,
 ) : Parcelable

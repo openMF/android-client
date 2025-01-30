@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network
 
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.entity.client.Charges
 import com.mifos.core.entity.group.Center
@@ -30,6 +29,7 @@ import com.mifos.core.objects.template.client.ChargeTemplate
 import com.mifos.core.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.payloads.ChargesPayload
 import com.mifos.core.payloads.GroupLoanPayload
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.GroupWithAssociations
 import okhttp3.ResponseBody

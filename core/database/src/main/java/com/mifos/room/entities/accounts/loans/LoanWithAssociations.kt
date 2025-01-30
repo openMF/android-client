@@ -9,6 +9,7 @@
  */
 package com.mifos.room.entities.accounts.loans
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -23,7 +24,23 @@ import com.mifos.core.objects.account.loan.RepaymentFrequencyType
 import com.mifos.core.objects.account.loan.RepaymentSchedule
 import com.mifos.core.objects.account.loan.TermPeriodFrequencyType
 import com.mifos.core.objects.account.loan.Transaction
+import kotlinx.parcelize.Parcelize
 
+// @TypeConverters(
+//    AmortizationTypeConverter::class,
+//    CurrencyTypeConverter::class,
+//    InterestCalculationPeriodTypeConverter::class,
+//    InterestRateFrequencyTypeConverter::class,
+//    InterestTypeConverter::class,
+//    LoanTypeConverter::class,
+//    RepaymentFrequencyTypeConverter::class,
+//    RepaymentScheduleTypeConverter::class,
+//    TermPeriodFrequencyTypeConverter::class,
+//    TimelineTypeConverter::class,
+//    TransactionListConverter::class,
+// )
+
+@Parcelize
 @Entity(
     tableName = "LoanWithAssociations",
     foreignKeys = [
@@ -41,158 +58,113 @@ import com.mifos.core.objects.account.loan.Transaction
         ),
         ForeignKey(
             entity = Summary::class,
-            parentColumns = ["savings"],
+            parentColumns = ["loanId"],
             childColumns = ["summary"],
             onDelete = ForeignKey.CASCADE,
         ),
     ],
 )
-// @TypeConverters(
-//    AmortizationTypeConverter::class,
-//    CurrencyTypeConverter::class,
-//    InterestCalculationPeriodTypeConverter::class,
-//    InterestRateFrequencyTypeConverter::class,
-//    InterestTypeConverter::class,
-//    LoanTypeConverter::class,
-//    RepaymentFrequencyTypeConverter::class,
-//    RepaymentScheduleTypeConverter::class,
-//    TermPeriodFrequencyTypeConverter::class,
-//    TimelineTypeConverter::class,
-//    TransactionListConverter::class,
-// )
 data class LoanWithAssociations(
-    @PrimaryKey
-    var id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
 
-    @ColumnInfo(name = "accountNo")
-    var accountNo: String = "",
+    val accountNo: String = "",
 
-    @ColumnInfo(name = "status", index = true)
-    var status: Status = Status(),
+    @ColumnInfo(index = true)
+    val status: Status = Status(),
 
-    @ColumnInfo(name = "clientId")
-    var clientId: Int = 0,
+    val clientId: Int = 0,
 
-    @ColumnInfo(name = "clientName")
-    var clientName: String = "",
+    val clientName: String = "",
 
-    @ColumnInfo(name = "clientOfficeId")
-    var clientOfficeId: Int = 0,
+    val clientOfficeId: Int = 0,
 
-    @ColumnInfo(name = "loanProductId")
-    var loanProductId: Int = 0,
+    val loanProductId: Int = 0,
 
-    @ColumnInfo(name = "loanProductName")
-    var loanProductName: String = "",
+    val loanProductName: String = "",
 
-    @ColumnInfo(name = "loanProductDescription")
-    var loanProductDescription: String = "",
+    val loanProductDescription: String = "",
 
-    @ColumnInfo(name = "fundId")
-    var fundId: Int = 0,
+    val fundId: Int = 0,
 
-    @ColumnInfo(name = "fundName")
-    var fundName: String = "",
+    val fundName: String = "",
 
-    @ColumnInfo(name = "loanPurposeId")
-    var loanPurposeId: Int = 0,
+    val loanPurposeId: Int = 0,
 
-    @ColumnInfo(name = "loanPurposeName")
-    var loanPurposeName: String = "",
+    val loanPurposeName: String = "",
 
-    @ColumnInfo(name = "loanOfficerId")
-    var loanOfficerId: Int = 0,
+    val loanOfficerId: Int = 0,
 
-    @ColumnInfo(name = "loanOfficerName")
-    var loanOfficerName: String = "",
+    val loanOfficerName: String = "",
 
-    @Embedded
-    var loanType: LoanType = LoanType(),
+    @Embedded(prefix = "LoanType_")
+    val loanType: LoanType = LoanType(),
 
-    @Embedded
-    var currency: Currency = Currency(),
+    @Embedded(prefix = "Currency_")
+    val currency: Currency = Currency(),
 
-    @ColumnInfo(name = "principal")
-    var principal: Double = 0.0,
+    val principal: Double = 0.0,
 
-    @ColumnInfo(name = "approvedPrincipal")
-    var approvedPrincipal: Double = 0.0,
+    val approvedPrincipal: Double = 0.0,
 
-    @ColumnInfo(name = "termFrequency")
-    var termFrequency: Int = 0,
+    val termFrequency: Int = 0,
 
-    @Embedded
-    var termPeriodFrequencyType: TermPeriodFrequencyType = TermPeriodFrequencyType(),
+    @Embedded(prefix = "termPeriodFrequencyType_")
+    val termPeriodFrequencyType: TermPeriodFrequencyType = TermPeriodFrequencyType(),
 
-    @ColumnInfo(name = "numberOfRepayments")
-    var numberOfRepayments: Int = 0,
+    val numberOfRepayments: Int = 0,
 
-    @ColumnInfo(name = "repaymentEvery")
-    var repaymentEvery: Int = 0,
+    val repaymentEvery: Int = 0,
 
-    @Embedded
-    var repaymentFrequencyType: RepaymentFrequencyType = RepaymentFrequencyType(),
+    @Embedded(prefix = "repaymentFrequencyType_")
+    val repaymentFrequencyType: RepaymentFrequencyType = RepaymentFrequencyType(),
 
-    @ColumnInfo(name = "interestRatePerPeriod")
-    var interestRatePerPeriod: Double = 0.0,
+    val interestRatePerPeriod: Double = 0.0,
 
-    @Embedded
-    var interestRateFrequencyType: InterestRateFrequencyType = InterestRateFrequencyType(),
+    @Embedded(prefix = "interestRateFrequencyType_")
+    val interestRateFrequencyType: InterestRateFrequencyType = InterestRateFrequencyType(),
 
-    @ColumnInfo(name = "annualInterestRate")
-    var annualInterestRate: Double = 0.0,
+    val annualInterestRate: Double = 0.0,
 
-    @Embedded
-    var amortizationType: AmortizationType = AmortizationType(),
+    @Embedded(prefix = "amortization_type_")
+    val amortizationType: AmortizationType = AmortizationType(),
 
-    @Embedded
-    var interestType: InterestType = InterestType(),
+    @Embedded(prefix = "interestType_")
+    val interestType: InterestType = InterestType(),
 
-    @Embedded
-    var interestCalculationPeriodType: InterestCalculationPeriodType = InterestCalculationPeriodType(),
+    @Embedded(prefix = "interestCalculationPeriodType_")
+    val interestCalculationPeriodType: InterestCalculationPeriodType = InterestCalculationPeriodType(),
 
-    @ColumnInfo(name = "transactionProcessingStrategyId")
-    var transactionProcessingStrategyId: Int = 0,
+    val transactionProcessingStrategyId: Int = 0,
 
-    @ColumnInfo(name = "transactionProcessingStrategyName")
-    var transactionProcessingStrategyName: String = "",
+    val transactionProcessingStrategyName: String = "",
 
-    @ColumnInfo(name = "syncDisbursementWithMeeting")
-    var syncDisbursementWithMeeting: Boolean = false,
+    val syncDisbursementWithMeeting: Boolean = false,
 
-    @ColumnInfo(name = "timeline", index = true)
-    var timeline: Timeline = Timeline(),
+    @ColumnInfo(index = true)
+    val timeline: Timeline = Timeline(),
 
-    @ColumnInfo(name = "summary", index = true)
-    var summary: Summary = Summary(),
+    @ColumnInfo(index = true)
+    val summary: Summary = Summary(),
 
-    @Embedded
-    var repaymentSchedule: RepaymentSchedule = RepaymentSchedule(),
+    @Embedded(prefix = "repaymentSchedule_")
+    val repaymentSchedule: RepaymentSchedule = RepaymentSchedule(),
 
-    @ColumnInfo(name = "transactions")
-    var transactions: List<Transaction> = ArrayList(),
+    val transactions: List<Transaction> = emptyList(),
 
-    @ColumnInfo(name = "feeChargesAtDisbursementCharged")
-    var feeChargesAtDisbursementCharged: Double = 0.0,
+    val feeChargesAtDisbursementCharged: Double = 0.0,
 
-    @ColumnInfo(name = "totalOverpaid")
-    var totalOverpaid: Double = 0.0,
+    val totalOverpaid: Double = 0.0,
 
-    @ColumnInfo(name = "loanCounter")
-    var loanCounter: Int = 0,
+    val loanCounter: Int = 0,
 
-    @ColumnInfo(name = "loanProductCounter")
-    var loanProductCounter: Int = 0,
+    val loanProductCounter: Int = 0,
 
-    @ColumnInfo(name = "multiDisburseLoan")
-    var multiDisburseLoan: Boolean = false,
+    val multiDisburseLoan: Boolean = false,
 
-    @ColumnInfo(name = "canDisburse")
-    var canDisburse: Boolean = false,
+    val canDisburse: Boolean = false,
 
-    @ColumnInfo(name = "inArrears")
-    var inArrears: Boolean = false,
+    val inArrears: Boolean = false,
 
-    @ColumnInfo(name = "isNPA")
-    var isNPA: Boolean = false,
-)
+    val isNPA: Boolean = false,
+) : Parcelable

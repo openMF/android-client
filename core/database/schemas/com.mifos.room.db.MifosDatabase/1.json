@@ -1,0 +1,1178 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "be50121d7afe08c6200f3cea98d17b8a",
+    "entities": [
+      {
+        "tableName": "ColumnValue",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `value` TEXT, `score` INTEGER, `registeredTableName` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "score",
+            "columnName": "score",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "registeredTableName",
+            "columnName": "registeredTableName",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "LoanWithAssociations",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `accountNo` TEXT NOT NULL, `status` TEXT NOT NULL, `clientId` INTEGER NOT NULL, `clientName` TEXT NOT NULL, `clientOfficeId` INTEGER NOT NULL, `loanProductId` INTEGER NOT NULL, `loanProductName` TEXT NOT NULL, `loanProductDescription` TEXT NOT NULL, `fundId` INTEGER NOT NULL, `fundName` TEXT NOT NULL, `loanPurposeId` INTEGER NOT NULL, `loanPurposeName` TEXT NOT NULL, `loanOfficerId` INTEGER NOT NULL, `loanOfficerName` TEXT NOT NULL, `principal` REAL NOT NULL, `approvedPrincipal` REAL NOT NULL, `termFrequency` INTEGER NOT NULL, `numberOfRepayments` INTEGER NOT NULL, `repaymentEvery` INTEGER NOT NULL, `interestRatePerPeriod` REAL NOT NULL, `annualInterestRate` REAL NOT NULL, `transactionProcessingStrategyId` INTEGER NOT NULL, `transactionProcessingStrategyName` TEXT NOT NULL, `syncDisbursementWithMeeting` INTEGER NOT NULL, `timeline` TEXT NOT NULL, `summary` TEXT NOT NULL, `transactions` TEXT NOT NULL, `feeChargesAtDisbursementCharged` REAL NOT NULL, `totalOverpaid` REAL NOT NULL, `loanCounter` INTEGER NOT NULL, `loanProductCounter` INTEGER NOT NULL, `multiDisburseLoan` INTEGER NOT NULL, `canDisburse` INTEGER NOT NULL, `inArrears` INTEGER NOT NULL, `isNPA` INTEGER NOT NULL, `LoanType_id` INTEGER, `LoanType_code` TEXT, `LoanType_value` TEXT, `Currency_code` TEXT, `Currency_name` TEXT, `Currency_decimalPlaces` REAL, `Currency_inMultiplesOf` INTEGER, `Currency_displaySymbol` TEXT, `Currency_nameCode` TEXT, `Currency_displayLabel` TEXT, `termPeriodFrequencyType_id` INTEGER, `termPeriodFrequencyType_code` TEXT, `termPeriodFrequencyType_value` TEXT, `repaymentFrequencyType_id` INTEGER, `repaymentFrequencyType_code` TEXT, `repaymentFrequencyType_value` TEXT, `interestRateFrequencyType_id` INTEGER, `interestRateFrequencyType_code` TEXT, `interestRateFrequencyType_value` TEXT, `amortization_type_id` INTEGER, `amortization_type_code` TEXT, `amortization_type_value` TEXT, `interestType_id` INTEGER, `interestType_code` TEXT, `interestType_value` TEXT, `interestCalculationPeriodType_id` INTEGER, `interestCalculationPeriodType_code` TEXT, `interestCalculationPeriodType_value` TEXT, `repaymentSchedule_currency` TEXT, `repaymentSchedule_loanTermInDays` INTEGER, `repaymentSchedule_periods` TEXT, `repaymentSchedule_totalFeeChargesCharged` REAL, `repaymentSchedule_totalInterestCharged` REAL, `repaymentSchedule_totalOutstanding` REAL, `repaymentSchedule_totalPaidInAdvance` REAL, `repaymentSchedule_totalPaidLate` REAL, `repaymentSchedule_totalPenaltyChargesCharged` REAL, `repaymentSchedule_totalPrincipalDisbursed` REAL, `repaymentSchedule_totalPrincipalExpected` REAL, `repaymentSchedule_totalPrincipalPaid` REAL, `repaymentSchedule_totalRepayment` REAL, `repaymentSchedule_totalRepaymentExpected` REAL, `repaymentSchedule_totalWaived` REAL, `repaymentSchedule_totalWrittenOff` REAL, FOREIGN KEY(`status`) REFERENCES `LoanStatus`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`timeline`) REFERENCES `Timeline`(`loanId`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`summary`) REFERENCES `LoansAccountSummary`(`loanId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "accountNo",
+            "columnName": "accountNo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clientId",
+            "columnName": "clientId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clientName",
+            "columnName": "clientName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clientOfficeId",
+            "columnName": "clientOfficeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loanProductId",
+            "columnName": "loanProductId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loanProductName",
+            "columnName": "loanProductName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loanProductDescription",
+            "columnName": "loanProductDescription",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fundId",
+            "columnName": "fundId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fundName",
+            "columnName": "fundName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loanPurposeId",
+            "columnName": "loanPurposeId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loanPurposeName",
+            "columnName": "loanPurposeName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loanOfficerId",
+            "columnName": "loanOfficerId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loanOfficerName",
+            "columnName": "loanOfficerName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "principal",
+            "columnName": "principal",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "approvedPrincipal",
+            "columnName": "approvedPrincipal",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "termFrequency",
+            "columnName": "termFrequency",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "numberOfRepayments",
+            "columnName": "numberOfRepayments",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repaymentEvery",
+            "columnName": "repaymentEvery",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interestRatePerPeriod",
+            "columnName": "interestRatePerPeriod",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "annualInterestRate",
+            "columnName": "annualInterestRate",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionProcessingStrategyId",
+            "columnName": "transactionProcessingStrategyId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactionProcessingStrategyName",
+            "columnName": "transactionProcessingStrategyName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncDisbursementWithMeeting",
+            "columnName": "syncDisbursementWithMeeting",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timeline",
+            "columnName": "timeline",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "summary",
+            "columnName": "summary",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transactions",
+            "columnName": "transactions",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "feeChargesAtDisbursementCharged",
+            "columnName": "feeChargesAtDisbursementCharged",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalOverpaid",
+            "columnName": "totalOverpaid",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loanCounter",
+            "columnName": "loanCounter",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loanProductCounter",
+            "columnName": "loanProductCounter",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "multiDisburseLoan",
+            "columnName": "multiDisburseLoan",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "canDisburse",
+            "columnName": "canDisburse",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "inArrears",
+            "columnName": "inArrears",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isNPA",
+            "columnName": "isNPA",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loanType.id",
+            "columnName": "LoanType_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "loanType.code",
+            "columnName": "LoanType_code",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "loanType.value",
+            "columnName": "LoanType_value",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currency.code",
+            "columnName": "Currency_code",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currency.name",
+            "columnName": "Currency_name",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currency.decimalPlaces",
+            "columnName": "Currency_decimalPlaces",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "currency.inMultiplesOf",
+            "columnName": "Currency_inMultiplesOf",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "currency.displaySymbol",
+            "columnName": "Currency_displaySymbol",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currency.nameCode",
+            "columnName": "Currency_nameCode",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currency.displayLabel",
+            "columnName": "Currency_displayLabel",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "termPeriodFrequencyType.id",
+            "columnName": "termPeriodFrequencyType_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "termPeriodFrequencyType.code",
+            "columnName": "termPeriodFrequencyType_code",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "termPeriodFrequencyType.value",
+            "columnName": "termPeriodFrequencyType_value",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "repaymentFrequencyType.id",
+            "columnName": "repaymentFrequencyType_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "repaymentFrequencyType.code",
+            "columnName": "repaymentFrequencyType_code",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "repaymentFrequencyType.value",
+            "columnName": "repaymentFrequencyType_value",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interestRateFrequencyType.id",
+            "columnName": "interestRateFrequencyType_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interestRateFrequencyType.code",
+            "columnName": "interestRateFrequencyType_code",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interestRateFrequencyType.value",
+            "columnName": "interestRateFrequencyType_value",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "amortizationType.id",
+            "columnName": "amortization_type_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "amortizationType.code",
+            "columnName": "amortization_type_code",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "amortizationType.value",
+            "columnName": "amortization_type_value",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interestType.id",
+            "columnName": "interestType_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interestType.code",
+            "columnName": "interestType_code",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interestType.value",
+            "columnName": "interestType_value",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interestCalculationPeriodType.id",
+            "columnName": "interestCalculationPeriodType_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "interestCalculationPeriodType.code",
+            "columnName": "interestCalculationPeriodType_code",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "interestCalculationPeriodType.value",
+            "columnName": "interestCalculationPeriodType_value",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "repaymentSchedule.currency",
+            "columnName": "repaymentSchedule_currency",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "repaymentSchedule.loanTermInDays",
+            "columnName": "repaymentSchedule_loanTermInDays",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "repaymentSchedule.periods",
+            "columnName": "repaymentSchedule_periods",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "repaymentSchedule.totalFeeChargesCharged",
+            "columnName": "repaymentSchedule_totalFeeChargesCharged",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "repaymentSchedule.totalInterestCharged",
+            "columnName": "repaymentSchedule_totalInterestCharged",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "repaymentSchedule.totalOutstanding",
+            "columnName": "repaymentSchedule_totalOutstanding",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "repaymentSchedule.totalPaidInAdvance",
+            "columnName": "repaymentSchedule_totalPaidInAdvance",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "repaymentSchedule.totalPaidLate",
+            "columnName": "repaymentSchedule_totalPaidLate",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "repaymentSchedule.totalPenaltyChargesCharged",
+            "columnName": "repaymentSchedule_totalPenaltyChargesCharged",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "repaymentSchedule.totalPrincipalDisbursed",
+            "columnName": "repaymentSchedule_totalPrincipalDisbursed",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "repaymentSchedule.totalPrincipalExpected",
+            "columnName": "repaymentSchedule_totalPrincipalExpected",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "repaymentSchedule.totalPrincipalPaid",
+            "columnName": "repaymentSchedule_totalPrincipalPaid",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "repaymentSchedule.totalRepayment",
+            "columnName": "repaymentSchedule_totalRepayment",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "repaymentSchedule.totalRepaymentExpected",
+            "columnName": "repaymentSchedule_totalRepaymentExpected",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "repaymentSchedule.totalWaived",
+            "columnName": "repaymentSchedule_totalWaived",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "repaymentSchedule.totalWrittenOff",
+            "columnName": "repaymentSchedule_totalWrittenOff",
+            "affinity": "REAL"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_LoanWithAssociations_status",
+            "unique": false,
+            "columnNames": [
+              "status"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_LoanWithAssociations_status` ON `${TABLE_NAME}` (`status`)"
+          },
+          {
+            "name": "index_LoanWithAssociations_timeline",
+            "unique": false,
+            "columnNames": [
+              "timeline"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_LoanWithAssociations_timeline` ON `${TABLE_NAME}` (`timeline`)"
+          },
+          {
+            "name": "index_LoanWithAssociations_summary",
+            "unique": false,
+            "columnNames": [
+              "summary"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_LoanWithAssociations_summary` ON `${TABLE_NAME}` (`summary`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "LoanStatus",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "status"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "Timeline",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "timeline"
+            ],
+            "referencedColumns": [
+              "loanId"
+            ]
+          },
+          {
+            "table": "LoansAccountSummary",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "summary"
+            ],
+            "referencedColumns": [
+              "loanId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "LoanRepaymentRequest",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timeStamp` INTEGER NOT NULL, `loanId` INTEGER, `errorMessage` TEXT, `dateFormat` TEXT, `locale` TEXT, `transactionDate` TEXT, `transactionAmount` TEXT, `paymentTypeId` TEXT, `note` TEXT, `accountNumber` TEXT, `checkNumber` TEXT, `routingCode` TEXT, `receiptNumber` TEXT, `bankNumber` TEXT, PRIMARY KEY(`timeStamp`))",
+        "fields": [
+          {
+            "fieldPath": "timeStamp",
+            "columnName": "timeStamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loanId",
+            "columnName": "loanId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "errorMessage",
+            "columnName": "errorMessage",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "dateFormat",
+            "columnName": "dateFormat",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "locale",
+            "columnName": "locale",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "transactionDate",
+            "columnName": "transactionDate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "transactionAmount",
+            "columnName": "transactionAmount",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "paymentTypeId",
+            "columnName": "paymentTypeId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "accountNumber",
+            "columnName": "accountNumber",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "checkNumber",
+            "columnName": "checkNumber",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "routingCode",
+            "columnName": "routingCode",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "receiptNumber",
+            "columnName": "receiptNumber",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "bankNumber",
+            "columnName": "bankNumber",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "timeStamp"
+          ]
+        }
+      },
+      {
+        "tableName": "LoanRepaymentTemplate",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`loanId` INTEGER PRIMARY KEY AUTOINCREMENT, `type` TEXT, `date` TEXT, `currency` TEXT, `amount` REAL, `principalPortion` REAL, `interestPortion` REAL, `feeChargesPortion` REAL, `penaltyChargesPortion` REAL, `paymentTypeOptions` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "loanId",
+            "columnName": "loanId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currency",
+            "columnName": "currency",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "principalPortion",
+            "columnName": "principalPortion",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "interestPortion",
+            "columnName": "interestPortion",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "feeChargesPortion",
+            "columnName": "feeChargesPortion",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "penaltyChargesPortion",
+            "columnName": "penaltyChargesPortion",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "paymentTypeOptions",
+            "columnName": "paymentTypeOptions",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "loanId"
+          ]
+        }
+      },
+      {
+        "tableName": "PaymentTypeOption",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `isCashPayment` INTEGER, `position` INTEGER, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "isCashPayment",
+            "columnName": "isCashPayment",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "ActualDisbursementDate",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`loanId` INTEGER, `year` INTEGER, `month` INTEGER, `date` INTEGER, PRIMARY KEY(`loanId`))",
+        "fields": [
+          {
+            "fieldPath": "loanId",
+            "columnName": "loanId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "year",
+            "columnName": "year",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "month",
+            "columnName": "month",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "loanId"
+          ]
+        }
+      },
+      {
+        "tableName": "Timeline",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`loanId` INTEGER, `submittedOnDate` TEXT, `submittedByUsername` TEXT, `submittedByFirstname` TEXT, `submittedByLastname` TEXT, `approvedOnDate` TEXT, `approvedByUsername` TEXT, `approvedByFirstname` TEXT, `approvedByLastname` TEXT, `expectedDisbursementDate` TEXT, `actualDisburseDate` TEXT, `actualDisbursementDate` TEXT, `disbursedByUsername` TEXT, `disbursedByFirstname` TEXT, `disbursedByLastname` TEXT, `closedOnDate` TEXT, `expectedMaturityDate` TEXT, PRIMARY KEY(`loanId`), FOREIGN KEY(`actualDisburseDate`) REFERENCES `ActualDisbursementDate`(`loanId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "loanId",
+            "columnName": "loanId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "submittedOnDate",
+            "columnName": "submittedOnDate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "submittedByUsername",
+            "columnName": "submittedByUsername",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "submittedByFirstname",
+            "columnName": "submittedByFirstname",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "submittedByLastname",
+            "columnName": "submittedByLastname",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "approvedOnDate",
+            "columnName": "approvedOnDate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "approvedByUsername",
+            "columnName": "approvedByUsername",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "approvedByFirstname",
+            "columnName": "approvedByFirstname",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "approvedByLastname",
+            "columnName": "approvedByLastname",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "expectedDisbursementDate",
+            "columnName": "expectedDisbursementDate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "actualDisburseDate",
+            "columnName": "actualDisburseDate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "actualDisbursementDate",
+            "columnName": "actualDisbursementDate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "disbursedByUsername",
+            "columnName": "disbursedByUsername",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "disbursedByFirstname",
+            "columnName": "disbursedByFirstname",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "disbursedByLastname",
+            "columnName": "disbursedByLastname",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "closedOnDate",
+            "columnName": "closedOnDate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "expectedMaturityDate",
+            "columnName": "expectedMaturityDate",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "loanId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_Timeline_actualDisburseDate",
+            "unique": false,
+            "columnNames": [
+              "actualDisburseDate"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Timeline_actualDisburseDate` ON `${TABLE_NAME}` (`actualDisburseDate`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "ActualDisbursementDate",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "actualDisburseDate"
+            ],
+            "referencedColumns": [
+              "loanId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "LoanStatus",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `code` TEXT, `value` TEXT, `pendingApproval` INTEGER, `waitingForDisbursal` INTEGER, `active` INTEGER, `closedObligationsMet` INTEGER, `closedWrittenOff` INTEGER, `closedRescheduled` INTEGER, `closed` INTEGER, `overpaid` INTEGER, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "code",
+            "columnName": "code",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "pendingApproval",
+            "columnName": "pendingApproval",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "waitingForDisbursal",
+            "columnName": "waitingForDisbursal",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "active",
+            "columnName": "active",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "closedObligationsMet",
+            "columnName": "closedObligationsMet",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "closedWrittenOff",
+            "columnName": "closedWrittenOff",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "closedRescheduled",
+            "columnName": "closedRescheduled",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "closed",
+            "columnName": "closed",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "overpaid",
+            "columnName": "overpaid",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "LoansAccountSummary",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`loanId` INTEGER, `principalDisbursed` REAL, `principalPaid` REAL, `principalWrittenOff` REAL, `principalOutstanding` REAL, `principalOverdue` REAL, `interestCharged` REAL, `interestPaid` REAL, `interestWaived` REAL, `interestWrittenOff` REAL, `interestOutstanding` REAL, `interestOverdue` REAL, `feeChargesCharged` REAL, `feeChargesDueAtDisbursementCharged` REAL, `feeChargesPaid` REAL, `feeChargesWaived` REAL, `feeChargesWrittenOff` REAL, `feeChargesOutstanding` REAL, `feeChargesOverdue` REAL, `penaltyChargesCharged` REAL, `penaltyChargesPaid` REAL, `penaltyChargesWaived` REAL, `penaltyChargesWrittenOff` REAL, `penaltyChargesOutstanding` REAL, `penaltyChargesOverdue` REAL, `totalExpectedRepayment` REAL, `totalRepayment` REAL, `totalExpectedCostOfLoan` REAL, `totalCostOfLoan` REAL, `totalWaived` REAL, `totalWrittenOff` REAL, `totalOutstanding` REAL, `totalOverdue` REAL, `overdueSinceDate` TEXT, `code` TEXT, `name` TEXT, `decimalPlaces` REAL, `inMultiplesOf` INTEGER, `displaySymbol` TEXT, `nameCode` TEXT, `displayLabel` TEXT, PRIMARY KEY(`loanId`))",
+        "fields": [
+          {
+            "fieldPath": "loanId",
+            "columnName": "loanId",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "principalDisbursed",
+            "columnName": "principalDisbursed",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "principalPaid",
+            "columnName": "principalPaid",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "principalWrittenOff",
+            "columnName": "principalWrittenOff",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "principalOutstanding",
+            "columnName": "principalOutstanding",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "principalOverdue",
+            "columnName": "principalOverdue",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "interestCharged",
+            "columnName": "interestCharged",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "interestPaid",
+            "columnName": "interestPaid",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "interestWaived",
+            "columnName": "interestWaived",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "interestWrittenOff",
+            "columnName": "interestWrittenOff",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "interestOutstanding",
+            "columnName": "interestOutstanding",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "interestOverdue",
+            "columnName": "interestOverdue",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "feeChargesCharged",
+            "columnName": "feeChargesCharged",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "feeChargesDueAtDisbursementCharged",
+            "columnName": "feeChargesDueAtDisbursementCharged",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "feeChargesPaid",
+            "columnName": "feeChargesPaid",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "feeChargesWaived",
+            "columnName": "feeChargesWaived",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "feeChargesWrittenOff",
+            "columnName": "feeChargesWrittenOff",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "feeChargesOutstanding",
+            "columnName": "feeChargesOutstanding",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "feeChargesOverdue",
+            "columnName": "feeChargesOverdue",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "penaltyChargesCharged",
+            "columnName": "penaltyChargesCharged",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "penaltyChargesPaid",
+            "columnName": "penaltyChargesPaid",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "penaltyChargesWaived",
+            "columnName": "penaltyChargesWaived",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "penaltyChargesWrittenOff",
+            "columnName": "penaltyChargesWrittenOff",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "penaltyChargesOutstanding",
+            "columnName": "penaltyChargesOutstanding",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "penaltyChargesOverdue",
+            "columnName": "penaltyChargesOverdue",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "totalExpectedRepayment",
+            "columnName": "totalExpectedRepayment",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "totalRepayment",
+            "columnName": "totalRepayment",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "totalExpectedCostOfLoan",
+            "columnName": "totalExpectedCostOfLoan",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "totalCostOfLoan",
+            "columnName": "totalCostOfLoan",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "totalWaived",
+            "columnName": "totalWaived",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "totalWrittenOff",
+            "columnName": "totalWrittenOff",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "totalOutstanding",
+            "columnName": "totalOutstanding",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "totalOverdue",
+            "columnName": "totalOverdue",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "overdueSinceDate",
+            "columnName": "overdueSinceDate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currency.code",
+            "columnName": "code",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currency.name",
+            "columnName": "name",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currency.decimalPlaces",
+            "columnName": "decimalPlaces",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "currency.inMultiplesOf",
+            "columnName": "inMultiplesOf",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "currency.displaySymbol",
+            "columnName": "displaySymbol",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currency.nameCode",
+            "columnName": "nameCode",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "currency.displayLabel",
+            "columnName": "displayLabel",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "loanId"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'be50121d7afe08c6200f3cea98d17b8a')"
+    ]
+  }
+}

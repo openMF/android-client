@@ -11,11 +11,13 @@ package com.mifos.core.objects.template.loan
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 16/07/16.
  */
 @Parcelize
+@Serializable
 data class Currency(
     var code: String? = null,
 

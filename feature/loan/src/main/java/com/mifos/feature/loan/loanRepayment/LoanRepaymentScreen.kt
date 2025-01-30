@@ -69,11 +69,11 @@ import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -479,20 +479,19 @@ private fun ShowLoanRepaymentConfirmationDialog(
                 onClick = {
                     onDismiss()
                     if (Network.isOnline(context)) {
-                        val request = LoanRepaymentRequest()
-
-                        request.accountNumber = loanAccountNumber
-                        request.paymentTypeId = paymentTypeId
-                        request.dateFormat = "dd MM yyyy"
-                        request.locale = "en"
-                        request.transactionAmount = total
-                        request.transactionDate = SimpleDateFormat(
-                            "dd MMMM yyyy",
-                            Locale.getDefault(),
-                        ).format(
-                            repaymentDate,
+                        val request = LoanRepaymentRequest(
+                            accountNumber = loanAccountNumber,
+                            paymentTypeId = paymentTypeId,
+                            dateFormat = "dd MM yyyy",
+                            locale = "en",
+                            transactionAmount = total,
+                            transactionDate = SimpleDateFormat(
+                                "dd MMMM yyyy",
+                                Locale.getDefault(),
+                            ).format(
+                                repaymentDate,
+                            ),
                         )
-
                         submitPayment.invoke(request)
                     } else {
                         Toast.makeText(

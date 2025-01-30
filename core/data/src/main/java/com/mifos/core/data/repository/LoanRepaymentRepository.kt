@@ -9,22 +9,22 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
-import rx.Observable
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
 interface LoanRepaymentRepository {
 
-    fun getLoanRepayTemplate(loanId: Int): Observable<LoanRepaymentTemplate>
+    fun getLoanRepayTemplate(loanId: Int): Flow<LoanRepaymentTemplate?>
 
-    fun submitPayment(
+    suspend fun submitPayment(
         loanId: Int,
         request: LoanRepaymentRequest,
-    ): Observable<LoanRepaymentResponse>
+    ): LoanRepaymentResponse
 
-    fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Observable<LoanRepaymentRequest>
+    fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Flow<LoanRepaymentRequest?>
 }

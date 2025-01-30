@@ -10,31 +10,32 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.LoanRepaymentRepository
-import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.network.datamanager.DataManagerLoan
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
-import rx.Observable
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class LoanRepaymentRepositoryImp @Inject constructor(private val dataManagerLoan: DataManagerLoan) :
-    LoanRepaymentRepository {
+class LoanRepaymentRepositoryImp @Inject constructor(
+    private val dataManagerLoan: DataManagerLoan,
+) : LoanRepaymentRepository {
 
-    override fun getLoanRepayTemplate(loanId: Int): Observable<LoanRepaymentTemplate> {
+    override fun getLoanRepayTemplate(loanId: Int): Flow<LoanRepaymentTemplate?> {
         return dataManagerLoan.getLoanRepayTemplate(loanId)
     }
 
-    override fun submitPayment(
+    override suspend fun submitPayment(
         loanId: Int,
         request: LoanRepaymentRequest,
-    ): Observable<LoanRepaymentResponse> {
-        return submitPayment(loanId, request)
+    ): LoanRepaymentResponse {
+        return dataManagerLoan.submitPayment(loanId, request)
     }
 
-    override fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Observable<LoanRepaymentRequest> {
+    override fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Flow<LoanRepaymentRequest?> {
         return dataManagerLoan.getDatabaseLoanRepaymentByLoanId(loanId)
     }
 }

@@ -10,8 +10,8 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.LoanTransactionsRepository
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.network.DataManager
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import rx.Observable
 import javax.inject.Inject
 

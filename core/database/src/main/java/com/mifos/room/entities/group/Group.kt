@@ -20,7 +20,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity(
-    tableName = "Group",
+    tableName = "GroupTable",
     foreignKeys = [
         ForeignKey(
             entity = GroupDate::class,

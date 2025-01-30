@@ -9,21 +9,21 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.entity.client.Charges
-import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.objects.account.loan.LoanApproval
 import com.mifos.core.objects.account.loan.LoanDisbursement
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.core.objects.clients.Page
 import com.mifos.core.objects.organisations.LoanProducts
 import com.mifos.core.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.room.basemodel.APIEndPoint
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import retrofit2.http.Body
@@ -38,10 +38,10 @@ import rx.Observable
  */
 interface LoanService {
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=all&exclude=guarantors,futureSchedule")
-    fun getLoanByIdWithAllAssociations(@Path("loanId") loanId: Int): Observable<LoanWithAssociations>
+    suspend fun getLoanByIdWithAllAssociations(@Path("loanId") loanId: Int): LoanWithAssociations
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=repayment")
-    fun getLoanRepaymentTemplate(@Path("loanId") loanId: Int): Observable<LoanRepaymentTemplate>
+    suspend fun getLoanRepaymentTemplate(@Path("loanId") loanId: Int): LoanRepaymentTemplate
 
     //  Mandatory Fields
     //  1. String approvedOnDate
@@ -60,10 +60,10 @@ interface LoanService {
     ): Observable<GenericResponse>
 
     @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=repayment")
-    fun submitPayment(
+    suspend fun submitPayment(
         @Path("loanId") loanId: Int,
         @Body loanRepaymentRequest: LoanRepaymentRequest?,
-    ): Observable<LoanRepaymentResponse>
+    ): LoanRepaymentResponse
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
     fun getLoanRepaymentSchedule(@Path("loanId") loanId: Int): Observable<LoanWithAssociations>

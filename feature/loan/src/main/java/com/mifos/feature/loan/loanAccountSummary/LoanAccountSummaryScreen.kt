@@ -67,10 +67,10 @@ import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.DarkGray
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
-import com.mifos.core.entity.accounts.loan.Status
-import com.mifos.core.entity.accounts.loan.Summary
 import com.mifos.feature.loan.R
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.Status
+import com.mifos.room.entities.accounts.loans.Summary
 
 /**
  * Created by Pronay Sarker on 01/07/2024 (5:50 AM)
@@ -99,7 +99,12 @@ internal fun LoanAccountSummaryScreen(
         uiState = uiState,
         navigateBack = navigateBack,
         onRetry = { viewModel.loadLoanById(loanAccountNumber) },
-        onMoreInfoClicked = { onMoreInfoClicked.invoke(Constants.DATA_TABLE_NAME_LOANS, loanAccountNumber) },
+        onMoreInfoClicked = {
+            onMoreInfoClicked.invoke(
+                Constants.DATA_TABLE_NAME_LOANS,
+                loanAccountNumber,
+            )
+        },
         onTransactionsClicked = { onTransactionsClicked.invoke(loanAccountNumber) },
         onRepaymentScheduleClicked = { onRepaymentScheduleClicked.invoke(loanAccountNumber) },
         onDocumentsClicked = { onDocumentsClicked(loanAccountNumber) },
@@ -563,7 +568,8 @@ private fun getInflateLoanSummaryValue(status: Status): Boolean {
     }
 }
 
-private class LoanAccountSummaryPreviewProvider : PreviewParameterProvider<LoanAccountSummaryUiState> {
+private class LoanAccountSummaryPreviewProvider :
+    PreviewParameterProvider<LoanAccountSummaryUiState> {
     private val demoSummary = Summary(
         loanId = 12345,
         principalDisbursed = 10000.0,

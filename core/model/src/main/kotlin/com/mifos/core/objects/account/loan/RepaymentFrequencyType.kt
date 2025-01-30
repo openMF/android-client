@@ -11,8 +11,10 @@ package com.mifos.core.objects.account.loan
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class RepaymentFrequencyType(
     var id: Int? = null,
 

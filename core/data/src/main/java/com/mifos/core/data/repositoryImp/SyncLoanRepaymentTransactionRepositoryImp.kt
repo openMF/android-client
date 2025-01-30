@@ -10,36 +10,37 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
-import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.network.datamanager.DataManagerLoan
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.room.entities.PaymentTypeOption
-import rx.Observable
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class SyncLoanRepaymentTransactionRepositoryImp @Inject constructor(private val dataManagerLoan: DataManagerLoan) :
-    SyncLoanRepaymentTransactionRepository {
+class SyncLoanRepaymentTransactionRepositoryImp @Inject constructor(
+    private val dataManagerLoan: DataManagerLoan,
+) : SyncLoanRepaymentTransactionRepository {
 
-    override fun databaseLoanRepayments(): Observable<List<LoanRepaymentRequest>> {
+    override fun databaseLoanRepayments(): Flow<List<LoanRepaymentRequest>> {
         return dataManagerLoan.databaseLoanRepayments
     }
 
-    override fun paymentTypeOption(): Observable<List<PaymentTypeOption>> {
+    override fun paymentTypeOption(): Flow<List<PaymentTypeOption>> {
         return dataManagerLoan.paymentTypeOption
     }
 
-    override fun submitPayment(
+    override suspend fun submitPayment(
         loanId: Int,
         request: LoanRepaymentRequest,
-    ): Observable<LoanRepaymentResponse> {
+    ): LoanRepaymentResponse {
         return dataManagerLoan.submitPayment(loanId, request)
     }
 
-    override fun deleteAndUpdateLoanRepayments(loanId: Int): Observable<List<LoanRepaymentRequest>> {
+    override fun deleteAndUpdateLoanRepayments(loanId: Int): Flow<List<LoanRepaymentRequest>> {
         return dataManagerLoan.deleteAndUpdateLoanRepayments(loanId)
     }
 
-    override fun updateLoanRepaymentTransaction(loanRepaymentRequest: LoanRepaymentRequest): Observable<LoanRepaymentRequest> {
+    override fun updateLoanRepaymentTransaction(loanRepaymentRequest: LoanRepaymentRequest): Flow<LoanRepaymentRequest> {
         return dataManagerLoan.updateLoanRepaymentTransaction(loanRepaymentRequest)
     }
 }

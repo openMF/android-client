@@ -10,19 +10,22 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperLoan
-import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.loan.Loans
-import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.objects.account.loan.LoanDisbursement
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.core.objects.organisations.LoanProducts
 import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
+import com.mifos.room.helper.LoanDaoHelper
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,6 +37,7 @@ import javax.inject.Singleton
 class DataManagerLoan @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     val mDatabaseHelperLoan: DatabaseHelperLoan,
+    val loanDaoHelper: LoanDaoHelper,
     private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**
@@ -50,14 +54,14 @@ class DataManagerLoan @Inject constructor(
      * @param loanId Loan Id of the Loan
      * @return LoanWithAssociation
      */
-    fun getLoanById(loanId: Int): Observable<LoanWithAssociations> {
+    fun getLoanById(loanId: Int): Flow<LoanWithAssociations?> {
         return when (prefManager.userStatus) {
-            false -> mBaseApiManager.loanApi.getLoanByIdWithAllAssociations(loanId)
+            false -> flow { emit(mBaseApiManager.loanApi.getLoanByIdWithAllAssociations(loanId)) }
             true ->
                 /**
-                 * Return LoanWithAssociation from DatabaseHelperLoan.
+                 * offline Mode, Return LoanWithAssociation from LoanDaoHelper.
                  */
-                mDatabaseHelperLoan.getLoanById(loanId)
+                loanDaoHelper.getLoanById(loanId)
         }
     }
 
@@ -70,14 +74,12 @@ class DataManagerLoan @Inject constructor(
      * @param loanId Loan Id
      * @return LoanWithAssociations
      */
-    fun syncLoanById(loanId: Int): Observable<LoanWithAssociations> {
-        return mBaseApiManager.loanApi
-            .getLoanByIdWithAllAssociations(loanId)
-            .concatMap { loanWithAssociations ->
-                mDatabaseHelperLoan.saveLoanById(
-                    loanWithAssociations,
-                )
-            }
+    fun syncLoanById(loanId: Int): Flow<LoanWithAssociations> {
+        return flow {
+            val loanWithAssociations = mBaseApiManager.loanApi.getLoanByIdWithAllAssociations(loanId)
+            loanDaoHelper.saveLoanById(loanWithAssociations)
+            emit(loanWithAssociations)
+        }
     }
 
     val allLoans: Observable<List<LoanProducts>>
@@ -110,14 +112,15 @@ class DataManagerLoan @Inject constructor(
      * @param loanId Loan Id of the LoanRepaymentTemplate
      * @return LoanRepaymentTemplate
      */
-    fun getLoanRepayTemplate(loanId: Int): Observable<LoanRepaymentTemplate> {
-        return when (prefManager.userStatus) {
-            false -> mBaseApiManager.loanApi.getLoanRepaymentTemplate(loanId)
-            true ->
+    fun getLoanRepayTemplate(loanId: Int): Flow<LoanRepaymentTemplate?> {
+        return flow {
+            when (prefManager.userStatus) {
+                false -> mBaseApiManager.loanApi.getLoanRepaymentTemplate(loanId)
                 /**
                  * Return LoanRepaymentTemplate from DatabaseHelperLoan.
                  */
-                mDatabaseHelperLoan.getLoanRepayTemplate(loanId)
+                true -> loanDaoHelper.getLoanRepayTemplate(loanId)
+            }
         }
     }
 
@@ -134,14 +137,13 @@ class DataManagerLoan @Inject constructor(
      * @param loanId Loan Id
      * @return LoanRepaymentTemplate
      */
-    fun syncLoanRepaymentTemplate(loanId: Int): Observable<LoanRepaymentTemplate> {
-        return mBaseApiManager.loanApi.getLoanRepaymentTemplate(loanId)
-            .concatMap { loanRepaymentTemplate ->
-                mDatabaseHelperLoan.saveLoanRepaymentTemplate(
-                    loanId,
-                    loanRepaymentTemplate,
-                )
+
+    fun syncLoanRepaymentTemplate(loanId: Int): Flow<LoanRepaymentTemplate> {
+        return flow {
+            mBaseApiManager.loanApi.getLoanRepaymentTemplate(loanId).also {
+                loanDaoHelper.saveLoanRepaymentTemplate(loanId, it)
             }
+        }
     }
 
     /**
@@ -158,19 +160,18 @@ class DataManagerLoan @Inject constructor(
      * @param request Request Body of POST Request
      * @return LoanRepaymentResponse
      */
-    fun submitPayment(
+    suspend fun submitPayment(
         loanId: Int,
         request: LoanRepaymentRequest,
-    ): Observable<LoanRepaymentResponse> {
+    ): LoanRepaymentResponse {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.loanApi.submitPayment(loanId, request)
-                .concatMap { loanRepaymentResponse -> Observable.just(loanRepaymentResponse) }
 
             true ->
                 /**
                  * Return LoanRepaymentResponse from DatabaseHelperLoan.
                  */
-                mDatabaseHelperLoan.saveLoanRepaymentTransaction(loanId, request)
+                loanDaoHelper.saveLoanRepaymentTransaction(loanId, request)
         }
     }
 
@@ -179,9 +180,10 @@ class DataManagerLoan @Inject constructor(
      * These LoanRepayment are those LoanRepayment that are saved during the Offline LoanRepayment.
      *
      * @return List<LoanRepaymentRequest>
+     *
      </LoanRepaymentRequest></LoanRepayment> */
-    val databaseLoanRepayments: Observable<List<LoanRepaymentRequest>>
-        get() = mDatabaseHelperLoan.readAllLoanRepaymentTransaction()
+    val databaseLoanRepayments: Flow<List<LoanRepaymentRequest>>
+        get() = loanDaoHelper.readAllLoanRepaymentTransaction()
 
     /**
      * This method request a Observable to DatabaseHelperLoan and DatabaseHelper check in
@@ -199,8 +201,10 @@ class DataManagerLoan @Inject constructor(
      * @param loanId
      * @return LoanRepayment with this Loan Id reference.
      */
-    fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Observable<LoanRepaymentRequest> {
-        return mDatabaseHelperLoan.getDatabaseLoanRepaymentByLoanId(loanId)
+    fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Flow<LoanRepaymentRequest?> {
+        return flow {
+            emit(loanDaoHelper.getDatabaseLoanRepaymentByLoanId(loanId))
+        }
     }
 
     /**
@@ -209,8 +213,8 @@ class DataManagerLoan @Inject constructor(
      *
      * @return List<PaymentTypeOption>
      </PaymentTypeOption> */
-    val paymentTypeOption: Observable<List<PaymentTypeOption>>
-        get() = mDatabaseHelperLoan.paymentTypeOption
+    val paymentTypeOption: Flow<List<PaymentTypeOption>>
+        get() = loanDaoHelper.getAllPaymentTypeOption
 
     /**
      * This method sending request DatabaseHelper and Deleting the LoanRepayment with loanId
@@ -219,8 +223,8 @@ class DataManagerLoan @Inject constructor(
      * @param loanId Loan Id of the Loan
      * @return List<LoanRepaymentRequest>
      </LoanRepaymentRequest> */
-    fun deleteAndUpdateLoanRepayments(loanId: Int): Observable<List<LoanRepaymentRequest>> {
-        return mDatabaseHelperLoan.deleteAndUpdateLoanRepayments(loanId)
+    fun deleteAndUpdateLoanRepayments(loanId: Int): Flow<List<LoanRepaymentRequest>> {
+        return loanDaoHelper.deleteAndUpdateLoanRepayments(loanId)
     }
 
     /**
@@ -231,8 +235,11 @@ class DataManagerLoan @Inject constructor(
      */
     fun updateLoanRepaymentTransaction(
         loanRepaymentRequest: LoanRepaymentRequest,
-    ): Observable<LoanRepaymentRequest> {
-        return mDatabaseHelperLoan.updateLoanRepaymentTransaction(loanRepaymentRequest)
+    ): Flow<LoanRepaymentRequest> {
+        return flow {
+            loanDaoHelper.updateLoanRepaymentTransaction(loanRepaymentRequest)
+            emit(loanRepaymentRequest)
+        }
     }
 
     /**

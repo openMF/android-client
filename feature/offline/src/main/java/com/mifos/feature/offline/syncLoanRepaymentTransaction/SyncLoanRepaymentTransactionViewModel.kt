@@ -11,21 +11,22 @@ package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.FileUtils.LOG_TAG
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
 import com.mifos.core.entity.center.CenterPayload_Table.errorMessage
-import com.mifos.core.objects.account.loan.LoanRepaymentResponse
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -63,44 +64,37 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
     }
 
     fun loadDatabaseLoanRepaymentTransactions() {
-        _syncLoanRepaymentTransactionUiState.value =
-            SyncLoanRepaymentTransactionUiState.ShowProgressbar
-        repository.databaseLoanRepayments()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<LoanRepaymentRequest>>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
+        viewModelScope.launch {
+            _syncLoanRepaymentTransactionUiState.value =
+                SyncLoanRepaymentTransactionUiState.ShowProgressbar
+
+            repository.databaseLoanRepayments()
+                .catch {
                     _syncLoanRepaymentTransactionUiState.value =
                         SyncLoanRepaymentTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_loanrepayment)
                 }
-
-                override fun onNext(loanRepaymentRequests: List<LoanRepaymentRequest>) {
+                .collect { loanRepaymentRequests ->
                     mLoanRepaymentRequests = loanRepaymentRequests.toMutableList()
                     updateUiState()
                 }
-            })
+        }
     }
 
     fun loanPaymentTypeOption() {
-        _syncLoanRepaymentTransactionUiState.value =
-            SyncLoanRepaymentTransactionUiState.ShowProgressbar
-        repository
-            .paymentTypeOption()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<PaymentTypeOption>>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
+        viewModelScope.launch {
+            _syncLoanRepaymentTransactionUiState.value =
+                SyncLoanRepaymentTransactionUiState.ShowProgressbar
+
+            repository.paymentTypeOption()
+                .catch {
                     _syncLoanRepaymentTransactionUiState.value =
                         SyncLoanRepaymentTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_paymentoptions)
                 }
-
-                override fun onNext(paymentTypeOptions: List<PaymentTypeOption>) {
+                .collect { paymentTypeOptions ->
                     mPaymentTypeOptions = paymentTypeOptions
                     updateUiState()
                 }
-            })
+        }
     }
 
     private fun updateUiState() {
@@ -119,81 +113,70 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
     }
 
     private fun syncLoanRepayment(loanId: Int, loanRepaymentRequest: LoanRepaymentRequest?) {
-        _syncLoanRepaymentTransactionUiState.value =
-            SyncLoanRepaymentTransactionUiState.ShowProgressbar
-        repository.submitPayment(loanId, loanRepaymentRequest!!)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<LoanRepaymentResponse>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    val eLoanRepaymentRequest = mLoanRepaymentRequests[mClientSyncIndex]
-                    eLoanRepaymentRequest.errorMessage = errorMessage.toString()
-                    updateLoanRepayment(eLoanRepaymentRequest)
-                }
+        viewModelScope.launch {
+            _syncLoanRepaymentTransactionUiState.value =
+                SyncLoanRepaymentTransactionUiState.ShowProgressbar
 
-                override fun onNext(loanRepaymentResponse: LoanRepaymentResponse) {
-                    mLoanRepaymentRequests[mClientSyncIndex].loanId?.let {
-                        deleteAndUpdateLoanRepayments(
-                            it,
-                        )
-                    }
+            try {
+                repository.submitPayment(loanId, loanRepaymentRequest!!)
+                mLoanRepaymentRequests[mClientSyncIndex].loanId?.let {
+                    deleteAndUpdateLoanRepayments(
+                        it,
+                    )
                 }
-            })
+            } catch (e: Exception) {
+                val eLoanRepaymentRequest = mLoanRepaymentRequests[mClientSyncIndex].copy(
+                    errorMessage = errorMessage.toString(),
+                )
+                updateLoanRepayment(eLoanRepaymentRequest)
+            }
+        }
     }
 
     fun deleteAndUpdateLoanRepayments(loanId: Int) {
-        _syncLoanRepaymentTransactionUiState.value =
-            SyncLoanRepaymentTransactionUiState.ShowProgressbar
-        repository.deleteAndUpdateLoanRepayments(loanId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<LoanRepaymentRequest>>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _syncLoanRepaymentTransactionUiState.value =
-                        SyncLoanRepaymentTransactionUiState.ShowError(R.string.feature_offline_failed_to_update_list)
-                }
+        viewModelScope.launch(Dispatchers.IO) {
+            _syncLoanRepaymentTransactionUiState.value =
+                SyncLoanRepaymentTransactionUiState.ShowProgressbar
 
-                override fun onNext(loanRepaymentRequests: List<LoanRepaymentRequest>) {
-                    mClientSyncIndex = 0
-                    mLoanRepaymentRequests =
-                        loanRepaymentRequests as MutableList<LoanRepaymentRequest>
-                    if (mLoanRepaymentRequests.isNotEmpty()) {
-                        syncGroupPayload()
-                    } else {
-                        _syncLoanRepaymentTransactionUiState.value =
-                            SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments(
-                                R.string.feature_offline_no_loanrepayment_to_sync.toString(),
-                            )
-                    }
-                    updateUiState()
+            repository.deleteAndUpdateLoanRepayments(loanId).catch {
+                _syncLoanRepaymentTransactionUiState.value =
+                    SyncLoanRepaymentTransactionUiState.ShowError(R.string.feature_offline_failed_to_update_list)
+            }.collect { loanRepaymentRequests ->
+                mClientSyncIndex = 0
+                mLoanRepaymentRequests =
+                    loanRepaymentRequests as MutableList<LoanRepaymentRequest>
+                if (mLoanRepaymentRequests.isNotEmpty()) {
+                    syncGroupPayload()
+                } else {
+                    _syncLoanRepaymentTransactionUiState.value =
+                        SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments(
+                            R.string.feature_offline_no_loanrepayment_to_sync.toString(),
+                        )
                 }
-            })
+                updateUiState()
+            }
+        }
     }
 
     fun updateLoanRepayment(loanRepaymentRequest: LoanRepaymentRequest?) {
-        _syncLoanRepaymentTransactionUiState.value =
+        viewModelScope.launch {
             SyncLoanRepaymentTransactionUiState.ShowProgressbar
-        repository.updateLoanRepaymentTransaction(loanRepaymentRequest!!)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<LoanRepaymentRequest>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
+
+            repository.updateLoanRepaymentTransaction(loanRepaymentRequest!!)
+                .flowOn(Dispatchers.IO)
+                .catch {
                     _syncLoanRepaymentTransactionUiState.value =
                         SyncLoanRepaymentTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_loanrepayment)
                 }
-
-                override fun onNext(loanRepaymentRequest: LoanRepaymentRequest) {
-                    mLoanRepaymentRequests[mClientSyncIndex] = loanRepaymentRequest
+                .collect {
+                    mLoanRepaymentRequests[mClientSyncIndex] = it ?: LoanRepaymentRequest()
                     mClientSyncIndex += 1
                     if (mLoanRepaymentRequests.size != mClientSyncIndex) {
                         syncGroupPayload()
                     }
                     updateUiState()
                 }
-            })
+        }
     }
 
     fun syncGroupPayload() {
