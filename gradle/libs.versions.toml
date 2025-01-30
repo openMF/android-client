@@ -9,10 +9,10 @@ androidJob = "1.2.6"
 androidMapsUtils = "0.4.2"
 androidGradlePlugin = "8.8.0"
 androidTools = "31.8.0"
-androidxActivity = "1.9.3"
+androidxActivity = "1.10.0"
 androidxAppCompat = "1.7.0"
 androidxArchCore = '2.2.0'
-androidxComposeBom = "2024.12.01"
+androidxComposeBom = "2025.01.00"
 androidxComposeCompiler = "1.5.8"
 androidxComposeUi = "1.7.6"
 androidxComposeRuntime = "1.7.6"
@@ -52,7 +52,7 @@ dbflowProcessor = "4.2.4"
 espressoIdlingResource = "3.6.1"
 espressoIntents = "3.6.1"
 fineractClientVersion = "0.0.1"
-firebaseBom = "33.7.0"
+firebaseBom = "33.8.0"
 firebaseCrashlyticsPlugin = "3.0.2"
 firebasePerfPlugin = "1.4.2"
 fliptables = "1.0.1"
@@ -101,7 +101,8 @@ playUpdate = "2.1.0"
 playScanner = "16.1.0"
 playService = "18.5.0"
 realmVersion = "1.13.0"
-recyclerview = "1.3.2"
+recyclerview = "1.4.0"
+roborazzi = "1.26.0"
 room = "2.7.0-alpha12"
 roomKtxVersion = "2.7.0-alpha12"
 roomRuntimeVersion = "2.7.0-alpha12"
@@ -308,7 +309,7 @@ converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref
 converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "converterScalars" }
 
 # Coil Compose
-coil-kt-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil-compose" }
+coil-kt-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 
 # DBFlow
 dbflow = { module = "com.github.raizlabs.dbflow.dbflow:dbflow", version.ref = "dbflow" }
@@ -579,6 +580,7 @@ ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotlessVersion" }
 module-graph = { id = "com.jraska.module.graph.assertion", version.ref = "moduleGraph" }
 dependencyGuard = { id = "com.dropbox.dependency-guard", version.ref = "dependencyGuard" }
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 
 # Plugins defined by this project
 
