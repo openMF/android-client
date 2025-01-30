@@ -25,28 +25,28 @@ import javax.inject.Inject
  */
 class GetSavingsAccountTransactionUseCase @Inject constructor(private val repository: SavingsAccountTransactionRepository) {
 
-    suspend operator fun invoke(accountId: Int): Flow<Resource<SavingsAccountTransactionRequest>> = callbackFlow {
-        try {
-            trySend(Resource.Loading())
+    suspend operator fun invoke(accountId: Int): Flow<Resource<SavingsAccountTransactionRequest?>> = callbackFlow {
+            try {
+                trySend(Resource.Loading())
 
-            repository.getSavingsAccountTransaction(accountId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<SavingsAccountTransactionRequest>() {
-                    override fun onCompleted() {}
+                repository.getSavingsAccountTransaction(accountId)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(object : Subscriber<SavingsAccountTransactionRequest?>() {
+                            override fun onCompleted() {}
 
-                    override fun onError(e: Throwable) {
-                        trySend(Resource.Error(e.message.toString()))
-                    }
+                            override fun onError(e: Throwable?) {
+                                trySend(Resource.Error(e?.message.toString()))
+                            }
 
-                    override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest) {
-                        trySend(Resource.Success(savingsAccountTransactionRequest))
-                    }
-                })
-
-            awaitClose { channel.close() }
-        } catch (exception: Exception) {
-            send(Resource.Error(exception.message.toString()))
+                            override fun onNext(savingsAccountTransactionRequest: SavingsAccountTransactionRequest?) {
+                                    trySend(Resource.Success(savingsAccountTransactionRequest))
+                            }
+                        },
+                    )
+                awaitClose { channel.close() }
+            } catch (exception: Exception) {
+                send(Resource.Error(exception.message.toString()))
+            }
         }
-    }
 }
