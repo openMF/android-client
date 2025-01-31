@@ -15,12 +15,12 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
 import com.mifos.core.objects.account.loan.AmortizationType
 import com.mifos.core.objects.account.loan.Currency
 import com.mifos.core.objects.account.loan.InterestCalculationPeriodType
 import com.mifos.core.objects.account.loan.InterestRateFrequencyType
 import com.mifos.core.objects.account.loan.InterestType
-import com.mifos.core.objects.account.loan.RepaymentFrequencyType
 import com.mifos.core.objects.account.loan.RepaymentSchedule
 import com.mifos.core.objects.account.loan.TermPeriodFrequencyType
 import com.mifos.core.objects.account.loan.Transaction

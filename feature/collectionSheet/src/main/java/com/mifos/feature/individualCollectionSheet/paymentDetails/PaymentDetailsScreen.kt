@@ -52,7 +52,6 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
-import com.mifos.core.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.objects.collectionsheets.LoanAndClientName
 import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
@@ -82,7 +81,7 @@ internal fun PaymentsDetailsScreen(
     payload: IndividualCollectionSheetPayload,
     loanAndClientNameItem: LoanAndClientName,
     paymentTypeOptionList: List<String>,
-    paymentTypeOptions: List<PaymentTypeOptions>,
+    paymentTypeOptions: List<com.mifos.core.model.objects.account.loan.PaymentTypeOptions>,
     modifier: Modifier = Modifier,
     getClientImage: (Int) -> ImageResult?,
 ) {

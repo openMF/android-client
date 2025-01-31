@@ -20,8 +20,6 @@ import com.mifos.core.network.mappers.clients.GetClientsClientIdAccountMapper
 import com.mifos.core.network.mappers.clients.GetIdentifiersTemplateMapper
 import com.mifos.core.network.mappers.clients.IdentifierMapper
 import com.mifos.core.objects.clients.ActivatePayload
-import com.mifos.core.objects.clients.ClientAddressRequest
-import com.mifos.core.objects.clients.ClientAddressResponse
 import com.mifos.core.objects.clients.Page
 import com.mifos.core.objects.noncoreobjects.Identifier
 import com.mifos.core.objects.noncoreobjects.IdentifierCreationResponse
@@ -350,7 +348,7 @@ class DataManagerClient @Inject constructor(
      * @param clientId Client Id
      * @return ClientAddressResponse
      */
-    suspend fun getClientPinpointLocations(clientId: Int): List<ClientAddressResponse> {
+    suspend fun getClientPinpointLocations(clientId: Int): List<com.mifos.core.model.objects.clients.ClientAddressResponse> {
         return mBaseApiManager.clientsApi.getClientPinpointLocations(clientId)
     }
 
@@ -363,7 +361,7 @@ class DataManagerClient @Inject constructor(
      */
     suspend fun addClientPinpointLocation(
         clientId: Int,
-        address: ClientAddressRequest?,
+        address: com.mifos.core.model.objects.clients.ClientAddressRequest?,
     ): GenericResponse {
         return mBaseApiManager.clientsApi.addClientPinpointLocation(clientId, address)
     }
@@ -394,7 +392,7 @@ class DataManagerClient @Inject constructor(
     suspend fun updateClientPinpointLocation(
         apptableId: Int,
         datatableId: Int,
-        address: ClientAddressRequest?,
+        address: com.mifos.core.model.objects.clients.ClientAddressRequest?,
     ): GenericResponse {
         return mBaseApiManager.clientsApi.updateClientPinpointLocation(
             apptableId,

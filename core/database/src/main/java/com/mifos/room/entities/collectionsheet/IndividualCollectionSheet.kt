@@ -10,7 +10,6 @@
 package com.mifos.room.entities.collectionsheet
 
 import android.os.Parcelable
-import com.mifos.core.objects.account.loan.PaymentTypeOptions
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -22,5 +21,5 @@ data class IndividualCollectionSheet(
 
     var clients: ArrayList<ClientCollectionSheet>? = null,
 
-    var paymentTypeOptions: ArrayList<PaymentTypeOptions>? = null,
+    var paymentTypeOptions: ArrayList<com.mifos.core.model.objects.account.loan.PaymentTypeOptions>? = null,
 ) : Parcelable

@@ -13,11 +13,7 @@ import android.os.Parcelable
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
 import com.mifos.core.objects.account.saving.InterestCalculationDaysInYearType
-import com.mifos.core.objects.account.saving.InterestCalculationType
-import com.mifos.core.objects.account.saving.InterestCompoundingPeriodType
-import com.mifos.core.objects.account.saving.InterestPostingPeriodType
 import com.mifos.core.objects.account.saving.LockinPeriodFrequencyType
-import com.mifos.core.objects.account.saving.Timeline
 import com.mifos.room.entities.accounts.savings.Charge
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.ForeignKey
@@ -52,17 +48,17 @@ data class SavingsAccountWithAssociations(
     @ForeignKey(saveForeignKeyModel = true)
     var status: Status? = null,
 
-    var timeline: Timeline? = null,
+    var timeline: com.mifos.core.model.objects.account.saving.Timeline? = null,
 
     var currency: Currency? = null,
 
     var nominalAnnualInterestRate: Double? = null,
 
-    var interestCompoundingPeriodType: InterestCompoundingPeriodType? = null,
+    var interestCompoundingPeriodType: com.mifos.core.model.objects.account.saving.InterestCompoundingPeriodType? = null,
 
-    var interestPostingPeriodType: InterestPostingPeriodType? = null,
+    var interestPostingPeriodType: com.mifos.core.model.objects.account.saving.InterestPostingPeriodType? = null,
 
-    var interestCalculationType: InterestCalculationType? = null,
+    var interestCalculationType: com.mifos.core.model.objects.account.saving.InterestCalculationType? = null,
 
     var interestCalculationDaysInYearType: InterestCalculationDaysInYearType? = null,
 

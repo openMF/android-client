@@ -11,14 +11,14 @@ package com.mifos.core.network.services
 
 import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.entity.client.Charges
+import com.mifos.core.model.objects.account.loan.LoanApproval
+import com.mifos.core.model.objects.account.loan.LoanDisbursement
+import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.model.objects.organisations.LoanProducts
+import com.mifos.core.model.objects.payloads.GroupLoanPayload
+import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.core.objects.account.loan.LoanApproval
-import com.mifos.core.objects.account.loan.LoanDisbursement
-import com.mifos.core.objects.clients.Page
-import com.mifos.core.objects.organisations.LoanProducts
-import com.mifos.core.objects.template.loan.GroupLoanTemplate
-import com.mifos.core.payloads.GroupLoanPayload
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse

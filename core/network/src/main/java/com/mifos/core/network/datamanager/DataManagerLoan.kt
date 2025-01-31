@@ -11,11 +11,11 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperLoan
 import com.mifos.core.entity.accounts.loan.Loans
+import com.mifos.core.model.objects.account.loan.LoanDisbursement
+import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.core.objects.account.loan.LoanDisbursement
-import com.mifos.core.objects.organisations.LoanProducts
 import com.mifos.room.entities.PaymentTypeOption
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse

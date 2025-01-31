@@ -17,7 +17,6 @@ import com.mifos.core.domain.useCases.AddClientPinpointLocationUseCase
 import com.mifos.core.domain.useCases.DeleteClientAddressPinpointUseCase
 import com.mifos.core.domain.useCases.GetClientPinpointLocationsUseCase
 import com.mifos.core.domain.useCases.UpdateClientPinpointUseCase
-import com.mifos.core.objects.clients.ClientAddressRequest
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -74,7 +73,7 @@ class PinPointClientViewModel @Inject constructor(
         }
     }
 
-    fun addClientPinpointLocation(clientId: Int, addressRequest: ClientAddressRequest) =
+    fun addClientPinpointLocation(clientId: Int, addressRequest: com.mifos.core.model.objects.clients.ClientAddressRequest) =
         viewModelScope.launch(Dispatchers.IO) {
             addClientPinpointLocationUseCase(clientId, addressRequest).collect { result ->
                 when (result) {
@@ -115,7 +114,7 @@ class PinPointClientViewModel @Inject constructor(
     fun updateClientPinpointLocation(
         apptableId: Int,
         datatableId: Int,
-        addressRequest: ClientAddressRequest,
+        addressRequest: com.mifos.core.model.objects.clients.ClientAddressRequest,
     ) = viewModelScope.launch(Dispatchers.IO) {
         updateClientPinpointUseCase(apptableId, datatableId, addressRequest).collect { result ->
             when (result) {

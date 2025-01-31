@@ -10,13 +10,11 @@
 package com.mifos.core.entity.accounts.loan
 
 import android.os.Parcelable
+import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
 import com.mifos.core.objects.account.loan.AmortizationType
-import com.mifos.core.objects.account.loan.Currency
 import com.mifos.core.objects.account.loan.InterestCalculationPeriodType
 import com.mifos.core.objects.account.loan.InterestRateFrequencyType
 import com.mifos.core.objects.account.loan.InterestType
-import com.mifos.core.objects.account.loan.RepaymentFrequencyType
-import com.mifos.core.objects.account.loan.TermPeriodFrequencyType
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -52,7 +50,7 @@ data class Loans(
 
     var loanType: LoanType? = null,
 
-    var currency: Currency? = null,
+    var currency: com.mifos.core.model.objects.account.loan.Currency? = null,
 
     var principal: Double? = null,
 
@@ -60,7 +58,7 @@ data class Loans(
 
     var termFrequency: Int? = null,
 
-    var termPeriodFrequencyType: TermPeriodFrequencyType? = null,
+    var termPeriodFrequencyType: com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType? = null,
 
     var numberOfRepayments: Int? = null,
 

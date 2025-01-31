@@ -10,19 +10,17 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.clients.ClientAddressRequest
-import com.mifos.core.objects.clients.ClientAddressResponse
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
 interface PinPointClientRepository {
 
-    suspend fun getClientPinpointLocations(clientId: Int): List<ClientAddressResponse>
+    suspend fun getClientPinpointLocations(clientId: Int): List<com.mifos.core.model.objects.clients.ClientAddressResponse>
 
     suspend fun addClientPinpointLocation(
         clientId: Int,
-        address: ClientAddressRequest,
+        address: com.mifos.core.model.objects.clients.ClientAddressRequest,
     ): GenericResponse
 
     suspend fun deleteClientAddressPinpointLocation(
@@ -33,6 +31,6 @@ interface PinPointClientRepository {
     suspend fun updateClientPinpointLocation(
         apptableId: Int,
         datatableId: Int,
-        address: ClientAddressRequest,
+        address: com.mifos.core.model.objects.clients.ClientAddressRequest,
     ): GenericResponse
 }

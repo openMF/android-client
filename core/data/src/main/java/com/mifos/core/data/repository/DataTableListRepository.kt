@@ -12,8 +12,8 @@ package com.mifos.core.data.repository
 import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.client.ClientPayload
+import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.core.payloads.GroupLoanPayload
 import rx.Observable
 
 /**

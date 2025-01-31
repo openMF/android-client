@@ -12,14 +12,12 @@ package com.mifos.core.entity.accounts.loan
 import android.os.Parcelable
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
+import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
 import com.mifos.core.objects.account.loan.AmortizationType
-import com.mifos.core.objects.account.loan.Currency
 import com.mifos.core.objects.account.loan.InterestCalculationPeriodType
 import com.mifos.core.objects.account.loan.InterestRateFrequencyType
 import com.mifos.core.objects.account.loan.InterestType
-import com.mifos.core.objects.account.loan.RepaymentFrequencyType
 import com.mifos.core.objects.account.loan.RepaymentSchedule
-import com.mifos.core.objects.account.loan.TermPeriodFrequencyType
 import com.mifos.core.objects.account.loan.Transaction
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.ForeignKey
@@ -71,7 +69,7 @@ data class LoanWithAssociations(
 
     var loanType: LoanType = LoanType(),
 
-    var currency: Currency = Currency(),
+    var currency: com.mifos.core.model.objects.account.loan.Currency = com.mifos.core.model.objects.account.loan.Currency(),
 
     var principal: Double = 0.0,
 
@@ -79,7 +77,7 @@ data class LoanWithAssociations(
 
     var termFrequency: Int = 0,
 
-    var termPeriodFrequencyType: TermPeriodFrequencyType = TermPeriodFrequencyType(),
+    var termPeriodFrequencyType: com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType = com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType(),
 
     var numberOfRepayments: Int = 0,
 

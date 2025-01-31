@@ -69,7 +69,6 @@ import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.core.objects.organisations.LoanProducts
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import java.text.SimpleDateFormat
@@ -178,7 +177,7 @@ fun LoanAccountScreen(
 @Composable
 private fun LoanAccountContent(
     clientsId: Int,
-    productLoans: List<LoanProducts>,
+    productLoans: List<com.mifos.core.model.objects.organisations.LoanProducts>,
     loanTemplate: LoanTemplate,
     onLoanProductSelected: (Int) -> Unit,
     createLoanAccount: (LoansPayload) -> Unit,
@@ -643,5 +642,5 @@ private fun LoanAccountScreenPreview(
 }
 
 val sampleLoanList = List(10) {
-    LoanProducts(name = "Loan $it", id = it)
+    com.mifos.core.model.objects.organisations.LoanProducts(name = "Loan $it", id = it)
 }
