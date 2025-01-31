@@ -90,4 +90,4 @@ data class SavingsAccountWithAssociations(
 
     var charges: List<Charge?> = ArrayList(),
 
-    ) : MifosBaseModel(), Parcelable
+) : MifosBaseModel(), Parcelable
