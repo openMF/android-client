@@ -14,8 +14,6 @@ import com.mifos.core.entity.client.ClientPayload
 import com.mifos.core.entity.templates.clients.ClientsTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.clients.ActivatePayload
-import com.mifos.core.objects.clients.ClientAddressRequest
-import com.mifos.core.objects.clients.ClientAddressResponse
 import com.mifos.core.objects.clients.Page
 import com.mifos.core.objects.noncoreobjects.Identifier
 import com.mifos.core.objects.noncoreobjects.IdentifierCreationResponse
@@ -148,7 +146,7 @@ interface ClientService {
     @GET(APIEndPoint.DATATABLES + "/client_pinpoint_location/{clientId}")
     suspend fun getClientPinpointLocations(
         @Path("clientId") clientId: Int,
-    ): List<ClientAddressResponse>
+    ): List<com.mifos.core.model.objects.clients.ClientAddressResponse>
 
     /**
      * This is the service for adding the new Client Pinpoint Location in dataTable
@@ -164,7 +162,7 @@ interface ClientService {
     @POST(APIEndPoint.DATATABLES + "/client_pinpoint_location/{clientId}")
     suspend fun addClientPinpointLocation(
         @Path("clientId") clientId: Int,
-        @Body clientAddressRequest: ClientAddressRequest?,
+        @Body clientAddressRequest: com.mifos.core.model.objects.clients.ClientAddressRequest?,
     ): GenericResponse
 
     /**
@@ -200,7 +198,7 @@ interface ClientService {
     suspend fun updateClientPinpointLocation(
         @Path("apptableId") apptableId: Int,
         @Path("datatableId") datatableId: Int,
-        @Body address: ClientAddressRequest?,
+        @Body address: com.mifos.core.model.objects.clients.ClientAddressRequest?,
     ): GenericResponse
 
     /**

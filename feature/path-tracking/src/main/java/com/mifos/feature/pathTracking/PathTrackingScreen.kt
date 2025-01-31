@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MyLocation
@@ -78,7 +77,6 @@ import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.users.UserLatLng
 import com.mifos.core.objects.users.UserLocation
 import com.mifos.feature.path.tracking.R
 
@@ -156,7 +154,7 @@ internal fun PathTrackingScreen(
     state: PathTrackingUiState,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
-    onPathTrackingClick: (List<UserLatLng>) -> Unit,
+    onPathTrackingClick: (List<com.mifos.core.model.objects.users.UserLatLng>) -> Unit,
     onRefresh: () -> Unit,
     refreshState: Boolean,
     userStatus: Boolean,
@@ -242,7 +240,7 @@ internal fun PathTrackingScreen(
 private fun PathTrackingContent(
     pathTrackingList: List<UserLocation>,
     modifier: Modifier = Modifier,
-    onPathTrackingClick: (List<UserLatLng>) -> Unit,
+    onPathTrackingClick: (List<com.mifos.core.model.objects.users.UserLatLng>) -> Unit,
 ) {
     LazyColumn(modifier = modifier) {
         items(pathTrackingList) { pathTracking ->
@@ -258,7 +256,7 @@ private fun PathTrackingContent(
 private fun PathTrackingItem(
     pathTracking: UserLocation,
     modifier: Modifier = Modifier,
-    onPathTrackingClick: (List<UserLatLng>) -> Unit,
+    onPathTrackingClick: (List<com.mifos.core.model.objects.users.UserLatLng>) -> Unit,
 ) {
     val latLngList = getLatLngList(pathTracking.latLng)
     val latLng = latLngList[0]
@@ -297,11 +295,11 @@ private fun PathTrackingItem(
     }
 }
 
-private fun getLatLngList(latLngString: String?): List<UserLatLng> {
+private fun getLatLngList(latLngString: String?): List<com.mifos.core.model.objects.users.UserLatLng> {
     val gson = Gson()
     return gson.fromJson(
         latLngString,
-        object : TypeToken<List<UserLatLng>>() {}.type,
+        object : TypeToken<List<com.mifos.core.model.objects.users.UserLatLng>>() {}.type,
     )
 }
 

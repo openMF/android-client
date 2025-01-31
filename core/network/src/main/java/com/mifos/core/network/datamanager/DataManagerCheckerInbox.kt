@@ -13,7 +13,6 @@ import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.objects.checkerinboxtask.CheckerTask
-import com.mifos.core.objects.checkerinboxtask.RescheduleLoansTask
 import rx.Observable
 import javax.inject.Inject
 
@@ -45,7 +44,7 @@ class DataManagerCheckerInbox @Inject constructor(
         return mBaseApiManager.checkerInboxApi.deleteCheckerEntry(auditId)
     }
 
-    suspend fun getRechdeduleLoansTaskList(): List<RescheduleLoansTask> {
+    suspend fun getRechdeduleLoansTaskList(): List<com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask> {
         return mBaseApiManager.checkerInboxApi.getRescheduleLoansTaskList()
     }
 

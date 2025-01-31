@@ -10,12 +10,12 @@
 package com.mifos.room.utils.typeconverters
 
 import androidx.room.TypeConverter
+import com.mifos.core.model.objects.account.loan.Period
+import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
 import com.mifos.core.objects.account.loan.AmortizationType
 import com.mifos.core.objects.account.loan.InterestCalculationPeriodType
 import com.mifos.core.objects.account.loan.InterestRateFrequencyType
 import com.mifos.core.objects.account.loan.InterestType
-import com.mifos.core.objects.account.loan.Period
-import com.mifos.core.objects.account.loan.RepaymentFrequencyType
 import com.mifos.core.objects.account.loan.RepaymentSchedule
 import com.mifos.core.objects.account.loan.TermPeriodFrequencyType
 import com.mifos.core.objects.account.loan.Transaction

@@ -9,29 +9,27 @@
  */
 package com.mifos.core.network
 
+import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.entity.client.Charges
 import com.mifos.core.entity.group.Center
+import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.entity.group.Group
+import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.core.entity.organisation.Office
 import com.mifos.core.entity.organisation.Staff
+import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload
-import com.mifos.core.objects.account.loan.LoanApproval
 import com.mifos.core.objects.clients.ChargeCreationResponse
 import com.mifos.core.objects.clients.Page
 import com.mifos.core.objects.databaseobjects.CollectionSheet
 import com.mifos.core.objects.databaseobjects.OfflineCenter
-import com.mifos.core.objects.organisations.LoanProducts
 import com.mifos.core.objects.responses.SaveResponse
 import com.mifos.core.objects.template.client.ChargeTemplate
 import com.mifos.core.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.payloads.ChargesPayload
-import com.mifos.core.payloads.GroupLoanPayload
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
-import com.mifos.room.entities.group.CenterWithAssociations
-import com.mifos.room.entities.group.GroupWithAssociations
 import okhttp3.ResponseBody
 import rx.Observable
 import javax.inject.Inject
@@ -173,7 +171,7 @@ class DataManager {
         return mBaseApiManager.loanApi.getLoanWithTransactions(loan)
     }
 
-    val allLoans: Observable<List<LoanProducts>>
+    val allLoans: Observable<List<com.mifos.core.model.objects.organisations.LoanProducts>>
         get() = mBaseApiManager.loanApi.allLoans
 
     fun getGroupLoansAccountTemplate(groupId: Int, productId: Int): Observable<GroupLoanTemplate> {
@@ -188,7 +186,7 @@ class DataManager {
         return mBaseApiManager.loanApi.getLoanRepaymentSchedule(loanId)
     }
 
-    fun approveLoan(loanId: Int, loanApproval: LoanApproval?): Observable<GenericResponse> {
+    fun approveLoan(loanId: Int, loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval?): Observable<GenericResponse> {
         return mBaseApiManager.loanApi.approveLoanApplication(loanId, loanApproval)
     }
 
