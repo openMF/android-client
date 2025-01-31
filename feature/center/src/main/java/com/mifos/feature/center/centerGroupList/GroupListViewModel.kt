@@ -16,9 +16,9 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetGroupsByCenterUseCase
 import com.mifos.core.domain.useCases.GetGroupsUseCase
-import com.mifos.core.entity.group.CenterWithAssociations
-import com.mifos.core.entity.group.GroupWithAssociations
 import com.mifos.feature.center.R
+import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.group.GroupWithAssociations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

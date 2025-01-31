@@ -9,17 +9,17 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.collectionsheet.CenterDetail
-import com.mifos.core.entity.collectionsheet.CollectionSheetPayload
-import com.mifos.core.entity.collectionsheet.CollectionSheetResponse
-import com.mifos.core.entity.collectionsheet.IndividualCollectionSheet
-import com.mifos.core.entity.collectionsheet.ProductiveCollectionSheetPayload
-import com.mifos.core.entity.group.CenterWithAssociations
-import com.mifos.core.model.APIEndPoint
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.core.objects.collectionsheets.CollectionSheetRequestPayload
+import com.mifos.room.basemodel.APIEndPoint
+import com.mifos.room.entities.collectionsheet.CenterDetail
+import com.mifos.room.entities.collectionsheet.CollectionSheetPayload
+import com.mifos.room.entities.collectionsheet.CollectionSheetResponse
+import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
+import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
+import com.mifos.room.entities.group.CenterWithAssociations
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

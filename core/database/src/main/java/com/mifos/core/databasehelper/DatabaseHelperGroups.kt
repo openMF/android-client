@@ -9,7 +9,6 @@
  */
 package com.mifos.core.databasehelper
 
-import com.mifos.core.entity.accounts.GroupAccounts
 import com.mifos.core.entity.accounts.loan.LoanAccount
 import com.mifos.core.entity.accounts.loan.LoanAccount_Table
 import com.mifos.core.entity.accounts.savings.SavingsAccount
@@ -21,6 +20,7 @@ import com.mifos.core.entity.group.GroupPayload_Table
 import com.mifos.core.entity.group.Group_Table
 import com.mifos.core.objects.clients.Page
 import com.mifos.core.objects.responses.SaveResponse
+import com.mifos.room.entities.accounts.GroupAccounts
 import com.raizlabs.android.dbflow.sql.language.Delete
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import rx.Observable

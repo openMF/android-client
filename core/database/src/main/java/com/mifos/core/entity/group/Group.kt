@@ -11,9 +11,9 @@ package com.mifos.core.entity.group
 
 import android.os.Parcelable
 import com.mifos.core.database.MifosDatabase
-import com.mifos.core.entity.Timeline
 import com.mifos.core.entity.client.Status
 import com.mifos.core.model.MifosBaseModel
+import com.mifos.room.entities.Timeline
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.ForeignKey
 import com.raizlabs.android.dbflow.annotation.ModelContainer

@@ -18,8 +18,8 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.DeleteDataTableEntryUseCase
 import com.mifos.core.domain.useCases.GetDataTableInfoUseCase
-import com.mifos.core.entity.navigation.DataTableDataNavigationArg
 import com.mifos.feature.data_table.R
+import com.mifos.room.entities.navigation.DataTableDataNavigationArg
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
