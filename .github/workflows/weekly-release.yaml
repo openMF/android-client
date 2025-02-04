@@ -32,7 +32,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'android-release.yml',
-              ref: 'dev',
+              ref: 'development',
               inputs: {
                 "release_type": "beta",
               },
