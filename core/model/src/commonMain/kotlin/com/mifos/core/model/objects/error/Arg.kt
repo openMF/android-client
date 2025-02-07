@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.error
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
+import utils.Parcelable
+import utils.Parcelize
 
 @Parcelize
 data class Arg(

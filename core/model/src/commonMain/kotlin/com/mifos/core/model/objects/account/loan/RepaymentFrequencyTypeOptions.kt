@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.account.loan
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
+import utils.Parcelable
+import utils.Parcelize
 
 /**
  * Created by nellyk on 2/25/2016.

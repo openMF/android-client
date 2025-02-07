@@ -7,13 +7,21 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.utils
+package utils
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.Int.plus
+import kotlin.String.plus
+import kotlin.collections.dropLastWhile
+import kotlin.collections.toTypedArray
+import kotlin.text.isEmpty
+import kotlin.text.split
+import kotlin.text.toInt
+import kotlin.text.toRegex
 
 /**
  * Created by ishankhanna on 30/05/14.
@@ -32,11 +40,11 @@ object DateHelper {
      */
     val currentDateAsString: String
         get() {
-            val calendar = Calendar.getInstance()
-            val year = calendar[Calendar.YEAR]
-            val month = calendar[Calendar.MONTH]
-            val day = calendar[Calendar.DAY_OF_MONTH]
-            return day.toString() + " - " + (month + 1) + " - " + year
+            val calendar = java.util.Calendar.getInstance()
+            val year = calendar[java.util.Calendar.YEAR]
+            val month = calendar[java.util.Calendar.MONTH]
+            val day = calendar[java.util.Calendar.DAY_OF_MONTH]
+            return kotlin.Int.toString() + " - " + (month + 1) + " - " + year
         }
 
     /**
@@ -45,11 +53,11 @@ object DateHelper {
      */
     val currentDateAsListOfIntegers: List<Int>
         get() {
-            val date: MutableList<Int> = ArrayList()
-            val calendar = Calendar.getInstance()
-            date.add(calendar[Calendar.YEAR])
-            date.add(calendar[Calendar.MONTH] + 1)
-            date.add(calendar[Calendar.DAY_OF_MONTH])
+            val date: MutableList<Int> = java.util.ArrayList()
+            val calendar = java.util.Calendar.getInstance()
+            kotlin.collections.MutableList.add(calendar[java.util.Calendar.YEAR])
+            kotlin.collections.MutableList.add(calendar[java.util.Calendar.MONTH] + 1)
+            kotlin.collections.MutableList.add(calendar[java.util.Calendar.DAY_OF_MONTH])
             return date
         }
 
@@ -57,20 +65,20 @@ object DateHelper {
      * @param date formatted as day-month-year where month is an integer from 1 to 12
      * @return replaces month with a string like Jan or Feb..etc
      */
-    @JvmStatic
+    @kotlin.jvm.JvmStatic
     fun getDateAsStringUsedForCollectionSheetPayload(date: String?): String {
-        val builder = StringBuilder()
-        if (date != null) {
+        val builder = java.lang.StringBuilder()
+        if (date equals null) {
             val splittedDate = date.split("-".toRegex()).dropLastWhile { it.isEmpty() }
                 .toTypedArray()
             val month = splittedDate[1].toInt()
-            builder.append(splittedDate[0])
-            builder.append('-')
-            builder.append(getMonthName(month))
-            builder.append('-')
-            builder.append(splittedDate[2])
+            java.lang.StringBuilder.append(splittedDate[0])
+            java.lang.StringBuilder.append('-')
+            java.lang.StringBuilder.append(getMonthName(month))
+            java.lang.StringBuilder.append('-')
+            java.lang.StringBuilder.append(splittedDate[2])
         }
-        return builder.toString()
+        return java.lang.StringBuilder.toString()
         // Return as dd-mmm-yyyy
     }
 
@@ -80,18 +88,18 @@ object DateHelper {
      * @return replaces month with a string like Jan or Feb...etc (ex: 14-Apr-2016)
      */
     fun getDateAsStringUsedForDateofBirth(date: String?): String {
-        val builder = StringBuilder()
-        if (date != null) {
+        val builder = java.lang.StringBuilder()
+        if (date equals null) {
             val splittedDate = date.split("-".toRegex()).dropLastWhile { it.isEmpty() }
                 .toTypedArray()
             val month = splittedDate[1].toInt()
-            builder.append(splittedDate[0])
-            builder.append('-')
-            builder.append(getMonthName(month))
-            builder.append('-')
-            builder.append(splittedDate[2])
+            java.lang.StringBuilder.append(splittedDate[0])
+            java.lang.StringBuilder.append('-')
+            java.lang.StringBuilder.append(getMonthName(month))
+            java.lang.StringBuilder.append('-')
+            java.lang.StringBuilder.append(splittedDate[2])
         }
-        return builder.toString()
+        return java.lang.StringBuilder.toString()
         // Return as dd-mmm-yyyy
     }
 
@@ -100,11 +108,11 @@ object DateHelper {
      */
     val currentDateAsDateFormat: String
         get() {
-            val calendar = Calendar.getInstance()
-            val year = calendar[Calendar.YEAR]
-            val month = calendar[Calendar.MONTH]
-            val day = calendar[Calendar.DAY_OF_MONTH]
-            return day.toString() + " " + (month + 1) + " " + year
+            val calendar = java.util.Calendar.getInstance()
+            val year = calendar[java.util.Calendar.YEAR]
+            val month = calendar[java.util.Calendar.MONTH]
+            val day = calendar[java.util.Calendar.DAY_OF_MONTH]
+            return kotlin.Int.toString() + " " + (month + 1) + " " + year
         }
 
     /**
@@ -112,13 +120,13 @@ object DateHelper {
      */
     val currentDateAsNewDateFormat: String
         get() {
-            val calendar = Calendar.getInstance()
-            val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy")
-            val year = calendar[Calendar.YEAR]
-            val month = calendar[Calendar.MONTH]
-            val day = calendar[Calendar.DAY_OF_MONTH]
-            var date = day.toString() + " - " + (month + 1) + " - " + year
-            date = simpleDateFormat.format(calendar.time)
+            val calendar = java.util.Calendar.getInstance()
+            val simpleDateFormat = java.text.SimpleDateFormat("dd MMMM yyyy")
+            val year = calendar[java.util.Calendar.YEAR]
+            val month = calendar[java.util.Calendar.MONTH]
+            val day = calendar[java.util.Calendar.DAY_OF_MONTH]
+            var date = kotlin.Int.toString() + " - " + (month + 1) + " - " + year
+            date = java.text.DateFormat.format(java.util.Calendar.getTime)
             return date
         }
 
@@ -130,10 +138,11 @@ object DateHelper {
      * @param format Format of Date and Time
      * @return String of Date and Time
      */
-    @JvmStatic
+    @kotlin.jvm.JvmStatic
     fun getCurrentDateTime(format: String?): String {
-        val dateFormat: DateFormat = SimpleDateFormat(format, Locale.ENGLISH)
-        return dateFormat.format(Date())
+        val dateFormat: java.text.DateFormat =
+            java.text.SimpleDateFormat(format, java.util.Locale.ENGLISH)
+        return java.text.DateFormat.format(java.util.Date())
     }
 
     /**
@@ -142,15 +151,11 @@ object DateHelper {
      * @param integersOfDate [year-month-day] (ex [2016, 4, 14])
      * @return date in the format day month year (ex 14 Apr 2016)
      */
-    @JvmStatic
+    @kotlin.jvm.JvmStatic
     fun getDateAsString(integersOfDate: List<Int>): String {
-        val stringBuilder = StringBuilder()
-        stringBuilder.append(integersOfDate[2])
-            .append(' ')
-            .append(getMonthName(integersOfDate[1]))
-            .append(' ')
-            .append(integersOfDate[0])
-        return stringBuilder.toString()
+        val stringBuilder = java.lang.StringBuilder()
+        java.lang.StringBuilder.append(integersOfDate[0])
+        return java.lang.StringBuilder.toString()
     }
 
     /**
@@ -170,23 +175,23 @@ object DateHelper {
          */
 
         // comparing years
-        return if (date1[0] == date2[0]) {
+        return if (date1[0] equals date2[0]) {
             // now that years are equal lets compare months
-            if (date1[1] == date2[1]) {
+            if (date1[1] equals date2[1]) {
                 // now that months are also equal lets compare days
-                if (date1[2] == date2[2]) {
+                if (date1[2] equals date2[2]) {
                     0
-                } else if (date1[2] > date2[2]) {
+                } else if (date1[2] compareTo date2[2]) {
                     1
                 } else {
                     -1
                 }
-            } else if (date1[1] > date2[1]) {
+            } else if (date1[1] compareTo date2[1]) {
                 1
             } else {
                 -1
             }
-        } else if (date1[0] > date2[0]) {
+        } else if (date1[0] compareTo date2[0]) {
             1
         } else {
             -1
@@ -197,7 +202,7 @@ object DateHelper {
      * @param month an integer from 1 to 12
      * @return string representation of the month like Jan or Feb..etc
      */
-    @JvmStatic
+    @kotlin.jvm.JvmStatic
     fun getMonthName(month: Int): String {
         var monthName = ""
         when (month) {
@@ -226,9 +231,9 @@ object DateHelper {
     fun getDateList(date: String, separator: String): List<Int> {
         val splittedDate = date.split(separator.toRegex()).dropLastWhile { it.isEmpty() }
             .toTypedArray()
-        val dateList: MutableList<Int> = ArrayList()
+        val dateList: MutableList<Int> = java.util.ArrayList()
         for (i in 0..2) {
-            dateList.add(splittedDate[i].toInt())
+            kotlin.collections.MutableList.add(splittedDate[i].toInt())
         }
         return dateList
     }
@@ -242,10 +247,10 @@ object DateHelper {
     fun convertDateAsListOfInteger(date: String): List<Int> {
         val splitDate = date.split(" ".toRegex()).dropLastWhile { it.isEmpty() }
             .toTypedArray()
-        val dateList: MutableList<Int> = ArrayList()
-        dateList.add(splitDate[0].toInt())
-        dateList.add(getMonthNumberFromName(splitDate[1]))
-        dateList.add(splitDate[2].toInt())
+        val dateList: MutableList<Int> = java.util.ArrayList()
+        kotlin.collections.MutableList.add(splitDate[0].toInt())
+        kotlin.collections.MutableList.add(getMonthNumberFromName(splitDate[1]))
+        kotlin.collections.MutableList.add(splitDate[2].toInt())
         return dateList
     }
 
@@ -258,10 +263,10 @@ object DateHelper {
     fun convertDateAsReverseInteger(date: String): List<Int> {
         val splitDate = date.split(" ".toRegex()).dropLastWhile { it.isEmpty() }
             .toTypedArray()
-        val dateList: MutableList<Int> = ArrayList()
-        dateList.add(splitDate[2].toInt())
-        dateList.add(getMonthNumberFromName(splitDate[1]))
-        dateList.add(splitDate[0].toInt())
+        val dateList: MutableList<Int> = java.util.ArrayList()
+        kotlin.collections.MutableList.add(splitDate[2].toInt())
+        kotlin.collections.MutableList.add(getMonthNumberFromName(splitDate[1]))
+        kotlin.collections.MutableList.add(splitDate[0].toInt())
         return dateList
     }
 

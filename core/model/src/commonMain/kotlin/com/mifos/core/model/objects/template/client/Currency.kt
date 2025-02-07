@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.template.client
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
+import utils.Parcelable
+import utils.Parcelize
 
 @Parcelize
 data class Currency(

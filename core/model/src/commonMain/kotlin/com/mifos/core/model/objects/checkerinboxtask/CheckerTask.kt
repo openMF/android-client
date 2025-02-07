@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.checkerinboxtask
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
+import utils.Parcelable
+import utils.Parcelize
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Date

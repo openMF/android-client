@@ -11,7 +11,6 @@ package com.mifos.core.testing.di
 
 import com.mifos.core.common.network.Dispatcher
 import com.mifos.core.common.network.MifosDispatchers
-import com.mifos.core.common.network.di.DispatchersModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent

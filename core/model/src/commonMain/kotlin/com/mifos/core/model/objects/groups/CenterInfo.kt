@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.groups
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
+import utils.Parcelable
+import utils.Parcelize
 
 /**
  * Created by Rajan Maurya on 05/02/17.

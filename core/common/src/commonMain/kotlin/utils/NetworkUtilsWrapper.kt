@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.utils
+package utils
 
 import android.content.Context
 import android.net.ConnectivityManager

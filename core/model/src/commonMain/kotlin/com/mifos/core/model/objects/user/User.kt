@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.model.user
+package com.mifos.core.model.objects.user
 
 class User {
     var username: String? = null
@@ -22,7 +22,7 @@ class User {
 
     var officeName: String? = null
 
-    var roles: List<Role> = ArrayList()
+    var roles: List<Role> = java.util.ArrayList()
 
-    var permissions: List<String> = ArrayList()
+    var permissions: List<String> = java.util.ArrayList()
 }

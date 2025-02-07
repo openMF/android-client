@@ -5,28 +5,25 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mobile-wallet/blob/master/LICENSE.md
  */
 package com.mifos.core.common.network.di
 
-import com.mifos.core.common.network.Dispatcher
-import com.mifos.core.common.network.MifosDispatchers.Default
-import com.mifos.core.common.network.MifosDispatchers.IO
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import org.koin.core.module.Module
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
+import kotlin.coroutines.CoroutineContext.plus
 
-@Module
-@InstallIn(SingletonComponent::class)
-object DispatchersModule {
-    @Provides
-    @Dispatcher(IO)
-    fun providesIODispatcher(): CoroutineDispatcher = Dispatchers.IO
-
-    @Provides
-    @Dispatcher(Default)
-    fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+val DispatchersModule = module {
+    Module.includes(ioDispatcherModule)
+    Module.single<kotlinx.coroutines.CoroutineDispatcher>(named(Enum.name)) { kotlinx.coroutines.Dispatchers.Default }
+    Module.single<kotlinx.coroutines.CoroutineDispatcher>(named(Enum.name)) { kotlinx.coroutines.Dispatchers.Unconfined }
+    Module.single<kotlinx.coroutines.CoroutineScope>(named("ApplicationScope")) {
+        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Default)
+    }
 }
+
+expect val ioDispatcherModule: Module

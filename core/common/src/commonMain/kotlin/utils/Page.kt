@@ -7,12 +7,13 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.utils
+package utils
 
-import com.google.gson.Gson
-import core.mifos.core.model.ServerConfig
+/**
+ * Created by ishankhanna on 09/02/14.
+ */
+data class Page<T>(
+    var totalFilteredRecords: Int = 0,
 
-fun String.asServerConfig(): core.mifos.core.model.ServerConfig {
-    val jsonString = this.replace("'", "\"")
-    return Gson().fromJson(jsonString, core.mifos.core.model.ServerConfig::class.java)
-}
+    var pageItems: List<T> = java.util.ArrayList(),
+)

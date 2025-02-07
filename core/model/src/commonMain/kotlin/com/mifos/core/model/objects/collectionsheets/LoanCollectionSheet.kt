@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.collectionsheets
 
-import com.mifos.core.common.utils.Parcel
-import com.mifos.core.common.utils.Parcelable
+import utils.Parcel
+import utils.Parcelable
 
 /**
  * Created by Tarun on 06-07-2017.

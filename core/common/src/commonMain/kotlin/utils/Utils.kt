@@ -7,25 +7,27 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.utils
+package utils
 
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.TimeZone
+import kotlin.collections.getOrNull
+import kotlin.let
 
 object Utils {
     fun getStringOfDate(dateObj: List<Int?>): String {
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        val calendar = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"))
         dateObj.getOrNull(0)?.let { year ->
-            calendar.set(Calendar.YEAR, year)
+            java.util.Calendar.set(java.util.Calendar.YEAR, year)
         }
         dateObj.getOrNull(1)?.let { month ->
-            calendar.set(Calendar.MONTH, month - 1)
+            java.util.Calendar.set(java.util.Calendar.MONTH, month - 1)
         }
         dateObj.getOrNull(2)?.let { day ->
-            calendar.set(Calendar.DAY_OF_MONTH, day)
+            java.util.Calendar.set(java.util.Calendar.DAY_OF_MONTH, day)
         }
-        val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
-        return dateFormat.format(calendar.time)
+        val dateFormat = java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM)
+        return java.text.DateFormat.format(java.util.Calendar.getTime)
     }
 }

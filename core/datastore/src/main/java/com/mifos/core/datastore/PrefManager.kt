@@ -13,10 +13,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.mifos.core.common.BuildConfig
-import com.mifos.core.common.model.user.User
+import com.mifos.core.model.objects.user.User
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.asServerConfig
-import com.mifos.core.model.ServerConfig
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

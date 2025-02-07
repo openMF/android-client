@@ -9,38 +9,28 @@
  */
 package com.mifos.core.common.utils
 
-actual interface Parcelable
-actual annotation class IgnoredOnParcel
-actual annotation class Parcelize
-actual interface Parceler<P> {
-    actual fun create(parcel: Parcel): P
-    actual fun P.write(parcel: Parcel, flags: Int)
+import utils.Parcel
+import utils.Parceler
+
+expect interface Parcelable
+expect annotation class IgnoredOnParcel
+expect annotation class Parcelize
+expect interface Parceler<P> {
+    fun create(parcel: Parcel): P
+    fun P.write(parcel: Parcel, flags: Int)
 }
 
-actual annotation class TypeParceler<T, P : Parceler<in T>>
+expect annotation class TypeParceler<T, P : Parceler<in T>>
 
-actual class Parcel {
-    actual fun readString(): String? = null
-    actual fun readByte(): Byte = 1
-
-    actual fun readInt(): Int = 1
-
-    actual fun readFloat(): Float = 1f
-
-    actual fun readDouble(): Double = 1.0
-
-    actual fun writeByte(value: Byte) {
-    }
-
-    actual fun writeInt(value: Int) {
-    }
-
-    actual fun writeFloat(value: Float) {
-    }
-
-    actual fun writeDouble(value: Double) {
-    }
-
-    actual fun writeString(value: String?) {
-    }
+expect class Parcel {
+    fun readString(): String?
+    fun readByte(): Byte
+    fun readInt(): Int
+    fun readFloat(): Float
+    fun readDouble(): Double
+    fun writeByte(value: Byte)
+    fun writeInt(value: Int)
+    fun writeFloat(value: Float)
+    fun writeDouble(value: Double)
+    fun writeString(value: String?)
 }

@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.utils
+package utils
 
 import android.os.Build
 
@@ -17,10 +17,10 @@ import android.os.Build
  */
 object AndroidVersionUtil {
     val apiVersion: Int
-        get() = Build.VERSION.SDK_INT
+        get() = android.os.Build.VERSION.SDK_INT
 
-    @JvmStatic
+    @kotlin.jvm.JvmStatic
     fun isApiVersionGreaterOrEqual(thisVersion: Int): Boolean {
-        return Build.VERSION.SDK_INT >= thisVersion
+        return android.os.Build.VERSION.SDK_INT compareTo thisVersion
     }
 }

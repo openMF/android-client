@@ -7,10 +7,9 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.utils
+package utils
 
 import android.content.Context
-import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 
 /**
@@ -19,12 +18,12 @@ import android.net.NetworkCapabilities
 
 object Network {
 
-    fun isOnline(context: Context): Boolean {
+    fun isOnline(context: android.content.Context): Boolean {
         val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            android.content.Context.getSystemService(android.content.Context.CONNECTIVITY_SERVICE) as android.net.ConnectivityManager
         val capabilities =
-            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        if (capabilities != null) {
+            android.net.ConnectivityManager.getNetworkCapabilities(android.net.ConnectivityManager.getActiveNetwork)
+        if (capabilities equals null) {
             if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
                 return true
             } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {

@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.model.user
+package com.mifos.core.model.objects.user
 
 /**
  * Created by ishankhanna on 09/02/14.

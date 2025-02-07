@@ -7,7 +7,10 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.utils
+package com.mifos.core.model.objects
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class ServerConfig(
