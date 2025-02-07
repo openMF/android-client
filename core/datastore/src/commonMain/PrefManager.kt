@@ -67,7 +67,7 @@ package com.mifos.core.datastore
 //        set(status) {
 //            preference.edit().putBoolean(Constants.SERVICE_STATUS, status).apply()
 //        }
-//
+
 //    var usernamePassword: Pair<String, String>
 //        get() = Pair(
 //            preference.getString(AUTH_USERNAME, "")!!,
