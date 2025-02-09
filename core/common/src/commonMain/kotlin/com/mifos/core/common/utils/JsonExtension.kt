@@ -7,16 +7,13 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.network
+package utils
 
-import javax.inject.Qualifier
-import kotlin.annotation.AnnotationRetention.RUNTIME
 
-@Qualifier
-@Retention(RUNTIME)
-annotation class Dispatcher(val mifosDispatcher: MifosDispatchers)
+//import core.mifos.core.model.ServerConfig
 
-enum class MifosDispatchers {
-    Default,
-    IO,
+import com.google.gson.Gson
+fun String.asServerConfig(): ServerConfig {
+    val jsonString = this.replace("'", "\"") // Ensuring valid JSON
+    return Json.decodeFromString(jsonString)
 }

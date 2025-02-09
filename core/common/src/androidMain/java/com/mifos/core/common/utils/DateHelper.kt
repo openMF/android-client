@@ -9,8 +9,11 @@
  */
 package com.mifos.core.common.utils
 
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toJavaLocalDate
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -247,6 +250,20 @@ object DateHelper {
         dateList.add(getMonthNumberFromName(splitDate[1]))
         dateList.add(splitDate[2].toInt())
         return dateList
+    }
+
+
+    object Utils {
+        fun getStringOfDate(dateObj: List<Int?>): String {
+            val year = dateObj.getOrNull(0) ?: 1970
+            val month = dateObj.getOrNull(1) ?: 1
+            val day = dateObj.getOrNull(2) ?: 1
+
+            val localDate = LocalDate(year, month, day)
+            val formatter = DateTimeFormatter.ofPattern("MMM d, yyyy") // Medium format
+
+            return localDate.toJavaLocalDate().format(formatter)
+        }
     }
 
     /**

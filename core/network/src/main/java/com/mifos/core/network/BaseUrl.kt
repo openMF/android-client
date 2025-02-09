@@ -10,7 +10,7 @@
 package com.mifos.core.network
 
 import com.mifos.core.common.BuildConfig
-import com.mifos.core.common.utils.asServerConfig
+import asServerConfig
 
 /**
  * @author fomenkoo

@@ -9,7 +9,7 @@
  */
 package com.mifos.core.common.utils
 
-import com.mifos.core.common.BuildConfig
+import utils.asServerConfig
 
 object BaseUrl {
 

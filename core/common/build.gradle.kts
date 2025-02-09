@@ -9,12 +9,10 @@
  */
 plugins {
     alias(libs.plugins.mifos.kmp.library)
-    id(libs.plugins.kotlin.parcelize.get().pluginId)
-    id("kotlinx-serialization")
+    alias(libs.plugins.kotlin.serialization)
 
-    alias(libs.plugins.mifos.android.hilt)
-    alias(libs.plugins.mifos.android.library.jacoco)
-    alias(libs.plugins.secrets)
+    //done by the plugin
+
 }
 
 android {
@@ -25,12 +23,55 @@ android {
     }
 }
 
-secrets {
-    defaultPropertiesFileName = "secrets.defaults.properties"
+kotlin {
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach {
+        it.binaries.framework {
+            isStatic = false
+            export(libs.kermit.simple)
+        }
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core)
+            api(libs.coil.kt)
+            api(libs.coil.core)
+            api(libs.coil.svg)
+            api(libs.coil.network.ktor)
+            api(libs.kermit.logging)
+            api(libs.squareup.okio)
+            api(libs.jb.kotlin.stdlib)
+            api(libs.kotlinx.datetime)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.kotlinx.coroutines.android)
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlinx.coroutines.test)
+        }
+        iosMain.dependencies {
+            api(libs.kermit.simple)
+        }
+        desktopMain.dependencies {
+            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.kotlin.reflect)
+        }
+        jsMain.dependencies {
+            api(libs.jb.kotlin.stdlib.js)
+            api(libs.jb.kotlin.dom)
+        }
+    }
 }
 
 dependencies {
-//    implementation(projects.core.model)
+    implementation(projects.core.model)
+    implementation(project(":core:common"))
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
 
