@@ -37,7 +37,6 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerCenter @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    private val mDatabaseHelperCenter: DatabaseHelperCenter,
     private val centerDatabaseHelper: CenterDaoHelper,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
     private val prefManager: com.mifos.core.datastore.PrefManager,
