@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.OfflineDashboardRepository
 import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.entity.center.CenterPayload
 import com.mifos.core.entity.client.ClientPayload
 import com.mifos.core.entity.group.GroupPayload
 import com.mifos.feature.offline.R
@@ -76,22 +75,33 @@ class OfflineDashboardViewModel @Inject constructor(
     }
 
     fun loadDatabaseCenterPayload() {
-        repository.allDatabaseCenterPayload()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<List<CenterPayload>>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        setError(Type.SYNC_CENTERS, e.message.toString())
-                    }
-
-                    override fun onNext(centerPayloads: List<CenterPayload>) {
-                        setCountOfSyncData(Type.SYNC_CENTERS, centerPayloads.size)
-                    }
-                },
-            )
+        viewModelScope.launch {
+            repository.allDatabaseCenterPayload()
+                .catch {
+                    setError(Type.SYNC_CENTERS, it.message.toString())
+                }.collect { centerPayloads ->
+                    setCountOfSyncData(Type.SYNC_CENTERS, centerPayloads.size)
+                }
+        }
     }
+
+//    fun loadDatabaseCenterPayload() {
+//        repository.allDatabaseCenterPayload()
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribeOn(Schedulers.io())
+//            .subscribe(
+//                object : Subscriber<List<CenterPayload>>() {
+//                    override fun onCompleted() {}
+//                    override fun onError(e: Throwable) {
+//                        setError(Type.SYNC_CENTERS, e.message.toString())
+//                    }
+//
+//                    override fun onNext(centerPayloads: List<CenterPayload>) {
+//                        setCountOfSyncData(Type.SYNC_CENTERS, centerPayloads.size)
+//                    }
+//                },
+//            )
+//    }
 
     fun loadDatabaseLoanRepaymentTransactions() {
         viewModelScope.launch {

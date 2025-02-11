@@ -9,20 +9,19 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.center.CenterPayload
-import com.mifos.core.objects.responses.SaveResponse
-import rx.Observable
+import com.mifos.room.entities.center.CenterPayload
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
 interface SyncCenterPayloadsRepository {
 
-    fun allDatabaseCenterPayload(): Observable<List<CenterPayload>>
+    fun allDatabaseCenterPayload(): Flow<List<CenterPayload>>
 
-    fun createCenter(centerPayload: CenterPayload): Observable<SaveResponse>
+    suspend fun createCenter(centerPayload: CenterPayload?)
 
-    fun deleteAndUpdateCenterPayloads(id: Int): Observable<List<CenterPayload>>
+    fun deleteAndUpdateCenterPayloads(id: Int): Flow<List<CenterPayload>>
 
-    fun updateCenterPayload(centerPayload: CenterPayload): Observable<CenterPayload>
+    suspend fun updateCenterPayload(centerPayload: CenterPayload)
 }

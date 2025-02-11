@@ -11,15 +11,10 @@ package com.mifos.core.data.pagingSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.mifos.core.entity.group.Center
 import com.mifos.core.network.datamanager.DataManagerCenter
-import com.mifos.core.objects.clients.Page
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
+import com.mifos.room.entities.group.Center
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
     PagingSource<Int, Center>() {
@@ -55,27 +50,33 @@ class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
         return Pair(pagedClient.pageItems, pagedClient.totalFilteredRecords)
     }
 
-    private suspend fun getCenterDbList(): List<Center> = suspendCoroutine { continuation ->
-        try {
-            dataManagerCenter.allDatabaseCenters
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Center>>() {
-                    override fun onCompleted() {
-                    }
-
-                    override fun onError(error: Throwable) {
-                        continuation.resumeWithException(error)
-                    }
-
-                    override fun onNext(centers: Page<Center>) {
-                        continuation.resume(centers.pageItems)
-                    }
-                })
-        } catch (exception: Exception) {
-            continuation.resumeWithException(exception)
-        }
+    private suspend fun getCenterDbList(): List<Center> {
+        return dataManagerCenter.allDatabaseCenters
+            .map { it.pageItems }
+            .first()
     }
+
+//    private suspend fun getCenterDbList(): List<Center> = suspendCoroutine { continuation ->
+//        try {
+//            dataManagerCenter.allDatabaseCenters
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribe(object : Subscriber<Page<Center>>() {
+//                    override fun onCompleted() {
+//                    }
+//
+//                    override fun onError(error: Throwable) {
+//                        continuation.resumeWithException(error)
+//                    }
+//
+//                    override fun onNext(centers: Page<Center>) {
+//                        continuation.resume(centers.pageItems)
+//                    }
+//                })
+//        } catch (exception: Exception) {
+//            continuation.resumeWithException(exception)
+//        }
+//    }
 
     private fun getCenterListWithSync(
         centerList: List<Center>,

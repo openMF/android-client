@@ -10,8 +10,8 @@
 package com.mifos.room.entities.accounts
 
 import android.os.Parcelable
-import com.mifos.core.entity.accounts.loan.LoanAccount
-import com.mifos.core.entity.accounts.savings.SavingsAccount
+import com.mifos.room.entities.accounts.loans.LoanAccount
+import com.mifos.room.entities.accounts.savings.SavingsAccount
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

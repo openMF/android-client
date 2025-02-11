@@ -9,11 +9,14 @@
  */
 package com.mifos.room.entities.accounts.savings
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "SavingsAccountStatus")
+@Parcelize
 data class Status(
     @PrimaryKey
     var id: Int? = null,
@@ -41,4 +44,4 @@ data class Status(
 
     @ColumnInfo(name = "closed")
     var closed: Boolean? = null,
-)
+) : Parcelable
