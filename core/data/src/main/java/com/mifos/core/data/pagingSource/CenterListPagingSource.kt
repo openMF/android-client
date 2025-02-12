@@ -9,6 +9,7 @@
  */
 package com.mifos.core.data.pagingSource
 
+import android.graphics.pdf.LoadParams
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mifos.core.network.datamanager.DataManagerCenter
@@ -55,28 +56,6 @@ class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
             .map { it.pageItems }
             .first()
     }
-
-//    private suspend fun getCenterDbList(): List<Center> = suspendCoroutine { continuation ->
-//        try {
-//            dataManagerCenter.allDatabaseCenters
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.io())
-//                .subscribe(object : Subscriber<Page<Center>>() {
-//                    override fun onCompleted() {
-//                    }
-//
-//                    override fun onError(error: Throwable) {
-//                        continuation.resumeWithException(error)
-//                    }
-//
-//                    override fun onNext(centers: Page<Center>) {
-//                        continuation.resume(centers.pageItems)
-//                    }
-//                })
-//        } catch (exception: Exception) {
-//            continuation.resumeWithException(exception)
-//        }
-//    }
 
     private fun getCenterListWithSync(
         centerList: List<Center>,

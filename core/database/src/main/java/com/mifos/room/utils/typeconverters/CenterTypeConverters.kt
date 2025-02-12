@@ -16,9 +16,6 @@ import com.mifos.room.entities.group.GroupDate
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-/**
- * Created by Pronay Sarker on 12/02/2025 (12:22 AM)
- */
 class CenterTypeConverters {
 
     @TypeConverter

@@ -131,35 +131,6 @@ class SyncCenterPayloadsViewModel @Inject constructor(
         }
     }
 
-//    private fun updsateCenterPayload(centerPayload: CenterPayload?) {
-//        deleteAndUpdateCenterPayload(
-//            mCenterPayloads[centerSyncIndex].id,
-//        )
-//        if (centerPayload != null) {
-//            viewModelScope.launch(Dispatchers.IO) {
-//                updateCenterPayloadUseCase(centerPayload).collect { result ->
-//                    when (result) {
-//                        is Resource.Error ->
-//                            _syncCenterPayloadsUiState.value =
-//                                SyncCenterPayloadsUiState.ShowError(result.message.toString())
-//
-//                        is Resource.Loading -> Unit
-//
-//                        is Resource.Success -> {
-//                            mCenterPayloads[centerSyncIndex] = result.data ?: CenterPayload()
-//                            _syncCenterPayloadsUiState.value =
-//                                SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
-//                            centerSyncIndex += 1
-//                            if (mCenterPayloads.size != centerSyncIndex) {
-//                                syncCenterPayload()
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-
     fun syncCenterPayload() {
         for (i in mCenterPayloads.indices) {
             if (mCenterPayloads[i].errorMessage == null) {

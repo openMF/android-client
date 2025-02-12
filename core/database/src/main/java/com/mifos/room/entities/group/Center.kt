@@ -31,35 +31,35 @@ import kotlinx.parcelize.Parcelize
 )
 data class Center(
     @PrimaryKey
-    var id: Int? = null,
+    val id: Int? = null,
 
     @Transient
-    var sync: Boolean = false,
+    val sync: Boolean = false,
 
-    var accountNo: String? = null,
+    val accountNo: String? = null,
 
-    var name: String? = null,
+    val name: String? = null,
 
-    var officeId: Int? = null,
+    val officeId: Int? = null,
 
-    var officeName: String? = null,
+    val officeName: String? = null,
 
-    var staffId: Int? = null,
+    val staffId: Int? = null,
 
-    var staffName: String? = null,
+    val staffName: String? = null,
 
-    var hierarchy: String? = null,
+    val hierarchy: String? = null,
 
-    var status: Status? = null,
+    val status: Status? = null,
 
-    var active: Boolean? = null,
+    val active: Boolean? = null,
 
     @Transient
-    var centerDate: CenterDate? = null,
+    val centerDate: CenterDate? = null,
 
-    var activationDate: List<Int?> = emptyList(),
+    val activationDate: List<Int?> = emptyList(),
 
-    var timeline: Timeline? = null,
+    val timeline: Timeline? = null,
 
-    var externalId: String? = null,
+    val externalId: String? = null,
 ) : Parcelable

@@ -26,7 +26,7 @@ class SyncCenterPayloadsRepositoryImp @Inject constructor(private val dataManage
     }
 
     override suspend fun createCenter(centerPayload: CenterPayload?) {
-        return dataManagerCenter.createCenter(centerPayload)
+        dataManagerCenter.createCenter(centerPayload)
     }
 
     override fun deleteAndUpdateCenterPayloads(id: Int): Flow<List<CenterPayload>> {
@@ -34,6 +34,6 @@ class SyncCenterPayloadsRepositoryImp @Inject constructor(private val dataManage
     }
 
     override suspend fun updateCenterPayload(centerPayload: CenterPayload) {
-        return dataManagerCenter.updateCenterPayload(centerPayload)
+        dataManagerCenter.updateCenterPayload(centerPayload)
     }
 }

@@ -21,9 +21,6 @@ import com.mifos.room.entities.group.Center
 import com.mifos.room.entities.group.Group
 import kotlinx.coroutines.flow.Flow
 
-/**
- * Created by Pronay Sarker on 03/02/2025 (7:19 PM)
- */
 @Dao
 interface CenterDao {
 

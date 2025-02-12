@@ -68,20 +68,4 @@ class CenterListViewModel @Inject constructor(
                 }
         }
     }
-
-//    private fun loadCentsersFromDb() = viewModelScope.launch(Dispatchers.IO) {
-//        getCenterListDbUseCase().collect { result ->
-//            when (result) {
-//                is Resource.Error ->
-//                    _centerListUiState.value =
-//                        CenterListUiState.Error(R.string.feature_center_failed_to_load_db_centers)
-//
-//                is Resource.Loading -> _centerListUiState.value = CenterListUiState.Loading
-//
-//                is Resource.Success ->
-//                    _centerListUiState.value =
-//                        CenterListUiState.CenterListDb(result.data ?: emptyList())
-//            }
-//        }
-//    }
 }

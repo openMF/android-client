@@ -65,22 +65,4 @@ class CreateNewCenterViewModel @Inject constructor(
             }
         }
     }
-
-//    fun createNewCenter(centerPayload: CenterPayload) = viewModelScope.launch(Dispatchers.IO) {
-//        createNewCenterUseCase(centerPayload).collect { result ->
-//            when (result) {
-//                is Resource.Error ->
-//                    _createNewCenterUiState.value =
-//                        CreateNewCenterUiState.Error(R.string.feature_center_failed_to_create_center)
-//
-//                is Resource.Loading ->
-//                    _createNewCenterUiState.value =
-//                        CreateNewCenterUiState.Loading
-//
-//                is Resource.Success ->
-//                    _createNewCenterUiState.value =
-//                        CreateNewCenterUiState.CenterCreatedSuccessfully
-//            }
-//        }
-//    }
 }

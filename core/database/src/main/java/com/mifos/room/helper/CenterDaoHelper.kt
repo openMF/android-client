@@ -71,6 +71,8 @@ class CenterDaoHelper @Inject constructor(
      * @return Observable.just(Center)
      */
     suspend fun saveCenter(center: Center) {
+        var updatedCenter: Center = center
+
         if (center.activationDate.isNotEmpty()) {
             val centerDate = center.id?.let {
                 center.activationDate[0]?.let { it1 ->
@@ -87,9 +89,9 @@ class CenterDaoHelper @Inject constructor(
                     }
                 }
             }
-            center.centerDate = centerDate
+            updatedCenter = center.copy(centerDate = centerDate)
         }
-        centerDatabase.saveCenter(center)
+        centerDatabase.saveCenter(updatedCenter)
     }
 
     /**

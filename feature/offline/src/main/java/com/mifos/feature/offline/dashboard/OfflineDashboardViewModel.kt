@@ -85,24 +85,6 @@ class OfflineDashboardViewModel @Inject constructor(
         }
     }
 
-//    fun loadDatabaseCenterPayload() {
-//        repository.allDatabaseCenterPayload()
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribeOn(Schedulers.io())
-//            .subscribe(
-//                object : Subscriber<List<CenterPayload>>() {
-//                    override fun onCompleted() {}
-//                    override fun onError(e: Throwable) {
-//                        setError(Type.SYNC_CENTERS, e.message.toString())
-//                    }
-//
-//                    override fun onNext(centerPayloads: List<CenterPayload>) {
-//                        setCountOfSyncData(Type.SYNC_CENTERS, centerPayloads.size)
-//                    }
-//                },
-//            )
-//    }
-
     fun loadDatabaseLoanRepaymentTransactions() {
         viewModelScope.launch {
             repository.databaseLoanRepayments()

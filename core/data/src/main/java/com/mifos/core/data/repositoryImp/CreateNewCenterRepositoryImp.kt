@@ -21,6 +21,6 @@ class CreateNewCenterRepositoryImp @Inject constructor(private val dataManagerCe
     CreateNewCenterRepository {
 
     override suspend fun createCenter(centerPayload: CenterPayload) {
-        return dataManagerCenter.createCenter(centerPayload)
+        dataManagerCenter.createCenter(centerPayload)
     }
 }

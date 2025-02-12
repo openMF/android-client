@@ -19,9 +19,9 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class CenterAccounts(
-    var loanAccounts: List<LoanAccount> = emptyList(),
+    val loanAccounts: List<LoanAccount> = emptyList(),
 
-    var savingsAccounts: List<SavingsAccount> = emptyList(),
+    val savingsAccounts: List<SavingsAccount> = emptyList(),
 
-    var memberLoanAccounts: List<LoanAccount> = emptyList(),
+    val memberLoanAccounts: List<LoanAccount> = emptyList(),
 ) : Parcelable

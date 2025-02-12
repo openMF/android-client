@@ -182,40 +182,6 @@ class SyncCentersDialogViewModel @Inject constructor(
             }
         }
     }
-//    private fun sywncCenterAccounts(centerId: Int) {
-//        repository.syncCenterAccounts(centerId)
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribeOn(Schedulers.io())
-//            .subscribe(
-//                object : Subscriber<CenterAccounts>() {
-//                    override fun onCompleted() {}
-//                    override fun onError(e: Throwable) {
-//                        onAccountSyncFailed(e)
-//                    }
-//
-//                    override fun onNext(centerAccounts: CenterAccounts) {
-//                        mLoanAccountList = getActiveLoanAccounts(
-//                            centerAccounts
-//                                .loanAccounts,
-//                        )
-//                        mSavingsAccountList = getActiveSavingsAccounts(
-//                            centerAccounts
-//                                .savingsAccounts,
-//                        )
-//                        mMemberLoanAccountsList = getActiveLoanAccounts(
-//                            centerAccounts
-//                                .memberLoanAccounts,
-//                        )
-//                        // Updating UI
-//                        maxSingleSyncCenterProgressBar = (
-//                                mLoanAccountList.size +
-//                                        mSavingsAccountList.size + mMemberLoanAccountsList.size
-//                                )
-//                        checkAccountsSyncStatusAndSyncAccounts()
-//                    }
-//                },
-//            )
-//    }
 
     /**
      * This Method check the LoanAccount isEmpty or not, If LoanAccount is not Empty the sync the
@@ -365,11 +331,13 @@ class SyncCentersDialogViewModel @Inject constructor(
      * @param center Center
      */
     private fun syncCenter(center: Center) {
-        center.id = mCenterList[mCenterSyncIndex].id
-        center.sync = true
+        val updatedCenter = center.copy(
+            id = mCenterList[mCenterSyncIndex].id,
+            sync = true,
+        )
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.syncCenterInDatabase(center)
+            repository.syncCenterInDatabase(updatedCenter)
 
             withContext(Dispatchers.Main) {
                 val singleSyncCenterMax = maxSingleSyncCenterProgressBar
@@ -386,7 +354,7 @@ class SyncCentersDialogViewModel @Inject constructor(
      * @param loanId Loan Id
      * @return LoanAndLoanRepayment
      */
-    private suspend fun getLoanAndLoanRepayment(loanId: Int): Flow<LoanAndLoanRepayment> {
+    private fun getLoanAndLoanRepayment(loanId: Int): Flow<LoanAndLoanRepayment> {
         return combine(
             repository.syncLoanById(loanId),
             repository.syncLoanRepaymentTemplate(loanId),
