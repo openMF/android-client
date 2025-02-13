@@ -188,8 +188,8 @@ class DataManagerClient @Inject constructor(
      * @param clientId Client ID
      * @return ResponseBody is the Retrofit 2 response
      */
-    fun deleteClientImage(clientId: Int): Flow<ResponseBody> {
-        return flow { mBaseApiManager.clientsApi.deleteClientImage(clientId) }
+    fun deleteClientImage(clientId: Int): Observable<ResponseBody> {
+        return mBaseApiManager.clientsApi.deleteClientImage(clientId)
     }
 
     /**

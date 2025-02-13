@@ -62,7 +62,7 @@ interface ClientService {
     ): Observable<ResponseBody>
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
-    suspend fun deleteClientImage(@Path("clientId") clientId: Int): ResponseBody
+    fun deleteClientImage(@Path("clientId") clientId: Int): Observable<ResponseBody>
 
     // TODO: Implement when API Fixed
     //    @GET("/clients/{clientId}/images")
@@ -83,7 +83,7 @@ interface ClientService {
      *
      * @param clientId Client Id
      * @return List<Identifier>
-     </Identifier> */
+    </Identifier> */
     @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
     fun getClientIdentifiers(@Path("clientId") clientId: Int): Observable<List<Identifier>>
 
