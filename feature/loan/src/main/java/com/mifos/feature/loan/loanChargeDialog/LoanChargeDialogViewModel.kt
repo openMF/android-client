@@ -11,7 +11,7 @@ package com.mifos.feature.loan.loanChargeDialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.CreateLoanChargesUseCase
 import com.mifos.core.domain.useCases.GetAllChargesV3UseCase
 import com.mifos.core.entity.client.Charges
@@ -54,7 +54,7 @@ class LoanChargeDialogViewModel @Inject constructor(
 //                        _loanChargeDialogUiState.value =
 //                            LoanChargeDialogUiState.AllChargesV3(it)
 //                    }
-                    result.data?.let { mapResourceBodyToChargeList(it) }
+                    Resource.data?.let { mapResourceBodyToChargeList(it) }
                 }
             }
         }

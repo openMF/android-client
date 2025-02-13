@@ -9,12 +9,12 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import javax.inject.Inject
 
 class GetIndividualCollectionSheetUseCase @Inject constructor(private val repository: NewIndividualCollectionSheetRepository) {

@@ -13,8 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetSavingsAccountUseCase
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.feature.savings.R
@@ -56,7 +55,7 @@ class SavingsAccountSummaryViewModel @Inject constructor(
                 is Resource.Success ->
                     _savingsAccountSummaryUiState.value =
                         SavingsAccountSummaryUiState.ShowSavingAccount(
-                            result.data ?: SavingsAccountWithAssociations(),
+                            Resource.data ?: SavingsAccountWithAssociations(),
                         )
             }
         }

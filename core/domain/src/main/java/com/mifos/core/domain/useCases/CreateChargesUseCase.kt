@@ -9,12 +9,12 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ChargeDialogRepository
-import com.mifos.core.objects.clients.ChargeCreationResponse
-import com.mifos.core.payloads.ChargesPayload
+import com.mifos.core.model.objects.clients.ChargeCreationResponse
+import com.mifos.core.model.objects.payloads.ChargesPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import javax.inject.Inject
 
 class CreateChargesUseCase @Inject constructor(private val repository: ChargeDialogRepository) {

@@ -13,7 +13,6 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import dagger.hilt.android.lifecycle.HiltViewModel

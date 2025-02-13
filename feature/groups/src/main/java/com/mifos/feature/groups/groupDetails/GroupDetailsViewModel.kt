@@ -12,8 +12,7 @@ package com.mifos.feature.groups.groupDetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetGroupAssociateClientsUseCase
 import com.mifos.core.domain.useCases.GetGroupDetailsUseCase
 import com.mifos.core.entity.accounts.loan.LoanAccount
@@ -60,10 +59,10 @@ class GroupDetailsViewModel @Inject constructor(
 
                 is Resource.Success -> {
                     _groupDetailsUiState.value =
-                        GroupDetailsUiState.ShowGroup(result.data?.group ?: Group())
-                    _loanAccounts.value = result.data?.groupAccounts?.loanAccounts ?: emptyList()
+                        GroupDetailsUiState.ShowGroup(Resource.data?.group ?: Group())
+                    _loanAccounts.value = Resource.data?.groupAccounts?.loanAccounts ?: emptyList()
                     _savingsAccounts.value =
-                        result.data?.groupAccounts?.savingsAccounts ?: emptyList()
+                        Resource.data?.groupAccounts?.savingsAccounts ?: emptyList()
                 }
             }
         }
@@ -77,7 +76,7 @@ class GroupDetailsViewModel @Inject constructor(
                         GroupDetailsUiState.Error(R.string.feature_groups_failed_to_load_client)
 
                 is Resource.Loading -> Unit
-                is Resource.Success -> _groupAssociateClients.value = result.data ?: emptyList()
+                is Resource.Success -> _groupAssociateClients.value = Resource.data ?: emptyList()
             }
         }
     }

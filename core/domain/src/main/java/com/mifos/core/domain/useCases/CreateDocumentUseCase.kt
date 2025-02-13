@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.channels.awaitClose
@@ -19,6 +18,7 @@ import okhttp3.MultipartBody
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import javax.inject.Inject
 
 class CreateDocumentUseCase @Inject constructor(private val repository: SignatureRepository) {

@@ -11,7 +11,7 @@ package com.mifos.feature.center.centerList.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CenterListRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.GetCenterListDbUseCase
@@ -67,7 +67,7 @@ class CenterListViewModel @Inject constructor(
 
                 is Resource.Success ->
                     _centerListUiState.value =
-                        CenterListUiState.CenterListDb(result.data ?: emptyList())
+                        CenterListUiState.CenterListDb(Resource.data ?: emptyList())
             }
         }
     }

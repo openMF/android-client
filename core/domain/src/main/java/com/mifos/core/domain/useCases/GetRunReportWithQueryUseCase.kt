@@ -9,11 +9,11 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ReportDetailRepository
-import com.mifos.core.objects.runreport.FullParameterListResponse
+import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import javax.inject.Inject
 
 class GetRunReportWithQueryUseCase @Inject constructor(private val repository: ReportDetailRepository) {

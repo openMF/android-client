@@ -15,8 +15,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.request.ImageResult
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.DeleteClientImageUseCase
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
@@ -93,7 +92,7 @@ class ClientDetailsViewModel @Inject constructor(
             when (result) {
                 is Resource.Error -> {
                     _clientDetailsUiState.value =
-                        ClientDetailsUiState.ShowError(result.message ?: "Unexpected error")
+                        ClientDetailsUiState.ShowError(Resource.message ?: "Unexpected error")
                     _showLoading.value = false
                 }
 
@@ -113,16 +112,16 @@ class ClientDetailsViewModel @Inject constructor(
             when (result) {
                 is Resource.Error -> {
                     _clientDetailsUiState.value =
-                        ClientDetailsUiState.ShowError(result.message.toString())
+                        ClientDetailsUiState.ShowError(Resource.message.toString())
                     _showLoading.value = false
                 }
 
                 is Resource.Loading -> _showLoading.value = true
 
                 is Resource.Success -> {
-                    _client.value = result.data?.client
-                    loanAccounts.value = result.data?.clientAccounts?.loanAccounts
-                    _savingsAccounts.value = result.data?.clientAccounts?.savingsAccounts
+                    _client.value = Resource.data?.client
+                    loanAccounts.value = Resource.data?.clientAccounts?.loanAccounts
+                    _savingsAccounts.value = Resource.data?.clientAccounts?.savingsAccounts
                     _showLoading.value = false
                 }
             }

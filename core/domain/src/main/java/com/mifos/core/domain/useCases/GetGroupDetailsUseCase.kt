@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.room.entities.zipmodels.GroupAndGroupAccounts
 import kotlinx.coroutines.channels.awaitClose
@@ -19,6 +18,7 @@ import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import javax.inject.Inject
 
 class GetGroupDetailsUseCase @Inject constructor(private val repository: GroupDetailsRepository) {

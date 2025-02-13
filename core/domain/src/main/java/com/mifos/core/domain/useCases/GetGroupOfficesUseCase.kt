@@ -9,11 +9,11 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.entity.organisation.Office
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import javax.inject.Inject
 
 /**

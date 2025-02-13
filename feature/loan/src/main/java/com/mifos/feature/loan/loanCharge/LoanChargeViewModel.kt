@@ -12,8 +12,7 @@ package com.mifos.feature.loan.loanCharge
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetListOfLoanChargesUseCase
 import com.mifos.feature.loan.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,7 +53,7 @@ class LoanChargeViewModel @Inject constructor(
 
                 is Resource.Success ->
                     _loanChargeUiState.value =
-                        LoanChargeUiState.LoanChargesList(result.data ?: emptyList())
+                        LoanChargeUiState.LoanChargesList(Resource.data ?: emptyList())
             }
         }
     }

@@ -13,7 +13,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.objects.nav.DataTableNavigationArg
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -12,8 +12,7 @@ package com.mifos.feature.loan.groupLoanAccount
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetGroupLoansAccountTemplateUseCase
@@ -55,7 +54,7 @@ class GroupLoanAccountViewModel @Inject constructor(
                     _groupLoanAccountUiState.value =
                         GroupLoanAccountUiState.Loading
 
-                is Resource.Success -> _loanProducts.value = result.data ?: emptyList()
+                is Resource.Success -> _loanProducts.value = Resource.data ?: emptyList()
             }
         }
     }
@@ -73,7 +72,7 @@ class GroupLoanAccountViewModel @Inject constructor(
                     is Resource.Success ->
                         _groupLoanAccountUiState.value =
                             GroupLoanAccountUiState.GroupLoanAccountTemplate(
-                                result.data ?: GroupLoanTemplate(),
+                                Resource.data ?: GroupLoanTemplate(),
                             )
                 }
             }

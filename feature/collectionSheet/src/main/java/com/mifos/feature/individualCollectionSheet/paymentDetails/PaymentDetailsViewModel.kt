@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.request.ImageResult
 import com.google.gson.Gson
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.network.utils.ImageLoaderUtils
 import com.mifos.core.objects.collectionsheets.LoanAndClientName

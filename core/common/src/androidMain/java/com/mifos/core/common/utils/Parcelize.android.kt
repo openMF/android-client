@@ -11,10 +11,6 @@ package com.mifos.core.common.utils
 
 import android.os.Parcel
 import android.os.Parcelable
-import kotlinx.parcelize.IgnoredOnParcel
-import kotlinx.parcelize.Parceler
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.TypeParceler
 
 actual typealias Parcelize = Parcelize
 

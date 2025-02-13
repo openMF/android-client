@@ -13,8 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.GetSavingsAccountTransactionTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsAccountTransactionUseCase
@@ -70,7 +69,7 @@ class SavingsAccountTransactionViewModel @Inject constructor(
                     when (result) {
                         is Resource.Error ->
                             _savingsAccountTransactionUiState.value =
-                                SavingsAccountTransactionUiState.ShowError(result.message.toString())
+                                SavingsAccountTransactionUiState.ShowError(Resource.message.toString())
 
                         is Resource.Loading ->
                             _savingsAccountTransactionUiState.value =
@@ -79,7 +78,7 @@ class SavingsAccountTransactionViewModel @Inject constructor(
                         is Resource.Success ->
                             _savingsAccountTransactionUiState.value =
                                 SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
-                                    result.data ?: SavingsAccountTransactionTemplate(),
+                                    Resource.data ?: SavingsAccountTransactionTemplate(),
                                 )
                     }
                 }
@@ -121,14 +120,14 @@ class SavingsAccountTransactionViewModel @Inject constructor(
                     when (result) {
                         is Resource.Error ->
                             _savingsAccountTransactionUiState.value =
-                                SavingsAccountTransactionUiState.ShowError(result.message.toString())
+                                SavingsAccountTransactionUiState.ShowError(Resource.message.toString())
 
                         is Resource.Loading ->
                             _savingsAccountTransactionUiState.value =
                                 SavingsAccountTransactionUiState.ShowProgressbar
 
                         is Resource.Success -> {
-                            if (result.data != null) {
+                            if (Resource.data != null) {
                                 _savingsAccountTransactionUiState.value =
                                     SavingsAccountTransactionUiState.ShowSavingAccountTransactionExistInDatabase
                             } else {

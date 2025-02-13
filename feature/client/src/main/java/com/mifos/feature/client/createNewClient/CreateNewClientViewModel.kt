@@ -12,7 +12,7 @@ package com.mifos.feature.client.createNewClient
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.domain.useCases.GetOfficeListUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeForCreateNewClientUseCase
@@ -92,7 +92,7 @@ class CreateNewClientViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    _showOffices.value = result.data ?: emptyList()
+                    _showOffices.value = Resource.data ?: emptyList()
                 }
             }
         }
@@ -108,7 +108,7 @@ class CreateNewClientViewModel @Inject constructor(
 
                     is Resource.Loading -> Unit
 
-                    is Resource.Success -> _staffInOffices.value = result.data ?: emptyList()
+                    is Resource.Success -> _staffInOffices.value = Resource.data ?: emptyList()
                 }
             }
         }

@@ -12,7 +12,7 @@ package com.mifos.feature.client.clientPinpoint
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.AddClientPinpointLocationUseCase
 import com.mifos.core.domain.useCases.DeleteClientAddressPinpointUseCase
 import com.mifos.core.domain.useCases.GetClientPinpointLocationsUseCase
@@ -64,10 +64,10 @@ class PinPointClientViewModel @Inject constructor(
 
                 is Resource.Success ->
                     _pinPointClientUiState.value =
-                        if (result.data.isNullOrEmpty()) {
+                        if (Resource.data.isNullOrEmpty()) {
                             PinPointClientUiState.Error(R.string.feature_client_no_pinpoint_found)
                         } else {
-                            PinPointClientUiState.ClientPinpointLocations(result.data ?: emptyList())
+                            PinPointClientUiState.ClientPinpointLocations(Resource.data ?: emptyList())
                         }
             }
         }

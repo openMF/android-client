@@ -1,12 +1,3 @@
-/*
- * Copyright 2024 Mifos Initiative
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
 package com.mifos.core.common.utils
 
 import android.content.Context
@@ -15,9 +6,9 @@ import android.preference.PreferenceManager
 import com.mifos.core.common.R
 import java.util.Locale
 
-object LanguageHelper {
-    // https://gunhansancar.com/change-language-programmatically-in-android/
-    fun onAttach(context: Context): Context? {
+actual object LanguageHelper {
+    actual fun onAttach(context: Any): Any? {
+        context as Context
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         return if (preferences.getBoolean(
                 context.getString(R.string.core_common_default_system_language),
@@ -37,13 +28,14 @@ object LanguageHelper {
         }
     }
 
-    @JvmStatic
-    fun onAttach(context: Context, defaultLanguage: String): Context? {
+    actual fun onAttach(context: Any, defaultLanguage: String): Any? {
+        context as Context
         val lang = getPersistedData(context, defaultLanguage)
         return lang?.let { setLocale(context, it) }
     }
 
-    fun setLocale(context: Context?, language: String): Context? {
+    actual fun setLocale(context: Any?, language: String): Any? {
+        context as Context?
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             updateResources(context!!, language)
         } else {

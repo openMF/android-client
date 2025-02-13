@@ -11,7 +11,7 @@ package com.mifos.feature.offline.syncSavingsAccountTransaction
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.AllSavingsAccountTransactionsUseCase
@@ -292,7 +292,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
                             SyncSavingsAccountTransactionUiState.Loading
 
                     is Resource.Success -> showTransactionDeletedAndUpdated(
-                        result.data as MutableList<SavingsAccountTransactionRequest>,
+                        Resource.data as MutableList<SavingsAccountTransactionRequest>,
                     )
                 }
             }

@@ -9,8 +9,6 @@
  */
 package com.mifos.feature.activate.navigation
 
-import com.mifos.core.common.utils.Constants
-
 /**
  * Created by Pronay Sarker on 18/08/2024 (1:40 PM)
  */

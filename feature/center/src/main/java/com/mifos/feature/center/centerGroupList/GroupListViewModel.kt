@@ -12,8 +12,7 @@ package com.mifos.feature.center.centerGroupList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetGroupsByCenterUseCase
 import com.mifos.core.domain.useCases.GetGroupsUseCase
 import com.mifos.feature.center.R
@@ -52,7 +51,7 @@ class GroupListViewModel @Inject constructor(
 
                 is Resource.Success ->
                     _groupListUiState.value =
-                        GroupListUiState.GroupList(result.data ?: CenterWithAssociations())
+                        GroupListUiState.GroupList(Resource.data ?: CenterWithAssociations())
             }
         }
     }
@@ -66,7 +65,7 @@ class GroupListViewModel @Inject constructor(
 
                 is Resource.Loading -> _groupListUiState.value = GroupListUiState.Loading
 
-                is Resource.Success -> _groupAssociationState.value = result.data
+                is Resource.Success -> _groupAssociationState.value = Resource.data
             }
         }
     }

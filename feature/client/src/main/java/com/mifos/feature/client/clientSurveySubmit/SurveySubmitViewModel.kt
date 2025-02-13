@@ -11,7 +11,6 @@ package com.mifos.feature.client.clientSurveySubmit
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.objects.surveys.Scorecard

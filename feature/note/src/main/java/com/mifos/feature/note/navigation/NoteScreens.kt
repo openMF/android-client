@@ -9,8 +9,6 @@
  */
 package com.mifos.feature.note.navigation
 
-import com.mifos.core.common.utils.Constants
-
 /**
  * Created by Pronay Sarker on 17/08/2024 (12:05 AM)
  */

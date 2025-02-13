@@ -9,12 +9,12 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ActivateRepository
-import com.mifos.core.objects.clients.ActivatePayload
+import com.mifos.core.model.objects.clients.ActivatePayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.openapitools.client.models.PostClientsClientIdResponse
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import javax.inject.Inject
 
 class ActivateClientUseCase @Inject constructor(private val activateRepository: ActivateRepository) {

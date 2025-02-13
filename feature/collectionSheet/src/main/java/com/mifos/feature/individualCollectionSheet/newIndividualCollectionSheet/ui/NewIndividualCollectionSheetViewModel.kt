@@ -11,7 +11,7 @@ package com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetIndividualCollectionSheetUseCase
 import com.mifos.core.domain.useCases.GetOfficeListUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeUseCase
@@ -47,7 +47,7 @@ class NewIndividualCollectionSheetViewModel @Inject constructor(
                 is Resource.Error -> {
                     _newIndividualCollectionSheetUiState.value =
                         _newIndividualCollectionSheetUiState.value.copy(
-                            error = result.message,
+                            error = Resource.message,
                         )
                 }
 
@@ -62,7 +62,7 @@ class NewIndividualCollectionSheetViewModel @Inject constructor(
                     _newIndividualCollectionSheetUiState.value =
                         _newIndividualCollectionSheetUiState.value.copy(
                             isLoading = false,
-                            officeList = result.data ?: emptyList(),
+                            officeList = Resource.data ?: emptyList(),
                         )
                 }
             }
@@ -75,7 +75,7 @@ class NewIndividualCollectionSheetViewModel @Inject constructor(
                 is Resource.Error -> {
                     _newIndividualCollectionSheetUiState.value =
                         _newIndividualCollectionSheetUiState.value.copy(
-                            error = result.message,
+                            error = Resource.message,
                         )
                 }
 
@@ -85,7 +85,7 @@ class NewIndividualCollectionSheetViewModel @Inject constructor(
                 is Resource.Success -> {
                     _newIndividualCollectionSheetUiState.value =
                         _newIndividualCollectionSheetUiState.value.copy(
-                            staffList = result.data ?: emptyList(),
+                            staffList = Resource.data ?: emptyList(),
                         )
                 }
             }
@@ -99,7 +99,7 @@ class NewIndividualCollectionSheetViewModel @Inject constructor(
                     is Resource.Error -> {
                         _newIndividualCollectionSheetUiState.value =
                             _newIndividualCollectionSheetUiState.value.copy(
-                                error = result.message,
+                                error = Resource.message,
                             )
                     }
 
@@ -109,7 +109,7 @@ class NewIndividualCollectionSheetViewModel @Inject constructor(
                     is Resource.Success -> {
                         _newIndividualCollectionSheetUiState.value =
                             _newIndividualCollectionSheetUiState.value.copy(
-                                individualCollectionSheet = result.data
+                                individualCollectionSheet = Resource.data
                                     ?: IndividualCollectionSheet(),
                             )
                     }

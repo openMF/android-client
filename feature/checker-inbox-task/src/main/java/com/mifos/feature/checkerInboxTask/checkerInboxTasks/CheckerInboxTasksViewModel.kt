@@ -11,7 +11,7 @@ package com.mifos.feature.checkerInboxTask.checkerInboxTasks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetCheckerInboxBadgesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -48,7 +48,7 @@ class CheckerInboxTasksViewModel @Inject constructor(
             when (result) {
                 is Resource.Error -> {
                     _checkerInboxTasksUiState.value =
-                        CheckerInboxTasksUiState.Error(result.message.toString())
+                        CheckerInboxTasksUiState.Error(Resource.message.toString())
                 }
 
                 is Resource.Loading -> {
@@ -57,8 +57,8 @@ class CheckerInboxTasksViewModel @Inject constructor(
 
                 is Resource.Success -> {
                     _checkerInboxTasksUiState.value = CheckerInboxTasksUiState.Success(
-                        result.data?.first.toString(),
-                        result.data?.second.toString(),
+                        Resource.data?.first.toString(),
+                        Resource.data?.second.toString(),
                     )
                 }
             }

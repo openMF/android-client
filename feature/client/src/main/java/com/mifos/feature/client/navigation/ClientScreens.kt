@@ -9,8 +9,6 @@
  */
 package com.mifos.feature.client.navigation
 
-import com.mifos.core.common.utils.Constants
-
 sealed class ClientScreens(val route: String) {
 
     data object ClientListScreen : ClientScreens("client_list_screen")

@@ -10,7 +10,6 @@
 package com.mifos.feature.savings.navigation
 
 import com.google.gson.Gson
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.entity.accounts.savings.DepositType
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.room.entities.accounts.savings.SavingsSummaryData

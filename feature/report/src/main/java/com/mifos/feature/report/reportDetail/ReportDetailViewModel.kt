@@ -13,8 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetReportFullParameterListUseCase
 import com.mifos.core.domain.useCases.GetReportParameterDetailsUseCase
 import com.mifos.core.domain.useCases.GetRunReportOfficesUseCase
@@ -77,7 +76,7 @@ class ReportDetailViewModel @Inject constructor(
 
                     is Resource.Success ->
                         _reportParameterList.value =
-                            result.data?.data ?: emptyList()
+                            Resource.data?.data ?: emptyList()
                 }
             }
         }
@@ -92,7 +91,7 @@ class ReportDetailViewModel @Inject constructor(
 
                     is Resource.Success -> {
                         _reportDetail.value =
-                            Pair(result.data?.data ?: emptyList(), parameterName)
+                            Pair(Resource.data?.data ?: emptyList(), parameterName)
                     }
                 }
             }
@@ -109,7 +108,7 @@ class ReportDetailViewModel @Inject constructor(
                     is Resource.Loading -> Unit
 
                     is Resource.Success -> {
-                        _reportOffices.value = result.data?.data ?: emptyList()
+                        _reportOffices.value = Resource.data?.data ?: emptyList()
                         _reportDetailUiState.value = ReportDetailUiState.ParameterDetailsSuccess
                     }
                 }
@@ -127,7 +126,7 @@ class ReportDetailViewModel @Inject constructor(
                     is Resource.Loading -> Unit
 
                     is Resource.Success -> {
-                        _reportProducts.value = result.data?.data ?: emptyList()
+                        _reportProducts.value = Resource.data?.data ?: emptyList()
                         _reportDetailUiState.value = ReportDetailUiState.ParameterDetailsSuccess
                     }
                 }
@@ -144,7 +143,7 @@ class ReportDetailViewModel @Inject constructor(
 
                     is Resource.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
 
-                    is Resource.Success -> _runReport.value = result.data
+                    is Resource.Success -> _runReport.value = Resource.data
                 }
             }
         }

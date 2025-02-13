@@ -9,16 +9,16 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ActivateRepository
+import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.clients.ActivatePayload
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import javax.inject.Inject
 
 class ActivateGroupUseCase @Inject constructor(private val activateRepository: ActivateRepository) {

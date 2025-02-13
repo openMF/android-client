@@ -15,7 +15,6 @@ import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
 import androidx.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
-import com.mifos.core.common.utils.LanguageHelper.onAttach
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import dagger.hilt.android.HiltAndroidApp

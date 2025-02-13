@@ -11,7 +11,7 @@ package com.mifos.feature.client.clientChargeDialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.CreateChargesUseCase
 import com.mifos.core.domain.useCases.GetAllChargesV2UseCase
 import com.mifos.core.objects.template.client.ChargeTemplate
@@ -46,7 +46,7 @@ class ChargeDialogViewModel @Inject constructor(
                 is Resource.Success ->
                     _chargeDialogUiState.value =
                         ChargeDialogUiState.AllChargesV2(
-                            result.data ?: ChargeTemplate(
+                            Resource.data ?: ChargeTemplate(
                                 false,
                                 emptyList(),
                             ),

@@ -11,7 +11,9 @@
 
 package com.mifos.core.common.network
 
-@javax.inject.Qualifier
+import org.koin.core.annotation.Qualifier
+
+@Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Dispatcher(val mifosDispatcher: MifosDispatchers)
 
@@ -21,6 +23,6 @@ enum class MifosDispatchers {
     Unconfined,
 }
 
-@javax.inject.Qualifier
+@Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 annotation class ApplicationScope

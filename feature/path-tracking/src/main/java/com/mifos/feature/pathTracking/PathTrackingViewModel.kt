@@ -11,7 +11,7 @@ package com.mifos.feature.pathTracking
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.GetUserPathTrackingUseCase
 import com.mifos.feature.path.tracking.R
@@ -54,7 +54,7 @@ class PathTrackingViewModel @Inject constructor(
                 is Resource.Loading -> _pathTrackingUiState.value = PathTrackingUiState.Loading
 
                 is Resource.Success ->
-                    result.data?.let { pathTracking ->
+                    Resource.data?.let { pathTracking ->
                         _pathTrackingUiState.value =
                             if (pathTracking.isEmpty()) {
                                 PathTrackingUiState.Error(R.string.feature_path_tracking_no_path_tracking_found)

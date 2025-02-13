@@ -10,7 +10,6 @@
 package com.mifos.feature.settings.syncSurvey
 
 import androidx.lifecycle.ViewModel
-import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.entity.survey.QuestionDatas
 import com.mifos.core.entity.survey.ResponseDatas
 import com.mifos.core.entity.survey.Survey

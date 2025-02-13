@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.implementation
+
 /*
  * Copyright 2024 Mifos Initiative
  *
@@ -39,6 +41,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
             api(libs.coil.kt)
             api(libs.coil.core)
             api(libs.coil.svg)

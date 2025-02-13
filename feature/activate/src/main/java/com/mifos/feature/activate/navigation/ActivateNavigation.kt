@@ -14,7 +14,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.mifos.core.common.utils.Constants
 import com.mifos.feature.activate.ActivateScreen
 
 /**

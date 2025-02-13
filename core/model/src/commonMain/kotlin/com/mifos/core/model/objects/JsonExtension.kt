@@ -7,13 +7,14 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.utils
+package com.mifos.core.model.objects
 
-/**
- * Created by ishankhanna on 09/02/14.
- */
-data class Page<T>(
-    var totalFilteredRecords: Int = 0,
+import kotlin.text.replace
 
-    var pageItems: List<T> = ArrayList(),
-)
+
+import kotlinx.serialization.json.Json
+
+fun String.asServerConfig(): ServerConfig {
+    val jsonString = this.replace("'", "\"") // Ensuring valid JSON
+    return Json.decodeFromString(jsonString)
+}

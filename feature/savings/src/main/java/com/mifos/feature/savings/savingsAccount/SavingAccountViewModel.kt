@@ -12,8 +12,7 @@ package com.mifos.feature.savings.savingsAccount
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
 import com.mifos.core.domain.useCases.GetClientSavingsAccountTemplateByProductUseCase
 import com.mifos.core.domain.useCases.GetGroupSavingsAccountTemplateByProductUseCase
@@ -63,9 +62,9 @@ class SavingAccountViewModel @Inject constructor(
                         _savingAccountUiState.value =
                             SavingAccountUiState.ShowProgress
 
-                    is Resource.Success -> if (result.data != null) {
+                    is Resource.Success -> if (Resource.data != null) {
                         _savingAccountUiState.value =
-                            SavingAccountUiState.LoadAllSavings(result.data!!)
+                            SavingAccountUiState.LoadAllSavings(Resource.data!!)
                     }
                 }
             }
@@ -83,7 +82,7 @@ class SavingAccountViewModel @Inject constructor(
 
                     is Resource.Success ->
                         _savingProductsTemplate.value =
-                            result.data ?: SavingProductsTemplate()
+                            Resource.data ?: SavingProductsTemplate()
                 }
             }
         }
@@ -100,7 +99,7 @@ class SavingAccountViewModel @Inject constructor(
 
                     is Resource.Success ->
                         _savingProductsTemplate.value =
-                            result.data ?: SavingProductsTemplate()
+                            Resource.data ?: SavingProductsTemplate()
                 }
             }
         }
@@ -111,7 +110,7 @@ class SavingAccountViewModel @Inject constructor(
                 when (result) {
                     is Resource.Error ->
                         _savingAccountUiState.value =
-                            SavingAccountUiState.ShowFetchingErrorString(result.message.toString())
+                            SavingAccountUiState.ShowFetchingErrorString(Resource.message.toString())
 
                     is Resource.Loading ->
                         _savingAccountUiState.value =
@@ -119,7 +118,7 @@ class SavingAccountViewModel @Inject constructor(
 
                     is Resource.Success ->
                         _savingAccountUiState.value =
-                            SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(result.data)
+                            SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(Resource.data)
                 }
             }
         }

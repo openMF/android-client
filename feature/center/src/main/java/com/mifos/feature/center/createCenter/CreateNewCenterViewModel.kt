@@ -11,7 +11,7 @@ package com.mifos.feature.center.createCenter
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.CreateNewCenterUseCase
 import com.mifos.core.domain.useCases.GetOfficeListUseCase
 import com.mifos.core.entity.center.CenterPayload
@@ -46,7 +46,7 @@ class CreateNewCenterViewModel @Inject constructor(
 
                 is Resource.Success ->
                     _createNewCenterUiState.value =
-                        CreateNewCenterUiState.Offices(result.data ?: emptyList())
+                        CreateNewCenterUiState.Offices(Resource.data ?: emptyList())
             }
         }
     }

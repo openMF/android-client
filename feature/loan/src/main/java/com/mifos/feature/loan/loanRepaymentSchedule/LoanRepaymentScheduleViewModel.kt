@@ -11,7 +11,6 @@ package com.mifos.feature.loan.loanRepaymentSchedule
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import dagger.hilt.android.lifecycle.HiltViewModel

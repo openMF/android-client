@@ -9,11 +9,11 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientIdentifiersRepository
-import com.mifos.core.objects.noncoreobjects.Identifier
+import com.mifos.core.model.objects.noncoreobjects.Identifier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import javax.inject.Inject
 
 class GetClientIdentifiersUseCase @Inject constructor(private val clientIdentifiersRepository: ClientIdentifiersRepository) {

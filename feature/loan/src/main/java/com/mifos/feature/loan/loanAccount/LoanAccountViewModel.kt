@@ -12,8 +12,7 @@ package com.mifos.feature.loan.loanAccount
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.CreateLoanAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase
@@ -55,7 +54,7 @@ class LoanAccountViewModel @Inject constructor(
 
                 is Resource.Success ->
                     _loanAccountUiState.value =
-                        LoanAccountUiState.AllLoan(result.data ?: emptyList())
+                        LoanAccountUiState.AllLoan(Resource.data ?: emptyList())
             }
         }
     }
@@ -72,7 +71,7 @@ class LoanAccountViewModel @Inject constructor(
 
                     is Resource.Success ->
                         _loanAccountTemplateUiState.value =
-                            result.data ?: LoanTemplate()
+                            Resource.data ?: LoanTemplate()
                 }
             }
         }

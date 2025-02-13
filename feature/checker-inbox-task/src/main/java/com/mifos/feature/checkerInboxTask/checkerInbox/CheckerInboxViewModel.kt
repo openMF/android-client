@@ -11,7 +11,7 @@ package com.mifos.feature.checkerInboxTask.checkerInbox
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.ApproveCheckerUseCase
 import com.mifos.core.domain.useCases.DeleteCheckerUseCase
 import com.mifos.core.domain.useCases.GetCheckerTasksUseCase
@@ -51,7 +51,7 @@ class CheckerInboxViewModel @Inject constructor(
 
                 is Resource.Success ->
                     _checkerInboxUiState.value =
-                        CheckerInboxUiState.CheckerTasksList(result.data ?: emptyList())
+                        CheckerInboxUiState.CheckerTasksList(Resource.data ?: emptyList())
             }
         }
     }

@@ -15,7 +15,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.entity.accounts.savings.DepositType
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.feature.savings.savingsAccount.SavingsAccountScreen

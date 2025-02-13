@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
 import kotlinx.coroutines.channels.awaitClose
@@ -19,6 +18,7 @@ import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import javax.inject.Inject
 
 /**

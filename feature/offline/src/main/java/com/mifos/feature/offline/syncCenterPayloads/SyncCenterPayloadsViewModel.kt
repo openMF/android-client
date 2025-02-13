@@ -12,8 +12,7 @@ package com.mifos.feature.offline.syncCenterPayloads
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.FileUtils.LOG_TAG
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.AllDatabaseCenterPayloadUseCase
 import com.mifos.core.domain.useCases.CreateCenterUseCase
@@ -86,7 +85,7 @@ class SyncCenterPayloadsViewModel @Inject constructor(
                     when (result) {
                         is Resource.Error -> {
                             _syncCenterPayloadsUiState.value =
-                                SyncCenterPayloadsUiState.ShowError(result.message.toString())
+                                SyncCenterPayloadsUiState.ShowError(Resource.message.toString())
                             updateCenterPayload(centerPayload)
                         }
 
@@ -111,7 +110,7 @@ class SyncCenterPayloadsViewModel @Inject constructor(
                 when (result) {
                     is Resource.Error ->
                         _syncCenterPayloadsUiState.value =
-                            SyncCenterPayloadsUiState.ShowError(result.message.toString())
+                            SyncCenterPayloadsUiState.ShowError(Resource.message.toString())
 
                     is Resource.Loading ->
                         _syncCenterPayloadsUiState.value =
@@ -119,7 +118,7 @@ class SyncCenterPayloadsViewModel @Inject constructor(
 
                     is Resource.Success -> {
                         centerSyncIndex = 0
-                        mCenterPayloads = result.data?.toMutableList() ?: mutableListOf()
+                        mCenterPayloads = Resource.data?.toMutableList() ?: mutableListOf()
                         _syncCenterPayloadsUiState.value =
                             SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
                         if (mCenterPayloads.isNotEmpty()) {

@@ -9,11 +9,11 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.PathTrackingRepository
-import com.mifos.core.objects.users.UserLocation
+import com.mifos.core.model.objects.users.UserLocation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import javax.inject.Inject
 
 class GetUserPathTrackingUseCase @Inject constructor(private val repository: PathTrackingRepository) {

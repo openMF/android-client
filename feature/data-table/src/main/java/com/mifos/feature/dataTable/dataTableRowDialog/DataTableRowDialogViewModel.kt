@@ -11,7 +11,6 @@ package com.mifos.feature.dataTable.dataTableRowDialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.AddDataTableEntryUseCase
 import com.mifos.feature.data_table.R
 import dagger.hilt.android.lifecycle.HiltViewModel

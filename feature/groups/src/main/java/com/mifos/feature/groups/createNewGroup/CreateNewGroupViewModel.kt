@@ -11,7 +11,7 @@ package com.mifos.feature.groups.createNewGroup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.CreateNewGroupUseCase
 import com.mifos.core.domain.useCases.GetGroupOfficesUseCase
@@ -56,11 +56,11 @@ class CreateNewGroupViewModel @Inject constructor(
 
                 is Resource.Error ->
                     _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowFetchingError(result.message.toString())
+                        CreateNewGroupUiState.ShowFetchingError(Resource.message.toString())
 
                 is Resource.Success ->
                     _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowOffices(result.data ?: emptyList())
+                        CreateNewGroupUiState.ShowOffices(Resource.data ?: emptyList())
             }
         }
     }
@@ -70,7 +70,7 @@ class CreateNewGroupViewModel @Inject constructor(
             when (result) {
                 is Resource.Error ->
                     _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowFetchingError(result.message.toString())
+                        CreateNewGroupUiState.ShowFetchingError(Resource.message.toString())
 
                 is Resource.Loading ->
                     _createNewGroupUiState.value =
@@ -78,7 +78,7 @@ class CreateNewGroupViewModel @Inject constructor(
 
                 is Resource.Success ->
                     _createNewGroupUiState.value =
-                        result.data?.let { CreateNewGroupUiState.ShowGroupCreatedSuccessfully(it) }!!
+                        Resource.data?.let { CreateNewGroupUiState.ShowGroupCreatedSuccessfully(it) }!!
             }
         }
     }

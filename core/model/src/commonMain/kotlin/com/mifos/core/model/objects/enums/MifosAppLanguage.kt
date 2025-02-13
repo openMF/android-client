@@ -7,7 +7,10 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.enums
+package com.mifos.core.model.objects.enums
+
+import kotlin.collections.find
+import kotlin.text.equals
 
 enum class MifosAppLanguage(val code: String, val displayName: String) {
 

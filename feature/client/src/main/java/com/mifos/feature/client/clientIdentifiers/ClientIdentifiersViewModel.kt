@@ -12,8 +12,7 @@ package com.mifos.feature.client.clientIdentifiers
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.DeleteIdentifierUseCase
 import com.mifos.core.domain.useCases.GetClientIdentifiersUseCase
 import com.mifos.feature.client.R
@@ -61,7 +60,7 @@ class ClientIdentifiersViewModel @Inject constructor(
 
                 is Resource.Success ->
                     _clientIdentifiersUiState.value =
-                        ClientIdentifiersUiState.ClientIdentifiers(result.data ?: emptyList())
+                        ClientIdentifiersUiState.ClientIdentifiers(Resource.data ?: emptyList())
             }
         }
     }

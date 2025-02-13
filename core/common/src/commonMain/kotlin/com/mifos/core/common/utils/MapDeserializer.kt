@@ -9,42 +9,50 @@
  */
 package utils
 
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import com.google.gson.JsonParseException
-import java.lang.reflect.Type
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.long
+import kotlinx.serialization.json.longOrNull
 
-class MapDeserializer : JsonDeserializer<Map<String, Any>?> {
-    @Throws(JsonParseException::class)
-    override fun deserialize(
-        json: JsonElement,
-        typeOfT: Type,
-        context: JsonDeserializationContext,
-    ): Map<String, Any>? {
-        return read(json) as Map<String, Any>?
+/**
+ * A custom deserializer for converting JSON into a `Map<String, Any?>`.
+ * This replaces the Gson-based deserializer with Kotlinx Serialization.
+ */
+object MapDeserializer {
+
+    /**
+     * Deserializes a JSON string into a `Map<String, Any?>`.
+     *
+     * @param jsonString The JSON string to deserialize.
+     * @return A `Map<String, Any?>` representing the deserialized JSON.
+     */
+    fun deserialize(jsonString: String): Map<String, Any?> {
+        val jsonElement = Json.parseToJsonElement(jsonString)
+        return read(jsonElement) as? Map<String, Any?> ?: emptyMap()
     }
 
-    fun read(jsonElement: JsonElement): Any? {
-        return when {
-            jsonElement.isJsonArray -> {
-                val list = jsonElement.asJsonArray.map { read(it) }
-                list
-            }
-            jsonElement.isJsonObject -> {
-                jsonElement.asJsonObject.entrySet().associate { (key, value) -> key to read(value) }
-            }
-            jsonElement.isJsonPrimitive -> {
-                val prim = jsonElement.asJsonPrimitive
-                when {
-                    prim.isBoolean -> prim.asBoolean
-                    prim.isString -> prim.asString
-                    prim.isNumber -> {
-                        val num = prim.asNumber
-                        if (Math.ceil(num.toDouble()) == num.toLong().toDouble()) num.toLong() else num.toDouble()
-                    }
-                    else -> null
-                }
+    /**
+     * Recursively reads a [JsonElement] and converts it into a Kotlin object.
+     *
+     * @param jsonElement The JSON element to read.
+     * @return A Kotlin object representing the JSON element.
+     */
+    private fun read(jsonElement: JsonElement): Any? {
+        return when (jsonElement) {
+            is JsonArray -> jsonElement.map { read(it) }
+            is JsonObject -> jsonElement.entries.associate { (key, value) -> key to read(value) }
+            is JsonPrimitive -> when {
+                jsonElement.booleanOrNull != null -> jsonElement.boolean
+                jsonElement.longOrNull != null -> jsonElement.long
+                jsonElement.doubleOrNull != null -> jsonElement.double
+                else -> jsonElement.content
             }
             else -> null
         }

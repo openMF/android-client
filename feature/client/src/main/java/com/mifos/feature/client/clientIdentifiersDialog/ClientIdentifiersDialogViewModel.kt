@@ -11,7 +11,7 @@ package com.mifos.feature.client.clientIdentifiersDialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
 import com.mifos.core.domain.useCases.GetClientIdentifierTemplateUseCase
 import com.mifos.core.objects.noncoreobjects.IdentifierPayload
@@ -48,7 +48,7 @@ class ClientIdentifiersDialogViewModel @Inject constructor(
                 is Resource.Success ->
                     _clientIdentifierDialogUiState.value =
                         ClientIdentifierDialogUiState.ClientIdentifierTemplate(
-                            result.data ?: IdentifierTemplate(),
+                            Resource.data ?: IdentifierTemplate(),
                         )
             }
         }

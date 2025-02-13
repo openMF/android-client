@@ -12,8 +12,7 @@ package com.mifos.feature.savings.savingsAccountApproval
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.account.loan.SavingsApproval
@@ -47,7 +46,7 @@ class SavingsAccountApprovalViewModel @Inject constructor(
                     is Resource.Error ->
                         _savingsAccountApprovalUiState.value =
                             SavingsAccountApprovalUiState.ShowError(
-                                result.message ?: "Something went wrong",
+                                Resource.message ?: "Something went wrong",
                             )
 
                     is Resource.Loading ->
@@ -57,7 +56,7 @@ class SavingsAccountApprovalViewModel @Inject constructor(
                     is Resource.Success ->
                         _savingsAccountApprovalUiState.value =
                             SavingsAccountApprovalUiState.ShowSavingAccountApprovedSuccessfully(
-                                result.data ?: GenericResponse(),
+                                Resource.data ?: GenericResponse(),
                             )
                 }
             }

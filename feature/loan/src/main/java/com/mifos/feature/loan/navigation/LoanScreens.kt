@@ -10,7 +10,6 @@
 package com.mifos.feature.loan.navigation
 
 import com.google.gson.Gson
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.entity.accounts.loan.LoanApprovalData
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 

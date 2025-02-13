@@ -10,10 +10,10 @@
 package com.mifos.core.domain.useCases
 
 import com.google.gson.JsonArray
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.DataTableDataRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import javax.inject.Inject
 
 class GetDataTableInfoUseCase @Inject constructor(private val repository: DataTableDataRepository) {

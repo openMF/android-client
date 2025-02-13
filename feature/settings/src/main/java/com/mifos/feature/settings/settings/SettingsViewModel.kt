@@ -13,8 +13,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.enums.MifosAppLanguage
-import com.mifos.core.common.utils.Constants
+import com.mifos.core.model.objects.enums.MifosAppLanguage
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.settings.R

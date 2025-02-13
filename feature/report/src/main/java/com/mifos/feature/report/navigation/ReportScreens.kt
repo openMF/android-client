@@ -9,8 +9,6 @@
  */
 package com.mifos.feature.report.navigation
 
-import com.mifos.core.common.utils.Constants
-
 sealed class ReportScreens(val route: String) {
 
     data object RunReportScreen : ReportScreens(route = "run_report_screen")

@@ -12,8 +12,6 @@ package com.mifos.core.databasehelper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.MapDeserializer
 import com.mifos.core.entity.accounts.loan.LoanAccount
 import com.mifos.core.entity.accounts.loan.LoanAccount_Table
 import com.mifos.core.entity.accounts.savings.SavingsAccount
@@ -45,6 +43,7 @@ import com.raizlabs.android.dbflow.sql.language.Delete
 import com.raizlabs.android.dbflow.sql.language.SQLite
 import rx.Observable
 import rx.functions.Func0
+import utils.MapDeserializer
 import java.lang.reflect.Type
 import javax.inject.Inject
 import javax.inject.Singleton

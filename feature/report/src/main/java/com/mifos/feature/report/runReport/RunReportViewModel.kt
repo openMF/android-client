@@ -11,7 +11,7 @@ package com.mifos.feature.report.runReport
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetReportCategoryUseCase
 import com.mifos.feature.report.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,7 +47,7 @@ class RunReportViewModel @Inject constructor(
                 is Resource.Loading -> _runReportUiState.value = RunReportUiState.Loading
 
                 is Resource.Success -> {
-                    result.data?.let { reports ->
+                    Resource.data?.let { reports ->
                         if (reports.isNotEmpty()) {
                             _runReportUiState.value = RunReportUiState.RunReports(reports)
                         } else {

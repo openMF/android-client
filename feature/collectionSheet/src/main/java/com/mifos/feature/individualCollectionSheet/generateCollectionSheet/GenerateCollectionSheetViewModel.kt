@@ -11,8 +11,7 @@ package com.mifos.feature.individualCollectionSheet.generateCollectionSheet
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.FetchCenterDetailsUseCase
 import com.mifos.core.domain.useCases.FetchCollectionSheetUseCase
 import com.mifos.core.domain.useCases.FetchProductiveCollectionSheetUseCase
@@ -88,10 +87,10 @@ class GenerateCollectionSheetViewModel @Inject constructor(
                         GenerateCollectionSheetUiState.Loading
 
                 is Resource.Success -> {
-                    _officeListState.value = result.data ?: emptyList()
-                    if (result.data?.isNotEmpty() == true) {
+                    _officeListState.value = Resource.data ?: emptyList()
+                    if (Resource.data?.isNotEmpty() == true) {
                         loadStaffInOffice(
-                            result.data?.get(0)?.id ?: -1,
+                            Resource.data?.get(0)?.id ?: -1,
                         )
                     }
                 }
@@ -111,15 +110,15 @@ class GenerateCollectionSheetViewModel @Inject constructor(
                 is Resource.Loading -> Unit
 
                 is Resource.Success -> {
-                    _staffListState.value = result.data ?: emptyList()
-                    if (result.data?.isNotEmpty() == true) {
+                    _staffListState.value = Resource.data ?: emptyList()
+                    if (Resource.data?.isNotEmpty() == true) {
                         loadCentersInOffice(
                             officeId,
-                            result.data?.get(0)?.id ?: -1,
+                            Resource.data?.get(0)?.id ?: -1,
                         )
                         loadGroupsInOffice(
                             officeId,
-                            result.data?.get(0)?.id ?: -1,
+                            Resource.data?.get(0)?.id ?: -1,
                         )
                     }
                 }
@@ -147,7 +146,7 @@ class GenerateCollectionSheetViewModel @Inject constructor(
                     is Resource.Loading -> Unit
 
                     is Resource.Success -> {
-                        _centerListState.value = result.data ?: emptyList()
+                        _centerListState.value = Resource.data ?: emptyList()
                     }
                 }
             }
@@ -172,7 +171,7 @@ class GenerateCollectionSheetViewModel @Inject constructor(
                     is Resource.Loading -> Unit
 
                     is Resource.Success -> {
-                        _groupListState.value = result.data ?: emptyList()
+                        _groupListState.value = Resource.data ?: emptyList()
                         _generateCollectionSheetUiState.value =
                             GenerateCollectionSheetUiState.Success
                     }
@@ -201,7 +200,7 @@ class GenerateCollectionSheetViewModel @Inject constructor(
 
                 is Resource.Loading -> Unit
 
-                is Resource.Success -> _centerDetailsState.value = result.data
+                is Resource.Success -> _centerDetailsState.value = Resource.data
             }
         }
     }
@@ -220,7 +219,7 @@ class GenerateCollectionSheetViewModel @Inject constructor(
 
                 is Resource.Loading -> Unit
 
-                is Resource.Success -> _collectionSheetState.value = it.data
+                is Resource.Success -> _collectionSheetState.value = Resource.data
             }
         }
     }
@@ -239,7 +238,7 @@ class GenerateCollectionSheetViewModel @Inject constructor(
 
                 is Resource.Loading -> Unit
 
-                is Resource.Success -> _collectionSheetState.value = it.data
+                is Resource.Success -> _collectionSheetState.value = Resource.data
             }
         }
     }

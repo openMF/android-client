@@ -13,8 +13,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Network
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
@@ -91,7 +90,7 @@ class LoginViewModel @Inject constructor(
                     is Resource.Error -> {
                         _loginUiState.value =
                             LoginUiState.ShowError(R.string.feature_auth_error_login_failed)
-                        Log.e("@@@", "login: ${result.message}")
+                        Log.e("@@@", "login: ${Resource.message}")
                     }
 
                     is Resource.Loading -> {
@@ -99,7 +98,7 @@ class LoginViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        result.data?.let { onLoginSuccessful(it, username, password) }
+                        Resource.data?.let { onLoginSuccessful(it, username, password) }
                     }
                 }
             }

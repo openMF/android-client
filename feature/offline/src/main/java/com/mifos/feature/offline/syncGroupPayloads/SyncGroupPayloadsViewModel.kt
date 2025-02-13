@@ -11,7 +11,7 @@ package com.mifos.feature.offline.syncGroupPayloads
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.AllDatabaseGroupPayloadUseCase
 import com.mifos.core.domain.useCases.CreateGroupUseCase
@@ -137,9 +137,9 @@ class SyncGroupPayloadsViewModel @Inject constructor(
 
                 is Resource.Success -> {
                     groupPayloadSyncIndex = 0
-                    _groupPayloadsList.value = result.data ?: emptyList()
+                    _groupPayloadsList.value = Resource.data ?: emptyList()
                     _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
-                        if ((result.data ?: emptyList()).isEmpty()
+                        if ((Resource.data ?: emptyList()).isEmpty()
                         ) {
                             GroupPayloadEmptyState.ALL_SYNCED
                         } else {

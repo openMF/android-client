@@ -12,8 +12,7 @@ package com.mifos.feature.document.documentList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.DownloadDocumentUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.RemoveDocumentUseCase
@@ -66,7 +65,7 @@ class DocumentListViewModel @Inject constructor(
 
                     is Resource.Success ->
                         _documentListUiState.value =
-                            DocumentListUiState.DocumentList(result.data ?: emptyList())
+                            DocumentListUiState.DocumentList(Resource.data ?: emptyList())
                 }
             }
         }

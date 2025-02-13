@@ -15,18 +15,11 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.format.DateTimeFormat
+import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.toLocalDateTime
-import kotlin.text.split
 
-/**
- * Created by ishankhanna on 30/05/14.
- *
- * This is a helper class that will be used to convert List<Interger> Type Dates
- * from MifosX into Simple Strings or Date Formats</Interger>
- */
 @OptIn(FormatStringsInDatetimeFormats::class)
 object DateHelper {
     /*
@@ -238,21 +231,21 @@ object DateHelper {
                         when {
                             // Tomorrow
                             dateTime.dayOfMonth - nowDateTime.dayOfMonth == 1 -> {
-                                "Tomorrow at ${dateTime.format(finalFormat)}"
+                                "Tomorrow at ${dateTime.format()}"
                             }
                             // Today
                             dateTime.dayOfMonth == nowDateTime.dayOfMonth -> {
-                                "Today at ${dateTime.format(finalFormat)}"
+                                "Today at ${dateTime.format()}"
                             }
                             // Yesterday
                             nowDateTime.dayOfMonth - dateTime.dayOfMonth == 1 -> {
-                                "Yesterday at ${dateTime.format(finalFormat)}"
+                                "Yesterday at ${dateTime.format()}"
                             }
                             // Same month but different day
                             else -> {
                                 "${
                                     dateTime.month.name.lowercase().capitalize()
-                                } ${dateTime.dayOfMonth}, ${dateTime.format(finalFormat)}"
+                                } ${dateTime.dayOfMonth}, ${dateTime.format()}"
                             }
                         }
                     }
@@ -260,7 +253,7 @@ object DateHelper {
                     else -> {
                         "${
                             dateTime.month.name.lowercase().capitalize()
-                        } ${dateTime.dayOfMonth}, ${dateTime.format(finalFormat)}"
+                        } ${dateTime.dayOfMonth}, ${dateTime.format()}"
                     }
                 }
             }
@@ -268,7 +261,7 @@ object DateHelper {
             else -> {
                 "${
                     dateTime.month.name.lowercase().capitalize()
-                } ${dateTime.dayOfMonth} ${dateTime.year}, ${dateTime.format(finalFormat)}"
+                } ${dateTime.dayOfMonth} ${dateTime.year}, ${dateTime.format()}"
             }
         }
     }
@@ -296,24 +289,24 @@ object DateHelper {
                         when {
                             // Tomorrow
                             neededDateTime.dayOfMonth - nowDateTime.dayOfMonth == 1 -> {
-                                val time = neededDateTime.format(finalFormat)
+                                val time = neededDateTime.format()
                                 "Tomorrow at $time"
                             }
                             // Today
                             neededDateTime.dayOfMonth == nowDateTime.dayOfMonth -> {
-                                val time = neededDateTime.format(finalFormat)
+                                val time = neededDateTime.format()
                                 "Today at $time"
                             }
                             // Yesterday
                             nowDateTime.dayOfMonth - neededDateTime.dayOfMonth == 1 -> {
-                                val time = neededDateTime.format(finalFormat)
+                                val time = neededDateTime.format()
                                 "Yesterday at $time"
                             }
                             // Same month but different day
                             else -> {
                                 "${
                                     neededDateTime.month.name.lowercase().capitalize()
-                                } ${neededDateTime.dayOfMonth}, ${neededDateTime.format(finalFormat)}"
+                                } ${neededDateTime.dayOfMonth}, ${neededDateTime.format()}"
                             }
                         }
                     }
@@ -321,7 +314,7 @@ object DateHelper {
                     else -> {
                         "${
                             neededDateTime.month.name.lowercase().capitalize()
-                        } ${neededDateTime.dayOfMonth}, ${neededDateTime.format(finalFormat)}"
+                        } ${neededDateTime.dayOfMonth}, ${neededDateTime.format()}"
                     }
                 }
             }
@@ -329,16 +322,13 @@ object DateHelper {
             else -> {
                 "${
                     neededDateTime.month.name.lowercase().capitalize()
-                } ${neededDateTime.dayOfMonth} ${neededDateTime.year}, ${neededDateTime.format(
-                    finalFormat
-                )
-                }"
+                } ${neededDateTime.dayOfMonth} ${neededDateTime.year}, ${neededDateTime.format()}"
             }
         }
     }
 
     // Helper function to format time
-    private fun LocalDateTime.format(finalFormat: DateTimeFormat<LocalDateTime>): String {
+    private fun LocalDateTime.format(): String {
         return "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"
     }
 

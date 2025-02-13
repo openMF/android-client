@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.LoanAccountRepository
 import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.network.model.LoansPayload
@@ -19,6 +18,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import javax.inject.Inject
 
 class CreateLoanAccountUseCase @Inject constructor(private val loanAccountRepository: LoanAccountRepository) {

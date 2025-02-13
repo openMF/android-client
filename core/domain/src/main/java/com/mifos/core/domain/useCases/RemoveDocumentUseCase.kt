@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow

@@ -12,8 +12,6 @@ package com.mifos.feature.activate
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.ActivateCenterUseCase
 import com.mifos.core.domain.useCases.ActivateClientUseCase
 import com.mifos.core.domain.useCases.ActivateGroupUseCase

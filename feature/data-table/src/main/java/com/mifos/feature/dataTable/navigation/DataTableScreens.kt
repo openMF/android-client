@@ -9,8 +9,6 @@
  */
 package com.mifos.feature.dataTable.navigation
 
-import com.mifos.core.common.utils.Constants
-
 sealed class DataTableScreens(val route: String) {
 
     data object DataTableScreenRoute : DataTableScreens("data_table_screen_route")

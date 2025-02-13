@@ -14,8 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.JsonArray
-import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.network.com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.DeleteDataTableEntryUseCase
 import com.mifos.core.domain.useCases.GetDataTableInfoUseCase
 import com.mifos.feature.data_table.R
@@ -66,7 +65,7 @@ class DataTableDataViewModel @Inject constructor(
 
                     is Resource.Success ->
                         _dataTableDataUiState.value =
-                            DataTableDataUiState.DataTableInfo(result.data ?: JsonArray())
+                            DataTableDataUiState.DataTableInfo(Resource.data ?: JsonArray())
                 }
             }
         }
