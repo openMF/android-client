@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.center.syncCentersDialog
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
@@ -35,7 +36,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import rx.Observable
 import rx.Subscriber
@@ -335,15 +335,16 @@ class SyncCentersDialogViewModel @Inject constructor(
             id = mCenterList[mCenterSyncIndex].id,
             sync = true,
         )
+        viewModelScope.launch {
+            try {
+                repository.syncCenterInDatabase(updatedCenter)
 
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.syncCenterInDatabase(updatedCenter)
-
-            withContext(Dispatchers.Main) {
                 val singleSyncCenterMax = maxSingleSyncCenterProgressBar
                 _syncCenterData.update { it.copy(singleSyncCount = singleSyncCenterMax) }
                 mCenterSyncIndex += 1
                 syncCenter()
+            } catch (e: Exception) {
+                Log.d("TAG", "syncCenter: ${e.message}")
             }
         }
     }
