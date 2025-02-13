@@ -9,21 +9,21 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.survey.QuestionDatas
-import com.mifos.core.entity.survey.ResponseDatas
-import com.mifos.core.entity.survey.Survey
-import rx.Observable
+import com.mifos.room.entities.survey.QuestionDatas
+import com.mifos.room.entities.survey.ResponseDatas
+import com.mifos.room.entities.survey.Survey
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
 interface SurveyListRepository {
 
-    fun allSurvey(): Observable<List<Survey>>
+    fun allSurvey(): Flow<List<Survey>>
 
-    fun databaseSurveys(): Observable<List<Survey>>
+    fun databaseSurveys(): Flow<List<Survey>>
 
-    fun getDatabaseQuestionData(surveyId: Int): Observable<List<QuestionDatas>>
+    fun getDatabaseQuestionData(surveyId: Int): Flow<List<QuestionDatas>>
 
-    fun getDatabaseResponseDatas(questionId: Int): Observable<List<ResponseDatas>>
+    fun getDatabaseResponseDatas(questionId: Int): Flow<List<ResponseDatas>>
 }

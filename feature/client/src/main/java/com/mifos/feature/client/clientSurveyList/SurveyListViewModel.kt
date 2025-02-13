@@ -10,18 +10,17 @@
 package com.mifos.feature.client.clientSurveyList
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.entity.survey.QuestionDatas
-import com.mifos.core.entity.survey.ResponseDatas
-import com.mifos.core.entity.survey.Survey
 import com.mifos.feature.client.R
+import com.mifos.room.entities.survey.QuestionDatas
+import com.mifos.room.entities.survey.Survey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -41,101 +40,105 @@ class SurveyListViewModel @Inject constructor(
     private lateinit var mSyncSurveyList: List<Survey>
 
     fun loadSurveyList() {
-        _surveyListUiState.value = SurveyListUiState.ShowProgressbar
+        viewModelScope.launch {
+            _surveyListUiState.value = SurveyListUiState.ShowProgressbar
 
-        repository.allSurvey()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<Survey>>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
+            repository.allSurvey()
+                .catch {
                     _surveyListUiState.value =
                         SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_fetch_surveys_list)
                 }
-
-                override fun onNext(surveys: List<Survey>) {
+                .collect { surveys ->
                     mSyncSurveyList = surveys
                     loadDatabaseSurveys()
                 }
-            })
+        }
     }
 
-    fun loadDatabaseSurveys() {
-        _surveyListUiState.value = SurveyListUiState.ShowProgressbar
-        repository.databaseSurveys()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<Survey>>() {
-                override fun onCompleted() {
-                    setAlreadySurveySyncStatus(mSyncSurveyList)
-                    _surveyListUiState.value = SurveyListUiState.ShowAllSurvey(mSyncSurveyList)
-                }
+    private fun loadDatabaseSurveys() {
+        viewModelScope.launch {
+            _surveyListUiState.value = SurveyListUiState.ShowProgressbar
 
-                override fun onError(e: Throwable) {
+            repository.databaseSurveys()
+                .catch {
                     _surveyListUiState.value =
                         SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_fetch_datatable)
                 }
-
-                override fun onNext(surveyList: List<Survey>) {
+                .collect { surveyList ->
                     mDbSurveyList = surveyList
                     if (prefManager.userStatus) {
                         for (survey in mSyncSurveyList) {
                             loadDatabaseQuestionData(survey.id, survey)
                         }
                     }
+                    // OnCompleted
+                    setAlreadySurveySyncStatus(mSyncSurveyList)
+                    _surveyListUiState.value = SurveyListUiState.ShowAllSurvey(mSyncSurveyList)
                 }
-            })
+        }
     }
 
-    fun loadDatabaseQuestionData(surveyId: Int, survey: Survey?) {
-        _surveyListUiState.value = SurveyListUiState.ShowProgressbar
-        repository.getDatabaseQuestionData(surveyId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<QuestionDatas>>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
+    private fun loadDatabaseQuestionData(surveyId: Int, survey: Survey?) {
+        viewModelScope.launch {
+            _surveyListUiState.value = SurveyListUiState.ShowProgressbar
+
+            repository.getDatabaseQuestionData(surveyId)
+                .catch {
                     _surveyListUiState.value =
                         SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_load_db_question_data)
-                }
-
-                override fun onNext(questionDatasList: List<QuestionDatas>) {
+                }.collect { questionDatasList ->
                     for (questionDatas in questionDatasList) {
-                        questionDatas.id.let { loadDatabaseResponseDatas(it, questionDatas) }
+                        loadDatabaseResponseDatas(questionDatas.id, questionDatas)
                     }
-                    survey!!.questionDatas = questionDatasList
+                    val updatedSurvey = survey!!.copy(questionDatas = questionDatasList)
+                    mSyncSurveyList = mSyncSurveyList.map {
+                        if (it.id == survey.id) updatedSurvey else it
+                    }
+                    _surveyListUiState.value = SurveyListUiState.ShowAllSurvey(mSyncSurveyList)
                 }
-            })
+        }
     }
 
-    fun loadDatabaseResponseDatas(questionId: Int, questionDatas: QuestionDatas) {
-        _surveyListUiState.value = SurveyListUiState.ShowProgressbar
-        repository.getDatabaseResponseDatas(questionId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<ResponseDatas>>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
+    private fun loadDatabaseResponseDatas(questionId: Int, questionDatas: QuestionDatas) {
+        viewModelScope.launch {
+            _surveyListUiState.value = SurveyListUiState.ShowProgressbar
+
+            repository.getDatabaseResponseDatas(questionId)
+                .catch {
                     _surveyListUiState.value =
                         SurveyListUiState.ShowFetchingError(R.string.feature_client_failed_to_load_db_question_data)
                 }
+                .collect { responseDatas ->
+                    val updatedQuestionDatas = questionDatas.copy(responseDatas = responseDatas)
 
-                override fun onNext(responseDatas: List<ResponseDatas>) {
-                    questionDatas.responseDatas = responseDatas
+                    mSyncSurveyList = mSyncSurveyList.map { survey ->
+                        if (survey.id == questionDatas.surveyId) {
+                            survey.copy(
+                                questionDatas = survey.questionDatas.map {
+                                    if (it.id == questionDatas.id) updatedQuestionDatas else it
+                                },
+                            )
+                        } else {
+                            survey
+                        }
+                    }
+                    _surveyListUiState.value = SurveyListUiState.ShowAllSurvey(mSyncSurveyList)
                 }
-            })
+        }
     }
 
-    fun setAlreadySurveySyncStatus(surveys: List<Survey>) {
+    private fun setAlreadySurveySyncStatus(surveys: List<Survey>) {
         checkSurveyAlreadySyncedOrNot(surveys)
     }
 
     private fun checkSurveyAlreadySyncedOrNot(surveys: List<Survey>) {
-        if (mDbSurveyList.isNullOrEmpty()) return // Early return if mDbSurveyList is empty
+        if (mDbSurveyList.isNullOrEmpty()) return
 
-        surveys.forEach { syncSurvey ->
+        mSyncSurveyList = surveys.map { syncSurvey ->
             if (mDbSurveyList!!.any { it.id == syncSurvey.id }) {
-                syncSurvey.isSync = true
+                syncSurvey.copy(isSync = true)
+            } else {
+                syncSurvey
             }
         }
     }

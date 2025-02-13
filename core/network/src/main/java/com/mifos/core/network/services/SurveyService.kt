@@ -9,9 +9,9 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.survey.Survey
-import com.mifos.core.objects.surveys.Scorecard
+import com.mifos.core.model.objects.surveys.Scorecard
 import com.mifos.room.basemodel.APIEndPoint
+import com.mifos.room.entities.survey.Survey
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -22,8 +22,8 @@ import rx.Observable
  * @author
  */
 interface SurveyService {
-    @get:GET(APIEndPoint.SURVEYS)
-    val allSurveys: Observable<List<Survey>>
+    @GET(APIEndPoint.SURVEYS)
+    suspend fun allSurveys(): List<Survey>
 
     @GET(APIEndPoint.SURVEYS + "/{surveyId}")
     fun getSurvey(@Path("surveyId") surveyId: Int): Observable<Survey>
