@@ -10,18 +10,19 @@
 package com.mifos.feature.settings.syncSurvey
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.NetworkUtilsWrapper
-import com.mifos.core.entity.survey.QuestionDatas
-import com.mifos.core.entity.survey.ResponseDatas
-import com.mifos.core.entity.survey.Survey
+import com.mifos.room.entities.survey.QuestionDatas
+import com.mifos.room.entities.survey.ResponseDatas
+import com.mifos.room.entities.survey.Survey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.subscribe
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -188,38 +189,31 @@ class SyncSurveysDialogViewModel @Inject constructor(
      * @param survey
      */
     private fun syncSurvey(survey: Survey) {
-        survey.isSync = true
-        repository.syncSurveyInDatabase(survey)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<Survey>() {
-                    override fun onStart() {
-                        _syncSurveysDialogUiState.value =
-                            SyncSurveysDialogUiState.ShowUI(mSurveyList.size)
-                    }
+        val updatedSurvey = survey.copy(isSync = true)
+        viewModelScope.launch {
+            try {
+                _syncSurveysDialogUiState.value =
+                    SyncSurveysDialogUiState.ShowUI(mSurveyList.size)
 
-                    override fun onCompleted() {
-                        _syncSurveysDialogUiState.value =
-                            mSurveyList[mSurveySyncIndex].name?.let {
-                                SyncSurveysDialogUiState.UpdateSingleSyncSurvey(
-                                    mSurveySyncIndex + 1, it, mQuestionDatasList.size,
-                                )
-                            }!!
-                    }
+                repository.syncSurveyInDatabase(updatedSurvey)
 
-                    override fun onError(e: Throwable) {
-                        _syncSurveysDialogUiState.value =
-                            SyncSurveysDialogUiState.ShowError(e.message.toString())
-                        onAccountSyncFailed(e)
-                    }
+                // onnext
+                mQuestionDatasList = updatedSurvey.questionDatas
+                checkSurveySyncStatus()
 
-                    override fun onNext(survey: Survey) {
-                        mQuestionDatasList = survey.questionDatas
-                        checkSurveySyncStatus()
-                    }
-                },
-            )
+                // oncompleted
+                _syncSurveysDialogUiState.value =
+                    mSurveyList[mSurveySyncIndex].name?.let {
+                        SyncSurveysDialogUiState.UpdateSingleSyncSurvey(
+                            mSurveySyncIndex + 1, it, mQuestionDatasList.size,
+                        )
+                    }!!
+            } catch (e: Exception) {
+                _syncSurveysDialogUiState.value =
+                    SyncSurveysDialogUiState.ShowError(e.message.toString())
+                onAccountSyncFailed(e)
+            }
+        }
     }
 
     /**
@@ -228,32 +222,25 @@ class SyncSurveysDialogViewModel @Inject constructor(
      * @param surveyId int, questionDatas QuestionDatas
      */
     private fun syncQuestionData(surveyId: Int, questionDatas: QuestionDatas) {
-        repository.syncQuestionDataInDatabase(surveyId, questionDatas)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<QuestionDatas>() {
-                    override fun onCompleted() {
-                        _syncSurveysDialogUiState.value =
-                            SyncSurveysDialogUiState.UpdateQuestionSync(
-                                mQuestionDataSyncIndex + 1,
-                                mQuestionDatasList[mQuestionDataSyncIndex].questionId,
-                                mResponseDatasList.size,
-                            )
-                    }
+        viewModelScope.launch {
+            repository.syncQuestionDataInDatabase(surveyId, questionDatas)
+                .catch { e ->
+                    _syncSurveysDialogUiState.value =
+                        SyncSurveysDialogUiState.ShowError(e.message.toString())
+                    onAccountSyncFailed(e)
+                }.collect { questionDatas ->
+                    mResponseDatasList = questionDatas.responseDatas
+                    checkQuestionDataSyncStatusAndSync()
 
-                    override fun onError(e: Throwable) {
-                        _syncSurveysDialogUiState.value =
-                            SyncSurveysDialogUiState.ShowError(e.message.toString())
-                        onAccountSyncFailed(e)
-                    }
-
-                    override fun onNext(questionDatas: QuestionDatas) {
-                        mResponseDatasList = questionDatas.responseDatas
-                        checkQuestionDataSyncStatusAndSync()
-                    }
-                },
-            )
+                    // oncompleted
+                    _syncSurveysDialogUiState.value =
+                        SyncSurveysDialogUiState.UpdateQuestionSync(
+                            mQuestionDataSyncIndex + 1,
+                            mQuestionDatasList[mQuestionDataSyncIndex].questionId,
+                            mResponseDatasList.size,
+                        )
+                }
+        }
     }
 
     /**
@@ -262,35 +249,29 @@ class SyncSurveysDialogViewModel @Inject constructor(
      * @param questionId int, responseDatas ResponseDatas
      */
     private fun syncResponseData(questionId: Int, responseDatas: ResponseDatas) {
-        repository.syncResponseDataInDatabase(questionId, responseDatas)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<ResponseDatas>() {
-                    override fun onCompleted() {
+        viewModelScope.launch {
+            repository.syncResponseDataInDatabase(questionId, responseDatas)
+                .catch { e ->
+                    _syncSurveysDialogUiState.value =
+                        SyncSurveysDialogUiState.ShowError(e.message.toString())
+                    onAccountSyncFailed(e)
+                }
+                .collect {
+                    _syncSurveysDialogUiState.value =
                         SyncSurveysDialogUiState.UpdateResponseSync(
                             mResponseDataSyncIndex,
                             mResponseDatasList[mResponseDataSyncIndex].value,
                         )
-                    }
+                    mResponseDataSyncIndex += 1
+                    checkNetworkConnectionAndSyncResponseData()
 
-                    override fun onError(e: Throwable) {
-                        _syncSurveysDialogUiState.value =
-                            SyncSurveysDialogUiState.ShowError(e.message.toString())
-                        onAccountSyncFailed(e)
-                    }
-
-                    override fun onNext(responseDatas: ResponseDatas) {
-                        _syncSurveysDialogUiState.value =
-                            SyncSurveysDialogUiState.UpdateResponseSync(
-                                mResponseDataSyncIndex,
-                                mResponseDatasList[mResponseDataSyncIndex].value,
-                            )
-                        mResponseDataSyncIndex += 1
-                        checkNetworkConnectionAndSyncResponseData()
-                    }
-                },
-            )
+                    // oncompleted
+                    SyncSurveysDialogUiState.UpdateResponseSync(
+                        mResponseDataSyncIndex,
+                        mResponseDatasList[mResponseDataSyncIndex].value,
+                    )
+                }
+        }
     }
 
     private fun checkSurveySyncStatus() {
@@ -310,25 +291,18 @@ class SyncSurveysDialogViewModel @Inject constructor(
     }
 
     fun loadSurveyList() {
-        _syncSurveysDialogUiState.value = SyncSurveysDialogUiState.ShowProgressbar
-        repository.allSurvey()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<List<Survey>>() {
-                    override fun onCompleted() {
-                        startSyncingSurveys()
-                    }
+        viewModelScope.launch {
+            _syncSurveysDialogUiState.value = SyncSurveysDialogUiState.ShowProgressbar
 
-                    override fun onError(e: Throwable) {
-                        _syncSurveysDialogUiState.value =
-                            SyncSurveysDialogUiState.ShowError(e.message.toString())
-                    }
-
-                    override fun onNext(surveys: List<Survey>) {
-                        mSurveyList = surveys
-                    }
-                },
-            )
+            repository.allSurvey()
+                .catch {
+                    _syncSurveysDialogUiState.value =
+                        SyncSurveysDialogUiState.ShowError(it.message.toString())
+                }.collect { surveys ->
+                    mSurveyList = surveys
+                    // onCompleted
+                    startSyncingSurveys()
+                }
+        }
     }
 }

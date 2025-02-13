@@ -10,7 +10,6 @@
 package com.mifos.room.entities.survey
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -19,18 +18,13 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "ComponentDatas")
 data class ComponentDatas(
     @PrimaryKey
-    @ColumnInfo(name = "id")
     var id: Int? = null,
 
-    @ColumnInfo(name = "key")
     var key: String? = null,
 
-    @ColumnInfo(name = "text")
     var text: String? = null,
 
-    @ColumnInfo(name = "description")
     var description: String? = null,
 
-    @ColumnInfo(name = "sequenceNo")
     var sequenceNo: Int = 0,
 ) : Parcelable

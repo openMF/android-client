@@ -10,40 +10,30 @@
 package com.mifos.room.entities.survey
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mifos.core.entity.survey.ResponseDatas
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity(tableName = "QuestionDatas")
 data class QuestionDatas(
     @PrimaryKey
-    @ColumnInfo(name = "id")
     var id: Int = 0,
 
-    @ColumnInfo(name = "surveyId")
     @Transient
-    var surveyId: Int = 0,
+    val surveyId: Int = 0,
 
-    @ColumnInfo(name = "componentKey")
-    var componentKey: String? = null,
+    val componentKey: String? = null,
 
-    @ColumnInfo(name = "key")
-    var key: String? = null,
+    val key: String? = null,
 
-    @ColumnInfo(name = "text")
-    var text: String? = null,
+    val text: String? = null,
 
-    @ColumnInfo(name = "description")
-    var description: String? = null,
+    val description: String? = null,
 
-    @ColumnInfo(name = "sequenceNo")
-    var sequenceNo: Int = 0,
+    val sequenceNo: Int = 0,
 
-    @ColumnInfo(name = "responseDatas")
-    var responseDatas: List<ResponseDatas> = ArrayList(),
+    val responseDatas: List<ResponseDatas> = emptyList(),
 ) : Parcelable {
 
     var questionId: Int

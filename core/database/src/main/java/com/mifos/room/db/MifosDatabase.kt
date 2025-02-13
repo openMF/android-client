@@ -14,6 +14,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.dao.LoanDao
+import com.mifos.room.dao.SurveyDao
 import com.mifos.room.entities.PaymentTypeOption
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDate
 import com.mifos.room.entities.accounts.loans.LoanAccount
@@ -27,12 +28,16 @@ import com.mifos.room.entities.center.CenterPayload
 import com.mifos.room.entities.group.Center
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.noncore.ColumnValue
+import com.mifos.room.entities.survey.QuestionDatas
+import com.mifos.room.entities.survey.ResponseDatas
+import com.mifos.room.entities.survey.Survey
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import com.mifos.room.utils.typeconverters.CenterTypeConverters
 import com.mifos.room.utils.typeconverters.DueDateConverter
 import com.mifos.room.utils.typeconverters.ListTypeConverters
 import com.mifos.room.utils.typeconverters.LoanTypeConverters
 import com.mifos.room.utils.typeconverters.ServerTypesConverters
+import com.mifos.room.utils.typeconverters.SurveyTypeConverters
 
 @Database(
     // [TODO -> add other entities ]
@@ -47,14 +52,16 @@ import com.mifos.room.utils.typeconverters.ServerTypesConverters
         Timeline::class,
         Status::class,
         Summary::class,
-
         // used in center
         CenterPayload::class,
         Center::class,
         LoanAccount::class,
         SavingsAccount::class,
         Group::class,
-
+        // survey
+        Survey::class,
+        QuestionDatas::class,
+        ResponseDatas::class,
     ],
     version = MifosDatabase.VERSION,
     exportSchema = true,
@@ -66,12 +73,14 @@ import com.mifos.room.utils.typeconverters.ServerTypesConverters
     DueDateConverter::class,
     LoanTypeConverters::class,
     CenterTypeConverters::class,
+    SurveyTypeConverters::class,
 )
 // ( TODO -> add type converters here )
 
 abstract class MifosDatabase : RoomDatabase() {
     abstract fun columnValueDao(): ColumnValueDao
     abstract fun loanDao(): LoanDao
+    abstract fun surveyDao(): SurveyDao
 
     companion object {
         const val VERSION = 1
