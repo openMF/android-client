@@ -21,12 +21,10 @@ class StaffDaoHelper @Inject constructor(
     private val staffDao: StaffDao,
 ) {
     suspend fun saveAllStaffOfOffices(staffs: List<Staff>) {
-        for (staff in staffs) {
-            staffDao.insertStaff(staff)
-        }
+        staffDao.insertStaffs(staffs)
     }
 
-    fun readAllStaffOffices(officeId: Int): Flow<List<Staff>> {
+    fun getAllStaffOffices(officeId: Int): Flow<List<Staff>> {
         return staffDao.readAllStaff(officeId)
     }
 }

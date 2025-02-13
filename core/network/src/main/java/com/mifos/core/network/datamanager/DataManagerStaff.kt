@@ -49,7 +49,7 @@ class DataManagerStaff @Inject constructor(
             /**
              * return all List of Staffs of Office from DatabaseHelperOffices
              */
-            true -> staffDaoHelper.readAllStaffOffices(officeId)
+            true -> staffDaoHelper.getAllStaffOffices(officeId)
         }
     }
 //    fun getStaffInOffice(officeId: Int): Observable<List<Staff>> {

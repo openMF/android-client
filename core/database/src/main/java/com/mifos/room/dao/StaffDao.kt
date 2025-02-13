@@ -23,6 +23,9 @@ import kotlinx.coroutines.flow.Flow
 interface StaffDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStaffs(staffs: List<Staff>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStaff(staff: Staff)
 
     @Query("SELECT * FROM Staff WHERE officeId = :officeId")
