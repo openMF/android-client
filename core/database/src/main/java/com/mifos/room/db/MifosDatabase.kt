@@ -14,6 +14,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.dao.LoanDao
+import com.mifos.room.dao.OfficeDao
 import com.mifos.room.entities.PaymentTypeOption
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDate
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
@@ -22,10 +23,12 @@ import com.mifos.room.entities.accounts.loans.Status
 import com.mifos.room.entities.accounts.loans.Summary
 import com.mifos.room.entities.accounts.loans.Timeline
 import com.mifos.room.entities.noncore.ColumnValue
+import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import com.mifos.room.utils.typeconverters.DueDateConverter
 import com.mifos.room.utils.typeconverters.ListTypeConverters
 import com.mifos.room.utils.typeconverters.LoanTypeConverters
+import com.mifos.room.utils.typeconverters.OfficeTypeConverters
 import com.mifos.room.utils.typeconverters.ServerTypesConverters
 
 @Database(
@@ -41,6 +44,7 @@ import com.mifos.room.utils.typeconverters.ServerTypesConverters
         Timeline::class,
         Status::class,
         Summary::class,
+        OfficeEntity::class,
     ],
     version = MifosDatabase.VERSION,
     exportSchema = true,
@@ -51,12 +55,14 @@ import com.mifos.room.utils.typeconverters.ServerTypesConverters
     ServerTypesConverters::class,
     DueDateConverter::class,
     LoanTypeConverters::class,
+    OfficeTypeConverters::class,
 )
 // ( TODO -> add type converters here )
 
 abstract class MifosDatabase : RoomDatabase() {
     abstract fun columnValueDao(): ColumnValueDao
     abstract fun loanDao(): LoanDao
+    abstract fun officeDao(): OfficeDao
 
     companion object {
         const val VERSION = 1

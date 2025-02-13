@@ -9,19 +9,21 @@
  */
 package com.mifos.core.network.mappers.offices
 
-import com.mifos.core.entity.organisation.Office
+import com.mifos.core.model.objects.databaseobjects.office.Office
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetOfficesResponse
 
 object GetOfficeResponseMapper : AbstractMapper<GetOfficesResponse, Office>() {
 
     override fun mapFromEntity(entity: GetOfficesResponse): Office {
-        return Office().apply {
-            id = entity.id?.toInt()
-            name = entity.name
-            nameDecorated = entity.nameDecorated
-            externalId = entity.externalId
-        }
+        return Office(
+            id = entity.id?.toInt(),
+            externalId = entity.externalId,
+            name = entity.name,
+            nameDecorated = entity.nameDecorated,
+            officeOpeningDate = null,
+            openingDate = emptyList(),
+        )
     }
 
     override fun mapToEntity(domainModel: Office): GetOfficesResponse {
