@@ -9,10 +9,8 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.databasehelper.DatabaseHelperSurveys
 import com.mifos.core.model.objects.surveys.Scorecard
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.objects.surveys.Scorecard
 import com.mifos.room.entities.survey.QuestionDatas
 import com.mifos.room.entities.survey.ResponseDatas
 import com.mifos.room.entities.survey.Survey
@@ -32,8 +30,8 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerSurveys @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    private val mDatabaseHelperSurveys: DatabaseHelperSurveys,
-    private val surveyDatabaseHelper : SurveyDaoHelper,
+//    private val mDatabaseHelperSurveys: DatabaseHelperSurveys,
+    private val surveyDatabaseHelper: SurveyDaoHelper,
     private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**

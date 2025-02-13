@@ -83,7 +83,7 @@ interface ClientService {
      *
      * @param clientId Client Id
      * @return List<Identifier>
-    </Identifier> */
+     </Identifier> */
     @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.IDENTIFIERS)
     fun getClientIdentifiers(@Path("clientId") clientId: Int): Observable<List<Identifier>>
 

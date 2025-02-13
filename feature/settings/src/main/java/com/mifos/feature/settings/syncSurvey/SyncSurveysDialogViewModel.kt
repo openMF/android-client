@@ -19,15 +19,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.observeOn
 import kotlinx.coroutines.flow.subscribe
-import kotlinx.coroutines.flow.subscribeOn
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -202,11 +197,11 @@ class SyncSurveysDialogViewModel @Inject constructor(
 
                 repository.syncSurveyInDatabase(updatedSurvey)
 
-                //onnext
+                // onnext
                 mQuestionDatasList = updatedSurvey.questionDatas
                 checkSurveySyncStatus()
 
-                //oncompleted
+                // oncompleted
                 _syncSurveysDialogUiState.value =
                     mSurveyList[mSurveySyncIndex].name?.let {
                         SyncSurveysDialogUiState.UpdateSingleSyncSurvey(
@@ -228,7 +223,6 @@ class SyncSurveysDialogViewModel @Inject constructor(
      */
     private fun syncQuestionData(surveyId: Int, questionDatas: QuestionDatas) {
         viewModelScope.launch {
-
             repository.syncQuestionDataInDatabase(surveyId, questionDatas)
                 .catch { e ->
                     _syncSurveysDialogUiState.value =
@@ -238,7 +232,7 @@ class SyncSurveysDialogViewModel @Inject constructor(
                     mResponseDatasList = questionDatas.responseDatas
                     checkQuestionDataSyncStatusAndSync()
 
-                    //oncompleted
+                    // oncompleted
                     _syncSurveysDialogUiState.value =
                         SyncSurveysDialogUiState.UpdateQuestionSync(
                             mQuestionDataSyncIndex + 1,
@@ -246,8 +240,6 @@ class SyncSurveysDialogViewModel @Inject constructor(
                             mResponseDatasList.size,
                         )
                 }
-
-
         }
     }
 
@@ -273,7 +265,7 @@ class SyncSurveysDialogViewModel @Inject constructor(
                     mResponseDataSyncIndex += 1
                     checkNetworkConnectionAndSyncResponseData()
 
-                    //oncompleted
+                    // oncompleted
                     SyncSurveysDialogUiState.UpdateResponseSync(
                         mResponseDataSyncIndex,
                         mResponseDatasList[mResponseDataSyncIndex].value,
@@ -308,10 +300,9 @@ class SyncSurveysDialogViewModel @Inject constructor(
                         SyncSurveysDialogUiState.ShowError(it.message.toString())
                 }.collect { surveys ->
                     mSurveyList = surveys
-                    //onCompleted
+                    // onCompleted
                     startSyncingSurveys()
                 }
         }
     }
-
 }

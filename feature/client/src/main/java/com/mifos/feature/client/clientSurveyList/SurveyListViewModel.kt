@@ -116,7 +116,7 @@ class SurveyListViewModel @Inject constructor(
                             survey.copy(
                                 questionDatas = survey.questionDatas.map {
                                     if (it.id == questionDatas.id) updatedQuestionDatas else it
-                                }
+                                },
                             )
                         } else {
                             survey
@@ -126,7 +126,6 @@ class SurveyListViewModel @Inject constructor(
                 }
         }
     }
-
 
     private fun setAlreadySurveySyncStatus(surveys: List<Survey>) {
         checkSurveyAlreadySyncedOrNot(surveys)
@@ -138,8 +137,9 @@ class SurveyListViewModel @Inject constructor(
         mSyncSurveyList = surveys.map { syncSurvey ->
             if (mDbSurveyList!!.any { it.id == syncSurvey.id }) {
                 syncSurvey.copy(isSync = true)
-            } else syncSurvey
+            } else {
+                syncSurvey
+            }
         }
     }
-
 }

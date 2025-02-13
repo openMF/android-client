@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.room.helper
 
 import com.mifos.room.dao.SurveyDao
@@ -21,7 +30,7 @@ class SurveyDaoHelper @Inject constructor(
      * @return saved Survey
      */
     suspend fun saveSurvey(survey: Survey) {
-        surveyDao.insertSurvey(survey);
+        surveyDao.insertSurvey(survey)
     }
 
     /**
@@ -35,7 +44,7 @@ class SurveyDaoHelper @Inject constructor(
         questionDatas: QuestionDatas,
     ): Flow<QuestionDatas> {
         return flow {
-            val updatedQuestionData = questionDatas.copy(surveyId = surveyId,)
+            val updatedQuestionData = questionDatas.copy(surveyId = surveyId)
             surveyDao.insertQuestionData(updatedQuestionData)
             emit(updatedQuestionData)
         }
@@ -50,7 +59,7 @@ class SurveyDaoHelper @Inject constructor(
     fun saveResponseData(
         questionId: Int,
         responseDatas: ResponseDatas,
-    ) : Flow<ResponseDatas> {
+    ): Flow<ResponseDatas> {
         return flow {
             val updatedResponseData = responseDatas.copy(questionId = questionId)
             surveyDao.insertResponseData(updatedResponseData)
@@ -63,7 +72,7 @@ class SurveyDaoHelper @Inject constructor(
      *
      * @return List Of Surveys
      */
-    fun readAllSurveys() : Flow<List<Survey>> {
+    fun readAllSurveys(): Flow<List<Survey>> {
         return surveyDao.getAllSurveys()
     }
 

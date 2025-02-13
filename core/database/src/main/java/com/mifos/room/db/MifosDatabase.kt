@@ -46,7 +46,7 @@ import com.mifos.room.utils.typeconverters.SurveyTypeConverters
         Timeline::class,
         Status::class,
         Summary::class,
-        //survey
+        // survey
         Survey::class,
         QuestionDatas::class,
         ResponseDatas::class,
