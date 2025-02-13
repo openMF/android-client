@@ -41,7 +41,7 @@ class CreateNewClientRepositoryImp @Inject constructor(
         return dataManagerOffices.offices()
     }
 
-    override suspend fun getStaffInOffice(officeId: Int): Flow<List<Staff>> {
+    override fun getStaffInOffice(officeId: Int): Flow<List<Staff>> {
         return dataManagerStaff.getStaffInOffice(officeId)
     }
 
