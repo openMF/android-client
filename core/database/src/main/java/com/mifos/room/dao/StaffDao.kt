@@ -29,5 +29,5 @@ interface StaffDao {
     suspend fun insertStaff(staff: Staff)
 
     @Query("SELECT * FROM Staff WHERE officeId = :officeId")
-    fun readAllStaff(officeId: Int): Flow<List<Staff>>
+    fun getAllStaff(officeId: Int): Flow<List<Staff>>
 }

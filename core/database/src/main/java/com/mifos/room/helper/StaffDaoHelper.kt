@@ -25,6 +25,6 @@ class StaffDaoHelper @Inject constructor(
     }
 
     fun getAllStaffOffices(officeId: Int): Flow<List<Staff>> {
-        return staffDao.readAllStaff(officeId)
+        return staffDao.getAllStaff(officeId)
     }
 }
