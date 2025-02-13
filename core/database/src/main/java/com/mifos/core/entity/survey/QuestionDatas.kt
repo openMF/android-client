@@ -12,6 +12,7 @@ package com.mifos.core.entity.survey
 import android.os.Parcelable
 import com.mifos.core.database.MifosDatabase
 import com.mifos.core.model.MifosBaseModel
+import com.mifos.room.entities.survey.ResponseDatas
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
