@@ -10,7 +10,6 @@
 package com.mifos.room.entities.organisation
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -19,30 +18,21 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "Staff")
 data class Staff(
     @PrimaryKey
-    @ColumnInfo(name = "id")
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "firstname")
-    var firstname: String? = null,
+    val firstname: String? = null,
 
-    @ColumnInfo(name = "lastname")
-    var lastname: String? = null,
+    val lastname: String? = null,
 
-    @ColumnInfo(name = "mobileNo")
-    var mobileNo: String? = null,
+    val mobileNo: String? = null,
 
-    @ColumnInfo(name = "displayName")
-    var displayName: String? = null,
+    val displayName: String? = null,
 
-    @ColumnInfo(name = "officeId")
-    var officeId: Int? = null,
+    val officeId: Int? = null,
 
-    @ColumnInfo(name = "officeName")
-    var officeName: String? = null,
+    val officeName: String? = null,
 
-    @ColumnInfo(name = "isLoanOfficer")
-    var isLoanOfficer: Boolean? = null,
+    val isLoanOfficer: Boolean? = null,
 
-    @ColumnInfo(name = "isActive")
-    var isActive: Boolean? = null,
+    val isActive: Boolean? = null,
 ) : Parcelable
