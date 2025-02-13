@@ -15,16 +15,16 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.domain.useCases.GetOfficeListUseCase
-import com.mifos.core.domain.useCases.GetStaffInOfficeForCreateNewClientUseCase
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.client.ClientPayload
 import com.mifos.core.entity.organisation.Office
-import com.mifos.core.entity.organisation.Staff
 import com.mifos.feature.client.R
+import com.mifos.room.entities.organisation.Staff
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -45,7 +45,6 @@ import javax.inject.Inject
 class CreateNewClientViewModel @Inject constructor(
     private val repository: CreateNewClientRepository,
 //    private val clientTemplateUseCase: ClientTemplateUseCase,
-    private val getStaffInOffice: GetStaffInOfficeForCreateNewClientUseCase,
     private val getOfficeListUseCase: GetOfficeListUseCase,
 ) : ViewModel() {
 
@@ -98,20 +97,17 @@ class CreateNewClientViewModel @Inject constructor(
         }
     }
 
-    fun loadStaffInOffices(officeId: Int) =
-        viewModelScope.launch(Dispatchers.IO) {
-            getStaffInOffice(officeId).collect { result ->
-                when (result) {
-                    is Resource.Error ->
-                        _createNewClientUiState.value =
-                            CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_staffs)
-
-                    is Resource.Loading -> Unit
-
-                    is Resource.Success -> _staffInOffices.value = result.data ?: emptyList()
+    fun loadStaffInOffices(officeId: Int) {
+        viewModelScope.launch {
+            repository.getStaffInOffice(officeId)
+                .catch {
+                    _createNewClientUiState.value =
+                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_staffs)
+                }.collect { staffs ->
+                    _staffInOffices.value = staffs
                 }
-            }
         }
+    }
 
     fun createClient(clientPayload: ClientPayload) {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
