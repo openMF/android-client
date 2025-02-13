@@ -12,12 +12,13 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.network.datamanager.DataManagerNote
 import com.mifos.core.objects.noncore.Note
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class NoteRepositoryImp @Inject constructor(private val dataManagerNote: DataManagerNote) :
     NoteRepository {
 
-    override fun getNotes(entityType: String?, entityId: Int): List<Note> {
+    override fun getNotes(entityType: String?, entityId: Int): Flow<List<Note>> {
         return dataManagerNote.getNotes(entityType, entityId)
     }
 }

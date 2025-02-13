@@ -12,6 +12,8 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.databasehelper.DatabaseHelperNote
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.objects.noncore.Note
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,7 +30,9 @@ class DataManagerNote @Inject constructor(
     /**
      * This Method Request the REST API of Note and In response give the List of Notes
      */
-    fun getNotes(entityType: String?, entityId: Int): List<Note> {
-        return mBaseApiManager.noteApi.getNotes(entityType, entityId)
+    fun getNotes(entityType: String?, entityId: Int): Flow<List<Note>> {
+        return flow {
+            emit(mBaseApiManager.noteApi.getNotes(entityType, entityId))
+        }
     }
 }

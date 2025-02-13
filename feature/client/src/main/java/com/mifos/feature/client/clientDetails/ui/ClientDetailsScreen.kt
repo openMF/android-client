@@ -152,7 +152,7 @@ internal fun ClientDetailsScreen(
     val file = context.createImageFile()
     val cameraImageUri = FileProvider.getUriForFile(
         Objects.requireNonNull(context),
-        "com.mifos.mifosxdroid" + ".provider",
+        context.packageName + ".provider",
         file,
     )
     val permissionState = rememberMultiplePermissionsState(

@@ -9,19 +9,17 @@
  */
 package com.mifos.feature.note
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repositoryImp.NoteRepositoryImp
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,8 +28,9 @@ class NoteViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val entityId = savedStateHandle.getStateFlow(key = Constants.ENTITY_ID, initialValue = 0)
-    val entityType: StateFlow<String?> = savedStateHandle.getStateFlow(key = Constants.ENTITY_TYPE, initialValue = null)
+    val entityId = savedStateHandle.getStateFlow(key = Constants.ENTITY_ID, initialValue = "0")
+    val entityType: StateFlow<String?> =
+        savedStateHandle.getStateFlow(key = Constants.ENTITY_TYPE, initialValue = null)
 
     private val _noteUiState = MutableStateFlow<NoteUiState>(NoteUiState.ShowProgressbar)
     val noteUiState: StateFlow<NoteUiState> get() = _noteUiState
@@ -43,6 +42,7 @@ class NoteViewModel @Inject constructor(
         viewModelScope.launch {
             _isRefreshing.emit(true)
             loadNote()
+            _isRefreshing.emit(false)
         }
     }
 
@@ -51,23 +51,20 @@ class NoteViewModel @Inject constructor(
      * Response: List<Note>
      </Note> */
     fun loadNote() {
-        Log.d("NoteScreendebug1", "id ${entityId.value} type ${entityType.value}")
         viewModelScope.launch {
             _noteUiState.value = NoteUiState.ShowProgressbar
-            try {
-                val notes = withContext(Dispatchers.IO) {
-                    repository.getNotes(entityType.value, entityId.value)
+
+            repository.getNotes(entityType.value, entityId.value.toInt())
+                .catch {
+                    _noteUiState.value =
+                        NoteUiState.ShowError(R.string.feature_note_failed_to_fetch_notes)
+                }.collect { notes ->
+                    if (notes.isNotEmpty()) {
+                        _noteUiState.value = NoteUiState.ShowNote(notes)
+                    } else {
+                        _noteUiState.value = NoteUiState.ShowEmptyNotes
+                    }
                 }
-                if (notes.isNotEmpty()) {
-                    _noteUiState.value = NoteUiState.ShowNote(notes)
-                } else {
-                    _noteUiState.value = NoteUiState.ShowEmptyNotes
-                }
-            } catch (e: Exception) {
-                _noteUiState.value =
-                    NoteUiState.ShowError(R.string.feature_note_failed_to_fetch_notes)
-            }
-            _isRefreshing.emit(false)
         }
     }
 }

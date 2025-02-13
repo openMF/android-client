@@ -152,7 +152,7 @@ private fun NoteContent(
 ) {
     LazyColumn(modifier = modifier) {
         items(notes) { note ->
-            note.noteContent?.let { NoteItem(noteTitle = it) }
+            note.note?.let { NoteItem(noteTitle = it) }
         }
     }
 }
@@ -190,7 +190,7 @@ private class NoteScreenPreviewProvider : PreviewParameterProvider<NoteUiState> 
         Note(
             id = 1,
             clientId = 101,
-            noteContent = "This is the first demo note.",
+            note = "This is the first demo note.",
             createdById = 1001,
             createdByUsername = "creator_1",
             createdOn = System.currentTimeMillis(),
@@ -201,7 +201,7 @@ private class NoteScreenPreviewProvider : PreviewParameterProvider<NoteUiState> 
         Note(
             id = 2,
             clientId = 102,
-            noteContent = "This is the second demo note.",
+            note = "This is the second demo note.",
             createdById = 1003,
             createdByUsername = "creator_2",
             createdOn = System.currentTimeMillis(),
@@ -212,7 +212,7 @@ private class NoteScreenPreviewProvider : PreviewParameterProvider<NoteUiState> 
         Note(
             id = 3,
             clientId = 103,
-            noteContent = "This is the third demo note.",
+            note = "This is the third demo note.",
             createdById = 1005,
             createdByUsername = "creator_3",
             createdOn = System.currentTimeMillis(),

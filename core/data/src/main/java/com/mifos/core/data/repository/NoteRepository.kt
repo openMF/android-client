@@ -10,8 +10,9 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.objects.noncore.Note
+import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
 
-    fun getNotes(entityType: String?, entityId: Int): List<Note>
+    fun getNotes(entityType: String?, entityId: Int): Flow<List<Note>>
 }

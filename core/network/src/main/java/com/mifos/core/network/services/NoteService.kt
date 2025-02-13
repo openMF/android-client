@@ -17,7 +17,7 @@ import retrofit2.http.Path
 interface NoteService {
 
     @GET("{entityType}/{entityId}/" + APIEndPoint.NOTES)
-    fun getNotes(
+    suspend fun getNotes(
         @Path("entityType") entityType: String?,
         @Path("entityId") entityId: Int,
     ): List<Note>

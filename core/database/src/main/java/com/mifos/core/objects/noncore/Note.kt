@@ -22,7 +22,7 @@ data class Note(
 
     var clientId: Int? = null,
 
-    var noteContent: String? = null,
+    var note: String? = null,
 
     var createdById: Int? = null,
 
