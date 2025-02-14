@@ -10,17 +10,17 @@
 package com.mifos.room.utils.typeconverters
 
 import androidx.room.TypeConverter
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class OfficeTypeConverters {
     @TypeConverter
     fun fromOpeningDateList(list: List<Int?>?): String {
-        return Gson().toJson(list)
+        return Json.encodeToString(list ?: emptyList())
     }
 
     @TypeConverter
-    fun toOpeningDateList(json: String): List<Int?> {
-        return Gson().fromJson(json, object : TypeToken<List<Int?>>() {}.type)
+    fun toOpeningDateList(json: String?): List<Int?>? {
+        return json?.let { Json.decodeFromString(it) }
     }
 }

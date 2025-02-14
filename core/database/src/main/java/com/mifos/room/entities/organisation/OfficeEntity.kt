@@ -36,6 +36,6 @@ data class OfficeEntity(
 
     val officeOpeningDate: OfficeOpeningDateEntity? = null,
 
-    val openingDate: List<Int?> = ArrayList(),
+    val openingDate: List<Int?> = emptyList()
 
 )
