@@ -56,6 +56,7 @@ import com.mifos.room.utils.typeconverters.SurveyTypeConverters
         QuestionDatas::class,
         ResponseDatas::class,
         Staff::class,
+        // office
         OfficeEntity::class,
     ],
     version = MifosDatabase.VERSION,
