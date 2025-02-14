@@ -12,12 +12,12 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.client.ClientPayload
-import com.mifos.core.entity.organisation.Office
 import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.entity.templates.clients.ClientsTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerOffices
 import com.mifos.core.network.datamanager.DataManagerStaff
+import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
@@ -37,7 +37,7 @@ class CreateNewClientRepositoryImp @Inject constructor(
         return dataManagerClient.clientTemplate
     }
 
-    override suspend fun offices(): List<Office> {
+    override suspend fun offices(): List<OfficeEntity> {
         return dataManagerOffices.offices()
     }
 

@@ -10,8 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.entity.group.GroupPayload
-import com.mifos.core.model.objects.databaseobjects.office.Office
 import com.mifos.core.model.objects.responses.SaveResponse
+import com.mifos.room.entities.organisation.OfficeEntity
 import rx.Observable
 
 /**
@@ -19,7 +19,7 @@ import rx.Observable
  */
 interface CreateNewGroupRepository {
 
-    suspend fun offices(): List<Office>
+    suspend fun offices(): List<OfficeEntity>
 
     fun createGroup(groupPayload: GroupPayload): Observable<SaveResponse>
 }

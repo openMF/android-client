@@ -9,10 +9,8 @@
  */
 package com.mifos.room.helper
 
-import com.mifos.core.model.objects.databaseobjects.office.Office
 import com.mifos.room.dao.OfficeDao
-import com.mifos.room.model.toOffice
-import com.mifos.room.model.toOfficeEntity
+import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -21,13 +19,13 @@ class OfficeDaoHelper @Inject constructor(
     private val officeDao: OfficeDao,
 ) {
 
-    suspend fun saveAllOffices(offices: List<Office>) {
-        val officeEntities = offices.map { it.toOfficeEntity() }
+    suspend fun saveAllOffices(offices: List<OfficeEntity>) {
+        val officeEntities = offices.map { it }
         officeDao.insertOffices(officeEntities)
     }
 
-    fun readAllOffices(): Flow<List<Office>> {
+    fun readAllOffices(): Flow<List<OfficeEntity>> {
         return officeDao.getAllOffices()
-            .map { entities -> entities.map { it.toOffice() } }
+            .map { entities -> entities.map { it } }
     }
 }

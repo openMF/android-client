@@ -9,14 +9,14 @@
  */
 package com.mifos.core.network.mappers.offices
 
-import com.mifos.core.model.objects.databaseobjects.office.Office
+import com.mifos.room.entities.organisation.OfficeEntity
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetOfficesResponse
 
-object GetOfficeResponseMapper : AbstractMapper<GetOfficesResponse, Office>() {
+object GetOfficeResponseMapper : AbstractMapper<GetOfficesResponse, OfficeEntity>() {
 
-    override fun mapFromEntity(entity: GetOfficesResponse): Office {
-        return Office(
+    override fun mapFromEntity(entity: GetOfficesResponse): OfficeEntity {
+        return OfficeEntity(
             id = entity.id?.toInt(),
             externalId = entity.externalId,
             name = entity.name,
@@ -26,7 +26,7 @@ object GetOfficeResponseMapper : AbstractMapper<GetOfficesResponse, Office>() {
         )
     }
 
-    override fun mapToEntity(domainModel: Office): GetOfficesResponse {
+    override fun mapToEntity(domainModel: OfficeEntity): GetOfficesResponse {
         return GetOfficesResponse(
             id = domainModel.id?.toLong(),
             name = domainModel.name,

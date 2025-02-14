@@ -11,10 +11,10 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.entity.group.GroupPayload
-import com.mifos.core.model.objects.databaseobjects.office.Office
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerOffices
+import com.mifos.room.entities.organisation.OfficeEntity
 import rx.Observable
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ class CreateNewGroupRepositoryImp @Inject constructor(
     private val dataManagerGroups: DataManagerGroups,
 ) : CreateNewGroupRepository {
 
-    override suspend fun offices(): List<Office> {
+    override suspend fun offices(): List<OfficeEntity> {
         return dataManagerOffices.offices()
     }
 
