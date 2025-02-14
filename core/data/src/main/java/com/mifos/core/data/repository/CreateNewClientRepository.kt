@@ -12,8 +12,8 @@ package com.mifos.core.data.repository
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.client.ClientPayload
 import com.mifos.core.entity.organisation.Office
+import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.entity.templates.clients.ClientsTemplate
-import com.mifos.room.entities.organisation.Staff
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody

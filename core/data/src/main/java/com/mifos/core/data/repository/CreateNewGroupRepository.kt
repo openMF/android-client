@@ -10,8 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.entity.group.GroupPayload
-import com.mifos.core.entity.organisation.Office
-import com.mifos.core.objects.responses.SaveResponse
+import com.mifos.core.model.objects.databaseobjects.office.Office
+import com.mifos.core.model.objects.responses.SaveResponse
 import rx.Observable
 
 /**
