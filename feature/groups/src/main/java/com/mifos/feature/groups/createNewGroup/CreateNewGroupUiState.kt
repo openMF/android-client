@@ -12,7 +12,6 @@ package com.mifos.feature.groups.createNewGroup
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.room.entities.organisation.OfficeEntity
 
-
 /**
  * Created by Aditya Gupta on 10/08/23.
  */

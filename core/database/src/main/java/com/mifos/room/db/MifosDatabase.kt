@@ -14,9 +14,9 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.dao.LoanDao
+import com.mifos.room.dao.OfficeDao
 import com.mifos.room.dao.StaffDao
 import com.mifos.room.dao.SurveyDao
-import com.mifos.room.dao.OfficeDao
 import com.mifos.room.entities.PaymentTypeOption
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDate
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
