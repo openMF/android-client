@@ -9,12 +9,14 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.client.Charges
+import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.core.objects.clients.ChargeCreationResponse
 import com.mifos.core.objects.clients.Page
 import com.mifos.core.objects.template.client.ChargeTemplate
 import com.mifos.core.payloads.ChargesPayload
 import com.mifos.room.basemodel.APIEndPoint
+import com.mifos.room.entities.client.Charges
 import okhttp3.ResponseBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -37,11 +39,11 @@ interface ChargeService {
     suspend fun getAllChargeV3(@Path("loanId") loanId: Int): ResponseBody
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/charges")
-    fun getListOfCharges(
+    suspend fun getListOfCharges(
         @Path("clientId") clientId: Int,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Observable<Page<Charges>>
+    ): Page<Charges>
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}/charges")
     suspend fun createCharges(

@@ -9,6 +9,7 @@
  */
 package com.mifos.room.di
 
+import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.dao.LoanDao
 import com.mifos.room.dao.StaffDao
@@ -40,5 +41,10 @@ object DaoModule {
     @Provides
     fun providesStaffDao(database: MifosDatabase): StaffDao {
         return database.staffDao()
+    }
+
+    @Provides
+    fun providesClientDao(database: MifosDatabase): ChargeDao {
+        return database.chargeDao()
     }
 }

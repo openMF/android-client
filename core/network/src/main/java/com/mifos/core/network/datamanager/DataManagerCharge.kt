@@ -9,11 +9,12 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.databasehelper.DatabaseHelperCharge
-import com.mifos.core.entity.client.Charges
+import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.objects.clients.Page
-import rx.Observable
+import com.mifos.room.entities.client.Charges
+import com.mifos.room.helper.ChargeDaoHelper
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,7 +29,8 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerCharge @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperCharge: DatabaseHelperCharge,
+//    val mDatabaseHelperCharge: DatabaseHelperCharge,
+    val chargeDatabase: ChargeDaoHelper,
     private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**
@@ -42,24 +44,28 @@ class DataManagerCharge @Inject constructor(
      * @return Page<Charge> Page of Charge in Which List Size is according to Limit and from
      * where position is Starting according to offset</Charge>>
      */
-    fun getClientCharges(clientId: Int, offset: Int, limit: Int): Observable<Page<Charges>> {
+    fun getClientCharges(
+        clientId: Int,
+        offset: Int,
+        limit: Int,
+    ): Flow<Page<Charges>> {
         return when (prefManager.userStatus) {
-            false -> mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
-                .concatMap { chargesPage ->
-                    mDatabaseHelperCharge.saveClientCharges(chargesPage, clientId)
-                    Observable.just(chargesPage)
-                }
+            false -> flow {
+                val charges = mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
+                chargeDatabase.saveClientCharges(charges, clientId)
+                emit(charges)
+            }
 
             true -> {
                 /**
                  * Return Client Charges from DatabaseHelperClient only one time.
                  */
                 if (offset == 0) {
-                    mDatabaseHelperCharge.readClientCharges(clientId)
+                    chargeDatabase.readClientCharges(clientId)
                 } else {
-                    Observable.just(
-                        Page(),
-                    )
+                    flow {
+                        emit(Page())
+                    }
                 }
             }
         }
