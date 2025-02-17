@@ -48,7 +48,7 @@ class SyncClientsDialogRepositoryImp @Inject constructor(
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Observable<SavingsAccountWithAssociations> {
+    ): Flow<SavingsAccountWithAssociations> {
         return dataManagerSavings.syncSavingsAccount(type, savingsAccountId, association)
     }
 

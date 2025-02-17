@@ -15,18 +15,21 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
+import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.GetSavingsAccountTransactionTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsAccountTransactionUseCase
 import com.mifos.core.domain.useCases.ProcessTransactionUseCase
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.room.entities.accounts.savings.SavingsTransactionData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,14 +39,16 @@ import javax.inject.Inject
 @HiltViewModel
 class SavingsAccountTransactionViewModel @Inject constructor(
     private val getSavingsAccountTransactionTemplateUseCase: GetSavingsAccountTransactionTemplateUseCase,
-    private val processTransactionUseCase: ProcessTransactionUseCase,
-    private val getSavingsAccountTransactionUseCase: GetSavingsAccountTransactionUseCase,
+//    private val processTransactionUseCase: ProcessTransactionUseCase,
+//    private val getSavingsAccountTransactionUseCase: GetSavingsAccountTransactionUseCase,
     private val prefManager: PrefManager,
+    private val repository: SavingsAccountTransactionRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val arg = savedStateHandle.getStateFlow(key = "arg", initialValue = "")
-    private val savingsTransactionData: SavingsTransactionData = Gson().fromJson(arg.value, SavingsTransactionData::class.java)
+    private val savingsTransactionData: SavingsTransactionData =
+        Gson().fromJson(arg.value, SavingsTransactionData::class.java)
 
     val accountId = savingsTransactionData.savingsAccountWithAssociations.id
     val savingsAccountNumber = savingsTransactionData.savingsAccountWithAssociations.accountNo
@@ -86,58 +91,51 @@ class SavingsAccountTransactionViewModel @Inject constructor(
             }
         }
 
-    fun processTransaction(request: SavingsAccountTransactionRequest) =
-        accountId?.let {
-            viewModelScope.launch(Dispatchers.IO) {
-                processTransactionUseCase(
+    fun processTransaction(request: SavingsAccountTransactionRequest) {
+        viewModelScope.launch {
+            if (accountId != null) {
+                _savingsAccountTransactionUiState.value =
+                    SavingsAccountTransactionUiState.ShowProgressbar
+
+                repository.processTransaction(
                     savingsAccountType?.endpoint,
-                    it,
+                    accountId,
                     transactionType,
                     request,
-                ).collect { result ->
-                    when (result) {
-                        is Resource.Error ->
-                            _savingsAccountTransactionUiState.value =
-                                SavingsAccountTransactionUiState.ShowError(result.message.toString())
+                ).catch {
+                    _savingsAccountTransactionUiState.value =
+                        SavingsAccountTransactionUiState.ShowError(it.message.toString())
 
-                        is Resource.Loading ->
-                            _savingsAccountTransactionUiState.value =
-                                SavingsAccountTransactionUiState.ShowProgressbar
-
-                        is Resource.Success ->
-                            _savingsAccountTransactionUiState.value =
-                                SavingsAccountTransactionUiState.ShowTransactionSuccessfullyDone(
-                                    result.data ?: SavingsAccountTransactionResponse(),
-                                )
-                    }
+                }.collect {
+                    _savingsAccountTransactionUiState.value =
+                        SavingsAccountTransactionUiState.ShowTransactionSuccessfullyDone(
+                            it ?: SavingsAccountTransactionResponse(),
+                        )
                 }
             }
         }
+    }
 
-    fun checkInDatabaseSavingAccountTransaction() =
-        viewModelScope.launch(Dispatchers.IO) {
-            accountId?.let {
-                getSavingsAccountTransactionUseCase(it).collect { result ->
-                    when (result) {
-                        is Resource.Error ->
+    fun checkInDatabaseSavingAccountTransaction() {
+        viewModelScope.launch {
+            if (accountId != null) {
+                _savingsAccountTransactionUiState.value =
+                    SavingsAccountTransactionUiState.ShowProgressbar
+
+                repository.getSavingsAccountTransaction(accountId)
+                    .catch {
+                        _savingsAccountTransactionUiState.value =
+                            SavingsAccountTransactionUiState.ShowError(it.message.toString())
+                    }.collect { savings ->
+                        if (savings != null) {
                             _savingsAccountTransactionUiState.value =
-                                SavingsAccountTransactionUiState.ShowError(result.message.toString())
-
-                        is Resource.Loading ->
+                                SavingsAccountTransactionUiState.ShowSavingAccountTransactionExistInDatabase
+                        } else {
                             _savingsAccountTransactionUiState.value =
-                                SavingsAccountTransactionUiState.ShowProgressbar
-
-                        is Resource.Success -> {
-                            if (result.data != null) {
-                                _savingsAccountTransactionUiState.value =
-                                    SavingsAccountTransactionUiState.ShowSavingAccountTransactionExistInDatabase
-                            } else {
-                                _savingsAccountTransactionUiState.value =
-                                    SavingsAccountTransactionUiState.ShowSavingAccountTransactionDoesNotExistInDatabase
-                            }
+                                SavingsAccountTransactionUiState.ShowSavingAccountTransactionDoesNotExistInDatabase
                         }
                     }
-                }
             }
         }
+    }
 }

@@ -9,17 +9,18 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.client.Savings
 import com.mifos.core.entity.templates.savings.SavingProductsTemplate
-import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.model.APIEndPoint
+import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.account.loan.SavingsApproval
 import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.objects.organisations.ProductSavings
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -48,11 +49,11 @@ interface SavingsAccountService {
      * @return SavingsAccountWithAssociations
      */
     @GET("{savingsAccountType}/{savingsAccountId}")
-    fun getSavingsAccountWithAssociations(
+    suspend fun getSavingsAccountWithAssociations(
         @Path("savingsAccountType") savingsAccountType: String?,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("associations") association: String?,
-    ): Observable<SavingsAccountWithAssociations>
+    ): SavingsAccountWithAssociations
 
     /**
      * This Method for Retrieving Savings Account Transaction Template from REST API
@@ -65,11 +66,11 @@ interface SavingsAccountService {
      * @return SavingsAccountTransactionTemplate
      */
     @GET("{savingsAccountType}/{savingsAccountId}/transactions/template")
-    fun getSavingsAccountTransactionTemplate(
+    suspend fun getSavingsAccountTransactionTemplate(
         @Path("savingsAccountType") savingsAccountType: String?,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("command") transactionType: String?,
-    ): Observable<SavingsAccountTransactionTemplate>
+    ): SavingsAccountTransactionTemplate
 
     /**
      * This Service making POST Request to the REST API :
@@ -83,12 +84,12 @@ interface SavingsAccountService {
      * @return SavingsAccountTransactionResponse
      */
     @POST("{savingsAccountType}/{savingsAccountId}/transactions")
-    fun processTransaction(
+    suspend fun processTransaction(
         @Path("savingsAccountType") savingsAccountType: String?,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("command") transactionType: String?,
         @Body savingsAccountTransactionRequest: SavingsAccountTransactionRequest?,
-    ): Observable<SavingsAccountTransactionResponse>
+    ): SavingsAccountTransactionResponse
 
     @POST(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/{savingsAccountId}/?command=activate")
     fun activateSavings(

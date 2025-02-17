@@ -33,13 +33,13 @@ interface SyncClientsDialogRepository {
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Observable<SavingsAccountWithAssociations>
+    ): Flow<SavingsAccountWithAssociations>
 
     fun syncSavingsAccountTransactionTemplate(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Observable<SavingsAccountTransactionTemplate>
+    ): Flow<SavingsAccountTransactionTemplate>
 
     fun syncClientInDatabase(client: Client): Observable<Client>
 }

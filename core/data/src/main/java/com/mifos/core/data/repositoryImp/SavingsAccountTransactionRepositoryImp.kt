@@ -10,10 +10,11 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 import javax.inject.Inject
 
@@ -40,7 +41,7 @@ class SavingsAccountTransactionRepositoryImp @Inject constructor(private val dat
         savingsAccountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequest,
-    ): Observable<SavingsAccountTransactionResponse> {
+    ): Flow<SavingsAccountTransactionResponse?> {
         return dataManagerSavings.processTransaction(
             savingsAccountType,
             savingsAccountId,
@@ -49,7 +50,7 @@ class SavingsAccountTransactionRepositoryImp @Inject constructor(private val dat
         )
     }
 
-    override fun getSavingsAccountTransaction(savingAccountId: Int): Observable<SavingsAccountTransactionRequest> {
+    override fun getSavingsAccountTransaction(savingAccountId: Int): Flow<SavingsAccountTransactionRequest?> {
         return dataManagerSavings.getSavingsAccountTransaction(savingAccountId)
     }
 }

@@ -9,9 +9,11 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
 /**
@@ -30,9 +32,7 @@ interface SavingsAccountTransactionRepository {
         savingsAccountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequest,
-    ): Observable<SavingsAccountTransactionResponse>
+    ): Flow<SavingsAccountTransactionResponse?>
 
-    fun getSavingsAccountTransaction(
-        savingAccountId: Int,
-    ): Observable<SavingsAccountTransactionRequest>
+    fun getSavingsAccountTransaction(savingAccountId: Int): Flow<SavingsAccountTransactionRequest?>
 }

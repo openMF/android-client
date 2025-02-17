@@ -9,7 +9,8 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
 /**
@@ -21,5 +22,5 @@ interface SavingsAccountSummaryRepository {
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Observable<SavingsAccountWithAssociations>
+    ): Flow<SavingsAccountWithAssociations?>
 }

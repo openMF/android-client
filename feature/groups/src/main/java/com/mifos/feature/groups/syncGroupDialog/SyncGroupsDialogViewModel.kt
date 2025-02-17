@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.subscribe
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -540,28 +541,52 @@ class SyncGroupsDialogViewModel @Inject constructor(
      */
     private fun getSavingsAccountAndTemplate(
         savingsAccountType: String,
-        savingsAccountId: Int,
-    ): Observable<SavingsAccountAndTransactionTemplate> {
-        return Observable.combineLatest(
+        savingsAccountId: Int
+    ): Flow<SavingsAccountAndTransactionTemplate> {
+        return combine(
             repository.syncSavingsAccount(
                 savingsAccountType,
                 savingsAccountId,
-                Constants.TRANSACTIONS,
+                Constants.TRANSACTIONS
             ),
             repository.syncSavingsAccountTransactionTemplate(
                 savingsAccountType,
                 savingsAccountId,
-                Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT,
-            ),
+                Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT
+            )
         ) { savingsAccountWithAssociations, savingsAccountTransactionTemplate ->
             SavingsAccountAndTransactionTemplate(
                 savingsAccountWithAssociations,
-                savingsAccountTransactionTemplate,
+                savingsAccountTransactionTemplate
             )
         }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
     }
+
+
+//    private fun getSavingsAccountAndTemplate(
+//        savingsAccountType: String,
+//        savingsAccountId: Int,
+//    ): Observable<SavingsAccountAndTransactionTemplate> {
+//        return Observable.combineLatest(
+//            repository.syncSavingsAccount(
+//                savingsAccountType,
+//                savingsAccountId,
+//                Constants.TRANSACTIONS,
+//            ),
+//            repository.syncSavingsAccountTransactionTemplate(
+//                savingsAccountType,
+//                savingsAccountId,
+//                Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT,
+//            ),
+//        ) { savingsAccountWithAssociations, savingsAccountTransactionTemplate ->
+//            SavingsAccountAndTransactionTemplate(
+//                savingsAccountWithAssociations,
+//                savingsAccountTransactionTemplate,
+//            )
+//        }
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribeOn(Schedulers.io())
+//    }
 
     private fun updateTotalSyncProgressBarAndCount() {
         _syncGroupData.update { it.copy(totalSyncCount = mGroupSyncIndex) }
