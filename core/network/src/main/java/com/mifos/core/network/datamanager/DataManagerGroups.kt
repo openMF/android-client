@@ -10,7 +10,6 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperClient
-import com.mifos.core.databasehelper.DatabaseHelperGroups
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.BaseApiManager
