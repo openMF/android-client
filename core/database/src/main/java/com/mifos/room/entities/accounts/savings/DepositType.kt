@@ -54,5 +54,3 @@ data class DepositType(
         }
     }
 }
-
-

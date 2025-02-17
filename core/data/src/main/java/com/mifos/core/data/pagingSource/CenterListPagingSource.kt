@@ -72,5 +72,4 @@ class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
         }
         return centerList
     }
-
 }

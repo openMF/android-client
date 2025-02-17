@@ -79,7 +79,7 @@ class SyncCentersDialogRepositoryImp @Inject constructor(
     }
 
     override suspend fun syncCenterInDatabase(center: Center) {
-         dataManagerCenter.syncCenterInDatabase(center)
+        dataManagerCenter.syncCenterInDatabase(center)
     }
 
     override fun syncSavingsAccount(

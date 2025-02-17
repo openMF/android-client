@@ -19,11 +19,9 @@ import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.entity.client.Client
 import com.mifos.feature.center.R
-import com.mifos.room.entities.accounts.CenterAccounts
 import com.mifos.room.entities.accounts.loans.LoanAccount
 import com.mifos.room.entities.accounts.savings.SavingsAccount
 import com.mifos.room.entities.group.Center
-import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
@@ -177,9 +175,9 @@ class SyncCentersDialogViewModel @Inject constructor(
                     )
                     // Updating UI
                     maxSingleSyncCenterProgressBar = (
-                            mLoanAccountList.size +
-                                    mSavingsAccountList.size + mMemberLoanAccountsList.size
-                            )
+                        mLoanAccountList.size +
+                            mSavingsAccountList.size + mMemberLoanAccountsList.size
+                        )
                     checkAccountsSyncStatusAndSyncAccounts()
                 }
         }
@@ -815,7 +813,7 @@ class SyncCentersDialogViewModel @Inject constructor(
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
                 savingsAccount.status?.active == true &&
-                        !savingsAccount.depositType!!.isRecurring
+                    !savingsAccount.depositType!!.isRecurring
             }
             .subscribe { savingsAccount -> accounts.add(savingsAccount) }
         return accounts
@@ -834,8 +832,8 @@ class SyncCentersDialogViewModel @Inject constructor(
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
                 savingsAccount.depositType?.value == "Savings" &&
-                        savingsAccount.status?.active == true &&
-                        !savingsAccount.depositType!!.isRecurring
+                    savingsAccount.status?.active == true &&
+                    !savingsAccount.depositType!!.isRecurring
             }
             .subscribe { savingsAccount -> accounts.add(savingsAccount) }
         return accounts
