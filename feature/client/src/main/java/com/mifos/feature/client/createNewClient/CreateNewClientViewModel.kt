@@ -13,7 +13,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.core.domain.useCases.GetOfficeListUseCase
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.client.ClientPayload
 import com.mifos.feature.client.R
