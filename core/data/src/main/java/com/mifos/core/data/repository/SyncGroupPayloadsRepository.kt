@@ -9,17 +9,17 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.group.GroupPayload
-import com.mifos.core.objects.responses.SaveResponse
-import rx.Observable
+import com.mifos.core.model.objects.responses.SaveResponse
+import com.mifos.room.entities.group.GroupPayload
+import kotlinx.coroutines.flow.Flow
 
 interface SyncGroupPayloadsRepository {
 
-    fun allDatabaseGroupPayload(): Observable<List<GroupPayload>>
+    fun allDatabaseGroupPayload(): Flow<List<GroupPayload>>
 
-    fun createGroup(groupPayload: GroupPayload): Observable<SaveResponse>
+    suspend fun createGroup(groupPayload: GroupPayload): SaveResponse
 
-    fun deleteAndUpdateGroupPayloads(id: Int): Observable<List<GroupPayload>>
+    fun deleteAndUpdateGroupPayloads(id: Int): Flow<List<GroupPayload>>
 
-    fun updateGroupPayload(groupPayload: GroupPayload): Observable<GroupPayload>
+    suspend fun updateGroupPayload(groupPayload: GroupPayload)
 }

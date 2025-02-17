@@ -12,10 +12,10 @@ package com.mifos.feature.groups.createNewGroup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
+import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.useCases.CreateNewGroupUseCase
 import com.mifos.core.domain.useCases.GetGroupOfficesUseCase
-import com.mifos.core.entity.group.GroupPayload
+import com.mifos.room.entities.group.GroupPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateNewGroupViewModel @Inject constructor(
     private val getGroupOfficesUseCase: GetGroupOfficesUseCase,
-    private val createNewGroupUseCase: CreateNewGroupUseCase,
+//    private val createNewGroupUseCase: CreateNewGroupUseCase,
+    private val repository: CreateNewGroupRepository,
     private val prefManager: PrefManager,
 ) : ViewModel() {
 
@@ -65,20 +66,18 @@ class CreateNewGroupViewModel @Inject constructor(
         }
     }
 
-    fun createGroup(groupPayload: GroupPayload) = viewModelScope.launch {
-        createNewGroupUseCase(groupPayload).collect { result ->
-            when (result) {
-                is Resource.Error ->
-                    _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowFetchingError(result.message.toString())
+    fun createGroup(groupPayload: GroupPayload) {
+        _createNewGroupUiState.value =
+            CreateNewGroupUiState.ShowProgressbar
 
-                is Resource.Loading ->
-                    _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowProgressbar
-
-                is Resource.Success ->
-                    _createNewGroupUiState.value =
-                        result.data?.let { CreateNewGroupUiState.ShowGroupCreatedSuccessfully(it) }!!
+        viewModelScope.launch {
+            try {
+                val savedResponse = repository.createGroup(groupPayload)
+                _createNewGroupUiState.value =
+                    CreateNewGroupUiState.ShowGroupCreatedSuccessfully(savedResponse)
+            } catch (e: Exception) {
+                _createNewGroupUiState.value =
+                    CreateNewGroupUiState.ShowFetchingError(e.message.toString())
             }
         }
     }

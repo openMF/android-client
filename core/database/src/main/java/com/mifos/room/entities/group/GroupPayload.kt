@@ -10,7 +10,6 @@
 package com.mifos.room.entities.group
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -19,35 +18,25 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "GroupPayload")
 data class GroupPayload(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
     @Transient
-    var id: Int = 0,
+    val id: Int = 0,
 
-    @ColumnInfo(name = "errorMessage")
     @Transient
-    var errorMessage: String? = null,
+    val errorMessage: String? = null,
 
-    @ColumnInfo(name = "officeId")
-    var officeId: Int = 0,
+    val officeId: Int = 0,
 
-    @ColumnInfo(name = "active")
-    var active: Boolean = false,
+    val active: Boolean = false,
 
-    @ColumnInfo(name = "activationDate")
-    var activationDate: String? = null,
+    val activationDate: String? = null,
 
-    @ColumnInfo(name = "submittedOnDate")
-    var submittedOnDate: String? = null,
+    val submittedOnDate: String? = null,
 
-    @ColumnInfo(name = "externalId")
-    var externalId: String? = null,
+    val externalId: String? = null,
 
-    @ColumnInfo(name = "name")
-    var name: String? = null,
+    val name: String? = null,
 
-    @ColumnInfo(name = "locale")
-    var locale: String? = null,
+    val locale: String? = null,
 
-    @ColumnInfo(name = "dateFormat")
-    var dateFormat: String? = null,
+    val dateFormat: String? = null,
 ) : Parcelable

@@ -10,19 +10,15 @@
 package com.mifos.core.model.objects.responses
 
 import com.mifos.core.model.objects.Changes
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 @Serializable
 class SaveResponse {
-    @SerialName("groupId")
     var groupId: Int? = null
 
-    @SerialName("resourceId")
     var resourceId: Int? = null
 
-    @SerialName("officeId")
     var officeId: Int? = null
 
     var changes: Changes? = null

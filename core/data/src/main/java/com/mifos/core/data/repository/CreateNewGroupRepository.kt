@@ -9,10 +9,9 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.group.GroupPayload
 import com.mifos.core.entity.organisation.Office
-import com.mifos.core.objects.responses.SaveResponse
-import rx.Observable
+import com.mifos.core.model.objects.responses.SaveResponse
+import com.mifos.room.entities.group.GroupPayload
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -21,5 +20,5 @@ interface CreateNewGroupRepository {
 
     suspend fun offices(): List<Office>
 
-    fun createGroup(groupPayload: GroupPayload): Observable<SaveResponse>
+    suspend fun createGroup(groupPayload: GroupPayload): SaveResponse
 }

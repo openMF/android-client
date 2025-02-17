@@ -15,7 +15,6 @@ import com.mifos.core.data.repository.OfflineDashboardRepository
 import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.entity.center.CenterPayload
 import com.mifos.core.entity.client.ClientPayload
-import com.mifos.core.entity.group.GroupPayload
 import com.mifos.feature.offline.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,21 +57,14 @@ class OfflineDashboardViewModel @Inject constructor(
     }
 
     fun loadDatabaseGroupPayload() {
-        repository.allDatabaseGroupPayload()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<List<GroupPayload>>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        setError(Type.SYNC_GROUPS, e.message.toString())
-                    }
-
-                    override fun onNext(groupPayloads: List<GroupPayload>) {
-                        setCountOfSyncData(Type.SYNC_GROUPS, groupPayloads.size)
-                    }
-                },
-            )
+        viewModelScope.launch {
+            repository.allDatabaseGroupPayload()
+                .catch {
+                    setError(Type.SYNC_GROUPS, it.message.toString())
+                }.collect { groupPayloads ->
+                    setCountOfSyncData(Type.SYNC_GROUPS, groupPayloads.size)
+                }
+        }
     }
 
     fun loadDatabaseCenterPayload() {

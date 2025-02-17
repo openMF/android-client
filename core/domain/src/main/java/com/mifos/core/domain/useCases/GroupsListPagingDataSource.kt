@@ -12,7 +12,7 @@ package com.mifos.core.domain.useCases
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mifos.core.data.repository.GroupsListRepository
-import com.mifos.core.entity.group.Group
+import com.mifos.room.entities.group.Group
 import retrofit2.HttpException
 import java.io.IOException
 
