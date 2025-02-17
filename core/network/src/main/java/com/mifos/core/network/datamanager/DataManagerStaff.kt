@@ -9,9 +9,13 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.entity.organisation.Staff
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.staffs.StaffMapper
+import com.mifos.room.entities.organisation.Staff
+import com.mifos.room.helper.StaffDaoHelper
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,15 +27,30 @@ class DataManagerStaff @Inject constructor(
     val mBaseApiManager: BaseApiManager,
 //    private val mDatabaseHelperStaff: DatabaseHelperStaff,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-//    private val prefManager: com.mifos.core.datastore.PrefManager,
+    private val prefManager: PrefManager,
+    private val staffDaoHelper: StaffDaoHelper,
 ) {
     /**
      * @param officeId
      * @return
      */
-    suspend fun getStaffInOffice(officeId: Int): List<Staff> {
-        return baseApiManager.getStaffApi().retrieveAll16(officeId.toLong(), null, null, null)
-            .map(StaffMapper::mapFromEntity)
+    fun getStaffInOffice(officeId: Int): Flow<List<Staff>> {
+        return when (prefManager.userStatus) {
+            false -> flow {
+                baseApiManager.getStaffApi().retrieveAll16(
+                    officeId.toLong(),
+                    null,
+                    null,
+                    null,
+                )
+                    .map(StaffMapper::mapFromEntity)
+            }
+
+            /**
+             * return all List of Staffs of Office from DatabaseHelperOffices
+             */
+            true -> staffDaoHelper.getAllStaffOffices(officeId)
+        }
     }
 //    fun getStaffInOffice(officeId: Int): Observable<List<Staff>> {
 //        return when (prefManager.userStatus) {

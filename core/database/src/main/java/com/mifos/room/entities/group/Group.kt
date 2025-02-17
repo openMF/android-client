@@ -10,7 +10,6 @@
 package com.mifos.room.entities.group
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -32,59 +31,41 @@ import kotlinx.parcelize.Parcelize
 )
 data class Group(
     @PrimaryKey
-    @ColumnInfo(name = "id")
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "accountNo")
-    var accountNo: String? = null,
+    val accountNo: String? = null,
 
-    @ColumnInfo(name = "sync")
     @Transient
-    var sync: Boolean = false,
+    val sync: Boolean = false,
 
-    @ColumnInfo(name = "name")
-    var name: String? = null,
+    val name: String? = null,
 
-    @ColumnInfo(name = "status")
-    var status: Status? = null,
+    val status: Status? = null,
 
-    @ColumnInfo(name = "active")
-    var active: Boolean? = null,
+    val active: Boolean? = null,
 
-    @ColumnInfo(name = "groupDate")
     @Transient
-    var groupDate: GroupDate? = null,
+    val groupDate: GroupDate? = null,
 
-    @ColumnInfo(name = "activationDate")
-    var activationDate: List<Int> = ArrayList(),
+    val activationDate: List<Int> = emptyList(),
 
-    @ColumnInfo(name = "officeId")
-    var officeId: Int? = null,
+    val officeId: Int? = null,
 
-    @ColumnInfo(name = "officeName")
-    var officeName: String? = null,
+    val officeName: String? = null,
 
-    @ColumnInfo(name = "centerId")
-    var centerId: Int? = 0,
+    val centerId: Int? = 0,
 
-    @ColumnInfo(name = "centerName")
-    var centerName: String? = null,
+    val centerName: String? = null,
 
-    @ColumnInfo(name = "staffId")
-    var staffId: Int? = null,
+    val staffId: Int? = null,
 
-    @ColumnInfo(name = "staffName")
-    var staffName: String? = null,
+    val staffName: String? = null,
 
-    @ColumnInfo(name = "hierarchy")
-    var hierarchy: String? = null,
+    val hierarchy: String? = null,
 
-    @ColumnInfo(name = "groupLevel")
-    var groupLevel: Int = 0,
+    val groupLevel: Int = 0,
 
-    @ColumnInfo(name = "timeline")
-    var timeline: Timeline? = null,
+    val timeline: Timeline? = null,
 
-    @ColumnInfo(name = "externalId")
-    var externalId: String? = null,
+    val externalId: String? = null,
 ) : Parcelable

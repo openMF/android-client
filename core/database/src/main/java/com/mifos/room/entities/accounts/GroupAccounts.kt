@@ -16,9 +16,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class GroupAccounts(
-    var loanAccounts: List<LoanAccount> = ArrayList(),
+    var loanAccounts: List<LoanAccount> = emptyList(),
 
-    var savingsAccounts: List<SavingsAccount> = ArrayList(),
+    var savingsAccounts: List<SavingsAccount> = emptyList(),
 ) : Parcelable {
 
     private fun getSavingsAccounts(wantRecurring: Boolean): List<SavingsAccount> {

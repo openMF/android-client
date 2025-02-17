@@ -62,14 +62,15 @@ class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
         centerDbList: List<Center>,
     ): List<Center> {
         if (centerDbList.isNotEmpty()) {
-            centerList.forEach { center ->
-                centerDbList.forEach { centerDb ->
-                    if (center.id == centerDb.id) {
-                        center.sync = true
-                    }
+            return centerList.map { center ->
+                if (centerDbList.any { it.id == center.id }) {
+                    center.copy(sync = true)
+                } else {
+                    center
                 }
             }
         }
         return centerList
     }
+
 }

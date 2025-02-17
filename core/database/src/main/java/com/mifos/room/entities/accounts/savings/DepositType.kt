@@ -35,22 +35,24 @@ data class DepositType(
         get() = ServerTypes.fromId(id!!).endpoint
     val serverType: ServerTypes
         get() = ServerTypes.fromId(id!!)
-}
 
-enum class ServerTypes(val id: Int, val code: String, val endpoint: String) {
-    SAVINGS(100, "depositAccountType.savingsDeposit", APIEndPoint.SAVINGS_ACCOUNTS),
-    FIXED(200, "depositAccountType.fixedDeposit", APIEndPoint.SAVINGS_ACCOUNTS),
-    RECURRING(300, "depositAccountType.recurringDeposit", APIEndPoint.RECURRING_ACCOUNTS),
-    ;
+    enum class ServerTypes(val id: Int, val code: String, val endpoint: String) {
+        SAVINGS(100, "depositAccountType.savingsDeposit", APIEndPoint.SAVINGS_ACCOUNTS),
+        FIXED(200, "depositAccountType.fixedDeposit", APIEndPoint.SAVINGS_ACCOUNTS),
+        RECURRING(300, "depositAccountType.recurringDeposit", APIEndPoint.RECURRING_ACCOUNTS),
+        ;
 
-    companion object {
-        fun fromId(id: Int): ServerTypes {
-            for (type in entries) {
-                if (type.id == id) {
-                    return type
+        companion object {
+            fun fromId(id: Int): ServerTypes {
+                for (type in entries) {
+                    if (type.id == id) {
+                        return type
+                    }
                 }
+                return SAVINGS
             }
-            return SAVINGS
         }
     }
 }
+
+

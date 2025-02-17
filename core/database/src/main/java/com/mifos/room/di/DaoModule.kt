@@ -10,7 +10,9 @@
 package com.mifos.room.di
 
 import com.mifos.room.dao.ColumnValueDao
+import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
+import com.mifos.room.dao.StaffDao
 import com.mifos.room.dao.SurveyDao
 import com.mifos.room.db.MifosDatabase
 import dagger.Module
@@ -34,5 +36,15 @@ object DaoModule {
     @Provides
     fun providesSurveyDao(database: MifosDatabase): SurveyDao {
         return database.surveyDao()
+    }
+
+    @Provides
+    fun providesStaffDao(database: MifosDatabase): StaffDao {
+        return database.staffDao()
+    }
+
+    @Provides
+    fun providesGroupDao(database: MifosDatabase): GroupsDao {
+        return database.groupsDao()
     }
 }

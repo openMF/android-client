@@ -12,7 +12,6 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.SyncCentersDialogRepository
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.group.Group
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerClient
@@ -25,6 +24,7 @@ import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import com.mifos.room.entities.group.Center
 import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import kotlinx.coroutines.flow.Flow
@@ -62,7 +62,7 @@ class SyncCentersDialogRepositoryImp @Inject constructor(
         return dataManagerGroups.getGroupWithAssociations(groupId)
     }
 
-    override fun syncGroupAccounts(groupId: Int): Observable<GroupAccounts> {
+    override fun syncGroupAccounts(groupId: Int): Flow<GroupAccounts> {
         return dataManagerGroups.syncGroupAccounts(groupId)
     }
 
@@ -70,8 +70,8 @@ class SyncCentersDialogRepositoryImp @Inject constructor(
         return dataManagerClient.syncClientAccounts(clientId)
     }
 
-    override fun syncGroupInDatabase(group: Group): Observable<Group> {
-        return dataManagerGroups.syncGroupInDatabase(group)
+    override suspend fun syncGroupInDatabase(group: Group) {
+        dataManagerGroups.syncGroupInDatabase(group)
     }
 
     override fun syncClientInDatabase(client: Client): Observable<Client> {
@@ -79,7 +79,7 @@ class SyncCentersDialogRepositoryImp @Inject constructor(
     }
 
     override suspend fun syncCenterInDatabase(center: Center) {
-        dataManagerCenter.syncCenterInDatabase(center)
+         dataManagerCenter.syncCenterInDatabase(center)
     }
 
     override fun syncSavingsAccount(
