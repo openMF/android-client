@@ -20,13 +20,13 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class DepositType(
     @PrimaryKey
-    var id: Int? = null,
+    val id: Int? = null,
 
     @ColumnInfo(name = "code")
-    var code: String? = null,
+    val code: String? = null,
 
     @ColumnInfo(name = "value")
-    var value: String? = null,
+    val value: String? = null,
 ) : Parcelable {
 
     val isRecurring: Boolean

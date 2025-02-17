@@ -12,7 +12,6 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.SyncCentersDialogRepository
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.group.Center
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerClient
@@ -23,6 +22,7 @@ import com.mifos.room.entities.accounts.CenterAccounts
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.group.Center
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupWithAssociations
@@ -42,7 +42,7 @@ class SyncCentersDialogRepositoryImp @Inject constructor(
     private val dataManagerClient: DataManagerClient,
 ) : SyncCentersDialogRepository {
 
-    override fun syncCenterAccounts(centerId: Int): Observable<CenterAccounts> {
+    override fun syncCenterAccounts(centerId: Int): Flow<CenterAccounts> {
         return dataManagerCenter.syncCenterAccounts(centerId)
     }
 
@@ -54,7 +54,7 @@ class SyncCentersDialogRepositoryImp @Inject constructor(
         return dataManagerLoan.syncLoanRepaymentTemplate(loanId)
     }
 
-    override fun getCenterWithAssociations(centerId: Int): Observable<CenterWithAssociations> {
+    override fun getCenterWithAssociations(centerId: Int): Flow<CenterWithAssociations> {
         return dataManagerCenter.getCenterWithAssociations(centerId)
     }
 
@@ -78,8 +78,8 @@ class SyncCentersDialogRepositoryImp @Inject constructor(
         return dataManagerClient.syncClientInDatabase(client)
     }
 
-    override fun syncCenterInDatabase(center: Center): Observable<Center> {
-        return dataManagerCenter.syncCenterInDatabase(center)
+    override suspend fun syncCenterInDatabase(center: Center) {
+        dataManagerCenter.syncCenterInDatabase(center)
     }
 
     override fun syncSavingsAccount(

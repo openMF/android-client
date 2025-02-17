@@ -35,6 +35,7 @@ import com.mifos.room.entities.survey.QuestionDatas
 import com.mifos.room.entities.survey.ResponseDatas
 import com.mifos.room.entities.survey.Survey
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import com.mifos.room.utils.typeconverters.CenterTypeConverters
 import com.mifos.room.utils.typeconverters.DueDateConverter
 import com.mifos.room.utils.typeconverters.ListTypeConverters
 import com.mifos.room.utils.typeconverters.LoanTypeConverters
@@ -75,6 +76,7 @@ import com.mifos.room.utils.typeconverters.SurveyTypeConverters
     DueDateConverter::class,
     LoanTypeConverters::class,
     SurveyTypeConverters::class,
+    CenterTypeConverters::class,
 )
 // ( TODO -> add type converters here )
 

@@ -11,7 +11,6 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.OfflineDashboardRepository
 import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.entity.center.CenterPayload
 import com.mifos.core.entity.client.ClientPayload
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerClient
@@ -19,6 +18,7 @@ import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.center.CenterPayload
 import com.mifos.room.entities.group.GroupPayload
 import kotlinx.coroutines.flow.Flow
 import rx.Observable
@@ -43,7 +43,7 @@ class OfflineDashboardRepositoryImp @Inject constructor(
         return dataManagerGroups.allDatabaseGroupPayload
     }
 
-    override fun allDatabaseCenterPayload(): Observable<List<CenterPayload>> {
+    override fun allDatabaseCenterPayload(): Flow<List<CenterPayload>> {
         return dataManagerCenter.allDatabaseCenterPayload
     }
 

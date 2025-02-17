@@ -12,10 +12,10 @@ package com.mifos.feature.center.createCenter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.useCases.CreateNewCenterUseCase
+import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.domain.useCases.GetOfficeListUseCase
-import com.mifos.core.entity.center.CenterPayload
 import com.mifos.feature.center.R
+import com.mifos.room.entities.center.CenterPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateNewCenterViewModel @Inject constructor(
     private val getOfficeListUseCase: GetOfficeListUseCase,
-    private val createNewCenterUseCase: CreateNewCenterUseCase,
+//    private val createNewCenterUseCase: CreateNewCenterUseCase,
+    private val repository: CreateNewCenterRepository,
 ) : ViewModel() {
 
     private val _createNewCenterUiState =
@@ -51,20 +52,16 @@ class CreateNewCenterViewModel @Inject constructor(
         }
     }
 
-    fun createNewCenter(centerPayload: CenterPayload) = viewModelScope.launch(Dispatchers.IO) {
-        createNewCenterUseCase(centerPayload).collect { result ->
-            when (result) {
-                is Resource.Error ->
-                    _createNewCenterUiState.value =
-                        CreateNewCenterUiState.Error(R.string.feature_center_failed_to_create_center)
-
-                is Resource.Loading ->
-                    _createNewCenterUiState.value =
-                        CreateNewCenterUiState.Loading
-
-                is Resource.Success ->
-                    _createNewCenterUiState.value =
-                        CreateNewCenterUiState.CenterCreatedSuccessfully
+    fun createNewCenter(centerPayload: CenterPayload) {
+        viewModelScope.launch {
+            _createNewCenterUiState.value = CreateNewCenterUiState.Loading
+            try {
+                repository.createCenter(centerPayload)
+                _createNewCenterUiState.value =
+                    CreateNewCenterUiState.CenterCreatedSuccessfully
+            } catch (e: Exception) {
+                _createNewCenterUiState.value =
+                    CreateNewCenterUiState.Error(R.string.feature_center_failed_to_create_center)
             }
         }
     }

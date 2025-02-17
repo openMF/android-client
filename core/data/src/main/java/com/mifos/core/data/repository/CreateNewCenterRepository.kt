@@ -9,13 +9,11 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.center.CenterPayload
-import com.mifos.core.objects.responses.SaveResponse
-import rx.Observable
+import com.mifos.room.entities.center.CenterPayload
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
 interface CreateNewCenterRepository {
-    fun createCenter(centerPayload: CenterPayload): Observable<SaveResponse>
+    suspend fun createCenter(centerPayload: CenterPayload)
 }

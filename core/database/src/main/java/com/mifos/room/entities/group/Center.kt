@@ -10,10 +10,10 @@
 package com.mifos.room.entities.group
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.mifos.room.entities.accounts.loans.Timeline
 import com.mifos.room.entities.client.Status
 import kotlinx.parcelize.Parcelize
 
@@ -31,50 +31,35 @@ import kotlinx.parcelize.Parcelize
 )
 data class Center(
     @PrimaryKey
-    @ColumnInfo(name = "id")
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "sync")
     @Transient
-    var sync: Boolean = false,
+    val sync: Boolean = false,
 
-    @ColumnInfo(name = "accountNo")
-    var accountNo: String? = null,
+    val accountNo: String? = null,
 
-    @ColumnInfo(name = "name")
-    var name: String? = null,
+    val name: String? = null,
 
-    @ColumnInfo(name = "officeId")
-    var officeId: Int? = null,
+    val officeId: Int? = null,
 
-    @ColumnInfo(name = "officeName")
-    var officeName: String? = null,
+    val officeName: String? = null,
 
-    @ColumnInfo(name = "staffId")
-    var staffId: Int? = null,
+    val staffId: Int? = null,
 
-    @ColumnInfo(name = "staffName")
-    var staffName: String? = null,
+    val staffName: String? = null,
 
-    @ColumnInfo(name = "hierarchy")
-    var hierarchy: String? = null,
+    val hierarchy: String? = null,
 
-    @ColumnInfo(name = "status")
-    var status: Status? = null,
+    val status: Status? = null,
 
-    @ColumnInfo(name = "active")
-    var active: Boolean? = null,
+    val active: Boolean? = null,
 
-    @ColumnInfo(name = "centerDate")
     @Transient
-    var centerDate: CenterDate? = null,
+    val centerDate: CenterDate? = null,
 
-    @ColumnInfo(name = "activationDate")
-    var activationDate: String? = null,
+    val activationDate: List<Int?> = emptyList(),
 
-    @ColumnInfo(name = "timeline")
-    var timeline: String? = null,
+    val timeline: Timeline? = null,
 
-    @ColumnInfo(name = "externalId")
-    var externalId: String? = null,
+    val externalId: String? = null,
 ) : Parcelable

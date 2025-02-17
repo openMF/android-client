@@ -9,17 +9,13 @@
  */
 package com.mifos.core.data.pagingSource
 
+import android.graphics.pdf.LoadParams
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.mifos.core.entity.group.Center
 import com.mifos.core.network.datamanager.DataManagerCenter
-import com.mifos.core.objects.clients.Page
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
+import com.mifos.room.entities.group.Center
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
     PagingSource<Int, Center>() {
@@ -55,26 +51,10 @@ class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
         return Pair(pagedClient.pageItems, pagedClient.totalFilteredRecords)
     }
 
-    private suspend fun getCenterDbList(): List<Center> = suspendCoroutine { continuation ->
-        try {
-            dataManagerCenter.allDatabaseCenters
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Center>>() {
-                    override fun onCompleted() {
-                    }
-
-                    override fun onError(error: Throwable) {
-                        continuation.resumeWithException(error)
-                    }
-
-                    override fun onNext(centers: Page<Center>) {
-                        continuation.resume(centers.pageItems)
-                    }
-                })
-        } catch (exception: Exception) {
-            continuation.resumeWithException(exception)
-        }
+    private suspend fun getCenterDbList(): List<Center> {
+        return dataManagerCenter.allDatabaseCenters
+            .map { it.pageItems }
+            .first()
     }
 
     private fun getCenterListWithSync(
@@ -82,11 +62,11 @@ class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
         centerDbList: List<Center>,
     ): List<Center> {
         if (centerDbList.isNotEmpty()) {
-            centerList.forEach { center ->
-                centerDbList.forEach { centerDb ->
-                    if (center.id == centerDb.id) {
-                        center.sync = true
-                    }
+            return centerList.map { center ->
+                if (centerDbList.any { it.id == center.id }) {
+                    center.copy(sync = true)
+                } else {
+                    center
                 }
             }
         }

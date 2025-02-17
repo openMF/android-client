@@ -16,8 +16,8 @@ import com.mifos.core.entity.group.Center
 import com.mifos.core.entity.group.CenterDate
 import com.mifos.core.entity.group.Group
 import com.mifos.core.entity.group.Group_Table
-import com.mifos.core.objects.clients.Page
-import com.mifos.core.objects.responses.SaveResponse
+import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.room.entities.accounts.CenterAccounts
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.raizlabs.android.dbflow.sql.language.Delete
