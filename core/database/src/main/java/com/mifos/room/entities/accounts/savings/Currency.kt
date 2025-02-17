@@ -9,11 +9,14 @@
  */
 package com.mifos.room.entities.accounts.savings
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "SavingAccountCurrency")
+@Parcelize
 data class Currency(
     @PrimaryKey
     var code: String? = null,
@@ -35,4 +38,4 @@ data class Currency(
 
     @ColumnInfo(name = "displayLabel")
     var displayLabel: String? = null,
-)
+) : Parcelable

@@ -12,13 +12,13 @@ package com.mifos.core.data.repository
 import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.group.Center
-import com.mifos.core.entity.group.Group
 import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.room.entities.accounts.CenterAccounts
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import kotlinx.coroutines.flow.Flow
@@ -39,11 +39,11 @@ interface SyncCentersDialogRepository {
 
     fun getGroupWithAssociations(groupId: Int): Observable<GroupWithAssociations>
 
-    fun syncGroupAccounts(groupId: Int): Observable<GroupAccounts>
+    fun syncGroupAccounts(groupId: Int): Flow<GroupAccounts>
 
     suspend fun syncClientAccounts(clientId: Int): ClientAccounts
 
-    fun syncGroupInDatabase(group: Group): Observable<Group>
+    suspend fun syncGroupInDatabase(group: Group)
 
     fun syncClientInDatabase(client: Client): Observable<Client>
 

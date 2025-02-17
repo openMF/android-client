@@ -9,9 +9,10 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.group.Group
 import com.mifos.room.entities.accounts.GroupAccounts
+import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupWithAssociations
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
 /**
@@ -19,9 +20,9 @@ import rx.Observable
  */
 interface GroupDetailsRepository {
 
-    fun getGroup(groupId: Int): Observable<Group>
+    fun getGroup(groupId: Int): Flow<Group>
 
-    fun getGroupAccounts(groupId: Int): Observable<GroupAccounts>
+    fun getGroupAccounts(groupId: Int): Flow<GroupAccounts>
 
     fun getGroupWithAssociations(groupId: Int): Observable<GroupWithAssociations>
 }

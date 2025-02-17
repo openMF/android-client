@@ -10,10 +10,11 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.GroupDetailsRepository
-import com.mifos.core.entity.group.Group
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.room.entities.accounts.GroupAccounts
+import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupWithAssociations
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 import javax.inject.Inject
 
@@ -24,11 +25,11 @@ class GroupDetailsRepositoryImp @Inject constructor(
     private val dataManagerGroups: DataManagerGroups,
 ) : GroupDetailsRepository {
 
-    override fun getGroup(groupId: Int): Observable<Group> {
+    override fun getGroup(groupId: Int): Flow<Group> {
         return dataManagerGroups.getGroup(groupId)
     }
 
-    override fun getGroupAccounts(groupId: Int): Observable<GroupAccounts> {
+    override fun getGroupAccounts(groupId: Int): Flow<GroupAccounts> {
         return dataManagerGroups.getGroupAccounts(groupId)
     }
 

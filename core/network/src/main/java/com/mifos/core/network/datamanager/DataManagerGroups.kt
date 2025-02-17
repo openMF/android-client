@@ -10,17 +10,19 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperClient
-import com.mifos.core.databasehelper.DatabaseHelperGroups
-import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.group.GroupPayload
+import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.groups.GetGroupsResponseMapper
 import com.mifos.core.objects.clients.ActivatePayload
-import com.mifos.core.objects.clients.Page
-import com.mifos.core.objects.responses.SaveResponse
 import com.mifos.room.entities.accounts.GroupAccounts
+import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.group.GroupPayload
 import com.mifos.room.entities.group.GroupWithAssociations
+import com.mifos.room.helper.GroupsDaoHelper
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,7 +36,7 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerGroups @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    private val mDatabaseHelperGroups: DatabaseHelperGroups,
+    private val databaseHelperGroups: GroupsDaoHelper,
     private val mDatabaseHelperClient: DatabaseHelperClient,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
     private val prefManager: com.mifos.core.datastore.PrefManager,
@@ -56,19 +58,31 @@ class DataManagerGroups @Inject constructor(
      * @return Groups List page from offset to max Limit
      */
     suspend fun getGroups(paged: Boolean, offset: Int, limit: Int): Page<Group> {
-        return baseApiManager.getGroupApi().retrieveAll24(
-            null,
-            null,
-            null,
-            null,
-            null,
-            paged,
-            offset,
-            limit,
-            null,
-            null,
-            null,
-        ).let(GetGroupsResponseMapper::mapFromEntity)
+        return when (prefManager.userStatus) {
+            false -> baseApiManager.getGroupApi().retrieveAll24(
+                null,
+                null,
+                null,
+                null,
+                null,
+                paged,
+                offset,
+                limit,
+                null,
+                null,
+                null,
+            ).let(GetGroupsResponseMapper::mapFromEntity)
+
+            true ->
+                /**
+                 * offset : is the value from which position we want to fetch the list, It means
+                 * if offset is 0 and User is in the Offline Mode So fetch all groups
+                 * Return All Groups List from DatabaseHelperGroups only one time.
+                 * If offset is zero this means this is first request and
+                 * return all clients from DatabaseHelperClient
+                 */
+                databaseHelperGroups.readAllGroups(offset, limit)
+        }
     }
 //    suspend fun getGroups(paged: Boolean, offset: Int, limit: Int): Observable<Page<Group>> {
 //        return when (prefManager.userStatus) {
@@ -105,8 +119,8 @@ class DataManagerGroups @Inject constructor(
      *
      * @return Page<Group>
      </Group></Group> */
-    val databaseGroups: Observable<Page<Group>>
-        get() = mDatabaseHelperGroups.readAllGroups()
+    val databaseGroups: Flow<Page<Group>>
+        get() = databaseHelperGroups.readAllGroups()
 
     /**
      * This Method fetch the Group from REST API if the user status is 0,
@@ -115,14 +129,14 @@ class DataManagerGroups @Inject constructor(
      * @param groupId Group Id
      * @return Group
      */
-    fun getGroup(groupId: Int): Observable<Group> {
+    fun getGroup(groupId: Int): Flow<Group> {
         return when (prefManager.userStatus) {
-            false -> mBaseApiManager.groupApi.getGroup(groupId)
+            false -> flow { emit(mBaseApiManager.groupApi.getGroup(groupId)) }
             true ->
                 /**
                  * Return Groups from DatabaseHelperGroups.
                  */
-                mDatabaseHelperGroups.getGroup(groupId)
+                databaseHelperGroups.getGroup(groupId)
         }
     }
 
@@ -132,8 +146,8 @@ class DataManagerGroups @Inject constructor(
      * @param group Group
      * @return Group
      */
-    fun syncGroupInDatabase(group: Group): Observable<Group> {
-        return mDatabaseHelperGroups.saveGroup(group)
+    suspend fun syncGroupInDatabase(group: Group) {
+        return databaseHelperGroups.saveGroup(group)
     }
 
     /**
@@ -159,14 +173,14 @@ class DataManagerGroups @Inject constructor(
      * @param groupId Group Id
      * @return GroupAccounts
      */
-    fun getGroupAccounts(groupId: Int): Observable<GroupAccounts> {
+    fun getGroupAccounts(groupId: Int): Flow<GroupAccounts> {
         return when (prefManager.userStatus) {
-            false -> mBaseApiManager.groupApi.getGroupAccounts(groupId)
+            false -> flow { emit(mBaseApiManager.groupApi.getGroupAccounts(groupId)) }
             true ->
                 /**
                  * Return Groups from DatabaseHelperGroups.
                  */
-                mDatabaseHelperGroups.readGroupAccounts(groupId)
+                databaseHelperGroups.readGroupAccounts(groupId)
         }
     }
 
@@ -177,14 +191,10 @@ class DataManagerGroups @Inject constructor(
      * @param groupId Group Id
      * @return GroupAccounts
      */
-    fun syncGroupAccounts(groupId: Int): Observable<GroupAccounts> {
-        return mBaseApiManager.groupApi.getGroupAccounts(groupId)
-            .concatMap { groupAccounts ->
-                mDatabaseHelperGroups.saveGroupAccounts(
-                    groupAccounts,
-                    groupId,
-                )
-            }
+    fun syncGroupAccounts(groupId: Int): Flow<GroupAccounts> = flow {
+        val groupAccounts = mBaseApiManager.groupApi.getGroupAccounts(groupId)
+        databaseHelperGroups.saveGroupAccounts(groupAccounts, groupId)
+        emit(groupAccounts)
     }
 
     /**
@@ -194,14 +204,15 @@ class DataManagerGroups @Inject constructor(
      * @param groupPayload GroupPayload
      * @return Group
      */
-    fun createGroup(groupPayload: GroupPayload): Observable<SaveResponse> {
+    suspend fun createGroup(groupPayload: GroupPayload): SaveResponse {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.groupApi.createGroup(groupPayload)
+
             true ->
                 /**
                  * Save GroupPayload in Database table.
                  */
-                mDatabaseHelperGroups.saveGroupPayload(groupPayload)
+                databaseHelperGroups.saveGroupPayload(groupPayload)
         }
     }
 
@@ -210,8 +221,8 @@ class DataManagerGroups @Inject constructor(
      *
      * @return List<GroupPayload>
      </GroupPayload> */
-    val allDatabaseGroupPayload: Observable<List<GroupPayload>>
-        get() = mDatabaseHelperGroups.realAllGroupPayload()
+    val allDatabaseGroupPayload: Flow<List<GroupPayload>>
+        get() = databaseHelperGroups.realAllGroupPayload()
 
     /**
      * This method will called when user is syncing the Database group.
@@ -221,8 +232,8 @@ class DataManagerGroups @Inject constructor(
      * @param id of the groupPayload in Database
      * @return List<GroupPayload></GroupPayload>>
      */
-    fun deleteAndUpdateGroupPayloads(id: Int): Observable<List<GroupPayload>> {
-        return mDatabaseHelperGroups.deleteAndUpdateGroupPayloads(id)
+    fun deleteAndUpdateGroupPayloads(id: Int): Flow<List<GroupPayload>> {
+        return databaseHelperGroups.deleteAndUpdateGroupPayloads(id)
     }
 
     /**
@@ -231,8 +242,8 @@ class DataManagerGroups @Inject constructor(
      * @param groupPayload GroupPayload
      * @return GroupPayload
      */
-    fun updateGroupPayload(groupPayload: GroupPayload): Observable<GroupPayload> {
-        return mDatabaseHelperGroups.updateDatabaseGroupPayload(groupPayload)
+    suspend fun updateGroupPayload(groupPayload: GroupPayload) {
+        databaseHelperGroups.updateGroupPayload(groupPayload)
     }
 
     /**

@@ -103,7 +103,7 @@ class DatabaseHelperGroups @Inject constructor() {
     }
 
     /**
-     * This Method Retrieving the Group from the Local Database.
+     * This Method RetrieFloing the Group from the Local Database.
      *
      * @param groupId Group Id
      * @return Group

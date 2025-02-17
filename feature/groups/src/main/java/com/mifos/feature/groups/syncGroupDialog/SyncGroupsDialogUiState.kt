@@ -10,7 +10,7 @@
 package com.mifos.feature.groups.syncGroupDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.core.entity.group.Group
+import com.mifos.room.entities.group.Group
 
 /**
  * Created by Aditya Gupta on 16/08/23.

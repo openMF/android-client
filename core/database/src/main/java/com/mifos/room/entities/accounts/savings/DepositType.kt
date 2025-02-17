@@ -9,12 +9,15 @@
  */
 package com.mifos.room.entities.accounts.savings
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mifos.room.basemodel.APIEndPoint
+import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "SavingAccountDepositType")
+@Parcelize
 data class DepositType(
     @PrimaryKey
     var id: Int? = null,
@@ -24,22 +27,30 @@ data class DepositType(
 
     @ColumnInfo(name = "value")
     var value: String? = null,
-)
+) : Parcelable {
 
-enum class ServerTypes(val id: Int, val code: String, val endpoint: String) {
-    SAVINGS(100, "depositAccountType.savingsDeposit", APIEndPoint.SAVINGS_ACCOUNTS),
-    FIXED(200, "depositAccountType.fixedDeposit", APIEndPoint.SAVINGS_ACCOUNTS),
-    RECURRING(300, "depositAccountType.recurringDeposit", APIEndPoint.RECURRING_ACCOUNTS),
-    ;
+    val isRecurring: Boolean
+        get() = ServerTypes.RECURRING.id == id
+    val endpoint: String
+        get() = ServerTypes.fromId(id!!).endpoint
+    val serverType: ServerTypes
+        get() = ServerTypes.fromId(id!!)
 
-    companion object {
-        fun fromId(id: Int): ServerTypes {
-            for (type in entries) {
-                if (type.id == id) {
-                    return type
+    enum class ServerTypes(val id: Int, val code: String, val endpoint: String) {
+        SAVINGS(100, "depositAccountType.savingsDeposit", APIEndPoint.SAVINGS_ACCOUNTS),
+        FIXED(200, "depositAccountType.fixedDeposit", APIEndPoint.SAVINGS_ACCOUNTS),
+        RECURRING(300, "depositAccountType.recurringDeposit", APIEndPoint.RECURRING_ACCOUNTS),
+        ;
+
+        companion object {
+            fun fromId(id: Int): ServerTypes {
+                for (type in entries) {
+                    if (type.id == id) {
+                        return type
+                    }
                 }
+                return SAVINGS
             }
-            return SAVINGS
         }
     }
 }
