@@ -16,6 +16,7 @@ import com.mifos.core.network.datamanager.DataManagerCollectionSheet
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.organisation.OfficeEntity
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
@@ -30,7 +31,7 @@ class NewIndividualCollectionSheetRepositoryImp @Inject constructor(
         return dataManagerCollection.getIndividualCollectionSheet(payload)
     }
 
-    override suspend fun offices(): List<OfficeEntity> {
+    override fun offices(): Flow<List<OfficeEntity>> {
         return dataManager.offices()
     }
 

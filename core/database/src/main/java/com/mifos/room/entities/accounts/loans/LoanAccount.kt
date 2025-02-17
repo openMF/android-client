@@ -9,10 +9,12 @@
  */
 package com.mifos.room.entities.accounts.loans
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity(
     foreignKeys = [
@@ -30,6 +32,7 @@ import androidx.room.PrimaryKey
         ),
     ],
 )
+@Parcelize
 data class LoanAccount(
     @PrimaryKey
     val id: Int? = null,
@@ -57,4 +60,4 @@ data class LoanAccount(
     val loanCycle: Int? = null,
 
     val inArrears: Boolean? = null,
-)
+) : Parcelable

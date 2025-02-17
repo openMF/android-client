@@ -10,10 +10,10 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.entity.center.CenterPayload
 import com.mifos.core.entity.client.ClientPayload
-import com.mifos.core.entity.group.GroupPayload
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.center.CenterPayload
+import com.mifos.room.entities.group.GroupPayload
 import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
@@ -24,9 +24,9 @@ interface OfflineDashboardRepository {
 
     fun allDatabaseClientPayload(): Observable<List<ClientPayload>>
 
-    fun allDatabaseGroupPayload(): Observable<List<GroupPayload>>
+    fun allDatabaseGroupPayload(): Flow<List<GroupPayload>>
 
-    fun allDatabaseCenterPayload(): Observable<List<CenterPayload>>
+    fun allDatabaseCenterPayload(): Flow<List<CenterPayload>>
 
     fun databaseLoanRepayments(): Flow<List<LoanRepaymentRequest>>
 

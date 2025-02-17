@@ -10,28 +10,29 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
-import com.mifos.core.entity.group.GroupPayload
+import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.datamanager.DataManagerGroups
-import com.mifos.core.objects.responses.SaveResponse
-import rx.Observable
+import com.mifos.room.entities.group.GroupPayload
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class SyncGroupPayloadsRepositoryImp @Inject constructor(private val dataManagerGroups: DataManagerGroups) :
-    SyncGroupPayloadsRepository {
+class SyncGroupPayloadsRepositoryImp @Inject constructor(
+    private val dataManagerGroups: DataManagerGroups,
+) : SyncGroupPayloadsRepository {
 
-    override fun allDatabaseGroupPayload(): Observable<List<GroupPayload>> {
+    override fun allDatabaseGroupPayload(): Flow<List<GroupPayload>> {
         return dataManagerGroups.allDatabaseGroupPayload
     }
 
-    override fun createGroup(groupPayload: GroupPayload): Observable<SaveResponse> {
+    override suspend fun createGroup(groupPayload: GroupPayload): SaveResponse {
         return dataManagerGroups.createGroup(groupPayload)
     }
 
-    override fun deleteAndUpdateGroupPayloads(id: Int): Observable<List<GroupPayload>> {
+    override fun deleteAndUpdateGroupPayloads(id: Int): Flow<List<GroupPayload>> {
         return dataManagerGroups.deleteAndUpdateGroupPayloads(id)
     }
 
-    override fun updateGroupPayload(groupPayload: GroupPayload): Observable<GroupPayload> {
-        return dataManagerGroups.updateGroupPayload(groupPayload)
+    override suspend fun updateGroupPayload(groupPayload: GroupPayload) {
+        dataManagerGroups.updateGroupPayload(groupPayload)
     }
 }

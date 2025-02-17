@@ -36,11 +36,16 @@ class DataManagerOffices @Inject constructor(
     /**
      * return all List of Offices from DatabaseHelperOffices
      */
-    suspend fun offices(): List<OfficeEntity> {
-        return baseApiManager.getOfficeApi().retrieveOffices(null, null, null).map(
-            GetOfficeResponseMapper::mapFromEntity,
-        )
+    fun offices(): Flow<List<OfficeEntity>> {
+        return flow {
+            emit(
+                baseApiManager.getOfficeApi().retrieveOffices(null, null, null).map(
+                    GetOfficeResponseMapper::mapFromEntity,
+                ),
+            )
+        }
     }
+
     val offices: Flow<List<OfficeEntity>>
         get() = when (prefManager.userStatus) {
             false -> flow {

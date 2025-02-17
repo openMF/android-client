@@ -10,11 +10,10 @@
 package com.mifos.core.data.repository
 
 import androidx.paging.PagingData
-import com.mifos.core.entity.group.Center
-import com.mifos.core.objects.clients.Page
+import com.mifos.core.model.objects.clients.Page
+import com.mifos.room.entities.group.Center
 import com.mifos.room.entities.group.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -25,5 +24,5 @@ interface CenterListRepository {
 
     suspend fun getCentersGroupAndMeeting(id: Int): CenterWithAssociations
 
-    fun allDatabaseCenters(): Observable<Page<Center>>
+    fun allDatabaseCenters(): Flow<Page<Center>>
 }

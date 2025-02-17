@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.center.syncCentersDialog
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
@@ -16,15 +17,12 @@ import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncCentersDialogRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.accounts.loan.LoanAccount
-import com.mifos.core.entity.accounts.savings.SavingsAccount
 import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.group.Center
-import com.mifos.core.entity.group.Group
 import com.mifos.feature.center.R
-import com.mifos.room.entities.accounts.CenterAccounts
-import com.mifos.room.entities.accounts.GroupAccounts
-import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanAccount
+import com.mifos.room.entities.accounts.savings.SavingsAccount
+import com.mifos.room.entities.group.Center
+import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
@@ -34,8 +32,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.observeOn
+import kotlinx.coroutines.flow.subscribe
+import kotlinx.coroutines.flow.subscribeOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -65,13 +65,13 @@ class SyncCentersDialogViewModel @Inject constructor(
     )
     val syncCenterData: StateFlow<SyncCentersDialogData> = _syncCenterData
 
-    private var mLoanAccountList: List<LoanAccount> = ArrayList()
-    private var mSavingsAccountList: List<SavingsAccount> = ArrayList()
-    private var mMemberLoanAccountsList: List<LoanAccount> = ArrayList()
-    private var mCenterList: List<Center> = ArrayList()
-    private val mFailedSyncCenter: MutableList<Center> = ArrayList()
-    private var mGroups: List<Group> = ArrayList()
-    private var mClients: List<Client> = ArrayList()
+    private var mLoanAccountList: List<LoanAccount> = emptyList()
+    private var mSavingsAccountList: List<SavingsAccount> = emptyList()
+    private var mMemberLoanAccountsList: List<LoanAccount> = emptyList()
+    private var mCenterList: List<Center> = emptyList()
+    private val mFailedSyncCenter: MutableList<Center> = mutableListOf()
+    private var mGroups: List<Group> = emptyList()
+    private var mClients: List<Client> = emptyList()
     private var mLoanAccountSyncStatus = false
     private var mSavingAccountSyncStatus = false
     private var mCenterSyncIndex = 0
@@ -156,38 +156,31 @@ class SyncCentersDialogViewModel @Inject constructor(
      * @param centerId Center Id
      */
     private fun syncCenterAccounts(centerId: Int) {
-        repository.syncCenterAccounts(centerId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<CenterAccounts>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        onAccountSyncFailed(e)
-                    }
-
-                    override fun onNext(centerAccounts: CenterAccounts) {
-                        mLoanAccountList = getActiveLoanAccounts(
-                            centerAccounts
-                                .loanAccounts,
+        viewModelScope.launch {
+            repository.syncCenterAccounts(centerId)
+                .catch { e ->
+                    onAccountSyncFailed(e)
+                }.collect { centerAccounts ->
+                    mLoanAccountList = getActiveLoanAccounts(
+                        centerAccounts
+                            .loanAccounts,
+                    )
+                    mSavingsAccountList = getActiveSavingsAccounts(
+                        centerAccounts
+                            .savingsAccounts,
+                    )
+                    mMemberLoanAccountsList = getActiveLoanAccounts(
+                        centerAccounts
+                            .memberLoanAccounts,
+                    )
+                    // Updating UI
+                    maxSingleSyncCenterProgressBar = (
+                        mLoanAccountList.size +
+                            mSavingsAccountList.size + mMemberLoanAccountsList.size
                         )
-                        mSavingsAccountList = getActiveSavingsAccounts(
-                            centerAccounts
-                                .savingsAccounts,
-                        )
-                        mMemberLoanAccountsList = getActiveLoanAccounts(
-                            centerAccounts
-                                .memberLoanAccounts,
-                        )
-                        // Updating UI
-                        maxSingleSyncCenterProgressBar = (
-                            mLoanAccountList.size +
-                                mSavingsAccountList.size + mMemberLoanAccountsList.size
-                            )
-                        checkAccountsSyncStatusAndSyncAccounts()
-                    }
-                },
-            )
+                    checkAccountsSyncStatusAndSyncAccounts()
+                }
+        }
     }
 
     /**
@@ -338,17 +331,22 @@ class SyncCentersDialogViewModel @Inject constructor(
      * @param center Center
      */
     private fun syncCenter(center: Center) {
-        center.id = mCenterList[mCenterSyncIndex].id
-        center.sync = true
-        repository.syncCenterInDatabase(center)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe {
+        val updatedCenter = center.copy(
+            id = mCenterList[mCenterSyncIndex].id,
+            sync = true,
+        )
+        viewModelScope.launch {
+            try {
+                repository.syncCenterInDatabase(updatedCenter)
+
                 val singleSyncCenterMax = maxSingleSyncCenterProgressBar
                 _syncCenterData.update { it.copy(singleSyncCount = singleSyncCenterMax) }
                 mCenterSyncIndex += 1
                 syncCenter()
+            } catch (e: Exception) {
+                Log.d("TAG", "syncCenter: ${e.message}")
             }
+        }
     }
 
     /**
@@ -407,30 +405,24 @@ class SyncCentersDialogViewModel @Inject constructor(
      * @param centerId Center Id
      */
     private fun loadCenterAssociateGroups(centerId: Int) {
-        _syncCentersDialogUiState.value = SyncCentersDialogUiState.Loading
-        repository.getCenterWithAssociations(centerId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<CenterWithAssociations>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        onAccountSyncFailed(e)
-                    }
+        viewModelScope.launch {
+            _syncCentersDialogUiState.value = SyncCentersDialogUiState.Loading
 
-                    override fun onNext(centerWithAssociations: CenterWithAssociations) {
-                        mGroups = centerWithAssociations.groupMembers
-                        mGroupSyncIndex = 0
-                        resetIndexes()
-                        if (mGroups.isNotEmpty()) {
-                            _syncCenterData.update { it.copy(totalGroupsSyncCount = mGroups.size) }
-                            mGroups[mGroupSyncIndex].id?.let { syncGroupAccounts(it) }
-                        } else {
-                            syncCenter(mCenterList[mCenterSyncIndex])
-                        }
+            repository.getCenterWithAssociations(centerId)
+                .catch {
+                    onAccountSyncFailed(it)
+                }.collect { centerWithAssociations ->
+                    mGroups = centerWithAssociations.groupMembers
+                    mGroupSyncIndex = 0
+                    resetIndexes()
+                    if (mGroups.isNotEmpty()) {
+                        _syncCenterData.update { it.copy(totalGroupsSyncCount = mGroups.size) }
+                        mGroups[mGroupSyncIndex].id?.let { syncGroupAccounts(it) }
+                    } else {
+                        syncCenter(mCenterList[mCenterSyncIndex])
                     }
-                },
-            )
+                }
+        }
     }
 
     /**
@@ -479,29 +471,23 @@ class SyncCentersDialogViewModel @Inject constructor(
      * @param groupId Group Id
      */
     private fun syncGroupAccounts(groupId: Int) {
-        repository.syncGroupAccounts(groupId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<GroupAccounts>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        onAccountSyncFailed(e)
-                    }
-
-                    override fun onNext(groupAccounts: GroupAccounts) {
-                        mLoanAccountList = getActiveLoanAccounts(
-                            groupAccounts
-                                .loanAccounts,
-                        )
-                        mSavingsAccountList = getActiveSavingsAccounts(
-                            groupAccounts
-                                .savingsAccounts,
-                        )
-                        checkAccountsSyncStatusAndSyncGroupAccounts()
-                    }
-                },
-            )
+        viewModelScope.launch {
+            repository.syncGroupAccounts(groupId)
+                .catch { e ->
+                    onAccountSyncFailed(e)
+                }
+                .collect { groupAccounts ->
+                    mLoanAccountList = getActiveLoanAccounts(
+                        groupAccounts
+                            .loanAccounts,
+                    )
+                    mSavingsAccountList = getActiveSavingsAccounts(
+                        groupAccounts
+                            .savingsAccounts,
+                    )
+                    checkAccountsSyncStatusAndSyncGroupAccounts()
+                }
+        }
     }
 
     /**
@@ -595,30 +581,27 @@ class SyncCentersDialogViewModel @Inject constructor(
      * @param group
      */
     private fun syncGroup(group: Group) {
-        group.centerId = mCenterList[mCenterSyncIndex].id
-        group.sync = true
-        repository.syncGroupInDatabase(group)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<Group>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        _syncCentersDialogUiState.value =
-                            SyncCentersDialogUiState.Error(message = e.message.toString())
-                    }
+        val updatedGroup = group.copy(
+            centerId = mCenterList[mCenterSyncIndex].id,
+            sync = true,
+        )
 
-                    override fun onNext(group: Group) {
-                        resetIndexes()
-                        mGroupSyncIndex += 1
-                        if (mGroups.size == mGroupSyncIndex) {
-                            syncCenter(mCenterList[mCenterSyncIndex])
-                        } else {
-                            mGroups[mGroupSyncIndex].id?.let { syncGroupAccounts(it) }
-                        }
-                    }
-                },
-            )
+        viewModelScope.launch {
+            try {
+                repository.syncGroupInDatabase(updatedGroup)
+
+                resetIndexes()
+                mGroupSyncIndex += 1
+                if (mGroups.size == mGroupSyncIndex) {
+                    syncCenter(mCenterList[mCenterSyncIndex])
+                } else {
+                    mGroups[mGroupSyncIndex].id?.let { syncGroupAccounts(it) }
+                }
+            } catch (e: Exception) {
+                _syncCentersDialogUiState.value =
+                    SyncCentersDialogUiState.Error(message = e.message.toString())
+            }
+        }
     }
 
     /**

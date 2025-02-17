@@ -10,8 +10,8 @@
 package com.mifos.room.entities.accounts
 
 import android.os.Parcelable
-import com.mifos.core.entity.accounts.loan.LoanAccount
-import com.mifos.core.entity.accounts.savings.SavingsAccount
+import com.mifos.room.entities.accounts.loans.LoanAccount
+import com.mifos.room.entities.accounts.savings.SavingsAccount
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -19,9 +19,9 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class CenterAccounts(
-    var loanAccounts: List<LoanAccount> = ArrayList(),
+    val loanAccounts: List<LoanAccount> = emptyList(),
 
-    var savingsAccounts: List<SavingsAccount> = ArrayList(),
+    val savingsAccounts: List<SavingsAccount> = emptyList(),
 
-    var memberLoanAccounts: List<LoanAccount> = ArrayList(),
+    val memberLoanAccounts: List<LoanAccount> = emptyList(),
 ) : Parcelable

@@ -9,21 +9,21 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.databasehelper.DatabaseHelperCenter
-import com.mifos.core.entity.center.CenterPayload
-import com.mifos.core.entity.group.Center
 import com.mifos.core.entity.organisation.Office
+import com.mifos.core.model.objects.clients.ActivatePayload
+import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.centers.GetCentersResponseMapper
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
-import com.mifos.core.objects.clients.ActivatePayload
-import com.mifos.core.objects.clients.Page
-import com.mifos.core.objects.responses.SaveResponse
 import com.mifos.room.entities.accounts.CenterAccounts
+import com.mifos.room.entities.center.CenterPayload
+import com.mifos.room.entities.group.Center
 import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.helper.CenterDaoHelper
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.openapitools.client.models.PostCentersCenterIdRequest
 import org.openapitools.client.models.PostCentersCenterIdResponse
-import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,7 +36,7 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerCenter @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    private val mDatabaseHelperCenter: DatabaseHelperCenter,
+    private val centerDatabaseHelper: CenterDaoHelper,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
     private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
@@ -88,8 +88,8 @@ class DataManagerCenter @Inject constructor(
      * @param center Center
      * @return Center
      */
-    fun syncCenterInDatabase(center: Center): Observable<Center> {
-        return mDatabaseHelperCenter.saveCenter(center)
+    suspend fun syncCenterInDatabase(center: Center) {
+        return centerDatabaseHelper.saveCenter(center)
     }
 
     /**
@@ -99,14 +99,13 @@ class DataManagerCenter @Inject constructor(
      * @param centerId Center Id
      * @return CenterAccounts
      */
-    fun syncCenterAccounts(centerId: Int): Observable<CenterAccounts> {
-        return mBaseApiManager.centerApi.getCenterAccounts(centerId)
-            .concatMap { centerAccounts ->
-                mDatabaseHelperCenter.saveCenterAccounts(
-                    centerAccounts,
-                    centerId,
-                )
+    fun syncCenterAccounts(centerId: Int): Flow<CenterAccounts> {
+        return flow {
+            val centerAccounts = mBaseApiManager.centerApi.getCenterAccounts(centerId).also {
+                centerDatabaseHelper.saveCenterAccounts(it, centerId)
             }
+            emit(centerAccounts)
+        }
     }
 
     /**
@@ -123,14 +122,14 @@ class DataManagerCenter @Inject constructor(
             .getCenterWithGroupMembersAndCollectionMeetingCalendar(id)
     }
 
-    fun createCenter(centerPayload: CenterPayload): Observable<SaveResponse> {
-        return when (prefManager.userStatus) {
+    suspend fun createCenter(centerPayload: CenterPayload?) {
+        when (prefManager.userStatus) {
             false -> mBaseApiManager.centerApi.createCenter(centerPayload)
             true ->
                 /**
                  * Save CenterPayload in Database table.
                  */
-                mDatabaseHelperCenter.saveCenterPayload(centerPayload)
+                centerDatabaseHelper.saveCenterPayload(centerPayload)
         }
     }
 
@@ -139,14 +138,16 @@ class DataManagerCenter @Inject constructor(
      * @param centerId Center Id
      * @return CenterWithAssociations
      */
-    fun getCenterWithAssociations(centerId: Int): Observable<CenterWithAssociations> {
-        return when (prefManager.userStatus) {
-            false -> mBaseApiManager.centerApi.getAllGroupsForCenter(centerId)
-            true ->
-                /**
-                 * Return Groups from DatabaseHelperGroups.
-                 */
-                mDatabaseHelperCenter.getCenterAssociateGroups(centerId)
+    fun getCenterWithAssociations(centerId: Int): Flow<CenterWithAssociations> {
+        return flow {
+            when (prefManager.userStatus) {
+                false -> mBaseApiManager.centerApi.getAllGroupsForCenter(centerId)
+                true ->
+                    /**
+                     * Return Groups from DatabaseHelperGroups.
+                     */
+                    centerDatabaseHelper.getCenterAssociateGroups(centerId)
+            }
         }
     }
 
@@ -156,8 +157,8 @@ class DataManagerCenter @Inject constructor(
      *
      * @return Page of Center List
      */
-    val allDatabaseCenters: Observable<Page<Center>>
-        get() = mDatabaseHelperCenter.readAllCenters()
+    val allDatabaseCenters: Flow<Page<Center>>
+        get() = centerDatabaseHelper.readAllCenters()
 
     suspend fun offices(): List<Office> {
         return baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
@@ -169,8 +170,8 @@ class DataManagerCenter @Inject constructor(
      *
      * @return List<CenterPayload>
      </CenterPayload> */
-    val allDatabaseCenterPayload: Observable<List<CenterPayload>>
-        get() = mDatabaseHelperCenter.readAllCenterPayload()
+    val allDatabaseCenterPayload: Flow<List<CenterPayload>>
+        get() = centerDatabaseHelper.readAllCenterPayload()
 
     /**
      * This method will called when user is syncing the Database center.
@@ -180,8 +181,8 @@ class DataManagerCenter @Inject constructor(
      * @param id of the centerPayload in Database
      * @return List<CenterPayload></CenterPayload>>
      */
-    fun deleteAndUpdateCenterPayloads(id: Int): Observable<List<CenterPayload>> {
-        return mDatabaseHelperCenter.deleteAndUpdateCenterPayloads(id)
+    fun deleteAndUpdateCenterPayloads(id: Int): Flow<List<CenterPayload>> {
+        return centerDatabaseHelper.deleteAndUpdateCenterPayloads(id)
     }
 
     /**
@@ -190,8 +191,8 @@ class DataManagerCenter @Inject constructor(
      * @param centerPayload CenterPayload
      * @return CenterPayload
      */
-    fun updateCenterPayload(centerPayload: CenterPayload): Observable<CenterPayload> {
-        return mDatabaseHelperCenter.updateDatabaseCenterPayload(centerPayload)
+    suspend fun updateCenterPayload(centerPayload: CenterPayload) {
+        return centerDatabaseHelper.updateDatabaseCenterPayload(centerPayload)
     }
 
     /**

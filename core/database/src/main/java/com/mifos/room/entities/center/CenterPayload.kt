@@ -10,7 +10,6 @@
 package com.mifos.room.entities.center
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -20,27 +19,20 @@ import kotlinx.parcelize.Parcelize
 data class CenterPayload(
     @PrimaryKey(autoGenerate = true)
     @Transient
-    var id: Int = 0,
+    val id: Int = 0,
 
-    @ColumnInfo(name = "errorMessage")
     @Transient
-    var errorMessage: String? = null,
+    val errorMessage: String? = null,
 
-    @ColumnInfo(name = "dateFormat")
-    var dateFormat: String? = null,
+    val dateFormat: String? = null,
 
-    @ColumnInfo(name = "locale")
-    var locale: String? = null,
+    val locale: String? = null,
 
-    @ColumnInfo(name = "name")
-    var name: String? = null,
+    val name: String? = null,
 
-    @ColumnInfo(name = "officeId")
-    var officeId: Int? = null,
+    val officeId: Int? = null,
 
-    @ColumnInfo(name = "active")
-    var active: Boolean = false,
+    val active: Boolean = false,
 
-    @ColumnInfo(name = "activationDate")
-    var activationDate: String? = null,
+    val activationDate: String? = null,
 ) : Parcelable

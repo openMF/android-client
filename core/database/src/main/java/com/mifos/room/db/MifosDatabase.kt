@@ -13,17 +13,22 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mifos.room.dao.ColumnValueDao
+import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
-import com.mifos.room.dao.OfficeDao
 import com.mifos.room.dao.StaffDao
 import com.mifos.room.dao.SurveyDao
 import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDate
+import com.mifos.room.entities.accounts.loans.LoanAccount
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import com.mifos.room.entities.accounts.loans.Status
 import com.mifos.room.entities.accounts.loans.Summary
 import com.mifos.room.entities.accounts.loans.Timeline
+import com.mifos.room.entities.accounts.savings.SavingsAccount
+import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.group.GroupPayload
 import com.mifos.room.entities.noncore.ColumnValue
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.Staff
@@ -34,7 +39,6 @@ import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import com.mifos.room.utils.typeconverters.DueDateConverter
 import com.mifos.room.utils.typeconverters.ListTypeConverters
 import com.mifos.room.utils.typeconverters.LoanTypeConverters
-import com.mifos.room.utils.typeconverters.OfficeTypeConverters
 import com.mifos.room.utils.typeconverters.ServerTypesConverters
 import com.mifos.room.utils.typeconverters.SurveyTypeConverters
 
@@ -56,8 +60,12 @@ import com.mifos.room.utils.typeconverters.SurveyTypeConverters
         QuestionDatas::class,
         ResponseDatas::class,
         Staff::class,
-        // office
         OfficeEntity::class,
+        Group::class,
+        LoanAccount::class,
+        SavingsAccount::class,
+        GroupAccounts::class,
+        GroupPayload::class,
     ],
     version = MifosDatabase.VERSION,
     exportSchema = true,
@@ -68,7 +76,6 @@ import com.mifos.room.utils.typeconverters.SurveyTypeConverters
     ServerTypesConverters::class,
     DueDateConverter::class,
     LoanTypeConverters::class,
-    OfficeTypeConverters::class,
     SurveyTypeConverters::class,
 )
 // ( TODO -> add type converters here )
@@ -76,9 +83,9 @@ import com.mifos.room.utils.typeconverters.SurveyTypeConverters
 abstract class MifosDatabase : RoomDatabase() {
     abstract fun columnValueDao(): ColumnValueDao
     abstract fun loanDao(): LoanDao
-    abstract fun officeDao(): OfficeDao
     abstract fun surveyDao(): SurveyDao
     abstract fun staffDao(): StaffDao
+    abstract fun groupsDao(): GroupsDao
 
     companion object {
         const val VERSION = 1
