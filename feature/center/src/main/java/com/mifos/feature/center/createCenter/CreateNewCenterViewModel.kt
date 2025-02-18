@@ -11,44 +11,42 @@ package com.mifos.feature.center.createCenter
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewCenterRepository
-import com.mifos.core.domain.useCases.GetOfficeListUseCase
+import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.feature.center.R
 import com.mifos.room.entities.center.CenterPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateNewCenterViewModel @Inject constructor(
-    private val getOfficeListUseCase: GetOfficeListUseCase,
+//    private val getOfficeListUseCase: GetOfficeListUseCase,
 //    private val createNewCenterUseCase: CreateNewCenterUseCase,
     private val repository: CreateNewCenterRepository,
+    private val collectionSheetRepo: NewIndividualCollectionSheetRepository,
 ) : ViewModel() {
 
     private val _createNewCenterUiState =
         MutableStateFlow<CreateNewCenterUiState>(CreateNewCenterUiState.Loading)
     val createNewCenterUiState = _createNewCenterUiState.asStateFlow()
 
-    fun loadOffices() = viewModelScope.launch(Dispatchers.IO) {
-        getOfficeListUseCase().collect { result ->
-            when (result) {
-                is Resource.Error ->
+    fun loadOffices() {
+        viewModelScope.launch {
+            _createNewCenterUiState.value =
+                CreateNewCenterUiState.Loading
+
+            collectionSheetRepo.offices()
+                .catch {
                     _createNewCenterUiState.value =
                         CreateNewCenterUiState.Error(R.string.feature_center_failed_to_load_offices)
-
-                is Resource.Loading ->
+                }.collect {
                     _createNewCenterUiState.value =
-                        CreateNewCenterUiState.Loading
-
-                is Resource.Success ->
-                    _createNewCenterUiState.value =
-                        CreateNewCenterUiState.Offices(result.data ?: emptyList())
-            }
+                        CreateNewCenterUiState.Offices(it)
+                }
         }
     }
 

@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.center.createCenter
 
-import com.mifos.core.entity.organisation.Office
+import com.mifos.room.entities.organisation.OfficeEntity
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -20,7 +20,7 @@ sealed class CreateNewCenterUiState {
 
     data class Error(val message: Int) : CreateNewCenterUiState()
 
-    data class Offices(val offices: List<Office>) : CreateNewCenterUiState()
+    data class Offices(val offices: List<OfficeEntity>) : CreateNewCenterUiState()
 
     data object CenterCreatedSuccessfully : CreateNewCenterUiState()
 }

@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.groups.createNewGroup
 
-import com.mifos.core.entity.organisation.Office
-import com.mifos.core.objects.responses.SaveResponse
+import com.mifos.core.model.objects.responses.SaveResponse
+import com.mifos.room.entities.organisation.OfficeEntity
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -21,7 +21,7 @@ sealed class CreateNewGroupUiState {
 
     data class ShowFetchingError(val message: String) : CreateNewGroupUiState()
 
-    data class ShowOffices(val offices: List<Office>) : CreateNewGroupUiState()
+    data class ShowOffices(val offices: List<OfficeEntity>) : CreateNewGroupUiState()
 
     data class ShowGroupCreatedSuccessfully(val saveResponse: SaveResponse) :
         CreateNewGroupUiState()

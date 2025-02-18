@@ -9,16 +9,17 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.organisation.Office
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.room.entities.group.GroupPayload
+import com.mifos.room.entities.organisation.OfficeEntity
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
 interface CreateNewGroupRepository {
 
-    suspend fun offices(): List<Office>
+    fun offices(): Flow<List<OfficeEntity>>
 
     suspend fun createGroup(groupPayload: GroupPayload): SaveResponse
 }

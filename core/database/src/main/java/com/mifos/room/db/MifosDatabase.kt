@@ -30,12 +30,12 @@ import com.mifos.room.entities.accounts.savings.SavingsAccount
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupPayload
 import com.mifos.room.entities.noncore.ColumnValue
+import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.Staff
 import com.mifos.room.entities.survey.QuestionDatas
 import com.mifos.room.entities.survey.ResponseDatas
 import com.mifos.room.entities.survey.Survey
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
-import com.mifos.room.utils.typeconverters.CenterTypeConverters
 import com.mifos.room.utils.typeconverters.DueDateConverter
 import com.mifos.room.utils.typeconverters.ListTypeConverters
 import com.mifos.room.utils.typeconverters.LoanTypeConverters
@@ -60,6 +60,7 @@ import com.mifos.room.utils.typeconverters.SurveyTypeConverters
         QuestionDatas::class,
         ResponseDatas::class,
         Staff::class,
+        OfficeEntity::class,
         Group::class,
         LoanAccount::class,
         SavingsAccount::class,
@@ -76,7 +77,6 @@ import com.mifos.room.utils.typeconverters.SurveyTypeConverters
     DueDateConverter::class,
     LoanTypeConverters::class,
     SurveyTypeConverters::class,
-    CenterTypeConverters::class,
 )
 // ( TODO -> add type converters here )
 

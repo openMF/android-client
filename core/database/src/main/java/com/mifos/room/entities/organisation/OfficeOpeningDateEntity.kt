@@ -9,25 +9,17 @@
  */
 package com.mifos.room.entities.organisation
 
-import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
 @Entity(tableName = "OfficeOpeningDate")
-data class OfficeOpeningDate(
+data class OfficeOpeningDateEntity(
     @PrimaryKey
-    @ColumnInfo(name = "officeId")
-    var officeId: Int? = null,
+    val officeId: Int? = null,
 
-    @ColumnInfo(name = "year")
-    var year: Int? = null,
+    val year: Int? = null,
 
-    @ColumnInfo(name = "month")
-    var month: Int? = null,
+    val month: Int? = null,
 
-    @ColumnInfo(name = "day")
-    var day: Int? = null,
-) : Parcelable
+    val day: Int? = null,
+)

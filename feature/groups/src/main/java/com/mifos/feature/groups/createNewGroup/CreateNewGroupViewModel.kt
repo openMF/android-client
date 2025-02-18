@@ -11,14 +11,13 @@ package com.mifos.feature.groups.createNewGroup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.useCases.GetGroupOfficesUseCase
 import com.mifos.room.entities.group.GroupPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +26,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class CreateNewGroupViewModel @Inject constructor(
-    private val getGroupOfficesUseCase: GetGroupOfficesUseCase,
+//    private val getGroupOfficesUseCase: GetGroupOfficesUseCase,
 //    private val createNewGroupUseCase: CreateNewGroupUseCase,
     private val repository: CreateNewGroupRepository,
     private val prefManager: PrefManager,
@@ -48,21 +47,20 @@ class CreateNewGroupViewModel @Inject constructor(
         }
     }
 
-    fun loadOffices() = viewModelScope.launch {
-        getGroupOfficesUseCase().collect { result ->
-            when (result) {
-                is Resource.Loading ->
-                    _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowProgressbar
+    fun loadOffices() {
+        viewModelScope.launch {
+            _createNewGroupUiState.value =
+                CreateNewGroupUiState.ShowProgressbar
 
-                is Resource.Error ->
+            repository.offices()
+                .catch {
                     _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowFetchingError(result.message.toString())
-
-                is Resource.Success ->
+                        CreateNewGroupUiState.ShowFetchingError(it.message.toString())
+                }
+                .collect {
                     _createNewGroupUiState.value =
-                        CreateNewGroupUiState.ShowOffices(result.data ?: emptyList())
-            }
+                        CreateNewGroupUiState.ShowOffices(it)
+                }
         }
     }
 

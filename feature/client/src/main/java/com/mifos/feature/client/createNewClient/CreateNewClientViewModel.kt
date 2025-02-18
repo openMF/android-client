@@ -12,16 +12,13 @@ package com.mifos.feature.client.createNewClient
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.core.domain.useCases.GetOfficeListUseCase
 import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.client.ClientPayload
-import com.mifos.core.entity.organisation.Office
 import com.mifos.feature.client.R
+import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.Staff
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -45,7 +42,7 @@ import javax.inject.Inject
 class CreateNewClientViewModel @Inject constructor(
     private val repository: CreateNewClientRepository,
 //    private val clientTemplateUseCase: ClientTemplateUseCase,
-    private val getOfficeListUseCase: GetOfficeListUseCase,
+//    private val getOfficeListUseCase: GetOfficeListUseCase,
 ) : ViewModel() {
 
     private val _createNewClientUiState =
@@ -55,8 +52,8 @@ class CreateNewClientViewModel @Inject constructor(
     private val _staffInOffices = MutableStateFlow<List<Staff>>(emptyList())
     val staffInOffices: StateFlow<List<Staff>> get() = _staffInOffices
 
-    private val _showOffices = MutableStateFlow<List<Office>>(emptyList())
-    val showOffices: StateFlow<List<Office>> get() = _showOffices
+    private val _showOffices = MutableStateFlow<List<OfficeEntity>>(emptyList())
+    val showOffices: StateFlow<List<OfficeEntity>> get() = _showOffices
 
     fun loadOfficeAndClientTemplate() {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
@@ -79,21 +76,15 @@ class CreateNewClientViewModel @Inject constructor(
 //        }
 //    }
 
-    private fun loadOffices() = viewModelScope.launch(Dispatchers.IO) {
-        getOfficeListUseCase().collect { result ->
-            when (result) {
-                is Resource.Error -> {
+    private fun loadOffices() {
+        viewModelScope.launch {
+            repository.offices()
+                .catch {
                     _createNewClientUiState.value =
                         CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_offices)
+                }.collect { offices ->
+                    _showOffices.value = offices
                 }
-
-                is Resource.Loading -> {
-                }
-
-                is Resource.Success -> {
-                    _showOffices.value = result.data ?: emptyList()
-                }
-            }
         }
     }
 

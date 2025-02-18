@@ -9,9 +9,13 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.entity.organisation.Office
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
+import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.helper.OfficeDaoHelper
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,30 +29,37 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerOffices @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-//    private val mDatabaseHelperOffices: DatabaseHelperOffices,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-//    private val prefManager: com.mifos.core.datastore.PrefManager,
+    private val officeDaoHelper: OfficeDaoHelper,
+    private val prefManager: PrefManager,
 ) {
     /**
      * return all List of Offices from DatabaseHelperOffices
      */
-    suspend fun offices(): List<Office> {
-        return baseApiManager.getOfficeApi().retrieveOffices(null, null, null).map(
-            GetOfficeResponseMapper::mapFromEntity,
-        )
+    fun offices(): Flow<List<OfficeEntity>> {
+        return flow {
+            emit(
+                baseApiManager.getOfficeApi().retrieveOffices(null, null, null).map(
+                    GetOfficeResponseMapper::mapFromEntity,
+                ),
+            )
+        }
     }
-//    val offices: Observable<List<Office>>
-//        get() = when (prefManager.userStatus) {
-//            false -> baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
-//                .map(GetOfficeResponseMapper::mapFromEntityList)
-//
-//            true ->
-//                /**
-//                 * return all List of Offices from DatabaseHelperOffices
-//                 */
-//                /**
-//                 * return all List of Offices from DatabaseHelperOffices
-//                 */
-//                mDatabaseHelperOffices.readAllOffices()
-//        }
+
+    val offices: Flow<List<OfficeEntity>>
+        get() = when (prefManager.userStatus) {
+            false -> flow {
+                baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
+                    .map { GetOfficeResponseMapper.mapFromEntity(it) }
+            }
+
+            true ->
+                /**
+                 * return all List of Offices from DatabaseHelperOffices
+                 */
+                /**
+                 * return all List of Offices from DatabaseHelperOffices
+                 */
+                officeDaoHelper.readAllOffices()
+        }
 }
