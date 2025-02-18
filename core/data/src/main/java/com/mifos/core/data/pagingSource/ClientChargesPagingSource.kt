@@ -60,8 +60,8 @@ class ClientChargesPagingSource(
             clientId = clientId,
             offset = position,
             limit = 10,
-        ).catch { exception ->
-            throw exception
+        ).catch {
+            throw DatabaseFetchException("Failed to fetch client charges")
         }.collect {
             page = it
         }
