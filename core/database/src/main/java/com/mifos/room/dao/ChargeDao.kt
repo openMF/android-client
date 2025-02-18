@@ -11,7 +11,6 @@ package com.mifos.room.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.mifos.room.entities.client.Charges
 import kotlinx.coroutines.flow.Flow
@@ -22,9 +21,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ChargeDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCharges(charge: List<Charges>)
-
     @Query("SELECT * FROM Charges where clientId = :clientId")
     fun getClientCharges(clientId: Int): Flow<List<Charges>>
+
+    @Insert
+    suspend fun insertAllCharges(vararg charges: List<Charges>)
 }

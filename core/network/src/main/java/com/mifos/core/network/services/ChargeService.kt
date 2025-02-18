@@ -17,6 +17,7 @@ import com.mifos.core.objects.template.client.ChargeTemplate
 import com.mifos.core.payloads.ChargesPayload
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.client.Charges
+import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -39,11 +40,11 @@ interface ChargeService {
     suspend fun getAllChargeV3(@Path("loanId") loanId: Int): ResponseBody
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/charges")
-    suspend fun getListOfCharges(
+    fun getListOfCharges(
         @Path("clientId") clientId: Int,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Page<Charges>
+    ): Flow<Page<Charges>>
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}/charges")
     suspend fun createCharges(

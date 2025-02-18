@@ -15,6 +15,7 @@ import com.mifos.room.entities.client.Charges
 import com.mifos.room.helper.ChargeDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,16 +45,15 @@ class DataManagerCharge @Inject constructor(
      * @return Page<Charge> Page of Charge in Which List Size is according to Limit and from
      * where position is Starting according to offset</Charge>>
      */
-    fun getClientCharges(
+    suspend fun getClientCharges(
         clientId: Int,
         offset: Int,
         limit: Int,
     ): Flow<Page<Charges>> {
         return when (prefManager.userStatus) {
-            false -> flow {
-                val charges = mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
-                chargeDatabase.saveClientCharges(charges, clientId)
-                emit(charges)
+            false -> mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit).map {
+                chargeDatabase.saveClientCharges(it, clientId)
+                it
             }
 
             true -> {

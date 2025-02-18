@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.organisation.Office
 import com.mifos.room.basemodel.APIEndPoint
+import com.mifos.room.entities.organisation.OfficeEntity
 import retrofit2.http.GET
 
 /**
@@ -23,5 +23,5 @@ interface OfficeService {
      * @param listOfOfficesCallback
      */
     @GET(APIEndPoint.OFFICES)
-    suspend fun allOffices(): List<Office>
+    suspend fun allOffices(): List<OfficeEntity>
 }

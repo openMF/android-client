@@ -9,11 +9,15 @@
  */
 package com.mifos.room.helper
 
+import com.mifos.core.common.network.Dispatcher
+import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.room.dao.ChargeDao
 import com.mifos.room.entities.client.Charges
 import com.mifos.room.entities.client.ClientDate
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -22,6 +26,8 @@ import javax.inject.Inject
  */
 class ChargeDaoHelper @Inject constructor(
     private val chargeDao: ChargeDao,
+    @Dispatcher(MifosDispatchers.IO)
+    private val ioDispatcher: CoroutineDispatcher,
 ) {
     /**
      * This Method save the All Client Charges in Database and save the Charge Due date in the
@@ -39,10 +45,10 @@ class ChargeDaoHelper @Inject constructor(
             val dateParts = charges.dueDate.orEmpty().split("-").mapNotNull { it.toIntOrNull() }
 
             val clientDate = if (dateParts.size == 3) {
-                charges.id?.toLong()?.let {
+                charges.id?.toLong()?.let { chargeId ->
                     ClientDate(
                         0,
-                        it,
+                        chargeId,
                         dateParts[2],
                         dateParts[1],
                         dateParts[0],
@@ -55,7 +61,7 @@ class ChargeDaoHelper @Inject constructor(
             charges.copy(clientId = clientId, chargeDueDate = clientDate)
         }
 
-        chargeDao.insertCharges(updatedCharges)
+        chargeDao.insertAllCharges(updatedCharges)
     }
 
     /**
@@ -66,16 +72,14 @@ class ChargeDaoHelper @Inject constructor(
      * @return Page of Charges
      */
     fun readClientCharges(clientId: Int): Flow<Page<Charges>> {
-        return chargeDao.getClientCharges(clientId).map { chargesList ->
-            val updatedChargesList = chargesList.map { charge ->
-                charge.copy(
-                    dueDate = charge.chargeDueDate?.let {
-                        "${it.year}-${it.month}-${it.day}"
-                    },
-                )
+        return chargeDao.getClientCharges(clientId)
+            .map { chargesList ->
+                Page<Charges>().apply {
+                    pageItems = chargesList.map { charge ->
+                        charge.copy(dueDate = charge.chargeDueDate?.run { "$year-$month-$day" })
+                    }
+                }
             }
-
-            Page<Charges>().apply { pageItems = updatedChargesList }
-        }
+            .flowOn(ioDispatcher)
     }
 }

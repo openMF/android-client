@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewGroupRepository
-import com.mifos.core.entity.organisation.Office
+import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 class GetGroupOfficesUseCase @Inject constructor(private val repository: CreateNewGroupRepository) {
 
-    suspend operator fun invoke(): Flow<Resource<List<Office>>> = flow {
+    suspend operator fun invoke(): Flow<Resource<List<OfficeEntity>>> = flow {
         try {
             emit(Resource.Loading())
             val response = repository.offices()

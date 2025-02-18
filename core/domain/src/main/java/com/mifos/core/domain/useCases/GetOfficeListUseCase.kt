@@ -11,14 +11,14 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
-import com.mifos.core.entity.organisation.Office
+import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetOfficeListUseCase @Inject constructor(private val repository: NewIndividualCollectionSheetRepository) {
 
-    suspend operator fun invoke(): Flow<Resource<List<Office>>> = flow {
+    suspend operator fun invoke(): Flow<Resource<List<OfficeEntity>>> = flow {
         try {
             emit(Resource.Loading())
             emit(Resource.Success(repository.offices()))

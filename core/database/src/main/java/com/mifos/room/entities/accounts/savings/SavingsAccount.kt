@@ -9,10 +9,12 @@
  */
 package com.mifos.room.entities.accounts.savings
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity(
     tableName = "SavingsAccount",
@@ -37,6 +39,7 @@ import androidx.room.PrimaryKey
         ),
     ],
 )
+@Parcelize
 data class SavingsAccount(
     @PrimaryKey
     var id: Int? = null,
@@ -72,4 +75,4 @@ data class SavingsAccount(
 
     @ColumnInfo(name = "depositType", index = true)
     var depositType: DepositType? = null,
-)
+) : Parcelable

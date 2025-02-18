@@ -11,13 +11,12 @@ package com.mifos.core.network
 
 import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.core.entity.accounts.loan.Loans
-import com.mifos.core.entity.client.Charges
 import com.mifos.core.entity.group.Center
 import com.mifos.core.entity.group.CenterWithAssociations
 import com.mifos.core.entity.group.Group
 import com.mifos.core.entity.group.GroupWithAssociations
-import com.mifos.core.entity.organisation.Office
 import com.mifos.core.entity.organisation.Staff
+import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.CollectionSheetPayload
@@ -30,6 +29,10 @@ import com.mifos.core.objects.responses.SaveResponse
 import com.mifos.core.objects.template.client.ChargeTemplate
 import com.mifos.core.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.payloads.ChargesPayload
+import com.mifos.room.entities.client.Charges
+import com.mifos.room.entities.organisation.OfficeEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import okhttp3.ResponseBody
 import rx.Observable
 import javax.inject.Inject
@@ -109,7 +112,7 @@ class DataManager {
      * Charges API
      */
     // TODO Remove this Method After fixing the Charge Test
-    fun getClientCharges(clientId: Int, offset: Int, limit: Int): Observable<Page<Charges>> {
+    fun getClientCharges(clientId: Int, offset: Int, limit: Int): Flow<Page<Charges>> {
         return mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
     }
 
@@ -152,7 +155,11 @@ class DataManager {
     /**
      * Offices API
      */
-    suspend fun offices(): List<Office> = mBaseApiManager.officeApi.allOffices()
+    fun offices(): Flow<List<OfficeEntity>> {
+        return flow {
+            emit(mBaseApiManager.officeApi.allOffices())
+        }
+    }
 
     /**
      * Staff API
@@ -186,7 +193,10 @@ class DataManager {
         return mBaseApiManager.loanApi.getLoanRepaymentSchedule(loanId)
     }
 
-    fun approveLoan(loanId: Int, loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval?): Observable<GenericResponse> {
+    fun approveLoan(
+        loanId: Int,
+        loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval?,
+    ): Observable<GenericResponse> {
         return mBaseApiManager.loanApi.approveLoanApplication(loanId, loanApproval)
     }
 

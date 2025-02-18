@@ -16,12 +16,11 @@ import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.accounts.loan.LoanAccount
-import com.mifos.core.entity.accounts.savings.SavingsAccount
 import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.group.Group
 import com.mifos.feature.groups.R
-import com.mifos.room.entities.accounts.GroupAccounts
+import com.mifos.room.entities.accounts.loans.LoanAccount
+import com.mifos.room.entities.accounts.savings.SavingsAccount
+import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
@@ -53,11 +52,11 @@ class SyncGroupsDialogViewModel @Inject constructor(
     private val prefManager: PrefManager,
 ) : ViewModel() {
 
-    private var mGroupList: List<Group> = ArrayList()
-    private val mFailedSyncGroup: MutableList<Group> = ArrayList()
-    private var mClients: List<Client> = ArrayList()
-    private var mLoanAccountList: List<LoanAccount> = ArrayList()
-    private var mSavingsAccountList: List<SavingsAccount> = ArrayList()
+    private var mGroupList: List<Group> = emptyList()
+    private val mFailedSyncGroup: MutableList<Group> = mutableListOf()
+    private var mClients: List<Client> = emptyList()
+    private var mLoanAccountList: List<LoanAccount> = emptyList()
+    private var mSavingsAccountList: List<SavingsAccount> = emptyList()
     private var mLoanAccountSyncStatus = false
     private var mGroupSyncIndex = 0
     private var mClientSyncIndex = 0
@@ -205,31 +204,25 @@ class SyncGroupsDialogViewModel @Inject constructor(
      * @param groupId Client Id
      */
     private fun syncGroupAccounts(groupId: Int) {
-        repository.syncGroupAccounts(groupId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<GroupAccounts>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        onAccountSyncFailed(e)
-                    }
+        viewModelScope.launch {
+            repository.syncGroupAccounts(groupId)
+                .catch {
+                    onAccountSyncFailed(it)
+                }
+                .collect { groupAccounts ->
+                    mLoanAccountList = getActiveLoanAccounts(
+                        groupAccounts.loanAccounts,
+                    )
+                    mSavingsAccountList = getActiveSavingsAccounts(
+                        groupAccounts.savingsAccounts,
+                    )
 
-                    override fun onNext(groupAccounts: GroupAccounts) {
-                        mLoanAccountList = getActiveLoanAccounts(
-                            groupAccounts.loanAccounts,
-                        )
-                        mSavingsAccountList = getActiveSavingsAccounts(
-                            groupAccounts.savingsAccounts,
-                        )
-
-                        // Updating UI
-                        maxSingleSyncGroupProgressBar =
-                            mLoanAccountList.size + mSavingsAccountList.size
-                        checkAccountsSyncStatusAndSyncAccounts()
-                    }
-                },
-            )
+                    // Updating UI
+                    maxSingleSyncGroupProgressBar =
+                        mLoanAccountList.size + mSavingsAccountList.size
+                    checkAccountsSyncStatusAndSyncAccounts()
+                }
+        }
     }
 
     /**
@@ -500,17 +493,18 @@ class SyncGroupsDialogViewModel @Inject constructor(
      * @param group Group
      */
     private fun syncGroup(group: Group) {
-        group.sync = true
-        repository.syncGroupInDatabase(group)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe {
+        val updatedGroup = group.copy(sync = true)
+        viewModelScope.launch {
+            try {
+                repository.syncGroupInDatabase(updatedGroup)
+
                 _syncGroupData.update { it.copy(clientSyncCount = 0) }
                 val singleSyncClientMax = maxSingleSyncGroupProgressBar
                 _syncGroupData.update { it.copy(singleSyncCount = singleSyncClientMax) }
                 mGroupSyncIndex += 1
                 syncGroups()
-            }
+            } catch (_: Exception) { }
+        }
     }
 
     /**
