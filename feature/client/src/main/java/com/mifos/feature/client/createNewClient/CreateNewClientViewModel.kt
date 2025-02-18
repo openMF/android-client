@@ -14,12 +14,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CreateNewClientRepository
+import com.mifos.core.domain.useCases.ClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetOfficeListUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeForCreateNewClientUseCase
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.client.ClientPayload
 import com.mifos.core.objects.organisation.Office
 import com.mifos.core.objects.organisation.Staff
+import com.mifos.core.objects.templates.clients.ClientsTemplate
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +46,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateNewClientViewModel @Inject constructor(
     private val repository: CreateNewClientRepository,
-//    private val clientTemplateUseCase: ClientTemplateUseCase,
+    private val clientTemplateUseCase: ClientTemplateUseCase,
     private val getStaffInOffice: GetStaffInOfficeForCreateNewClientUseCase,
     private val getOfficeListUseCase: GetOfficeListUseCase,
 ) : ViewModel() {
@@ -61,24 +63,25 @@ class CreateNewClientViewModel @Inject constructor(
 
     fun loadOfficeAndClientTemplate() {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
+        loadClientTemplate()
         loadOffices()
     }
 
-//    private fun loadClientTemplate() = viewModelScope.launch(Dispatchers.IO) {
-//        clientTemplateUseCase().collect { result ->
-//            when (result) {
-//                is Resource.Error ->
-//                    _createNewClientUiState.value =
-//                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
-//
-//                is Resource.Loading -> Unit
-//
-//                is Resource.Success ->
-//                    _createNewClientUiState.value =
-//                        CreateNewClientUiState.ShowClientTemplate(result.data ?: ClientsTemplate())
-//            }
-//        }
-//    }
+    private fun loadClientTemplate() = viewModelScope.launch(Dispatchers.IO) {
+        clientTemplateUseCase().collect { result ->
+            when (result) {
+                is Resource.Error ->
+                    _createNewClientUiState.value =
+                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
+
+                is Resource.Loading -> Unit
+
+                is Resource.Success ->
+                    _createNewClientUiState.value =
+                        CreateNewClientUiState.ShowClientTemplate(result.data ?: ClientsTemplate())
+            }
+        }
+    }
 
     private fun loadOffices() = viewModelScope.launch(Dispatchers.IO) {
         getOfficeListUseCase().collect { result ->

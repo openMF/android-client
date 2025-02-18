@@ -14,6 +14,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.telephony.PhoneNumberUtils
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -299,9 +300,10 @@ private fun CreateNewClientContent(
     val file = context.createTempImageFile()
     val imgUri = FileProvider.getUriForFile(
         Objects.requireNonNull(context),
-        "com.mifos.mifosxdroid" + ".provider",
+        context.packageName + ".provider",
         file,
     )
+    Log.d("Debuguripath", context.packageName)
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
@@ -371,7 +373,7 @@ private fun CreateNewClientContent(
             onGranted = {
                 LaunchedEffect(key1 = Unit) {
                     if (imagePickerActionType == ImagePickerType.GALLERY) {
-                        imagePickerLauncher.launch("image/png")
+                        imagePickerLauncher.launch("my_images/png")
                     } else {
                         cameraLauncher.launch(imgUri)
                     }
