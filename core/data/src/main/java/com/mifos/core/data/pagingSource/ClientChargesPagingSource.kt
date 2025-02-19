@@ -11,15 +11,12 @@ package com.mifos.core.data.pagingSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.mifos.core.entity.client.Charges
+import com.mifos.core.common.utils.DatabaseFetchException
+import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.datamanager.DataManagerCharge
-import com.mifos.core.objects.clients.Page
-import kotlinx.coroutines.suspendCancellableCoroutine
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
+import com.mifos.room.entities.client.Charges
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 
 class ClientChargesPagingSource(
     private val clientId: Int,
@@ -48,6 +45,8 @@ class ClientChargesPagingSource(
             )
         } catch (exception: Exception) {
             LoadResult.Error(exception)
+        } catch (exception: DatabaseFetchException) {
+            LoadResult.Error(exception)
         }
     }
 
@@ -55,22 +54,20 @@ class ClientChargesPagingSource(
         clientId: Int,
         position: Int,
     ): Pair<List<Charges>, Int> {
-        return suspendCancellableCoroutine { continuation ->
-            dataManagerCharge.getClientCharges(clientId = clientId, offset = position, 10)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Charges>>() {
-                    override fun onCompleted() {
-                    }
+        var page: Page<Charges>? = null
 
-                    override fun onError(exception: Throwable) {
-                        continuation.resumeWithException(exception)
-                    }
-
-                    override fun onNext(page: Page<Charges>) {
-                        continuation.resume(Pair(page.pageItems, page.totalFilteredRecords))
-                    }
-                })
+        dataManagerCharge.getClientCharges(
+            clientId = clientId,
+            offset = position,
+            limit = 10,
+        ).catch {
+            throw DatabaseFetchException("Failed to fetch client charges")
+        }.collect {
+            page = it
         }
+
+        return page?.let {
+            Pair(it.pageItems, it.totalFilteredRecords)
+        } ?: throw DatabaseFetchException("Failed to fetch client charges")
     }
 }

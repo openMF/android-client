@@ -10,7 +10,6 @@
 package com.mifos.room.entities.client
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -56,62 +55,43 @@ import kotlinx.serialization.json.Json
 )
 data class Charges(
     @PrimaryKey
-    @ColumnInfo(name = "id")
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "clientId")
-    var clientId: Int? = null,
+    val clientId: Int? = null,
 
-    @ColumnInfo(name = "loanId")
-    var loanId: Int? = null,
+    val loanId: Int? = null,
 
-    @ColumnInfo(name = "chargeId")
-    var chargeId: Int? = null,
+    val chargeId: Int? = null,
 
-    @ColumnInfo(name = "name")
-    var name: String? = null,
+    val name: String? = null,
 
-    @ColumnInfo(name = "chargeTimeType")
-    var chargeTimeType: ChargeTimeType? = null,
+    val chargeTimeType: ChargeTimeType? = null,
 
-    @ColumnInfo(name = "chargeDueDateId")
-    var chargeDueDate: ClientDate? = null,
+    val chargeDueDate: ClientDate? = null,
 
-    @ColumnInfo(name = "dueDate")
-    var dueDate: String? = null,
+    val dueDate: String? = null,
 
-    @ColumnInfo(name = "chargeCalculationType")
-    var chargeCalculationType: ChargeCalculationType? = null,
+    val chargeCalculationType: ChargeCalculationType? = null,
 
-    @ColumnInfo(name = "currency")
-    var currency: Currency? = null,
+    val currency: Currency? = null,
 
-    @ColumnInfo(name = "amount")
-    var amount: Double? = null,
+    val amount: Double? = null,
 
-    @ColumnInfo(name = "amountPaid")
-    var amountPaid: Double? = null,
+    val amountPaid: Double? = null,
 
-    @ColumnInfo(name = "amountWaived")
-    var amountWaived: Double? = null,
+    val amountWaived: Double? = null,
 
-    @ColumnInfo(name = "amountWrittenOff")
-    var amountWrittenOff: Double? = null,
+    val amountWrittenOff: Double? = null,
 
-    @ColumnInfo(name = "amountOutstanding")
-    var amountOutstanding: Double? = null,
+    val amountOutstanding: Double? = null,
 
-    @ColumnInfo(name = "penalty")
-    var penalty: Boolean? = null,
+    val penalty: Boolean? = null,
 
-    @ColumnInfo(name = "active")
-    var active: Boolean? = null,
+    val active: Boolean? = null,
 
-    @ColumnInfo(name = "paid")
-    var paid: Boolean? = null,
+    val paid: Boolean? = null,
 
-    @ColumnInfo(name = "waived")
-    var waived: Boolean? = null,
+    val waived: Boolean? = null,
 ) : Parcelable {
 
     val formattedDueDate: String

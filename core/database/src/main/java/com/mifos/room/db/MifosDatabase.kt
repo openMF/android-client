@@ -12,9 +12,11 @@ package com.mifos.room.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
+import com.mifos.room.dao.OfficeDao
 import com.mifos.room.dao.StaffDao
 import com.mifos.room.dao.SurveyDao
 import com.mifos.room.entities.PaymentTypeOption
@@ -46,7 +48,6 @@ import com.mifos.room.utils.typeconverters.SurveyTypeConverters
     // [TODO -> add other entities ]
     entities = [
         ColumnValue::class,
-        // loan
         LoanWithAssociations::class,
         LoanRepaymentRequest::class,
         LoanRepaymentTemplate::class,
@@ -55,7 +56,6 @@ import com.mifos.room.utils.typeconverters.SurveyTypeConverters
         Timeline::class,
         Status::class,
         Summary::class,
-        // survey
         Survey::class,
         QuestionDatas::class,
         ResponseDatas::class,
@@ -85,7 +85,9 @@ abstract class MifosDatabase : RoomDatabase() {
     abstract fun loanDao(): LoanDao
     abstract fun surveyDao(): SurveyDao
     abstract fun staffDao(): StaffDao
+    abstract fun officeDao(): OfficeDao
     abstract fun groupsDao(): GroupsDao
+    abstract fun chargeDao(): ChargeDao
 
     companion object {
         const val VERSION = 1

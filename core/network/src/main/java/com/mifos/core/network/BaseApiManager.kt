@@ -10,10 +10,8 @@
 package com.mifos.core.network
 
 import com.google.gson.GsonBuilder
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.common.utils.FlowCallAdapterFactory
 import com.mifos.core.model.getInstanceUrl
-import com.mifos.core.network.adapter.FlowCallAdapterFactory
-import com.mifos.core.network.services.AuthService
 import com.mifos.core.network.services.CenterService
 import com.mifos.core.network.services.ChargeService
 import com.mifos.core.network.services.CheckerInboxService
@@ -31,13 +29,9 @@ import com.mifos.core.network.services.SavingsAccountService
 import com.mifos.core.network.services.SearchService
 import com.mifos.core.network.services.StaffService
 import com.mifos.core.network.services.SurveyService
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
 import org.mifos.core.utils.JsonDateSerializer
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.Date
 import javax.inject.Inject
@@ -45,9 +39,8 @@ import javax.inject.Inject
 /**
  * @author fomenkoo
  */
-class BaseApiManager @Inject constructor(
-    prefManager: PrefManager,
-) {
+class BaseApiManager @Inject constructor(private val prefManager: com.mifos.core.datastore.PrefManager) {
+
     init {
         createService(prefManager)
     }
@@ -86,8 +79,6 @@ class BaseApiManager @Inject constructor(
         get() = Companion.noteApi
     val runReportsService: RunReportsService
         get() = Companion.runReportsService
-    val authApi: AuthService
-        get() = Companion.authApi
 
     companion object {
         private var mRetrofit: Retrofit? = null
@@ -108,46 +99,73 @@ class BaseApiManager @Inject constructor(
         private lateinit var noteApi: NoteService
         private lateinit var collectionSheetApi: CollectionSheetService
         private lateinit var checkerInboxApi: CheckerInboxService
-        private lateinit var authApi: AuthService
 
         fun init() {
-            centerApi = createApi(CenterService::class.java)
-            accountsApi = createApi(ClientAccountsService::class.java)
-            clientsApi = createApi(ClientService::class.java)
-            dataTableApi = createApi(DataTableService::class.java)
-            loanApi = createApi(LoanService::class.java)
-            savingsApi = createApi(SavingsAccountService::class.java)
-            searchApi = createApi(SearchService::class.java)
-            groupApi = createApi(GroupService::class.java)
-            documentApi = createApi(DocumentService::class.java)
-            officeApi = createApi(OfficeService::class.java)
-            staffApi = createApi(StaffService::class.java)
-            surveyApi = createApi(SurveyService::class.java)
-            chargeApi = createApi(ChargeService::class.java)
-            runReportsService = createApi(RunReportsService::class.java)
-            noteApi = createApi(NoteService::class.java)
-            collectionSheetApi = createApi(CollectionSheetService::class.java)
-            checkerInboxApi = createApi(CheckerInboxService::class.java)
-            authApi = createApi(AuthService::class.java)
+            centerApi = createApi(
+                CenterService::class.java,
+            )
+            accountsApi = createApi(
+                ClientAccountsService::class.java,
+            )
+            clientsApi = createApi(
+                ClientService::class.java,
+            )
+            dataTableApi = createApi(
+                DataTableService::class.java,
+            )
+            loanApi = createApi(
+                LoanService::class.java,
+            )
+            savingsApi = createApi(
+                SavingsAccountService::class.java,
+            )
+            searchApi = createApi(
+                SearchService::class.java,
+            )
+            groupApi = createApi(
+                GroupService::class.java,
+            )
+            documentApi = createApi(
+                DocumentService::class.java,
+            )
+            officeApi = createApi(
+                OfficeService::class.java,
+            )
+            staffApi = createApi(
+                StaffService::class.java,
+            )
+            surveyApi = createApi(
+                SurveyService::class.java,
+            )
+            chargeApi = createApi(
+                ChargeService::class.java,
+            )
+            runReportsService = createApi(
+                RunReportsService::class.java,
+            )
+            noteApi = createApi(
+                NoteService::class.java,
+            )
+            collectionSheetApi = createApi(
+                CollectionSheetService::class.java,
+            )
+            checkerInboxApi = createApi(
+                CheckerInboxService::class.java,
+            )
         }
 
         private fun <T> createApi(clazz: Class<T>): T {
             return mRetrofit!!.create(clazz)
         }
 
-        fun createService(prefManager: PrefManager) {
+        fun createService(prefManager: com.mifos.core.datastore.PrefManager) {
             val gson = GsonBuilder()
-                .disableHtmlEscaping()
                 .registerTypeAdapter(Date::class.java, JsonDateSerializer()).create()
-            val json = Json { ignoreUnknownKeys = true }
-
             mRetrofit = Retrofit.Builder()
-                .baseUrl(prefManager.serverConfig.getInstanceUrl())
+                .baseUrl(prefManager.getServerConfig.getInstanceUrl())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(FlowCallAdapterFactory())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+                .addCallAdapterFactory(FlowCallAdapterFactory.create())
                 .client(MifosOkHttpClient(prefManager).okHttpClient)
                 .build()
             init()
