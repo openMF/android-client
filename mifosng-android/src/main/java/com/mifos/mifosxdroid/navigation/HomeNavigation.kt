@@ -66,6 +66,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.mifos.mifosxdroid.R
 import com.mifos.mifosxdroid.components.HomeDestinationsScreen
+import com.mifos.mifosxdroid.components.LogoutDialog
 import com.mifos.mifosxdroid.components.MifosNavigationBar
 import com.mifos.mifosxdroid.components.Navigation
 import com.mifos.mifosxdroid.components.NavigationConstants
@@ -130,6 +131,8 @@ private fun HomeNavigation(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    var showLogoutUiState by rememberSaveable { mutableStateOf(false) }
 
     ModalNavigationDrawer(
         modifier = modifier,
@@ -265,7 +268,7 @@ private fun HomeNavigation(
                             }
                         },
                         actions = {
-                            IconButton(onClick = onClickLogout) {
+                            IconButton(onClick = { showLogoutUiState = true }) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Rounded.Logout,
                                     contentDescription = null,
@@ -299,6 +302,18 @@ private fun HomeNavigation(
                 navController = navController,
                 padding = paddingValues,
                 onUpdateConfig = onUpdateConfig,
+            )
+            LogoutDialog(
+                showDialogState = showLogoutUiState,
+                onDismiss = { showLogoutUiState = false },
+                title = R.string.dialog_message_logout_confirm,
+                confirmButtonText = R.string.dialog_action_ok,
+                onConfirm = {
+                    showLogoutUiState = false
+                    onClickLogout()
+                },
+                dismissButtonText = R.string.dialog_action_back,
+                message = R.string.dialog_message_logout_confirmation,
             )
         }
     }

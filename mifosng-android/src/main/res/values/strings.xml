@@ -659,6 +659,8 @@
         Ask Again.
     </string>
     <string name="msg_setting_activity_not_found">Something went wrong while finding Settings activity.\n        \nGo to \'Settings\' and grant permission manually.</string>
+    <string name="dialog_message_logout_confirmation">Do you want to logout?</string>
+    <string name="dialog_message_logout_confirm">Confirm</string>
 
     <!--Material Dialog-->
     <string name="dialog_action_ok">OK</string>
