@@ -12,6 +12,7 @@ package com.mifos.room.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
@@ -97,6 +98,7 @@ abstract class MifosDatabase : RoomDatabase() {
     abstract fun groupsDao(): GroupsDao
     abstract fun savingsDao(): SavingsDao
     abstract fun officeDao(): OfficeDao
+    abstract fun chargeDao(): ChargeDao
 
     companion object {
         const val VERSION = 1
