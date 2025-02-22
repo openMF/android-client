@@ -39,28 +39,28 @@ import androidx.room.PrimaryKey
 )
 data class Transaction(
     @PrimaryKey
-    var id: Int? = null,
+    val id: Int? = null,
 
-    var savingsAccountId: Int? = null,
+    val savingsAccountId: Int? = null,
 
     @ColumnInfo(index = true)
-    var transactionType: TransactionType? = null,
+    val transactionType: TransactionType? = null,
 
-    var accountId: Int? = null,
+    val accountId: Int? = null,
 
-    var accountNo: String? = null,
+    val accountNo: String? = null,
 
     @Transient
-    var savingsTransactionDate: SavingsTransactionDate? = null,
+    val savingsTransactionDate: SavingsTransactionDate? = null,
 
-    var date: List<Int?> = emptyList(),
+    val date: List<Int?> = emptyList(),
 
     @ColumnInfo(index = true)
-    var currency: Currency? = null,
+    val currency: Currency? = null,
 
-    var amount: Double? = null,
+    val amount: Double? = null,
 
-    var runningBalance: Double? = null,
+    val runningBalance: Double? = null,
 
-    var reversed: Boolean? = null,
+    val reversed: Boolean? = null,
 )
