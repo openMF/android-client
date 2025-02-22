@@ -14,14 +14,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
-import com.mifos.core.domain.useCases.GetSavingsAccountUseCase
 import com.mifos.feature.savings.R
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.room.entities.accounts.savings.SavingsSummaryData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch

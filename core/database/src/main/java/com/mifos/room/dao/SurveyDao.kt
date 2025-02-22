@@ -11,6 +11,7 @@ package com.mifos.room.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.mifos.room.entities.survey.QuestionDatas
 import com.mifos.room.entities.survey.ResponseDatas
@@ -23,13 +24,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SurveyDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSurvey(survey: Survey)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertQuestionData(questionData: QuestionDatas)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertResponseData(responseDatas: ResponseDatas)
 
     @Query("SELECT * FROM Survey")

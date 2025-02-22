@@ -11,18 +11,15 @@ package com.mifos.feature.offline.syncGroupPayloads
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.useCases.AllDatabaseGroupPayloadUseCase
-import com.mifos.core.domain.useCases.CreateGroupUseCase
-import com.mifos.core.domain.useCases.DeleteAndUpdateGroupPayloadUseCase
-import com.mifos.core.domain.useCases.UpdateGroupPayloadUseCase
-import com.mifos.core.entity.group.GroupPayload
 import com.mifos.feature.offline.R
+import com.mifos.room.entities.group.GroupPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,11 +28,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SyncGroupPayloadsViewModel @Inject constructor(
-    private val allDatabaseGroupPayloadUseCase: AllDatabaseGroupPayloadUseCase,
-    private val createGroupUseCase: CreateGroupUseCase,
-    private val deleteAndUpdateGroupPayloadUseCase: DeleteAndUpdateGroupPayloadUseCase,
-    private val updateGroupPayloadUseCase: UpdateGroupPayloadUseCase,
     private val prefManager: PrefManager,
+    private val repository: SyncGroupPayloadsRepository,
 ) : ViewModel() {
 
     val syncGroupPayloadsUiState get() = _syncGroupPayloadsUiState
@@ -64,32 +58,26 @@ class SyncGroupPayloadsViewModel @Inject constructor(
         return prefManager.userStatus
     }
 
-    fun loanDatabaseGroupPayload() = viewModelScope.launch {
-        allDatabaseGroupPayloadUseCase().collect { result ->
-            when (result) {
-                is Resource.Error ->
+    fun loanDatabaseGroupPayload() {
+        viewModelScope.launch {
+            _syncGroupPayloadsUiState.value =
+                SyncGroupPayloadsUiState.Loading
+
+            repository.allDatabaseGroupPayload()
+                .catch {
                     _syncGroupPayloadsUiState.value =
                         SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_load_groupPayload)
-
-                is Resource.Loading ->
-                    _syncGroupPayloadsUiState.value =
-                        SyncGroupPayloadsUiState.Loading
-
-                is Resource.Success -> {
-                    _groupPayloadsList.value = result.data ?: emptyList()
+                }
+                .collect { groupPayloadsList ->
+                    _groupPayloadsList.value = groupPayloadsList
                     _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
-                        if ((
-                                result.data
-                                    ?: emptyList()
-                                ).isEmpty()
-                        ) {
+                        if (groupPayloadsList.isEmpty()) {
                             GroupPayloadEmptyState.NOTHING_TO_SYNC
                         } else {
                             null
                         },
                     )
                 }
-            }
         }
     }
 
@@ -106,40 +94,35 @@ class SyncGroupPayloadsViewModel @Inject constructor(
             }
     }
 
-    private fun syncGroupPayload(groupPayload: GroupPayload?) = viewModelScope.launch {
-        createGroupUseCase(groupPayload!!).collect { result ->
-            when (result) {
-                is Resource.Error -> {
-                    _syncGroupPayloadsUiState.value =
-                        SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_group_sync_failed)
-                    updateGroupPayload()
-                }
-
-                is Resource.Loading ->
-                    _syncGroupPayloadsUiState.value =
-                        SyncGroupPayloadsUiState.Loading
-
-                is Resource.Success -> deleteAndUpdateGroupPayload()
+    private fun syncGroupPayload(groupPayload: GroupPayload?) {
+        viewModelScope.launch {
+            _syncGroupPayloadsUiState.value =
+                SyncGroupPayloadsUiState.Loading
+            try {
+                repository.createGroup(groupPayload!!)
+                deleteAndUpdateGroupPayload()
+            } catch (e: Exception) {
+                _syncGroupPayloadsUiState.value =
+                    SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_group_sync_failed)
+                updateGroupPayload()
             }
         }
     }
 
-    private fun deleteAndUpdateGroupPayload() = viewModelScope.launch {
-        val id = groupPayloadsList.value[groupPayloadSyncIndex].id
+    private fun deleteAndUpdateGroupPayload() {
+        viewModelScope.launch {
+            val id = groupPayloadsList.value[groupPayloadSyncIndex].id
 
-        deleteAndUpdateGroupPayloadUseCase(id).collect { result ->
-            when (result) {
-                is Resource.Error ->
+            repository.deleteAndUpdateGroupPayloads(id)
+                .catch {
                     _syncGroupPayloadsUiState.value =
                         SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_update_list)
-
-                is Resource.Loading -> Unit
-
-                is Resource.Success -> {
+                }
+                .collect { groupPayloads ->
                     groupPayloadSyncIndex = 0
-                    _groupPayloadsList.value = result.data ?: emptyList()
+                    _groupPayloadsList.value = groupPayloads
                     _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success(
-                        if ((result.data ?: emptyList()).isEmpty()
+                        if ((groupPayloads.isEmpty())
                         ) {
                             GroupPayloadEmptyState.ALL_SYNCED
                         } else {
@@ -147,34 +130,28 @@ class SyncGroupPayloadsViewModel @Inject constructor(
                         },
                     )
                 }
-            }
         }
     }
 
-    private fun updateGroupPayload() = viewModelScope.launch {
-        val groupPayload = groupPayloadsList.value[groupPayloadSyncIndex]
+    private fun updateGroupPayload() {
+        viewModelScope.launch {
+            val groupPayload = groupPayloadsList.value[groupPayloadSyncIndex]
+            _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Loading
+            try {
+                repository.updateGroupPayload(groupPayload)
 
-        updateGroupPayloadUseCase(groupPayload).collect { result ->
-            when (result) {
-                is Resource.Error ->
-                    _syncGroupPayloadsUiState.value =
-                        SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_load_groupPayload)
+                _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Success()
 
-                is Resource.Loading ->
-                    _syncGroupPayloadsUiState.value =
-                        SyncGroupPayloadsUiState.Loading
-
-                is Resource.Success -> {
-                    _syncGroupPayloadsUiState.value =
-                        SyncGroupPayloadsUiState.Success()
-                    val payloadList = groupPayloadsList.value.toMutableList()
-                    payloadList[groupPayloadSyncIndex] = groupPayload
-                    groupPayloadsList.value = payloadList
-                    groupPayloadSyncIndex += 1
-                    if (groupPayloadsList.value.size != groupPayloadSyncIndex) {
-                        syncGroupPayload()
-                    }
+                val payloadList = groupPayloadsList.value.toMutableList()
+                payloadList[groupPayloadSyncIndex] = groupPayload
+                groupPayloadsList.value = payloadList
+                groupPayloadSyncIndex += 1
+                if (groupPayloadsList.value.size != groupPayloadSyncIndex) {
+                    syncGroupPayload()
                 }
+            } catch (e: Exception) {
+                _syncGroupPayloadsUiState.value =
+                    SyncGroupPayloadsUiState.Error(R.string.feature_offline_error_failed_to_load_groupPayload)
             }
         }
     }

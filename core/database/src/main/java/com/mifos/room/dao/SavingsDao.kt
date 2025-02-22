@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.room.dao
 
 import androidx.room.Dao
@@ -16,10 +25,10 @@ import kotlinx.coroutines.flow.Flow
 interface SavingsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSavings(savings: SavingsAccountWithAssociations)
+    suspend fun insertTransaction(vararg transaction: Transaction)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSavingsTransaction(savingsTransaction: SavingsAccountTransactionTemplate)
+    suspend fun insertSavingsAccountWithAssociations(savingsAccountWithAssociations: SavingsAccountWithAssociations)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSavingsAccountTransactionRequest(transactionRequest: SavingsAccountTransactionRequest)
@@ -29,9 +38,6 @@ interface SavingsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSavingsAccountTransactionTemplate(transactionTemplate: SavingsAccountTransactionTemplate)
-
-    @Insert
-    fun insertAll(vararg paymentTypeOptions : PaymentTypeOption)
 
     @Update
     suspend fun updateSavingsAccountTransactionRequest(transactionRequest: SavingsAccountTransactionRequest)
@@ -52,7 +58,7 @@ interface SavingsDao {
     fun getSavingsAccountTransactionTemplate(savingsAccountId: Int): Flow<SavingsAccountTransactionTemplate?>
 
     @Query("SELECT * FROM SavingsAccountWithAssociations where id = :savingsAccountId")
-    fun getSavingsAccountWithAssociations(savingsAccountId: Int): Flow<SavingsAccountWithAssociations>
+    fun getSavingsAccountWithAssociations(savingsAccountId: Int): Flow<SavingsAccountWithAssociations?>
 
     @Query("SELECT * FROM PaymentTypeOption")
     fun getAllPaymentTypeOption(): Flow<List<PaymentTypeOption>>

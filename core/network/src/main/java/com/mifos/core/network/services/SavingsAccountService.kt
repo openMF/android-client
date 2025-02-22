@@ -21,6 +21,7 @@ import com.mifos.core.objects.organisations.ProductSavings
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -66,11 +67,11 @@ interface SavingsAccountService {
      * @return SavingsAccountTransactionTemplate
      */
     @GET("{savingsAccountType}/{savingsAccountId}/transactions/template")
-    suspend fun getSavingsAccountTransactionTemplate(
+    fun getSavingsAccountTransactionTemplate(
         @Path("savingsAccountType") savingsAccountType: String?,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("command") transactionType: String?,
-    ): SavingsAccountTransactionTemplate
+    ): Flow<SavingsAccountTransactionTemplate>
 
     /**
      * This Service making POST Request to the REST API :

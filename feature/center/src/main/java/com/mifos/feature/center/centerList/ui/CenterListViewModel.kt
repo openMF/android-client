@@ -11,15 +11,14 @@ package com.mifos.feature.center.centerList.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.CenterListRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.useCases.GetCenterListDbUseCase
 import com.mifos.feature.center.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +26,6 @@ import javax.inject.Inject
 class CenterListViewModel @Inject constructor(
     private val prefManager: PrefManager,
     private val repository: CenterListRepository,
-    private val getCenterListDbUseCase: GetCenterListDbUseCase,
 ) : ViewModel() {
 
     // for refresh feature
@@ -56,19 +54,18 @@ class CenterListViewModel @Inject constructor(
         _centerListUiState.value = CenterListUiState.CenterList(response)
     }
 
-    private fun loadCentersFromDb() = viewModelScope.launch(Dispatchers.IO) {
-        getCenterListDbUseCase().collect { result ->
-            when (result) {
-                is Resource.Error ->
+    private fun loadCentersFromDb() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _centerListUiState.value = CenterListUiState.Loading
+
+            repository.allDatabaseCenters()
+                .catch {
                     _centerListUiState.value =
                         CenterListUiState.Error(R.string.feature_center_failed_to_load_db_centers)
-
-                is Resource.Loading -> _centerListUiState.value = CenterListUiState.Loading
-
-                is Resource.Success ->
+                }.collect {
                     _centerListUiState.value =
-                        CenterListUiState.CenterListDb(result.data ?: emptyList())
-            }
+                        CenterListUiState.CenterListDb(it.pageItems)
+                }
         }
     }
 }

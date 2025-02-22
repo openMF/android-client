@@ -13,7 +13,6 @@ import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResp
 import com.mifos.room.entities.PaymentTypeOption
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -29,7 +28,7 @@ interface SyncSavingsAccountTransactionRepository {
         savingsAccountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequest,
-    ): Flow<SavingsAccountTransactionResponse>
+    ): Flow<SavingsAccountTransactionResponse?>
 
     fun deleteAndUpdateTransactions(savingsAccountId: Int): Flow<List<SavingsAccountTransactionRequest>>
 

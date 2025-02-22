@@ -9,7 +9,6 @@
  */
 package com.mifos.room.entities.accounts.savings
 
-import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -25,15 +24,11 @@ data class Summary(
     @Embedded
     var currency: Currency? = null,
 
-    @ColumnInfo(name = "totalDeposits")
     var totalDeposits: Double? = null,
 
-    @ColumnInfo(name = "accountBalance")
     var accountBalance: Double? = null,
 
-    @ColumnInfo(name = "totalWithdrawals")
     var totalWithdrawals: Double? = null,
 
-    @ColumnInfo(name = "totalInterestEarned")
     var totalInterestEarned: Double? = null,
 )

@@ -13,22 +13,35 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mifos.room.dao.ColumnValueDao
+import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
+import com.mifos.room.dao.OfficeDao
+import com.mifos.room.dao.SavingsDao
 import com.mifos.room.dao.StaffDao
 import com.mifos.room.dao.SurveyDao
 import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDate
+import com.mifos.room.entities.accounts.loans.LoanAccount
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import com.mifos.room.entities.accounts.loans.Status
 import com.mifos.room.entities.accounts.loans.Summary
 import com.mifos.room.entities.accounts.loans.Timeline
+import com.mifos.room.entities.accounts.savings.SavingsAccount
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.accounts.savings.Transaction
+import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.group.GroupPayload
 import com.mifos.room.entities.noncore.ColumnValue
+import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.Staff
 import com.mifos.room.entities.survey.QuestionDatas
 import com.mifos.room.entities.survey.ResponseDatas
 import com.mifos.room.entities.survey.Survey
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.room.utils.typeconverters.DueDateConverter
 import com.mifos.room.utils.typeconverters.ListTypeConverters
 import com.mifos.room.utils.typeconverters.LoanTypeConverters
@@ -39,7 +52,6 @@ import com.mifos.room.utils.typeconverters.SurveyTypeConverters
     // [TODO -> add other entities ]
     entities = [
         ColumnValue::class,
-        // loan
         LoanWithAssociations::class,
         LoanRepaymentRequest::class,
         LoanRepaymentTemplate::class,
@@ -48,11 +60,21 @@ import com.mifos.room.utils.typeconverters.SurveyTypeConverters
         Timeline::class,
         Status::class,
         Summary::class,
-        // survey
         Survey::class,
         QuestionDatas::class,
         ResponseDatas::class,
         Staff::class,
+        OfficeEntity::class,
+        Group::class,
+        LoanAccount::class,
+        SavingsAccount::class,
+        GroupAccounts::class,
+        GroupPayload::class,
+        Transaction::class,
+        SavingsAccountWithAssociations::class,
+        SavingsAccountTransactionRequest::class,
+        SavingsAccountTransactionTemplate::class,
+        SavingsAccountTransactionRequest::class,
     ],
     version = MifosDatabase.VERSION,
     exportSchema = true,
@@ -72,6 +94,9 @@ abstract class MifosDatabase : RoomDatabase() {
     abstract fun loanDao(): LoanDao
     abstract fun surveyDao(): SurveyDao
     abstract fun staffDao(): StaffDao
+    abstract fun groupsDao(): GroupsDao
+    abstract fun savingsDao(): SavingsDao
+    abstract fun officeDao(): OfficeDao
 
     companion object {
         const val VERSION = 1

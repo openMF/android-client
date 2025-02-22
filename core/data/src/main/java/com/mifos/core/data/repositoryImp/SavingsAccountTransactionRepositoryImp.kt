@@ -10,25 +10,25 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
-import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-class SavingsAccountTransactionRepositoryImp @Inject constructor(private val dataManagerSavings: DataManagerSavings) :
-    SavingsAccountTransactionRepository {
+class SavingsAccountTransactionRepositoryImp @Inject constructor(
+    private val dataManagerSavings: DataManagerSavings,
+) : SavingsAccountTransactionRepository {
 
     override fun getSavingsAccountTransactionTemplate(
         type: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Observable<SavingsAccountTransactionTemplate> {
+    ): Flow<SavingsAccountTransactionTemplate?> {
         return dataManagerSavings.getSavingsAccountTransactionTemplate(
             type,
             savingsAccountId,

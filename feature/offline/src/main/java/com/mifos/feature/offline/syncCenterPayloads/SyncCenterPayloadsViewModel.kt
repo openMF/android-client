@@ -13,18 +13,15 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.FileUtils.LOG_TAG
-import com.mifos.core.common.utils.Resource
+import com.mifos.core.data.repository.SyncCenterPayloadsRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.useCases.AllDatabaseCenterPayloadUseCase
-import com.mifos.core.domain.useCases.CreateCenterUseCase
-import com.mifos.core.domain.useCases.DeleteAndUpdateCenterPayloadsUseCase
-import com.mifos.core.domain.useCases.UpdateCenterPayloadUseCase
-import com.mifos.core.entity.center.CenterPayload
+import com.mifos.room.entities.center.CenterPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,11 +30,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SyncCenterPayloadsViewModel @Inject constructor(
-    private val deleteAndUpdateCenterPayloadsUseCase: DeleteAndUpdateCenterPayloadsUseCase,
-    private val updateCenterPayloadUseCase: UpdateCenterPayloadUseCase,
-    private val createCenterUseCase: CreateCenterUseCase,
-    private val allDatabaseCenterPayloadUseCase: AllDatabaseCenterPayloadUseCase,
     private val prefManager: PrefManager,
+    private val repository: SyncCenterPayloadsRepository,
 ) : ViewModel() {
 
     private val _syncCenterPayloadsUiState = MutableStateFlow<SyncCenterPayloadsUiState>(
@@ -61,99 +55,77 @@ class SyncCenterPayloadsViewModel @Inject constructor(
         _isRefreshing.value = false
     }
 
-    fun loadDatabaseCenterPayload() = viewModelScope.launch(Dispatchers.IO) {
-        allDatabaseCenterPayloadUseCase().collect { result ->
-            when (result) {
-                is Resource.Error ->
+    fun loadDatabaseCenterPayload() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.allDatabaseCenterPayload()
+                .catch {
                     _syncCenterPayloadsUiState.value =
-                        SyncCenterPayloadsUiState.ShowError(result.message.toString())
-
-                is Resource.Loading -> Unit
-
-                is Resource.Success -> {
-                    mCenterPayloads = result.data?.toMutableList() ?: mutableListOf()
+                        SyncCenterPayloadsUiState.ShowError(it.message.toString())
+                }.collect { mCenterPayloads ->
                     _syncCenterPayloadsUiState.value =
                         SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
                 }
-            }
         }
     }
 
     private fun syncCenterPayload(centerPayload: CenterPayload?) {
-        if (centerPayload != null) {
-            viewModelScope.launch(Dispatchers.IO) {
-                createCenterUseCase(centerPayload).collect { result ->
-                    when (result) {
-                        is Resource.Error -> {
-                            _syncCenterPayloadsUiState.value =
-                                SyncCenterPayloadsUiState.ShowError(result.message.toString())
-                            updateCenterPayload(centerPayload)
-                        }
+        viewModelScope.launch {
+            _syncCenterPayloadsUiState.value =
+                SyncCenterPayloadsUiState.ShowProgressbar
+            try {
+                repository.createCenter(centerPayload)
 
-                        is Resource.Loading ->
-                            _syncCenterPayloadsUiState.value =
-                                SyncCenterPayloadsUiState.ShowProgressbar
-
-                        is Resource.Success -> {
-                            deleteAndUpdateCenterPayload(
-                                mCenterPayloads[centerSyncIndex].id,
-                            )
-                        }
-                    }
-                }
+                deleteAndUpdateCenterPayload(
+                    mCenterPayloads[centerSyncIndex].id,
+                )
+            } catch (e: Exception) {
+                _syncCenterPayloadsUiState.value =
+                    SyncCenterPayloadsUiState.ShowError(e.message.toString())
+                updateCenterPayload(centerPayload)
             }
         }
     }
 
-    private fun deleteAndUpdateCenterPayload(id: Int) =
-        viewModelScope.launch(Dispatchers.IO) {
-            deleteAndUpdateCenterPayloadsUseCase(id).collect { result ->
-                when (result) {
-                    is Resource.Error ->
-                        _syncCenterPayloadsUiState.value =
-                            SyncCenterPayloadsUiState.ShowError(result.message.toString())
+    private fun deleteAndUpdateCenterPayload(id: Int) {
+        viewModelScope.launch {
+            _syncCenterPayloadsUiState.value =
+                SyncCenterPayloadsUiState.ShowProgressbar
 
-                    is Resource.Loading ->
-                        _syncCenterPayloadsUiState.value =
-                            SyncCenterPayloadsUiState.ShowProgressbar
-
-                    is Resource.Success -> {
-                        centerSyncIndex = 0
-                        mCenterPayloads = result.data?.toMutableList() ?: mutableListOf()
-                        _syncCenterPayloadsUiState.value =
-                            SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
-                        if (mCenterPayloads.isNotEmpty()) {
-                            syncCenterPayload()
-                        }
+            repository.deleteAndUpdateCenterPayloads(id)
+                .catch {
+                    _syncCenterPayloadsUiState.value =
+                        SyncCenterPayloadsUiState.ShowError(it.message.toString())
+                }.collect {
+                    centerSyncIndex = 0
+                    mCenterPayloads = it.toMutableList()
+                    _syncCenterPayloadsUiState.value =
+                        SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
+                    if (mCenterPayloads.isNotEmpty()) {
+                        syncCenterPayload()
                     }
                 }
-            }
         }
+    }
 
     private fun updateCenterPayload(centerPayload: CenterPayload?) {
         deleteAndUpdateCenterPayload(
             mCenterPayloads[centerSyncIndex].id,
         )
         if (centerPayload != null) {
-            viewModelScope.launch(Dispatchers.IO) {
-                updateCenterPayloadUseCase(centerPayload).collect { result ->
-                    when (result) {
-                        is Resource.Error ->
-                            _syncCenterPayloadsUiState.value =
-                                SyncCenterPayloadsUiState.ShowError(result.message.toString())
+            viewModelScope.launch {
+                try {
+                    repository.updateCenterPayload(centerPayload)
 
-                        is Resource.Loading -> Unit
-
-                        is Resource.Success -> {
-                            mCenterPayloads[centerSyncIndex] = result.data ?: CenterPayload()
-                            _syncCenterPayloadsUiState.value =
-                                SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
-                            centerSyncIndex += 1
-                            if (mCenterPayloads.size != centerSyncIndex) {
-                                syncCenterPayload()
-                            }
-                        }
+                    mCenterPayloads[centerSyncIndex] = centerPayload
+                    _syncCenterPayloadsUiState.value =
+                        SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
+                    centerSyncIndex += 1
+                    if (mCenterPayloads.size != centerSyncIndex) {
+                        syncCenterPayload()
                     }
+                } catch (e: Exception) {
+                    _syncCenterPayloadsUiState.value =
+                        SyncCenterPayloadsUiState.ShowError(e.message.toString())
                 }
             }
         }

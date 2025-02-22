@@ -9,14 +9,15 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.group.GroupPayload
+import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.clients.ActivatePayload
 import com.mifos.core.objects.clients.Page
 import com.mifos.core.objects.responses.SaveResponse
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.GroupAccounts
+import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.group.GroupPayload
 import com.mifos.room.entities.group.GroupWithAssociations
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -47,13 +48,13 @@ interface GroupService {
     ): List<Group>
 
     @POST(APIEndPoint.GROUPS)
-    fun createGroup(@Body groupPayload: GroupPayload?): Observable<SaveResponse>
+    suspend fun createGroup(@Body groupPayload: GroupPayload?): SaveResponse
 
     @GET(APIEndPoint.GROUPS + "/{groupId}")
-    fun getGroup(@Path("groupId") groupId: Int): Observable<Group>
+    suspend fun getGroup(@Path("groupId") groupId: Int): Group
 
     @GET(APIEndPoint.GROUPS + "/{groupId}/accounts")
-    fun getGroupAccounts(@Path("groupId") groupId: Int): Observable<GroupAccounts>
+    suspend fun getGroupAccounts(@Path("groupId") groupId: Int): GroupAccounts
 
     /**
      * This is the service to activate the Group

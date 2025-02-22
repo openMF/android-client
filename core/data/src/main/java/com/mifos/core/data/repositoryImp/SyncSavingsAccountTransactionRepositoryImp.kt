@@ -16,7 +16,6 @@ import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.PaymentTypeOption
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -40,7 +39,7 @@ class SyncSavingsAccountTransactionRepositoryImp @Inject constructor(
         savingsAccountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequest,
-    ): Flow<SavingsAccountTransactionResponse> {
+    ): Flow<SavingsAccountTransactionResponse?> {
         return dataManagerSavings.processTransaction(
             savingsAccountType,
             savingsAccountId,

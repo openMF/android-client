@@ -1,14 +1,28 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.room.helper
 
+import com.mifos.core.common.network.Dispatcher
+import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.room.dao.SavingsDao
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.accounts.savings.SavingsTransactionDate
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 /**
@@ -17,6 +31,8 @@ import javax.inject.Inject
 
 class SavingsDaoHelper @Inject constructor(
     private val savingsDao: SavingsDao,
+    @Dispatcher(MifosDispatchers.IO)
+    private val ioDispatcher: CoroutineDispatcher,
 ) {
 
     /**
@@ -26,14 +42,32 @@ class SavingsDaoHelper @Inject constructor(
      * @param savingsAccountWithAssociations SavingAccountSummary Template.
      * @return SavingsAccountWithAssociations.
      */
-    suspend fun saveSavingsAccount(
+    fun saveSavingsAccount(
         savingsAccountWithAssociations: SavingsAccountWithAssociations,
-    ) {
-        val transactions = savingsAccountWithAssociations.transactions
+    ): Flow<SavingsAccountWithAssociations> {
+        return flow {
+            val transactions = savingsAccountWithAssociations.transactions
 
-        if (transactions.isNotEmpty()) {
+            if (transactions.isNotEmpty()) {
+                transactions.forEach { transaction ->
+                    val savingsTransactionDate = transaction.id?.let {
+                        SavingsTransactionDate(
+                            it,
+                            transaction.date.getOrNull(0),
+                            transaction.date.getOrNull(1),
+                            transaction.date.getOrNull(2),
+                        )
+                    }
+                    transaction.savingsAccountId = savingsAccountWithAssociations.id
+                    transaction.savingsTransactionDate = savingsTransactionDate
+                    savingsDao.insertTransaction(transaction)
+                }
+            }
 
-        }
+            savingsAccountWithAssociations.summary?.savingsId = savingsAccountWithAssociations.id
+            savingsDao.insertSavingsAccountWithAssociations(savingsAccountWithAssociations)
+            emit(savingsAccountWithAssociations)
+        }.flowOn(ioDispatcher)
     }
 
     /**
@@ -49,7 +83,7 @@ class SavingsDaoHelper @Inject constructor(
         savingsAccountId: Int,
     ): Flow<SavingsAccountWithAssociations?> {
         return flow {
-            val savingsAccountWithAssociations =
+            var savingsAccountWithAssociations =
                 savingsDao.getSavingsAccountWithAssociations(savingsAccountId).first()
             val transactions = savingsDao.getAllTransactions(savingsAccountId)
 
@@ -61,9 +95,13 @@ class SavingsDaoHelper @Inject constructor(
                 )
             }
 
-            savingsAccountWithAssociations.transactions = transactions
+            if (savingsAccountWithAssociations != null) {
+                savingsAccountWithAssociations = savingsAccountWithAssociations.copy(
+                    transactions = transactions,
+                )
+            }
             emit(savingsAccountWithAssociations)
-        }
+        }.flowOn(ioDispatcher)
     }
 
     /**
@@ -102,7 +140,7 @@ class SavingsDaoHelper @Inject constructor(
                 )
             }
             emit(savingsAccountTransactionTemplate)
-        }
+        }.flowOn(ioDispatcher)
     }
 
     /**
@@ -132,9 +170,8 @@ class SavingsDaoHelper @Inject constructor(
 
             savingsDao.insertSavingsAccountTransactionRequest(updatedRequest)
             emit(SavingsAccountTransactionResponse())
-        }
+        }.flowOn(ioDispatcher)
     }
-
 
     /**
      * This Method, retrieving SavingsAccountTransactionRequest with the Saving Id from Database
@@ -148,6 +185,7 @@ class SavingsDaoHelper @Inject constructor(
         savingsAccountId: Int,
     ): Flow<SavingsAccountTransactionRequest?> {
         return savingsDao.getSavingsAccountTransactionRequest(savingsAccountId)
+            .flowOn(ioDispatcher)
     }
 
     /**
@@ -155,9 +193,10 @@ class SavingsDaoHelper @Inject constructor(
      * and give the List<SavingsAccountTransactionRequest> response.
      *
      * @return List<SavingsAccountTransactionRequest>
-    </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
+     </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
     fun allSavingsAccountTransaction(): Flow<List<SavingsAccountTransactionRequest>> {
         return savingsDao.getAllSavingsAccountTransactionRequest()
+            .flowOn(ioDispatcher)
     }
 
     /**
@@ -168,7 +207,7 @@ class SavingsDaoHelper @Inject constructor(
      *
      * @param savingsAccountId SavingsAccount Id
      * @return List<SavingsAccountTransactionRequest>
-    </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest></SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
+     </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest></SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
     fun deleteAndUpdateTransaction(
         savingsAccountId: Int,
     ): Flow<List<SavingsAccountTransactionRequest>> {
@@ -177,7 +216,7 @@ class SavingsDaoHelper @Inject constructor(
             val savingsAccountTransactionRequests =
                 savingsDao.getAllSavingsAccountTransactionRequest()
             emitAll(savingsAccountTransactionRequests)
-        }
+        }.flowOn(ioDispatcher)
     }
 
     /**

@@ -9,42 +9,33 @@
  */
 package com.mifos.room.entities.organisation
 
-import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
 @Entity(
     tableName = "Office",
     foreignKeys = [
         ForeignKey(
-            entity = OfficeOpeningDate::class,
+            entity = OfficeOpeningDateEntity::class,
             parentColumns = ["officeId"],
             childColumns = ["officeOpeningDate"],
             onDelete = ForeignKey.CASCADE,
         ),
     ],
 )
-data class Office(
+data class OfficeEntity(
     @PrimaryKey
-    @ColumnInfo(name = "id")
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "externalId")
-    var externalId: String? = null,
+    val externalId: String? = null,
 
-    @ColumnInfo(name = "name")
-    var name: String? = null,
+    val name: String? = null,
 
-    @ColumnInfo(name = "nameDecorated")
-    var nameDecorated: String? = null,
+    val nameDecorated: String? = null,
 
-    @ColumnInfo(name = "officeOpeningDate")
-    var officeOpeningDate: OfficeOpeningDate? = null,
+    val officeOpeningDate: OfficeOpeningDateEntity? = null,
 
-    @ColumnInfo(name = "openingDate")
-    var openingDate: List<Int?> = ArrayList(),
-) : Parcelable
+    val openingDate: List<Int?> = emptyList(),
+
+)

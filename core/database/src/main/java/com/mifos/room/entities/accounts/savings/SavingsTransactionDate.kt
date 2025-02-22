@@ -9,21 +9,14 @@
  */
 package com.mifos.room.entities.accounts.savings
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "SavingsTransactionDate")
 data class SavingsTransactionDate(
     @PrimaryKey
-    var transactionId: Int? = null,
-
-    @ColumnInfo("year")
-    var year: Int? = null,
-
-    @ColumnInfo("month")
-    var month: Int? = null,
-
-    @ColumnInfo("day")
-    var day: Int? = null,
+    val transactionId: Int? = null,
+    val year: Int? = null,
+    val month: Int? = null,
+    val day: Int? = null,
 )
