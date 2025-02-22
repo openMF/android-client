@@ -5,24 +5,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.mifos.mifosxdroid.R
 
 @Composable
 fun LogoutDialog(
     showDialogState: Boolean,
     onDismiss: () -> Unit,
-    title: Int,
-    confirmButtonText: Int,
     onConfirm: () -> Unit,
-    dismissButtonText: Int,
     message: Int? = null,
 ) {
     if (showDialogState) {
         AlertDialog(
             onDismissRequest = onDismiss,
-            title = { Text(text = stringResource(id = title)) },
+            title = { Text(text = stringResource(id = R.string.dialog_message_logout_confirm)) },
             text = {
                 if (message != null) {
-                    Text(text = stringResource(id = message))
+                    Text(text = stringResource(id = R.string.dialog_message_logout_confirmation))
                 }
             },
             confirmButton = {
@@ -31,12 +29,12 @@ fun LogoutDialog(
                         onConfirm()
                     },
                 ) {
-                    Text(stringResource(id = confirmButtonText))
+                    Text(stringResource(id = R.string.dialog_action_ok))
                 }
             },
             dismissButton = {
                 TextButton(onClick = onDismiss) {
-                    Text(stringResource(id = dismissButtonText))
+                    Text(stringResource(id = R.string.dialog_action_back))
                 }
             },
         )

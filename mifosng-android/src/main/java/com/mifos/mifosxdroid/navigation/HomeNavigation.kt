@@ -303,17 +303,14 @@ private fun HomeNavigation(
                 padding = paddingValues,
                 onUpdateConfig = onUpdateConfig,
             )
+
             LogoutDialog(
                 showDialogState = showLogoutUiState,
                 onDismiss = { showLogoutUiState = false },
-                title = R.string.dialog_message_logout_confirm,
-                confirmButtonText = R.string.dialog_action_ok,
                 onConfirm = {
                     showLogoutUiState = false
                     onClickLogout()
                 },
-                dismissButtonText = R.string.dialog_action_back,
-                message = R.string.dialog_message_logout_confirmation,
             )
         }
     }
