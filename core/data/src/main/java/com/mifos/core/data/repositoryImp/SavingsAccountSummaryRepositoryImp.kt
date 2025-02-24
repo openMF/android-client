@@ -10,21 +10,23 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
-import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.network.datamanager.DataManagerSavings
-import rx.Observable
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class SavingsAccountSummaryRepositoryImp @Inject constructor(private val dataManagerSavings: DataManagerSavings) :
-    SavingsAccountSummaryRepository {
+class SavingsAccountSummaryRepositoryImp @Inject constructor(
+    private val dataManagerSavings: DataManagerSavings,
+) : SavingsAccountSummaryRepository {
+
     override fun getSavingsAccount(
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Observable<SavingsAccountWithAssociations> {
+    ): Flow<SavingsAccountWithAssociations?> {
         return dataManagerSavings.getSavingsAccount(type, savingsAccountId, association)
     }
 }

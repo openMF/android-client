@@ -10,15 +10,15 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncClientsDialogRepository
-import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
 import kotlinx.coroutines.flow.Flow
 import rx.Observable
 import javax.inject.Inject
@@ -48,7 +48,7 @@ class SyncClientsDialogRepositoryImp @Inject constructor(
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Observable<SavingsAccountWithAssociations> {
+    ): Flow<SavingsAccountWithAssociations> {
         return dataManagerSavings.syncSavingsAccount(type, savingsAccountId, association)
     }
 
@@ -56,7 +56,7 @@ class SyncClientsDialogRepositoryImp @Inject constructor(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Observable<SavingsAccountTransactionTemplate> {
+    ): Flow<SavingsAccountTransactionTemplate?> {
         return dataManagerSavings.getSavingsAccountTransactionTemplate(
             savingsAccountType,
             savingsAccountId,

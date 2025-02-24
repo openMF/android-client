@@ -14,6 +14,7 @@ import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
 import com.mifos.room.dao.OfficeDao
+import com.mifos.room.dao.SavingsDao
 import com.mifos.room.dao.StaffDao
 import com.mifos.room.dao.SurveyDao
 import com.mifos.room.db.MifosDatabase
@@ -66,5 +67,11 @@ object DaoModule {
     @Singleton
     fun providesClientDao(database: MifosDatabase): ChargeDao {
         return database.chargeDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providesSavingsDao(database: MifosDatabase): SavingsDao {
+        return database.savingsDao()
     }
 }

@@ -9,7 +9,6 @@
  */
 package com.mifos.room.entities.accounts.savings
 
-import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -20,20 +19,16 @@ import kotlinx.serialization.Transient
 data class Summary(
     @PrimaryKey
     @Transient
-    var savingsId: Int? = null,
+    val savingsId: Int? = null,
 
     @Embedded
-    var currency: Currency? = null,
+    val currency: Currency? = null,
 
-    @ColumnInfo(name = "totalDeposits")
-    var totalDeposits: Double? = null,
+    val totalDeposits: Double? = null,
 
-    @ColumnInfo(name = "accountBalance")
-    var accountBalance: Double? = null,
+    val accountBalance: Double? = null,
 
-    @ColumnInfo(name = "totalWithdrawals")
-    var totalWithdrawals: Double? = null,
+    val totalWithdrawals: Double? = null,
 
-    @ColumnInfo(name = "totalInterestEarned")
-    var totalInterestEarned: Double? = null,
+    val totalInterestEarned: Double? = null,
 )

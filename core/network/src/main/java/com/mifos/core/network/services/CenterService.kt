@@ -77,7 +77,7 @@ interface CenterService {
     /*@POST(APIEndPoint.CLIENTS + "")
     void uploadNewClientDetails();*/
     @POST(APIEndPoint.CENTERS)
-    suspend fun createCenter(@Body centerPayload: CenterPayload?)
+    suspend fun createCenter(@Body centerPayload: CenterPayload?): SaveResponse
 
     @GET(APIEndPoint.CENTERS)
     fun getCenterList(

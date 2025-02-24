@@ -9,6 +9,8 @@
  */
 package com.mifos.room.helper
 
+import com.mifos.core.common.network.Dispatcher
+import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.room.dao.CenterDao
 import com.mifos.room.entities.accounts.CenterAccounts
@@ -16,10 +18,12 @@ import com.mifos.room.entities.center.CenterPayload
 import com.mifos.room.entities.group.Center
 import com.mifos.room.entities.group.CenterDate
 import com.mifos.room.entities.group.CenterWithAssociations
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -28,6 +32,8 @@ import javax.inject.Inject
  */
 class CenterDaoHelper @Inject constructor(
     private val centerDatabase: CenterDao,
+    @Dispatcher(MifosDispatchers.IO)
+    private val ioDispatcher: CoroutineDispatcher,
 ) {
     /**
      * Reading All Centers from table of Center and return the CenterList
@@ -39,7 +45,7 @@ class CenterDaoHelper @Inject constructor(
     fun readAllCenters(): Flow<Page<Center>> {
         return centerDatabase.readAllCenters().map { centers ->
             Page<Center>().apply { pageItems = centers }
-        }
+        }.flowOn(ioDispatcher)
     }
 
     suspend fun saveCenterPayload(centerPayload: CenterPayload?) {
@@ -48,6 +54,7 @@ class CenterDaoHelper @Inject constructor(
 
     fun readAllCenterPayload(): Flow<List<CenterPayload>> {
         return centerDatabase.readAllCenterPayload()
+            .flowOn(ioDispatcher)
     }
 
     /**
@@ -61,7 +68,7 @@ class CenterDaoHelper @Inject constructor(
             val centerWithAssociations = CenterWithAssociations()
             centerWithAssociations.groupMembers = groups
             emit(centerWithAssociations)
-        }
+        }.flowOn(ioDispatcher)
     }
 
     /**
@@ -105,7 +112,7 @@ class CenterDaoHelper @Inject constructor(
         return flow {
             centerDatabase.deleteCenterPayloadById(id)
             emitAll(centerDatabase.readAllCenterPayload())
-        }
+        }.flowOn(ioDispatcher)
     }
 
     suspend fun updateDatabaseCenterPayload(centerPayload: CenterPayload) {

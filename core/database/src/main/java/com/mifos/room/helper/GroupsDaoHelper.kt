@@ -9,6 +9,8 @@
  */
 package com.mifos.room.helper
 
+import com.mifos.core.common.network.Dispatcher
+import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.room.dao.GroupsDao
@@ -18,10 +20,12 @@ import com.mifos.room.entities.accounts.savings.SavingsAccount
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupDate
 import com.mifos.room.entities.group.GroupPayload
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -32,6 +36,8 @@ import javax.inject.Inject
  */
 class GroupsDaoHelper @Inject constructor(
     private val groupsDao: GroupsDao,
+    @Dispatcher(MifosDispatchers.IO)
+    private val ioDispatcher: CoroutineDispatcher,
 ) {
     /**
      * This Method Saving the Single Group in the Database
@@ -65,7 +71,7 @@ class GroupsDaoHelper @Inject constructor(
     fun readAllGroups(): Flow<Page<Group>> {
         return groupsDao.getAllGroups().map { groups ->
             Page<Group>().apply { pageItems = groups }
-        }
+        }.flowOn(ioDispatcher)
     }
 
     /**
@@ -95,7 +101,7 @@ class GroupsDaoHelper @Inject constructor(
                     group.groupDate?.year ?: 0,
                 ),
             )
-        }
+        }.flowOn(ioDispatcher)
     }
 
     /**
@@ -138,7 +144,7 @@ class GroupsDaoHelper @Inject constructor(
             groupAccounts.loanAccounts = loanAccounts
             groupAccounts.savingsAccounts = savingsAccounts
             emit(groupAccounts)
-        }
+        }.flowOn(ioDispatcher)
     }
 
     suspend fun saveGroupPayload(groupPayload: GroupPayload): SaveResponse {
@@ -147,7 +153,7 @@ class GroupsDaoHelper @Inject constructor(
     }
 
     fun realAllGroupPayload(): Flow<List<GroupPayload>> {
-        return groupsDao.getAllGroupPayloads()
+        return groupsDao.getAllGroupPayloads().flowOn(ioDispatcher)
     }
 
     /**
@@ -161,7 +167,7 @@ class GroupsDaoHelper @Inject constructor(
             groupsDao.deleteGroupPayloadById(id)
             val groupPayloads = groupsDao.getAllGroupPayloads()
             emitAll(groupPayloads)
-        }
+        }.flowOn(ioDispatcher)
     }
 
     suspend fun updateGroupPayload(groupPayload: GroupPayload) {

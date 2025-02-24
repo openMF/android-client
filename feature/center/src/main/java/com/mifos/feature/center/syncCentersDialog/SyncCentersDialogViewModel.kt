@@ -303,26 +303,21 @@ class SyncCentersDialogViewModel @Inject constructor(
      * @param savingsAccountId   SavingsAccount Id
      */
     private fun syncSavingsAccountAndTemplate(savingsAccountType: String, savingsAccountId: Int) {
-        getSavingsAccountAndTemplate(savingsAccountType, savingsAccountId)
-            .subscribe(
-                object : Subscriber<SavingsAccountAndTransactionTemplate>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        onAccountSyncFailed(e)
+        viewModelScope.launch {
+            getSavingsAccountAndTemplate(savingsAccountType, savingsAccountId)
+                .catch {
+                    onAccountSyncFailed(it)
+                }.collect {
+                    mSavingsAndTransactionSyncIndex += 1
+                    _syncCenterData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex) }
+                    if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
+                        checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
+                    } else {
+                        setSavingAccountSyncStatusTrue()
+                        checkAccountsSyncStatusAndSyncAccounts()
                     }
-
-                    override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
-                        mSavingsAndTransactionSyncIndex += 1
-                        _syncCenterData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex) }
-                        if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
-                            checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
-                        } else {
-                            setSavingAccountSyncStatusTrue()
-                            checkAccountsSyncStatusAndSyncAccounts()
-                        }
-                    }
-                },
-            )
+                }
+        }
     }
 
     /**
@@ -377,8 +372,8 @@ class SyncCentersDialogViewModel @Inject constructor(
     private fun getSavingsAccountAndTemplate(
         savingsAccountType: String,
         savingsAccountId: Int,
-    ): Observable<SavingsAccountAndTransactionTemplate> {
-        return Observable.combineLatest(
+    ): Flow<SavingsAccountAndTransactionTemplate> {
+        return combine(
             repository.syncSavingsAccount(
                 savingsAccountType,
                 savingsAccountId,
@@ -395,8 +390,6 @@ class SyncCentersDialogViewModel @Inject constructor(
                 savingsAccountTransactionTemplate,
             )
         }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
     }
 
     /**
@@ -709,32 +702,27 @@ class SyncCentersDialogViewModel @Inject constructor(
         savingsAccountType: String,
         savingsAccountId: Int,
     ) {
-        getSavingsAccountAndTemplate(savingsAccountType, savingsAccountId)
-            .subscribe(
-                object : Subscriber<SavingsAccountAndTransactionTemplate>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        onAccountSyncFailed(e)
-                    }
-
-                    override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
-                        mSavingsAndTransactionSyncIndex += 1
-                        if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
-                            mSavingsAccountList[mSavingsAndTransactionSyncIndex]
-                                .depositType?.endpoint?.let {
-                                    mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
-                                        syncGroupSavingsAccountAndTemplate(
-                                            it,
-                                            it1,
-                                        )
-                                    }
+        viewModelScope.launch {
+            getSavingsAccountAndTemplate(savingsAccountType, savingsAccountId)
+                .catch {
+                    onAccountSyncFailed(it)
+                }.collect {
+                    mSavingsAndTransactionSyncIndex += 1
+                    if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
+                        mSavingsAccountList[mSavingsAndTransactionSyncIndex]
+                            .depositType?.endpoint?.let {
+                                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
+                                    syncGroupSavingsAccountAndTemplate(
+                                        it,
+                                        it1,
+                                    )
                                 }
-                        } else {
-                            mGroups[mGroupSyncIndex].id?.let { loadGroupAssociateClients(it) }
-                        }
+                            }
+                    } else {
+                        mGroups[mGroupSyncIndex].id?.let { loadGroupAssociateClients(it) }
                     }
-                },
-            )
+                }
+        }
     }
 
     /**
@@ -748,32 +736,27 @@ class SyncCentersDialogViewModel @Inject constructor(
         savingsAccountType: String,
         savingsAccountId: Int,
     ) {
-        getSavingsAccountAndTemplate(savingsAccountType, savingsAccountId)
-            .subscribe(
-                object : Subscriber<SavingsAccountAndTransactionTemplate>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        onAccountSyncFailed(e)
-                    }
-
-                    override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
-                        mSavingsAndTransactionSyncIndex += 1
-                        if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
-                            mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let {
-                                mSavingsAccountList[mSavingsAndTransactionSyncIndex]
-                                    .depositType?.endpoint?.let { it1 ->
-                                        syncClientSavingsAccountAndTemplate(
-                                            it1,
-                                            it,
-                                        )
-                                    }
-                            }
-                        } else {
-                            syncClient(mClients[mClientSyncIndex])
+        viewModelScope.launch {
+            getSavingsAccountAndTemplate(savingsAccountType, savingsAccountId)
+                .catch {
+                    onAccountSyncFailed(it)
+                }.collect {
+                    mSavingsAndTransactionSyncIndex += 1
+                    if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
+                        mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let {
+                            mSavingsAccountList[mSavingsAndTransactionSyncIndex]
+                                .depositType?.endpoint?.let { it1 ->
+                                    syncClientSavingsAccountAndTemplate(
+                                        it1,
+                                        it,
+                                    )
+                                }
                         }
+                    } else {
+                        syncClient(mClients[mClientSyncIndex])
                     }
-                },
-            )
+                }
+        }
     }
 
     private fun updateTotalSyncProgressBarAndCount() {

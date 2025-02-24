@@ -12,7 +12,6 @@ package com.mifos.feature.offline.dashboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.OfflineDashboardRepository
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.entity.client.ClientPayload
 import com.mifos.feature.offline.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -89,24 +88,17 @@ class OfflineDashboardViewModel @Inject constructor(
     }
 
     fun loadDatabaseSavingsAccountTransactions() {
-        repository.allSavingsAccountTransactions()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<List<SavingsAccountTransactionRequest>>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        setError(Type.SYNC_SAVINGS_ACCOUNT_TRANSACTION, e.message.toString())
-                    }
-
-                    override fun onNext(transactionRequests: List<SavingsAccountTransactionRequest>) {
-                        setCountOfSyncData(
-                            Type.SYNC_SAVINGS_ACCOUNT_TRANSACTION,
-                            transactionRequests.size,
-                        )
-                    }
-                },
-            )
+        viewModelScope.launch {
+            repository.allSavingsAccountTransactions()
+                .catch { e ->
+                    setError(Type.SYNC_SAVINGS_ACCOUNT_TRANSACTION, e.message.toString())
+                }.collect { transactionRequests ->
+                    setCountOfSyncData(
+                        Type.SYNC_SAVINGS_ACCOUNT_TRANSACTION,
+                        transactionRequests.size,
+                    )
+                }
+        }
     }
 
     private fun setCountOfSyncData(type: Type, count: Int) {

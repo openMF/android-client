@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.subscribe
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -262,25 +263,20 @@ class SyncGroupsDialogViewModel @Inject constructor(
      * @param savingsAccountId   SavingsAccount Id
      */
     private fun syncSavingsAccountAndTemplate(savingsAccountType: String, savingsAccountId: Int) {
-        getSavingsAccountAndTemplate(savingsAccountType, savingsAccountId)
-            .subscribe(
-                object : Subscriber<SavingsAccountAndTransactionTemplate>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        onAccountSyncFailed(e)
+        viewModelScope.launch {
+            getSavingsAccountAndTemplate(savingsAccountType, savingsAccountId)
+                .catch {
+                    onAccountSyncFailed(it)
+                }.collect {
+                    mSavingsAndTransactionSyncIndex += 1
+                    _syncGroupData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex) }
+                    if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
+                        checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
+                    } else {
+                        mGroupList[mGroupSyncIndex].id?.let { loadGroupAssociateClients(it) }
                     }
-
-                    override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
-                        mSavingsAndTransactionSyncIndex += 1
-                        _syncGroupData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex) }
-                        if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
-                            checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
-                        } else {
-                            mGroupList[mGroupSyncIndex].id?.let { loadGroupAssociateClients(it) }
-                        }
-                    }
-                },
-            )
+                }
+        }
     }
 
     /**
@@ -459,32 +455,27 @@ class SyncGroupsDialogViewModel @Inject constructor(
         savingsAccountType: String,
         savingsAccountId: Int,
     ) {
-        getSavingsAccountAndTemplate(savingsAccountType, savingsAccountId)
-            .subscribe(
-                object : Subscriber<SavingsAccountAndTransactionTemplate>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        onAccountSyncFailed(e)
-                    }
-
-                    override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
-                        mSavingsAndTransactionSyncIndex += 1
-                        if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
-                            mSavingsAccountList[mSavingsAndTransactionSyncIndex]
-                                .depositType?.endpoint?.let {
-                                    mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
-                                        syncClientSavingsAccountAndTemplate(
-                                            it,
-                                            it1,
-                                        )
-                                    }
+        viewModelScope.launch {
+            getSavingsAccountAndTemplate(savingsAccountType, savingsAccountId)
+                .catch {
+                    onAccountSyncFailed(it)
+                }.collect {
+                    mSavingsAndTransactionSyncIndex += 1
+                    if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
+                        mSavingsAccountList[mSavingsAndTransactionSyncIndex]
+                            .depositType?.endpoint?.let {
+                                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
+                                    syncClientSavingsAccountAndTemplate(
+                                        it,
+                                        it1,
+                                    )
                                 }
-                        } else {
-                            syncClient(mClients[mClientSyncIndex])
-                        }
+                            }
+                    } else {
+                        syncClient(mClients[mClientSyncIndex])
                     }
-                },
-            )
+                }
+        }
     }
 
     /**
@@ -503,7 +494,8 @@ class SyncGroupsDialogViewModel @Inject constructor(
                 _syncGroupData.update { it.copy(singleSyncCount = singleSyncClientMax) }
                 mGroupSyncIndex += 1
                 syncGroups()
-            } catch (_: Exception) { }
+            } catch (_: Exception) {
+            }
         }
     }
 
@@ -535,8 +527,8 @@ class SyncGroupsDialogViewModel @Inject constructor(
     private fun getSavingsAccountAndTemplate(
         savingsAccountType: String,
         savingsAccountId: Int,
-    ): Observable<SavingsAccountAndTransactionTemplate> {
-        return Observable.combineLatest(
+    ): Flow<SavingsAccountAndTransactionTemplate> {
+        return combine(
             repository.syncSavingsAccount(
                 savingsAccountType,
                 savingsAccountId,
@@ -553,8 +545,6 @@ class SyncGroupsDialogViewModel @Inject constructor(
                 savingsAccountTransactionTemplate,
             )
         }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
     }
 
     private fun updateTotalSyncProgressBarAndCount() {
