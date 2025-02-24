@@ -19,16 +19,16 @@ import kotlinx.serialization.Transient
 data class Summary(
     @PrimaryKey
     @Transient
-    var savingsId: Int? = null,
+    val savingsId: Int? = null,
 
     @Embedded
-    var currency: Currency? = null,
+    val currency: Currency? = null,
 
-    var totalDeposits: Double? = null,
+    val totalDeposits: Double? = null,
 
-    var accountBalance: Double? = null,
+    val accountBalance: Double? = null,
 
-    var totalWithdrawals: Double? = null,
+    val totalWithdrawals: Double? = null,
 
-    var totalInterestEarned: Double? = null,
+    val totalInterestEarned: Double? = null,
 )

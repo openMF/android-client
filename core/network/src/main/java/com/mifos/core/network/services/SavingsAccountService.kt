@@ -50,11 +50,11 @@ interface SavingsAccountService {
      * @return SavingsAccountWithAssociations
      */
     @GET("{savingsAccountType}/{savingsAccountId}")
-    suspend fun getSavingsAccountWithAssociations(
+    fun getSavingsAccountWithAssociations(
         @Path("savingsAccountType") savingsAccountType: String?,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("associations") association: String?,
-    ): SavingsAccountWithAssociations
+    ): Flow<SavingsAccountWithAssociations>
 
     /**
      * This Method for Retrieving Savings Account Transaction Template from REST API

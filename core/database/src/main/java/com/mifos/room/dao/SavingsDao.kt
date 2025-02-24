@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.Flow
 interface SavingsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTransaction(vararg transaction: Transaction)
+    suspend fun insertAllTransactions(transaction: List<Transaction>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSavingsAccountWithAssociations(savingsAccountWithAssociations: SavingsAccountWithAssociations)
@@ -34,7 +34,7 @@ interface SavingsDao {
     suspend fun insertSavingsAccountTransactionRequest(transactionRequest: SavingsAccountTransactionRequest)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPaymentTypeOption(paymentTypeOption: List<PaymentTypeOption>)
+    suspend fun insertAllPaymentTypeOption(paymentTypeOption: List<PaymentTypeOption>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSavingsAccountTransactionTemplate(transactionTemplate: SavingsAccountTransactionTemplate)

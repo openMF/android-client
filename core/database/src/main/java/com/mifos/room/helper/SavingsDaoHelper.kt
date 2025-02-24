@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
@@ -44,31 +45,31 @@ class SavingsDaoHelper @Inject constructor(
      */
     fun saveSavingsAccount(
         savingsAccountWithAssociations: SavingsAccountWithAssociations,
-    ): Flow<SavingsAccountWithAssociations> {
-        return flow {
-            val transactions = savingsAccountWithAssociations.transactions
+    ): Flow<SavingsAccountWithAssociations> = flow {
+        val updatedTransactions = savingsAccountWithAssociations.transactions.map { transaction ->
+            transaction.id?.let { id ->
+                transaction.copy(
+                    savingsAccountId = savingsAccountWithAssociations.id,
+                    savingsTransactionDate = SavingsTransactionDate(
+                        id,
+                        transaction.date.getOrNull(0),
+                        transaction.date.getOrNull(1),
+                        transaction.date.getOrNull(2),
+                    ),
+                )
+            } ?: transaction
+        }
 
-            if (transactions.isNotEmpty()) {
-                transactions.forEach { transaction ->
-                    val savingsTransactionDate = transaction.id?.let {
-                        SavingsTransactionDate(
-                            it,
-                            transaction.date.getOrNull(0),
-                            transaction.date.getOrNull(1),
-                            transaction.date.getOrNull(2),
-                        )
-                    }
-                    transaction.savingsAccountId = savingsAccountWithAssociations.id
-                    transaction.savingsTransactionDate = savingsTransactionDate
-                    savingsDao.insertTransaction(transaction)
-                }
-            }
+        savingsDao.insertAllTransactions(updatedTransactions)
 
-            savingsAccountWithAssociations.summary?.savingsId = savingsAccountWithAssociations.id
-            savingsDao.insertSavingsAccountWithAssociations(savingsAccountWithAssociations)
-            emit(savingsAccountWithAssociations)
-        }.flowOn(ioDispatcher)
-    }
+        val updatedSavingsAccount = savingsAccountWithAssociations.copy(
+            transactions = updatedTransactions,
+            summary = savingsAccountWithAssociations.summary?.copy(savingsId = savingsAccountWithAssociations.id),
+        )
+
+        savingsDao.insertSavingsAccountWithAssociations(updatedSavingsAccount)
+        emit(updatedSavingsAccount)
+    }.flowOn(ioDispatcher)
 
     /**
      * This Method Read the SavingsAccountSummary Template from the
@@ -79,30 +80,23 @@ class SavingsDaoHelper @Inject constructor(
      * @param savingsAccountId Savings Account Id
      * @return SavingsAccountWithAssociations SavingsAccountSummary Template.
      */
-    fun readSavingsAccount(
-        savingsAccountId: Int,
-    ): Flow<SavingsAccountWithAssociations?> {
-        return flow {
-            var savingsAccountWithAssociations =
-                savingsDao.getSavingsAccountWithAssociations(savingsAccountId).first()
-            val transactions = savingsDao.getAllTransactions(savingsAccountId)
-
-            transactions.forEach { transaction ->
-                transaction.date = listOf(
-                    transaction.savingsTransactionDate?.year,
-                    transaction.savingsTransactionDate?.month,
-                    transaction.savingsTransactionDate?.day,
+    fun readSavingsAccount(savingsAccountId: Int): Flow<SavingsAccountWithAssociations?> =
+        savingsDao.getSavingsAccountWithAssociations(savingsAccountId)
+            .map { savingsAccountWithAssociations ->
+                savingsAccountWithAssociations?.copy(
+                    transactions = savingsDao.getAllTransactions(savingsAccountId)
+                        .map { transaction ->
+                            transaction.copy(
+                                date = listOf(
+                                    transaction.savingsTransactionDate?.year,
+                                    transaction.savingsTransactionDate?.month,
+                                    transaction.savingsTransactionDate?.day,
+                                ),
+                            )
+                        },
                 )
             }
-
-            if (savingsAccountWithAssociations != null) {
-                savingsAccountWithAssociations = savingsAccountWithAssociations.copy(
-                    transactions = transactions,
-                )
-            }
-            emit(savingsAccountWithAssociations)
-        }.flowOn(ioDispatcher)
-    }
+            .flowOn(ioDispatcher)
 
     /**
      * This Method is Saving the SavingsAccountTransactionTemplate into Database.
@@ -113,7 +107,7 @@ class SavingsDaoHelper @Inject constructor(
     suspend fun saveSavingsAccountTransactionTemplate(
         savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate,
     ) {
-        savingsDao.insertPaymentTypeOption(savingsAccountTransactionTemplate.paymentTypeOptions)
+        savingsDao.insertAllPaymentTypeOption(savingsAccountTransactionTemplate.paymentTypeOptions)
         savingsDao.insertSavingsAccountTransactionTemplate(savingsAccountTransactionTemplate)
     }
 
@@ -126,22 +120,14 @@ class SavingsDaoHelper @Inject constructor(
      * @param savingsAccountId SavingAccount id
      * @return SavingsAccountTransactionTemplate
      */
-    fun readSavingsAccountTransactionTemplate(
-        savingsAccountId: Int,
-    ): Flow<SavingsAccountTransactionTemplate?> {
-        return flow {
-            var savingsAccountTransactionTemplate =
-                savingsDao.getSavingsAccountTransactionTemplate(savingsAccountId).first()
-            val paymentTypeOption = savingsDao.getAllPaymentTypeOption().first()
-
-            if (savingsAccountTransactionTemplate != null) {
-                savingsAccountTransactionTemplate = savingsAccountTransactionTemplate.copy(
-                    paymentTypeOptions = paymentTypeOption,
+    fun readSavingsAccountTransactionTemplate(savingsAccountId: Int): Flow<SavingsAccountTransactionTemplate?> =
+        savingsDao.getSavingsAccountTransactionTemplate(savingsAccountId)
+            .map { savingsAccountTransactionTemplate ->
+                savingsAccountTransactionTemplate?.copy(
+                    paymentTypeOptions = savingsDao.getAllPaymentTypeOption().first(),
                 )
             }
-            emit(savingsAccountTransactionTemplate)
-        }.flowOn(ioDispatcher)
-    }
+            .flowOn(ioDispatcher)
 
     /**
      * This Method saving the SavingAccountTransaction into Database
@@ -160,18 +146,16 @@ class SavingsDaoHelper @Inject constructor(
         savingsAccountId: Int,
         transactionType: String?,
         savingsAccountTransactionRequest: SavingsAccountTransactionRequest,
-    ): Flow<SavingsAccountTransactionResponse?> {
-        return flow {
-            val updatedRequest = savingsAccountTransactionRequest.copy(
+    ): Flow<SavingsAccountTransactionResponse?> = flow {
+        savingsDao.insertSavingsAccountTransactionRequest(
+            savingsAccountTransactionRequest.copy(
                 savingAccountId = savingsAccountId,
                 savingsAccountType = savingsAccountType,
                 transactionType = transactionType,
-            )
-
-            savingsDao.insertSavingsAccountTransactionRequest(updatedRequest)
-            emit(SavingsAccountTransactionResponse())
-        }.flowOn(ioDispatcher)
-    }
+            ),
+        )
+        emit(SavingsAccountTransactionResponse())
+    }.flowOn(ioDispatcher)
 
     /**
      * This Method, retrieving SavingsAccountTransactionRequest with the Saving Id from Database
@@ -208,16 +192,11 @@ class SavingsDaoHelper @Inject constructor(
      * @param savingsAccountId SavingsAccount Id
      * @return List<SavingsAccountTransactionRequest>
      </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest></SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
-    fun deleteAndUpdateTransaction(
-        savingsAccountId: Int,
-    ): Flow<List<SavingsAccountTransactionRequest>> {
-        return flow {
+    fun deleteAndUpdateTransaction(savingsAccountId: Int): Flow<List<SavingsAccountTransactionRequest>> =
+        flow {
             savingsDao.deleteSavingsAccountTransactionRequest(savingsAccountId)
-            val savingsAccountTransactionRequests =
-                savingsDao.getAllSavingsAccountTransactionRequest()
-            emitAll(savingsAccountTransactionRequests)
+            emitAll(savingsDao.getAllSavingsAccountTransactionRequest())
         }.flowOn(ioDispatcher)
-    }
 
     /**
      * This Method updating the SavingsAccountTransactionRequest to Database Table.

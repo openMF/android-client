@@ -59,15 +59,11 @@ class DataManagerSavings @Inject constructor(
         association: String?,
     ): Flow<SavingsAccountWithAssociations?> {
         return when (prefManager.userStatus) {
-            false -> flow {
-                emit(
-                    mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
-                        type,
-                        savingsAccountId,
-                        association,
-                    ),
-                )
-            }
+            false -> mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
+                type,
+                savingsAccountId,
+                association,
+            )
 
             true ->
                 /**
@@ -100,14 +96,11 @@ class DataManagerSavings @Inject constructor(
         association: String?,
     ): Flow<SavingsAccountWithAssociations> {
         return flow {
-            val savingsWithTransaction =
-                mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
-                    type,
-                    savingsAccountId,
-                    association,
-                )
-            databaseHelperSavings.saveSavingsAccount(savingsWithTransaction)
-            emit(savingsWithTransaction)
+            mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(type, savingsAccountId, association)
+                .collect { savingsWithTransaction ->
+                    databaseHelperSavings.saveSavingsAccount(savingsWithTransaction)
+                    emit(savingsWithTransaction)
+                }
         }
     }
 
