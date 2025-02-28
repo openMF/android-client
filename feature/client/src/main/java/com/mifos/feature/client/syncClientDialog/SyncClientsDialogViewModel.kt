@@ -16,26 +16,24 @@ import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncClientsDialogRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.accounts.loan.LoanAccount
-import com.mifos.core.entity.accounts.savings.SavingsAccount
-import com.mifos.core.entity.client.Client
 import com.mifos.feature.client.R
+import com.mifos.room.entities.accounts.loans.LoanAccount
+import com.mifos.room.entities.accounts.savings.SavingsAccount
+import com.mifos.room.entities.client.Client
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -224,45 +222,36 @@ class SyncClientsDialogViewModel @Inject constructor(
      * @param savingsAccountId   SavingsAccount Id
      */
     private fun syncSavingsAccountAndTemplate(savingsAccountType: String?, savingsAccountId: Int) {
-        Observable.combineLatest(
-            repository.syncSavingsAccount(
-                savingsAccountType,
-                savingsAccountId,
-                Constants.TRANSACTIONS,
-            ),
-            repository.syncSavingsAccountTransactionTemplate(
-                savingsAccountType,
-                savingsAccountId,
-                Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT,
-            ),
-        ) { savingsAccountWithAssociations, savingsAccountTransactionTemplate ->
-            val accountAndTransactionTemplate = SavingsAccountAndTransactionTemplate()
-            accountAndTransactionTemplate.savingsAccountTransactionTemplate =
-                savingsAccountTransactionTemplate
-            accountAndTransactionTemplate.savingsAccountWithAssociations =
-                savingsAccountWithAssociations
-            accountAndTransactionTemplate
-        }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<SavingsAccountAndTransactionTemplate>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        onAccountSyncFailed(e)
-                    }
+        viewModelScope.launch {
+            combine(
+                repository.syncSavingsAccount(
+                    savingsAccountType,
+                    savingsAccountId,
+                    Constants.TRANSACTIONS,
+                ),
+                repository.syncSavingsAccountTransactionTemplate(
+                    savingsAccountType,
+                    savingsAccountId,
+                    Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT,
+                ),
+            ) { savingsAccountWithAssociations, savingsAccountTransactionTemplate ->
+                SavingsAccountAndTransactionTemplate(
+                    savingsAccountTransactionTemplate = savingsAccountTransactionTemplate,
+                    savingsAccountWithAssociations = savingsAccountWithAssociations,
+                )
+            }.catch {
+                onAccountSyncFailed(it)
+            }.collect {
+                mSavingsAndTransactionSyncIndex += 1
+                _syncClientData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex) }
 
-                    override fun onNext(savingsAccountAndTransactionTemplate: SavingsAccountAndTransactionTemplate) {
-                        mSavingsAndTransactionSyncIndex += 1
-                        _syncClientData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex) }
-                        if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
-                            checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
-                        } else {
-                            syncClient(mClientList[mClientSyncIndex])
-                        }
-                    }
-                },
-            )
+                if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
+                    checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
+                } else {
+                    syncClient(mClientList[mClientSyncIndex])
+                }
+            }
+        }
     }
 
     /**
@@ -271,28 +260,24 @@ class SyncClientsDialogViewModel @Inject constructor(
      *
      * @param client
      */
-    fun syncClient(client: Client) {
-        client.groupId = mClientList[mClientSyncIndex].id
-        client.sync = true
-        repository.syncClientInDatabase(client)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<Client>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        _syncClientsDialogUiState.value =
-                            SyncClientsDialogUiState.Error(message = e.message.toString())
-                    }
+    fun syncClient(client: com.mifos.room.entities.client.Client) {
+        val updatedClient = client.copy(
+            groupId = mClientList[mClientSyncIndex].id,
+            sync = true,
+        )
+        viewModelScope.launch {
+            try {
+                repository.syncClientInDatabase(updatedClient)
 
-                    override fun onNext(client: Client) {
-                        val singleSyncClientMax = maxSingleSyncClientProgressBar
-                        _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
-                        mClientSyncIndex += 1
-                        syncClient()
-                    }
-                },
-            )
+                val singleSyncClientMax = maxSingleSyncClientProgressBar
+                _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
+                mClientSyncIndex += 1
+                syncClient()
+            } catch (e: Exception) {
+                _syncClientsDialogUiState.value =
+                    SyncClientsDialogUiState.Error(message = e.message.toString())
+            }
+        }
     }
 
     private fun updateTotalSyncProgressBarAndCount() {

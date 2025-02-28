@@ -11,12 +11,12 @@ package com.mifos.feature.dataTable.dataTableList
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.entity.accounts.loan.Loans
-import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.client.ClientPayload
 import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.entity.noncore.DataTablePayload
@@ -26,6 +26,7 @@ import com.mifos.feature.data_table.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -147,28 +148,23 @@ class DataTableListViewModel @Inject constructor(
     }
 
     private fun createClient(clientPayload: ClientPayload) {
-        _dataTableListUiState.value = DataTableListUiState.Loading
-        repository.createClient(clientPayload)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Client>() {
-                override fun onCompleted() {
-                }
+        viewModelScope.launch {
+            _dataTableListUiState.value = DataTableListUiState.Loading
 
-                override fun onError(e: Throwable) {
+            try {
+                val client = repository.createClient(clientPayload)
+
+                if (client?.clientId != null) {
+                    _dataTableListUiState.value = DataTableListUiState.Success(client = client)
+                } else {
                     _dataTableListUiState.value =
-                        DataTableListUiState.ShowMessage(message = e.message.toString())
+                        DataTableListUiState.Success(messageResId = R.string.feature_data_table_waiting_for_checker_approval)
                 }
-
-                override fun onNext(client: Client) {
-                    if (client.clientId != null) {
-                        _dataTableListUiState.value = DataTableListUiState.Success(client = client)
-                    } else {
-                        _dataTableListUiState.value =
-                            DataTableListUiState.Success(messageResId = R.string.feature_data_table_waiting_for_checker_approval)
-                    }
-                }
-            })
+            } catch (e: Exception) {
+                _dataTableListUiState.value =
+                    DataTableListUiState.ShowMessage(message = e.message.toString())
+            }
+        }
     }
 
     private fun addDataTableInput(formWidgets: List<FormWidget>): HashMap<String, Any> {

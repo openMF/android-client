@@ -14,13 +14,9 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.domain.useCases.AllSavingsAccountTransactionsUseCase
-import com.mifos.core.domain.useCases.DeleteAndUpdateTransactionsUseCase
-import com.mifos.core.domain.useCases.ProcessTransactionUseCase
-import com.mifos.core.domain.useCases.UpdateLoanRepaymentTransactionSavingsUseCase
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,9 +33,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SyncSavingsAccountTransactionViewModel @Inject constructor(
     private val processTransactionUseCase: ProcessTransactionUseCase,
-    private val allSavingsAccountTransactionsUseCase: AllSavingsAccountTransactionsUseCase,
-    private val updateLoanRepaymentTransactionSavingsUseCase: UpdateLoanRepaymentTransactionSavingsUseCase,
-    private val deleteAndUpdateTransactionsUseCase: DeleteAndUpdateTransactionsUseCase,
+//    private val allSavingsAccountTransactionsUseCase: AllSavingsAccountTransactionsUseCase,
+//    private val updateLoanRepaymentTransactionSavingsUseCase: UpdateLoanRepaymentTransactionSavingsUseCase,
+//    private val deleteAndUpdateTransactionsUseCase: DeleteAndUpdateTransactionsUseCase,
     private val repository: SyncSavingsAccountTransactionRepository,
     private val prefManager: PrefManager,
 ) : ViewModel() {
@@ -181,21 +177,18 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
      * This Method Load the List<SavingsAccountTransactionRequest> from
      * SavingsAccountTransactionRequest_Table and Update the UI
      </SavingsAccountTransactionRequest> */
-    fun loadDatabaseSavingsAccountTransactions() = viewModelScope.launch(Dispatchers.IO) {
-        allSavingsAccountTransactionsUseCase().collect { result ->
-            when (result) {
-                is Resource.Error ->
+    fun loadDatabaseSavingsAccountTransactions() {
+        viewModelScope.launch {
+            _syncSavingsAccountTransactionUiState.value =
+                SyncSavingsAccountTransactionUiState.Loading
+
+            repository.allSavingsAccountTransactions()
+                .catch {
                     _syncSavingsAccountTransactionUiState.value =
                         SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_savingaccounttransaction)
-
-                is Resource.Loading ->
-                    _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.Loading
-
-                is Resource.Success -> {
-                    val r = result.data ?: emptyList()
-                    if (r.isNotEmpty()) {
-                        mSavingsAccountTransactionRequests = r.toMutableList()
+                }.collect { savings ->
+                    if (savings.isNotEmpty()) {
+                        mSavingsAccountTransactionRequests = savings.toMutableList()
                         updateUiState()
                     } else {
                         _syncSavingsAccountTransactionUiState.value =
@@ -204,7 +197,6 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
                             )
                     }
                 }
-            }
         }
     }
 
@@ -279,24 +271,23 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
      *
      * @param savingsAccountId SavingsAccountTransactionRequest's SavingsAccount Id
      </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
-    private fun deleteAndUpdateSavingsAccountTransaction(savingsAccountId: Int) =
-        viewModelScope.launch(Dispatchers.IO) {
-            deleteAndUpdateTransactionsUseCase(savingsAccountId).collect { result ->
-                when (result) {
-                    is Resource.Error ->
-                        _syncSavingsAccountTransactionUiState.value =
-                            SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_update_list)
+    private fun deleteAndUpdateSavingsAccountTransaction(savingsAccountId: Int) {
+        viewModelScope.launch {
+            _syncSavingsAccountTransactionUiState.value =
+                SyncSavingsAccountTransactionUiState.Loading
 
-                    is Resource.Loading ->
-                        _syncSavingsAccountTransactionUiState.value =
-                            SyncSavingsAccountTransactionUiState.Loading
-
-                    is Resource.Success -> showTransactionDeletedAndUpdated(
-                        result.data as MutableList<SavingsAccountTransactionRequest>,
+            repository.deleteAndUpdateTransactions(savingsAccountId)
+                .catch {
+                    _syncSavingsAccountTransactionUiState.value =
+                        SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_update_list)
+                }
+                .collect { savingsAccountTransactionRequests ->
+                    showTransactionDeletedAndUpdated(
+                        savingsAccountTransactionRequests as MutableList<SavingsAccountTransactionRequest>,
                     )
                 }
-            }
         }
+    }
 
     /**
      * This Method Update the SavingsAccountTransactionRequest in the Database. This will be called
@@ -306,21 +297,15 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
      * @param request SavingsAccountTransactionRequest
      */
     private fun updateSavingsAccountTransaction(request: SavingsAccountTransactionRequest?) =
-        viewModelScope.launch(Dispatchers.IO) {
-            updateLoanRepaymentTransactionSavingsUseCase(request).collect { result ->
-                when (result) {
-                    is Resource.Error ->
-                        _syncSavingsAccountTransactionUiState.value =
-                            SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_update_savingsaccount)
-
-                    is Resource.Loading ->
-                        _syncSavingsAccountTransactionUiState.value =
-                            SyncSavingsAccountTransactionUiState.Loading
-
-                    is Resource.Success -> result.data?.let {
-                        showTransactionUpdatedSuccessfully(it)
-                    }
-                }
+        viewModelScope.launch {
+            _syncSavingsAccountTransactionUiState.value =
+                SyncSavingsAccountTransactionUiState.Loading
+            try {
+                repository.updateLoanRepaymentTransaction(request!!)
+                showTransactionUpdatedSuccessfully(request)
+            } catch (e: Exception) {
+                _syncSavingsAccountTransactionUiState.value =
+                    SyncSavingsAccountTransactionUiState.ShowError(R.string.feature_offline_failed_to_update_savingsaccount)
             }
         }
 }

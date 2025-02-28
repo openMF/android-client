@@ -14,12 +14,8 @@ import androidx.paging.PagingState
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.room.entities.client.Client
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 
 /**
  * Created by Aditya Gupta on 21/02/24.
@@ -61,23 +57,9 @@ class ClientListPagingSource(
     }
 
     private suspend fun getClientDbList(): List<Client> {
-        return suspendCoroutine { continuation ->
-            dataManagerClient.allDatabaseClients
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Page<Client>>() {
-                    override fun onCompleted() {
-                    }
-
-                    override fun onError(error: Throwable) {
-                        continuation.resumeWithException(error)
-                    }
-
-                    override fun onNext(clients: Page<Client>) {
-                        continuation.resume(clients.pageItems)
-                    }
-                })
-        }
+        return dataManagerClient.allDatabaseClients
+            .map { it.pageItems }
+            .firstOrNull() ?: emptyList()
     }
 
     private fun getClientListWithSync(

@@ -14,7 +14,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.mifos.core.common.utils.Constants
 import com.mifos.room.entities.accounts.loans.LoanAccount
 import com.mifos.room.entities.accounts.savings.SavingsAccount
 import com.mifos.room.entities.client.Client
@@ -31,40 +30,32 @@ import com.mifos.room.entities.templates.clients.SavingProductOptions
 import com.mifos.room.entities.templates.clients.StaffOptions
 import kotlinx.coroutines.flow.Flow
 
-// TODO remove comments
 @Dao
 interface ClientDao {
-    // fun saveClient
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertClient(client: Client)
 
-    // fun readAllClients
     @Query("SELECT * FROM Client")
     fun getAllClients(): Flow<List<Client>>
 
-    // fun getGroupAssociateClients
     @Query("SELECT * FROM Client WHERE groupId = :groupId")
     fun getClientsByGroupId(groupId: Int): Flow<List<Client>>
 
-    // fun getClient
     @Query("SELECT * FROM Client WHERE id = :clientId LIMIT 1")
-    fun getClientByClientId(clientId: Int): Flow<Client>
+    fun getClientByClientId(clientId: Int): Flow<Client?>
 
-    // fun saveClientAccounts
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLoanAccount(loanAccount: LoanAccount)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSavingsAccount(savingsAccount: SavingsAccount)
 
-    // fun readClientAccounts
     @Query("SELECT * FROM LoanAccount WHERE clientId = :clientId")
     fun getLoanAccountsByClientId(clientId: Long): Flow<List<LoanAccount>>
 
     @Query("SELECT * FROM SavingsAccount WHERE clientId = :clientId")
     fun getSavingsAccountsByClientId(clientId: Long): Flow<List<SavingsAccount>>
 
-    // fun saveClientTemplate
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertClientsTemplate(clientsTemplate: ClientsTemplate)
 
@@ -78,19 +69,16 @@ interface ClientDao {
     suspend fun insertSavingProductOptions(savingProductOptions: List<SavingProductOptions>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOptions(options: List<Options>)
+    suspend fun insertOption(options: Options)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertInterestTypes(interestTypes: List<InterestType>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDataTables(dataTables: List<DataTable>)
+    suspend fun insertColumnHeader(columnHeader: ColumnHeader)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertColumnHeaders(columnHeaders: List<ColumnHeader>)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertColumnValues(columnValues: List<ColumnValue>)
+    suspend fun insertColumnValue(columnValue: ColumnValue)
 
     @Query("DELETE FROM DataTable")
     suspend fun deleteDataTables()
@@ -101,7 +89,6 @@ interface ClientDao {
     @Query("DELETE FROM ColumnValue")
     suspend fun deleteColumnValues()
 
-    // fun readClientTemplate
     @Query("SELECT * FROM ClientsTemplate LIMIT 1")
     suspend fun getClientsTemplate(): ClientsTemplate
 
@@ -115,42 +102,41 @@ interface ClientDao {
     fun getSavingProductOptions(): Flow<List<SavingProductOptions>>
 
     @Query("SELECT * FROM ClientTemplateOptions WHERE optionType = :optionType")
-    fun getGenderOptions(optionType: String = GENDER_OPTIONS): Flow<List<Options>>
-
-    @Query("SELECT * FROM ClientTemplateOptions WHERE optionType = :optionType")
-    fun getClientTypeOptions(optionType: String = CLIENT_TYPE_OPTIONS): Flow<List<InterestType>>
-
-    @Query("SELECT * FROM ClientTemplateOptions WHERE optionType = :optionType")
-    fun getClientClassificationOptions(optionType: String = CLIENT_CLASSIFICATION_OPTIONS): Flow<List<Options>>
+    fun getOptions(optionType: String): Flow<List<Options>>
 
     @Query("SELECT * FROM ClientTemplateInterest")
-    fun getLegalFormOptions(): Flow<List<InterestType>>
+    fun getAllInterestType(): Flow<List<InterestType>>
 
-    @Query("SELECT * FROM DataTable WHERE applicationTableName = :applicationTableName")
-    fun getDataTables(applicationTableName: String = Constants.DATA_TABLE_NAME_CLIENT): Flow<List<DataTable>>
+    @Query("SELECT * FROM DataTable where applicationTableName = :tableName")
+    fun getDatatableByTableName(tableName: String): Flow<List<DataTable>>
 
-    // fun saveClientPayloadToDB
+    @Query("SELECT * FROM ColumnHeader WHERE registeredTableName = :tableName")
+    fun getColumnHeadersByTableName(tableName: String): Flow<List<ColumnHeader>>
+
+    @Query("SELECT * FROM ColumnValue WHERE registeredTableName = :tableName")
+    fun getColumnValuesByTableName(tableName: String): Flow<List<ColumnValue>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertClientPayload(clientPayload: ClientPayload)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDataTablePayloads(dataTablePayloads: List<DataTablePayload>)
+    suspend fun insertDataTablePayload(dataTablePayloads: DataTablePayload)
 
-    // fun readAllClientPayload
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDataTable(dataTable: DataTable)
+
     @Query("SELECT * FROM ClientPayload")
     fun getAllClientPayload(): Flow<List<ClientPayload>>
 
     @Query("SELECT * FROM DataTablePayload WHERE clientCreationTime = :clientCreationTime")
-    fun getDataTablePayloadByCreationTime(clientCreationTime: Long): Flow<DataTablePayload>
+    fun getDataTablePayloadByCreationTime(clientCreationTime: Long): List<Flow<DataTablePayload>>
 
-    // fun deleteAndUpdatePayloads
     @Query("DELETE FROM ClientPayload WHERE id = :id")
     suspend fun deleteClientPayloadById(id: Int)
 
     @Query("DELETE FROM DataTablePayload WHERE clientCreationTime = :clientCreationTime")
     suspend fun deleteDataTablePayloadByCreationTime(clientCreationTime: Long)
 
-    // fun updateDatabaseClientPayload
     @Update
     suspend fun updateDatabaseClientPayload(clientPayload: ClientPayload): Flow<ClientPayload>
 

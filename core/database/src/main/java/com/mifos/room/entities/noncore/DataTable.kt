@@ -10,22 +10,15 @@
 package com.mifos.room.entities.noncore
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mifos.core.entity.noncore.ColumnHeader
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity("DataTable")
 data class DataTable(
-    @ColumnInfo("applicationTableName")
-    var applicationTableName: String? = null,
-
-    @ColumnInfo("columnHeaderData")
-    var columnHeaderData: List<ColumnHeader> = ArrayList(),
-
+    val applicationTableName: String? = null,
+    val columnHeaderData: List<ColumnHeader> = emptyList(),
     @PrimaryKey
-    @ColumnInfo("registeredTableName")
-    var registeredTableName: String? = null,
+    val registeredTableName: String? = null,
 ) : Parcelable

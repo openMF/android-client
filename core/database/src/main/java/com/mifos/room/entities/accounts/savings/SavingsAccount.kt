@@ -42,37 +42,30 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class SavingsAccount(
     @PrimaryKey
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "clientId")
     @Transient
-    var clientId: Long = 0,
+    val clientId: Long = 0,
 
-    @ColumnInfo(name = "groupId")
     @Transient
-    var groupId: Long = 0,
+    val groupId: Long = 0,
 
-    @ColumnInfo(name = "centerId")
-    var centerId: Long = 0,
+    val centerId: Long = 0,
 
-    @ColumnInfo(name = "accountNo")
-    var accountNo: String? = null,
+    val accountNo: String? = null,
 
-    @ColumnInfo(name = "productId")
-    var productId: Int? = null,
+    val productId: Int? = null,
 
-    @ColumnInfo(name = "productName")
-    var productName: String? = null,
+    val productName: String? = null,
 
-    @ColumnInfo(name = "status", index = true)
-    var status: Status? = null,
+    @ColumnInfo(index = true)
+    val status: Status? = null,
 
-    @ColumnInfo(name = "currency", index = true)
-    var currency: Currency? = null,
+    @ColumnInfo(index = true)
+    val currency: Currency? = null,
 
-    @ColumnInfo(name = "accountBalance")
-    var accountBalance: Double? = null,
+    val accountBalance: Double? = null,
 
-    @ColumnInfo(name = "depositType", index = true)
-    var depositType: DepositType? = null,
+    @ColumnInfo(index = true)
+    val depositType: DepositType? = null,
 ) : Parcelable

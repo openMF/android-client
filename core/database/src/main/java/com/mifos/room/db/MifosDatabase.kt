@@ -18,6 +18,7 @@ import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
 import com.mifos.room.dao.OfficeDao
+import com.mifos.room.dao.SavingsDao
 import com.mifos.room.dao.StaffDao
 import com.mifos.room.dao.SurveyDao
 import com.mifos.room.entities.PaymentTypeOption
@@ -30,6 +31,9 @@ import com.mifos.room.entities.accounts.loans.Status
 import com.mifos.room.entities.accounts.loans.Summary
 import com.mifos.room.entities.accounts.loans.Timeline
 import com.mifos.room.entities.accounts.savings.SavingsAccount
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.accounts.savings.Transaction
 import com.mifos.room.entities.client.ChargeCalculationType
 import com.mifos.room.entities.client.ChargeTimeType
 import com.mifos.room.entities.client.Charges
@@ -46,6 +50,7 @@ import com.mifos.room.entities.survey.QuestionDatas
 import com.mifos.room.entities.survey.ResponseDatas
 import com.mifos.room.entities.survey.Survey
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.room.utils.typeconverters.ClientTypeConverters
 import com.mifos.room.utils.typeconverters.DueDateConverter
 import com.mifos.room.utils.typeconverters.ListTypeConverters
@@ -83,6 +88,11 @@ import com.mifos.room.utils.typeconverters.SurveyTypeConverters
         ClientPayload::class,
         Currency::class,
         Status::class,
+        Transaction::class,
+        SavingsAccountWithAssociations::class,
+        SavingsAccountTransactionRequest::class,
+        SavingsAccountTransactionTemplate::class,
+        SavingsAccountTransactionRequest::class,
     ],
     version = MifosDatabase.VERSION,
     exportSchema = true,
@@ -105,6 +115,7 @@ abstract class MifosDatabase : RoomDatabase() {
     abstract fun staffDao(): StaffDao
     abstract fun officeDao(): OfficeDao
     abstract fun groupsDao(): GroupsDao
+    abstract fun savingsDao(): SavingsDao
     abstract fun chargeDao(): ChargeDao
     abstract fun clientDao(): ClientDao
 

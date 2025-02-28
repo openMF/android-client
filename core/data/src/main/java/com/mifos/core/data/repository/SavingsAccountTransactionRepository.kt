@@ -9,10 +9,10 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
-import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
-import rx.Observable
+import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Aditya Gupta on 13/08/23.
@@ -23,16 +23,14 @@ interface SavingsAccountTransactionRepository {
         type: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Observable<SavingsAccountTransactionTemplate>
+    ): Flow<SavingsAccountTransactionTemplate?>
 
     fun processTransaction(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequest,
-    ): Observable<SavingsAccountTransactionResponse>
+    ): Flow<SavingsAccountTransactionResponse?>
 
-    fun getSavingsAccountTransaction(
-        savingAccountId: Int,
-    ): Observable<SavingsAccountTransactionRequest>
+    fun getSavingsAccountTransaction(savingAccountId: Int): Flow<SavingsAccountTransactionRequest?>
 }

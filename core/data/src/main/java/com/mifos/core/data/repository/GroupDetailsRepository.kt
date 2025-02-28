@@ -13,7 +13,6 @@ import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupWithAssociations
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -24,5 +23,5 @@ interface GroupDetailsRepository {
 
     fun getGroupAccounts(groupId: Int): Flow<GroupAccounts>
 
-    fun getGroupWithAssociations(groupId: Int): Observable<GroupWithAssociations>
+    fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations>
 }

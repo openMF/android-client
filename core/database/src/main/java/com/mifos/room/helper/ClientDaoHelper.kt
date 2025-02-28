@@ -9,7 +9,15 @@
  */
 package com.mifos.room.helper
 
-import com.mifos.core.common.utils.Page
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import com.mifos.core.common.network.Dispatcher
+import com.mifos.core.common.network.MifosDispatchers
+import com.mifos.core.common.utils.Constants.DATA_TABLE_NAME_CLIENT
+import com.mifos.core.common.utils.MapDeserializer
+import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.objects.noncore.DataTablePayload_Table.dataTableString
 import com.mifos.room.dao.ClientDao
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.loans.LoanAccount
@@ -18,10 +26,22 @@ import com.mifos.room.entities.client.Client
 import com.mifos.room.entities.client.ClientDate
 import com.mifos.room.entities.client.ClientPayload
 import com.mifos.room.entities.group.GroupWithAssociations
+import com.mifos.room.entities.noncore.ColumnHeader
+import com.mifos.room.entities.noncore.ColumnValue
+import com.mifos.room.entities.noncore.DataTable
+import com.mifos.room.entities.templates.clients.ClientsTemplate
+import com.mifos.room.entities.templates.clients.Options
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.map
+import java.lang.reflect.Type
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,7 +53,21 @@ import javax.inject.Singleton
 @Singleton
 class ClientDaoHelper @Inject constructor(
     private val clientDao: ClientDao,
+    @Dispatcher(MifosDispatchers.IO)
+    private val ioDispatcher: CoroutineDispatcher,
 ) {
+    private val gson: Gson
+    private val type: Type
+
+    init {
+        val gsonBuilder = GsonBuilder()
+        gsonBuilder.registerTypeAdapter(
+            object : TypeToken<HashMap<String, Any>>() {}.type,
+            MapDeserializer(),
+        )
+        gson = gsonBuilder.create()
+        type = object : TypeToken<HashMap<String, Any>>() {}.type
+    }
 
     /**
      * This Method save the single Client in Database with ClientId as Primary Id
@@ -41,19 +75,17 @@ class ClientDaoHelper @Inject constructor(
      * @param client Client
      * @return saved Client
      */
-    fun saveClient(client: Client): Flow<Client> =
-        flow {
-            val clientDate = client.activationDate.getOrNull(0)?.let { year ->
-                client.activationDate.getOrNull(1)?.let { month ->
-                    client.activationDate.getOrNull(2)?.let { day ->
-                        ClientDate(client.id.toLong(), 0, year, month, day)
-                    }
+    suspend fun saveClient(client: Client) {
+        val clientDate = client.activationDate.getOrNull(0)?.let { year ->
+            client.activationDate.getOrNull(1)?.let { month ->
+                client.activationDate.getOrNull(2)?.let { day ->
+                    ClientDate(client.id.toLong(), 0, year, month, day)
                 }
             }
-            val updatedClient = client.copy(clientDate = clientDate)
-            clientDao.insertClient(updatedClient)
-            emit(updatedClient)
         }
+        val updatedClient = client.copy(clientDate = clientDate)
+        clientDao.insertClient(updatedClient)
+    }
 
     /**
      * Reading All Clients from table of Client and return the ClientList
@@ -66,7 +98,7 @@ class ClientDaoHelper @Inject constructor(
             Page<Client>().apply {
                 pageItems = clients
             }
-        }
+        }.flowOn(ioDispatcher)
     }
 
     /**
@@ -82,7 +114,7 @@ class ClientDaoHelper @Inject constructor(
             GroupWithAssociations().copy(
                 clientMembers = clients,
             )
-        }
+        }.flowOn(ioDispatcher)
     }
 
     /**
@@ -91,16 +123,16 @@ class ClientDaoHelper @Inject constructor(
      * @param clientId of the client
      * @return A 'Flow' of 'Client'
      */
-    fun getClient(clientId: Int): Flow<Client> {
+    fun getClient(clientId: Int): Flow<Client?> {
         return clientDao.getClientByClientId(clientId).map { client ->
-            client.copy(
+            client?.copy(
                 activationDate = listOf(
                     client.clientDate?.day,
                     client.clientDate?.month,
                     client.clientDate?.year,
                 ),
             )
-        }
+        }.flowOn(ioDispatcher)
     }
 
     /**
@@ -135,17 +167,13 @@ class ClientDaoHelper @Inject constructor(
      * @param clientId Client Id
      * @return Return the ClientAccounts according to client Id
      */
-    // TODO resolve if first() can be used or not
     fun readClientAccounts(clientId: Int): Flow<ClientAccounts> {
-        return flow {
-            val loanAccounts = clientDao.getLoanAccountsByClientId(clientId.toLong()).first()
-            val savingsAccounts = clientDao.getSavingsAccountsByClientId(clientId.toLong()).first()
-
-            val clientAccounts = ClientAccounts()
-            clientAccounts.loanAccounts = loanAccounts
-            clientAccounts.savingsAccounts = savingsAccounts
-            emit(clientAccounts)
-        }
+        return combine(
+            clientDao.getLoanAccountsByClientId(clientId.toLong()),
+            clientDao.getSavingsAccountsByClientId(clientId.toLong()),
+        ) { loanAccounts, savingsAccounts ->
+            ClientAccounts(loanAccounts = loanAccounts, savingsAccounts = savingsAccounts)
+        }.flowOn(ioDispatcher)
     }
 
     /**
@@ -154,14 +182,98 @@ class ClientDaoHelper @Inject constructor(
      * @param clientsTemplate fetched from Server
      * @return void
      */
-    // TODO saveClientTemplate
+    fun saveClientTemplate(
+        clientsTemplate: ClientsTemplate,
+    ): Flow<ClientsTemplate> {
+        return flow {
+            clientDao.insertClientsTemplate(clientsTemplate)
+            clientDao.insertOfficeOptions(clientsTemplate.officeOptions)
+            clientDao.insertStaffOptions(clientsTemplate.staffOptions)
+            clientDao.insertSavingProductOptions(clientsTemplate.savingProductOptions)
+            for (option: Options in clientsTemplate.genderOptions) {
+                option.optionType = GENDER_OPTIONS
+                clientDao.insertOption(option)
+            }
+            for (option: Options in clientsTemplate.clientTypeOptions) {
+                option.optionType = CLIENT_TYPE_OPTIONS
+                clientDao.insertOption(option)
+            }
+
+            for (option: Options in clientsTemplate.clientClassificationOptions) {
+                option.optionType = CLIENT_CLASSIFICATION_OPTIONS
+                clientDao.insertOption(option)
+            }
+            clientDao.insertInterestTypes(clientsTemplate.clientLegalFormOptions)
+
+            for (dataTable: DataTable in clientsTemplate.dataTables) {
+                clientDao.deleteDataTables()
+                clientDao.deleteColumnHeaders()
+                clientDao.deleteColumnValues()
+
+                clientDao.insertDataTable(dataTable)
+
+                for (columnHeader: ColumnHeader in dataTable.columnHeaderData) {
+                    val updatedColumnHeader =
+                        columnHeader.copy(registeredTableName = dataTable.applicationTableName)
+                    clientDao.insertColumnHeader(updatedColumnHeader)
+
+                    for (columnValue: ColumnValue in columnHeader.columnValues) {
+                        val updatedColumnValue =
+                            columnValue.copy(registeredTableName = dataTable.registeredTableName)
+                        clientDao.insertColumnValue(updatedColumnValue)
+                    }
+                }
+            }
+            emit(clientsTemplate)
+        }.flowOn(ioDispatcher)
+    }
 
     /**
      * Reading ClientTemplate from Database ClientTemplate_Table
      *
      * @return ClientTemplate
      */
-    // TODO readClientTemplate
+    fun readClientTemplate(): Flow<ClientsTemplate> = flow {
+        val clientsTemplate = clientDao.getClientsTemplate()
+        val officeOptions = clientDao.getOfficeOptions().first()
+        val staffOptions = clientDao.getStaffOptions().first()
+        val savingsProductOptions = clientDao.getSavingProductOptions().first()
+        val genderOptions = clientDao.getOptions(GENDER_OPTIONS).first()
+        val clientTypeOptions = clientDao.getOptions(CLIENT_TYPE_OPTIONS).first()
+        val clientClassificationOptions =
+            clientDao.getOptions(CLIENT_CLASSIFICATION_OPTIONS).first()
+        val clientLegalFormOptions = clientDao.getAllInterestType().first()
+
+        val dataTables =
+            clientDao.getDatatableByTableName(DATA_TABLE_NAME_CLIENT).first().map { dataTable ->
+                if (dataTable.registeredTableName != null) {
+                    val columnHeaders =
+                        clientDao.getColumnHeadersByTableName(dataTable.registeredTableName)
+                            .first().map { columnHeader ->
+                                val columnValues =
+                                    clientDao.getColumnValuesByTableName(dataTable.registeredTableName)
+                                        .firstOrNull() ?: emptyList()
+                                columnHeader.copy(columnValues = columnValues)
+                            }
+                    dataTable.copy(columnHeaderData = columnHeaders)
+                } else {
+                    dataTable.copy(columnHeaderData = emptyList())
+                }
+            }
+
+        emit(
+            clientsTemplate.copy(
+                officeOptions = officeOptions,
+                staffOptions = staffOptions,
+                savingProductOptions = savingsProductOptions,
+                genderOptions = genderOptions,
+                clientTypeOptions = clientTypeOptions,
+                clientClassificationOptions = clientClassificationOptions,
+                clientLegalFormOptions = clientLegalFormOptions,
+                dataTables = dataTables,
+            ),
+        )
+    }.flowOn(ioDispatcher)
 
     /**
      * Saving ClientPayload into Database ClientPayload_Table
@@ -169,33 +281,55 @@ class ClientDaoHelper @Inject constructor(
      * @param clientPayload created in offline mode
      * @return Client
      */
-    // TODO clientPayload
+    suspend fun saveClientPayloadToDB(clientPayload: ClientPayload?): Client {
+        val currentTime = System.currentTimeMillis()
+        val updatedClientPayload = clientPayload.copy(
+            clientCreationTime = currentTime,
+        )
+        updatedClientPayload.datatables?.let { datatables ->
+            if (datatables.isNotEmpty()) {
+                datatables.forEach { dataTablePayload ->
+                    dataTablePayload.clientCreationTime = currentTime
+                    val jsonObject = gson.toJsonTree(dataTablePayload.data).asJsonObject
+                    dataTablePayload.dataTableString = jsonObject.toString()
+                    clientDao.insertDataTablePayload(dataTablePayload)
+                }
+            }
+        }
+
+        clientDao.insertClientPayload(updatedClientPayload)
+        return Client()
+    }
 
     /**
      * Reading All Entries in the ClientPayload_Table
      *
      * @return List<ClientPayload></ClientPayload>>
      */
+
     fun readAllClientPayload(): Flow<List<ClientPayload>> {
         return flow {
-            clientDao.getAllClientPayload().map { clientPayloads ->
-                clientPayloads.map { clientPayload ->
-                    val dataTablePayloads =
-                        clientPayload.clientCreationTime?.let {
-                            clientDao.getDataTablePayloadByCreationTime(
-                                it,
+            val clientPayloads = clientDao.getAllClientPayload().firstOrNull().orEmpty()
+
+            if (clientPayloads.isNotEmpty()) {
+                for (clientPayload in clientPayloads) {
+                    val dataTablePayloads = clientPayload.clientCreationTime?.let { time ->
+                        clientDao.getDataTablePayloadByCreationTime(time)
+                            .mapNotNull { it.firstOrNull() }
+                    }
+
+                    if (dataTablePayloads != null) {
+                        for (dataTablePayload in dataTablePayloads) {
+                            dataTablePayload.data = gson.fromJson<HashMap<String, Any>>(
+                                dataTablePayload.dataTableString, type,
                             )
                         }
-                    val updatedDataTables = dataTablePayloads?.map { dataTablePayload ->
-                        val data: HashMap<String, Any>? =
-                            dataTablePayload.dataTableString?.let { json.decodeFromString(it) }
-                        dataTablePayload.copy(data = data)
                     }
-                    clientPayload.copy(datatables = updatedDataTables.toString())
+                    clientPayload.datatables = dataTablePayloads
                 }
-                emit(clientPayloads)
             }
-        }
+            emit(clientPayloads)
+        }.flowOn(ioDispatcher)
     }
 
     /**
@@ -206,13 +340,15 @@ class ClientDaoHelper @Inject constructor(
      * @return List<ClientPayload> A flow emitting the updated client payload.
      */
 
-    suspend fun deleteAndUpdatePayloads(
+    fun deleteAndUpdatePayloads(
         id: Int,
         clientCreationTIme: Long,
     ): Flow<List<ClientPayload>> {
-        clientDao.deleteClientPayloadById(id)
-        clientDao.deleteDataTablePayloadByCreationTime(clientCreationTIme)
-        return readAllClientPayload()
+        return flow {
+            clientDao.deleteClientPayloadById(id)
+            clientDao.deleteDataTablePayloadByCreationTime(clientCreationTIme)
+            emitAll(readAllClientPayload())
+        }.flowOn(ioDispatcher)
     }
 
     /**
@@ -221,10 +357,13 @@ class ClientDaoHelper @Inject constructor(
      * @param clientPayload The client payload data to be updated in the database.
      * @return List<ClientPayload> A flow emitting the updated client payload.
      */
-    fun updateDatabaseClientPayload(clientPayload: ClientPayload): Flow<ClientPayload> {
-        return flow {
-            clientDao.updateDatabaseClientPayload(clientPayload)
-            emit(clientPayload)
-        }
+    suspend fun updateDatabaseClientPayload(clientPayload: ClientPayload) {
+        clientDao.updateDatabaseClientPayload(clientPayload)
+    }
+
+    companion object {
+        const val GENDER_OPTIONS = "genderOptions"
+        const val CLIENT_TYPE_OPTIONS = "clientTypeOptions"
+        const val CLIENT_CLASSIFICATION_OPTIONS = "clientClassificationOptions"
     }
 }

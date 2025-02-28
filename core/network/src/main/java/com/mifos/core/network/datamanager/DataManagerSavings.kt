@@ -9,18 +9,21 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.databasehelper.DatabaseHelperSavings
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.core.entity.client.Savings
 import com.mifos.core.entity.templates.savings.SavingProductsTemplate
-import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.account.loan.SavingsApproval
-import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.objects.organisations.ProductSavings
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.helper.SavingsDaoHelper
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import rx.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,7 +34,8 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerSavings @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperSavings: DatabaseHelperSavings,
+//    val mDatabaseHelperSavings: DatabaseHelperSavings,
+    private val databaseHelperSavings: SavingsDaoHelper,
     private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**
@@ -53,7 +57,7 @@ class DataManagerSavings @Inject constructor(
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Observable<SavingsAccountWithAssociations> {
+    ): Flow<SavingsAccountWithAssociations?> {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
                 type,
@@ -65,7 +69,7 @@ class DataManagerSavings @Inject constructor(
                 /**
                  * Return SavingsAccountWithAssociations from DatabaseHelperSavings.
                  */
-                mDatabaseHelperSavings.readSavingsAccount(savingsAccountId)
+                databaseHelperSavings.readSavingsAccount(savingsAccountId)
         }
     }
 
@@ -90,17 +94,14 @@ class DataManagerSavings @Inject constructor(
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Observable<SavingsAccountWithAssociations> {
-        return mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
-            type,
-            savingsAccountId,
-            association,
-        )
-            .concatMap { savingsAccountWithAssociations ->
-                mDatabaseHelperSavings.saveSavingsAccount(
-                    savingsAccountWithAssociations,
-                )
-            }
+    ): Flow<SavingsAccountWithAssociations> {
+        return flow {
+            mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(type, savingsAccountId, association)
+                .collect { savingsWithTransaction ->
+                    databaseHelperSavings.saveSavingsAccount(savingsWithTransaction)
+                    emit(savingsWithTransaction)
+                }
+        }
     }
 
     fun activateSavings(
@@ -128,7 +129,7 @@ class DataManagerSavings @Inject constructor(
         type: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Observable<SavingsAccountTransactionTemplate> {
+    ): Flow<SavingsAccountTransactionTemplate?> {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.savingsApi.getSavingsAccountTransactionTemplate(
                 type,
@@ -140,7 +141,7 @@ class DataManagerSavings @Inject constructor(
                 /**
                  * Return SavingsAccountTransactionTemplate from DatabaseHelperSavings.
                  */
-                mDatabaseHelperSavings.readSavingsAccountTransactionTemplate(savingsAccountId)
+                databaseHelperSavings.readSavingsAccountTransactionTemplate(savingsAccountId)
         }
     }
 
@@ -161,17 +162,17 @@ class DataManagerSavings @Inject constructor(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Observable<SavingsAccountTransactionTemplate> {
+    ): Flow<SavingsAccountTransactionTemplate> {
         return mBaseApiManager.savingsApi.getSavingsAccountTransactionTemplate(
             savingsAccountType,
             savingsAccountId,
             transactionType,
-        )
-            .concatMap { savingsAccountTransactionTemplate ->
-                mDatabaseHelperSavings.saveSavingsAccountTransactionTemplate(
-                    savingsAccountTransactionTemplate,
-                )
-            }
+        ).map { savingsAccountTransactionTemplate ->
+            databaseHelperSavings.saveSavingsAccountTransactionTemplate(
+                savingsAccountTransactionTemplate,
+            )
+            savingsAccountTransactionTemplate
+        }
     }
 
     /**
@@ -191,20 +192,24 @@ class DataManagerSavings @Inject constructor(
         savingsAccountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequest,
-    ): Observable<SavingsAccountTransactionResponse> {
+    ): Flow<SavingsAccountTransactionResponse?> {
         return when (prefManager.userStatus) {
-            false -> mBaseApiManager.savingsApi.processTransaction(
-                savingsAccountType,
-                savingsAccountId,
-                transactionType,
-                request,
-            )
+            false -> flow {
+                emit(
+                    mBaseApiManager.savingsApi.processTransaction(
+                        savingsAccountType,
+                        savingsAccountId,
+                        transactionType,
+                        request,
+                    ),
+                )
+            }
 
             true ->
                 /**
                  * Return SavingsAccountTransactionResponse from DatabaseHelperSavings.
                  */
-                mDatabaseHelperSavings
+                databaseHelperSavings
                     .saveSavingsAccountTransaction(
                         savingsAccountType,
                         savingsAccountId,
@@ -225,8 +230,8 @@ class DataManagerSavings @Inject constructor(
      */
     fun getSavingsAccountTransaction(
         savingAccountId: Int,
-    ): Observable<SavingsAccountTransactionRequest> {
-        return mDatabaseHelperSavings.getSavingsAccountTransaction(savingAccountId)
+    ): Flow<SavingsAccountTransactionRequest?> {
+        return databaseHelperSavings.getSavingsAccountTransaction(savingAccountId)
     }
 
     /**
@@ -236,8 +241,8 @@ class DataManagerSavings @Inject constructor(
      *
      * @return List<SavingsAccountTransactionRequest></SavingsAccountTransactionRequest>>
      </SavingsAccountTransactionRequest> */
-    val allSavingsAccountTransactions: Observable<List<SavingsAccountTransactionRequest>>
-        get() = mDatabaseHelperSavings.allSavingsAccountTransaction
+    val allSavingsAccountTransactions: Flow<List<SavingsAccountTransactionRequest>>
+        get() = databaseHelperSavings.allSavingsAccountTransaction()
 
     /**
      * This method sending request DatabaseHelper and Deleting the SavingsAccountTransaction
@@ -249,8 +254,8 @@ class DataManagerSavings @Inject constructor(
      </SavingsAccountTransaction> */
     fun deleteAndUpdateTransactions(
         savingsAccountId: Int,
-    ): Observable<List<SavingsAccountTransactionRequest>> {
-        return mDatabaseHelperSavings.deleteAndUpdateTransaction(savingsAccountId)
+    ): Flow<List<SavingsAccountTransactionRequest>> {
+        return databaseHelperSavings.deleteAndUpdateTransaction(savingsAccountId)
     }
 
     /**
@@ -261,10 +266,10 @@ class DataManagerSavings @Inject constructor(
      * in to Database.
      * @return LoanRepaymentRequest
      */
-    fun updateLoanRepaymentTransaction(
+    suspend fun updateLoanRepaymentTransaction(
         savingsAccountTransactionRequest: SavingsAccountTransactionRequest,
-    ): Observable<SavingsAccountTransactionRequest> {
-        return mDatabaseHelperSavings.updateSavingsAccountTransaction(
+    ) {
+        databaseHelperSavings.updateSavingsAccountTransaction(
             savingsAccountTransactionRequest,
         )
     }

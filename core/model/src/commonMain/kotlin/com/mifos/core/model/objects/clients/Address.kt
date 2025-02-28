@@ -9,21 +9,41 @@
  */
 package com.mifos.core.model.objects.clients
 
+import com.mifos.core.common.utils.Parcel
 import com.mifos.core.common.utils.Parcelable
+import com.mifos.core.common.utils.Parceler
 import com.mifos.core.common.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 15/12/16.
  */
 @Parcelize
+@Serializable
 data class Address(
-    var addressTypeId: Int? = null,
-
-    var active: Boolean? = null,
-
-    var street: String? = null,
-
-    var stateProvinceId: Int? = null,
-
-    var countryId: Int? = null,
+    val addressTypeId: Int? = null,
+    val active: Boolean? = null,
+    val street: String? = null,
+    val stateProvinceId: Int? = null,
+    val countryId: Int? = null,
 ) : Parcelable
+
+object AddressParceler : Parceler<Address> {
+    override fun Address.write(parcel: Parcel, flags: Int) {
+        parcel.writeInt(addressTypeId)
+        parcel.writeBoolean(active)
+        parcel.writeString(street)
+        parcel.writeInt(stateProvinceId)
+        parcel.writeInt(countryId)
+    }
+
+    override fun create(parcel: Parcel): Address {
+        return Address(
+            addressTypeId = parcel.readInt(),
+            active = parcel.readBoolean(),
+            street = parcel.readString(),
+            stateProvinceId = parcel.readInt(),
+            countryId = parcel.readInt(),
+        )
+    }
+}

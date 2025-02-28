@@ -37,39 +37,30 @@ import androidx.room.PrimaryKey
         ),
     ],
 )
-// @TypeConverters(NullableIntegerListConverter::class, CurrencyTypeConverter::class)
 data class Transaction(
     @PrimaryKey
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "savingsAccountId")
-    var savingsAccountId: Int? = null,
+    val savingsAccountId: Int? = null,
 
-    @ColumnInfo(name = "transactionType", index = true)
-    var transactionType: TransactionType? = null,
+    @ColumnInfo(index = true)
+    val transactionType: TransactionType? = null,
 
-    @ColumnInfo(name = "accountId")
-    var accountId: Int? = null,
+    val accountId: Int? = null,
 
-    @ColumnInfo(name = "accountNo")
-    var accountNo: String? = null,
+    val accountNo: String? = null,
 
-    @ColumnInfo(name = "savingsTransactionDate")
     @Transient
-    var savingsTransactionDate: SavingsTransactionDate? = null,
+    val savingsTransactionDate: SavingsTransactionDate? = null,
 
-    @ColumnInfo(name = "date")
-    var date: List<Int?> = ArrayList(),
+    val date: List<Int?> = emptyList(),
 
-    @ColumnInfo(name = "currency", index = true)
-    var currency: Currency? = null,
+    @ColumnInfo(index = true)
+    val currency: Currency? = null,
 
-    @ColumnInfo(name = "amount")
-    var amount: Double? = null,
+    val amount: Double? = null,
 
-    @ColumnInfo(name = "runningBalance")
-    var runningBalance: Double? = null,
+    val runningBalance: Double? = null,
 
-    @ColumnInfo(name = "reversed")
-    var reversed: Boolean? = null,
+    val reversed: Boolean? = null,
 )

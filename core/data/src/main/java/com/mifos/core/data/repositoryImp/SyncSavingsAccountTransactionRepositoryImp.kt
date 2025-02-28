@@ -10,13 +10,12 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -27,7 +26,7 @@ class SyncSavingsAccountTransactionRepositoryImp @Inject constructor(
     private val dataManagerLoan: DataManagerLoan,
 ) : SyncSavingsAccountTransactionRepository {
 
-    override fun allSavingsAccountTransactions(): Observable<List<SavingsAccountTransactionRequest>> {
+    override fun allSavingsAccountTransactions(): Flow<List<SavingsAccountTransactionRequest>> {
         return dataManagerSavings.allSavingsAccountTransactions
     }
 
@@ -40,7 +39,7 @@ class SyncSavingsAccountTransactionRepositoryImp @Inject constructor(
         savingsAccountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequest,
-    ): Observable<SavingsAccountTransactionResponse> {
+    ): Flow<SavingsAccountTransactionResponse?> {
         return dataManagerSavings.processTransaction(
             savingsAccountType,
             savingsAccountId,
@@ -49,11 +48,11 @@ class SyncSavingsAccountTransactionRepositoryImp @Inject constructor(
         )
     }
 
-    override fun deleteAndUpdateTransactions(savingsAccountId: Int): Observable<List<SavingsAccountTransactionRequest>> {
+    override fun deleteAndUpdateTransactions(savingsAccountId: Int): Flow<List<SavingsAccountTransactionRequest>> {
         return dataManagerSavings.deleteAndUpdateTransactions(savingsAccountId)
     }
 
-    override fun updateLoanRepaymentTransaction(savingsAccountTransactionRequest: SavingsAccountTransactionRequest): Observable<SavingsAccountTransactionRequest> {
-        return dataManagerSavings.updateLoanRepaymentTransaction(savingsAccountTransactionRequest)
+    override suspend fun updateLoanRepaymentTransaction(savingsAccountTransactionRequest: SavingsAccountTransactionRequest) {
+        dataManagerSavings.updateLoanRepaymentTransaction(savingsAccountTransactionRequest)
     }
 }

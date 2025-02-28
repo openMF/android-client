@@ -23,19 +23,21 @@ expect interface Parceler<P> {
 
 expect annotation class TypeParceler<T, P : Parceler<in T>>()
 
+// TODO check if these can be nullable
 expect class Parcel {
-    fun readByte(): Byte
-    fun readInt(): Int
+    fun readByte(): Byte?
+    fun readInt(): Int?
 
-    fun readFloat(): Float
-    fun readDouble(): Double
+    fun readFloat(): Float?
+    fun readDouble(): Double?
     fun readString(): String?
+    fun readBoolean(): Boolean?
 
-    fun writeByte(value: Byte)
-    fun writeInt(value: Int)
+    fun writeByte(value: Byte?)
+    fun writeInt(value: Int?)
+    fun writeBoolean(value: Boolean?)
+    fun writeFloat(value: Float?)
 
-    fun writeFloat(value: Float)
-
-    fun writeDouble(value: Double)
+    fun writeDouble(value: Double?)
     fun writeString(value: String?)
 }

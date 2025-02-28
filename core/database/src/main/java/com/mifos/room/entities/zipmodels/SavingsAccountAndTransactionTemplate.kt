@@ -9,8 +9,8 @@
  */
 package com.mifos.room.entities.zipmodels
 
-import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
 
 /**
  * Created by Rajan Maurya on 21/08/16.

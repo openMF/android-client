@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.databasehelper.DatabaseHelperClient
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.noncoreobjects.ClientAccounts
@@ -26,7 +25,9 @@ import com.mifos.core.network.mappers.clients.IdentifierMapper
 import com.mifos.room.entities.client.Client
 import com.mifos.room.entities.client.ClientPayload
 import com.mifos.room.entities.templates.clients.ClientsTemplate
+import com.mifos.room.helper.ClientDaoHelper
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
@@ -43,7 +44,8 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerClient @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    private val mDatabaseHelperClient: DatabaseHelperClient,
+//    private val mDatabaseHelperClient: DatabaseHelperClient,
+    private val clientDatabaseHelper: ClientDaoHelper,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
     private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
@@ -98,7 +100,7 @@ class DataManagerClient @Inject constructor(
      * @return Page of Client List
      */
     val allDatabaseClients: Flow<Page<Client>>
-        get() = mDatabaseHelperClient.readAllClients()
+        get() = clientDatabaseHelper.readAllClients()
 
     /**
      * This Method
@@ -122,8 +124,8 @@ class DataManagerClient @Inject constructor(
 //        }
 //    }
 
-    fun syncClientInDatabase(client: Client): Flow<Client> {
-        return mDatabaseHelperClient.saveClient(client)
+    suspend fun syncClientInDatabase(client: Client) {
+        clientDatabaseHelper.saveClient(client)
     }
 
     /**
@@ -213,14 +215,15 @@ class DataManagerClient @Inject constructor(
      *
      * @return ClientTemplate
      */
-    val clientTemplate: Observable<ClientsTemplate>
+    val clientTemplate: Flow<ClientsTemplate>
         get() = when (prefManager.userStatus) {
             false ->
                 mBaseApiManager.clientsApi.clientTemplate
-                    .concatMap { clientsTemplate ->
-                        mDatabaseHelperClient.saveClientTemplate(
+                    .map { clientsTemplate ->
+                        clientDatabaseHelper.saveClientTemplate(
                             clientsTemplate,
                         )
+                        clientsTemplate
                     }
 
             true ->
@@ -230,7 +233,7 @@ class DataManagerClient @Inject constructor(
                 /**
                  * Return Clients from DatabaseHelperClient only one time.
                  */
-                mDatabaseHelperClient.readClientTemplate()
+                clientDatabaseHelper.readClientTemplate()
         }
 
     /**
@@ -241,17 +244,16 @@ class DataManagerClient @Inject constructor(
      * @param clientPayload Client details filled by user
      * @return Client
      */
-    fun createClient(clientPayload: ClientPayload): Flow<Client> {
+    suspend fun createClient(clientPayload: ClientPayload?): Client? {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.clientsApi.createClient(clientPayload)
-                .concatMap { client -> Flow.just(client) }
 
             true ->
                 /**
                  * If user is in offline mode and he is making client. client payload will be saved
                  * in Database for future synchronization to sever.
                  */
-                mDatabaseHelperClient.saveClientPayloadToDB(clientPayload)
+                clientDatabaseHelper.saveClientPayloadToDB(clientPayload)
         }
     }
 
@@ -261,7 +263,7 @@ class DataManagerClient @Inject constructor(
      * @return List<ClientPayload></ClientPayload>>
      */
     val allDatabaseClientPayload: Flow<List<ClientPayload>>
-        get() = mDatabaseHelperClient.readAllClientPayload()
+        get() = clientDatabaseHelper.readAllClientPayload()
 
     /**
      * This method will called when user is syncing the client created from Database.
@@ -275,7 +277,7 @@ class DataManagerClient @Inject constructor(
         id: Int,
         clientCreationTIme: Long,
     ): Flow<List<ClientPayload>> {
-        return mDatabaseHelperClient.deleteAndUpdatePayloads(id, clientCreationTIme)
+        return clientDatabaseHelper.deleteAndUpdatePayloads(id, clientCreationTIme)
     }
 
     /**
@@ -284,8 +286,8 @@ class DataManagerClient @Inject constructor(
      * @param clientPayload ClientPayload
      * @return ClientPayload
      */
-    fun updateClientPayload(clientPayload: ClientPayload): Flow<ClientPayload> {
-        return mDatabaseHelperClient.updateDatabaseClientPayload(clientPayload)
+    suspend fun updateClientPayload(clientPayload: ClientPayload) {
+        clientDatabaseHelper.updateDatabaseClientPayload(clientPayload)
     }
 
     /**
