@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.subscribe
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -478,7 +479,8 @@ class SyncGroupsDialogViewModel @Inject constructor(
                 _syncGroupData.update { it.copy(singleSyncCount = singleSyncClientMax) }
                 mGroupSyncIndex += 1
                 syncGroups()
-            } catch (_: Exception) { }
+            } catch (_: Exception) {
+            }
         }
     }
 
