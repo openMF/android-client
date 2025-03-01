@@ -101,15 +101,15 @@ class CreateNewClientViewModel @Inject constructor(
             _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
 
             try {
-                val client = repository.createClient(clientPayload)
+                val clientId = repository.createClient(clientPayload)
 
-                client?.clientId?.let { clientId ->
+                clientId?.let {
                     _createNewClientUiState.value = CreateNewClientUiState.ShowClientCreatedSuccessfully(
                         R.string.feature_client_client_created_successfully,
                     )
-                    _createNewClientUiState.value = CreateNewClientUiState.SetClientId(clientId)
+                    _createNewClientUiState.value = CreateNewClientUiState.SetClientId(it)
                 } ?: run {
-                    _createNewClientUiState.value = CreateNewClientUiState.ShowWaitingForCheckerApproval(client?.clientId ?: 0)
+                    _createNewClientUiState.value = CreateNewClientUiState.ShowWaitingForCheckerApproval(0)
                 }
             } catch (e: HttpException) {
                 val errorMessage = e.response()?.errorBody()?.string().orEmpty()

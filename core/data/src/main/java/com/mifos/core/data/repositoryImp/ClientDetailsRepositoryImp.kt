@@ -24,8 +24,8 @@ class ClientDetailsRepositoryImp @Inject constructor(
     private val dataManagerClient: DataManagerClient,
 ) : ClientDetailsRepository {
 
-    override suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?): ResponseBody {
-        return dataManagerClient.uploadClientImage(id, file)
+    override suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?) {
+        dataManagerClient.uploadClientImage(id, file)
     }
 
     override suspend fun deleteClientImage(clientId: Int): ResponseBody {

@@ -201,8 +201,8 @@ class DataManagerClient @Inject constructor(
      * @param file MultipartBody of the Image file
      * @return ResponseBody is the Retrofit 2 response
      */
-    fun uploadClientImage(id: Int, file: MultipartBody.Part?): Flow<ResponseBody> {
-        return mBaseApiManager.clientsApi.uploadClientImage(id, file)
+    suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?) {
+        mBaseApiManager.clientsApi.uploadClientImage(id, file)
     }
     /**
      * Return Clients from DatabaseHelperClient only one time.
@@ -244,16 +244,19 @@ class DataManagerClient @Inject constructor(
      * @param clientPayload Client details filled by user
      * @return Client
      */
-    suspend fun createClient(clientPayload: ClientPayload?): Client? {
+    suspend fun createClient(clientPayload: ClientPayload?): Int? {
         return when (prefManager.userStatus) {
-            false -> mBaseApiManager.clientsApi.createClient(clientPayload)
+            false -> mBaseApiManager.clientsApi.createClient(clientPayload)?.clientId
 
             true ->
                 /**
                  * If user is in offline mode and he is making client. client payload will be saved
                  * in Database for future synchronization to sever.
                  */
-                clientDatabaseHelper.saveClientPayloadToDB(clientPayload)
+                {
+                    clientDatabaseHelper.saveClientPayloadToDB(clientPayload)
+                    null
+                }
         }
     }
 

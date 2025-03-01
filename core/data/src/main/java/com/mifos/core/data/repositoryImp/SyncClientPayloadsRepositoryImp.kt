@@ -11,7 +11,6 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.room.entities.client.Client
 import com.mifos.room.entities.client.ClientPayload
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -24,7 +23,7 @@ class SyncClientPayloadsRepositoryImp @Inject constructor(
         return dataManagerClient.allDatabaseClientPayload
     }
 
-    override suspend fun createClient(clientPayload: ClientPayload): Client? {
+    override suspend fun createClient(clientPayload: ClientPayload): Int? {
         return dataManagerClient.createClient(clientPayload)
     }
 

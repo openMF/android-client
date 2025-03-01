@@ -19,7 +19,7 @@ import okhttp3.ResponseBody
  */
 interface ClientDetailsRepository {
 
-    suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?): ResponseBody
+    suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?)
 
     suspend fun deleteClientImage(clientId: Int): ResponseBody
 

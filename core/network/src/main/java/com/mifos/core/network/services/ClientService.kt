@@ -57,10 +57,10 @@ interface ClientService {
 
     @Multipart
     @POST(APIEndPoint.CLIENTS + "/{clientId}/images")
-    fun uploadClientImage(
+    suspend fun uploadClientImage(
         @Path("clientId") clientId: Int,
         @Part file: MultipartBody.Part?,
-    ): Flow<ResponseBody>
+    ): ResponseBody
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
     fun deleteClientImage(@Path("clientId") clientId: Int): Observable<ResponseBody>

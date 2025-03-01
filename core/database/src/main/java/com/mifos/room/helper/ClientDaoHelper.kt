@@ -182,50 +182,47 @@ class ClientDaoHelper @Inject constructor(
      * @param clientsTemplate fetched from Server
      * @return void
      */
-    fun saveClientTemplate(
+    suspend fun saveClientTemplate(
         clientsTemplate: ClientsTemplate,
-    ): Flow<ClientsTemplate> {
-        return flow {
-            clientDao.insertClientsTemplate(clientsTemplate)
-            clientDao.insertOfficeOptions(clientsTemplate.officeOptions)
-            clientDao.insertStaffOptions(clientsTemplate.staffOptions)
-            clientDao.insertSavingProductOptions(clientsTemplate.savingProductOptions)
-            for (option: Options in clientsTemplate.genderOptions) {
-                option.optionType = GENDER_OPTIONS
-                clientDao.insertOption(option)
-            }
-            for (option: Options in clientsTemplate.clientTypeOptions) {
-                option.optionType = CLIENT_TYPE_OPTIONS
-                clientDao.insertOption(option)
-            }
+    ) {
+        clientDao.insertClientsTemplate(clientsTemplate)
+        clientDao.insertOfficeOptions(clientsTemplate.officeOptions)
+        clientDao.insertStaffOptions(clientsTemplate.staffOptions)
+        clientDao.insertSavingProductOptions(clientsTemplate.savingProductOptions)
+        for (option: Options in clientsTemplate.genderOptions) {
+            option.optionType = GENDER_OPTIONS
+            clientDao.insertOption(option)
+        }
+        for (option: Options in clientsTemplate.clientTypeOptions) {
+            option.optionType = CLIENT_TYPE_OPTIONS
+            clientDao.insertOption(option)
+        }
 
-            for (option: Options in clientsTemplate.clientClassificationOptions) {
-                option.optionType = CLIENT_CLASSIFICATION_OPTIONS
-                clientDao.insertOption(option)
-            }
-            clientDao.insertInterestTypes(clientsTemplate.clientLegalFormOptions)
+        for (option: Options in clientsTemplate.clientClassificationOptions) {
+            option.optionType = CLIENT_CLASSIFICATION_OPTIONS
+            clientDao.insertOption(option)
+        }
+        clientDao.insertInterestTypes(clientsTemplate.clientLegalFormOptions)
 
-            for (dataTable: DataTable in clientsTemplate.dataTables) {
-                clientDao.deleteDataTables()
-                clientDao.deleteColumnHeaders()
-                clientDao.deleteColumnValues()
+        for (dataTable: DataTable in clientsTemplate.dataTables) {
+            clientDao.deleteDataTables()
+            clientDao.deleteColumnHeaders()
+            clientDao.deleteColumnValues()
 
-                clientDao.insertDataTable(dataTable)
+            clientDao.insertDataTable(dataTable)
 
-                for (columnHeader: ColumnHeader in dataTable.columnHeaderData) {
-                    val updatedColumnHeader =
-                        columnHeader.copy(registeredTableName = dataTable.applicationTableName)
-                    clientDao.insertColumnHeader(updatedColumnHeader)
+            for (columnHeader: ColumnHeader in dataTable.columnHeaderData) {
+                val updatedColumnHeader =
+                    columnHeader.copy(registeredTableName = dataTable.applicationTableName)
+                clientDao.insertColumnHeader(updatedColumnHeader)
 
-                    for (columnValue: ColumnValue in columnHeader.columnValues) {
-                        val updatedColumnValue =
-                            columnValue.copy(registeredTableName = dataTable.registeredTableName)
-                        clientDao.insertColumnValue(updatedColumnValue)
-                    }
+                for (columnValue: ColumnValue in columnHeader.columnValues) {
+                    val updatedColumnValue =
+                        columnValue.copy(registeredTableName = dataTable.registeredTableName)
+                    clientDao.insertColumnValue(updatedColumnValue)
                 }
             }
-            emit(clientsTemplate)
-        }.flowOn(ioDispatcher)
+        }
     }
 
     /**
@@ -281,24 +278,24 @@ class ClientDaoHelper @Inject constructor(
      * @param clientPayload created in offline mode
      * @return Client
      */
-    suspend fun saveClientPayloadToDB(clientPayload: ClientPayload?): Client {
+    suspend fun saveClientPayloadToDB(clientPayload: com.mifos.core.entity.client.ClientPayload?) {
         val currentTime = System.currentTimeMillis()
-        val updatedClientPayload = clientPayload.copy(
+        val updatedClientPayload = clientPayload?.copy(
             clientCreationTime = currentTime,
         )
         updatedClientPayload.datatables?.let { datatables ->
             if (datatables.isNotEmpty()) {
                 datatables.forEach { dataTablePayload ->
                     dataTablePayload.clientCreationTime = currentTime
-                    val jsonObject = gson.toJsonTree(dataTablePayload.data).asJsonObject
-                    dataTablePayload.dataTableString = jsonObject.toString()
+                    // Use kotlinx.serialization to convert data to JSON string
+                    val jsonString = json.encodeToString(dataTablePayload.data)
+                    dataTablePayload.dataTableString = jsonString
                     clientDao.insertDataTablePayload(dataTablePayload)
                 }
             }
         }
 
         clientDao.insertClientPayload(updatedClientPayload)
-        return Client()
     }
 
     /**
