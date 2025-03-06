@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.databasehelper.DatabaseHelperClient
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.BaseApiManager
@@ -20,6 +19,7 @@ import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupPayload
 import com.mifos.room.entities.group.GroupWithAssociations
+import com.mifos.room.helper.ClientDaoHelper
 import com.mifos.room.helper.GroupsDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -37,7 +37,8 @@ import javax.inject.Singleton
 class DataManagerGroups @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     private val databaseHelperGroups: GroupsDaoHelper,
-    private val mDatabaseHelperClient: DatabaseHelperClient,
+//    private val mDatabaseHelperClient: DatabaseHelperClient,
+    private val databaseHelperClient: ClientDaoHelper,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
     private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
@@ -155,14 +156,14 @@ class DataManagerGroups @Inject constructor(
      * @param groupId Group Id
      * @return GroupWithAssociations
      */
-    fun getGroupWithAssociations(groupId: Int): Observable<GroupWithAssociations> {
+    fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations> {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.groupApi.getGroupWithAssociations(groupId)
             true ->
                 /**
                  * Return Groups from DatabaseHelperGroups.
                  */
-                mDatabaseHelperClient.getGroupAssociateClients(groupId)
+                databaseHelperClient.getGroupAssociateClients(groupId)
         }
     }
 

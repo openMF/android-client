@@ -15,7 +15,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ClientsAttendance(
 
-    var attendanceType: Int,
+    val attendanceType: Int,
 
-    var clientId: Int,
+    val clientId: Int,
 ) : Parcelable

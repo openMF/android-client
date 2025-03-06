@@ -10,7 +10,6 @@
 package com.mifos.room.entities.templates.clients
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -19,13 +18,10 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "ClientTemplateOfficeOptions")
 data class OfficeOptions(
     @PrimaryKey
-    @ColumnInfo(name = "id")
     var id: Int = 0,
 
-    @ColumnInfo(name = "name")
     val name: String = "",
 
-    @ColumnInfo(name = "nameDecorated")
     val nameDecorated: String = "",
 ) : Parcelable {
 

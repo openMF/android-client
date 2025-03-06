@@ -14,16 +14,17 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.mifos.core.data.pagingSource.ClientChargesPagingSource
 import com.mifos.core.data.repository.ClientChargeRepository
-import com.mifos.core.entity.client.Charges
 import com.mifos.core.network.datamanager.DataManagerCharge
+import com.mifos.room.entities.client.Charges
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class ClientChargeRepositoryImp @Inject constructor(private val dataManagerCharge: DataManagerCharge) :
-    ClientChargeRepository {
+class ClientChargeRepositoryImp @Inject constructor(
+    private val dataManagerCharge: DataManagerCharge,
+) : ClientChargeRepository {
 
     override fun getClientCharges(
         clientId: Int,

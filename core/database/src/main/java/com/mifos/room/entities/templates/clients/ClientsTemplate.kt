@@ -10,7 +10,6 @@
 package com.mifos.room.entities.templates.clients
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mifos.room.entities.noncore.DataTable
@@ -19,36 +18,26 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = "ClientsTemplate")
 data class ClientsTemplate(
-    @ColumnInfo(name = "activationDate")
     var activationDate: IntArray = intArrayOf(),
 
     @PrimaryKey
-    @ColumnInfo(name = "officeId")
     var officeId: Int = 0,
 
-    @ColumnInfo(name = "officeOptions")
-    var officeOptions: List<OfficeOptions> = ArrayList(),
+    var officeOptions: List<OfficeOptions> = emptyList(),
 
-    @ColumnInfo(name = "staffOptions")
-    var staffOptions: List<StaffOptions> = ArrayList(),
+    var staffOptions: List<StaffOptions> = emptyList(),
 
-    @ColumnInfo(name = "savingProductOptions")
-    var savingProductOptions: List<SavingProductOptions> = ArrayList(),
+    var savingProductOptions: List<SavingProductOptions> = emptyList(),
 
-    @ColumnInfo(name = "genderOptions")
-    var genderOptions: List<Options> = ArrayList(),
+    var genderOptions: List<Options> = emptyList(),
 
-    @ColumnInfo(name = "clientTypeOptions")
-    var clientTypeOptions: List<Options> = ArrayList(),
+    var clientTypeOptions: List<Options> = emptyList(),
 
-    @ColumnInfo(name = "clientClassificationOptions")
-    var clientClassificationOptions: List<Options> = ArrayList(),
+    var clientClassificationOptions: List<Options> = emptyList(),
 
-    @ColumnInfo(name = "clientLegalFormOptions")
-    var clientLegalFormOptions: List<InterestType> = ArrayList(),
+    var clientLegalFormOptions: List<InterestType> = emptyList(),
 
-    @ColumnInfo(name = "dataTables")
-    var dataTables: List<DataTable> = ArrayList(),
+    var dataTables: List<DataTable> = emptyList(),
 ) : Parcelable {
 
     override fun toString(): String {

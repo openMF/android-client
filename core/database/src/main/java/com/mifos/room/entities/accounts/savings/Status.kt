@@ -10,7 +10,6 @@
 package com.mifos.room.entities.accounts.savings
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -19,29 +18,21 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Status(
     @PrimaryKey
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "code")
-    var code: String? = null,
+    val code: String? = null,
 
-    @ColumnInfo(name = "value")
-    var value: String? = null,
+    val value: String? = null,
 
-    @ColumnInfo(name = "submittedAndPendingApproval")
-    var submittedAndPendingApproval: Boolean? = null,
+    val submittedAndPendingApproval: Boolean? = null,
 
-    @ColumnInfo(name = "approved")
-    var approved: Boolean? = null,
+    val approved: Boolean? = null,
 
-    @ColumnInfo(name = "rejected")
-    var rejected: Boolean? = null,
+    val rejected: Boolean? = null,
 
-    @ColumnInfo(name = "withdrawnByApplicant")
-    var withdrawnByApplicant: Boolean? = null,
+    val withdrawnByApplicant: Boolean? = null,
 
-    @ColumnInfo(name = "active")
-    var active: Boolean? = null,
+    val active: Boolean? = null,
 
-    @ColumnInfo(name = "closed")
-    var closed: Boolean? = null,
+    val closed: Boolean? = null,
 ) : Parcelable

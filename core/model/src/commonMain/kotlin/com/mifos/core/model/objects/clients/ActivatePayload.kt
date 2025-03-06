@@ -11,11 +11,13 @@ package com.mifos.core.model.objects.clients
 
 import com.mifos.core.common.utils.Parcelable
 import com.mifos.core.common.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 09/02/17.
  */
 @Parcelize
+@Serializable
 data class ActivatePayload(
     var activationDate: String? = null,
 

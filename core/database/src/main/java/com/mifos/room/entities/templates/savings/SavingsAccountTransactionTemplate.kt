@@ -10,7 +10,6 @@
 package com.mifos.room.entities.templates.savings
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mifos.room.entities.PaymentTypeOption
@@ -20,20 +19,15 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "SavingsAccountTransactionTemplate")
 data class SavingsAccountTransactionTemplate(
     @PrimaryKey
-    @ColumnInfo(name = "accountId")
-    var accountId: Int? = null,
+    val accountId: Int? = null,
 
-    @ColumnInfo(name = "accountNo")
-    var accountNo: String? = null,
+    val accountNo: String? = null,
 
-    @ColumnInfo(name = "date")
-    var date: List<Int> = ArrayList(),
+    val date: List<Int> = emptyList(),
 
-    @ColumnInfo(name = "reversed")
-    var reversed: Boolean? = null,
+    val reversed: Boolean? = null,
 
-    @ColumnInfo(name = "paymentTypeOptions")
-    var paymentTypeOptions: List<PaymentTypeOption> = ArrayList(),
+    val paymentTypeOptions: List<PaymentTypeOption> = emptyList(),
 ) : Parcelable {
 
     fun isReversed(): Boolean? {

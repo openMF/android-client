@@ -9,51 +9,37 @@
  */
 package com.mifos.room.entities.accounts.savings
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "TransactionType")
 data class TransactionType(
     @PrimaryKey
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "code")
-    var code: String? = null,
+    val code: String? = null,
 
-    @ColumnInfo(name = "value")
-    var value: String? = null,
+    val value: String? = null,
 
-    @ColumnInfo(name = "deposit")
-    var deposit: Boolean? = null,
+    val deposit: Boolean? = null,
 
-    @ColumnInfo(name = "withdrawal")
-    var withdrawal: Boolean? = null,
+    val withdrawal: Boolean? = null,
 
-    @ColumnInfo(name = "interestPosting")
-    var interestPosting: Boolean? = null,
+    val interestPosting: Boolean? = null,
 
-    @ColumnInfo(name = "feeDeduction")
-    var feeDeduction: Boolean? = null,
+    val feeDeduction: Boolean? = null,
 
-    @ColumnInfo(name = "initiateTransfer")
-    var initiateTransfer: Boolean? = null,
+    val initiateTransfer: Boolean? = null,
 
-    @ColumnInfo(name = "approveTransfer")
-    var approveTransfer: Boolean? = null,
+    val approveTransfer: Boolean? = null,
 
-    @ColumnInfo(name = "withdrawTransfer")
-    var withdrawTransfer: Boolean? = null,
+    val withdrawTransfer: Boolean? = null,
 
-    @ColumnInfo(name = "rejectTransfer")
-    var rejectTransfer: Boolean? = null,
+    val rejectTransfer: Boolean? = null,
 
-    @ColumnInfo(name = "overdraftInterest")
-    var overdraftInterest: Boolean? = null,
+    val overdraftInterest: Boolean? = null,
 
-    @ColumnInfo(name = "writtenoff")
-    var writtenoff: Boolean? = null,
+    val writtenoff: Boolean? = null,
 
-    @ColumnInfo(name = "overdraftFee")
-    var overdraftFee: Boolean? = null,
+    val overdraftFee: Boolean? = null,
 )

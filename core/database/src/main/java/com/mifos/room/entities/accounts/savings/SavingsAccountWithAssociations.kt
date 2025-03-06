@@ -14,12 +14,12 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.mifos.core.objects.account.saving.InterestCalculationDaysInYearType
-import com.mifos.core.objects.account.saving.InterestCalculationType
-import com.mifos.core.objects.account.saving.InterestCompoundingPeriodType
-import com.mifos.core.objects.account.saving.InterestPostingPeriodType
-import com.mifos.core.objects.account.saving.LockinPeriodFrequencyType
-import com.mifos.core.objects.account.saving.Timeline
+import com.mifos.core.model.objects.account.saving.InterestCalculationDaysInYearType
+import com.mifos.core.model.objects.account.saving.InterestCalculationType
+import com.mifos.core.model.objects.account.saving.InterestCompoundingPeriodType
+import com.mifos.core.model.objects.account.saving.InterestPostingPeriodType
+import com.mifos.core.model.objects.account.saving.LockinPeriodFrequencyType
+import com.mifos.room.entities.accounts.loans.Timeline
 
 @Entity(
     tableName = "SavingsAccountWithAssociations",
@@ -40,86 +40,63 @@ import com.mifos.core.objects.account.saving.Timeline
 )
 data class SavingsAccountWithAssociations(
     @PrimaryKey
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "accountNo")
-    var accountNo: Int? = null,
+    val accountNo: Int? = null,
 
-    @ColumnInfo(name = "clientId")
-    var clientId: Int? = null,
+    val clientId: Int? = null,
 
-    @ColumnInfo(name = "clientName")
-    var clientName: String? = null,
+    val clientName: String? = null,
 
-    @ColumnInfo(name = "savingsProductId")
-    var savingsProductId: Int? = null,
+    val savingsProductId: Int? = null,
 
-    @ColumnInfo(name = "savingsProductName")
-    var savingsProductName: String? = null,
+    val savingsProductName: String? = null,
 
-    @ColumnInfo(name = "fieldOfficerId")
-    var fieldOfficerId: Int? = null,
+    val fieldOfficerId: Int? = null,
 
-    @ColumnInfo(name = "status", index = true)
-    var status: Status? = null,
+    @ColumnInfo(index = true)
+    val status: Status? = null,
 
     @Embedded
-    var timeline: Timeline? = null,
+    val timeline: Timeline? = null,
 
     @Embedded
-    var currency: Currency? = null,
+    val currency: Currency? = null,
 
-    @ColumnInfo(name = "nominalAnnualInterestRate")
-    var nominalAnnualInterestRate: Double? = null,
+    val nominalAnnualInterestRate: Double? = null,
 
-    @ColumnInfo(name = "interestCompoundingPeriodType")
-    var interestCompoundingPeriodType: InterestCompoundingPeriodType? = null,
+    val interestCompoundingPeriodType: InterestCompoundingPeriodType? = null,
 
-    @ColumnInfo(name = "interestPostingPeriodType")
-    var interestPostingPeriodType: InterestPostingPeriodType? = null,
+    val interestPostingPeriodType: InterestPostingPeriodType? = null,
 
-    @ColumnInfo(name = "interestCalculationType")
-    var interestCalculationType: InterestCalculationType? = null,
+    val interestCalculationType: InterestCalculationType? = null,
 
-    @ColumnInfo(name = "interestCalculationDaysInYearType")
-    var interestCalculationDaysInYearType: InterestCalculationDaysInYearType? = null,
+    val interestCalculationDaysInYearType: InterestCalculationDaysInYearType? = null,
 
-    @ColumnInfo(name = "minRequiredOpeningBalance")
-    var minRequiredOpeningBalance: Double? = null,
+    val minRequiredOpeningBalance: Double? = null,
 
-    @ColumnInfo(name = "lockinPeriodFrequency")
-    var lockinPeriodFrequency: Int? = null,
+    val lockinPeriodFrequency: Int? = null,
 
-    @ColumnInfo(name = "lockinPeriodFrequencyType")
-    var lockinPeriodFrequencyType: LockinPeriodFrequencyType? = null,
+    val lockinPeriodFrequencyType: LockinPeriodFrequencyType? = null,
 
-    @ColumnInfo(name = "withdrawalFeeForTransfers")
-    var withdrawalFeeForTransfers: Boolean? = null,
+    val withdrawalFeeForTransfers: Boolean? = null,
 
-    @ColumnInfo(name = "allowOverdraft")
-    var allowOverdraft: Boolean? = null,
+    val allowOverdraft: Boolean? = null,
 
-    @ColumnInfo(name = "enforceMinRequiredBalance")
-    var enforceMinRequiredBalance: Boolean? = null,
+    val enforceMinRequiredBalance: Boolean? = null,
 
-    @ColumnInfo(name = "withHoldTax")
-    var withHoldTax: Boolean? = null,
+    val withHoldTax: Boolean? = null,
 
-    @ColumnInfo(name = "lastActiveTransactionDate")
-    var lastActiveTransactionDate: List<Int?> = ArrayList(),
+    val lastActiveTransactionDate: List<Int?> = emptyList(),
 
-    @ColumnInfo(name = "dormancyTrackingActive")
-    var dormancyTrackingActive: Boolean? = null,
+    val dormancyTrackingActive: Boolean? = null,
 
-    @ColumnInfo(name = "overdraftLimit")
-    var overdraftLimit: Int? = null,
+    val overdraftLimit: Int? = null,
 
-    @ColumnInfo(name = "summary", index = true)
-    var summary: Summary? = null,
+    @ColumnInfo(index = true)
+    val summary: Summary? = null,
 
-    @ColumnInfo(name = "transactions")
-    var transactions: List<Transaction> = ArrayList(),
+    val transactions: List<Transaction> = emptyList(),
 
-    @ColumnInfo(name = "charges")
-    var charges: List<Charge?> = ArrayList(),
+    val charges: List<Charge?> = emptyList(),
 )

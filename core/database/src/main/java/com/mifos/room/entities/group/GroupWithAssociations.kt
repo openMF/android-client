@@ -10,9 +10,9 @@
 package com.mifos.room.entities.group
 
 import android.os.Parcelable
-import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.client.Status
 import com.mifos.room.entities.Timeline
+import com.mifos.room.entities.client.Client
+import com.mifos.room.entities.client.Status
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -20,31 +20,31 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class GroupWithAssociations(
-    var id: Int? = null,
+    val id: Int? = null,
 
-    var accountNo: String? = null,
+    val accountNo: String? = null,
 
-    var name: String? = null,
+    val name: String? = null,
 
-    var status: Status? = null,
+    val status: Status? = null,
 
-    var active: Boolean? = null,
+    val active: Boolean? = null,
 
-    var activationDate: List<Int?> = ArrayList(),
+    val activationDate: List<Int?> = emptyList(),
 
-    var officeId: Int? = null,
+    val officeId: Int? = null,
 
-    var officeName: String? = null,
+    val officeName: String? = null,
 
-    var staffId: Int? = null,
+    val staffId: Int? = null,
 
-    var staffName: String? = null,
+    val staffName: String? = null,
 
-    var hierarchy: String? = null,
+    val hierarchy: String? = null,
 
-    var groupLevel: Int? = null,
+    val groupLevel: Int? = null,
 
-    var clientMembers: List<Client> = ArrayList(),
+    val clientMembers: List<Client> = emptyList(),
 
-    var timeline: Timeline? = null,
+    val timeline: Timeline? = null,
 ) : Parcelable

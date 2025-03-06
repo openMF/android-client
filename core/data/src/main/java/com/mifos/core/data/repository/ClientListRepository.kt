@@ -10,10 +10,9 @@
 package com.mifos.core.data.repository
 
 import androidx.paging.PagingData
-import com.mifos.core.entity.client.Client
-import com.mifos.core.objects.clients.Page
+import com.mifos.core.model.objects.clients.Page
+import com.mifos.room.entities.client.Client
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -22,5 +21,5 @@ interface ClientListRepository {
 
     fun getAllClients(): Flow<PagingData<Client>>
 
-    fun allDatabaseClients(): Observable<Page<Client>>
+    fun allDatabaseClients(): Flow<Page<Client>>
 }

@@ -9,9 +9,6 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.client.ClientPayload
-import com.mifos.core.entity.templates.clients.ClientsTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.objects.clients.ActivatePayload
 import com.mifos.core.objects.clients.Page
@@ -21,6 +18,10 @@ import com.mifos.core.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.ClientAccounts
+import com.mifos.room.entities.client.Client
+import com.mifos.room.entities.client.ClientPayload
+import com.mifos.room.entities.templates.clients.ClientsTemplate
+import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.http.Body
@@ -56,10 +57,10 @@ interface ClientService {
 
     @Multipart
     @POST(APIEndPoint.CLIENTS + "/{clientId}/images")
-    fun uploadClientImage(
+    suspend fun uploadClientImage(
         @Path("clientId") clientId: Int,
         @Part file: MultipartBody.Part?,
-    ): Observable<ResponseBody>
+    ): ResponseBody
 
     @DELETE(APIEndPoint.CLIENTS + "/{clientId}/images")
     fun deleteClientImage(@Path("clientId") clientId: Int): Observable<ResponseBody>
@@ -68,10 +69,10 @@ interface ClientService {
     //    @GET("/clients/{clientId}/images")
     //    Observable<TypedString> getClientImage(@Path("clientId") int clientId);
     @POST(APIEndPoint.CLIENTS)
-    fun createClient(@Body clientPayload: ClientPayload?): Observable<Client>
+    suspend fun createClient(@Body clientPayload: ClientPayload?): Client?
 
     @get:GET(APIEndPoint.CLIENTS + "/template")
-    val clientTemplate: Observable<ClientsTemplate>
+    val clientTemplate: Flow<ClientsTemplate>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/accounts")
     fun getClientAccounts(@Path("clientId") clientId: Int): Observable<ClientAccounts>

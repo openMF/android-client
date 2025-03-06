@@ -10,17 +10,18 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.ClientIdentifierDialogRepository
+import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
+import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
+import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.core.objects.noncoreobjects.IdentifierCreationResponse
-import com.mifos.core.objects.noncoreobjects.IdentifierPayload
-import com.mifos.core.objects.noncoreobjects.IdentifierTemplate
 import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class ClientIdentifierDialogRepositoryImp @Inject constructor(private val dataManagerClient: DataManagerClient) :
-    ClientIdentifierDialogRepository {
+class ClientIdentifierDialogRepositoryImp @Inject constructor(
+    private val dataManagerClient: DataManagerClient,
+) : ClientIdentifierDialogRepository {
 
     override suspend fun getClientIdentifierTemplate(clientId: Int): IdentifierTemplate {
         return dataManagerClient.getClientIdentifierTemplate(clientId)

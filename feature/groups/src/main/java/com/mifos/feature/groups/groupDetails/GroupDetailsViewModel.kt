@@ -13,13 +13,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.GroupDetailsRepository
-import com.mifos.core.domain.useCases.GetGroupAssociateClientsUseCase
-import com.mifos.core.entity.client.Client
 import com.mifos.feature.groups.R
 import com.mifos.room.entities.accounts.loans.LoanAccount
 import com.mifos.room.entities.accounts.savings.SavingsAccount
+import com.mifos.room.entities.client.Client
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.zipmodels.GroupAndGroupAccounts
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,7 +30,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GroupDetailsViewModel @Inject constructor(
-    private val getGroupAssociateClientsUseCase: GetGroupAssociateClientsUseCase,
     private val savedStateHandle: SavedStateHandle,
     private val repository: GroupDetailsRepository,
 ) : ViewModel() {
@@ -72,16 +69,16 @@ class GroupDetailsViewModel @Inject constructor(
         }
     }
 
-    fun getGroupAssociateClients(groupId: Int) = viewModelScope.launch {
-        getGroupAssociateClientsUseCase(groupId).collect { result ->
-            when (result) {
-                is Resource.Error ->
+    fun getGroupAssociateClients(groupId: Int) {
+        viewModelScope.launch {
+            repository.getGroupWithAssociations(groupId)
+                .catch {
                     _groupDetailsUiState.value =
                         GroupDetailsUiState.Error(R.string.feature_groups_failed_to_load_client)
-
-                is Resource.Loading -> Unit
-                is Resource.Success -> _groupAssociateClients.value = result.data ?: emptyList()
-            }
+                }
+                .collect {
+                    _groupAssociateClients.value = it.clientMembers ?: emptyList()
+                }
         }
     }
 }

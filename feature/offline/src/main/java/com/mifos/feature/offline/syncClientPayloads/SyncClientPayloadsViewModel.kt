@@ -11,19 +11,17 @@ package com.mifos.feature.offline.syncClientPayloads
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.FileUtils.LOG_TAG
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.client.ClientPayload
+import com.mifos.room.entities.client.ClientPayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import rx.Observer
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -59,63 +57,51 @@ class SyncClientPayloadsViewModel @Inject constructor(
 
     fun loadDatabaseClientPayload() {
         _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
-        repository.allDatabaseClientPayload()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<List<ClientPayload>>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
+        viewModelScope.launch {
+            repository.allDatabaseClientPayload()
+                .catch {
                     _syncClientPayloadsUiState.value =
-                        SyncClientPayloadsUiState.ShowError(e.message.toString())
-                }
-
-                override fun onNext(clientPayloads: List<ClientPayload>) {
+                        SyncClientPayloadsUiState.ShowError(it.message.toString())
+                }.collect { clientPayloads ->
                     mClientPayloads = clientPayloads.toMutableList()
                     _syncClientPayloadsUiState.value =
                         SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
                 }
-            })
+        }
     }
 
     private fun syncClientPayload(clientPayload: ClientPayload?) {
-        _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
-        repository.createClient(clientPayload!!)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Observer<Client> {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _syncClientPayloadsUiState.value =
-                        SyncClientPayloadsUiState.ShowError(e.message.toString())
-                    updateClientPayload(clientPayload)
-                }
+        viewModelScope.launch {
+            _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
 
-                override fun onNext(client: Client) {
-                    mClientPayloads[mClientSyncIndex].id?.let {
-                        mClientPayloads[mClientSyncIndex].clientCreationTime?.let { it1 ->
-                            deleteAndUpdateClientPayload(
-                                it,
-                                it1,
-                            )
-                        }
+            try {
+                repository.createClient(clientPayload!!)
+
+                mClientPayloads[mClientSyncIndex].id?.let {
+                    mClientPayloads[mClientSyncIndex].clientCreationTime?.let { it1 ->
+                        deleteAndUpdateClientPayload(
+                            it,
+                            it1,
+                        )
                     }
                 }
-            })
+            } catch (e: Exception) {
+                _syncClientPayloadsUiState.value =
+                    SyncClientPayloadsUiState.ShowError(e.message.toString())
+                updateClientPayload(clientPayload)
+            }
+        }
     }
 
     fun deleteAndUpdateClientPayload(id: Int, clientCreationTIme: Long) {
-        _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
-        repository.deleteAndUpdatePayloads(id, clientCreationTIme)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Observer<List<ClientPayload>> {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
+        viewModelScope.launch {
+            _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
+
+            repository.deleteAndUpdatePayloads(id, clientCreationTIme)
+                .catch { e ->
                     _syncClientPayloadsUiState.value =
                         SyncClientPayloadsUiState.ShowError(e.message.toString())
-                }
-
-                override fun onNext(clientPayloads: List<ClientPayload>) {
+                }.collect { clientPayloads ->
                     mClientSyncIndex = 0
                     if (clientPayloads.isNotEmpty()) {
                         syncClientPayload()
@@ -124,29 +110,26 @@ class SyncClientPayloadsViewModel @Inject constructor(
                     _syncClientPayloadsUiState.value =
                         SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
                 }
-            })
+        }
     }
 
     fun updateClientPayload(clientPayload: ClientPayload?) {
-        _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
-        repository.updateClientPayload(clientPayload!!)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<ClientPayload>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _syncClientPayloadsUiState.value =
-                        SyncClientPayloadsUiState.ShowError(e.message.toString())
-                }
+        viewModelScope.launch {
+            _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
 
-                override fun onNext(clientPayload: ClientPayload) {
-                    mClientPayloads[mClientSyncIndex] = clientPayload
-                    mClientSyncIndex += 1
-                    if (mClientPayloads.size != mClientSyncIndex) {
-                        syncClientPayload()
-                    }
+            try {
+                repository.updateClientPayload(clientPayload!!)
+
+                mClientPayloads[mClientSyncIndex] = clientPayload
+                mClientSyncIndex += 1
+                if (mClientPayloads.size != mClientSyncIndex) {
+                    syncClientPayload()
                 }
-            })
+            } catch (e: Exception) {
+                _syncClientPayloadsUiState.value =
+                    SyncClientPayloadsUiState.ShowError(e.message.toString())
+            }
+        }
     }
 
     fun syncClientPayload() {

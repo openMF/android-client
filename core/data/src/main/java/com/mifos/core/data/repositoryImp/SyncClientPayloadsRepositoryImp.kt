@@ -10,31 +10,31 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
-import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.client.ClientPayload
 import com.mifos.core.network.datamanager.DataManagerClient
-import rx.Observable
+import com.mifos.room.entities.client.ClientPayload
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class SyncClientPayloadsRepositoryImp @Inject constructor(private val dataManagerClient: DataManagerClient) :
-    SyncClientPayloadsRepository {
+class SyncClientPayloadsRepositoryImp @Inject constructor(
+    private val dataManagerClient: DataManagerClient,
+) : SyncClientPayloadsRepository {
 
-    override fun allDatabaseClientPayload(): Observable<List<ClientPayload>> {
+    override fun allDatabaseClientPayload(): Flow<List<ClientPayload>> {
         return dataManagerClient.allDatabaseClientPayload
     }
 
-    override fun createClient(clientPayload: ClientPayload): Observable<Client> {
+    override suspend fun createClient(clientPayload: ClientPayload): Int? {
         return dataManagerClient.createClient(clientPayload)
     }
 
     override fun deleteAndUpdatePayloads(
         id: Int,
         clientCreationTIme: Long,
-    ): Observable<List<ClientPayload>> {
+    ): Flow<List<ClientPayload>> {
         return dataManagerClient.deleteAndUpdatePayloads(id, clientCreationTIme)
     }
 
-    override fun updateClientPayload(clientPayload: ClientPayload): Observable<ClientPayload> {
-        return dataManagerClient.updateClientPayload(clientPayload)
+    override suspend fun updateClientPayload(clientPayload: ClientPayload) {
+        dataManagerClient.updateClientPayload(clientPayload)
     }
 }

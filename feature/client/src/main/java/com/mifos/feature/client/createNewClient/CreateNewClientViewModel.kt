@@ -13,11 +13,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.client.ClientPayload
 import com.mifos.feature.client.R
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.Staff
+import com.mifos.room.entities.templates.clients.ClientsTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,7 +30,6 @@ import okhttp3.ResponseBody
 import retrofit2.HttpException
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
-import rx.plugins.RxJavaPlugins
 import rx.schedulers.Schedulers
 import java.io.File
 import javax.inject.Inject
@@ -57,24 +56,21 @@ class CreateNewClientViewModel @Inject constructor(
 
     fun loadOfficeAndClientTemplate() {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
+        loadClientTemplate()
         loadOffices()
     }
 
-//    private fun loadClientTemplate() = viewModelScope.launch(Dispatchers.IO) {
-//        clientTemplateUseCase().collect { result ->
-//            when (result) {
-//                is Resource.Error ->
-//                    _createNewClientUiState.value =
-//                        CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
-//
-//                is Resource.Loading -> Unit
-//
-//                is Resource.Success ->
-//                    _createNewClientUiState.value =
-//                        CreateNewClientUiState.ShowClientTemplate(result.data ?: ClientsTemplate())
-//            }
-//        }
-//    }
+    private fun loadClientTemplate() {
+        viewModelScope.launch {
+            repository.clientTemplate().catch {
+                _createNewClientUiState.value =
+                    CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
+            }.collect {
+                _createNewClientUiState.value =
+                    CreateNewClientUiState.ShowClientTemplate(it ?: ClientsTemplate())
+            }
+        }
+    }
 
     private fun loadOffices() {
         viewModelScope.launch {
@@ -101,51 +97,35 @@ class CreateNewClientViewModel @Inject constructor(
     }
 
     fun createClient(clientPayload: ClientPayload) {
-        _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
-        repository.createClient(clientPayload)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<Client>() {
-                    override fun onCompleted() {
-                    }
+        viewModelScope.launch {
+            _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
 
-                    override fun onError(e: Throwable) {
-                        try {
-                            if (e is HttpException) {
-                                val errorMessage = e.response()?.errorBody()
-                                    ?.string() ?: ""
-                                Log.d("error", errorMessage)
-                                _createNewClientUiState.value =
-                                    CreateNewClientUiState.ShowStringError(errorMessage)
-                            }
-                        } catch (throwable: Throwable) {
-                            RxJavaPlugins.getInstance().errorHandler.handleError(e)
-                        }
-                    }
+            try {
+                val clientId = repository.createClient(clientPayload)
 
-                    override fun onNext(client: Client?) {
-                        if (client != null) {
-                            if (client.clientId != null) {
-                                _createNewClientUiState.value =
-                                    CreateNewClientUiState.ShowClientCreatedSuccessfully(R.string.feature_client_client_created_successfully)
-
-                                _createNewClientUiState.value = client.clientId?.let {
-                                    CreateNewClientUiState.SetClientId(
-                                        it,
-                                    )
-                                }!!
-                            } else {
-                                _createNewClientUiState.value = client.clientId?.let {
-                                    CreateNewClientUiState.ShowWaitingForCheckerApproval(
-                                        it,
-                                    )
-                                }!!
-                            }
-                        }
-                    }
-                },
-            )
+                clientId?.let {
+                    _createNewClientUiState.value = CreateNewClientUiState.ShowClientCreatedSuccessfully(
+                        R.string.feature_client_client_created_successfully,
+                    )
+                    _createNewClientUiState.value = CreateNewClientUiState.SetClientId(it)
+                } ?: run {
+                    _createNewClientUiState.value = CreateNewClientUiState.ShowWaitingForCheckerApproval(0)
+                }
+            } catch (e: HttpException) {
+                val errorMessage = e.response()?.errorBody()?.string().orEmpty()
+                Log.d("CreateClient", errorMessage)
+                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
+                    "HTTP Error: $errorMessage",
+                )
+            } catch (e: Exception) {
+                val errorMessage = e.message.orEmpty()
+                Log.e("CreateClient", "Unexpected error", e)
+                // Todo check if we need to assign value to uiState here. else remove
+                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
+                    "Unexpected Error: $errorMessage",
+                )
+            }
+        }
     }
 
     fun uploadImage(id: Int, pngFile: File) {

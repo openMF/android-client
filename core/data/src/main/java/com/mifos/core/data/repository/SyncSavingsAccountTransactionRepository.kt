@@ -9,18 +9,17 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
 interface SyncSavingsAccountTransactionRepository {
 
-    fun allSavingsAccountTransactions(): Observable<List<SavingsAccountTransactionRequest>>
+    fun allSavingsAccountTransactions(): Flow<List<SavingsAccountTransactionRequest>>
 
     fun paymentTypeOption(): Flow<List<PaymentTypeOption>>
 
@@ -29,13 +28,9 @@ interface SyncSavingsAccountTransactionRepository {
         savingsAccountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequest,
-    ): Observable<SavingsAccountTransactionResponse>
+    ): Flow<SavingsAccountTransactionResponse?>
 
-    fun deleteAndUpdateTransactions(
-        savingsAccountId: Int,
-    ): Observable<List<SavingsAccountTransactionRequest>>
+    fun deleteAndUpdateTransactions(savingsAccountId: Int): Flow<List<SavingsAccountTransactionRequest>>
 
-    fun updateLoanRepaymentTransaction(
-        savingsAccountTransactionRequest: SavingsAccountTransactionRequest,
-    ): Observable<SavingsAccountTransactionRequest>
+    suspend fun updateLoanRepaymentTransaction(savingsAccountTransactionRequest: SavingsAccountTransactionRequest)
 }

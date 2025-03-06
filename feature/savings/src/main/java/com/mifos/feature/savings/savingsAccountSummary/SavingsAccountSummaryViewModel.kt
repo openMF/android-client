@@ -14,15 +14,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.useCases.GetSavingsAccountUseCase
-import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.feature.savings.R
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.room.entities.accounts.savings.SavingsSummaryData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,33 +30,36 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SavingsAccountSummaryViewModel @Inject constructor(
-    private val getSavingsAccountUseCase: GetSavingsAccountUseCase,
+//    private val getSavingsAccountUseCase: GetSavingsAccountUseCase,
     savedStateHandle: SavedStateHandle,
+    private val repository: SavingsAccountSummaryRepository,
 ) : ViewModel() {
 
     private val arg = savedStateHandle.getStateFlow(key = "arg", initialValue = "")
-    val savingsNavigationData: SavingsSummaryData = Gson().fromJson(arg.value, SavingsSummaryData::class.java)
+    val savingsNavigationData: SavingsSummaryData =
+        Gson().fromJson(arg.value, SavingsSummaryData::class.java)
 
     private val _savingsAccountSummaryUiState =
         MutableStateFlow<SavingsAccountSummaryUiState>(SavingsAccountSummaryUiState.ShowProgressbar)
     val savingsAccountSummaryUiState: StateFlow<SavingsAccountSummaryUiState> get() = _savingsAccountSummaryUiState
 
-    fun loadSavingAccount(type: String?, accountId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        getSavingsAccountUseCase(type, accountId, Constants.TRANSACTIONS).collect { result ->
-            when (result) {
-                is Resource.Error ->
-                    _savingsAccountSummaryUiState.value =
-                        SavingsAccountSummaryUiState.ShowFetchingError(R.string.feature_savings_failed_to_fetch_savingsaccount)
+    fun loadSavingAccount(type: String?, accountId: Int) {
+        viewModelScope.launch {
+            _savingsAccountSummaryUiState.value =
+                SavingsAccountSummaryUiState.ShowProgressbar
 
-                is Resource.Loading ->
-                    _savingsAccountSummaryUiState.value =
-                        SavingsAccountSummaryUiState.ShowProgressbar
-
-                is Resource.Success ->
-                    _savingsAccountSummaryUiState.value =
-                        SavingsAccountSummaryUiState.ShowSavingAccount(
-                            result.data ?: SavingsAccountWithAssociations(),
-                        )
+            repository.getSavingsAccount(
+                type,
+                accountId,
+                Constants.TRANSACTIONS,
+            ).catch {
+                _savingsAccountSummaryUiState.value =
+                    SavingsAccountSummaryUiState.ShowFetchingError(R.string.feature_savings_failed_to_fetch_savingsaccount)
+            }.collect { savings ->
+                _savingsAccountSummaryUiState.value =
+                    SavingsAccountSummaryUiState.ShowSavingAccount(
+                        savings ?: SavingsAccountWithAssociations(),
+                    )
             }
         }
     }

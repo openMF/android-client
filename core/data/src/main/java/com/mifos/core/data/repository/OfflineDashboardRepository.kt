@@ -15,14 +15,13 @@ import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
 import com.mifos.room.entities.center.CenterPayload
 import com.mifos.room.entities.group.GroupPayload
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
 interface OfflineDashboardRepository {
 
-    fun allDatabaseClientPayload(): Observable<List<ClientPayload>>
+    fun allDatabaseClientPayload(): Flow<List<com.mifos.room.entities.client.ClientPayload>>
 
     fun allDatabaseGroupPayload(): Flow<List<GroupPayload>>
 
@@ -30,5 +29,5 @@ interface OfflineDashboardRepository {
 
     fun databaseLoanRepayments(): Flow<List<LoanRepaymentRequest>>
 
-    fun allSavingsAccountTransactions(): Observable<List<SavingsAccountTransactionRequest>>
+    fun allSavingsAccountTransactions(): Flow<List<com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest>>
 }

@@ -9,17 +9,15 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -36,17 +34,17 @@ interface SyncGroupsDialogRepository {
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Observable<SavingsAccountWithAssociations>
+    ): Flow<SavingsAccountWithAssociations>
 
     fun syncSavingsAccountTransactionTemplate(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Observable<SavingsAccountTransactionTemplate>
+    ): Flow<SavingsAccountTransactionTemplate?>
 
-    fun getGroupWithAssociations(groupId: Int): Observable<GroupWithAssociations>
+    fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations>
 
-    fun syncClientInDatabase(client: Client): Observable<Client>
+    suspend fun syncClientInDatabase(client: com.mifos.room.entities.client.Client)
 
     suspend fun syncClientAccounts(clientId: Int): ClientAccounts
 

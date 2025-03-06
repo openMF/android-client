@@ -10,7 +10,6 @@
 package com.mifos.room.entities.client
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -19,68 +18,47 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "ClientPayload")
 data class ClientPayload(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "clientCreationTime")
     @Transient
-    var clientCreationTime: Long? = null,
+    val clientCreationTime: Long? = null,
 
-    @ColumnInfo(name = "errorMessage")
     @Transient
-    var errorMessage: String? = null,
+    val errorMessage: String? = null,
 
-    @ColumnInfo(name = "firstname")
-    var firstname: String? = null,
+    val firstname: String? = null,
 
-    @ColumnInfo(name = "lastname")
-    var lastname: String? = null,
+    val lastname: String? = null,
 
-    @ColumnInfo(name = "middlename")
-    var middlename: String? = null,
+    val middlename: String? = null,
 
-    @ColumnInfo(name = "officeId")
-    var officeId: Int? = null,
+    val officeId: Int? = null,
 
-    @ColumnInfo(name = "staffId")
-    var staffId: Int? = null,
+    val staffId: Int? = null,
 
-    @ColumnInfo(name = "genderId")
-    var genderId: Int? = null,
+    val genderId: Int? = null,
 
-    @ColumnInfo(name = "active")
-    var active: Boolean? = null,
+    val active: Boolean? = null,
 
-    @ColumnInfo(name = "activationDate")
-    var activationDate: String? = null,
+    val activationDate: String? = null,
 
-    @ColumnInfo(name = "submittedOnDate")
-    var submittedOnDate: String? = null,
+    val submittedOnDate: String? = null,
 
-    @ColumnInfo(name = "dateOfBirth")
-    var dateOfBirth: String? = null,
+    val dateOfBirth: String? = null,
 
-    @ColumnInfo(name = "mobileNo")
-    var mobileNo: String? = null,
+    val mobileNo: String? = null,
 
-    @ColumnInfo(name = "externalId")
-    var externalId: String? = null,
+    val externalId: String? = null,
 
-    @ColumnInfo(name = "clientTypeId")
-    var clientTypeId: Int? = null,
+    val clientTypeId: Int? = null,
 
-    @ColumnInfo(name = "clientClassificationId")
-    var clientClassificationId: Int? = null,
+    val clientClassificationId: Int? = null,
 
-    @ColumnInfo(name = "address")
-    var address: String? = null,
+    val address: String? = null,
 
-    @ColumnInfo(name = "dateFormat")
-    var dateFormat: String? = "dd MMMM YYYY",
+    val dateFormat: String? = "dd MMMM YYYY",
 
-    @ColumnInfo(name = "locale")
-    var locale: String? = "en",
+    val locale: String? = "en",
 
-    @ColumnInfo(name = "datatables")
-    var datatables: String? = null,
+    val datatables: String? = null,
 ) : Parcelable

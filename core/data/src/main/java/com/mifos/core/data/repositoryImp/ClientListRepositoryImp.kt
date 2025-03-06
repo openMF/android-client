@@ -14,11 +14,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.mifos.core.data.pagingSource.ClientListPagingSource
 import com.mifos.core.data.repository.ClientListRepository
-import com.mifos.core.entity.client.Client
+import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.core.objects.clients.Page
+import com.mifos.room.entities.client.Client
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -39,7 +38,7 @@ class ClientListRepositoryImp @Inject constructor(
         ).flow
     }
 
-    override fun allDatabaseClients(): Observable<Page<Client>> {
+    override fun allDatabaseClients(): Flow<Page<Client>> {
         return dataManagerClient.allDatabaseClients
     }
 }

@@ -15,7 +15,6 @@ import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupWithAssociations
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -33,7 +32,7 @@ class GroupDetailsRepositoryImp @Inject constructor(
         return dataManagerGroups.getGroupAccounts(groupId)
     }
 
-    override fun getGroupWithAssociations(groupId: Int): Observable<GroupWithAssociations> {
+    override fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations> {
         return dataManagerGroups.getGroupWithAssociations(groupId)
     }
 }

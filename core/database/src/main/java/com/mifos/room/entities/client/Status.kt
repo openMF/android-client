@@ -10,7 +10,6 @@
 package com.mifos.room.entities.client
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -19,14 +18,11 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "Status")
 data class Status(
     @PrimaryKey
-    @ColumnInfo(name = "id")
-    var id: Int = 0,
+    val id: Int = 0,
 
-    @ColumnInfo(name = "code")
-    var code: String? = null,
+    val code: String? = null,
 
-    @ColumnInfo(name = "value")
-    var value: String? = null,
+    val value: String? = null,
 ) : Parcelable {
 
     companion object {
