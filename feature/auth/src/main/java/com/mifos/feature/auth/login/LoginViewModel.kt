@@ -87,7 +87,7 @@ class LoginViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        if (result.data != null && result.data?.authenticated == true) {
+                        if (result.data?.authenticated == true) {
                             prefManager.saveUserDetails(result.data!!)
                             // Saving username password
                             prefManager.usernamePassword = Pair(username, password)
