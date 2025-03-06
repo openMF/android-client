@@ -10,7 +10,6 @@
 package com.mifos.room.entities.client
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -19,24 +18,17 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "ClientChargeCurrency")
 data class Currency(
     @PrimaryKey
-    @ColumnInfo(name = "code")
-    var code: String? = null,
+    val code: String? = null,
 
-    @ColumnInfo(name = "name")
-    var name: String? = null,
+    val name: String? = null,
 
-    @ColumnInfo(name = "decimalPlaces")
-    var decimalPlaces: Int? = null,
+    val decimalPlaces: Int? = null,
 
-    @ColumnInfo(name = "inMultiplesOf")
-    var inMultiplesOf: Int? = null,
+    val inMultiplesOf: Int? = null,
 
-    @ColumnInfo(name = "displaySymbol")
-    var displaySymbol: String? = null,
+    val displaySymbol: String? = null,
 
-    @ColumnInfo(name = "nameCode")
-    var nameCode: String? = null,
+    val nameCode: String? = null,
 
-    @ColumnInfo(name = "displayLabel")
-    var displayLabel: String? = null,
+    val displayLabel: String? = null,
 ) : Parcelable

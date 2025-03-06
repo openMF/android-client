@@ -10,7 +10,6 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncCentersDialogRepository
-import com.mifos.core.entity.client.Client
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
@@ -21,6 +20,7 @@ import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.client.Client
 import com.mifos.room.entities.group.Center
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.Group
@@ -28,7 +28,6 @@ import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -58,7 +57,7 @@ class SyncCentersDialogRepositoryImp @Inject constructor(
         return dataManagerCenter.getCenterWithAssociations(centerId)
     }
 
-    override fun getGroupWithAssociations(groupId: Int): Observable<GroupWithAssociations> {
+    override fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations> {
         return dataManagerGroups.getGroupWithAssociations(groupId)
     }
 
@@ -74,8 +73,8 @@ class SyncCentersDialogRepositoryImp @Inject constructor(
         dataManagerGroups.syncGroupInDatabase(group)
     }
 
-    override fun syncClientInDatabase(client: Client): Observable<Client> {
-        return dataManagerClient.syncClientInDatabase(client)
+    override suspend fun syncClientInDatabase(client: Client) {
+        dataManagerClient.syncClientInDatabase(client)
     }
 
     override suspend fun syncCenterInDatabase(center: Center) {

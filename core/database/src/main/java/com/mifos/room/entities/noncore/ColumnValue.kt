@@ -10,7 +10,6 @@
 package com.mifos.room.entities.noncore
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -19,15 +18,8 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "ColumnValue")
 data class ColumnValue(
     @PrimaryKey
-    @ColumnInfo(name = "id")
-    var id: Int? = null,
-
-    @ColumnInfo(name = "value")
-    var value: String? = null,
-
-    @ColumnInfo(name = "score")
-    var score: Int? = null,
-
-    @ColumnInfo(name = "registeredTableName")
-    var registeredTableName: String? = null,
+    val id: Int? = null,
+    val value: String? = null,
+    val score: Int? = null,
+    val registeredTableName: String? = null,
 ) : Parcelable

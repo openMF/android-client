@@ -10,18 +10,15 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.client.ClientPayload
-import com.mifos.core.entity.templates.clients.ClientsTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerOffices
 import com.mifos.core.network.datamanager.DataManagerStaff
+import com.mifos.room.entities.client.ClientPayload
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.Staff
+import com.mifos.room.entities.templates.clients.ClientsTemplate
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
-import okhttp3.ResponseBody
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -33,7 +30,7 @@ class CreateNewClientRepositoryImp @Inject constructor(
     private val dataManagerStaff: DataManagerStaff,
 ) : CreateNewClientRepository {
 
-    override fun clientTemplate(): Observable<ClientsTemplate> {
+    override fun clientTemplate(): Flow<ClientsTemplate> {
         return dataManagerClient.clientTemplate
     }
 
@@ -45,11 +42,11 @@ class CreateNewClientRepositoryImp @Inject constructor(
         return dataManagerStaff.getStaffInOffice(officeId)
     }
 
-    override fun createClient(clientPayload: ClientPayload): Observable<Client> {
+    override suspend fun createClient(clientPayload: ClientPayload): Int? {
         return dataManagerClient.createClient(clientPayload)
     }
 
-    override fun uploadClientImage(id: Int, file: MultipartBody.Part?): Observable<ResponseBody> {
-        return dataManagerClient.uploadClientImage(id, file)
+    override suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?) {
+        dataManagerClient.uploadClientImage(id, file)
     }
 }

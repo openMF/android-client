@@ -19,6 +19,7 @@ import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupPayload
 import com.mifos.room.entities.group.GroupWithAssociations
+import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -39,7 +40,7 @@ interface GroupService {
     ): Observable<Page<Group>>
 
     @GET(APIEndPoint.GROUPS + "/{groupId}?associations=all")
-    fun getGroupWithAssociations(@Path("groupId") groupId: Int): Observable<GroupWithAssociations>
+    fun getGroupWithAssociations(@Path("groupId") groupId: Int): Flow<GroupWithAssociations>
 
     @GET(APIEndPoint.GROUPS)
     suspend fun getAllGroupsInOffice(

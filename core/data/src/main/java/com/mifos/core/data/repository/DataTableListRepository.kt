@@ -10,10 +10,9 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.entity.accounts.loan.Loans
-import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.client.ClientPayload
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.model.LoansPayload
+import com.mifos.room.entities.client.ClientPayload
 import rx.Observable
 
 /**
@@ -25,5 +24,5 @@ interface DataTableListRepository {
 
     fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Observable<Loans>
 
-    fun createClient(clientPayload: ClientPayload): Observable<Client>
+    suspend fun createClient(clientPayload: ClientPayload): Int?
 }

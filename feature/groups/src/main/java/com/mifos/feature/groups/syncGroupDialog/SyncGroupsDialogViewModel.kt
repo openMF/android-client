@@ -21,7 +21,6 @@ import com.mifos.feature.groups.R
 import com.mifos.room.entities.accounts.loans.LoanAccount
 import com.mifos.room.entities.accounts.savings.SavingsAccount
 import com.mifos.room.entities.group.Group
-import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,10 +36,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -286,29 +282,22 @@ class SyncGroupsDialogViewModel @Inject constructor(
      */
     private fun loadGroupAssociateClients(groupId: Int) {
         _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.Loading
-        repository.getGroupWithAssociations(groupId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<GroupWithAssociations>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        onAccountSyncFailed(e)
+        viewModelScope.launch {
+            repository.getGroupWithAssociations(groupId)
+                .catch {
+                    onAccountSyncFailed(it)
+                }.collect { groupWithAssociations ->
+                    mClients = groupWithAssociations.clientMembers
+                    mClientSyncIndex = 0
+                    resetIndexes()
+                    if (mClients.isNotEmpty()) {
+                        _syncGroupData.update { it.copy(totalClientSyncCount = mClients.size) }
+                        syncClientAccounts(mClients[mClientSyncIndex].id)
+                    } else {
+                        syncGroup(mGroupList[mGroupSyncIndex])
                     }
-
-                    override fun onNext(groupWithAssociations: GroupWithAssociations) {
-                        mClients = groupWithAssociations.clientMembers
-                        mClientSyncIndex = 0
-                        resetIndexes()
-                        if (mClients.isNotEmpty()) {
-                            _syncGroupData.update { it.copy(totalClientSyncCount = mClients.size) }
-                            syncClientAccounts(mClients[mClientSyncIndex].id)
-                        } else {
-                            syncGroup(mGroupList[mGroupSyncIndex])
-                        }
-                    }
-                },
-            )
+                }
+        }
     }
 
     /**
@@ -317,32 +306,28 @@ class SyncGroupsDialogViewModel @Inject constructor(
      *
      * @param client
      */
-    private fun syncClient(client: Client) {
-        client.groupId = mGroupList[mGroupSyncIndex].id
-        client.sync = true
-        repository.syncClientInDatabase(client)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<Client>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        _syncGroupsDialogUiState.value =
-                            SyncGroupsDialogUiState.Error(message = e.message.toString())
-                    }
+    private fun syncClient(client: com.mifos.room.entities.client.Client) {
+        val updatedClient = client.copy(
+            groupId = mGroupList[mGroupSyncIndex].id,
+            sync = true,
+        )
+        viewModelScope.launch {
+            try {
+                repository.syncClientInDatabase(updatedClient)
 
-                    override fun onNext(client: Client) {
-                        resetIndexes()
-                        mClientSyncIndex += 1
-                        _syncGroupData.update { it.copy(clientSyncCount = mClientSyncIndex) }
-                        if (mClients.size == mClientSyncIndex) {
-                            syncGroup(mGroupList[mGroupSyncIndex])
-                        } else {
-                            syncClientAccounts(mClients[mClientSyncIndex].id)
-                        }
-                    }
-                },
-            )
+                resetIndexes()
+                mClientSyncIndex += 1
+                _syncGroupData.update { it.copy(clientSyncCount = mClientSyncIndex) }
+                if (mClients.size == mClientSyncIndex) {
+                    syncGroup(mGroupList[mGroupSyncIndex])
+                } else {
+                    syncClientAccounts(mClients[mClientSyncIndex].id)
+                }
+            } catch (e: Exception) {
+                _syncGroupsDialogUiState.value =
+                    SyncGroupsDialogUiState.Error(message = e.message.toString())
+            }
+        }
     }
 
     /**

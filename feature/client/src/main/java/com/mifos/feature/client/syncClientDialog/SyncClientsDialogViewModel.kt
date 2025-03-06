@@ -16,10 +16,10 @@ import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncClientsDialogRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.client.Client
 import com.mifos.feature.client.R
 import com.mifos.room.entities.accounts.loans.LoanAccount
 import com.mifos.room.entities.accounts.savings.SavingsAccount
+import com.mifos.room.entities.client.Client
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,10 +33,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -263,28 +260,24 @@ class SyncClientsDialogViewModel @Inject constructor(
      *
      * @param client
      */
-    fun syncClient(client: Client) {
-        client.groupId = mClientList[mClientSyncIndex].id
-        client.sync = true
-        repository.syncClientInDatabase(client)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<Client>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        _syncClientsDialogUiState.value =
-                            SyncClientsDialogUiState.Error(message = e.message.toString())
-                    }
+    fun syncClient(client: com.mifos.room.entities.client.Client) {
+        val updatedClient = client.copy(
+            groupId = mClientList[mClientSyncIndex].id,
+            sync = true,
+        )
+        viewModelScope.launch {
+            try {
+                repository.syncClientInDatabase(updatedClient)
 
-                    override fun onNext(client: Client) {
-                        val singleSyncClientMax = maxSingleSyncClientProgressBar
-                        _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
-                        mClientSyncIndex += 1
-                        syncClient()
-                    }
-                },
-            )
+                val singleSyncClientMax = maxSingleSyncClientProgressBar
+                _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
+                mClientSyncIndex += 1
+                syncClient()
+            } catch (e: Exception) {
+                _syncClientsDialogUiState.value =
+                    SyncClientsDialogUiState.Error(message = e.message.toString())
+            }
+        }
     }
 
     private fun updateTotalSyncProgressBarAndCount() {

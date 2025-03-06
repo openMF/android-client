@@ -10,7 +10,6 @@
 package com.mifos.room.entities.templates.clients
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -19,12 +18,9 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "ClientTemplateInterest")
 data class InterestType(
     @PrimaryKey
-    @ColumnInfo(name = "id")
     var id: Int = 0,
 
-    @ColumnInfo(name = "code")
     var code: String = "",
 
-    @ColumnInfo(name = "value")
     var value: String = "",
 ) : Parcelable

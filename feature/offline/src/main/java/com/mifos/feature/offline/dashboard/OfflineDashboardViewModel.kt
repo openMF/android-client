@@ -12,19 +12,12 @@ package com.mifos.feature.offline.dashboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.OfflineDashboardRepository
-import com.mifos.core.entity.client.ClientPayload
 import com.mifos.feature.offline.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.observeOn
-import kotlinx.coroutines.flow.subscribe
-import kotlinx.coroutines.flow.subscribeOn
 import kotlinx.coroutines.launch
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,21 +30,14 @@ class OfflineDashboardViewModel @Inject constructor(
     val offlineDashboardUiState: StateFlow<OfflineDashboardUiState> = _offlineDashboardUiState
 
     fun loadDatabaseClientPayload() {
-        repository.allDatabaseClientPayload()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<List<ClientPayload>>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        setError(Type.SYNC_CLIENTS, e.message.toString())
-                    }
-
-                    override fun onNext(clientPayloads: List<ClientPayload>) {
-                        setCountOfSyncData(Type.SYNC_CLIENTS, clientPayloads.size)
-                    }
-                },
-            )
+        viewModelScope.launch {
+            repository.allDatabaseClientPayload()
+                .catch {
+                    setError(Type.SYNC_CLIENTS, it.message.toString())
+                }.collect { clientPayloads ->
+                    setCountOfSyncData(Type.SYNC_CLIENTS, clientPayloads.size)
+                }
+        }
     }
 
     fun loadDatabaseGroupPayload() {

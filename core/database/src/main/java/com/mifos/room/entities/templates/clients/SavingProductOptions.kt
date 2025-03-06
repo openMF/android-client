@@ -10,7 +10,6 @@
 package com.mifos.room.entities.templates.clients
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -19,15 +18,11 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "ClientTemplateSavingProductsOptions")
 data class SavingProductOptions(
     @PrimaryKey
-    @ColumnInfo(name = "id")
     var id: Int = 0,
 
-    @ColumnInfo(name = "name")
     val name: String = "",
 
-    @ColumnInfo(name = "withdrawalFeeForTransfers")
     val withdrawalFeeForTransfers: Boolean = false,
 
-    @ColumnInfo(name = "allowOverdraft")
     val allowOverdraft: Boolean = false,
 ) : Parcelable

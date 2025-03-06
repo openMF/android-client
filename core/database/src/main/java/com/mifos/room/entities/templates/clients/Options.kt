@@ -11,7 +11,6 @@ package com.mifos.room.entities.templates.clients
 
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -22,24 +21,18 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "ClientTemplateOptions")
 class Options() : Parcelable {
 
-    @ColumnInfo(name = "optionType")
     var optionType: String? = null
 
     @PrimaryKey
-    @ColumnInfo(name = "id")
     var id: Int = 0
 
-    @ColumnInfo(name = "name")
     var name: String = ""
 
-    @ColumnInfo(name = "position")
     var position: Int = 0
 
-    @ColumnInfo(name = "description")
     var description: String? = null
 
     @SerializedName("isActive")
-    @ColumnInfo(name = "activeStatus")
     var activeStatus: Boolean = false
 
     // Getter for activeStatus property

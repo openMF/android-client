@@ -299,20 +299,12 @@ class DatabaseHelperClient @Inject constructor() {
                 for (dataTable: DataTable in dataTables) {
                     val columnHeaders = SQLite.select()
                         .from(ColumnHeader::class.java)
-                        .where(
-                            ColumnHeader_Table.registeredTableName
-                                .eq(dataTable.registeredTableName),
-                        )
+                        .where(ColumnHeader_Table.registeredTableName.eq(dataTable.registeredTableName))
                         .queryList()
                     for (columnHeader: ColumnHeader in columnHeaders) {
                         val columnValues = SQLite.select()
                             .from(ColumnValue::class.java)
-                            .where(
-                                ColumnValue_Table.registeredTableName.eq(
-                                    dataTable
-                                        .registeredTableName,
-                                ),
-                            )
+                            .where(ColumnValue_Table.registeredTableName.eq(dataTable.registeredTableName))
                             .queryList()
                         if (columnValues.isNotEmpty()) {
                             columnHeader.columnValues = columnValues
@@ -350,10 +342,7 @@ class DatabaseHelperClient @Inject constructor() {
                 Observable.from<DataTablePayload>(clientPayload.datatables)
                     .subscribe { dataTablePayload ->
                         dataTablePayload.clientCreationTime = currentTime
-                        val jsonObject = gson.toJsonTree(
-                            dataTablePayload
-                                .data,
-                        ).asJsonObject
+                        val jsonObject = gson.toJsonTree(dataTablePayload.data).asJsonObject
                         dataTablePayload.dataTableString = jsonObject.toString()
                         dataTablePayload.save()
                     }

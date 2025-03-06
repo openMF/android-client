@@ -10,7 +10,6 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
-import com.mifos.core.entity.client.Client
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
@@ -19,12 +18,12 @@ import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.client.Client
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -69,12 +68,12 @@ class SyncGroupsDialogRepositoryImp @Inject constructor(
         )
     }
 
-    override fun getGroupWithAssociations(groupId: Int): Observable<GroupWithAssociations> {
+    override fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations> {
         return dataManagerGroups.getGroupWithAssociations(groupId)
     }
 
-    override fun syncClientInDatabase(client: Client): Observable<Client> {
-        return dataManagerClient.syncClientInDatabase(client)
+    override suspend fun syncClientInDatabase(client: Client) {
+        dataManagerClient.syncClientInDatabase(client)
     }
 
     override suspend fun syncClientAccounts(clientId: Int): ClientAccounts {

@@ -23,7 +23,6 @@ import com.mifos.room.entities.accounts.loans.LoanAccount
 import com.mifos.room.entities.accounts.savings.SavingsAccount
 import com.mifos.room.entities.group.Center
 import com.mifos.room.entities.group.Group
-import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,17 +32,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.observeOn
-import kotlinx.coroutines.flow.subscribe
-import kotlinx.coroutines.flow.subscribeOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import rx.Observable
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
-import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -425,29 +418,22 @@ class SyncCentersDialogViewModel @Inject constructor(
      */
     private fun loadGroupAssociateClients(groupId: Int) {
         _syncCentersDialogUiState.value = SyncCentersDialogUiState.Loading
-        repository.getGroupWithAssociations(groupId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<GroupWithAssociations>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        onAccountSyncFailed(e)
+        viewModelScope.launch {
+            repository.getGroupWithAssociations(groupId)
+                .catch {
+                    onAccountSyncFailed(it)
+                }.collect { groupWithAssociations ->
+                    mClients = getActiveClients(groupWithAssociations.clientMembers)
+                    mClientSyncIndex = 0
+                    resetIndexes()
+                    if (mClients.isNotEmpty()) {
+                        _syncCenterData.update { it.copy(totalClientSyncCount = mClients.size) }
+                        syncClientAccounts(mClients[mClientSyncIndex].id)
+                    } else {
+                        syncGroup(mGroups[mGroupSyncIndex])
                     }
-
-                    override fun onNext(groupWithAssociations: GroupWithAssociations) {
-                        mClients = getActiveClients(groupWithAssociations.clientMembers)
-                        mClientSyncIndex = 0
-                        resetIndexes()
-                        if (mClients.isNotEmpty()) {
-                            _syncCenterData.update { it.copy(totalClientSyncCount = mClients.size) }
-                            syncClientAccounts(mClients[mClientSyncIndex].id)
-                        } else {
-                            syncGroup(mGroups[mGroupSyncIndex])
-                        }
-                    }
-                },
-            )
+                }
+        }
     }
 
     /**
@@ -604,30 +590,26 @@ class SyncCentersDialogViewModel @Inject constructor(
      * @param client
      */
     private fun syncClient(client: Client) {
-        client.groupId = mGroups[mGroupSyncIndex].id
-        client.sync = true
-        repository.syncClientInDatabase(client)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<Client>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        _syncCentersDialogUiState.value =
-                            SyncCentersDialogUiState.Error(message = e.message.toString())
-                    }
+        val updatedClient = client.copy(
+            groupId = mGroups[mGroupSyncIndex].id,
+            sync = true,
+        )
+        viewModelScope.launch {
+            try {
+                repository.syncClientInDatabase(updatedClient)
 
-                    override fun onNext(client: Client) {
-                        resetIndexes()
-                        mClientSyncIndex += 1
-                        if (mClients.size == mClientSyncIndex) {
-                            syncGroup(mGroups[mGroupSyncIndex])
-                        } else {
-                            syncClientAccounts(mClients[mClientSyncIndex].id)
-                        }
-                    }
-                },
-            )
+                resetIndexes()
+                mClientSyncIndex += 1
+                if (mClients.size == mClientSyncIndex) {
+                    syncGroup(mGroups[mGroupSyncIndex])
+                } else {
+                    syncClientAccounts(mClients[mClientSyncIndex].id)
+                }
+            } catch (e: Exception) {
+                _syncCentersDialogUiState.value =
+                    SyncCentersDialogUiState.Error(message = e.message.toString())
+            }
+        }
     }
 
     /**

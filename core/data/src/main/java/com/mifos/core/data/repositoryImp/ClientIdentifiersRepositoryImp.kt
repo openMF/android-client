@@ -10,18 +10,20 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.ClientIdentifiersRepository
+import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.core.objects.noncoreobjects.Identifier
+import kotlinx.coroutines.flow.Flow
 import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class ClientIdentifiersRepositoryImp @Inject constructor(private val dataManagerClient: DataManagerClient) :
-    ClientIdentifiersRepository {
+class ClientIdentifiersRepositoryImp @Inject constructor(
+    private val dataManagerClient: DataManagerClient,
+) : ClientIdentifiersRepository {
 
-    override suspend fun getClientIdentifiers(clientId: Int): List<Identifier> {
+    override fun getClientIdentifiers(clientId: Int): Flow<List<Identifier>> {
         return dataManagerClient.getClientIdentifiers(clientId)
     }
 

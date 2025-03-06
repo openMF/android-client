@@ -10,18 +10,15 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.OfflineDashboardRepository
-import com.mifos.core.entity.client.ClientPayload
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.room.entities.center.CenterPayload
 import com.mifos.room.entities.group.GroupPayload
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -35,7 +32,7 @@ class OfflineDashboardRepositoryImp @Inject constructor(
     private val dataManagerSavings: DataManagerSavings,
 ) : OfflineDashboardRepository {
 
-    override fun allDatabaseClientPayload(): Observable<List<ClientPayload>> {
+    override fun allDatabaseClientPayload(): Flow<List<com.mifos.room.entities.client.ClientPayload>> {
         return dataManagerClient.allDatabaseClientPayload
     }
 
@@ -51,7 +48,7 @@ class OfflineDashboardRepositoryImp @Inject constructor(
         return dataManagerLoan.databaseLoanRepayments
     }
 
-    override fun allSavingsAccountTransactions(): Flow<List<SavingsAccountTransactionRequest>> {
+    override fun allSavingsAccountTransactions(): Flow<List<com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest>> {
         return dataManagerSavings.allSavingsAccountTransactions
     }
 }

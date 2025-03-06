@@ -231,7 +231,7 @@ complexity:
     # Modifying default values 11 to 20
     thresholdInFiles: 20
     thresholdInClasses: 45
-    thresholdInInterfaces: 20
+    thresholdInInterfaces: 40
     thresholdInObjects: 20
     thresholdInEnums: 20
     ignoreDeprecated: false

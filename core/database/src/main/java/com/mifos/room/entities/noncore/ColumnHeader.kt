@@ -10,43 +10,31 @@
 package com.mifos.room.entities.noncore
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mifos.core.entity.noncore.ColumnValue
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity(tableName = "ColumnHeader")
 data class ColumnHeader(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "columnCode")
-    var columnCode: String? = null,
+    val columnCode: String? = null,
 
-    @ColumnInfo(name = "columnDisplayType")
-    var columnDisplayType: String? = null,
+    val columnDisplayType: String? = null,
 
-    @ColumnInfo(name = "columnLength")
-    var columnLength: Int? = null,
+    val columnLength: Int? = null,
 
-    @ColumnInfo(name = "dataTableColumnName")
-    var dataTableColumnName: String? = null,
+    val dataTableColumnName: String? = null,
 
-    @ColumnInfo(name = "columnType")
-    var columnType: String? = null,
+    val columnType: String? = null,
 
-    @ColumnInfo(name = "columnNullable")
-    var columnNullable: Boolean? = null,
+    val columnNullable: Boolean? = null,
 
-    @ColumnInfo(name = "columnPrimaryKey")
-    var columnPrimaryKey: Boolean? = null,
+    val columnPrimaryKey: Boolean? = null,
 
-    @ColumnInfo(name = "registeredTableName")
-    var registeredTableName: String? = null,
+    val registeredTableName: String? = null,
 
-    @ColumnInfo(name = "columnValues")
-    var columnValues: List<ColumnValue> = ArrayList(),
+    val columnValues: List<ColumnValue> = emptyList(),
 ) : Parcelable

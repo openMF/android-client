@@ -9,46 +9,45 @@
  */
 package com.mifos.room.entities.client
 
-import com.mifos.core.entity.client.Status
 import com.mifos.room.entities.Timeline
 
 /**
  * Created by ishankhanna on 09/02/14.
  */
 data class PageItem(
-    var id: Int = 0,
+    val id: Int = 0,
 
-    var accountNo: String? = null,
+    val accountNo: String? = null,
 
-    var status: Status? = null,
+    val status: Status? = null,
 
-    var isActive: Boolean = false,
+    val isActive: Boolean = false,
 
-    var activationDate: List<Int> = ArrayList(),
+    val activationDate: List<Int> = emptyList(),
 
-    var firstname: String? = null,
+    val firstname: String? = null,
 
-    var middlename: String? = null,
+    val middlename: String? = null,
 
-    var lastname: String? = null,
+    val lastname: String? = null,
 
-    var displayName: String? = null,
+    val displayName: String? = null,
 
-    var officeId: Int = 0,
+    val officeId: Int = 0,
 
-    var officeName: String? = null,
+    val officeName: String? = null,
 
-    var staffId: Int = 0,
+    val staffId: Int = 0,
 
-    var staffName: String? = null,
+    val staffName: String? = null,
 
-    var timeline: Timeline? = null,
+    val timeline: Timeline? = null,
 
-    var fullname: String? = null,
+    val fullname: String? = null,
 
-    var imageId: Int = 0,
+    val imageId: Int = 0,
 
-    var isImagePresent: Boolean = false,
+    val isImagePresent: Boolean = false,
 
-    var externalId: String? = null,
+    val externalId: String? = null,
 )

@@ -10,25 +10,25 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.ClientDetailsRepository
-import com.mifos.core.entity.client.Client
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.room.entities.accounts.ClientAccounts
+import com.mifos.room.entities.client.Client
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
-import rx.Observable
 import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class ClientDetailsRepositoryImp @Inject constructor(private val dataManagerClient: DataManagerClient) :
-    ClientDetailsRepository {
+class ClientDetailsRepositoryImp @Inject constructor(
+    private val dataManagerClient: DataManagerClient,
+) : ClientDetailsRepository {
 
-    override fun uploadClientImage(id: Int, file: MultipartBody.Part?): Observable<ResponseBody> {
-        return dataManagerClient.uploadClientImage(id, file)
+    override suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?) {
+        dataManagerClient.uploadClientImage(id, file)
     }
 
-    override fun deleteClientImage(clientId: Int): Observable<ResponseBody> {
+    override suspend fun deleteClientImage(clientId: Int): ResponseBody {
         return dataManagerClient.deleteClientImage(clientId)
     }
 

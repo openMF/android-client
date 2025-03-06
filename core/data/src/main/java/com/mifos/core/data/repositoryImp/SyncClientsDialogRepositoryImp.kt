@@ -10,17 +10,16 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncClientsDialogRepository
-import com.mifos.core.entity.client.Client
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.client.Client
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 import javax.inject.Inject
 
 /**
@@ -64,7 +63,7 @@ class SyncClientsDialogRepositoryImp @Inject constructor(
         )
     }
 
-    override fun syncClientInDatabase(client: Client): Observable<Client> {
-        return dataManagerClient.syncClientInDatabase(client)
+    override suspend fun syncClientInDatabase(client: Client) {
+        dataManagerClient.syncClientInDatabase(client)
     }
 }

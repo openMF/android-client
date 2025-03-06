@@ -9,20 +9,19 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.client.ClientPayload
-import rx.Observable
+import com.mifos.room.entities.client.ClientPayload
+import kotlinx.coroutines.flow.Flow
 
 interface SyncClientPayloadsRepository {
 
-    fun allDatabaseClientPayload(): Observable<List<ClientPayload>>
+    fun allDatabaseClientPayload(): Flow<List<ClientPayload>>
 
-    fun createClient(clientPayload: ClientPayload): Observable<Client>
+    suspend fun createClient(clientPayload: ClientPayload): Int?
 
     fun deleteAndUpdatePayloads(
         id: Int,
         clientCreationTIme: Long,
-    ): Observable<List<ClientPayload>>
+    ): Flow<List<ClientPayload>>
 
-    fun updateClientPayload(clientPayload: ClientPayload): Observable<ClientPayload>
+    suspend fun updateClientPayload(clientPayload: ClientPayload)
 }

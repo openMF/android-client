@@ -10,12 +10,11 @@
 package com.mifos.room.entities.client
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.mifos.core.entity.group.Group
 import com.mifos.room.entities.Timeline
+import com.mifos.room.entities.group.Group
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -38,82 +37,57 @@ import kotlinx.parcelize.Parcelize
 )
 data class Client(
     @PrimaryKey
-    @ColumnInfo(name = "id")
-    var id: Int = 0,
+    val id: Int = 0,
 
-    @ColumnInfo(name = "groupId")
     @Transient
-    var groupId: Int? = 0,
+    val groupId: Int? = 0,
 
-    @ColumnInfo(name = "accountNo")
-    var accountNo: String? = null,
+    val accountNo: String? = null,
 
-    @ColumnInfo(name = "clientId")
-    var clientId: Int? = null,
+    val clientId: Int? = null,
 
-    @ColumnInfo(name = "status")
-    var status: Status? = null,
+    val status: Status? = null,
 
-    @ColumnInfo(name = "sync")
     @Transient
     var sync: Boolean = false,
 
-    @ColumnInfo(name = "active")
-    var active: Boolean = false,
+    val active: Boolean = false,
 
-    @ColumnInfo(name = "clientDate")
-    var clientDate: ClientDate? = null,
+    val clientDate: ClientDate? = null,
 
-    @ColumnInfo(name = "activationDate")
-    var activationDate: List<Int?> = ArrayList(),
+    val activationDate: List<Int?> = emptyList(),
 
-    @ColumnInfo(name = "dobDate")
-    var dobDate: List<Int?> = ArrayList(),
+    val dobDate: List<Int?> = emptyList(),
 
-    @ColumnInfo(name = "groups")
-    var groups: List<Group?> = ArrayList(),
+    val groups: List<Group?> = emptyList(),
 
-    @ColumnInfo(name = "mobileNo")
-    var mobileNo: String? = null,
+    val mobileNo: String? = null,
 
-    @ColumnInfo(name = "firstname")
-    var firstname: String? = null,
+    val firstname: String? = null,
 
-    @ColumnInfo(name = "middlename")
-    var middlename: String? = null,
+    val middlename: String? = null,
 
-    @ColumnInfo(name = "lastname")
-    var lastname: String? = null,
+    val lastname: String? = null,
 
-    @ColumnInfo(name = "displayName")
-    var displayName: String? = null,
+    val displayName: String? = null,
 
-    @ColumnInfo(name = "officeId")
-    var officeId: Int = 0,
+    val officeId: Int = 0,
 
-    @ColumnInfo(name = "officeName")
-    var officeName: String? = null,
+    val officeName: String? = null,
 
-    @ColumnInfo(name = "staffId")
-    var staffId: Int = 0,
+    val staffId: Int = 0,
 
-    @ColumnInfo(name = "staffName")
-    var staffName: String? = null,
+    val staffName: String? = null,
 
-    @ColumnInfo(name = "timeline")
-    var timeline: Timeline? = null,
+    val timeline: Timeline? = null,
 
-    @ColumnInfo(name = "fullname")
-    var fullname: String? = null,
+    val fullname: String? = null,
 
-    @ColumnInfo(name = "imageId")
-    var imageId: Int = 0,
+    val imageId: Int = 0,
 
-    @ColumnInfo(name = "imagePresent")
-    var imagePresent: Boolean = false,
+    val imagePresent: Boolean = false,
 
-    @ColumnInfo(name = "externalId")
-    var externalId: String? = null,
+    val externalId: String? = null,
 ) : Parcelable {
 
     val groupNames: String
