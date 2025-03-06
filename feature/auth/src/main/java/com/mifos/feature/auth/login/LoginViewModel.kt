@@ -10,7 +10,6 @@
 package com.mifos.feature.auth.login
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Network
@@ -88,9 +87,8 @@ class LoginViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        result.data?.let {
-                            Log.d("Android", "$it")
-                            prefManager.saveUserDetails(it)
+                        if (result.data != null && result.data?.authenticated == true) {
+                            prefManager.saveUserDetails(result.data!!)
                             // Saving username password
                             prefManager.usernamePassword = Pair(username, password)
                             // Updating Services
@@ -102,6 +100,9 @@ class LoginViewModel @Inject constructor(
                                 secured = true,
                             )
                             _loginUiState.value = LoginUiState.Success
+                        } else {
+                            _loginUiState.value =
+                                ShowError(R.string.feature_auth_error_login_failed)
                         }
                     }
                 }
