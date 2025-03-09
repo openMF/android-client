@@ -23,7 +23,7 @@ class MifosOkHttpClient(private val prefManager: PrefManager) {
         get() {
             val builder = OkHttpClient.Builder()
             // Enable Full Body Logging
-            val logger = HttpLoggingInterceptor()
+            val logger = HttpLoggingInterceptor(::println)
             logger.level = HttpLoggingInterceptor.Level.BODY
 
             // Setting Timeout 30 Seconds

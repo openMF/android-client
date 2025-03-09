@@ -21,16 +21,13 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerStaff @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-//    private val mDatabaseHelperStaff: DatabaseHelperStaff,
-    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-//    private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**
      * @param officeId
      * @return
      */
     suspend fun getStaffInOffice(officeId: Int): List<Staff> {
-        return baseApiManager.getStaffApi().retrieveAll16(officeId.toLong(), null, null, null)
+        return mBaseApiManager.staffApi.getAllStaff(officeId = officeId.toLong())
             .map(StaffMapper::mapFromEntity)
     }
 //    fun getStaffInOffice(officeId: Int): Observable<List<Staff>> {

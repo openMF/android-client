@@ -9,11 +9,13 @@
  */
 package com.mifos.core.data.repositoryImp
 
+import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientIdentifierDialogRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.objects.noncore.IdentifierCreationResponse
 import com.mifos.core.objects.noncore.IdentifierPayload
 import com.mifos.core.objects.noncore.IdentifierTemplate
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
@@ -22,14 +24,14 @@ import javax.inject.Inject
 class ClientIdentifierDialogRepositoryImp @Inject constructor(private val dataManagerClient: DataManagerClient) :
     ClientIdentifierDialogRepository {
 
-    override suspend fun getClientIdentifierTemplate(clientId: Int): IdentifierTemplate {
+    override fun getClientIdentifierTemplate(clientId: Int): Flow<Resource<IdentifierTemplate>> {
         return dataManagerClient.getClientIdentifierTemplate(clientId)
     }
 
-    override suspend fun createClientIdentifier(
+    override fun createClientIdentifier(
         clientId: Int,
         identifierPayload: IdentifierPayload,
-    ): IdentifierCreationResponse {
+    ): Flow<Resource<IdentifierCreationResponse>> {
         return dataManagerClient.createClientIdentifier(clientId, identifierPayload)
     }
 }

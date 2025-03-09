@@ -11,6 +11,7 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperClient
 import com.mifos.core.databasehelper.DatabaseHelperGroups
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.groups.GetGroupsResponseMapper
@@ -36,8 +37,7 @@ class DataManagerGroups @Inject constructor(
     val mBaseApiManager: BaseApiManager,
     private val mDatabaseHelperGroups: DatabaseHelperGroups,
     private val mDatabaseHelperClient: DatabaseHelperClient,
-    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-    private val prefManager: com.mifos.core.datastore.PrefManager,
+    private val prefManager: PrefManager,
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -56,18 +56,10 @@ class DataManagerGroups @Inject constructor(
      * @return Groups List page from offset to max Limit
      */
     suspend fun getGroups(paged: Boolean, offset: Int, limit: Int): Page<Group> {
-        return baseApiManager.getGroupApi().retrieveAll24(
-            null,
-            null,
-            null,
-            null,
-            null,
-            paged,
-            offset,
-            limit,
-            null,
-            null,
-            null,
+        return mBaseApiManager.groupApi.getGroups(
+            paged = paged,
+            offset = offset,
+            limit = limit,
         ).let(GetGroupsResponseMapper::mapFromEntity)
     }
 //    suspend fun getGroups(paged: Boolean, offset: Int, limit: Int): Observable<Page<Group>> {

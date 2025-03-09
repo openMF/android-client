@@ -9,6 +9,11 @@
  */
 package com.mifos.core.common.utils
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+
 /**
  * Created by Aditya Gupta on 11/02/24.
  */
@@ -21,3 +26,8 @@ sealed class Resource<T>(val data: T? = null, val message: String? = null) {
 
     class Loading<T>(data: T? = null) : Resource<T>(data)
 }
+
+fun <T> Flow<T>.asResourceFlow(): Flow<Resource<T>> =
+    map<T, Resource<T>> { Resource.Success(it) }
+        .onStart { emit(Resource.Loading()) }
+        .catch { emit(Resource.Error(it.message ?: "Unknown error", null)) }

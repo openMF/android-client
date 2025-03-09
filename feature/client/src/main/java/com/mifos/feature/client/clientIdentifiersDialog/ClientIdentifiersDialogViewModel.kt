@@ -12,8 +12,7 @@ package com.mifos.feature.client.clientIdentifiersDialog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
-import com.mifos.core.domain.useCases.GetClientIdentifierTemplateUseCase
+import com.mifos.core.data.repository.ClientIdentifierDialogRepository
 import com.mifos.core.objects.noncore.IdentifierPayload
 import com.mifos.core.objects.noncore.IdentifierTemplate
 import com.mifos.feature.client.R
@@ -26,8 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ClientIdentifiersDialogViewModel @Inject constructor(
-    private val getClientIdentifierTemplateUseCase: GetClientIdentifierTemplateUseCase,
-    private val createClientIdentifierUseCase: CreateClientIdentifierUseCase,
+    private val repository: ClientIdentifierDialogRepository,
 ) : ViewModel() {
 
     private val _clientIdentifierDialogUiState =
@@ -35,7 +33,7 @@ class ClientIdentifiersDialogViewModel @Inject constructor(
     val clientIdentifierDialogUiState = _clientIdentifierDialogUiState.asStateFlow()
 
     fun loadClientIdentifierTemplate(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        getClientIdentifierTemplateUseCase(clientId).collect { result ->
+        repository.getClientIdentifierTemplate(clientId).collect { result ->
             when (result) {
                 is Resource.Error ->
                     _clientIdentifierDialogUiState.value =
@@ -56,7 +54,7 @@ class ClientIdentifiersDialogViewModel @Inject constructor(
 
     fun createClientIdentifier(clientId: Int, identifierPayload: IdentifierPayload) =
         viewModelScope.launch(Dispatchers.IO) {
-            createClientIdentifierUseCase(clientId, identifierPayload).collect { result ->
+            repository.createClientIdentifier(clientId, identifierPayload).collect { result ->
                 when (result) {
                     is Resource.Error ->
                         _clientIdentifierDialogUiState.value =

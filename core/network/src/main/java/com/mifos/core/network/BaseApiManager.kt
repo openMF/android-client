@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.model.getInstanceUrl
 import com.mifos.core.network.adapter.FlowCallAdapterFactory
+import com.mifos.core.network.services.AuthService
 import com.mifos.core.network.services.CenterService
 import com.mifos.core.network.services.ChargeService
 import com.mifos.core.network.services.CheckerInboxService
@@ -85,6 +86,8 @@ class BaseApiManager @Inject constructor(
         get() = Companion.noteApi
     val runReportsService: RunReportsService
         get() = Companion.runReportsService
+    val authApi: AuthService
+        get() = Companion.authApi
 
     companion object {
         private var mRetrofit: Retrofit? = null
@@ -105,59 +108,27 @@ class BaseApiManager @Inject constructor(
         private lateinit var noteApi: NoteService
         private lateinit var collectionSheetApi: CollectionSheetService
         private lateinit var checkerInboxApi: CheckerInboxService
+        private lateinit var authApi: AuthService
 
         fun init() {
-            centerApi = createApi(
-                CenterService::class.java,
-            )
-            accountsApi = createApi(
-                ClientAccountsService::class.java,
-            )
-            clientsApi = createApi(
-                ClientService::class.java,
-            )
-            dataTableApi = createApi(
-                DataTableService::class.java,
-            )
-            loanApi = createApi(
-                LoanService::class.java,
-            )
-            savingsApi = createApi(
-                SavingsAccountService::class.java,
-            )
-            searchApi = createApi(
-                SearchService::class.java,
-            )
-            groupApi = createApi(
-                GroupService::class.java,
-            )
-            documentApi = createApi(
-                DocumentService::class.java,
-            )
-            officeApi = createApi(
-                OfficeService::class.java,
-            )
-            staffApi = createApi(
-                StaffService::class.java,
-            )
-            surveyApi = createApi(
-                SurveyService::class.java,
-            )
-            chargeApi = createApi(
-                ChargeService::class.java,
-            )
-            runReportsService = createApi(
-                RunReportsService::class.java,
-            )
-            noteApi = createApi(
-                NoteService::class.java,
-            )
-            collectionSheetApi = createApi(
-                CollectionSheetService::class.java,
-            )
-            checkerInboxApi = createApi(
-                CheckerInboxService::class.java,
-            )
+            centerApi = createApi(CenterService::class.java)
+            accountsApi = createApi(ClientAccountsService::class.java)
+            clientsApi = createApi(ClientService::class.java)
+            dataTableApi = createApi(DataTableService::class.java)
+            loanApi = createApi(LoanService::class.java)
+            savingsApi = createApi(SavingsAccountService::class.java)
+            searchApi = createApi(SearchService::class.java)
+            groupApi = createApi(GroupService::class.java)
+            documentApi = createApi(DocumentService::class.java)
+            officeApi = createApi(OfficeService::class.java)
+            staffApi = createApi(StaffService::class.java)
+            surveyApi = createApi(SurveyService::class.java)
+            chargeApi = createApi(ChargeService::class.java)
+            runReportsService = createApi(RunReportsService::class.java)
+            noteApi = createApi(NoteService::class.java)
+            collectionSheetApi = createApi(CollectionSheetService::class.java)
+            checkerInboxApi = createApi(CheckerInboxService::class.java)
+            authApi = createApi(AuthService::class.java)
         }
 
         private fun <T> createApi(clazz: Class<T>): T {
