@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.mifos.android.hilt)
     alias(libs.plugins.mifos.android.library.jacoco)
     alias(libs.plugins.secrets)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -33,7 +34,7 @@ dependencies {
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
-
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.converter.gson)
 
     implementation(libs.javax.inject)
