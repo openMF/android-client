@@ -31,8 +31,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class DataManagerLoan @Inject constructor(
-    val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperLoan: DatabaseHelperLoan,
+    private val mBaseApiManager: BaseApiManager,
+    private val mDatabaseHelperLoan: DatabaseHelperLoan,
     private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
     /**

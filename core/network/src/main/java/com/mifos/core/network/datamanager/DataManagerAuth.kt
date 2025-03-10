@@ -9,7 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
-import org.mifos.core.apimanager.BaseApiManager
+import com.mifos.core.network.BaseApiManager
 import org.openapitools.client.models.PostAuthenticationRequest
 import org.openapitools.client.models.PostAuthenticationResponse
 import javax.inject.Inject
@@ -27,6 +27,6 @@ class DataManagerAuth @Inject constructor(private val baseApiManager: BaseApiMan
      */
     suspend fun login(username: String, password: String): PostAuthenticationResponse {
         val body = PostAuthenticationRequest(username = username, password = password)
-        return baseApiManager.getAuthApi().authenticate(body, true)
+        return baseApiManager.authApi.authenticate(body)
     }
 }

@@ -10,6 +10,7 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.databasehelper.DatabaseHelperCharge
+import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.objects.client.Charges
 import com.mifos.core.objects.client.Page
@@ -27,9 +28,9 @@ import javax.inject.Singleton
  */
 @Singleton
 class DataManagerCharge @Inject constructor(
-    val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperCharge: DatabaseHelperCharge,
-    private val prefManager: com.mifos.core.datastore.PrefManager,
+    private val mBaseApiManager: BaseApiManager,
+    private val mDatabaseHelperCharge: DatabaseHelperCharge,
+    private val prefManager: PrefManager,
 ) {
     /**
      * This Method Request the Charge API at

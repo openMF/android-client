@@ -10,7 +10,6 @@
 package com.mifos.core.network.datamanager
 
 import com.google.gson.JsonArray
-import com.mifos.core.databasehelper.DatabaseHelperDataTable
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.dataTable.GetDataTablesResponseMapper
@@ -30,8 +29,6 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerDataTable @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperDataTable: DatabaseHelperDataTable,
-    private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
 ) {
     /**
      * This Method Request the REST API of Datatable and In response give the List of DataTable
@@ -43,7 +40,7 @@ class DataManagerDataTable @Inject constructor(
      * @return List<DataTable>
      </DataTable> */
     suspend fun getDataTable(tableName: String?): List<DataTable> {
-        return baseApiManager.getDataTableApi().getDatatables(tableName).map(
+        return mBaseApiManager.dataTableApi.getDatatables(tableName).map(
             GetDataTablesResponseMapper::mapFromEntity,
         )
     }
@@ -66,7 +63,7 @@ class DataManagerDataTable @Inject constructor(
         entity: Int,
         rowId: Int,
     ): DeleteDataTablesDatatableAppTableIdDatatableIdResponse {
-        return baseApiManager.getDataTableApi().deleteDatatableEntry(
+        return mBaseApiManager.dataTableApi.deleteDatatableEntry(
             datatable = table,
             apptableId = entity.toLong(),
             datatableId = rowId.toLong(),

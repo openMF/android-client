@@ -100,6 +100,7 @@ data class Client(
 
     @Column
     var externalId: String? = null,
+
 ) : MifosBaseModel(), Parcelable {
 
     /**

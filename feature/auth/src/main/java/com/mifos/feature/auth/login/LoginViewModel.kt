@@ -93,8 +93,8 @@ class LoginViewModel @Inject constructor(
                             prefManager.usernamePassword = Pair(username, password)
                             // Updating Services
                             baseApiManager.createService(
-                                username,
-                                password,
+                                username = username,
+                                password = password,
                                 baseUrl = prefManager.serverConfig.getInstanceUrl().dropLast(3),
                                 tenant = prefManager.serverConfig.tenant,
                                 secured = true,

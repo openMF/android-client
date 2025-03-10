@@ -29,7 +29,7 @@ class MifosInterceptor(private val prefManager: PrefManager) : Interceptor {
     }
 
     companion object {
-        const val HEADER_TENANT = "Fineract-Platform-TenantId"
+        const val HEADER_TENANT = "fineract-platform-tenantid"
         const val HEADER_AUTH = "Authorization"
     }
 }
