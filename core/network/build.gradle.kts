@@ -12,8 +12,8 @@ plugins {
     alias(libs.plugins.mifos.android.library.jacoco)
     alias(libs.plugins.mifos.android.hilt)
     alias(libs.plugins.secrets)
-    alias(libs.plugins.kotlin.serialization)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     implementation(libs.fliptables)
+    implementation(libs.kotlinx.serialization.json)
 
     //stetho dependencies
     implementation(libs.stetho)
@@ -71,5 +72,4 @@ dependencies {
 
     implementation(libs.coil.kt.compose)
 
-    implementation(libs.kotlinx.serialization.json)
 }
