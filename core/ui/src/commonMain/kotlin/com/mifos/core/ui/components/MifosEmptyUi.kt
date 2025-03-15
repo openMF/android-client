@@ -23,15 +23,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.mifos.core.designsystem.theme.DarkGray
 
 @Composable
 fun MifosEmptyUi(
@@ -58,18 +53,12 @@ fun MifosEmptyUi(
             Icon(
                 imageVector = icon,
                 contentDescription = text + icon.name,
-                tint = Color.Gray,
                 modifier = Modifier.size(70.dp),
             )
 
             Text(
                 text = text,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontStyle = FontStyle.Normal,
-                    color = DarkGray,
-                ),
+                style = MaterialTheme.typography.bodyMedium
             )
         }
     }

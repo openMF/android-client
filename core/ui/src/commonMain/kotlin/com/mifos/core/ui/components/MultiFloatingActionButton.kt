@@ -15,9 +15,8 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -28,8 +27,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 
 enum class FabType {
     CLIENT,
@@ -53,7 +53,7 @@ sealed class FabButtonState {
 
 data class FabButton(
     val fabType: FabType,
-    val iconRes: Int,
+    val iconRes: DrawableResource,
 )
 
 @Composable
@@ -70,7 +70,7 @@ fun FabItem(
             .size(48.dp),
     ) {
         Icon(
-            painter = painterResource(id = fabButton.iconRes),
+            painter = painterResource(fabButton.iconRes),
             contentDescription = fabButton.fabType.name,
         )
     }
@@ -102,13 +102,12 @@ fun MultiFloatingActionButton(
             enter = fadeIn() + expandVertically(),
             exit = fadeOut() + shrinkVertically(),
         ) {
-            Column {
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 fabButtons.forEach {
                     FabItem(
                         fabButton = it,
                         onFabClick = onFabClick,
                     )
-                    Spacer(modifier = Modifier.height(24.dp))
                 }
             }
         }
