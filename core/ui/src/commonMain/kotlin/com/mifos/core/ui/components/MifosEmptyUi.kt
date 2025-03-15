@@ -58,7 +58,7 @@ fun MifosEmptyUi(
 
             Text(
                 text = text,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
     }

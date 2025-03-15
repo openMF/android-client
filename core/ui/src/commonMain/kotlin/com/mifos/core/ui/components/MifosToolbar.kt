@@ -29,7 +29,7 @@ fun SelectionModeTopAppBar(
     itemCount: Int,
     resetSelectionMode: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.primary,
+    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(

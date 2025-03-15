@@ -24,7 +24,7 @@ fun MifosFAB(
     icon: ImageVector,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.onSurface,
+    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
 ) {
     Box(
         modifier = modifier,
