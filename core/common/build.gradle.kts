@@ -29,15 +29,12 @@ secrets {
     defaultPropertiesFileName = "secrets.defaults.properties"
 }
 
-dependencies {
-//    implementation(projects.core.model)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.turbine)
-
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
-
-    implementation(libs.converter.gson)
-
-    implementation(libs.javax.inject)
+kotlin {
+    sourceSets{
+        androidMain.dependencies {
+            implementation(libs.converter.gson)
+            implementation(libs.javax.inject)
+            implementation(libs.kotlinx.serialization.json)
+        }
+    }
 }

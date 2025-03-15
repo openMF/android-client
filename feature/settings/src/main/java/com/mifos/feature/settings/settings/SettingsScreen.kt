@@ -126,10 +126,8 @@ internal fun SettingsScreen(
     val context = LocalContext.current
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
-        title = stringResource(id = R.string.feature_settings),
         onBackPressed = onBackPressed,
-        snackbarHostState = snackbarHostState,
+        topBarTitle = stringResource(R.string.feature_settings)
     ) { paddingValues ->
         Column(
             Modifier.padding(paddingValues),

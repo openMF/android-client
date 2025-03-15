@@ -37,7 +37,7 @@ import androidx.compose.ui.graphics.Color
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MifosScaffold(
-    backPress: () -> Unit,
+    onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
     topBarTitle: String? = null,
     floatingActionButtonContent: FloatingActionButtonContent? = null,
@@ -51,7 +51,7 @@ fun MifosScaffold(
             if (topBarTitle != null) {
                 MifosTopBar(
                     topBarTitle = topBarTitle,
-                    backPress = backPress,
+                    backPress = onBackPressed,
                     actions = actions,
                 )
             }

@@ -9,6 +9,9 @@
  */
 package com.mifos.core.common.utils
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
 @Serializable
 data class ServerConfig(
     val protocol: String,
