@@ -13,7 +13,6 @@ import com.mifos.core.common.utils.Parcelable
 import com.mifos.core.common.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-
 @Parcelize
 @Serializable
 data class UserData(

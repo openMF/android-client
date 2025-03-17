@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects
 
-
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,7 +18,7 @@ data class ServerConfig(
     val apiPath: String,
     val port: String,
     val tenant: String,
-)  {
+) {
     companion object {
         val DEFAULT = ServerConfig(
             protocol = "https://",
