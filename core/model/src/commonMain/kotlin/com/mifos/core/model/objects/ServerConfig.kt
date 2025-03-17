@@ -7,18 +7,28 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.utils
+package com.mifos.core.model.objects
+
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class ServerConfig(
     val protocol: String,
-    @SerialName("end_point")
     val endPoint: String,
-    @SerialName("api_path")
     val apiPath: String,
     val port: String,
     val tenant: String,
-)
+) {
+    companion object {
+        val DEFAULT = ServerConfig(
+            protocol = "https://",
+            endPoint = "dev.mifos.io",
+            apiPath = "/fineract-provider/api/v1/",
+            port = "80",
+            tenant = "default",
+        )
+    }
+}
 
 fun ServerConfig.getInstanceUrl(): String {
     return "$protocol$endPoint$apiPath"
