@@ -11,6 +11,8 @@ package com.mifos.feature.about
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,8 +50,10 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.White
-import com.mifos.core.designsystem.theme.aboutItemTextStyle
-import com.mifos.core.designsystem.theme.aboutItemTextStyleBold
+import com.mifos.core.designsystem.theme.aboutItemTextStyleBoldDark
+import com.mifos.core.designsystem.theme.aboutItemTextStyleLight
+import com.mifos.core.designsystem.theme.aboutItemTextStyleBoldLight
+import com.mifos.core.designsystem.theme.aboutItemTextStyleDark
 
 @Composable
 internal fun AboutScreen(
@@ -127,7 +131,11 @@ private fun AboutScreenContent(
     aboutOptions: List<AboutItem>,
     onOptionClick: (AboutItems) -> Unit,
 ) {
-    Column {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
         Image(
             modifier = Modifier.size(100.dp),
             painter = painterResource(id = R.drawable.feature_about_ic_launcher),
@@ -138,14 +146,14 @@ private fun AboutScreenContent(
                 .fillMaxWidth()
                 .padding(16.dp),
             text = stringResource(id = R.string.feature_about_mifos_x_droid),
-            style = aboutItemTextStyleBold,
+            style = if (isSystemInDarkTheme()) aboutItemTextStyleBoldDark else aboutItemTextStyleBoldLight,
         )
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp),
             text = stringResource(id = R.string.feature_about_app),
-            style = aboutItemTextStyle,
+            style = if (isSystemInDarkTheme()) aboutItemTextStyleDark else aboutItemTextStyleLight,
         )
         Text(
             modifier = Modifier
