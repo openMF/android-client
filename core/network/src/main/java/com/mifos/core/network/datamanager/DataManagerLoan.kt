@@ -9,14 +9,13 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.databasehelper.DatabaseHelperLoan
-import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
@@ -36,7 +35,7 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerLoan @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperLoan: DatabaseHelperLoan,
+//    val mDatabaseHelperLoan: DatabaseHelperLoan,
     val loanDaoHelper: LoanDaoHelper,
     private val prefManager: com.mifos.core.datastore.PrefManager,
 ) {
@@ -89,7 +88,7 @@ class DataManagerLoan @Inject constructor(
         return mBaseApiManager.loanApi.getLoansAccountTemplate(clientId, productId)
     }
 
-    fun createLoansAccount(loansPayload: LoansPayload?): Observable<Loans> {
+    fun createLoansAccount(loansPayload: LoansPayload?): Observable<Loan> {
         return mBaseApiManager.loanApi.createLoansAccount(loansPayload)
     }
 

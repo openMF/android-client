@@ -16,6 +16,7 @@ import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.room.entities.center.CenterPayload
 import com.mifos.room.entities.group.GroupPayload
 import kotlinx.coroutines.flow.Flow
@@ -48,7 +49,7 @@ class OfflineDashboardRepositoryImp @Inject constructor(
         return dataManagerLoan.databaseLoanRepayments
     }
 
-    override fun allSavingsAccountTransactions(): Flow<List<com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest>> {
+    override fun allSavingsAccountTransactions(): Flow<List<SavingsAccountTransactionRequest>> {
         return dataManagerSavings.allSavingsAccountTransactions
     }
 }

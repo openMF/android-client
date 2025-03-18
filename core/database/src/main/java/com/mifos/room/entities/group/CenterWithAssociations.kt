@@ -12,8 +12,8 @@ package com.mifos.room.entities.group
 import android.os.Parcelable
 import com.mifos.core.entity.client.Status
 import com.mifos.core.model.objects.collectionsheets.CollectionMeetingCalendar
-import com.mifos.core.objects.collectionsheets.CollectionMeetingCalendar
 import com.mifos.room.entities.Timeline
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -49,5 +49,6 @@ data class CenterWithAssociations(
 
     var groupMembers: List<Group> = ArrayList(),
 
+    @IgnoredOnParcel
     var collectionMeetingCalendar: CollectionMeetingCalendar = CollectionMeetingCalendar(),
 ) : Parcelable

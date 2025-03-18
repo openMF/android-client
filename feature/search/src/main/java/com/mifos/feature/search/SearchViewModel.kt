@@ -13,8 +13,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.SearchRepository
-import com.mifos.core.objects.SearchedEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
+import com.mifos.core.model.objects.SearchedEntity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

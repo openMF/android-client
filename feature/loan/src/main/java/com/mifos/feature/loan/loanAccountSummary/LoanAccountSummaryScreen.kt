@@ -14,7 +14,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +27,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -62,11 +60,6 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import com.mifos.room.entities.accounts.loans.Status
@@ -137,14 +130,14 @@ internal fun LoanAccountSummaryScreen(
     }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
+//        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_loan_loan_account_summary),
         onBackPressed = navigateBack,
         snackbarHostState = snackbarHostState,
         actions = {
             IconButton(onClick = { openDropdown = !openDropdown }) {
                 Icon(
-                    imageVector = MifosIcons.moreVert,
+                    imageVector = MifosIcons.MoreVert,
                     contentDescription = null,
                 )
             }
@@ -354,9 +347,9 @@ private fun LoanAccountSummaryContent(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
                 .height(45.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//            ),
             onClick = when {
                 loanWithAssociations.status.active == true -> {
                     { makeRepayment.invoke() }
@@ -398,7 +391,7 @@ private fun LoanSummaryDataTable(loanSummary: Summary, inflateLoanSummary: Boole
             amountColumnValue = stringResource(id = R.string.feature_loan_amount_paid),
             balanceColumnValue = stringResource(id = R.string.feature_loan_balance),
             isHeader = true,
-            color = BluePrimary.copy(alpha = .3f),
+            color = Color.Blue.copy(alpha = .3f),
         )
 
         DataTableRow(
@@ -413,7 +406,7 @@ private fun LoanSummaryDataTable(loanSummary: Summary, inflateLoanSummary: Boole
             loanColumnValue = summary?.interestCharged?.toString() ?: "",
             amountColumnValue = summary?.interestPaid?.toString() ?: "",
             balanceColumnValue = summary?.interestOutstanding?.toString() ?: "",
-            color = BluePrimary.copy(alpha = .1f),
+            color = Color.Blue.copy(alpha = .3f),
         )
 
         DataTableRow(
@@ -428,7 +421,7 @@ private fun LoanSummaryDataTable(loanSummary: Summary, inflateLoanSummary: Boole
             loanColumnValue = summary?.penaltyChargesCharged?.toString() ?: "",
             amountColumnValue = summary?.penaltyChargesPaid?.toString() ?: "",
             balanceColumnValue = summary?.penaltyChargesOutstanding?.toString() ?: "",
-            color = BluePrimary.copy(alpha = .1f),
+            color = Color.Blue.copy(alpha = .3f),
         )
 
         DataTableRow(
@@ -451,13 +444,13 @@ private fun LoanSummaryFarApartTextItem(title: String, value: String) {
         Text(
             style = MaterialTheme.typography.bodyLarge,
             text = title,
-            color = Black,
+            color = Color.Black,
         )
 
         Text(
             style = MaterialTheme.typography.bodyLarge,
             text = value,
-            color = DarkGray,
+            color = Color.DarkGray,
         )
     }
 }
@@ -469,7 +462,7 @@ private fun DataTableRow(
     amountColumnValue: String,
     balanceColumnValue: String,
     isHeader: Boolean = false,
-    color: Color = White,
+    color: Color = Color.White,
 ) {
     Row(
         modifier = Modifier

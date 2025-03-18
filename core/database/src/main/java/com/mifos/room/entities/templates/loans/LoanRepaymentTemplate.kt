@@ -12,9 +12,10 @@ package com.mifos.room.entities.templates.loans
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mifos.core.objects.template.loan.Currency
-import com.mifos.core.objects.template.loan.Type
+import com.mifos.core.model.objects.template.loan.Currency
+import com.mifos.core.model.objects.template.loan.Type
 import com.mifos.room.entities.PaymentTypeOption
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -23,10 +24,12 @@ data class LoanRepaymentTemplate(
     @PrimaryKey(autoGenerate = true)
     val loanId: Int? = null,
 
+    @IgnoredOnParcel
     val type: Type? = null,
 
     val date: MutableList<Int>? = null,
 
+    @IgnoredOnParcel
     val currency: Currency? = null,
 
     val amount: Double? = null,

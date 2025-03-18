@@ -45,6 +45,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Blue
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -62,11 +66,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.runreport.client.ClientReportTypeItem
+import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.feature.report.R
 
 @Composable
@@ -129,7 +129,7 @@ internal fun RunReportScreen(
                         onClick = { onBackPressed() },
                     ) {
                         Icon(
-                            imageVector = MifosIcons.arrowBack,
+                            imageVector = MifosIcons.ArrowBack,
                             contentDescription = null,
                             tint = Black,
                         )
@@ -154,7 +154,7 @@ internal fun RunReportScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(
-                            imageVector = if (showMenu) MifosIcons.arrowUp else MifosIcons.arrowDown,
+                            imageVector = if (showMenu) MifosIcons.ArrowUp else MifosIcons.ArrowDown,
                             contentDescription = null,
                         )
                     }
@@ -284,7 +284,7 @@ private fun RunReportCardItem(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(42.dp)
-                    .background(BlueSecondary, CircleShape),
+                    .background(Blue, CircleShape),
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.feature_report_ic_report_item),

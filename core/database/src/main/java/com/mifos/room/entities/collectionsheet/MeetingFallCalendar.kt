@@ -11,7 +11,8 @@ package com.mifos.room.entities.collectionsheet
 
 import android.os.Parcelable
 import com.mifos.core.entity.accounts.loan.Status
-import com.mifos.core.objects.collectionsheets.CollectionMeetingCalendar
+import com.mifos.core.model.objects.collectionsheets.CollectionMeetingCalendar
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -26,6 +27,7 @@ data class MeetingFallCalendar(
 
     var isActive: Boolean = false,
 
+    @IgnoredOnParcel
     var collectionMeetingCalendar: CollectionMeetingCalendar? = null,
 
     var hierarchy: String? = null,

@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.mappers.clients
 
-import com.mifos.core.entity.client.Client
-import com.mifos.core.objects.clients.Page
+import com.mifos.core.common.utils.Page
+import com.mifos.room.entities.client.Client
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetClientsResponse
 

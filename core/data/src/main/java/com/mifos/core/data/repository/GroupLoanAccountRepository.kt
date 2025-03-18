@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
-import com.mifos.core.objects.template.loan.GroupLoanTemplate
+import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
+import com.mifos.room.entities.accounts.loans.Loan
 import rx.Observable
 
 /**
@@ -21,5 +21,5 @@ interface GroupLoanAccountRepository {
 
     fun getGroupLoansAccountTemplate(groupId: Int, productId: Int): Observable<GroupLoanTemplate>
 
-    fun createGroupLoansAccount(loansPayload: GroupLoanPayload): Observable<Loans>
+    fun createGroupLoansAccount(loansPayload: GroupLoanPayload): Observable<Loan>
 }

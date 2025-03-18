@@ -57,6 +57,10 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -68,20 +72,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.LightGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.client.Client
 import com.mifos.feature.client.R
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogScreen
+import com.mifos.room.entities.client.Client
 
 /**
  * Created by Aditya Gupta on 21/02/24.
@@ -143,7 +142,7 @@ internal fun ClientListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { createNewClient() },
-                containerColor = BlueSecondary,
+//                containerColor = BlueSecondary,
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
@@ -221,7 +220,7 @@ private fun SelectionModeTopAppBar(
     val selectedItems = currentSelectedItems.toMutableStateList()
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = BlueSecondary,
+//            containerColor = BlueSecondary,
         ),
         title = {
             Text(
@@ -238,7 +237,7 @@ private fun SelectionModeTopAppBar(
                 Icon(
                     imageVector = Icons.Rounded.Close,
                     contentDescription = null,
-                    tint = Black,
+                    tint = Color.Black,
                 )
             }
         },
@@ -252,7 +251,7 @@ private fun SelectionModeTopAppBar(
                 Icon(
                     imageVector = Icons.Rounded.Sync,
                     contentDescription = null,
-                    tint = Black,
+                    tint = Color.Black,
                 )
             }
         },
@@ -390,7 +389,7 @@ private fun LazyColumnForClientListApi(
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = Black,
+                                    color = Color.Black,
                                 ),
                             )
                         }
@@ -491,7 +490,7 @@ private fun LazyColumnForClientListDb(clientList: List<Client>) {
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = Black,
+                                    color = Color.Black,
                                 ),
                             )
                         }

@@ -57,8 +57,6 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.network.GenericResponse
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
@@ -101,7 +99,7 @@ internal fun LoanAccountApprovalScreen(
     MifosScaffold(
         snackbarHostState = snackBarHostState,
         title = stringResource(id = R.string.feature_loan_approve_loan),
-        icon = MifosIcons.arrowBack,
+//        icon = MifosIcons.arrowBack,
         onBackPressed = navigateBack,
     ) {
         Box(
@@ -257,7 +255,7 @@ private fun LoanAccountApprovalContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 approveDate,
             ),
-            label = R.string.feature_loan_approved_on,
+            label = stringResource(R.string.feature_loan_approved_on),
             openDatePicker = {
                 pickApproveDate = true
             },
@@ -267,7 +265,7 @@ private fun LoanAccountApprovalContent(
 
         MifosDatePickerTextField(
             value = disbursementDate ?: "null",
-            label = R.string.feature_loan_expected_disbursement_on,
+            label = stringResource(R.string.feature_loan_expected_disbursement_on),
             openDatePicker = {
                 pickDisbursementDate = true
             },
@@ -310,9 +308,9 @@ private fun LoanAccountApprovalContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .heightIn(46.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//            ),
             onClick = {
                 if (isFieldValid(amount = approvedAmount, context = context) &&
                     isFieldValid(amount = transactionAmount, context = context)

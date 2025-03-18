@@ -51,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -74,10 +75,6 @@ import com.mifos.core.designsystem.component.MifosPaginationSweetError
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.entity.group.Group
 import com.mifos.core.testing.repository.sampleGroups
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosFAB
@@ -90,6 +87,7 @@ import com.mifos.core.ui.util.GroupListLoadingPreviewParameterProvider
 import com.mifos.core.ui.util.GroupListSuccessPreviewParameterProvider
 import com.mifos.feature.groups.R
 import com.mifos.feature.groups.syncGroupDialog.SyncGroupDialogScreen
+import com.mifos.room.entities.group.Group
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -188,7 +186,7 @@ fun GroupsListScreen(
                             },
                         ) {
                             Icon(
-                                imageVector = MifosIcons.sync,
+                                imageVector = MifosIcons.Sync,
                                 contentDescription = "Sync Items",
                             )
                             Text(text = stringResource(id = R.string.feature_groups_sync))
@@ -328,11 +326,11 @@ private fun GroupItem(
     onSelectItem: () -> Unit,
 ) {
     val borderStroke = if (doesSelected) {
-        BorderStroke(1.dp, BluePrimary)
+        BorderStroke(1.dp, Color.Blue)
     } else {
         CardDefaults.outlinedCardBorder()
     }
-    val containerColor = if (doesSelected) BlueSecondary else Color.Unspecified
+    val containerColor = if (doesSelected) Color.Blue else Color.Unspecified
 
     group.name?.let {
         OutlinedCard(
@@ -459,7 +457,9 @@ private fun GroupListScreenPopulatedAndSelectedItem(
     GroupsListScreen(
         lazyListState = rememberLazyListState(),
         swipeRefreshState = rememberSwipeRefreshState(false),
-        selectedItems = listOf(sampleGroups[1], sampleGroups[3]),
+        selectedItems = listOf(
+//            sampleGroups[1], sampleGroups[3]
+        ),
         data = data.collectAsLazyPagingItems(),
         onAddGroupClick = {},
         onGroupClick = {},

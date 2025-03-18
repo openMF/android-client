@@ -11,8 +11,8 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.GroupLoanAccountRepository
-import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
+import com.mifos.room.entities.accounts.loans.Loan
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -23,21 +23,21 @@ import javax.inject.Inject
 
 class CreateGroupLoansAccountUseCase @Inject constructor(private val repository: GroupLoanAccountRepository) {
 
-    suspend operator fun invoke(loansPayload: GroupLoanPayload): Flow<Resource<Loans>> =
+    suspend operator fun invoke(loansPayload: GroupLoanPayload): Flow<Resource<Loan>> =
         callbackFlow {
             try {
                 trySend(Resource.Loading())
                 repository.createGroupLoansAccount(loansPayload)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(object : Subscriber<Loans>() {
+                    .subscribe(object : Subscriber<Loan>() {
                         override fun onCompleted() {}
 
                         override fun onError(exception: Throwable) {
                             trySend(Resource.Error(exception.message.toString()))
                         }
 
-                        override fun onNext(response: Loans) {
+                        override fun onNext(response: Loan) {
                             trySend(Resource.Success(response))
                         }
                     })

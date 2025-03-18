@@ -9,7 +9,8 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
-import com.mifos.core.entity.noncore.DataTable
+import com.mifos.room.entities.noncore.DataTable
+
 
 data class DataTableListNavArgs(
 

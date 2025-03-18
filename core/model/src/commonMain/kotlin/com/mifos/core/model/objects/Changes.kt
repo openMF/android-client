@@ -9,13 +9,12 @@
  */
 package com.mifos.core.model.objects
 
-import com.mifos.core.common.utils.Parcelable
 import com.mifos.core.common.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-class Changes(
+data class Changes(
     var transactionDate: String? = null,
 
     var transactionAmount: String? = null,
@@ -35,4 +34,4 @@ class Changes(
     var receiptNumber: String? = null,
 
     var bankNumber: String? = null,
-) : Parcelable
+)

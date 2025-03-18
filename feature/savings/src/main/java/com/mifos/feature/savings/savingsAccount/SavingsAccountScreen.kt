@@ -17,7 +17,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,9 +30,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -69,16 +66,13 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.entity.client.Savings
-import com.mifos.core.entity.templates.savings.SavingProductsTemplate
-import com.mifos.core.entity.zipmodels.SavingProductsAndTemplate
+import com.mifos.core.model.objects.account.saving.FieldOfficerOptions
+import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
-import com.mifos.core.objects.account.saving.FieldOfficerOptions
-import com.mifos.core.objects.organisations.ProductSavings
 import com.mifos.feature.savings.R
+import com.mifos.room.entities.client.Savings
+import com.mifos.room.entities.templates.savings.SavingProductsTemplate
+import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -154,7 +148,6 @@ internal fun SavingsAccountScreen(
         modifier = modifier,
         snackbarHostState = snackBarHostState,
         title = stringResource(id = R.string.feature_savings_create_savings_account),
-        icon = MifosIcons.arrowBack,
         onBackPressed = navigateBack,
     ) {
         Box(
@@ -359,7 +352,7 @@ private fun SavingsAccountContent(
                 "dd MMMM yyyy",
                 Locale.getDefault(),
             ).format(submittedOnDate),
-            label = R.string.feature_savings_submitted_on,
+            label = stringResource(R.string.feature_savings_submitted_on),
         ) {
             pickSubmitDate = true
         }
@@ -423,9 +416,6 @@ private fun SavingsAccountContent(
             Checkbox(
                 checked = enforceMinimumBalance,
                 onCheckedChange = { enforceMinimumBalance = !enforceMinimumBalance },
-                colors = CheckboxDefaults.colors(
-                    checkedColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
             )
 
             Text(text = stringResource(id = R.string.feature_savings_min_required_balance))
@@ -462,9 +452,6 @@ private fun SavingsAccountContent(
             Checkbox(
                 checked = overDraftAllowed,
                 onCheckedChange = { overDraftAllowed = !overDraftAllowed },
-                colors = CheckboxDefaults.colors(
-                    checkedColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
             )
 
             Text(text = stringResource(id = R.string.feature_savings_overdraft_allowed))
@@ -522,9 +509,6 @@ private fun SavingsAccountContent(
                 .heightIn(44.dp)
                 .padding(horizontal = 16.dp),
             contentPadding = PaddingValues(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
             onClick = {
                 if (Network.isOnline(context)) {
                     val savingsPayload = SavingsPayload()
@@ -544,7 +528,8 @@ private fun SavingsAccountContent(
                     savingsPayload.fieldOfficerId = fieldOfficerId
                     savingsPayload.nominalAnnualInterestRate = nominalAnnualInterest
                     savingsPayload.allowOverdraft = overDraftAllowed
-                    savingsPayload.nominalAnnualInterestRateOverdraft = nominalAnnualInterestOverdraft
+                    savingsPayload.nominalAnnualInterestRateOverdraft =
+                        nominalAnnualInterestOverdraft
                     savingsPayload.overdraftLimit = maximumOverdraftAmount
                     savingsPayload.minOverdraftForInterestCalculation = minimumOverdraftAmount
                     savingsPayload.enforceMinRequiredBalance = enforceMinimumBalance

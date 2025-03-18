@@ -12,9 +12,9 @@ package com.mifos.core.data.repositoryImp
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.mifos.core.common.utils.Page
 import com.mifos.core.data.pagingSource.ClientListPagingSource
 import com.mifos.core.data.repository.ClientListRepository
-import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.room.entities.client.Client
 import kotlinx.coroutines.flow.Flow

@@ -9,7 +9,7 @@
  */
 package com.mifos.room.entities.navigation
 
-import com.mifos.core.entity.noncore.DataTable
+import com.mifos.room.entities.noncore.DataTable
 
 data class DataTableDataNavigationArg(
 

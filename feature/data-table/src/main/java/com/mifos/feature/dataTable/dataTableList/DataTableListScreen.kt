@@ -95,7 +95,6 @@ fun DataTableListScreen(
     val snackBarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_data_table_associated_datatables),
         onBackPressed = onBackPressed,
         snackbarHostState = snackBarHostState,
@@ -368,7 +367,7 @@ fun DataTableListScreenPreview() {
 //                MifosResponseHandler.response, Toast.LENGTH_SHORT
 //    ).show()
 //    if (PrefManager.userStatus == Constants.USER_ONLINE) {
-//        val clientActivityIntent = Intent(activity, ClientActivity::class.java)
+//        val clientActivityIntent = Intent(activity, ClientActivity::class.kotlin)
 //        clientActivityIntent.putExtra(Constants.CLIENT_ID, client.clientId)
 //        startActivity(clientActivityIntent)
 //    }

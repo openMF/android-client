@@ -15,9 +15,18 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.mifos.core.model.objects.account.loan.AmortizationType
+import com.mifos.core.model.objects.account.loan.Currency
+import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType
+import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType
+import com.mifos.core.model.objects.account.loan.InterestType
 import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
+import com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType
+import com.mifos.core.model.objects.account.loan.Transaction
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 // @TypeConverters(
 //    AmortizationTypeConverter::class,
@@ -94,6 +103,7 @@ data class LoanWithAssociations(
     val loanType: LoanType = LoanType(),
 
     @Embedded(prefix = "Currency_")
+    @IgnoredOnParcel
     val currency: Currency = Currency(),
 
     val principal: Double = 0.0,
@@ -103,6 +113,7 @@ data class LoanWithAssociations(
     val termFrequency: Int = 0,
 
     @Embedded(prefix = "termPeriodFrequencyType_")
+    @IgnoredOnParcel
     val termPeriodFrequencyType: TermPeriodFrequencyType = TermPeriodFrequencyType(),
 
     val numberOfRepayments: Int = 0,
@@ -110,22 +121,27 @@ data class LoanWithAssociations(
     val repaymentEvery: Int = 0,
 
     @Embedded(prefix = "repaymentFrequencyType_")
+    @IgnoredOnParcel
     val repaymentFrequencyType: RepaymentFrequencyType = RepaymentFrequencyType(),
 
     val interestRatePerPeriod: Double = 0.0,
 
     @Embedded(prefix = "interestRateFrequencyType_")
+    @IgnoredOnParcel
     val interestRateFrequencyType: InterestRateFrequencyType = InterestRateFrequencyType(),
 
     val annualInterestRate: Double = 0.0,
 
     @Embedded(prefix = "amortization_type_")
+    @IgnoredOnParcel
     val amortizationType: AmortizationType = AmortizationType(),
 
     @Embedded(prefix = "interestType_")
+    @IgnoredOnParcel
     val interestType: InterestType = InterestType(),
 
     @Embedded(prefix = "interestCalculationPeriodType_")
+    @IgnoredOnParcel
     val interestCalculationPeriodType: InterestCalculationPeriodType = InterestCalculationPeriodType(),
 
     val transactionProcessingStrategyId: Int = 0,
@@ -141,8 +157,10 @@ data class LoanWithAssociations(
     val summary: Summary = Summary(),
 
     @Embedded(prefix = "repaymentSchedule_")
+    @IgnoredOnParcel
     val repaymentSchedule: RepaymentSchedule = RepaymentSchedule(),
 
+    @IgnoredOnParcel
     val transactions: List<Transaction> = emptyList(),
 
     val feeChargesAtDisbursementCharged: Double = 0.0,

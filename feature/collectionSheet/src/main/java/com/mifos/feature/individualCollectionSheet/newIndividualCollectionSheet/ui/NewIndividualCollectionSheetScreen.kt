@@ -60,8 +60,6 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.entity.organisation.Office
 import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.network.model.RequestCollectionSheetPayload
@@ -142,7 +140,8 @@ internal fun NewIndividualCollectionSheetScreen(
 
     MifosScaffold(
         modifier = modifier,
-        isAppBarPresent = false,
+        // TODO check old code and see why it was here and implement if necessary
+//        isAppBarPresent = false,
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         if (showDatePicker) {
@@ -246,7 +245,7 @@ internal fun NewIndividualCollectionSheetScreen(
                     value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                         repaymentDate,
                     ),
-                    label = R.string.feature_collection_sheet_repayment_date,
+                    label = stringResource(R.string.feature_collection_sheet_repayment_date),
                     openDatePicker = {
                         showDatePicker = true
                     },
@@ -287,9 +286,6 @@ internal fun NewIndividualCollectionSheetScreen(
                             .padding(16.dp),
                         contentPadding = PaddingValues(),
 //                        enabled =  selectedOffice != "",
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                        ),
                     ) {
                         Text(
                             text = stringResource(id = R.string.feature_collection_sheet_generate),
@@ -307,9 +303,6 @@ internal fun NewIndividualCollectionSheetScreen(
                             .weight(1f)
                             .padding(16.dp),
                         contentPadding = PaddingValues(),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                        ),
                     ) {
                         Text(
                             text = stringResource(id = R.string.feature_collection_sheet_clear),
@@ -394,9 +387,6 @@ private fun CollectionSheetDialogContent(
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     Button(
                         onClick = fillNow,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                        ),
                     ) {
                         Text(
                             text = stringResource(id = R.string.feature_collection_sheet_fill_now),
@@ -406,9 +396,6 @@ private fun CollectionSheetDialogContent(
                     Spacer(modifier = Modifier.width(16.dp))
                     Button(
                         onClick = onDismiss,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                        ),
                     ) {
                         Text(
                             text = stringResource(id = R.string.feature_collection_sheet_cancel),

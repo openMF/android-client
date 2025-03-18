@@ -9,7 +9,8 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.client.Charges
+import com.mifos.room.entities.client.Charges
+
 
 /**
  * Created by Aditya Gupta on 10/08/23.

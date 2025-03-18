@@ -12,9 +12,9 @@ package com.mifos.core.data.repositoryImp
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.mifos.core.common.utils.Page
 import com.mifos.core.data.pagingSource.CenterListPagingSource
 import com.mifos.core.data.repository.CenterListRepository
-import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.room.entities.group.Center
 import com.mifos.room.entities.group.CenterWithAssociations

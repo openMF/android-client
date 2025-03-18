@@ -11,9 +11,6 @@ package com.mifos.core.model.objects.checkerinboxtask
 
 import com.mifos.core.common.utils.Parcelable
 import com.mifos.core.common.utils.Parcelize
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-import java.util.Date
 
 // TODO migrate to KMP
 @Parcelize
@@ -29,13 +26,14 @@ data class CheckerTask(
 
     var selectedFlag = false
 
-    fun getDate(): String {
-        val date = Date(madeOnDate)
-        val dateFormat = SimpleDateFormat("dd MMM yyyy")
-        return dateFormat.format(date)
-    }
-
-    fun getTimeStamp(): Timestamp {
-        return Timestamp(madeOnDate)
-    }
+    //todo fix this - date
+//    fun getDate(): String {
+//        val date = Date(madeOnDate)
+//        val dateFormat = SimpleDateFormat("dd MMM yyyy")
+//        return dateFormat.format(date)
+//    }
+//
+//    fun getTimeStamp(): Timestamp {
+//        return Timestamp(madeOnDate)
+//    }
 }

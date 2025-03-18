@@ -22,6 +22,7 @@ dependencies {
     implementation(projects.core.datastore)
     implementation(projects.core.designsystem)
     implementation(projects.core.domain)
+    implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(libs.appcompat)
 

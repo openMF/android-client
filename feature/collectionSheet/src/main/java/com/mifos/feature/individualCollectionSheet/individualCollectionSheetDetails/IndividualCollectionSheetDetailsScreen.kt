@@ -43,6 +43,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -55,17 +59,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.LightGray
-import com.mifos.core.designsystem.theme.White
+import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
+import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
-import com.mifos.core.objects.collectionsheets.LoanAndClientName
 import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.collectionsheet.ClientCollectionSheet
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
@@ -74,7 +75,7 @@ import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 @Composable
 internal fun IndividualCollectionSheetDetailsScreen(
     onBackPressed: () -> Unit,
-    submit: (Int, IndividualCollectionSheetPayload, List<String>, LoanAndClientName, List<com.mifos.core.model.objects.account.loan.PaymentTypeOptions>, Int) -> Unit,
+    submit: (Int, IndividualCollectionSheetPayload, List<String>, LoanAndClientName, List<PaymentTypeOptions>, Int) -> Unit,
     viewModel: IndividualCollectionSheetDetailsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.individualCollectionSheetDetailsUiState.collectAsStateWithLifecycle()
@@ -148,7 +149,6 @@ internal fun IndividualCollectionSheetDetailsScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         onBackPressed = onBackPressed,
         title = stringResource(id = R.string.feature_collection_sheet_individual_collection_details),
         actions = {
@@ -158,7 +158,7 @@ internal fun IndividualCollectionSheetDetailsScreen(
                 },
             ) {
                 Icon(
-                    imageVector = MifosIcons.save,
+                    imageVector = MifosIcons.Save,
                     contentDescription = null,
                 )
             }

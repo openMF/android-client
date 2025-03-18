@@ -9,9 +9,8 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.group.Center
+import com.mifos.core.common.utils.Page
 import com.mifos.core.model.objects.clients.ActivatePayload
-import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.databaseobjects.CollectionSheet
 import com.mifos.core.model.objects.databaseobjects.OfflineCenter
 import com.mifos.core.model.objects.responses.SaveResponse
@@ -21,7 +20,9 @@ import com.mifos.core.network.model.Payload
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.CenterAccounts
 import com.mifos.room.entities.center.CenterPayload
+import com.mifos.room.entities.group.Center
 import com.mifos.room.entities.group.CenterWithAssociations
+import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -54,7 +55,7 @@ interface CenterService {
     ): List<Center>
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")
-    suspend fun getAllGroupsForCenter(@Path("centerId") centerId: Int): CenterWithAssociations
+    fun getAllGroupsForCenter(@Path("centerId") centerId: Int): Flow<CenterWithAssociations>
 
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=generateCollectionSheet")
     fun getCollectionSheet(

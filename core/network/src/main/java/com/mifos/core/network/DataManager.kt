@@ -9,27 +9,29 @@
  */
 package com.mifos.core.network
 
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
-import com.mifos.core.entity.accounts.loan.Loans
-import com.mifos.core.entity.group.Center
-import com.mifos.core.entity.group.CenterWithAssociations
-import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.group.GroupWithAssociations
+
+import com.mifos.core.entity.organisation.Office
 import com.mifos.core.entity.organisation.Staff
+import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.model.objects.databaseobjects.CollectionSheet
+import com.mifos.core.model.objects.databaseobjects.OfflineCenter
+import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
+import com.mifos.core.model.objects.responses.SaveResponse
+import com.mifos.core.model.objects.template.client.ChargeTemplate
+import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
+import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
 import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload
-import com.mifos.core.objects.clients.ChargeCreationResponse
-import com.mifos.core.objects.clients.Page
-import com.mifos.core.objects.databaseobjects.CollectionSheet
-import com.mifos.core.objects.databaseobjects.OfflineCenter
-import com.mifos.core.objects.responses.SaveResponse
-import com.mifos.core.objects.template.client.ChargeTemplate
-import com.mifos.core.objects.template.loan.GroupLoanTemplate
-import com.mifos.core.payloads.ChargesPayload
+import com.mifos.room.entities.accounts.loans.Loan
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import com.mifos.room.entities.client.Charges
+import com.mifos.room.entities.group.Center
+import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -63,7 +65,7 @@ class DataManager {
     /**
      * Center API
      */
-    fun getGroupsByCenter(id: Int): Observable<CenterWithAssociations> {
+    fun getGroupsByCenter(id: Int): Flow<CenterWithAssociations> {
         return mBaseApiManager.centerApi.getAllGroupsForCenter(id)
     }
 
@@ -141,7 +143,7 @@ class DataManager {
     /**
      * Groups API
      */
-    fun getGroups(groupid: Int): Observable<GroupWithAssociations> {
+    fun getGroups(groupid: Int): Flow<GroupWithAssociations> {
         return mBaseApiManager.groupApi.getGroupWithAssociations(groupid)
     }
 
@@ -157,7 +159,7 @@ class DataManager {
      */
     fun offices(): Flow<List<OfficeEntity>> {
         return flow {
-            emit(mBaseApiManager.officeApi.allOffices())
+//            emit(GetOfficeResponseMapper.mapFromEntity(mBaseApiManager.officeApi.allOffices()))
         }
     }
 
@@ -185,7 +187,7 @@ class DataManager {
         return mBaseApiManager.loanApi.getGroupLoansAccountTemplate(groupId, productId)
     }
 
-    fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Observable<Loans> {
+    fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Observable<Loan> {
         return mBaseApiManager.loanApi.createGroupLoansAccount(loansPayload)
     }
 

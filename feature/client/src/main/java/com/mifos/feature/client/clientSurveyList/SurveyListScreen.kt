@@ -45,9 +45,9 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.survey.Survey
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.client.R
+import com.mifos.room.entities.survey.Survey
 
 /**
  * Created by Pronay Sarker on 03/07/2024 (6:05 AM)
@@ -86,7 +86,6 @@ internal fun SurveyListScreen(
 
     MifosScaffold(
         snackbarHostState = snackbarHostState,
-        icon = MifosIcons.arrowBack,
         onBackPressed = navigateBack,
         title = stringResource(id = R.string.feature_client_surveys),
     ) {

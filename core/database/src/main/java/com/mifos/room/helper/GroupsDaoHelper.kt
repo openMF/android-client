@@ -11,7 +11,7 @@ package com.mifos.room.helper
 
 import com.mifos.core.common.network.Dispatcher
 import com.mifos.core.common.network.MifosDispatchers
-import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.common.utils.Page
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.entities.accounts.GroupAccounts
@@ -123,8 +123,7 @@ class GroupsDaoHelper @Inject constructor(
             groupsDao.insertLoanAccount(updatedLoanAccount)
         }
         for (savingsAccount: SavingsAccount in savingsAccounts) {
-            savingsAccount.groupId = groupId.toLong()
-            groupsDao.insertSavingsAccount(savingsAccount)
+            groupsDao.insertSavingsAccount(savingsAccount.copy(groupId = groupId.toLong()))
         }
     }
 

@@ -10,9 +10,9 @@
 package com.mifos.core.network.utils
 
 import android.content.Context
-import coil.ImageLoader
-import coil.request.ImageRequest
-import coil.request.ImageResult
+import coil3.ImageLoader
+import coil3.request.ImageRequest
+import coil3.request.ImageResult
 import com.mifos.core.network.MifosInterceptor
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

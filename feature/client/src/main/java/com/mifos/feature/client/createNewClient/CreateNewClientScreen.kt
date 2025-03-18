@@ -71,6 +71,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -91,7 +93,7 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.rememberAsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -99,17 +101,12 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.component.PermissionBox
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.client.ClientPayload
-import com.mifos.core.entity.noncore.DataTable
-import com.mifos.core.entity.organisation.Office
-import com.mifos.core.entity.organisation.Staff
-import com.mifos.core.entity.templates.clients.ClientsTemplate
 import com.mifos.feature.client.R
+import com.mifos.room.entities.client.ClientPayload
+import com.mifos.room.entities.noncore.DataTable
+import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.entities.organisation.Staff
+import com.mifos.room.entities.templates.clients.ClientsTemplate
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
@@ -153,7 +150,7 @@ internal fun CreateNewClientScreen(
 internal fun CreateNewClientScreen(
     uiState: CreateNewClientUiState,
     onRetry: () -> Unit,
-    officeList: List<Office>,
+    officeList: List<OfficeEntity>,
     staffInOffices: List<Staff>,
     loadStaffInOffice: (officeId: Int) -> Unit,
     navigateBack: () -> Unit,
@@ -169,6 +166,7 @@ internal fun CreateNewClientScreen(
     MifosScaffold(
         title = stringResource(id = R.string.feature_client_create_new_client),
         snackbarHostState = snackbarHostState,
+        onBackPressed = {},
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (uiState) {
@@ -251,7 +249,7 @@ internal fun CreateNewClientScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CreateNewClientContent(
-    officeList: List<Office>,
+    officeList: List<OfficeEntity>,
     staffInOffices: List<Staff>,
     clientTemplate: ClientsTemplate,
     loadStaffInOffice: (officeId: Int) -> Unit,
@@ -331,7 +329,11 @@ private fun CreateNewClientContent(
     }
     LaunchedEffect(key1 = staffInOffices) {
         if (staffInOffices.isEmpty()) {
-            Toast.makeText(context, context.resources.getString(R.string.feature_client_no_staff_associated_with_office), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.resources.getString(R.string.feature_client_no_staff_associated_with_office),
+                Toast.LENGTH_SHORT,
+            ).show()
             staff = ""
             selectedStaffId = 0
         }
@@ -357,10 +359,10 @@ private fun CreateNewClientContent(
     if (handleImageSelection) {
         PermissionBox(
             requiredPermissions = permissionList,
-            title = R.string.feature_client_permissions_required,
-            description = R.string.feature_client_please_grant_us_the_following_permission,
-            confirmButtonText = R.string.feature_client_proceed,
-            dismissButtonText = R.string.feature_client_skip,
+            title = stringResource(R.string.feature_client_permissions_required),
+            description = stringResource(R.string.feature_client_please_grant_us_the_following_permission),
+            confirmButtonText = stringResource(R.string.feature_client_proceed),
+            dismissButtonText = stringResource(R.string.feature_client_skip),
             onGranted = {
                 LaunchedEffect(key1 = Unit) {
                     if (imagePickerActionType == ImagePickerType.GALLERY) {
@@ -483,7 +485,7 @@ private fun CreateNewClientContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 dateOfBirth,
             ),
-            label = R.string.feature_client_dob,
+            label = stringResource(R.string.feature_client_dob),
             openDatePicker = { showDateOfBirthDatepicker = !showDateOfBirthDatepicker },
         )
 
@@ -560,9 +562,9 @@ private fun CreateNewClientContent(
             Checkbox(
                 checked = isActive,
                 onCheckedChange = { isActive = !isActive },
-                colors = CheckboxDefaults.colors(
-                    if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
+//                colors = CheckboxDefaults.colors(
+//                    if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//                ),
             )
             Text(text = stringResource(id = R.string.feature_client_client_active))
         }
@@ -584,7 +586,7 @@ private fun CreateNewClientContent(
                 value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                     activationDate,
                 ),
-                label = R.string.feature_client_center_submission_date,
+                label = stringResource(R.string.feature_client_center_submission_date),
                 openDatePicker = { showActivateDatepicker = !showActivateDatepicker },
             )
         }
@@ -596,9 +598,9 @@ private fun CreateNewClientContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .heightIn(46.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//            ),
             onClick = {
                 val clientNames = Name(firstName, lastName, middleName)
                 handleSubmitClick(
@@ -614,11 +616,13 @@ private fun CreateNewClientContent(
         }
     }
 }
+
 data class Name(
     val firstName: String,
     val lastName: String,
     val middleName: String,
 )
+
 private fun handleSubmitClick(
     context: Context,
     clientNames: Name,
@@ -640,7 +644,13 @@ private fun handleSubmitClick(
     mobileNumber: String,
     externalId: String,
 ) {
-    if (!isAllFieldsValid(context, clientNames.firstName, clientNames.middleName, clientNames.lastName)) {
+    if (!isAllFieldsValid(
+            context,
+            clientNames.firstName,
+            clientNames.middleName,
+            clientNames.lastName,
+        )
+    ) {
         return
     }
 
@@ -653,7 +663,7 @@ private fun handleSubmitClick(
         return
     }
 
-    val clientPayload = createClientPayload(
+    var clientPayload = createClientPayload(
         clientNames.firstName, clientNames.lastName, selectedOfficeId, staffInOffices, isActive,
         activationDate, dateOfBirth, clientNames.middleName, mobileNumber,
         externalId, clientTemplate, genderId, selectedStaffId,
@@ -664,7 +674,9 @@ private fun handleSubmitClick(
         onHasDatatables.invoke(clientTemplate.dataTables, clientPayload)
     } else {
         setUriForUpload.invoke(selectedImageUri)
-        clientPayload.datatables = null
+        clientPayload = clientPayload.copy(
+            datatables = null,
+        )
         createClient.invoke(clientPayload)
     }
 }
@@ -686,39 +698,43 @@ private fun createClientPayload(
     selectedClientId: Int,
     selectedClientClassificationId: Int,
 ): ClientPayload {
-    val clientPayload = ClientPayload()
+    var clientPayload = ClientPayload(
+        // Mandatory fields
+        firstname = firstName,
+        lastname = lastName,
+        officeId = selectedOfficeId,
 
-    // Mandatory fields
-    clientPayload.firstname = firstName
-    clientPayload.lastname = lastName
-    clientPayload.officeId = selectedOfficeId
+        // Optional fields with default values
+        active = isActive,
+        activationDate = SimpleDateFormat(
+            "dd MMMM yyyy",
+            Locale.getDefault(),
+        ).format(activationDate),
+        dateOfBirth = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(dateOfBirth),
+    )
 
-    // Optional fields with default values
-    clientPayload.active = isActive
-    clientPayload.activationDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(activationDate)
-    clientPayload.dateOfBirth = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(dateOfBirth)
 
     // Optional fields
     if (middleName.isNotEmpty()) {
-        clientPayload.middlename = middleName
+        clientPayload = clientPayload.copy(middlename = middleName)
     }
     if (PhoneNumberUtils.isGlobalPhoneNumber(mobileNumber)) {
-        clientPayload.mobileNo = mobileNumber
+        clientPayload = clientPayload.copy(mobileNo = mobileNumber)
     }
     if (externalId.isNotEmpty()) {
-        clientPayload.externalId = externalId
+        clientPayload = clientPayload.copy(externalId = externalId)
     }
     if (clientTemplate.genderOptions.isNotEmpty()) {
-        clientPayload.genderId = genderId
+        clientPayload = clientPayload.copy(genderId = genderId)
     }
     if (staffInOffices.isNotEmpty()) {
-        clientPayload.staffId = selectedStaffId
+        clientPayload = clientPayload.copy(staffId = selectedStaffId)
     }
     if (clientTemplate.clientTypeOptions.isNotEmpty()) {
-        clientPayload.clientTypeId = selectedClientId
+        clientPayload = clientPayload.copy(clientTypeId = selectedClientId)
     }
     if (clientTemplate.clientClassificationOptions.isNotEmpty()) {
-        clientPayload.clientClassificationId = selectedClientClassificationId
+        clientPayload = clientPayload.copy(clientClassificationId = selectedClientClassificationId)
     }
     return clientPayload
 }
@@ -854,7 +870,7 @@ private fun MifosSelectImageDialog(
 
                 Button(
                     onClick = { takeImage() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary),
+//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_take_a_photo),
@@ -870,7 +886,7 @@ private fun MifosSelectImageDialog(
                 }
                 Button(
                     onClick = { uploadImage() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary),
+//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_upload_photo),
@@ -886,7 +902,7 @@ private fun MifosSelectImageDialog(
                 }
                 Button(
                     onClick = { removeImage() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary),
+//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_remove_existing_photo),
@@ -1009,7 +1025,8 @@ private fun isMiddleNameValid(name: String, context: Context): Boolean {
     }
 }
 
-private class CreateNewClientScreenPreviewProvider : PreviewParameterProvider<CreateNewClientUiState> {
+private class CreateNewClientScreenPreviewProvider :
+    PreviewParameterProvider<CreateNewClientUiState> {
     override val values: Sequence<CreateNewClientUiState>
         get() = sequenceOf(
             CreateNewClientUiState.ShowClientTemplate(

@@ -63,16 +63,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.gson.Gson
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.survey.Survey
-import com.mifos.core.objects.surveys.Scorecard
-import com.mifos.core.objects.surveys.ScorecardValues
+import com.mifos.core.model.objects.surveys.Scorecard
+import com.mifos.core.model.objects.surveys.ScorecardValues
 import com.mifos.feature.client.R
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitScreen
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitUiState
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
+import com.mifos.room.entities.survey.Survey
 import java.util.Date
 
 @SuppressLint("MutableCollectionMutableState")
@@ -237,7 +234,7 @@ private fun SurveyQuestionContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(BluePrimary)
+//                .background(BluePrimary)
                 .padding(24.dp),
         ) {
             Text(
@@ -271,12 +268,12 @@ private fun SurveyQuestionContent(
             modifier = Modifier
                 .width(160.dp)
                 .align(alignment = Alignment.CenterHorizontally),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = BluePrimary,
-                contentColor = White,
-                disabledContainerColor = Color.DarkGray,
-                disabledContentColor = White,
-            ),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = BluePrimary,
+//                contentColor = White,
+//                disabledContainerColor = Color.DarkGray,
+//                disabledContentColor = White,
+//            ),
         ) {
             Text(text = stringResource(id = R.string.feature_client_next))
         }
@@ -293,7 +290,7 @@ private fun RadioGroup(options: List<String>, selectedOptionIndex: Int, onOption
                 RadioButton(
                     selected = index == selectedOptionIndex,
                     onClick = { onOptionSelected(index) },
-                    colors = RadioButtonDefaults.colors(BluePrimary),
+//                    colors = RadioButtonDefaults.colors(BluePrimary),
                 )
                 Text(
                     text = option,
@@ -312,15 +309,15 @@ private fun SurveyQuestionTopBar(
     showSubmitScreen: Boolean,
 ) {
     TopAppBar(
-        colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = White),
+//        colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = White),
         navigationIcon = {
             IconButton(
                 onClick = { onBackPressed() },
             ) {
                 Icon(
-                    imageVector = MifosIcons.arrowBack,
+                    imageVector = MifosIcons.ArrowBack,
                     contentDescription = null,
-                    tint = Black,
+                    tint = Color.Black,
                 )
             }
         },
@@ -333,7 +330,7 @@ private fun SurveyQuestionTopBar(
                         fontWeight = FontWeight.Medium,
                         fontStyle = FontStyle.Normal,
                     ),
-                    color = Black,
+                    color = Color.Black,
                     textAlign = TextAlign.Start,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
@@ -344,7 +341,7 @@ private fun SurveyQuestionTopBar(
                         style = TextStyle(
                             fontSize = 16.sp,
                         ),
-                        color = Black,
+                        color = Color.Black,
                         textAlign = TextAlign.Start,
                     )
                 }

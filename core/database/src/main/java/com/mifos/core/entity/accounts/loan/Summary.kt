@@ -11,6 +11,7 @@ package com.mifos.core.entity.accounts.loan
 
 import android.os.Parcelable
 import com.mifos.core.database.MifosDatabase
+import com.mifos.core.entity.accounts.savings.Currency
 import com.mifos.core.model.MifosBaseModel
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.ModelContainer
@@ -30,7 +31,7 @@ data class Summary(
     @Transient
     var loanId: Int? = null,
 
-    var currency: com.mifos.core.model.objects.account.loan.Currency? = null,
+    var currency: Currency? = null,
 
     @Column
     var principalDisbursed: Double? = null,

@@ -10,8 +10,9 @@
 package com.mifos.room.entities.collectionsheet
 
 import android.os.Parcelable
-import com.mifos.core.objects.collectionsheets.AttendanceTypeOption
-import com.mifos.core.objects.collectionsheets.LoanCollectionSheet
+import com.mifos.core.model.objects.collectionsheets.AttendanceTypeOption
+import com.mifos.core.model.objects.collectionsheets.LoanCollectionSheet
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -23,8 +24,10 @@ data class ClientCollectionSheet(
 
     var clientName: String? = null,
 
+    @IgnoredOnParcel
     var loans: ArrayList<LoanCollectionSheet>? = null,
 
+    @IgnoredOnParcel
     var attendanceType: AttendanceTypeOption? = null,
 
     var savings: ArrayList<SavingsCollectionSheet> = ArrayList(),

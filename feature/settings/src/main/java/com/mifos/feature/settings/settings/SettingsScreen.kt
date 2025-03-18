@@ -54,7 +54,6 @@ import com.mifos.core.common.utils.LanguageHelper
 import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
-import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.settings.R
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
@@ -127,7 +126,7 @@ internal fun SettingsScreen(
 
     MifosScaffold(
         onBackPressed = onBackPressed,
-        topBarTitle = stringResource(R.string.feature_settings)
+        title = stringResource(R.string.feature_settings)
     ) { paddingValues ->
         Column(
             Modifier.padding(paddingValues),
@@ -177,7 +176,7 @@ internal fun SettingsScreen(
 
     if (showLanguageUpdateDialog) {
         MifosRadioButtonDialog(
-            titleResId = R.string.feature_settings_choose_language,
+            title = stringResource(R.string.feature_settings_choose_language),
             items = stringArrayResource(R.array.feature_settings_languages),
             selectItem = { _, index -> updateLanguage(MifosAppLanguage.entries[index]) },
             onDismissRequest = { showLanguageUpdateDialog = false },
@@ -187,7 +186,7 @@ internal fun SettingsScreen(
 
     if (showThemeUpdateDialog) {
         MifosRadioButtonDialog(
-            titleResId = R.string.feature_settings_change_app_theme,
+            title = stringResource(R.string.feature_settings_change_app_theme),
             items = AppTheme.entries.map { it.themeName }.toTypedArray(),
             selectItem = { _, index -> updateTheme(AppTheme.entries[index]) },
             onDismissRequest = { showThemeUpdateDialog = false },

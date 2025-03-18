@@ -32,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -45,8 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.White
+
 import com.mifos.core.entity.noncore.DataTable
 import com.mifos.feature.data_table.R
 
@@ -129,11 +129,11 @@ fun DataTableRowDialogScreen(
                                 Text(
                                     text = stringResource(id = R.string.feature_data_table_add_data_table),
                                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                                    color = BluePrimary,
+                                    color = Color.Blue,
                                 )
                                 IconButton(onClick = { onDismiss() }) {
                                     Icon(
-                                        imageVector = MifosIcons.close,
+                                        imageVector = MifosIcons.Close,
                                         contentDescription = "",
                                         tint = colorResource(android.R.color.darker_gray),
                                         modifier = Modifier
@@ -175,12 +175,12 @@ fun DataTableRowDialogContent(
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
-        colors = ButtonColors(
-            containerColor = BluePrimary,
-            contentColor = White,
-            disabledContainerColor = BluePrimary,
-            disabledContentColor = Color.Gray,
-        ),
+//        colors = ButtonColors(
+//            containerColor = BluePrimary,
+//            contentColor = White,
+//            disabledContainerColor = BluePrimary,
+//            disabledContentColor = Color.Gray,
+//        ),
     ) {
         Text(text = stringResource(id = R.string.feature_data_table_submit))
     }

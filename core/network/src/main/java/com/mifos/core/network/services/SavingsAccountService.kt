@@ -9,17 +9,16 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.client.Savings
-import com.mifos.core.entity.templates.savings.SavingProductsTemplate
-import com.mifos.core.model.APIEndPoint
+import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.account.loan.SavingsApproval
-import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
-import com.mifos.core.objects.organisations.ProductSavings
+import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.client.Savings
+import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
 import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Body

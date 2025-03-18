@@ -9,9 +9,9 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.Page
 import com.mifos.core.entity.organisation.Office
 import com.mifos.core.model.objects.clients.ActivatePayload
-import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.centers.GetCentersResponseMapper
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
@@ -19,6 +19,7 @@ import com.mifos.room.entities.accounts.CenterAccounts
 import com.mifos.room.entities.center.CenterPayload
 import com.mifos.room.entities.group.Center
 import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.helper.CenterDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -160,7 +161,7 @@ class DataManagerCenter @Inject constructor(
     val allDatabaseCenters: Flow<Page<Center>>
         get() = centerDatabaseHelper.readAllCenters()
 
-    suspend fun offices(): List<Office> {
+    suspend fun offices(): List<OfficeEntity> {
         return baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
             .map(GetOfficeResponseMapper::mapFromEntity)
     }

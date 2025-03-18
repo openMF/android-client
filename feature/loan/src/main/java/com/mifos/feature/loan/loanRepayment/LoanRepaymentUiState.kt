@@ -9,7 +9,8 @@
  */
 package com.mifos.feature.loan.loanRepayment
 
-import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -23,7 +24,7 @@ sealed class LoanRepaymentUiState {
     data class ShowLoanRepayTemplate(val loanRepaymentTemplate: LoanRepaymentTemplate) :
         LoanRepaymentUiState()
 
-    data class ShowPaymentSubmittedSuccessfully(val loanRepaymentResponse: com.mifos.core.model.objects.account.loan.LoanRepaymentResponse?) :
+    data class ShowPaymentSubmittedSuccessfully(val loanRepaymentResponse: LoanRepaymentResponse?) :
         LoanRepaymentUiState()
 
     data object ShowLoanRepaymentExistInDatabase : LoanRepaymentUiState()

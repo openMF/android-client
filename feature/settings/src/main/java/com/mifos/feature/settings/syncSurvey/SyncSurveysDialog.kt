@@ -50,8 +50,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.White
 import com.mifos.feature.settings.R
 import kotlinx.coroutines.launch
 
@@ -380,10 +378,7 @@ private fun SyncSurveyButton(
             .fillMaxWidth()
             .height(40.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = BluePrimary,
-            contentColor = White,
             disabledContainerColor = Color.DarkGray,
-            disabledContentColor = White,
         ),
         enabled = isEnabled,
     ) {

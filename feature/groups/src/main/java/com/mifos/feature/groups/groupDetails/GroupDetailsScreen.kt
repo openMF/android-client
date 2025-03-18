@@ -55,6 +55,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -74,19 +77,12 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.accounts.loan.LoanAccount
-import com.mifos.core.entity.accounts.savings.DepositType
-import com.mifos.core.entity.accounts.savings.SavingsAccount
-import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.group.Group
 import com.mifos.feature.groups.R
+import com.mifos.room.entities.accounts.loans.LoanAccount
+import com.mifos.room.entities.accounts.savings.DepositType
+import com.mifos.room.entities.accounts.savings.SavingsAccount
+import com.mifos.room.entities.client.Client
+import com.mifos.room.entities.group.Group
 
 @Composable
 internal fun GroupDetailsScreen(
@@ -162,7 +158,6 @@ internal fun GroupDetailsScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_groups_group),
         onBackPressed = onBackPressed,
         actions = {
@@ -227,9 +222,9 @@ internal fun GroupDetailsScreen(
                         .fillMaxWidth()
                         .heightIn(44.dp)
                         .padding(start = 16.dp, end = 16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                    ),
+//                    colors = ButtonDefaults.buttonColors(
+//                        containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//                    ),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_groups_activate_group),
@@ -366,7 +361,7 @@ fun MifosCenterDetailsText(
             modifier = Modifier.size(18.dp),
             imageVector = icon,
             contentDescription = null,
-            tint = DarkGray,
+            tint = Color.DarkGray,
         )
         Text(
             modifier = Modifier
@@ -419,7 +414,7 @@ fun MifosLoanAccountExpendableCard(
                 ),
             ),
         shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(BlueSecondary),
+        colors = CardDefaults.cardColors(Color.Blue),
     ) {
         Column(
             modifier = Modifier
@@ -599,7 +594,7 @@ private fun MifosSavingsAccountExpendableCard(
                 ),
             ),
         shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(BlueSecondary),
+//        colors = CardDefaults.cardColors(BlueSecondary),
     ) {
         Column(
             modifier = Modifier

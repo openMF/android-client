@@ -24,8 +24,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateNewCenterViewModel @Inject constructor(
-//    private val getOfficeListUseCase: GetOfficeListUseCase,
-//    private val createNewCenterUseCase: CreateNewCenterUseCase,
     private val repository: CreateNewCenterRepository,
     private val collectionSheetRepo: NewIndividualCollectionSheetRepository,
 ) : ViewModel() {

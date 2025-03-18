@@ -13,8 +13,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.core.entity.client.ClientPayload
 import com.mifos.feature.client.R
+import com.mifos.room.entities.client.ClientPayload
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.Staff
 import com.mifos.room.entities.templates.clients.ClientsTemplate
@@ -56,6 +56,7 @@ class CreateNewClientViewModel @Inject constructor(
 
     fun loadOfficeAndClientTemplate() {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
+        //todo combine these 2
         loadClientTemplate()
         loadOffices()
     }
@@ -104,12 +105,14 @@ class CreateNewClientViewModel @Inject constructor(
                 val clientId = repository.createClient(clientPayload)
 
                 clientId?.let {
-                    _createNewClientUiState.value = CreateNewClientUiState.ShowClientCreatedSuccessfully(
-                        R.string.feature_client_client_created_successfully,
-                    )
+                    _createNewClientUiState.value =
+                        CreateNewClientUiState.ShowClientCreatedSuccessfully(
+                            R.string.feature_client_client_created_successfully,
+                        )
                     _createNewClientUiState.value = CreateNewClientUiState.SetClientId(it)
                 } ?: run {
-                    _createNewClientUiState.value = CreateNewClientUiState.ShowWaitingForCheckerApproval(0)
+                    _createNewClientUiState.value =
+                        CreateNewClientUiState.ShowWaitingForCheckerApproval(0)
                 }
             } catch (e: HttpException) {
                 val errorMessage = e.response()?.errorBody()?.string().orEmpty()
@@ -138,24 +141,17 @@ class CreateNewClientViewModel @Inject constructor(
 
         // MultipartBody.Part is used to send also the actual file name
         val body = MultipartBody.Part.createFormData("file", pngFile.name, requestFile)
-        repository.uploadClientImage(id, body)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<ResponseBody>() {
-                    override fun onCompleted() {
-                    }
 
-                    override fun onError(e: Throwable) {
-                        _createNewClientUiState.value =
-                            CreateNewClientUiState.ShowError(R.string.feature_client_Image_Upload_Failed)
-                    }
+        viewModelScope.launch {
+            try {
+                repository.uploadClientImage(id, body)
 
-                    override fun onNext(t: ResponseBody) {
-                        _createNewClientUiState.value =
-                            CreateNewClientUiState.OnImageUploadSuccess(R.string.feature_client_Image_Upload_Successful)
-                    }
-                },
-            )
+                _createNewClientUiState.value =
+                    CreateNewClientUiState.OnImageUploadSuccess(R.string.feature_client_Image_Upload_Successful)
+            } catch (e: Exception) {
+                _createNewClientUiState.value =
+                    CreateNewClientUiState.ShowError(R.string.feature_client_Image_Upload_Failed)
+            }
+        }
     }
 }

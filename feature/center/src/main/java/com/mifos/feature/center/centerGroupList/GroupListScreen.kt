@@ -45,12 +45,12 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.client.Client
 import com.mifos.core.entity.client.Status
-import com.mifos.core.entity.group.Group
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.center.R
+import com.mifos.room.entities.client.Client
 import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.group.Group
 
 @Composable
 internal fun GroupListScreen(
@@ -98,7 +98,6 @@ internal fun GroupListScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_center_groups),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
@@ -115,7 +114,7 @@ internal fun GroupListScreen(
                     if (state.centerWithAssociations.groupMembers.isEmpty()) {
                         MifosEmptyUi(
                             text = stringResource(id = R.string.feature_center_no_group_list_to_show),
-                            icon = MifosIcons.fileTask,
+                            icon = MifosIcons.FileTask,
                         )
                     } else {
                         GroupListContent(

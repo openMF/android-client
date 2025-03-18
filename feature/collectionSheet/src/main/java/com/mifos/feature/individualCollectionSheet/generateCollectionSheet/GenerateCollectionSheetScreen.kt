@@ -56,13 +56,11 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.entity.group.Center
 import com.mifos.core.entity.group.Group
 import com.mifos.core.entity.organisation.Office
 import com.mifos.core.entity.organisation.Staff
-import com.mifos.core.objects.collectionsheets.CollectionSheetRequestPayload
+import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.collectionsheet.CenterDetail
 import com.mifos.room.entities.collectionsheet.CollectionSheetPayload
@@ -148,7 +146,6 @@ internal fun GenerateCollectionSheetScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_collection_sheet_generate_collection_sheet),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
@@ -322,7 +319,7 @@ private fun GenerateCollectionSheetContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 repaymentDate,
             ),
-            label = R.string.feature_collection_sheet_repayment_date,
+            label = stringResource(R.string.feature_collection_sheet_repayment_date),
             openDatePicker = {
                 showDatePicker = true
             },
@@ -365,9 +362,6 @@ private fun GenerateCollectionSheetContent(
                 .heightIn(44.dp)
                 .padding(start = 16.dp, end = 16.dp),
             contentPadding = PaddingValues(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
         ) {
             Text(
                 text = stringResource(id = R.string.feature_collection_sheet_productive_collection_sheet),
@@ -429,9 +423,6 @@ private fun GenerateCollectionSheetContent(
                 .heightIn(44.dp)
                 .padding(start = 16.dp, end = 16.dp),
             contentPadding = PaddingValues(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
         ) {
             Text(
                 text = stringResource(id = R.string.feature_collection_sheet_generate_collection_sheet),
@@ -515,9 +506,6 @@ private fun GenerateCollectionSheetContent(
                     .heightIn(44.dp)
                     .padding(start = 16.dp, end = 16.dp),
                 contentPadding = PaddingValues(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
             ) {
                 Text(
                     text = stringResource(id = R.string.feature_collection_sheet_submit_collection_sheet),

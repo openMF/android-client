@@ -9,12 +9,12 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.common.utils.Page
+import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.groups.GetGroupsResponseMapper
-import com.mifos.core.objects.clients.ActivatePayload
 import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.group.GroupPayload

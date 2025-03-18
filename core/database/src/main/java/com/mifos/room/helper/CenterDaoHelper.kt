@@ -11,7 +11,7 @@ package com.mifos.room.helper
 
 import com.mifos.core.common.network.Dispatcher
 import com.mifos.core.common.network.MifosDispatchers
-import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.common.utils.Page
 import com.mifos.room.dao.CenterDao
 import com.mifos.room.entities.accounts.CenterAccounts
 import com.mifos.room.entities.center.CenterPayload
@@ -139,8 +139,11 @@ class CenterDaoHelper @Inject constructor(
             centerDatabase.saveLoanAccount(updatedLoanAccount)
         }
         for (savingsAccount in savingsAccounts) {
-            savingsAccount.centerId = centerId.toLong()
-            centerDatabase.saveSavingsAccount(savingsAccount)
+            centerDatabase.saveSavingsAccount(
+                savingsAccount.copy(
+                    centerId = centerId.toLong(),
+                ),
+            )
         }
         for (memberLoanAccount in memberLoanAccounts) {
             val updatedLoanAccount = memberLoanAccount.copy(centerId = centerId.toLong())

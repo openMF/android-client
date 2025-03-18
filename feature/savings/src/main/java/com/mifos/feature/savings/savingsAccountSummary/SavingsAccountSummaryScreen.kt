@@ -49,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -64,19 +65,15 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.entity.accounts.savings.Currency
-import com.mifos.core.entity.accounts.savings.DepositType
-import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.core.entity.accounts.savings.Status
-import com.mifos.core.entity.accounts.savings.Summary
-import com.mifos.core.entity.accounts.savings.Transaction
-import com.mifos.core.entity.accounts.savings.TransactionType
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.savings.R
+import com.mifos.room.entities.accounts.savings.Currency
+import com.mifos.room.entities.accounts.savings.DepositType
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.accounts.savings.Status
+import com.mifos.room.entities.accounts.savings.Summary
+import com.mifos.room.entities.accounts.savings.Transaction
+import com.mifos.room.entities.accounts.savings.TransactionType
 
 /**
  * Created by Pronay Sarker on 10/07/2024 (6:21 PM)
@@ -150,11 +147,9 @@ internal fun SavingsAccountSummaryScreen(
         snackbarHostState = snackbarHostState,
         onBackPressed = navigateBack,
         title = stringResource(id = R.string.feature_savings_savingsAccountSummary),
-        icon = MifosIcons.arrowBack,
-        fontsizeInSp = 22,
         actions = {
             IconButton(onClick = { showDropdown = !showDropdown }) {
-                Icon(imageVector = MifosIcons.moreVert, contentDescription = "")
+                Icon(imageVector = MifosIcons.MoreVert, contentDescription = "")
             }
 
             if (showDropdown) {
@@ -312,9 +307,6 @@ private fun SavingsAccountSummaryContent(
                             .weight(1f)
                             .padding(horizontal = 8.dp)
                             .height(45.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                        ),
                         onClick = { onWithdrawButtonClicked.invoke(savingsAccountWithAssociations) },
                     ) {
                         Text(text = stringResource(id = R.string.feature_savings_withdrawal))
@@ -325,9 +317,6 @@ private fun SavingsAccountSummaryContent(
                             .weight(1f)
                             .padding(horizontal = 8.dp)
                             .height(45.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                        ),
                         onClick = { onDepositButtonClicked.invoke(savingsAccountWithAssociations) },
                     ) {
                         Text(text = stringResource(id = R.string.feature_savings_make_deposit))
@@ -340,9 +329,6 @@ private fun SavingsAccountSummaryContent(
                             .weight(1f)
                             .padding(horizontal = 8.dp)
                             .height(45.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                        ),
                         onClick = when {
                             savingsAccountWithAssociations.status?.submittedAndPendingApproval == true -> {
                                 { approveSavings.invoke() }
@@ -357,7 +343,7 @@ private fun SavingsAccountSummaryContent(
                             }
                         },
 
-                    ) {
+                        ) {
                         Text(
                             text = getSavingsButtonText(
                                 context = context,
@@ -508,13 +494,13 @@ private fun DialogBoxRowItem(
             .fillMaxWidth()
             .border(
                 width = 2.dp,
-                color = BluePrimary.copy(alpha = .5f),
+                color = Color.Blue.copy(alpha = .5f),
                 shape = RoundedCornerShape(0.dp),
             )
             .padding(horizontal = 8.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
 
-    ) {
+        ) {
         Text(
             modifier = Modifier.weight(5f),
             style = MaterialTheme.typography.bodyMedium,
@@ -528,7 +514,6 @@ private fun DialogBoxRowItem(
                 .padding(end = 8.dp),
             style = MaterialTheme.typography.bodyMedium,
             text = value,
-            color = Black,
             textAlign = TextAlign.End,
         )
     }
@@ -545,7 +530,6 @@ private fun FarApartTextItem(title: String, value: String) {
         Text(
             style = MaterialTheme.typography.bodyLarge,
             text = title,
-            color = Black,
         )
 
         Text(

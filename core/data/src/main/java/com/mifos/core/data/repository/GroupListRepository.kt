@@ -11,6 +11,7 @@ package com.mifos.core.data.repository
 
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.GroupWithAssociations
+import kotlinx.coroutines.flow.Flow
 import rx.Observable
 
 /**
@@ -18,7 +19,7 @@ import rx.Observable
  */
 interface GroupListRepository {
 
-    fun getGroups(groupId: Int): Observable<GroupWithAssociations>
+    fun getGroups(groupId: Int): Flow<GroupWithAssociations>
 
-    fun getGroupsByCenter(id: Int): Observable<CenterWithAssociations>
+    fun getGroupsByCenter(id: Int): Flow<CenterWithAssociations>
 }

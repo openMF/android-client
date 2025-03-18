@@ -9,9 +9,8 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.Page
 import com.mifos.core.model.objects.clients.ActivatePayload
-import com.mifos.core.model.objects.clients.Page
-import com.mifos.core.model.objects.noncoreobjects.ClientAccounts
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
@@ -22,6 +21,7 @@ import com.mifos.core.network.mappers.clients.GetClientResponseMapper
 import com.mifos.core.network.mappers.clients.GetClientsClientIdAccountMapper
 import com.mifos.core.network.mappers.clients.GetIdentifiersTemplateMapper
 import com.mifos.core.network.mappers.clients.IdentifierMapper
+import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.client.Client
 import com.mifos.room.entities.client.ClientPayload
 import com.mifos.room.entities.templates.clients.ClientsTemplate
@@ -188,8 +188,8 @@ class DataManagerClient @Inject constructor(
      * @param clientId Client ID
      * @return ResponseBody is the Retrofit 2 response
      */
-    fun deleteClientImage(clientId: Int): Flow<ResponseBody> {
-        return mBaseApiManager.clientsApi.deleteClientImage(clientId)
+    suspend fun deleteClientImage(clientId: Int)  {
+        mBaseApiManager.clientsApi.deleteClientImage(clientId)
     }
 
     /**
@@ -244,7 +244,7 @@ class DataManagerClient @Inject constructor(
      * @param clientPayload Client details filled by user
      * @return Client
      */
-    suspend fun createClient(clientPayload: ClientPayload?): Int? {
+    suspend fun createClient(clientPayload: ClientPayload): Int? {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.clientsApi.createClient(clientPayload)?.clientId
 

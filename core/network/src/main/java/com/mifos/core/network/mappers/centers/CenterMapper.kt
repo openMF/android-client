@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.mappers.centers
 
-import com.mifos.core.entity.client.Status
-import com.mifos.core.entity.group.Center
+import com.mifos.room.entities.client.Status
+import com.mifos.room.entities.group.Center
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetCentersPageItems
 import org.openapitools.client.models.GetCentersStatus
@@ -18,19 +18,19 @@ import org.openapitools.client.models.GetCentersStatus
 object CenterMapper : AbstractMapper<GetCentersPageItems, Center>() {
 
     override fun mapFromEntity(entity: GetCentersPageItems): Center {
-        return Center().apply {
-            id = entity.id?.toInt()
-            active = entity.active
-            name = entity.name
-            officeName = entity.officeName
-            officeId = entity.officeId?.toInt()
-            hierarchy = entity.hierarchy
-            status = Status().apply {
-                id = entity.status?.id!!.toInt()
-                code = entity.status?.code
-                value = entity.status?.description
-            }
-        }
+        return Center(
+            id = entity.id?.toInt(),
+            active = entity.active,
+            name = entity.name,
+            officeName = entity.officeName,
+            officeId = entity.officeId?.toInt(),
+            hierarchy = entity.hierarchy,
+            status = Status(
+                id = entity.status?.id!!.toInt(),
+                code = entity.status?.code,
+                value = entity.status?.description,
+            ),
+        )
     }
 
     override fun mapToEntity(domainModel: Center): GetCentersPageItems {

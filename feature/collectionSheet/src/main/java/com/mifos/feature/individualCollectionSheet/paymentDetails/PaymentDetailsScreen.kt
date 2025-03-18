@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.individualCollectionSheet.paymentDetails
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +21,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -45,14 +43,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import coil.request.ImageResult
+import coil3.compose.AsyncImage
+import coil3.request.ImageResult
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
+import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
+import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
-import com.mifos.core.objects.collectionsheets.LoanAndClientName
 import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 
@@ -81,7 +78,7 @@ internal fun PaymentsDetailsScreen(
     payload: IndividualCollectionSheetPayload,
     loanAndClientNameItem: LoanAndClientName,
     paymentTypeOptionList: List<String>,
-    paymentTypeOptions: List<com.mifos.core.model.objects.account.loan.PaymentTypeOptions>,
+    paymentTypeOptions: List<PaymentTypeOptions>,
     modifier: Modifier = Modifier,
     getClientImage: (Int) -> ImageResult?,
 ) {
@@ -272,9 +269,6 @@ internal fun PaymentsDetailsScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
             onClick = {
                 showAdditionalDetails = !showAdditionalDetails
             },
@@ -385,9 +379,6 @@ private fun ButtonRow(
     ) {
         Button(
             modifier = Modifier.height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
             onClick = { cancelAdditional() },
         ) {
             Text(text = stringResource(id = R.string.feature_collection_sheet_cancel))
@@ -395,9 +386,6 @@ private fun ButtonRow(
 
         Button(
             modifier = Modifier.height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
             onClick = { saveAdditional() },
         ) {
             Text(text = stringResource(id = R.string.feature_collection_sheet_save))

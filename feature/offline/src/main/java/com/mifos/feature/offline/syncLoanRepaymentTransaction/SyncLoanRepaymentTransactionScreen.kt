@@ -9,8 +9,10 @@
  */
 package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
+import android.Manifest
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -109,7 +111,6 @@ internal fun SyncLoanRepaymentTransactionScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_offline_sync_loanrepayment),
         onBackPressed = onBackPressed,
         actions = {
@@ -126,7 +127,7 @@ internal fun SyncLoanRepaymentTransactionScreen(
                 },
             ) {
                 Icon(
-                    MifosIcons.sync,
+                    MifosIcons.Sync,
                     contentDescription = stringResource(id = R.string.feature_offline_sync_loanrepayment),
                 )
             }
@@ -306,6 +307,7 @@ private fun EmptyLoanRepaymentsScreen(
     }
 }
 
+@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 internal fun checkNetworkConnectionAndSync(
     context: Context,
     syncLoanRepaymentTransactions: () -> Unit,

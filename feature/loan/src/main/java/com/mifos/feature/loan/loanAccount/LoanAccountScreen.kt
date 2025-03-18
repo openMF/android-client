@@ -65,8 +65,6 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.feature.loan.R
@@ -125,7 +123,7 @@ fun LoanAccountScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
+//        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_loan_application),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
@@ -349,7 +347,7 @@ private fun LoanAccountContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 submissionDate,
             ),
-            label = R.string.feature_loan_submission_date,
+            label = stringResource(R.string.feature_loan_submission_date),
             openDatePicker = {
                 showSubmissionDatePicker = true
             },
@@ -359,7 +357,7 @@ private fun LoanAccountContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 disbursementDate,
             ),
-            label = R.string.feature_loan_disbursed_date,
+            label = stringResource(R.string.feature_loan_disbursed_date),
             openDatePicker = {
                 showDisbursementDatePicker = true
             },
@@ -601,9 +599,9 @@ private fun LoanAccountContent(
                 .heightIn(44.dp)
                 .padding(start = 16.dp, end = 16.dp),
             contentPadding = PaddingValues(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//            ),
         ) {
             Text(text = stringResource(id = R.string.feature_loan_submit), fontSize = 16.sp)
         }

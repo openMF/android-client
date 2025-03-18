@@ -9,7 +9,8 @@
  */
 package com.mifos.feature.client.createNewClient
 
-import com.mifos.core.entity.templates.clients.ClientsTemplate
+import com.mifos.room.entities.templates.clients.ClientsTemplate
+
 
 /**
  * Created by Aditya Gupta on 10/08/23.

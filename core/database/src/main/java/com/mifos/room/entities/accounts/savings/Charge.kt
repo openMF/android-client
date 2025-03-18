@@ -11,6 +11,9 @@ package com.mifos.room.entities.accounts.savings
 
 import android.os.Parcelable
 import com.mifos.core.entity.accounts.savings.Currency
+import com.mifos.core.model.objects.account.saving.ChargeCalculationType
+import com.mifos.core.model.objects.account.saving.ChargeTimeType
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import javax.annotation.processing.Generated
 
@@ -25,9 +28,11 @@ data class Charge(
 
     var name: String? = null,
 
-    var chargeTimeType: com.mifos.core.model.objects.account.saving.ChargeTimeType? = null,
+    @IgnoredOnParcel
+    var chargeTimeType: ChargeTimeType? = null,
 
-    var chargeCalculationType: com.mifos.core.model.objects.account.saving.ChargeCalculationType? = null,
+    @IgnoredOnParcel
+    var chargeCalculationType: ChargeCalculationType? = null,
 
     var percentage: Int? = null,
 

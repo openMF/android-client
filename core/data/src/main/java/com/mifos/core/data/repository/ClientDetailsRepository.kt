@@ -21,7 +21,7 @@ interface ClientDetailsRepository {
 
     suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?)
 
-    suspend fun deleteClientImage(clientId: Int): ResponseBody
+    suspend fun deleteClientImage(clientId: Int)
 
     suspend fun getClientAccounts(clientId: Int): ClientAccounts
 

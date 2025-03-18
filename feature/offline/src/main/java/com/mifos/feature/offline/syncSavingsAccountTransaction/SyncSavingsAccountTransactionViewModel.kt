@@ -32,10 +32,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SyncSavingsAccountTransactionViewModel @Inject constructor(
-    private val processTransactionUseCase: ProcessTransactionUseCase,
-//    private val allSavingsAccountTransactionsUseCase: AllSavingsAccountTransactionsUseCase,
-//    private val updateLoanRepaymentTransactionSavingsUseCase: UpdateLoanRepaymentTransactionSavingsUseCase,
-//    private val deleteAndUpdateTransactionsUseCase: DeleteAndUpdateTransactionsUseCase,
+//    private val processTransactionUseCase: ProcessTransactionUseCase,
     private val repository: SyncSavingsAccountTransactionRepository,
     private val prefManager: PrefManager,
 ) : ViewModel() {
@@ -110,7 +107,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
     /**
      * This Method delete the SavingsAccountTransactionRequest from Database and load again
      * List<SavingsAccountTransactionRequest> and Update the UI.
-     </SavingsAccountTransactionRequest> */
+    </SavingsAccountTransactionRequest> */
     fun showTransactionSyncSuccessfully() {
         mSavingsAccountTransactionRequests[mTransactionIndex].savingAccountId?.let {
             deleteAndUpdateSavingsAccountTransaction(
@@ -127,8 +124,8 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
      * @param errorMessage Server Error Message
      */
     fun showTransactionSyncFailed(errorMessage: String?) {
-        val transaction = mSavingsAccountTransactionRequests[mTransactionIndex]
-        transaction.errorMessage = errorMessage
+        val transaction =
+            mSavingsAccountTransactionRequests[mTransactionIndex].copy(errorMessage = errorMessage)
         updateSavingsAccountTransaction(transaction)
     }
 
@@ -153,7 +150,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
      * List<SavingsAccountTransactionRequest>.
      *
      * @param transactions List<SavingsAccountTransactionRequest>
-     </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
+    </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
     fun showTransactionDeletedAndUpdated(transactions: MutableList<SavingsAccountTransactionRequest>) {
         mTransactionIndex = 0
         mSavingsAccountTransactionRequests = transactions
@@ -176,7 +173,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
     /**
      * This Method Load the List<SavingsAccountTransactionRequest> from
      * SavingsAccountTransactionRequest_Table and Update the UI
-     </SavingsAccountTransactionRequest> */
+    </SavingsAccountTransactionRequest> */
     fun loadDatabaseSavingsAccountTransactions() {
         viewModelScope.launch {
             _syncSavingsAccountTransactionUiState.value =
@@ -251,16 +248,17 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
         transactionType: String?,
         request: SavingsAccountTransactionRequest?,
     ) = viewModelScope.launch(Dispatchers.IO) {
-        processTransactionUseCase(type, accountId, transactionType, request!!).collect { result ->
-            when (result) {
-                is Resource.Error -> showTransactionSyncFailed(result.message)
-
-                is Resource.Loading ->
-                    _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.Loading
-
-                is Resource.Success -> showTransactionSyncSuccessfully()
-            }
+        _syncSavingsAccountTransactionUiState.value =
+            SyncSavingsAccountTransactionUiState.Loading
+        repository.processTransaction(
+            type,
+            accountId,
+            transactionType,
+            request!!,
+        ).catch {
+            showTransactionSyncFailed(it.message)
+        }.collect {
+            showTransactionSyncSuccessfully()
         }
     }
 
@@ -270,7 +268,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
      * and returns the List<SavingsAccountTransactionRequest>.
      *
      * @param savingsAccountId SavingsAccountTransactionRequest's SavingsAccount Id
-     </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
+    </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
     private fun deleteAndUpdateSavingsAccountTransaction(savingsAccountId: Int) {
         viewModelScope.launch {
             _syncSavingsAccountTransactionUiState.value =

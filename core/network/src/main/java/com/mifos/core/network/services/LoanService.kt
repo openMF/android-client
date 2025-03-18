@@ -9,8 +9,6 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.accounts.loan.Loans
-import com.mifos.core.entity.client.Charges
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.clients.Page
@@ -20,9 +18,11 @@ import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.basemodel.APIEndPoint
+import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
 import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.client.Charges
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
@@ -75,7 +75,7 @@ interface LoanService {
     val allLoans: Observable<List<LoanProducts>>
 
     @POST(APIEndPoint.CREATE_LOANS_ACCOUNTS)
-    fun createLoansAccount(@Body loansPayload: LoansPayload?): Observable<Loans>
+    fun createLoansAccount(@Body loansPayload: LoansPayload?): Observable<Loan>
 
     @GET(APIEndPoint.CREATE_LOANS_ACCOUNTS + "/template?templateType=individual")
     fun getLoansAccountTemplate(
@@ -103,7 +103,7 @@ interface LoanService {
     ): Observable<LoanTransactionTemplate>
 
     @POST(APIEndPoint.CREATE_LOANS_ACCOUNTS)
-    fun createGroupLoansAccount(@Body loansPayload: GroupLoanPayload?): Observable<Loans>
+    fun createGroupLoansAccount(@Body loansPayload: GroupLoanPayload?): Observable<Loan>
 
     @GET(APIEndPoint.CREATE_LOANS_ACCOUNTS + "/template?templateType=group")
     fun getGroupLoansAccountTemplate(

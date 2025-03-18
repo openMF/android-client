@@ -42,6 +42,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Blue
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -59,14 +63,9 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.runreport.DataRow
-import com.mifos.core.objects.runreport.FullParameterListResponse
-import com.mifos.core.objects.runreport.client.ClientReportTypeItem
+import com.mifos.core.model.objects.runreport.DataRow
+import com.mifos.core.model.objects.runreport.FullParameterListResponse
+import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.feature.report.R
 
 @Composable
@@ -211,7 +210,6 @@ internal fun ReportDetailScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_report_details),
         onBackPressed = onBackPressed,
         actions = {
@@ -367,7 +365,7 @@ private fun RunReportContent(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .size(42.dp)
-                        .background(BlueSecondary, CircleShape),
+                        .background(Blue, CircleShape),
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.feature_report_ic_report_item),
@@ -403,7 +401,7 @@ private fun RunReportContent(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontStyle = FontStyle.Normal,
-                                color = DarkGray,
+                                color = Gray,
                             ),
                         )
                         Text(
@@ -412,7 +410,7 @@ private fun RunReportContent(
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontStyle = FontStyle.Normal,
-                                color = DarkGray,
+                                color = Gray,
                             ),
                         )
                     }

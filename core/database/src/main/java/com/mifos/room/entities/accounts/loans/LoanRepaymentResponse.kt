@@ -12,8 +12,9 @@ package com.mifos.room.entities.accounts.loans
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mifos.core.objects.Changes
-import kotlinx.parcelize.Parcelize
+import com.mifos.core.model.objects.Changes
+import com.mifos.core.common.utils.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
 
 @Entity(tableName = "LoanRepaymentResponse")
 @Parcelize
@@ -24,5 +25,6 @@ data class LoanRepaymentResponse(
     val clientId: Int? = null,
     val loanId: Int? = null,
     val resourceId: Int? = null,
+    @IgnoredOnParcel
     val changes: Changes? = null,
 ) : Parcelable

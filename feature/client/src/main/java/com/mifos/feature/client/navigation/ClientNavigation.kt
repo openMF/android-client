@@ -17,10 +17,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.entity.accounts.savings.DepositType
-import com.mifos.core.entity.client.ClientPayload
-import com.mifos.core.entity.noncore.DataTable
-import com.mifos.core.entity.survey.Survey
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientDetails.ui.ClientDetailsScreen
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
@@ -31,6 +27,10 @@ import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 import com.mifos.feature.dataTable.dataTableList.FormWidget
+import com.mifos.room.entities.accounts.savings.DepositType
+import com.mifos.room.entities.client.ClientPayload
+import com.mifos.room.entities.noncore.DataTable
+import com.mifos.room.entities.survey.Survey
 import kotlin.reflect.KFunction4
 
 fun NavGraphBuilder.clientNavGraph(

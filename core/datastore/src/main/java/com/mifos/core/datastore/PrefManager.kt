@@ -15,8 +15,8 @@ import android.preference.PreferenceManager
 import com.mifos.core.common.BuildConfig
 import com.mifos.core.common.model.user.User
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.common.utils.asServerConfig
-import com.mifos.core.model.ServerConfig
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -78,12 +78,12 @@ class PrefManager @Inject constructor(
             preference.edit().putString(AUTH_PASSWORD, value.second).apply()
         }
 
-    val getServerConfig: com.mifos.core.model.ServerConfig =
+    val getServerConfig: ServerConfig =
         preference.getString(serverConfigKey.value, null)?.let {
-            gson.fromJson(it, com.mifos.core.model.ServerConfig::class.java)
+            gson.fromJson(it, ServerConfig::class.java)
         } ?: BuildConfig.DEMO_SERVER_CONFIG.asServerConfig()
 
-    fun updateServerConfig(config: com.mifos.core.model.ServerConfig?) {
+    fun updateServerConfig(config: ServerConfig?) {
         this.put(serverConfigKey, config)
     }
 

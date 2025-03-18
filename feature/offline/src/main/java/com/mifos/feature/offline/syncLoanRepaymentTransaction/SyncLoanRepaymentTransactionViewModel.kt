@@ -13,9 +13,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.FileUtils.LOG_TAG
+import com.mifos.core.data.CenterPayload_Table.errorMessage
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.entity.center.CenterPayload_Table.errorMessage
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.PaymentTypeOption
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
@@ -133,7 +133,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
         }
     }
 
-    fun deleteAndUpdateLoanRepayments(loanId: Int) {
+    private fun deleteAndUpdateLoanRepayments(loanId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             _syncLoanRepaymentTransactionUiState.value =
                 SyncLoanRepaymentTransactionUiState.ShowProgressbar
@@ -158,7 +158,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
         }
     }
 
-    fun updateLoanRepayment(loanRepaymentRequest: LoanRepaymentRequest?) {
+    private fun updateLoanRepayment(loanRepaymentRequest: LoanRepaymentRequest?) {
         viewModelScope.launch {
             SyncLoanRepaymentTransactionUiState.ShowProgressbar
 

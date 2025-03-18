@@ -9,8 +9,8 @@
  */
 package com.mifos.core.data.repositoryImp
 
+import com.mifos.core.common.utils.Page
 import com.mifos.core.data.repository.GroupsListRepository
-import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.room.entities.group.Group
 import kotlinx.coroutines.flow.Flow

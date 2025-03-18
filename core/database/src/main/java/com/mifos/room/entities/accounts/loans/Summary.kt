@@ -14,7 +14,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mifos.core.objects.account.loan.Currency
+import com.mifos.core.model.objects.account.loan.Currency
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
@@ -26,6 +27,7 @@ data class Summary(
     val loanId: Int? = null,
 
     @Embedded
+    @IgnoredOnParcel
     val currency: Currency? = null,
 
     @ColumnInfo(name = "principalDisbursed")

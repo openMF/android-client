@@ -52,7 +52,6 @@ internal fun IndividualCollectionSheetScreen(
     )
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_collection_sheet_individual_collection_sheet),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,

@@ -16,13 +16,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.entity.accounts.savings.DepositType
-import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.feature.savings.savingsAccount.SavingsAccountScreen
 import com.mifos.feature.savings.savingsAccountActivate.SavingsAccountActivateScreen
 import com.mifos.feature.savings.savingsAccountApproval.SavingsAccountApprovalScreen
 import com.mifos.feature.savings.savingsAccountSummary.SavingsAccountSummaryScreen
 import com.mifos.feature.savings.savingsAccountTransaction.SavingsAccountTransactionScreen
+import com.mifos.room.entities.accounts.savings.DepositType
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
 
 /**
  * Created by Pronay Sarker on 14/08/2024 (1:10 PM)

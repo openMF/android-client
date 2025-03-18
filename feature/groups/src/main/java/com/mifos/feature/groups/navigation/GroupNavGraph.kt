@@ -17,12 +17,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.entity.accounts.savings.DepositType
-import com.mifos.core.entity.client.Client
-import com.mifos.core.objects.responses.SaveResponse
+import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.feature.groups.createNewGroup.CreateNewGroupScreen
 import com.mifos.feature.groups.groupDetails.GroupDetailsScreen
 import com.mifos.feature.groups.groupList.GroupsListRoute
+import com.mifos.room.entities.accounts.savings.DepositType
+import com.mifos.room.entities.client.Client
 
 /**
  * Created by Pronay Sarker on 13/08/2024

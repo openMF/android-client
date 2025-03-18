@@ -41,9 +41,9 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.data_table.R
+import com.mifos.room.entities.noncore.DataTable
 
 /**
  * Created on 27/06/2024 (11:38 PM) by Pronay Sarker
@@ -89,7 +89,6 @@ fun DataTableScreen(
     val pullRefreshState = rememberPullToRefreshState()
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_data_table_title),
         onBackPressed = navigateBack,
         snackbarHostState = snackbarHostState,
@@ -183,44 +182,44 @@ fun DataTableItem(
     }
 }
 
-class DataTablePreviewProvider : PreviewParameterProvider<DataTableUiState> {
-    val dataTable: List<DataTable> = listOf(
-        DataTable(
-            applicationTableName = "AppTable1",
-            columnHeaderData = listOf(),
-            registeredTableName = "registered Table Name",
-        ),
-        DataTable(
-            applicationTableName = "AppTable1",
-            columnHeaderData = listOf(),
-            registeredTableName = "registered Table Name",
-        ),
-        DataTable(
-            applicationTableName = "AppTable1",
-            columnHeaderData = listOf(),
-            registeredTableName = "registered Table Name",
-        ),
-    )
-
-    override val values: Sequence<DataTableUiState>
-        get() = sequenceOf(
-            DataTableUiState.ShowEmptyDataTables,
-            DataTableUiState.ShowProgressbar,
-            DataTableUiState.ShowDataTables(dataTable),
-            DataTableUiState.ShowError(R.string.feature_data_table_failed_to_fetch_data_table),
-        )
-}
-
-@Composable
-@Preview(showSystemUi = true)
-private fun PreviewDataTable(
-    @PreviewParameter(DataTablePreviewProvider::class) dataTableUiState: DataTableUiState,
-) {
-    DataTableScreen(
-        uiState = dataTableUiState,
-        navigateBack = { },
-        onRefresh = { },
-        isRefreshing = false,
-        onClick = { },
-    )
-}
+//class DataTablePreviewProvider : PreviewParameterProvider<DataTableUiState> {
+//    val dataTable: List<DataTable> = listOf(
+//        DataTable(
+//            applicationTableName = "AppTable1",
+//            columnHeaderData = listOf(),
+//            registeredTableName = "registered Table Name",
+//        ),
+//        DataTable(
+//            applicationTableName = "AppTable1",
+//            columnHeaderData = listOf(),
+//            registeredTableName = "registered Table Name",
+//        ),
+//        DataTable(
+//            applicationTableName = "AppTable1",
+//            columnHeaderData = listOf(),
+//            registeredTableName = "registered Table Name",
+//        ),
+//    )
+//
+//    override val values: Sequence<DataTableUiState>
+//        get() = sequenceOf(
+//            DataTableUiState.ShowEmptyDataTables,
+//            DataTableUiState.ShowProgressbar,
+//            DataTableUiState.ShowDataTables(dataTable),
+//            DataTableUiState.ShowError(R.string.feature_data_table_failed_to_fetch_data_table),
+//        )
+//}
+//
+//@Composable
+//@Preview(showSystemUi = true)
+//private fun PreviewDataTable(
+//    @PreviewParameter(DataTablePreviewProvider::class) dataTableUiState: DataTableUiState,
+//) {
+//    DataTableScreen(
+//        uiState = dataTableUiState,
+//        navigateBack = { },
+//        onRefresh = { },
+//        isRefreshing = false,
+//        onClick = { },
+//    )
+//}

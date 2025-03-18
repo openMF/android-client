@@ -9,8 +9,10 @@
  */
 package com.mifos.feature.offline.syncGroupPayloads
 
+import android.Manifest
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,8 +49,8 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosErrorContent
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.group.GroupPayload
 import com.mifos.feature.offline.R
+import com.mifos.room.entities.group.GroupPayload
 
 @Composable
 internal fun SyncGroupPayloadsScreenRoute(
@@ -96,7 +98,6 @@ internal fun SyncGroupPayloadsScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_offline_sync_groups),
         onBackPressed = onBackPressed,
         actions = {
@@ -113,7 +114,7 @@ internal fun SyncGroupPayloadsScreen(
                 },
             ) {
                 Icon(
-                    MifosIcons.sync,
+                    MifosIcons.Sync,
                     contentDescription = stringResource(id = R.string.feature_offline_sync),
                 )
             }
@@ -249,6 +250,7 @@ private fun GroupPayloadField(
     }
 }
 
+@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 private fun checkNetworkConnectionAndSync(
     context: Context,
     syncGroupPayloads: () -> Unit,
@@ -264,16 +266,16 @@ private fun checkNetworkConnectionAndSync(
     }
 }
 
-@Preview
-@Composable
-private fun SyncGroupPayloadsScreenPreview() {
-    SyncGroupPayloadsScreen(
-        uiState = SyncGroupPayloadsUiState.Success(),
-        onRefresh = { },
-        onBackPressed = { },
-        refreshState = false,
-        syncGroupPayloads = { },
-        groupPayloadsList = dummyGroupPayloads,
-        userStatus = true,
-    )
-}
+//@Preview
+//@Composable
+//private fun SyncGroupPayloadsScreenPreview() {
+//    SyncGroupPayloadsScreen(
+//        uiState = SyncGroupPayloadsUiState.Success(),
+//        onRefresh = { },
+//        onBackPressed = { },
+//        refreshState = false,
+//        syncGroupPayloads = { },
+//        groupPayloadsList = dummyGroupPayloads,
+//        userStatus = true,
+//    )
+//}

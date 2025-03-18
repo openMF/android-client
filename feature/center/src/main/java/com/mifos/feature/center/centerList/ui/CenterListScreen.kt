@@ -53,6 +53,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -69,20 +73,15 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.LightGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.group.Center
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.R
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
+import com.mifos.room.entities.group.Center
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
@@ -163,7 +162,7 @@ internal fun CenterListScreen(
                             },
                         ) {
                             Icon(
-                                imageVector = MifosIcons.sync,
+                                imageVector = MifosIcons.Sync,
                                 contentDescription = "Sync Items",
                             )
                             Text(text = stringResource(id = R.string.feature_center_sync))
@@ -176,7 +175,7 @@ internal fun CenterListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { createNewCenter() },
-                containerColor = BlueSecondary,
+//                containerColor = ,
             ) {
                 Icon(
                     imageVector = MifosIcons.Add,

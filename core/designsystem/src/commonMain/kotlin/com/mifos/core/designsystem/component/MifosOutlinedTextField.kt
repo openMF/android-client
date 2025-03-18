@@ -14,6 +14,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
@@ -47,7 +48,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun MifosOutlinedTextField(
     value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
+    onValueChanged: (TextFieldValue) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
     maxLines: Int = 1,
@@ -59,7 +60,7 @@ fun MifosOutlinedTextField(
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = onValueChanged,
         label = { Text(label) },
         modifier = modifier
             .fillMaxWidth()
@@ -98,6 +99,7 @@ fun MifosOutlinedTextField(
 @Composable
 fun MifosOutlinedTextField(
     value: String,
+    onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector? = null,
@@ -113,6 +115,9 @@ fun MifosOutlinedTextField(
     errorTextTag: String = label.plus("Error"),
     keyboardType: KeyboardType = KeyboardType.Text,
     textStyle: TextStyle = LocalTextStyle.current,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     isPasswordToggleDisplayed: Boolean = keyboardType == KeyboardType.Password,
     clearIcon: ImageVector = Icons.Default.Clear,
     showClearIcon: Boolean = false,
@@ -122,7 +127,6 @@ fun MifosOutlinedTextField(
     prefix: @Composable (() -> Unit)? = null,
     suffix: @Composable (() -> Unit)? = null,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    onValueChange: (String) -> Unit,
 ) {
     val isFocused by interactionSource.collectIsFocusedAsState()
 

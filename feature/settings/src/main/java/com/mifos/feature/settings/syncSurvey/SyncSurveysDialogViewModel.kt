@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.settings.syncSurvey
 
+import android.Manifest
+import androidx.annotation.RequiresPermission
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.NetworkUtilsWrapper
@@ -51,7 +53,7 @@ class SyncSurveysDialogViewModel @Inject constructor(
     private var mQuestionDataSyncIndex = 0
     private var mResponseDataSyncIndex = 0
     private var maxSingleSyncSurveyProgressBar = 0
-
+    
     private fun checkNetworkConnection(): Boolean {
         return networkUtilsWrapper.isNetworkConnected()
     }

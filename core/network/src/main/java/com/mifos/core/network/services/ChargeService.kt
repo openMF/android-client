@@ -9,12 +9,10 @@
  */
 package com.mifos.core.network.services
 
+import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
-import com.mifos.core.objects.clients.ChargeCreationResponse
-import com.mifos.core.objects.clients.Page
-import com.mifos.core.objects.template.client.ChargeTemplate
-import com.mifos.core.payloads.ChargesPayload
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.client.Charges
 import kotlinx.coroutines.flow.Flow

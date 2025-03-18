@@ -52,9 +52,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.model.ServerConfig
 import com.mifos.core.ui.util.DevicePreviews
 import com.mifos.feature.settings.R
 
@@ -95,7 +94,7 @@ internal fun UpdateServerConfigScreenRoute(
 @VisibleForTesting
 @Composable
 internal fun UpdateServerConfigScreenContent(
-    serverConfig: com.mifos.core.model.ServerConfig,
+    serverConfig: ServerConfig,
     onEvent: (UpdateServerConfigEvent) -> Unit,
     modifier: Modifier = Modifier,
     protocolError: Int? = null,
@@ -290,7 +289,6 @@ internal fun UpdateServerConfigScreenContent(
                             .height(48.dp),
                         enabled = !hasAnyError,
                         colors = ButtonDefaults.elevatedButtonColors(
-                            containerColor = BluePrimary,
                             contentColor = Color.White,
                         ),
                     ) {
@@ -312,7 +310,7 @@ internal fun UpdateServerConfigScreenContent(
 private fun UpdateServerConfigScreenEmptyData() {
     MaterialTheme {
         UpdateServerConfigScreenContent(
-            serverConfig = com.mifos.core.model.ServerConfig(
+            serverConfig = ServerConfig(
                 protocol = "",
                 endPoint = "",
                 apiPath = "",

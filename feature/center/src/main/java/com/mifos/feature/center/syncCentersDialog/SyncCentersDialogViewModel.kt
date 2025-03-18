@@ -17,10 +17,10 @@ import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncCentersDialogRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.client.Client
 import com.mifos.feature.center.R
 import com.mifos.room.entities.accounts.loans.LoanAccount
 import com.mifos.room.entities.accounts.savings.SavingsAccount
+import com.mifos.room.entities.client.Client
 import com.mifos.room.entities.group.Center
 import com.mifos.room.entities.group.Group
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment

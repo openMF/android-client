@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.common.utils.Page
 import com.mifos.room.entities.group.Group
 import kotlinx.coroutines.flow.Flow
 

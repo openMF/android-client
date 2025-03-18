@@ -16,9 +16,9 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanRepaymentRepository
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.accounts.loans.LoanWithAssociations
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

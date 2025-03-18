@@ -12,7 +12,7 @@ package com.mifos.core.common.utils
 /**
  * Created by satya on 13/04/14.
  */
-object Constants {
+actual object Constants {
     const val INSTANCE_URL_KEY = "instanceURL"
     const val INSTANCE_DOMAIN_KEY = "instanceDomain"
     const val INSTANCE_PORT_KEY = "instancePort"

@@ -10,17 +10,17 @@
 package com.mifos.room.utils.typeconverters
 
 import androidx.room.TypeConverter
+import com.mifos.core.model.objects.account.loan.AmortizationType
+import com.mifos.core.model.objects.account.loan.Currency
+import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType
+import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType
+import com.mifos.core.model.objects.account.loan.InterestType
 import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
-import com.mifos.core.objects.account.loan.AmortizationType
-import com.mifos.core.objects.account.loan.InterestCalculationPeriodType
-import com.mifos.core.objects.account.loan.InterestRateFrequencyType
-import com.mifos.core.objects.account.loan.InterestType
-import com.mifos.core.objects.account.loan.RepaymentSchedule
-import com.mifos.core.objects.account.loan.TermPeriodFrequencyType
-import com.mifos.core.objects.account.loan.Transaction
-import com.mifos.core.objects.template.loan.Currency
-import com.mifos.core.objects.template.loan.Type
+import com.mifos.core.model.objects.account.loan.RepaymentSchedule
+import com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType
+import com.mifos.core.model.objects.account.loan.Transaction
+import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.room.entities.PaymentTypeOption
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDate
 import com.mifos.room.entities.accounts.loans.LoanType

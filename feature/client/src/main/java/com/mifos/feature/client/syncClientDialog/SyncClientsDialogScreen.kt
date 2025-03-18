@@ -38,8 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
-import com.mifos.core.entity.client.Client
 import com.mifos.feature.client.R
+import com.mifos.room.entities.client.Client
 
 @Composable
 internal fun SyncClientsDialogScreen(

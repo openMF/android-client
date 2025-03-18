@@ -16,7 +16,7 @@ import com.mifos.core.common.network.Dispatcher
 import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.common.utils.Constants.DATA_TABLE_NAME_CLIENT
 import com.mifos.core.common.utils.MapDeserializer
-import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.common.utils.Page
 import com.mifos.core.objects.noncore.DataTablePayload_Table.dataTableString
 import com.mifos.room.dao.ClientDao
 import com.mifos.room.entities.accounts.ClientAccounts
@@ -278,25 +278,29 @@ class ClientDaoHelper @Inject constructor(
      * @param clientPayload created in offline mode
      * @return Client
      */
-    suspend fun saveClientPayloadToDB(clientPayload: com.mifos.core.entity.client.ClientPayload?) {
-        val currentTime = System.currentTimeMillis()
-        val updatedClientPayload = clientPayload?.copy(
-            clientCreationTime = currentTime,
-        )
-        updatedClientPayload.datatables?.let { datatables ->
-            if (datatables.isNotEmpty()) {
-                datatables.forEach { dataTablePayload ->
-                    dataTablePayload.clientCreationTime = currentTime
-                    // Use kotlinx.serialization to convert data to JSON string
-                    val jsonString = json.encodeToString(dataTablePayload.data)
-                    dataTablePayload.dataTableString = jsonString
-                    clientDao.insertDataTablePayload(dataTablePayload)
-                }
-            }
-        }
+    suspend fun saveClientPayloadToDB(clientPayload : ClientPayload){
 
-        clientDao.insertClientPayload(updatedClientPayload)
     }
+    // todo Use kotlinx.serialization to convert data to JSON string and remove the upper function
+//    suspend fun saveClientPayloadToDB(clientPayload: com.mifos.core.entity.client.ClientPayload?) {
+//        val currentTime = System.currentTimeMillis()
+//        val updatedClientPayload = clientPayload?.copy(
+//            clientCreationTime = currentTime,
+//        )
+//        updatedClientPayload.datatables?.let { datatables ->
+//            if (datatables.isNotEmpty()) {
+//                datatables.forEach { dataTablePayload ->
+//                    dataTablePayload.clientCreationTime = currentTime
+//                    // Use kotlinx.serialization to convert data to JSON string
+//                    val jsonString = json.encodeToString(dataTablePayload.data)
+//                    dataTablePayload.dataTableString = jsonString
+//                    clientDao.insertDataTablePayload(dataTablePayload)
+//                }
+//            }
+//        }
+//
+//        clientDao.insertClientPayload(updatedClientPayload)
+//    }
 
     /**
      * Reading All Entries in the ClientPayload_Table

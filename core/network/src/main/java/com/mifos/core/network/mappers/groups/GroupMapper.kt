@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.mappers.groups
 
-import com.mifos.core.entity.client.Status
-import com.mifos.core.entity.group.Group
+import com.mifos.room.entities.client.Status
+import com.mifos.room.entities.group.Group
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetGroupsPageItems
 import org.openapitools.client.models.GetGroupsStatus
@@ -18,19 +18,19 @@ import org.openapitools.client.models.GetGroupsStatus
 object GroupMapper : AbstractMapper<GetGroupsPageItems, Group>() {
 
     override fun mapFromEntity(entity: GetGroupsPageItems): Group {
-        return Group().apply {
-            id = entity.id?.toInt()
-            name = entity.name
-            active = entity.active
-            officeId = entity.officeId?.toInt()
-            officeName = entity.officeName
-            hierarchy = entity.hierarchy
-            status = Status().apply {
-                id = entity.status?.id!!.toInt()
-                code = entity.status?.code
-                value = entity.status?.description
-            }
-        }
+        return Group(
+            id = entity.id?.toInt(),
+            name = entity.name,
+            active = entity.active,
+            officeId = entity.officeId?.toInt(),
+            officeName = entity.officeName,
+            hierarchy = entity.hierarchy,
+            status = Status(
+                id = entity.status?.id!!.toInt(),
+                code = entity.status?.code,
+                value = entity.status?.description,
+            ),
+        )
     }
 
     override fun mapToEntity(domainModel: Group): GetGroupsPageItems {

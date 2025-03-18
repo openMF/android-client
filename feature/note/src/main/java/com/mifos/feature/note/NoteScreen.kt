@@ -77,7 +77,6 @@ internal fun NoteScreen(
     val pullRefreshState = rememberPullToRefreshState()
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_note_Note),
         onBackPressed = onBackPressed,
         snackbarHostState = snackBarHostState,

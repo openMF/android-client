@@ -18,14 +18,14 @@ import androidx.navigation.navigation
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.noncore.DataTable
-import com.mifos.core.objects.nav.DataTableNavigationArg
+import com.mifos.core.model.objects.nav.DataTableNavigationArg
 import com.mifos.feature.dataTable.dataTable.DataTableScreen
 import com.mifos.feature.dataTable.dataTableData.DataTableDataScreen
 import com.mifos.feature.dataTable.dataTableList.DataTableListNavArgs
 import com.mifos.feature.dataTable.dataTableList.DataTableListScreen
 import com.mifos.feature.dataTable.dataTableList.FormWidget
 import com.mifos.room.entities.navigation.DataTableDataNavigationArg
+import com.mifos.room.entities.noncore.DataTable
 
 fun NavGraphBuilder.dataTableNavGraph(
     navController: NavController,

@@ -9,8 +9,9 @@
  */
 package com.mifos.feature.offline.syncSavingsAccountTransaction
 
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
+
 
 /**
  * Created by Aditya Gupta on 16/08/23.

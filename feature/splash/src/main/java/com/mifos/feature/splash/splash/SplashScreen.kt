@@ -57,7 +57,6 @@ internal fun SplashScreen(
 
     MifosScaffold(
         modifier = modifier,
-//        containerColor = ,
     ) { paddingValues ->
         Column(
             modifier = Modifier
