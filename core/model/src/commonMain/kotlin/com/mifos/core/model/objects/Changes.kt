@@ -9,7 +9,7 @@
  */
 package com.mifos.core.model.objects
 
-import com.mifos.core.common.utils.Parcelize
+import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 @Parcelize

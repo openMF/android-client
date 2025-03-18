@@ -70,7 +70,7 @@
 //    fun getLoanById(loanId: Int): Observable<LoanWithAssociations> {
 //        return Observable.defer {
 //            val loanWithAssociations = SQLite.select()
-//                .from(LoanWithAssociations::class.kotlin)
+//                .from(LoanWithAssociations::class.java)
 //                .where(LoanWithAssociations_Table.id.eq(loanId))
 //                .querySingle()
 //
@@ -118,7 +118,7 @@
 //    fun readAllLoanRepaymentTransaction(): Observable<List<LoanRepaymentRequest>> {
 //        return Observable.defer {
 //            val loanRepaymentRequests = SQLite.select()
-//                .from(LoanRepaymentRequest::class.kotlin)
+//                .from(LoanRepaymentRequest::class.java)
 //                .orderBy(LoanRepaymentRequest_Table.timeStamp, true)
 //                .queryList()
 //            Observable.just(loanRepaymentRequests)
@@ -139,7 +139,7 @@
 //    fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Observable<LoanRepaymentRequest> {
 //        return Observable.defer {
 //            val loanRepaymentRequest = SQLite.select()
-//                .from(LoanRepaymentRequest::class.kotlin)
+//                .from(LoanRepaymentRequest::class.java)
 //                .where(LoanRepaymentRequest_Table.loanId.eq(loanId))
 //                .querySingle()
 //            Observable.just(loanRepaymentRequest)
@@ -179,11 +179,11 @@
 //    fun getLoanRepayTemplate(loanId: Int): Observable<LoanRepaymentTemplate> {
 //        return Observable.defer {
 //            val loanRepaymentTemplate = SQLite.select()
-//                .from(LoanRepaymentTemplate::class.kotlin)
+//                .from(LoanRepaymentTemplate::class.java)
 //                .where(LoanRepaymentTemplate_Table.loanId.eq(loanId))
 //                .querySingle()
 //            val paymentTypeOptions = SQLite.select()
-//                .from(PaymentTypeOption::class.kotlin)
+//                .from(PaymentTypeOption::class.java)
 //                .queryList()
 //            if (loanRepaymentTemplate != null) {
 //                loanRepaymentTemplate.paymentTypeOptions = paymentTypeOptions
@@ -201,7 +201,7 @@
 //    val paymentTypeOption: Observable<List<PaymentTypeOption>>
 //        get() = Observable.defer {
 //            val paymentTypeOptions: List<PaymentTypeOption> = SQLite.select()
-//                .from(PaymentTypeOption::class.kotlin)
+//                .from(PaymentTypeOption::class.java)
 //                .queryList()
 //            Observable.just(paymentTypeOptions)
 //        }
@@ -217,11 +217,11 @@
 //    fun deleteAndUpdateLoanRepayments(loanId: Int): Observable<List<LoanRepaymentRequest>> {
 //        return Observable.defer {
 //            Delete.table(
-//                LoanRepaymentRequest::class.kotlin,
+//                LoanRepaymentRequest::class.java,
 //                LoanRepaymentRequest_Table.loanId.eq(loanId),
 //            )
 //            val loanRepaymentRequests = SQLite.select()
-//                .from(LoanRepaymentRequest::class.kotlin)
+//                .from(LoanRepaymentRequest::class.java)
 //                .orderBy(LoanRepaymentRequest_Table.timeStamp, true)
 //                .queryList()
 //            Observable.just(loanRepaymentRequests)

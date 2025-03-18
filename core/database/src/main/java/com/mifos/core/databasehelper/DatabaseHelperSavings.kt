@@ -80,11 +80,11 @@
 //    ): Observable<SavingsAccountWithAssociations> {
 //        return Observable.defer {
 //            val savingsAccountWithAssociations = SQLite.select()
-//                .from(SavingsAccountWithAssociations::class.kotlin)
+//                .from(SavingsAccountWithAssociations::class.java)
 //                .where(SavingsAccountWithAssociations_Table.id.eq(savingsAccountId))
 //                .querySingle()
 //            val transactions = SQLite.select()
-//                .from(Transaction::class.kotlin)
+//                .from(Transaction::class.java)
 //                .where(Transaction_Table.savingsAccountId.eq(savingsAccountId))
 //                .queryList()
 //            Observable.from(transactions)
@@ -133,11 +133,11 @@
 //    ): Observable<SavingsAccountTransactionTemplate> {
 //        return Observable.defer {
 //            val savingsAccountTransactionTemplate = SQLite.select()
-//                .from(SavingsAccountTransactionTemplate::class.kotlin)
+//                .from(SavingsAccountTransactionTemplate::class.java)
 //                .where(SavingsAccountTransactionTemplate_Table.accountId.eq(savingsAccountId))
 //                .querySingle()
 //            val paymentTypeOptions = SQLite.select()
-//                .from(PaymentTypeOption::class.kotlin)
+//                .from(PaymentTypeOption::class.java)
 //                .queryList()
 //            if (savingsAccountTransactionTemplate != null) {
 //                savingsAccountTransactionTemplate.paymentTypeOptions = paymentTypeOptions
@@ -186,7 +186,7 @@
 //    ): Observable<SavingsAccountTransactionRequest> {
 //        return Observable.defer {
 //            val savingsAccountTransactionRequest = SQLite.select()
-//                .from(SavingsAccountTransactionRequest::class.kotlin)
+//                .from(SavingsAccountTransactionRequest::class.java)
 //                .where(
 //                    SavingsAccountTransactionRequest_Table.savingAccountId.eq(
 //                        savingsAccountId,
@@ -207,7 +207,7 @@
 //        get() = Observable.defer {
 //            val savingsAccountTransactionRequests: List<SavingsAccountTransactionRequest> =
 //                SQLite.select()
-//                    .from(SavingsAccountTransactionRequest::class.kotlin)
+//                    .from(SavingsAccountTransactionRequest::class.java)
 //                    .queryList()
 //            Observable.just(savingsAccountTransactionRequests)
 //        }
@@ -226,11 +226,11 @@
 //    ): Observable<List<SavingsAccountTransactionRequest>> {
 //        return Observable.defer { // Deleting Entry from SavingsAccountTransactionRequest_Table with SavingsAccountId
 //            Delete.table(
-//                SavingsAccountTransactionRequest::class.kotlin,
+//                SavingsAccountTransactionRequest::class.java,
 //                SavingsAccountTransactionRequest_Table.savingAccountId.eq(savingsAccountId),
 //            )
 //            val savingsAccountTransactionRequests = SQLite.select()
-//                .from(SavingsAccountTransactionRequest::class.kotlin)
+//                .from(SavingsAccountTransactionRequest::class.java)
 //                .queryList()
 //            Observable.just(savingsAccountTransactionRequests)
 //        }

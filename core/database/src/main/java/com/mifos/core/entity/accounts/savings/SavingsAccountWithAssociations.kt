@@ -9,7 +9,7 @@
 // */
 //package com.mifos.core.entity.accounts.savings
 //
-//import android.os.Parcelable
+//import android.os.com.mifos.core.model.utils.Parcelable
 //import com.mifos.core.database.MifosDatabase
 //import com.mifos.core.model.MifosBaseModel
 //import com.mifos.core.objects.account.saving.InterestCalculationDaysInYearType
@@ -20,9 +20,9 @@
 //import com.raizlabs.android.dbflow.annotation.ModelContainer
 //import com.raizlabs.android.dbflow.annotation.PrimaryKey
 //import com.raizlabs.android.dbflow.annotation.Table
-//import kotlinx.parcelize.Parcelize
+//import kotlinx.parcelize.com.mifos.core.model.utils.Parcelize
 //
-//@Parcelize
+//@com.mifos.core.model.utils.Parcelize
 //@Table(database = MifosDatabase::class)
 //@ModelContainer
 //data class SavingsAccountWithAssociations(
@@ -90,4 +90,4 @@
 //
 //    var charges: List<Charge?> = ArrayList(),
 //
-//) : MifosBaseModel(), Parcelable
+//) : MifosBaseModel(), com.mifos.core.model.utils.Parcelable

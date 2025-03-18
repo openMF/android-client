@@ -78,7 +78,7 @@
 //        return Observable.defer {
 //            val groupPage = Page<Group>()
 //            groupPage.pageItems = SQLite.select()
-//                .from(Group::class.kotlin)
+//                .from(Group::class.java)
 //                .queryList()
 //            Observable.just(groupPage)
 //        }
@@ -94,7 +94,7 @@
 //        return Observable.defer {
 //            val groupPage = Page<Group>()
 //            groupPage.pageItems = SQLite.select()
-//                .from(Group::class.kotlin)
+//                .from(Group::class.java)
 //                .offset(offset)
 //                .limit(limit)
 //                .queryList()
@@ -111,7 +111,7 @@
 //    fun getGroup(groupId: Int): Observable<Group> {
 //        return Observable.defer {
 //            val group = SQLite.select()
-//                .from(Group::class.kotlin)
+//                .from(Group::class.java)
 //                .where(Group_Table.id.eq(groupId))
 //                .querySingle()
 //            if (group != null) {
@@ -160,11 +160,11 @@
 //    fun readGroupAccounts(groupId: Int): Observable<GroupAccounts> {
 //        return Observable.defer {
 //            val loanAccounts = SQLite.select()
-//                .from(LoanAccount::class.kotlin)
+//                .from(LoanAccount::class.java)
 //                .where(LoanAccount_Table.groupId.eq(groupId.toLong()))
 //                .queryList()
 //            val savingsAccounts = SQLite.select()
-//                .from(SavingsAccount::class.kotlin)
+//                .from(SavingsAccount::class.java)
 //                .where(SavingsAccount_Table.groupId.eq(groupId.toLong()))
 //                .queryList()
 //            val groupAccounts = GroupAccounts()
@@ -184,7 +184,7 @@
 //    fun realAllGroupPayload(): Observable<List<GroupPayload>> {
 //        return Observable.defer {
 //            val groupPayloads = SQLite.select()
-//                .from(GroupPayload::class.kotlin)
+//                .from(GroupPayload::class.java)
 //                .queryList()
 //            Observable.just(groupPayloads)
 //        }
@@ -198,9 +198,9 @@
 //     */
 //    fun deleteAndUpdateGroupPayloads(id: Int): Observable<List<GroupPayload>> {
 //        return Observable.defer {
-//            Delete.table(GroupPayload::class.kotlin, GroupPayload_Table.id.eq(id))
+//            Delete.table(GroupPayload::class.java, GroupPayload_Table.id.eq(id))
 //            val groupPayloads = SQLite.select()
-//                .from(GroupPayload::class.kotlin)
+//                .from(GroupPayload::class.java)
 //                .queryList()
 //            Observable.just(groupPayloads)
 //        }

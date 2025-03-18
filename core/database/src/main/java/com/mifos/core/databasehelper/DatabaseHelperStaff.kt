@@ -34,7 +34,7 @@
 //    fun readAllStaffOffices(officeId: Int): Observable<List<Staff>> {
 //        return Observable.create { subscriber ->
 //            val staffs = SQLite.select()
-//                .from(Staff::class.kotlin)
+//                .from(Staff::class.java)
 //                .where(Staff_Table.officeId.eq(officeId))
 //                .queryList()
 //            subscriber.onNext(staffs)

@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.template.loan
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
 
 /**
  * Created by Rajan Maurya on 16/07/16.

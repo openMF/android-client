@@ -58,7 +58,7 @@
 //        return Observable.create<Page<Center>> { subscriber ->
 //            val centerPage = Page<Center>()
 //            centerPage.pageItems = SQLite.select()
-//                .from(Center::class.kotlin)
+//                .from(Center::class.java)
 //                .queryList()
 //            subscriber.onNext(centerPage)
 //            subscriber.onCompleted()
@@ -75,7 +75,7 @@
 //    fun readAllCenterPayload(): Observable<List<CenterPayload>> {
 //        return Observable.defer {
 //            val centerPayloads = SQLite.select()
-//                .from(CenterPayload::class.kotlin)
+//                .from(CenterPayload::class.java)
 //                .queryList()
 //            Observable.just(centerPayloads)
 //        }
@@ -89,7 +89,7 @@
 //    fun getCenterAssociateGroups(centerId: Int): Observable<CenterWithAssociations> {
 //        return Observable.defer {
 //            val groups = SQLite.select()
-//                .from(Group::class.kotlin)
+//                .from(Group::class.java)
 //                .where(Group_Table.centerId.eq(centerId))
 //                .queryList()
 //            val centerWithAssociations = CenterWithAssociations()
@@ -137,9 +137,9 @@
 //     */
 //    fun deleteAndUpdateCenterPayloads(id: Int): Observable<List<CenterPayload>> {
 //        return Observable.defer {
-//            Delete.table(CenterPayload::class.kotlin, CenterPayload_Table.id.eq(id))
+//            Delete.table(CenterPayload::class.java, CenterPayload_Table.id.eq(id))
 //            val groupPayloads = SQLite.select()
-//                .from(CenterPayload::class.kotlin)
+//                .from(CenterPayload::class.java)
 //                .queryList()
 //            Observable.just(groupPayloads)
 //        }

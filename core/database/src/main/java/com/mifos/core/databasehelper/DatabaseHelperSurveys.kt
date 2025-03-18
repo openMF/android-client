@@ -79,7 +79,7 @@
 //    fun readAllSurveys(): Observable<List<Survey>> {
 //        return Observable.defer {
 //            val surveyList = SQLite.select()
-//                .from(Survey::class.kotlin)
+//                .from(Survey::class.java)
 //                .queryList()
 //            Observable.just(surveyList)
 //        }
@@ -93,7 +93,7 @@
 //    fun getQuestionDatas(surveyId: Int): Observable<List<QuestionDatas>> {
 //        return Observable.defer {
 //            val questionDatas = SQLite.select()
-//                .from(QuestionDatas::class.kotlin)
+//                .from(QuestionDatas::class.java)
 //                .where(QuestionDatas_Table.surveyId.eq(surveyId))
 //                .orderBy(QuestionDatas_Table.sequenceNo, true)
 //                .queryList()
@@ -109,7 +109,7 @@
 //    fun getResponseDatas(questionId: Int): Observable<List<ResponseDatas>> {
 //        return Observable.defer {
 //            val responseDatas = SQLite.select()
-//                .from(ResponseDatas::class.kotlin)
+//                .from(ResponseDatas::class.java)
 //                .where(ResponseDatas_Table.questionId.eq(questionId))
 //                .orderBy(ResponseDatas_Table.sequenceNo, true)
 //                .queryList()

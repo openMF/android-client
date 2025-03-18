@@ -67,7 +67,7 @@
 //    fun readClientCharges(clientId: Int): Observable<Page<Charges>> {
 //        return Observable.create<Page<Charges>> { subscriber -> // Loading All charges from Charges_Table as reference to client id
 //            val chargesList = SQLite.select()
-//                .from(Charges::class.kotlin)
+//                .from(Charges::class.java)
 //                .where(Charges_Table.clientId.eq(clientId))
 //                .queryList()
 //

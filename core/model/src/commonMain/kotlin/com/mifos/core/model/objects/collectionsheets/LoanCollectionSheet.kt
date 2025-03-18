@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.collectionsheets
 
-import com.mifos.core.common.utils.Parcel
-import com.mifos.core.common.utils.Parcelable
+import com.mifos.core.model.utils.Parcel
+import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.objects.template.loan.Currency
 
 /**
@@ -49,7 +49,7 @@ class LoanCollectionSheet() : Parcelable {
 //        return 0
 //    }
 
-//    override fun writeToParcel(dest: Parcel, flags: Int) {
+//    override fun writeToParcel(dest: com.mifos.core.model.utils.Parcel, flags: Int) {
 //        dest.writeString(accountId)
 //        dest.writeInt(accountStatusId)
 //        dest.writeParcelable(currency, flags)
@@ -69,8 +69,8 @@ class LoanCollectionSheet() : Parcelable {
             "productId=$productId, totalDue=$totalDue, chargesDue=$chargesDue, productShortName=$productShortName)"
     }
 
-//    companion object CREATOR : Parcelable.Creator<LoanCollectionSheet> {
-//        override fun createFromParcel(parcel: Parcel): LoanCollectionSheet {
+//    companion object CREATOR : com.mifos.core.model.utils.Parcelable.Creator<LoanCollectionSheet> {
+//        override fun createFromParcel(parcel: com.mifos.core.model.utils.Parcel): LoanCollectionSheet {
 //            return LoanCollectionSheet(parcel)
 //        }
 //

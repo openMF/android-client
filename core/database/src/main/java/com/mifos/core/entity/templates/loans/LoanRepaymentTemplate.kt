@@ -9,7 +9,7 @@
 // */
 //package com.mifos.core.entity.templates.loans
 //
-//import android.os.Parcelable
+//import android.os.com.mifos.core.model.utils.Parcelable
 //import com.mifos.core.database.MifosDatabase
 //import com.mifos.core.entity.accounts.savings.Currency
 //import com.mifos.core.model.MifosBaseModel
@@ -19,9 +19,9 @@
 //import com.raizlabs.android.dbflow.annotation.ModelContainer
 //import com.raizlabs.android.dbflow.annotation.PrimaryKey
 //import com.raizlabs.android.dbflow.annotation.Table
-//import kotlinx.parcelize.Parcelize
+//import kotlinx.parcelize.com.mifos.core.model.utils.Parcelize
 //
-//@Parcelize
+//@com.mifos.core.model.utils.Parcelize
 //@ModelContainer
 //@Table(database = MifosDatabase::class)
 //data class LoanRepaymentTemplate(
@@ -50,4 +50,4 @@
 //    var penaltyChargesPortion: Double? = null,
 //
 //    var paymentTypeOptions: MutableList<PaymentTypeOption>? = null,
-//) : MifosBaseModel(), Parcelable
+//) : MifosBaseModel(), com.mifos.core.model.utils.Parcelable

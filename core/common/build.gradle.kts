@@ -8,10 +8,7 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.kmp.library)
-    id(libs.plugins.kotlin.parcelize.get().pluginId)
-    id("kotlinx-serialization")
-
+    alias(libs.plugins.mifos.android.library)
     alias(libs.plugins.mifos.android.hilt)
     alias(libs.plugins.mifos.android.library.jacoco)
     alias(libs.plugins.secrets)
@@ -29,12 +26,15 @@ secrets {
     defaultPropertiesFileName = "secrets.defaults.properties"
 }
 
-kotlin {
-    sourceSets{
-        androidMain.dependencies {
-            implementation(libs.converter.gson)
-            implementation(libs.javax.inject)
-            implementation(libs.kotlinx.serialization.json)
-        }
-    }
+dependencies {
+//    implementation(projects.core.model)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    implementation(libs.kotlinx.serialization.json)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+
+    implementation(libs.converter.gson)
+
+    implementation(libs.javax.inject)
 }

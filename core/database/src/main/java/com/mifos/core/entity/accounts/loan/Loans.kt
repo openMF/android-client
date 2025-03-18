@@ -9,14 +9,14 @@
 // */
 //package com.mifos.core.entity.accounts.loan
 //
-//import android.os.Parcelable
+//import android.os.com.mifos.core.model.utils.Parcelable
 //import RepaymentFrequencyType
-//import kotlinx.parcelize.Parcelize
+//import kotlinx.parcelize.com.mifos.core.model.utils.Parcelize
 //
 ///**
 // * Created by nellyk on 2/20/2016.
 // */
-//@Parcelize
+//@com.mifos.core.model.utils.Parcelize
 //data class Loans(
 //    var id: Int? = null,
 //
@@ -99,4 +99,4 @@
 //    var isNPA: Boolean? = null,
 //
 //    private val additionalProperties: MutableMap<String, String> = HashMap(),
-//) : Parcelable
+//) : com.mifos.core.model.utils.Parcelable

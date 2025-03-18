@@ -45,7 +45,7 @@
 //import com.raizlabs.android.dbflow.sql.language.SQLite
 //import rx.Observable
 //import rx.functions.Func0
-//import kotlin.lang.reflect.Type
+//import java.lang.reflect.Type
 //import javax.inject.Inject
 //import javax.inject.Singleton
 //
@@ -111,7 +111,7 @@
 //        return Observable.create<Page<Client>> { subscriber ->
 //            val clientPage = Page<Client>()
 //            clientPage.pageItems = SQLite.select()
-//                .from(Client::class.kotlin)
+//                .from(Client::class.java)
 //                .queryList()
 //            subscriber.onNext(clientPage)
 //            subscriber.onCompleted()
@@ -121,7 +121,7 @@
 //    fun getGroupAssociateClients(groupId: Int): Observable<GroupWithAssociations> {
 //        return Observable.defer {
 //            val clients = SQLite.select()
-//                .from(Client::class.kotlin)
+//                .from(Client::class.java)
 //                .where(Client_Table.groupId.eq(groupId))
 //                .queryList()
 //            val groupWithAssociations = GroupWithAssociations()
@@ -139,7 +139,7 @@
 //    fun getClient(clientId: Int): Observable<Client> {
 //        return Observable.create { subscriber ->
 //            val client = SQLite.select()
-//                .from(Client::class.kotlin)
+//                .from(Client::class.java)
 //                .where(Client_Table.id.eq(clientId))
 //                .querySingle()
 //            if (client != null) {
@@ -189,11 +189,11 @@
 //    fun realClientAccounts(clientId: Int): Observable<ClientAccounts> {
 //        return Observable.create { subscriber ->
 //            val loanAccounts = SQLite.select()
-//                .from(LoanAccount::class.kotlin)
+//                .from(LoanAccount::class.java)
 //                .where(LoanAccount_Table.clientId.eq(clientId.toLong()))
 //                .queryList()
 //            val savingsAccounts = SQLite.select()
-//                .from(SavingsAccount::class.kotlin)
+//                .from(SavingsAccount::class.java)
 //                .where(SavingsAccount_Table.clientId.eq(clientId.toLong()))
 //                .queryList()
 //            val clientAccounts = ClientAccounts()
@@ -238,11 +238,11 @@
 //                interestType.save()
 //            }
 //            for (dataTable: DataTable in clientsTemplate.dataTables) {
-//                Delete.table(DataTable::class.kotlin)
+//                Delete.table(DataTable::class.java)
 //                Delete.table(
-//                    ColumnHeader::class.kotlin,
+//                    ColumnHeader::class.java,
 //                )
-//                Delete.table(ColumnValue::class.kotlin)
+//                Delete.table(ColumnValue::class.java)
 //                dataTable.save()
 //                for (columnHeader: ColumnHeader in dataTable.columnHeaderData) {
 //                    columnHeader.registeredTableName = dataTable.registeredTableName
@@ -265,45 +265,45 @@
 //    fun readClientTemplate(): Observable<ClientsTemplate> {
 //        return Observable.defer {
 //            val clientsTemplate = SQLite.select()
-//                .from(ClientsTemplate::class.kotlin)
+//                .from(ClientsTemplate::class.java)
 //                .querySingle()
 //            val officeOptionses = SQLite.select()
-//                .from(OfficeOptions::class.kotlin)
+//                .from(OfficeOptions::class.java)
 //                .queryList()
 //            val staffOptionses = SQLite.select()
-//                .from(StaffOptions::class.kotlin)
+//                .from(StaffOptions::class.java)
 //                .queryList()
 //            val savingProductOptionses = SQLite.select()
-//                .from(SavingProductOptions::class.kotlin)
+//                .from(SavingProductOptions::class.java)
 //                .queryList()
 //            val genderOptions = SQLite.select()
-//                .from(Options::class.kotlin)
+//                .from(Options::class.java)
 //                .where(Options_Table.optionType.eq(GENDER_OPTIONS))
 //                .queryList()
 //            val clientTypeOptions = SQLite.select()
-//                .from(Options::class.kotlin)
+//                .from(Options::class.java)
 //                .where(Options_Table.optionType.eq(CLIENT_TYPE_OPTIONS))
 //                .queryList()
 //            val clientClassificationOptions = SQLite.select()
-//                .from(Options::class.kotlin)
+//                .from(Options::class.java)
 //                .where(Options_Table.optionType.eq(CLIENT_CLASSIFICATION_OPTIONS))
 //                .queryList()
 //            val clientLegalFormOptions = SQLite.select()
-//                .from(InterestType::class.kotlin)
+//                .from(InterestType::class.java)
 //                .queryList()
 //            val dataTables = SQLite.select()
-//                .from(DataTable::class.kotlin)
+//                .from(DataTable::class.java)
 //                .where(DataTable_Table.applicationTableName.eq(Constants.DATA_TABLE_NAME_CLIENT))
 //                .queryList()
 //            if (dataTables.isNotEmpty()) {
 //                for (dataTable: DataTable in dataTables) {
 //                    val columnHeaders = SQLite.select()
-//                        .from(ColumnHeader::class.kotlin)
+//                        .from(ColumnHeader::class.java)
 //                        .where(ColumnHeader_Table.registeredTableName.eq(dataTable.registeredTableName))
 //                        .queryList()
 //                    for (columnHeader: ColumnHeader in columnHeaders) {
 //                        val columnValues = SQLite.select()
-//                            .from(ColumnValue::class.kotlin)
+//                            .from(ColumnValue::class.java)
 //                            .where(ColumnValue_Table.registeredTableName.eq(dataTable.registeredTableName))
 //                            .queryList()
 //                        if (columnValues.isNotEmpty()) {
@@ -360,12 +360,12 @@
 //    fun readAllClientPayload(): Observable<List<ClientPayload>> {
 //        return Observable.defer {
 //            val clientPayloads = SQLite.select()
-//                .from(ClientPayload::class.kotlin)
+//                .from(ClientPayload::class.java)
 //                .queryList()
 //            if (clientPayloads.isNotEmpty()) {
 //                Observable.from(clientPayloads).subscribe { clientPayload ->
 //                    val dataTablePayloads = SQLite.select()
-//                        .from(DataTablePayload::class.kotlin)
+//                        .from(DataTablePayload::class.java)
 //                        .where(
 //                            DataTablePayload_Table.clientCreationTime
 //                                .eq(clientPayload.clientCreationTime),
@@ -400,9 +400,9 @@
 //        clientCreationTIme: Long,
 //    ): Observable<List<ClientPayload>> {
 //        return Observable.defer {
-//            Delete.table(ClientPayload::class.kotlin, ClientPayload_Table.id.eq(id))
+//            Delete.table(ClientPayload::class.java, ClientPayload_Table.id.eq(id))
 //            Delete.table(
-//                DataTablePayload::class.kotlin,
+//                DataTablePayload::class.java,
 //                DataTablePayload_Table.clientCreationTime.eq(clientCreationTIme),
 //            )
 //            readAllClientPayload()

@@ -9,7 +9,7 @@
 // */
 //package com.mifos.core.entity.accounts.loan
 //
-//import android.os.Parcelable
+//import android.os.com.mifos.core.model.utils.Parcelable
 //import com.mifos.core.database.MifosDatabase
 //import com.mifos.core.model.MifosBaseModel
 //import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
@@ -24,11 +24,11 @@
 //import com.raizlabs.android.dbflow.annotation.ModelContainer
 //import com.raizlabs.android.dbflow.annotation.PrimaryKey
 //import com.raizlabs.android.dbflow.annotation.Table
-//import kotlinx.parcelize.Parcelize
+//import kotlinx.parcelize.com.mifos.core.model.utils.Parcelize
 //
 //@Table(database = MifosDatabase::class)
 //@ModelContainer
-//@Parcelize
+//@com.mifos.core.model.utils.Parcelize
 //data class LoanWithAssociations(
 //    @PrimaryKey
 //    var id: Int = 0,
@@ -130,7 +130,7 @@
 //    var inArrears: Boolean = false,
 //
 //    var isNPA: Boolean = false,
-//) : MifosBaseModel(), Parcelable {
+//) : MifosBaseModel(), com.mifos.core.model.utils.Parcelable {
 //
 //    fun isInArrears(): Boolean {
 //        return inArrears

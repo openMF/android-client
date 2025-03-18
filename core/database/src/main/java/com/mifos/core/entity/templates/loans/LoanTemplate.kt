@@ -9,7 +9,7 @@
 // */
 //package com.mifos.core.entity.templates.loans
 //
-//import android.os.Parcelable
+//import android.os.com.mifos.core.model.utils.Parcelable
 //import com.mifos.core.entity.noncore.DataTable
 //import com.mifos.core.objects.template.loan.AmortizationType
 //import com.mifos.core.objects.template.loan.AmortizationTypeOptions
@@ -28,12 +28,12 @@
 //import com.mifos.core.objects.template.loan.TermPeriodFrequencyType
 //import com.mifos.core.objects.template.loan.Timeline
 //import com.mifos.core.objects.template.loan.TransactionProcessingStrategyOptions
-//import kotlinx.parcelize.Parcelize
+//import kotlinx.parcelize.com.mifos.core.model.utils.Parcelize
 //
 ///**
 // * Created by Rajan Maurya on 15/07/16.
 // */
-//@Parcelize
+//@com.mifos.core.model.utils.Parcelize
 //data class LoanTemplate(
 //    var clientId: Int? = null,
 //
@@ -146,4 +146,4 @@
 //    var maximumGap: Int? = null,
 //
 //    var accountLinkingOptions: List<com.mifos.core.model.objects.account.loan.AccountLinkingOptions> = ArrayList(),
-//) : Parcelable
+//) : com.mifos.core.model.utils.Parcelable
