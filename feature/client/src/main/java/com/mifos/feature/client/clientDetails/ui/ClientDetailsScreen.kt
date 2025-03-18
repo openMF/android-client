@@ -57,6 +57,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -438,7 +439,7 @@ private fun MifosClientDetailsScreen(
                     fontWeight = FontWeight.Medium,
                     fontStyle = FontStyle.Normal,
                 ),
-                color = Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Start,
             )
         }
@@ -755,6 +756,7 @@ private fun MifosSavingsAccountExpendableCard(
                         modifier = Modifier.rotate(rotateState),
                         imageVector = Icons.Default.KeyboardArrowDown,
                         contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -976,7 +978,7 @@ private fun MifosClientDetailsText(icon: ImageVector, field: String, value: Stri
             modifier = Modifier.size(18.dp),
             imageVector = icon,
             contentDescription = null,
-            tint = DarkGray,
+            tint = MaterialTheme.colorScheme.secondary,
         )
         Text(
             modifier = Modifier
@@ -988,7 +990,7 @@ private fun MifosClientDetailsText(icon: ImageVector, field: String, value: Stri
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
             ),
-            color = Black,
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Start,
         )
         Text(
@@ -999,7 +1001,7 @@ private fun MifosClientDetailsText(icon: ImageVector, field: String, value: Stri
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
             ),
-            color = DarkGray,
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Start,
         )
     }

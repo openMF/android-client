@@ -75,7 +75,6 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
 import com.mifos.core.designsystem.theme.BluePrimary
 import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.designsystem.theme.BlueSecondary
@@ -87,6 +86,7 @@ import com.mifos.core.objects.accounts.savings.SavingsAccount
 import com.mifos.core.objects.client.Client
 import com.mifos.core.objects.group.Group
 import com.mifos.feature.groups.R
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 internal fun GroupDetailsScreen(
@@ -287,7 +287,7 @@ fun GroupDetailsContent(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold,
                 ),
-                color = Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
             )
         }
@@ -327,7 +327,7 @@ fun GroupDetailsContent(
                     fontWeight = FontWeight.Medium,
                     fontStyle = FontStyle.Normal,
                 ),
-                color = Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Start,
             )
             HorizontalDivider(modifier = Modifier.padding(start = 16.dp, end = 16.dp))
@@ -366,7 +366,7 @@ fun MifosCenterDetailsText(
             modifier = Modifier.size(18.dp),
             imageVector = icon,
             contentDescription = null,
-            tint = DarkGray,
+            tint = MaterialTheme.colorScheme.secondary,
         )
         Text(
             modifier = Modifier
@@ -378,7 +378,7 @@ fun MifosCenterDetailsText(
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
             ),
-            color = Black,
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Start,
         )
         Text(
@@ -389,7 +389,7 @@ fun MifosCenterDetailsText(
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
             ),
-            color = DarkGray,
+            color = MaterialTheme.colorScheme.secondary,
             textAlign = TextAlign.Start,
         )
     }
@@ -439,7 +439,7 @@ fun MifosLoanAccountExpendableCard(
                         fontWeight = FontWeight.Normal,
                         fontStyle = FontStyle.Normal,
                     ),
-                    color = Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Start,
                 )
                 IconButton(
@@ -542,7 +542,7 @@ fun MifosLoanAccountsLazyColumn(
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
                                 ),
-                                color = Black,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 textAlign = TextAlign.Start,
                             )
                         }
@@ -565,7 +565,7 @@ fun MifosLoanAccountsLazyColumn(
                                 fontWeight = FontWeight.Normal,
                                 fontStyle = FontStyle.Normal,
                             ),
-                            color = Black,
+                            color = MaterialTheme.colorScheme.onSurface,
                             textAlign = TextAlign.Start,
                         )
                     }
@@ -619,7 +619,7 @@ private fun MifosSavingsAccountExpendableCard(
                         fontWeight = FontWeight.Normal,
                         fontStyle = FontStyle.Normal,
                     ),
-                    color = Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Start,
                 )
                 IconButton(
@@ -721,7 +721,7 @@ private fun MifosSavingsAccountsLazyColumn(
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
                                 ),
-                                color = Black,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 textAlign = TextAlign.Start,
                             )
                         }
@@ -744,7 +744,7 @@ private fun MifosSavingsAccountsLazyColumn(
                                 fontWeight = FontWeight.Normal,
                                 fontStyle = FontStyle.Normal,
                             ),
-                            color = Black,
+                            color = MaterialTheme.colorScheme.onSurface,
                             textAlign = TextAlign.Start,
                         )
                     }
