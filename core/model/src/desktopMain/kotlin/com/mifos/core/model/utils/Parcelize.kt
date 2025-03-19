@@ -9,11 +9,11 @@
  */
 package com.mifos.core.model.utils
 
-expect annotation class Parcelize()
+actual annotation class Parcelize
 
-expect interface Parcelable
+actual interface Parcelable
 
-expect annotation class IgnoredOnParcel()
+actual annotation class IgnoredOnParcel
 
 @Target(AnnotationTarget.TYPE)
-expect annotation class RawValue()
+actual annotation class RawValue actual constructor()

@@ -9,11 +9,15 @@
  */
 package com.mifos.core.model.utils
 
-expect annotation class Parcelize()
+import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
-expect interface Parcelable
+actual typealias Parcelize = Parcelize
 
-expect annotation class IgnoredOnParcel()
+actual typealias Parcelable = Parcelable
 
-@Target(AnnotationTarget.TYPE)
-expect annotation class RawValue()
+actual typealias IgnoredOnParcel = IgnoredOnParcel
+
+actual typealias RawValue = RawValue
