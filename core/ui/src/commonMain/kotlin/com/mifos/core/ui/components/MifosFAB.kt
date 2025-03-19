@@ -12,11 +12,9 @@ package com.mifos.core.ui.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
@@ -24,7 +22,6 @@ fun MifosFAB(
     icon: ImageVector,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
 ) {
     Box(
         modifier = modifier,
@@ -32,7 +29,6 @@ fun MifosFAB(
     ) {
         FloatingActionButton(
             onClick = onClick,
-            containerColor = containerColor,
         ) {
             Icon(
                 imageVector = icon,
