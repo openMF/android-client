@@ -17,3 +17,29 @@ actual annotation class IgnoredOnParcel
 
 @Target(AnnotationTarget.TYPE)
 actual annotation class RawValue actual constructor()
+
+actual class Parcel {
+    actual fun readString(): String? = null
+    actual fun readByte(): Byte = 1
+
+    actual fun readInt(): Int = 1
+
+    actual fun readFloat(): Float = 1f
+
+    actual fun readDouble(): Double = 1.0
+
+    actual fun writeByte(value: Byte) {
+    }
+
+    actual fun writeInt(value: Int) {
+    }
+
+    actual fun writeFloat(value: Float) {
+    }
+
+    actual fun writeDouble(value: Double) {
+    }
+
+    actual fun writeString(value: String?) {
+    }
+}

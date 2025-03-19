@@ -13,7 +13,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mifos.core.model.objects.Changes
-import com.mifos.core.common.utils.Parcelize
+import com.mifos.core.model.utils.Parcelize
 import kotlinx.parcelize.IgnoredOnParcel
 
 @Entity(tableName = "LoanRepaymentResponse")

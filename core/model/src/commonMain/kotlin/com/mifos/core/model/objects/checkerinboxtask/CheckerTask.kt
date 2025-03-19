@@ -11,9 +11,11 @@ package com.mifos.core.model.objects.checkerinboxtask
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 // TODO migrate to KMP
 @Parcelize
+@Serializable
 data class CheckerTask(
     var id: Int,
     var madeOnDate: Long,
@@ -23,6 +25,7 @@ data class CheckerTask(
     var entityName: String,
     var resourceId: String,
 ) : Parcelable {
+
 
     var selectedFlag = false
 

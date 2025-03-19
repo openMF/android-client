@@ -22,7 +22,7 @@ data class Scorecard(
 
     var clientId: Int = 0,
 
-    var createdOn: Date? = null,
-
+//    var createdOn: Date? = null,
+    var createdOn : List<Int> = emptyList(),
     var scorecardValues: List<ScorecardValues>? = null,
 ) : Parcelable

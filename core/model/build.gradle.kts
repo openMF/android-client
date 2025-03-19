@@ -18,6 +18,11 @@ android{
 }
 
 kotlin {
+    androidTarget {
+        compilerOptions {
+            freeCompilerArgs.addAll("-P", "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=com.mifos.core.model.utils.Parcelize")
+        }
+    }
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.json)

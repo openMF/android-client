@@ -9,6 +9,7 @@
  */
 package com.mifos.core.model.utils
 
+import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
@@ -21,3 +22,5 @@ actual typealias Parcelable = Parcelable
 actual typealias IgnoredOnParcel = IgnoredOnParcel
 
 actual typealias RawValue = RawValue
+
+actual typealias Parcel = Parcel

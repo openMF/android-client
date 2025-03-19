@@ -12,11 +12,16 @@ package com.mifos.core.model.objects.collectionsheets
 import com.mifos.core.model.utils.Parcel
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.objects.template.loan.Currency
+import com.mifos.core.model.utils.IgnoredOnParcel
+import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 06-07-2017.
  */
 // TODO migrate to kmp model,
+@Parcelize
+@Serializable
 class LoanCollectionSheet() : Parcelable {
     var accountId: String? = null
     var accountStatusId: Int = 0
