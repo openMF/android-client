@@ -13,6 +13,8 @@ plugins {
     alias(libs.plugins.mifos.android.hilt)
     alias(libs.plugins.secrets)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
+
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -63,4 +65,7 @@ dependencies {
     implementation(libs.stetho.okhttp3)
 
     implementation(libs.coil.kt2)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
 }

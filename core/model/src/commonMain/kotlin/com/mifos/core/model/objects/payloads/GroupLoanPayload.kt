@@ -11,11 +11,13 @@ package com.mifos.core.model.objects.payloads
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by nellyk on 2/20/2016.
  */
 @Parcelize
+@Serializable
 data class GroupLoanPayload(
     var isAllowPartialPeriodInterestCalcualtion: Boolean? = null,
     var amortizationType: Int? = null,

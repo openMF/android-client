@@ -14,8 +14,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mifos.room.entities.noncore.DataTableEntity
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 @Entity(tableName = "ClientsTemplate")
 data class ClientsTemplateEntity(
     val activationDate: List<Int> = emptyList(),

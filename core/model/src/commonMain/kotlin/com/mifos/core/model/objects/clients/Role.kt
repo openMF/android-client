@@ -9,9 +9,12 @@
  */
 package com.mifos.core.model.objects.clients
 
+import kotlinx.serialization.Serializable
+
 /**
  * Created by ishankhanna on 09/02/14.
  */
+@Serializable
 data class Role(
     var id: Int = 0,
 

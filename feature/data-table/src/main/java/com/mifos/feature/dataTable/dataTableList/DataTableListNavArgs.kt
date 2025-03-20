@@ -9,15 +9,21 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
+import FormWidgetDTO
 import com.mifos.room.entities.noncore.DataTableEntity
+import kotlinx.serialization.Polymorphic
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class DataTableListNavArgs(
 
     val dataTableList: List<DataTableEntity>,
 
     val requestType: Int,
 
+    @Polymorphic
     val payload: Any?,
 
-    val formWidget: MutableList<List<FormWidget>>,
+    val formWidget: MutableList<List<FormWidgetDTO>>,
+
 )

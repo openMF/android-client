@@ -9,6 +9,9 @@
  */
 package com.mifos.core.common.model.user
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 class User {
     var username: String? = null
 

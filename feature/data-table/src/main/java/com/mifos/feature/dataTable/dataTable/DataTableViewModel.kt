@@ -12,7 +12,6 @@ package com.mifos.feature.dataTable.dataTable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.model.objects.nav.DataTableNavigationArg
@@ -22,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 /**
@@ -35,7 +35,7 @@ class DataTableViewModel @Inject constructor(
 
     private val arg =
         savedStateHandle.getStateFlow(Constants.DATA_TABLE_NAV_DATA, initialValue = "")
-    val args = Gson().fromJson(arg.value, DataTableNavigationArg::class.java)
+    val args = Json.decodeFromString<DataTableNavigationArg>(arg.value)
 
     private val _dataTableUiState =
         MutableStateFlow<DataTableUiState>(DataTableUiState.ShowProgressbar)

@@ -28,5 +28,7 @@ dependencies {
     testImplementation(projects.core.testing)
     androidTestImplementation(projects.core.testing)
 
+    implementation(libs.kotlinx.serialization.json)
+
     implementation(libs.maps.compose)
 }

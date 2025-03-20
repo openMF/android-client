@@ -9,6 +9,9 @@
  */
 package com.mifos.core.model.objects.nav
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class DataTableNavigationArg(
 
     val tableName: String,

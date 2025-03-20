@@ -9,12 +9,16 @@
  */
 package com.mifos.room.entities.noncore
 
-import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.parcelize.Parcelize
+import com.mifos.core.common.utils.MapDeserializer
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
 import kotlinx.parcelize.RawValue
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 @Entity(tableName = "DataTablePayload")
 data class DataTablePayload(
@@ -28,5 +32,11 @@ data class DataTablePayload(
 
     val registeredTableName: String? = null,
 
-    val data: Map<String, @RawValue Any>? = null,
+    @Serializable(with = MapDeserializer::class)
+    @Contextual
+    val data: Map<
+        String,
+        @RawValue @Contextual
+        Any,
+        >,
 ) : Parcelable

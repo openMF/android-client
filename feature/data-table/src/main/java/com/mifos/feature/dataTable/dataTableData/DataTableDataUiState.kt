@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.dataTable.dataTableData
 
-import com.google.gson.JsonArray
+import kotlinx.serialization.json.JsonArray
 
 /**
  * Created by Aditya Gupta on 10/08/23.

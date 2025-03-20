@@ -9,10 +9,11 @@
  */
 package com.mifos.feature.loan.navigation
 
-import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.room.entities.accounts.loans.LoanApprovalData
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * Created by Pronay Sarker on 16/08/2024 (2:25 AM)
@@ -29,9 +30,8 @@ sealed class LoanScreens(val route: String) {
 
     data object LoanApprovalScreen : LoanScreens("loan_approval_screen/{arg}") {
         fun argument(loanAccountNumber: Int, loanWithAssociations: LoanWithAssociationsEntity): String {
-            val gson = Gson()
             val arg = LoanApprovalData(loanAccountNumber, loanWithAssociations)
-            val loanApprovalDataInJson = gson.toJson(arg)
+            val loanApprovalDataInJson = Json.encodeToString(arg)
 
             return "loan_approval_screen/$loanApprovalDataInJson"
         }
@@ -47,8 +47,7 @@ sealed class LoanScreens(val route: String) {
 
     data object LoanRepaymentScreen : LoanScreens("loan_repayment_screen/{${Constants.LOAN_WITH_ASSOCIATIONS}}") {
         fun argument(loanWithAssociations: LoanWithAssociationsEntity): String {
-            val gson = Gson()
-            val loanWithAssociationsInJson = gson.toJson(loanWithAssociations)
+            val loanWithAssociationsInJson = Json.encodeToString(loanWithAssociations)
 
             return "loan_repayment_screen/$loanWithAssociationsInJson"
         }

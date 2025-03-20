@@ -13,7 +13,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.request.ImageResult
-import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
@@ -22,6 +21,7 @@ import com.mifos.core.network.utils.ImageLoaderUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,11 +40,10 @@ class PaymentDetailsViewModel @Inject constructor(
     val clientId = decodedClientId
     val position = decodedPosition
     val individualCollectionSheetPayload: IndividualCollectionSheetPayload =
-        Gson().fromJson(payloadArg.value, IndividualCollectionSheetPayload::class.java)
-    val paymentTypeOptionsName = Gson().fromJson(paymentListArg.value, Array<String>::class.java).toList()
-    val loanAndClientName: LoanAndClientName = Gson().fromJson(loanAndClientNameArg.value, LoanAndClientName::class.java)
-    val paymentTypeOptions = Gson().fromJson(paymentOptionsArg.value, Array<PaymentTypeOptions>::class.java).toList()
-
+        Json.decodeFromString<IndividualCollectionSheetPayload>(payloadArg.value)
+    val paymentTypeOptionsName = Json.decodeFromString<Array<String>>(paymentListArg.value).toList()
+    val loanAndClientName: LoanAndClientName = Json.decodeFromString<LoanAndClientName>(loanAndClientNameArg.value)
+    val paymentTypeOptions = Json.decodeFromString<Array<PaymentTypeOptions>>(paymentOptionsArg.value).toList()
     fun getClientImageUrl(clientId: Int): ImageResult? {
         var image: ImageResult? = null
         viewModelScope.launch(Dispatchers.IO) {

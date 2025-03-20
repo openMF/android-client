@@ -9,15 +9,19 @@
  */
 package com.mifos.core.network.model
 
-import com.google.gson.Gson
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
+@Serializable
 class CollectionSheetPayload : Payload() {
     var actualDisbursementDate: String? = null
-    lateinit var bulkDisbursementTransactions: IntArray
-    lateinit var bulkRepaymentTransactions: Array<BulkRepaymentTransactions>
-    lateinit var clientsAttendance: Array<String>
+    var bulkDisbursementTransactions: List<Int> = emptyList()
+    var bulkRepaymentTransactions: List<BulkRepaymentTransactions> = emptyList()
+    var clientsAttendance: List<String> = emptyList()
+
     override fun toString(): String {
-        return Gson().toJson(this)
+        return Json.encodeToString(this)
     }
 }

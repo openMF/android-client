@@ -9,23 +9,24 @@
  */
 package com.mifos.feature.dataTable.navigation
 
+import FormWidgetDTO
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.nav.DataTableNavigationArg
 import com.mifos.feature.dataTable.dataTable.DataTableScreen
 import com.mifos.feature.dataTable.dataTableData.DataTableDataScreen
 import com.mifos.feature.dataTable.dataTableList.DataTableListNavArgs
 import com.mifos.feature.dataTable.dataTableList.DataTableListScreen
-import com.mifos.feature.dataTable.dataTableList.FormWidget
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.navigation.DataTableDataNavigationArg
 import com.mifos.room.entities.noncore.DataTableEntity
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 fun NavGraphBuilder.dataTableNavGraph(
     navController: NavController,
@@ -113,7 +114,7 @@ fun NavController.navigateToDataTable(
     tableName: String,
     entityId: Int,
 ) {
-    val arg = Gson().toJson(DataTableNavigationArg(tableName, entityId))
+    val arg = Json.encodeToString(DataTableNavigationArg(tableName, entityId))
     navigate(DataTableScreens.DataTableScreen.argument(arg))
 }
 
@@ -122,7 +123,7 @@ fun NavController.navigateDataTableData(
     entityId: Int,
     dataTable: DataTableEntity,
 ) {
-    val arg = Gson().toJson(DataTableDataNavigationArg(tableName, entityId, dataTable))
+    val arg = Json.encodeToString(DataTableDataNavigationArg(tableName, entityId, dataTable))
     navigate(DataTableScreens.DataTableDataScreen.argument(arg))
 }
 
@@ -130,8 +131,8 @@ fun NavController.navigateDataTableList(
     dataTableList: List<DataTableEntity>,
     payload: Any?,
     requestType: Int,
-    formWidget: MutableList<List<FormWidget>>,
+    formWidget: MutableList<List<FormWidgetDTO>>,
 ) {
-    val arg = Gson().toJson(DataTableListNavArgs(dataTableList, requestType, payload, formWidget))
+    val arg = Json.encodeToString(DataTableListNavArgs(dataTableList, requestType, payload, formWidget))
     navigate(DataTableScreens.DataTableListScreen.argument(arg))
 }
