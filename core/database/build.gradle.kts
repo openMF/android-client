@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.mifos.android.library.jacoco)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -37,9 +38,9 @@ dependencies {
     implementation(libs.rxjava)
 
     //DBFlow dependencies
-    kapt(libs.dbflow.processor)
+    ksp(libs.dbflow.processor)
     implementation(libs.dbflow)
-    kapt(libs.github.dbflow.processor)
+    ksp(libs.github.dbflow.processor)
 
     //room dependencies
 //    implementation(libs.room.runtime)

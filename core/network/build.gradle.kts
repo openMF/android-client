@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.mifos.android.hilt)
     alias(libs.plugins.secrets)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -46,7 +47,7 @@ dependencies {
     implementation(libs.fineract.client)
 
     //DBFlow dependencies
-    kapt(libs.dbflow.processor)
+    ksp(libs.dbflow.processor)
     implementation(libs.dbflow)
 
     //Square dependencies

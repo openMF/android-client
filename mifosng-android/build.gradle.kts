@@ -24,6 +24,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.secrets)
     alias(libs.plugins.androidx.navigation)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -166,7 +167,7 @@ dependencies {
     implementation(libs.kotlin.stdlib)
 
     //DBFlow dependencies
-    kapt(libs.dbflow.processor)
+    ksp(libs.dbflow.processor)
     implementation(libs.dbflow)
 
     // App's Support dependencies, including test
