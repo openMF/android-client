@@ -137,6 +137,7 @@ class BaseApiManager @Inject constructor(
 
         fun createService(prefManager: PrefManager) {
             val gson = GsonBuilder()
+                .disableHtmlEscaping()
                 .registerTypeAdapter(Date::class.java, JsonDateSerializer()).create()
             val json = Json { ignoreUnknownKeys = true }
 
