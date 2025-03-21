@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.ui.util
 
 import kotlin.math.log2
@@ -42,7 +51,7 @@ object PasswordChecker {
             numTypesPresent == 2 -> PasswordStrength.LEVEL_2
             numTypesPresent == 3 && length >= STRONG_PASSWORD_LENGTH -> PasswordStrength.LEVEL_4
             numTypesPresent == 4 && length >= STRONG_PASSWORD_LENGTH &&
-                    entropyBits >= MIN_ENTROPY_BITS -> PasswordStrength.LEVEL_5
+                entropyBits >= MIN_ENTROPY_BITS -> PasswordStrength.LEVEL_5
 
             else -> PasswordStrength.LEVEL_3
         }
