@@ -10,19 +10,19 @@
 package com.mifos.room.entities.accounts
 
 import android.os.Parcelable
-import com.mifos.room.entities.accounts.loans.LoanAccount
-import com.mifos.room.entities.accounts.savings.SavingsAccount
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class GroupAccounts(
-    var loanAccounts: List<LoanAccount> = emptyList(),
+    var loanAccounts: List<LoanAccountEntity> = emptyList(),
 
-    var savingsAccounts: List<SavingsAccount> = emptyList(),
+    var savingsAccounts: List<SavingsAccountEntity> = emptyList(),
 ) : Parcelable {
 
-    private fun getSavingsAccounts(wantRecurring: Boolean): List<SavingsAccount> {
-        val result: MutableList<SavingsAccount> = ArrayList()
+    private fun getSavingsAccounts(wantRecurring: Boolean): List<SavingsAccountEntity> {
+        val result: MutableList<SavingsAccountEntity> = ArrayList()
         for (account in savingsAccounts) {
             if (account.depositType?.isRecurring == wantRecurring) {
                 result.add(account)
@@ -31,11 +31,11 @@ data class GroupAccounts(
         return result
     }
 
-    fun getRecurringSavingsAccounts(): List<SavingsAccount> {
+    fun getRecurringSavingsAccounts(): List<SavingsAccountEntity> {
         return getSavingsAccounts(true)
     }
 
-    fun getNonRecurringSavingsAccounts(): List<SavingsAccount> {
+    fun getNonRecurringSavingsAccounts(): List<SavingsAccountEntity> {
         return getSavingsAccounts(false)
     }
 }

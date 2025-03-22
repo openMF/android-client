@@ -9,11 +9,11 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.room.entities.center.CenterPayload
+import com.mifos.room.entities.center.CenterPayloadEntity
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
 interface CreateNewCenterRepository {
-    suspend fun createCenter(centerPayload: CenterPayload)
+    suspend fun createCenter(centerPayload: CenterPayloadEntity)
 }

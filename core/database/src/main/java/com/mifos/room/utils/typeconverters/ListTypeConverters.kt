@@ -11,8 +11,8 @@ package com.mifos.room.utils.typeconverters
 
 import androidx.room.TypeConverter
 import com.mifos.room.entities.accounts.savings.Charge
-import com.mifos.room.entities.accounts.savings.Transaction
-import com.mifos.room.entities.group.Center
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionEntity
+import com.mifos.room.entities.group.CenterEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -29,12 +29,12 @@ class ListTypeConverters {
     }
 
     @TypeConverter
-    fun fromCenterList(centers: List<Center?>): String {
+    fun fromCenterList(centers: List<CenterEntity?>): String {
         return centers.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toCenterList(json: String): List<Center?> {
+    fun toCenterList(json: String): List<CenterEntity?> {
         return json.let { Json.decodeFromString(it) }
     }
 
@@ -44,12 +44,12 @@ class ListTypeConverters {
     }
 
     @TypeConverter
-    fun fromListOfTransactions(list: List<Transaction>?): String? {
+    fun fromListOfTransactions(list: List<SavingsAccountTransactionEntity>?): String? {
         return list?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toListOfTransactions(json: String?): List<Transaction>? {
+    fun toListOfTransactions(json: String?): List<SavingsAccountTransactionEntity>? {
         return json?.let { Json.decodeFromString(it) }
     }
 

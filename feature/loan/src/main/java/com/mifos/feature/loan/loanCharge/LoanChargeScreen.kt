@@ -58,10 +58,10 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.client.Charges
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.loan.R
 import com.mifos.feature.loan.loanChargeDialog.LoanChargeDialogScreen
+import com.mifos.room.entities.client.ChargesEntity
 
 @Composable
 internal fun LoanChargeScreen(
@@ -166,7 +166,7 @@ internal fun LoanChargeScreen(
 
 @Composable
 private fun LoanChargesContent(
-    loanCharges: List<Charges>,
+    loanCharges: List<ChargesEntity>,
 ) {
     LazyColumn {
         items(loanCharges) { charges ->
@@ -179,7 +179,7 @@ private fun LoanChargesContent(
 
 @Composable
 private fun LoanChargeItem(
-    charges: Charges,
+    charges: ChargesEntity,
 ) {
     Card(
         modifier = Modifier
@@ -273,5 +273,5 @@ private fun LoanChargeScreenPreview(
 }
 
 val sampleLoanChargeList = List(10) {
-    Charges(name = "name $it", chargeId = it, amount = it.toDouble())
+    ChargesEntity(name = "name $it", chargeId = it, amount = it.toDouble())
 }

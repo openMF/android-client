@@ -29,7 +29,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -72,10 +71,10 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.dataTable.dataTableRowDialog.DataTableRowDialogScreen
 import com.mifos.feature.data_table.R
+import com.mifos.room.entities.noncore.DataTableEntity
 
 @Composable
 fun DataTableDataScreen(
@@ -112,7 +111,7 @@ fun DataTableDataScreen(
 
 @Composable
 fun DataTableDataScreen(
-    dataTable: DataTable,
+    dataTable: DataTableEntity,
     entityId: Int,
     state: DataTableDataUiState,
     onBackPressed: () -> Unit,
@@ -407,7 +406,7 @@ private fun DataTableDataScreenPreview(
     @PreviewParameter(DataTableDataUiStateProvider::class) state: DataTableDataUiState,
 ) {
     DataTableDataScreen(
-        dataTable = DataTable(),
+        dataTable = DataTableEntity(),
         entityId = 1,
         state = state,
         onBackPressed = {},

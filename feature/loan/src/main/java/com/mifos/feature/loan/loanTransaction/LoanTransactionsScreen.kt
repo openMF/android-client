@@ -67,7 +67,7 @@ import com.mifos.core.model.objects.account.loan.Transaction
 import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.loan.R
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 
 /**
  * Created by Pronay Sarker on 04/07/2024 (11:31 AM)
@@ -412,7 +412,7 @@ private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTra
             LoanTransactionsUiState.ShowFetchingError(""),
             LoanTransactionsUiState.ShowProgressBar,
             LoanTransactionsUiState.ShowLoanTransaction(
-                LoanWithAssociations(
+                LoanWithAssociationsEntity(
                     transactions = listOf(
                         transaction,
                         transaction,

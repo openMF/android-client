@@ -9,68 +9,21 @@
  */
 package com.mifos.room.entities
 
-import android.os.Parcel
 import android.os.Parcelable
-import com.raizlabs.android.dbflow.structure.BaseModel
+import kotlinx.parcelize.Parcelize
 
-/**
- * Created by ishankhanna on 09/02/14.
- */
-class Timeline() : BaseModel(), Parcelable {
-    var submittedOnDate: MutableList<Int> = ArrayList()
-    var submittedByUsername: String? = null
-    var submittedByFirstname: String? = null
-    var submittedByLastname: String? = null
-    var activatedOnDate: MutableList<Int> = ArrayList()
-    var activatedByUsername: String? = null
-    var activatedByFirstname: String? = null
-    var activatedByLastname: String? = null
-    var closedOnDate: MutableList<Int> = ArrayList()
-    var closedByUsername: String? = null
-    var closedByFirstname: String? = null
-    var closedByLastname: String? = null
-
-    constructor(parcel: Parcel) : this() {
-        parcel.readList(submittedOnDate, Int::class.java.classLoader)
-        submittedByUsername = parcel.readString()
-        submittedByFirstname = parcel.readString()
-        submittedByLastname = parcel.readString()
-        parcel.readList(activatedOnDate, Int::class.java.classLoader)
-        activatedByUsername = parcel.readString()
-        activatedByFirstname = parcel.readString()
-        activatedByLastname = parcel.readString()
-        parcel.readList(closedOnDate, Int::class.java.classLoader)
-        closedByUsername = parcel.readString()
-        closedByFirstname = parcel.readString()
-        closedByLastname = parcel.readString()
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeList(submittedOnDate)
-        parcel.writeString(submittedByUsername)
-        parcel.writeString(submittedByFirstname)
-        parcel.writeString(submittedByLastname)
-        parcel.writeList(activatedOnDate)
-        parcel.writeString(activatedByUsername)
-        parcel.writeString(activatedByFirstname)
-        parcel.writeString(activatedByLastname)
-        parcel.writeList(closedOnDate)
-        parcel.writeString(closedByUsername)
-        parcel.writeString(closedByFirstname)
-        parcel.writeString(closedByLastname)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Timeline> {
-        override fun createFromParcel(parcel: Parcel): Timeline {
-            return Timeline(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Timeline?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
+@Parcelize
+data class Timeline(
+    val submittedOnDate: List<Int> = emptyList(),
+    val submittedByUsername: String? = null,
+    val submittedByFirstname: String? = null,
+    val submittedByLastname: String? = null,
+    val activatedOnDate: List<Int> = emptyList(),
+    val activatedByUsername: String? = null,
+    val activatedByFirstname: String? = null,
+    val activatedByLastname: String? = null,
+    val closedOnDate: List<Int> = emptyList(),
+    val closedByUsername: String? = null,
+    val closedByFirstname: String? = null,
+    val closedByLastname: String? = null,
+) : Parcelable

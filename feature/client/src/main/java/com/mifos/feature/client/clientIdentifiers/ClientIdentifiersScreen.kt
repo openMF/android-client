@@ -233,7 +233,7 @@ private fun ClientIdentifiersItem(
                     .height(94.dp),
             ) {
                 drawRect(
-                    //TODO use lightGreen color
+                    // TODO use lightGreen color
                     color = Color.Green,
                     size = Size(size.width, size.height),
                 )

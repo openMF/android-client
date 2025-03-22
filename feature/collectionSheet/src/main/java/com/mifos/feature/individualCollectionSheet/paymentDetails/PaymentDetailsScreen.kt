@@ -43,8 +43,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil3.compose.AsyncImage
-import coil3.request.ImageResult
+import coil.compose.AsyncImage
+import coil.request.ImageResult
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
@@ -82,7 +82,7 @@ internal fun PaymentsDetailsScreen(
     modifier: Modifier = Modifier,
     getClientImage: (Int) -> ImageResult?,
 ) {
-    val loanCollectionSheetItem = loanAndClientNameItem?.loan
+    val loanCollectionSheetItem = loanAndClientNameItem.loan
     val scrollState = rememberScrollState()
 
     val bulkRepaymentTransactions by rememberSaveable { mutableStateOf(BulkRepaymentTransactions()) }
@@ -103,11 +103,11 @@ internal fun PaymentsDetailsScreen(
     var noPaymentVisibility by rememberSaveable { mutableStateOf(true) }
 
     fun onSaveAdditionalItem(transaction: BulkRepaymentTransactions, position: Int) {
-        payload!!.bulkRepaymentTransactions[position] = transaction
+        payload.bulkRepaymentTransactions[position] = transaction
     }
 
     fun onShowSheetMandatoryItem(transaction: BulkRepaymentTransactions, position: Int) {
-        payload!!.bulkRepaymentTransactions[position] = transaction
+        payload.bulkRepaymentTransactions[position] = transaction
     }
 
     fun cancelAdditional() { // done
@@ -115,7 +115,7 @@ internal fun PaymentsDetailsScreen(
             if (totalCharges.isNotEmpty()) totalCharges.toDoubleOrNull() ?: 0.0 else 0.0
         val charge2: Double = if (totalDues.isNotEmpty()) totalDues.toDoubleOrNull() ?: 0.0 else 0.0
 
-        bulkRepaymentTransactions.loanId = loanAndClientNameItem?.loan!!.loanId
+        bulkRepaymentTransactions.loanId = loanAndClientNameItem.loan!!.loanId
         bulkRepaymentTransactions.transactionAmount = charge1 + charge2
         showAdditionalDetails = false
         bulkRepaymentTransactions.paymentTypeId = null
@@ -130,7 +130,7 @@ internal fun PaymentsDetailsScreen(
     fun saveAdditional() {
         var isAnyDetailNull = false
 
-        bulkRepaymentTransactions.loanId = loanAndClientNameItem?.loan!!.loanId
+        bulkRepaymentTransactions.loanId = loanAndClientNameItem.loan!!.loanId
         val charge1: Double =
             if (totalCharges.isNotEmpty()) totalCharges.toDoubleOrNull() ?: 0.0 else 0.0
         val charge2: Double = if (totalDues.isNotEmpty()) totalDues.toDoubleOrNull() ?: 0.0 else 0.0
@@ -211,7 +211,7 @@ internal fun PaymentsDetailsScreen(
                         .padding(end = 16.dp),
                 ) {
                     Text(
-                        text = loanAndClientNameItem?.clientName ?: "This is Tv name",
+                        text = loanAndClientNameItem.clientName ?: "This is Tv name",
                         style = TextStyle(
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
@@ -303,7 +303,7 @@ internal fun PaymentsDetailsScreen(
                         onValueChanged = { paymentType = it },
                         onOptionSelected = { index, value ->
                             paymentType = value
-                            bulkRepaymentTransactions.paymentTypeId = paymentTypeOptions!![index].id
+                            bulkRepaymentTransactions.paymentTypeId = paymentTypeOptions[index].id
                         },
                         options = paymentTypeOptionList ?: emptyList(),
                         readOnly = true,

@@ -19,7 +19,7 @@ data class PageItem(
 
     val accountNo: String? = null,
 
-    val status: Status? = null,
+    val status: ClientStatusEntity? = null,
 
     val isActive: Boolean = false,
 

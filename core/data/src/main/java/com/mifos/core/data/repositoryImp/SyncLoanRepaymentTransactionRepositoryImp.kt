@@ -11,9 +11,9 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.network.datamanager.DataManagerLoan
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
-import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -21,26 +21,26 @@ class SyncLoanRepaymentTransactionRepositoryImp @Inject constructor(
     private val dataManagerLoan: DataManagerLoan,
 ) : SyncLoanRepaymentTransactionRepository {
 
-    override fun databaseLoanRepayments(): Flow<List<LoanRepaymentRequest>> {
+    override fun databaseLoanRepayments(): Flow<List<LoanRepaymentRequestEntity>> {
         return dataManagerLoan.databaseLoanRepayments
     }
 
-    override fun paymentTypeOption(): Flow<List<PaymentTypeOption>> {
+    override fun paymentTypeOption(): Flow<List<PaymentTypeOptionEntity>> {
         return dataManagerLoan.paymentTypeOption
     }
 
     override suspend fun submitPayment(
         loanId: Int,
-        request: LoanRepaymentRequest,
-    ): LoanRepaymentResponse {
+        request: LoanRepaymentRequestEntity,
+    ): LoanRepaymentResponseEntity {
         return dataManagerLoan.submitPayment(loanId, request)
     }
 
-    override fun deleteAndUpdateLoanRepayments(loanId: Int): Flow<List<LoanRepaymentRequest>> {
+    override fun deleteAndUpdateLoanRepayments(loanId: Int): Flow<List<LoanRepaymentRequestEntity>> {
         return dataManagerLoan.deleteAndUpdateLoanRepayments(loanId)
     }
 
-    override fun updateLoanRepaymentTransaction(loanRepaymentRequest: LoanRepaymentRequest): Flow<LoanRepaymentRequest> {
+    override fun updateLoanRepaymentTransaction(loanRepaymentRequest: LoanRepaymentRequestEntity): Flow<LoanRepaymentRequestEntity> {
         return dataManagerLoan.updateLoanRepaymentTransaction(loanRepaymentRequest)
     }
 }

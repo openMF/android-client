@@ -11,9 +11,9 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.model.objects.surveys.Scorecard
 import com.mifos.core.network.BaseApiManager
-import com.mifos.room.entities.survey.QuestionDatas
-import com.mifos.room.entities.survey.ResponseDatas
-import com.mifos.room.entities.survey.Survey
+import com.mifos.room.entities.survey.QuestionDatasEntity
+import com.mifos.room.entities.survey.ResponseDatasEntity
+import com.mifos.room.entities.survey.SurveyEntity
 import com.mifos.room.helper.SurveyDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -41,7 +41,7 @@ class DataManagerSurveys @Inject constructor(
      *
      * @return Observable<List></List><Survey>>
      </Survey></Survey> */
-    val allSurvey: Flow<List<Survey>>
+    val allSurvey: Flow<List<SurveyEntity>>
         get() = when (prefManager.userStatus) {
             false -> flow { mBaseApiManager.surveyApi.allSurveys() }
             true -> surveyDatabaseHelper.readAllSurveys()
@@ -53,7 +53,7 @@ class DataManagerSurveys @Inject constructor(
      *
      * @return List<Survey>
      </Survey></Survey> */
-    val databaseSurveys: Flow<List<Survey>>
+    val databaseSurveys: Flow<List<SurveyEntity>>
         get() = surveyDatabaseHelper.readAllSurveys()
 
     /**
@@ -62,7 +62,7 @@ class DataManagerSurveys @Inject constructor(
      * from the Database QuestionDatas table and returns the List<QuestionDatas>.
      * @return List<QuestionDatas>
      </QuestionDatas></QuestionDatas> */
-    fun getDatabaseQuestionData(surveyId: Int): Flow<List<QuestionDatas>> {
+    fun getDatabaseQuestionData(surveyId: Int): Flow<List<QuestionDatasEntity>> {
         return surveyDatabaseHelper.getQuestionDatas(surveyId)
     }
 
@@ -72,7 +72,7 @@ class DataManagerSurveys @Inject constructor(
      * from the Database ResponseDatas table and returns the List<ResponseDatas>.
      * @return List<ResponseDatas>
      </ResponseDatas></ResponseDatas> */
-    fun getDatabaseResponseDatas(questionId: Int): Flow<List<ResponseDatas>> {
+    fun getDatabaseResponseDatas(questionId: Int): Flow<List<ResponseDatasEntity>> {
         return surveyDatabaseHelper.getResponseDatas(questionId)
     }
 
@@ -87,7 +87,7 @@ class DataManagerSurveys @Inject constructor(
         return mBaseApiManager.surveyApi.submitScore(surveyId, scorecardPayload)
     }
 
-    fun getSurvey(surveyId: Int): Observable<Survey> {
+    fun getSurvey(surveyId: Int): Observable<SurveyEntity> {
         return mBaseApiManager.surveyApi.getSurvey(surveyId)
     }
 
@@ -97,7 +97,7 @@ class DataManagerSurveys @Inject constructor(
      * @param survey Survey
      * @return Survey
      */
-    suspend fun syncSurveyInDatabase(survey: Survey) {
+    suspend fun syncSurveyInDatabase(survey: SurveyEntity) {
         return surveyDatabaseHelper.saveSurvey(survey)
     }
 
@@ -109,8 +109,8 @@ class DataManagerSurveys @Inject constructor(
      */
     fun syncQuestionDataInDatabase(
         surveyId: Int,
-        questionDatas: QuestionDatas,
-    ): Flow<QuestionDatas> {
+        questionDatas: QuestionDatasEntity,
+    ): Flow<QuestionDatasEntity> {
         return surveyDatabaseHelper.saveQuestionData(surveyId, questionDatas)
     }
 
@@ -122,8 +122,8 @@ class DataManagerSurveys @Inject constructor(
      */
     fun syncResponseDataInDatabase(
         questionId: Int,
-        responseDatas: ResponseDatas,
-    ): Flow<ResponseDatas> {
+        responseDatas: ResponseDatasEntity,
+    ): Flow<ResponseDatasEntity> {
         return surveyDatabaseHelper.saveResponseData(questionId, responseDatas)
     }
 }

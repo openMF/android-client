@@ -39,13 +39,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.feature.center.R
-import com.mifos.room.entities.group.Center
+import com.mifos.room.entities.group.CenterEntity
 
 @Composable
 internal fun SyncCenterDialogScreen(
     dismiss: () -> Unit,
     hide: () -> Unit,
-    centers: List<Center>? = listOf(),
+    centers: List<CenterEntity>? = listOf(),
     viewModel: SyncCentersDialogViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.syncCentersDialogUiState.collectAsStateWithLifecycle()

@@ -9,12 +9,11 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
-import com.mifos.room.entities.noncore.DataTable
-
+import com.mifos.room.entities.noncore.DataTableEntity
 
 data class DataTableListNavArgs(
 
-    val dataTableList: List<DataTable>,
+    val dataTableList: List<DataTableEntity>,
 
     val requestType: Int,
 

@@ -10,7 +10,7 @@
 plugins {
     alias(libs.plugins.mifos.kmp.library)
     alias(libs.plugins.kotlin.serialization)
-    id(libs.plugins.kotlin.parcelize.get().pluginId)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android{
@@ -26,6 +26,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.datetime)
         }
     }
 }

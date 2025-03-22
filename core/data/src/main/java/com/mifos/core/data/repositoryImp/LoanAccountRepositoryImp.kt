@@ -24,7 +24,7 @@ import javax.inject.Inject
 class LoanAccountRepositoryImp @Inject constructor(private val dataManagerLoan: DataManagerLoan) :
     LoanAccountRepository {
 
-    override suspend fun allLoans(): Observable<List<LoanProducts>> {
+    override suspend fun allLoans(): Observable<List<com.mifos.core.model.objects.organisations.LoanProducts>> {
         return dataManagerLoan.allLoans
     }
 

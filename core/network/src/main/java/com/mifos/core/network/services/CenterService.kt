@@ -19,8 +19,8 @@ import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.CenterAccounts
-import com.mifos.room.entities.center.CenterPayload
-import com.mifos.room.entities.group.Center
+import com.mifos.room.entities.center.CenterPayloadEntity
+import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Body
@@ -40,7 +40,7 @@ interface CenterService {
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Observable<Page<Center>>
+    ): Observable<Page<CenterEntity>>
 
     @GET(APIEndPoint.CENTERS + "/{centerId}/accounts")
     suspend fun getCenterAccounts(@Path("centerId") centerId: Int): CenterAccounts
@@ -52,7 +52,7 @@ interface CenterService {
     suspend fun getAllCentersInOffice(
         @Query("officeId") officeId: Int,
         @QueryMap additionalParams: Map<String, String>,
-    ): List<Center>
+    ): List<CenterEntity>
 
     @GET(APIEndPoint.CENTERS + "/{centerId}?associations=groupMembers")
     fun getAllGroupsForCenter(@Path("centerId") centerId: Int): Flow<CenterWithAssociations>
@@ -78,7 +78,7 @@ interface CenterService {
     /*@POST(APIEndPoint.CLIENTS + "")
     void uploadNewClientDetails();*/
     @POST(APIEndPoint.CENTERS)
-    suspend fun createCenter(@Body centerPayload: CenterPayload?): SaveResponse
+    suspend fun createCenter(@Body centerPayload: CenterPayloadEntity?): SaveResponse
 
     @GET(APIEndPoint.CENTERS)
     fun getCenterList(

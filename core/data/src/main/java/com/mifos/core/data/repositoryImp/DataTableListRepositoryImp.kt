@@ -16,7 +16,7 @@ import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.accounts.loans.Loan
-import com.mifos.room.entities.client.ClientPayload
+import com.mifos.room.entities.client.ClientPayloadEntity
 import rx.Observable
 import javax.inject.Inject
 
@@ -37,7 +37,7 @@ class DataTableListRepositoryImp @Inject constructor(
         return dataManager.createGroupLoansAccount(loansPayload)
     }
 
-    override suspend fun createClient(clientPayload: ClientPayload): Int? {
+    override suspend fun createClient(clientPayload: ClientPayloadEntity): Int? {
         return dataManagerClient.createClient(clientPayload)
     }
 }

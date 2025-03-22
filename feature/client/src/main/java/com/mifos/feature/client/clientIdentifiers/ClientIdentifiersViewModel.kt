@@ -63,7 +63,6 @@ class ClientIdentifiersViewModel @Inject constructor(
             }
     }
 
-
     fun deleteIdentifier(clientId: Int, identifierId: Int) = viewModelScope.launch(Dispatchers.IO) {
         deleteIdentifierUseCase(clientId, identifierId).collect { result ->
             when (result) {

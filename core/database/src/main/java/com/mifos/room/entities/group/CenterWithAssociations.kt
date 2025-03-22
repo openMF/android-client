@@ -10,9 +10,9 @@
 package com.mifos.room.entities.group
 
 import android.os.Parcelable
-import com.mifos.core.entity.client.Status
 import com.mifos.core.model.objects.collectionsheets.CollectionMeetingCalendar
 import com.mifos.room.entities.Timeline
+import com.mifos.room.entities.client.ClientStatusEntity
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
@@ -39,7 +39,7 @@ data class CenterWithAssociations(
 
     var hierarchy: String? = null,
 
-    var status: Status? = null,
+    var status: ClientStatusEntity? = null,
 
     var active: Boolean? = null,
 
@@ -47,7 +47,7 @@ data class CenterWithAssociations(
 
     var timeline: Timeline? = null,
 
-    var groupMembers: List<Group> = ArrayList(),
+    var groupMembers: List<GroupEntity> = ArrayList(),
 
     @IgnoredOnParcel
     var collectionMeetingCalendar: CollectionMeetingCalendar = CollectionMeetingCalendar(),

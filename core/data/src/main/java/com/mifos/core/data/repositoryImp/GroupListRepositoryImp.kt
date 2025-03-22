@@ -14,7 +14,6 @@ import com.mifos.core.network.DataManager
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.GroupWithAssociations
 import kotlinx.coroutines.flow.Flow
-import rx.Observable
 import javax.inject.Inject
 
 /**

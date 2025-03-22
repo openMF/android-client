@@ -12,18 +12,17 @@ package com.mifos.core.network.services
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.clients.Page
-import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.loans.Loan
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
-import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
-import com.mifos.room.entities.client.Charges
-import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.client.ChargesEntity
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import retrofit2.http.Body
@@ -38,10 +37,10 @@ import rx.Observable
  */
 interface LoanService {
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=all&exclude=guarantors,futureSchedule")
-    suspend fun getLoanByIdWithAllAssociations(@Path("loanId") loanId: Int): LoanWithAssociations
+    suspend fun getLoanByIdWithAllAssociations(@Path("loanId") loanId: Int): LoanWithAssociationsEntity
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=repayment")
-    suspend fun getLoanRepaymentTemplate(@Path("loanId") loanId: Int): LoanRepaymentTemplate
+    suspend fun getLoanRepaymentTemplate(@Path("loanId") loanId: Int): LoanRepaymentTemplateEntity
 
     //  Mandatory Fields
     //  1. String approvedOnDate
@@ -62,17 +61,17 @@ interface LoanService {
     @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=repayment")
     suspend fun submitPayment(
         @Path("loanId") loanId: Int,
-        @Body loanRepaymentRequest: LoanRepaymentRequest?,
-    ): LoanRepaymentResponse
+        @Body loanRepaymentRequest: LoanRepaymentRequestEntity?,
+    ): LoanRepaymentResponseEntity
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
-    fun getLoanRepaymentSchedule(@Path("loanId") loanId: Int): Observable<LoanWithAssociations>
+    fun getLoanRepaymentSchedule(@Path("loanId") loanId: Int): Observable<LoanWithAssociationsEntity>
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=transactions")
-    fun getLoanWithTransactions(@Path("loanId") loanId: Int): Observable<LoanWithAssociations>
+    fun getLoanWithTransactions(@Path("loanId") loanId: Int): Observable<LoanWithAssociationsEntity>
 
     @get:GET(APIEndPoint.CREATE_LOANS_PRODUCTS)
-    val allLoans: Observable<List<LoanProducts>>
+    val allLoans: Observable<List<com.mifos.core.model.objects.organisations.LoanProducts>>
 
     @POST(APIEndPoint.CREATE_LOANS_ACCOUNTS)
     fun createLoansAccount(@Body loansPayload: LoansPayload?): Observable<Loan>
@@ -112,8 +111,8 @@ interface LoanService {
     ): Observable<GroupLoanTemplate>
 
     @GET(APIEndPoint.LOANS + "/{loanId}/" + APIEndPoint.CHARGES)
-    suspend fun getListOfLoanCharges(@Path("loanId") loanId: Int): List<Charges>
+    suspend fun getListOfLoanCharges(@Path("loanId") loanId: Int): List<ChargesEntity>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.CHARGES)
-    fun getListOfCharges(@Path("clientId") clientId: Int): Observable<Page<Charges>>
+    fun getListOfCharges(@Path("clientId") clientId: Int): Observable<Page<ChargesEntity>>
 }

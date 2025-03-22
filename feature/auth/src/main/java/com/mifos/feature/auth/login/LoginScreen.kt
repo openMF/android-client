@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.auth.login
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -197,7 +196,6 @@ internal fun LoginScreen(
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
 
             MifosOutlinedTextField(
                 value = userName,

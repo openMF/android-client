@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.document.documentList
 
-import com.mifos.core.objects.noncoreobjects.Document
+import com.mifos.core.model.objects.noncoreobjects.Document
 
 /**
  * Created by Aditya Gupta on 08/08/23.

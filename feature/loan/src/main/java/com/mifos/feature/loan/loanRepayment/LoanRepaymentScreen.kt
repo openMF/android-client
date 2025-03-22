@@ -65,10 +65,10 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.feature.loan.R
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
-import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
-import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -115,7 +115,7 @@ internal fun LoanRepaymentScreen(
     uiState: LoanRepaymentUiState,
     navigateBack: () -> Unit,
     onRetry: () -> Unit,
-    submitPayment: (request: LoanRepaymentRequest) -> Unit,
+    submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
     onLoanRepaymentDoesNotExistInDatabase: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -201,9 +201,9 @@ private fun LoanRepaymentContent(
     loanProductName: String,
     amountInArrears: Double?,
     loanAccountNumber: String,
-    loanRepaymentTemplate: LoanRepaymentTemplate,
+    loanRepaymentTemplate: LoanRepaymentTemplateEntity,
     navigateBack: () -> Unit,
-    submitPayment: (request: LoanRepaymentRequest) -> Unit,
+    submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
 ) {
     var paymentType by rememberSaveable { mutableStateOf("") }
     var amount by rememberSaveable { mutableStateOf("") }
@@ -464,7 +464,7 @@ private fun ShowLoanRepaymentConfirmationDialog(
     fees: String,
     total: String,
     context: Context,
-    submitPayment: (request: LoanRepaymentRequest) -> Unit,
+    submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -473,7 +473,7 @@ private fun ShowLoanRepaymentConfirmationDialog(
                 onClick = {
                     onDismiss()
                     if (Network.isOnline(context)) {
-                        val request = LoanRepaymentRequest(
+                        val request = LoanRepaymentRequestEntity(
                             accountNumber = loanAccountNumber,
                             paymentTypeId = paymentTypeId,
                             dateFormat = "dd MM yyyy",
@@ -586,7 +586,7 @@ private class LoanRepaymentScreenPreviewProvider :
     PreviewParameterProvider<LoanRepaymentUiState> {
 
     private val samplePaymentTypeOptions = mutableListOf(
-        PaymentTypeOption(
+        PaymentTypeOptionEntity(
             id = 1,
             name = "Cash",
             description = "Cash payment",
@@ -595,7 +595,7 @@ private class LoanRepaymentScreenPreviewProvider :
         ),
     )
 
-    private val sampleLoanRepaymentTemplate = LoanRepaymentTemplate(
+    private val sampleLoanRepaymentTemplate = LoanRepaymentTemplateEntity(
         loanId = 101,
         date = mutableListOf(2024, 7, 15),
         amount = 1000.0,
@@ -613,7 +613,7 @@ private class LoanRepaymentScreenPreviewProvider :
             LoanRepaymentUiState.ShowError(R.string.feature_loan_failed_to_load_loan_repayment),
             LoanRepaymentUiState.ShowLoanRepaymentDoesNotExistInDatabase,
             LoanRepaymentUiState.ShowProgressbar,
-            LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully(LoanRepaymentResponse()),
+            LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully(LoanRepaymentResponseEntity()),
         )
 }
 

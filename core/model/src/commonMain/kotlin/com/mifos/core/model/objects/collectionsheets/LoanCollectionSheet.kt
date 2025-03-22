@@ -9,10 +9,9 @@
  */
 package com.mifos.core.model.objects.collectionsheets
 
+import com.mifos.core.model.objects.template.loan.Currency
 import com.mifos.core.model.utils.Parcel
 import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.objects.template.loan.Currency
-import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
@@ -38,7 +37,7 @@ class LoanCollectionSheet() : Parcelable {
     constructor(parcel: Parcel) : this() {
         accountId = parcel.readString()
         accountStatusId = parcel.readInt()
-        //todo resolve this
+        // todo resolve this
 //        currency = parcel.readParcelable(Currency::class.java.classLoader)
         interestDue = parcel.readDouble()
         interestPaid = parcel.readDouble()

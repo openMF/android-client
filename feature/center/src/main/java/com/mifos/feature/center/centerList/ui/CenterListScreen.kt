@@ -81,7 +81,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.R
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
-import com.mifos.room.entities.group.Center
+import com.mifos.room.entities.group.CenterEntity
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
@@ -241,21 +241,21 @@ internal fun CenterListScreen(
     }
 }
 
-private class SelectedItemsState(initialSelectedItems: List<Center> = emptyList()) {
-    private val _selectedItems = mutableStateListOf<Center>().also { it.addAll(initialSelectedItems) }
-    val selectedItems: State<List<Center>> = derivedStateOf { _selectedItems }
+private class SelectedItemsState(initialSelectedItems: List<CenterEntity> = emptyList()) {
+    private val _selectedItems = mutableStateListOf<CenterEntity>().also { it.addAll(initialSelectedItems) }
+    val selectedItems: State<List<CenterEntity>> = derivedStateOf { _selectedItems }
 
-    fun add(item: Center) {
+    fun add(item: CenterEntity) {
         _selectedItems.add(item)
     }
 
-    fun remove(item: Center) {
+    fun remove(item: CenterEntity) {
         _selectedItems.remove(item)
     }
-    fun toList(): List<Center> {
+    fun toList(): List<CenterEntity> {
         return _selectedItems.toList()
     }
-    fun contains(item: Center): Boolean {
+    fun contains(item: CenterEntity): Boolean {
         return _selectedItems.contains(item)
     }
 
@@ -273,7 +273,7 @@ private class SelectedItemsState(initialSelectedItems: List<Center> = emptyList(
 
 @Composable
 private fun CenterListContent(
-    centerPagingList: LazyPagingItems<Center>,
+    centerPagingList: LazyPagingItems<CenterEntity>,
     isInSelectionMode: Boolean,
     selectedItems: SelectedItemsState,
     onRefresh: () -> Unit,
@@ -473,7 +473,7 @@ private fun CenterListContent(
 
 @Composable
 private fun CenterListDbContent(
-    centerList: List<Center>,
+    centerList: List<CenterEntity>,
 ) {
     LazyColumn {
         items(centerList) { center ->
@@ -630,7 +630,7 @@ private fun CenterListScreenPreview(
 }
 
 val sampleCenterListDb = List(10) {
-    Center(
+    CenterEntity(
         name = "Center $it",
         officeId = it,
         officeName = "Office $it",

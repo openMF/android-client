@@ -9,13 +9,12 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.room.entities.client.Charges
-
+import com.mifos.room.entities.client.ChargesEntity
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
 interface LoanChargeRepository {
 
-    suspend fun getListOfLoanCharges(loanId: Int): List<Charges>
+    suspend fun getListOfLoanCharges(loanId: Int): List<ChargesEntity>
 }

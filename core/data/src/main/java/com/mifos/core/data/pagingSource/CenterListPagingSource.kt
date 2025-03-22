@@ -9,18 +9,17 @@
  */
 package com.mifos.core.data.pagingSource
 
-import android.graphics.pdf.LoadParams
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mifos.core.network.datamanager.DataManagerCenter
-import com.mifos.room.entities.group.Center
+import com.mifos.room.entities.group.CenterEntity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
-    PagingSource<Int, Center>() {
+    PagingSource<Int, CenterEntity>() {
 
-    override fun getRefreshKey(state: PagingState<Int, Center>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, CenterEntity>): Int? {
         return state.anchorPosition?.let { position ->
             state.closestPageToPosition(position)?.prevKey?.plus(10) ?: state.closestPageToPosition(
                 position,
@@ -28,7 +27,7 @@ class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Center> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CenterEntity> {
         val position = params.key ?: 0
         return try {
             val getCenters = getCenterList(position)
@@ -46,21 +45,21 @@ class CenterListPagingSource(private val dataManagerCenter: DataManagerCenter) :
         }
     }
 
-    private suspend fun getCenterList(position: Int): Pair<List<Center>, Int> {
+    private suspend fun getCenterList(position: Int): Pair<List<CenterEntity>, Int> {
         val pagedClient = dataManagerCenter.getCenters(true, position, 10)
         return Pair(pagedClient.pageItems, pagedClient.totalFilteredRecords)
     }
 
-    private suspend fun getCenterDbList(): List<Center> {
+    private suspend fun getCenterDbList(): List<CenterEntity> {
         return dataManagerCenter.allDatabaseCenters
             .map { it.pageItems }
             .first()
     }
 
     private fun getCenterListWithSync(
-        centerList: List<Center>,
-        centerDbList: List<Center>,
-    ): List<Center> {
+        centerList: List<CenterEntity>,
+        centerDbList: List<CenterEntity>,
+    ): List<CenterEntity> {
         if (centerDbList.isNotEmpty()) {
             return centerList.map { center ->
                 if (centerDbList.any { it.id == center.id }) {

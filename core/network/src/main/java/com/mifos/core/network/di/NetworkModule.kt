@@ -11,17 +11,16 @@ package com.mifos.core.network.di
 
 import android.content.Context
 import androidx.core.os.trace
-import coil3.ImageLoader
-import coil3.util.DebugLogger
-import dagger.Module
+import coil.ImageLoader
+import coil.util.DebugLogger
 import com.mifos.core.common.utils.getInstanceUrl
+import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Call
 import okhttp3.OkHttpClient
-import okhttp3.internal.http2.Http2Reader.Companion.logger
 import org.mifos.core.apimanager.BaseApiManager
 import javax.inject.Singleton
 

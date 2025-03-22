@@ -18,5 +18,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class SavingsSummaryData(
     val id: Int,
-    val type: DepositType,
+    val type: SavingAccountDepositTypeEntity,
 ) : Parcelable

@@ -664,6 +664,7 @@ private fun CheckerInboxItem(
     }
 }
 
+@Suppress("UnusedParameter")
 private fun getFilteredList(
     searchQuery: String,
     fromDate: Timestamp?,
@@ -688,19 +689,22 @@ private fun getFilteredList(
         return checkerList
     }
 
-    val aLL = "ALL"
-    return checkerList.filter { checkerTask ->
-        val isDateInRange = if (fromDate == null) {
-            !checkerTask.getTimeStamp().after(toDate)
-        } else {
-            checkerTask.getTimeStamp().after(fromDate) && checkerTask.getTimeStamp().before(toDate)
-        }
+    // TODO:: Fix this based on KMP implementation
+//    val aLL = "ALL"
+//    return checkerList.filter { checkerTask ->
+//        val isDateInRange = if (fromDate == null) {
+//            !checkerTask.getTimeStamp().after(toDate)
+//        } else {
+//            checkerTask.getTimeStamp().after(fromDate) && checkerTask.getTimeStamp().before(toDate)
+//        }
+//
+//        val isActionMatch = action == aLL || action.equals(checkerTask.actionName, true)
+//        val isEntityMatch = entity == aLL || entity.equals(checkerTask.entityName, true)
+//
+//        isDateInRange && isActionMatch && isEntityMatch
+//    }
 
-        val isActionMatch = action == aLL || action.equals(checkerTask.actionName, true)
-        val isEntityMatch = entity == aLL || entity.equals(checkerTask.entityName, true)
-
-        isDateInRange && isActionMatch && isEntityMatch
-    }
+    return checkerList
 }
 
 class CheckerInboxUiStateProvider : PreviewParameterProvider<CheckerInboxUiState> {

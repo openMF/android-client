@@ -27,16 +27,13 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -69,14 +66,13 @@ import com.mifos.feature.client.R
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitScreen
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitUiState
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
-import com.mifos.room.entities.survey.Survey
-import java.util.Date
+import com.mifos.room.entities.survey.SurveyEntity
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 internal fun SurveyQuestionScreen(
     navigateBack: () -> Unit,
-    survey: Survey?,
+    survey: SurveyEntity?,
     viewModel: SurveySubmitViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -122,7 +118,7 @@ internal fun SurveyQuestionScreen(
                         scorecardPayload = Scorecard(
                             userId = userId,
                             clientId = clientId,
-                            createdOn = Date(),
+                            createdOn = emptyList(),
                             scorecardValues = scoreCardData,
                         ),
                     )
@@ -138,7 +134,7 @@ internal fun SurveyQuestionScreen(
     }
 }
 
-private fun processSurveyData(survey: Survey): Pair<List<String>, List<List<String>>> {
+private fun processSurveyData(survey: SurveyEntity): Pair<List<String>, List<List<String>>> {
     val questionData = mutableListOf<String>()
     val optionsData = mutableListOf<List<String>>()
 

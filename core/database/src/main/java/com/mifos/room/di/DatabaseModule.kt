@@ -17,6 +17,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
@@ -30,6 +31,9 @@ object DatabaseModule {
             context = context,
             klass = MifosDatabase::class.java,
             name = "mifos-database",
-        ).build()
+        ).enableMultiInstanceInvalidation()
+            .fallbackToDestructiveMigration(true)
+            .setQueryCoroutineContext(Dispatchers.IO)
+            .build()
     }
 }

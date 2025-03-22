@@ -39,13 +39,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.feature.client.R
-import com.mifos.room.entities.client.Client
+import com.mifos.room.entities.client.ClientEntity
 
 @Composable
 internal fun SyncClientsDialogScreen(
     dismiss: () -> Unit,
     hide: () -> Unit,
-    list: List<Client>? = listOf(),
+    list: List<ClientEntity>? = listOf(),
     viewModel: SyncClientsDialogViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.syncClientsDialogUiState.collectAsStateWithLifecycle()

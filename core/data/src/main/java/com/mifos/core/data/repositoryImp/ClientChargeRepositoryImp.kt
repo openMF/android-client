@@ -15,7 +15,7 @@ import androidx.paging.PagingData
 import com.mifos.core.data.pagingSource.ClientChargesPagingSource
 import com.mifos.core.data.repository.ClientChargeRepository
 import com.mifos.core.network.datamanager.DataManagerCharge
-import com.mifos.room.entities.client.Charges
+import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class ClientChargeRepositoryImp @Inject constructor(
 
     override fun getClientCharges(
         clientId: Int,
-    ): Flow<PagingData<Charges>> {
+    ): Flow<PagingData<ChargesEntity>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 10,

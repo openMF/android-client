@@ -56,10 +56,9 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.feature.loan.R
-import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -146,7 +145,7 @@ internal fun LoanAccountDisbursementScreen(
 @Composable
 private fun LoanAccountDisbursementContent(
     initialAmount: String,
-    paymentTypeOptions: List<PaymentTypeOption>,
+    paymentTypeOptions: List<PaymentTypeOptionEntity>,
     onDisburseLoan: (loanDisbursement: LoanDisbursement) -> Unit,
 ) {
     var disbursementDate by rememberSaveable {

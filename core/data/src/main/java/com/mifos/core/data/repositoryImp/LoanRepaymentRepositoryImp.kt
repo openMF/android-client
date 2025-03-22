@@ -11,9 +11,9 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.LoanRepaymentRepository
 import com.mifos.core.network.datamanager.DataManagerLoan
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
-import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
-import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -24,18 +24,18 @@ class LoanRepaymentRepositoryImp @Inject constructor(
     private val dataManagerLoan: DataManagerLoan,
 ) : LoanRepaymentRepository {
 
-    override fun getLoanRepayTemplate(loanId: Int): Flow<LoanRepaymentTemplate?> {
+    override fun getLoanRepayTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity?> {
         return dataManagerLoan.getLoanRepayTemplate(loanId)
     }
 
     override suspend fun submitPayment(
         loanId: Int,
-        request: LoanRepaymentRequest,
-    ): LoanRepaymentResponse {
+        request: LoanRepaymentRequestEntity,
+    ): LoanRepaymentResponseEntity {
         return dataManagerLoan.submitPayment(loanId, request)
     }
 
-    override fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Flow<LoanRepaymentRequest?> {
+    override fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Flow<LoanRepaymentRequestEntity?> {
         return dataManagerLoan.getDatabaseLoanRepaymentByLoanId(loanId)
     }
 }

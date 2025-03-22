@@ -18,7 +18,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,9 +30,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -69,10 +66,9 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.entity.organisation.Office
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.feature.groups.R
-import com.mifos.room.entities.group.GroupPayload
+import com.mifos.room.entities.group.GroupPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -107,7 +103,7 @@ internal fun CreateNewGroupScreen(
 internal fun CreateNewGroupScreen(
     uiState: CreateNewGroupUiState,
     onRetry: () -> Unit,
-    invokeGroupCreation: (GroupPayload) -> Unit,
+    invokeGroupCreation: (GroupPayloadEntity) -> Unit,
     onGroupCreated: (group: SaveResponse?) -> Unit,
     modifier: Modifier = Modifier,
     getResponse: () -> String,
@@ -160,7 +156,7 @@ internal fun CreateNewGroupScreen(
 private fun CreateNewGroupContent(
     officeList: List<OfficeEntity>,
     modifier: Modifier = Modifier,
-    invokeGroupCreation: (GroupPayload) -> Unit,
+    invokeGroupCreation: (GroupPayloadEntity) -> Unit,
 ) {
     var groupName by rememberSaveable {
         mutableStateOf("")
@@ -366,7 +362,7 @@ private fun CreateNewGroupContent(
                         )
 
                         invokeGroupCreation.invoke(
-                            GroupPayload(
+                            GroupPayloadEntity(
                                 name = groupName,
                                 externalId = externalId,
                                 active = isActive,

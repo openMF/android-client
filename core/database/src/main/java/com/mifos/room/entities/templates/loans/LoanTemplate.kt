@@ -10,7 +10,6 @@
 package com.mifos.room.entities.templates.loans
 
 import android.os.Parcelable
-import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.model.objects.account.loan.AccountLinkingOptions
 import com.mifos.core.model.objects.template.loan.AmortizationType
 import com.mifos.core.model.objects.template.loan.AmortizationTypeOptions
@@ -37,6 +36,7 @@ import com.mifos.core.model.objects.template.loan.TermFrequencyTypeOptions
 import com.mifos.core.model.objects.template.loan.TermPeriodFrequencyType
 import com.mifos.core.model.objects.template.loan.Timeline
 import com.mifos.core.model.objects.template.loan.TransactionProcessingStrategyOptions
+import com.mifos.room.entities.noncore.DataTableEntity
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
@@ -114,7 +114,7 @@ data class LoanTemplate(
     @IgnoredOnParcel
     val productOptions: List<ProductOptions> = emptyList(),
 
-    val dataTables: ArrayList<DataTable> = ArrayList(),
+    val dataTables: ArrayList<DataTableEntity> = ArrayList(),
 
     @IgnoredOnParcel
     val loanOfficerOptions: List<LoanOfficerOptions> = emptyList(),

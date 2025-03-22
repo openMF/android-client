@@ -29,13 +29,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -114,7 +112,6 @@ internal fun SettingsScreen(
     updateTheme: (theme: AppTheme) -> Unit,
     updateLanguage: (language: MifosAppLanguage) -> Unit,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
     var showLanguageUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showEndpointUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showThemeUpdateDialog by rememberSaveable { mutableStateOf(false) }
@@ -126,7 +123,7 @@ internal fun SettingsScreen(
 
     MifosScaffold(
         onBackPressed = onBackPressed,
-        title = stringResource(R.string.feature_settings)
+        title = stringResource(R.string.feature_settings),
     ) { paddingValues ->
         Column(
             Modifier.padding(paddingValues),

@@ -12,7 +12,6 @@ package com.mifos.feature.savings.savingsAccountTransaction
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +26,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -69,8 +67,8 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.feature.savings.R
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -121,7 +119,7 @@ internal fun SavingsAccountTransactionScreen(
     onRetry: () -> Unit,
     transactionType: String,
     loadSavingAccountTemplate: () -> Unit,
-    onProcessTransaction: (request: SavingsAccountTransactionRequest) -> Unit,
+    onProcessTransaction: (request: SavingsAccountTransactionRequestEntity) -> Unit,
     modifier: Modifier = Modifier,
     setUserOffline: () -> Unit,
 ) {
@@ -130,7 +128,7 @@ internal fun SavingsAccountTransactionScreen(
 
     val topbarTitle = if (transactionType == Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT) {
         stringResource(id = R.string.feature_savings_savingsAccount) + " " +
-                stringResource(id = R.string.feature_savings_deposit)
+            stringResource(id = R.string.feature_savings_deposit)
     } else {
         stringResource(id = R.string.feature_savings_savingsAccount) + " " + stringResource(id = R.string.feature_savings_withdrawal)
     }
@@ -202,14 +200,14 @@ internal fun SavingsAccountTransactionScreen(
                             Toast.makeText(
                                 context,
                                 context.resources.getString(R.string.feature_savings_deposit_successful_transaction_ID) +
-                                        uiState.savingsAccountTransactionResponse.resourceId,
+                                    uiState.savingsAccountTransactionResponse.resourceId,
                                 Toast.LENGTH_SHORT,
                             ).show()
                         } else if (transactionType == Constants.SAVINGS_ACCOUNT_TRANSACTION_WITHDRAWAL) {
                             Toast.makeText(
                                 context,
                                 context.resources.getString(R.string.feature_savings_withdrawal_successful_transaction_ID) +
-                                        uiState.savingsAccountTransactionResponse.resourceId,
+                                    uiState.savingsAccountTransactionResponse.resourceId,
                                 Toast.LENGTH_SHORT,
                             ).show()
                         }
@@ -226,8 +224,8 @@ private fun SavingsAccountTransactionContent(
     clientName: String?,
     savingsAccountNumber: Int?,
     navigateBack: () -> Unit,
-    savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate,
-    onProcessTransaction: (savingsAccountTransactionRequest: SavingsAccountTransactionRequest) -> Unit,
+    savingsAccountTransactionTemplate: SavingsAccountTransactionTemplateEntity,
+    onProcessTransaction: (savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity) -> Unit,
     modifier: Modifier = Modifier,
     setUserOffline: () -> Unit,
 ) {
@@ -273,7 +271,7 @@ private fun SavingsAccountTransactionContent(
                 TextButton(
                     onClick = {
                         showReviewTransactionDialog = false
-                        val savingsAccountTransactionRequest = SavingsAccountTransactionRequest(
+                        val savingsAccountTransactionRequest = SavingsAccountTransactionRequestEntity(
                             locale = "en",
                             dateFormat = "dd MM yyyy",
                             transactionDate = SimpleDateFormat(
@@ -507,7 +505,7 @@ class SavingsAccountTransactionScreenPreviewProvider :
     override val values: Sequence<SavingsAccountTransactionUiState>
         get() = sequenceOf(
             SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
-                SavingsAccountTransactionTemplate(
+                SavingsAccountTransactionTemplateEntity(
                     paymentTypeOptions = listOf(),
                 ),
             ),

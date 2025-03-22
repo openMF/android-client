@@ -9,10 +9,10 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -26,5 +26,5 @@ interface NewIndividualCollectionSheetRepository {
 
     fun offices(): Flow<List<OfficeEntity>>
 
-    suspend fun getStaffInOffice(officeId: Int): List<Staff>
+    suspend fun getStaffInOffice(officeId: Int): List<StaffEntity>
 }

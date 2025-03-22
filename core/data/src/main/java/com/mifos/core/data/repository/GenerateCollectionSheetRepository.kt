@@ -15,21 +15,21 @@ import com.mifos.room.entities.collectionsheet.CenterDetail
 import com.mifos.room.entities.collectionsheet.CollectionSheetPayload
 import com.mifos.room.entities.collectionsheet.CollectionSheetResponse
 import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
-import com.mifos.room.entities.group.Center
+import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.CenterWithAssociations
-import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.group.GroupEntity
 
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
 interface GenerateCollectionSheetRepository {
 
-    suspend fun getCentersInOffice(id: Int, params: Map<String, String>): List<Center>
+    suspend fun getCentersInOffice(id: Int, params: Map<String, String>): List<CenterEntity>
 
     suspend fun getGroupsByOffice(
         office: Int,
         params: Map<String, String>,
-    ): List<Group>
+    ): List<GroupEntity>
 
     suspend fun fetchGroupsAssociatedWithCenter(centerId: Int): CenterWithAssociations
 

@@ -11,7 +11,7 @@ package com.mifos.room.utils.typeconverters
 
 import androidx.room.TypeConverter
 import com.mifos.room.entities.Timeline
-import com.mifos.room.entities.group.GroupDate
+import com.mifos.room.entities.group.GroupDateEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -21,12 +21,12 @@ import kotlinx.serialization.json.Json
 class GroupTypeConverters {
 
     @TypeConverter
-    fun fromGroupDate(date: GroupDate?): String? {
+    fun fromGroupDate(date: GroupDateEntity?): String? {
         return date?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toGroupDate(json: String?): GroupDate? {
+    fun toGroupDate(json: String?): GroupDateEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 

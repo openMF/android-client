@@ -13,7 +13,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.mifos.room.entities.organisation.Staff
+import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -23,11 +23,11 @@ import kotlinx.coroutines.flow.Flow
 interface StaffDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStaffs(staffs: List<Staff>)
+    suspend fun insertStaffs(staffs: List<StaffEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStaff(staff: Staff)
+    suspend fun insertStaff(staff: StaffEntity)
 
     @Query("SELECT * FROM Staff WHERE officeId = :officeId")
-    fun getAllStaff(officeId: Int): Flow<List<Staff>>
+    fun getAllStaff(officeId: Int): Flow<List<StaffEntity>>
 }

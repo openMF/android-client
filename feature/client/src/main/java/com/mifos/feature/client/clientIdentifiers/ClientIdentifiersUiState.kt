@@ -11,7 +11,6 @@ package com.mifos.feature.client.clientIdentifiers
 
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 
-
 /**
  * Created by Aditya Gupta on 08/08/23.
  */

@@ -14,16 +14,16 @@ import android.os.Environment
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil3.request.ImageResult
+import coil.request.ImageResult
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.network.utils.ImageLoaderUtils
-import com.mifos.room.entities.accounts.loans.LoanAccount
-import com.mifos.room.entities.accounts.savings.SavingsAccount
-import com.mifos.room.entities.client.Client
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.client.ClientEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,13 +51,13 @@ class ClientDetailsViewModel @Inject constructor(
         MutableStateFlow<ClientDetailsUiState>(ClientDetailsUiState.Empty)
     val clientDetailsUiState = _clientDetailsUiState.asStateFlow()
 
-    private val loanAccounts = MutableStateFlow<List<LoanAccount>?>(null)
+    private val loanAccounts = MutableStateFlow<List<LoanAccountEntity>?>(null)
     val loanAccount = loanAccounts.asStateFlow()
 
-    private val _savingsAccounts = MutableStateFlow<List<SavingsAccount>?>(null)
+    private val _savingsAccounts = MutableStateFlow<List<SavingsAccountEntity>?>(null)
     val savingsAccounts = _savingsAccounts.asStateFlow()
 
-    private val _client = MutableStateFlow<Client?>(null)
+    private val _client = MutableStateFlow<ClientEntity?>(null)
     val client = _client.asStateFlow()
 
     private val _showLoading = MutableStateFlow(true)

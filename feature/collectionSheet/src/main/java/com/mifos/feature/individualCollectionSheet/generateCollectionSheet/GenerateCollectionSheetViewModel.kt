@@ -22,16 +22,16 @@ import com.mifos.core.domain.useCases.GetGroupsByOfficeUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeUseCase
 import com.mifos.core.domain.useCases.SubmitCollectionSheetUseCase
 import com.mifos.core.domain.useCases.SubmitProductiveSheetUseCase
-import com.mifos.core.entity.group.Center
-import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.organisation.Office
-import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.collectionsheet.CenterDetail
 import com.mifos.room.entities.collectionsheet.CollectionSheetPayload
 import com.mifos.room.entities.collectionsheet.CollectionSheetResponse
 import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
+import com.mifos.room.entities.group.CenterEntity
+import com.mifos.room.entities.group.GroupEntity
+import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.entities.organisation.StaffEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,16 +58,16 @@ class GenerateCollectionSheetViewModel @Inject constructor(
         MutableStateFlow<GenerateCollectionSheetUiState>(GenerateCollectionSheetUiState.Loading)
     val generateCollectionSheetUiState = _generateCollectionSheetUiState.asStateFlow()
 
-    private val _officeListState = MutableStateFlow<List<Office>>(emptyList())
+    private val _officeListState = MutableStateFlow<List<OfficeEntity>>(emptyList())
     val officeListState = _officeListState.asStateFlow()
 
-    private val _staffListState = MutableStateFlow<List<Staff>>(emptyList())
+    private val _staffListState = MutableStateFlow<List<StaffEntity>>(emptyList())
     val staffListState = _staffListState.asStateFlow()
 
-    private val _centerListState = MutableStateFlow<List<Center>>(emptyList())
+    private val _centerListState = MutableStateFlow<List<CenterEntity>>(emptyList())
     val centerListState = _centerListState.asStateFlow()
 
-    private val _groupListState = MutableStateFlow<List<Group>>(emptyList())
+    private val _groupListState = MutableStateFlow<List<GroupEntity>>(emptyList())
     val groupListState = _groupListState.asStateFlow()
 
     private val _collectionSheetState = MutableStateFlow<CollectionSheetResponse?>(null)

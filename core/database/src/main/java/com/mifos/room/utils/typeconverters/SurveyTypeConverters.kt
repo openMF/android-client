@@ -10,9 +10,9 @@
 package com.mifos.room.utils.typeconverters
 
 import androidx.room.TypeConverter
-import com.mifos.room.entities.survey.ComponentDatas
-import com.mifos.room.entities.survey.QuestionDatas
-import com.mifos.room.entities.survey.ResponseDatas
+import com.mifos.room.entities.survey.ComponentDatasEntity
+import com.mifos.room.entities.survey.QuestionDatasEntity
+import com.mifos.room.entities.survey.ResponseDatasEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -22,32 +22,32 @@ import kotlinx.serialization.json.Json
 class SurveyTypeConverters {
 
     @TypeConverter
-    fun fromQuestionDatasList(questionDatas: List<QuestionDatas>?): String? {
+    fun fromQuestionDatasList(questionDatas: List<QuestionDatasEntity>?): String? {
         return questionDatas?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toQuestionDatasList(json: String?): List<QuestionDatas>? {
+    fun toQuestionDatasList(json: String?): List<QuestionDatasEntity>? {
         return json?.let { Json.decodeFromString(it) }
     }
 
     @TypeConverter
-    fun fromComponentDatasList(componentDatas: List<ComponentDatas>?): String? {
+    fun fromComponentDatasList(componentDatas: List<ComponentDatasEntity>?): String? {
         return componentDatas?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toComponentDatasList(json: String?): List<ComponentDatas>? {
+    fun toComponentDatasList(json: String?): List<ComponentDatasEntity>? {
         return json?.let { Json.decodeFromString(it) }
     }
 
     @TypeConverter
-    fun fromResponseDatasList(responseDatas: List<ResponseDatas>?): String? {
+    fun fromResponseDatasList(responseDatas: List<ResponseDatasEntity>?): String? {
         return responseDatas?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toResponseDatasList(json: String?): List<ResponseDatas>? {
+    fun toResponseDatasList(json: String?): List<ResponseDatasEntity>? {
         return json?.let { Json.decodeFromString(it) }
     }
 }

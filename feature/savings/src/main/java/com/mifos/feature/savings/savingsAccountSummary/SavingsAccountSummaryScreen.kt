@@ -12,7 +12,6 @@ package com.mifos.feature.savings.savingsAccountSummary
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +28,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -67,13 +65,13 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.savings.R
-import com.mifos.room.entities.accounts.savings.Currency
-import com.mifos.room.entities.accounts.savings.DepositType
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.room.entities.accounts.savings.Status
-import com.mifos.room.entities.accounts.savings.Summary
-import com.mifos.room.entities.accounts.savings.Transaction
-import com.mifos.room.entities.accounts.savings.TransactionType
+import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountStatusEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountSummaryEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
+import com.mifos.room.entities.accounts.savings.SavingsTransactionTypeEntity
 
 /**
  * Created by Pronay Sarker on 10/07/2024 (6:21 PM)
@@ -84,10 +82,10 @@ internal fun SavingsAccountSummaryScreen(
     navigateBack: () -> Unit,
     loadMoreSavingsAccountInfo: (accountNumber: Int) -> Unit,
     loadDocuments: (accountNumber: Int) -> Unit,
-    onDepositClick: (savings: SavingsAccountWithAssociations, type: DepositType?) -> Unit,
-    onWithdrawButtonClicked: (savings: SavingsAccountWithAssociations, type: DepositType?) -> Unit,
-    approveSavings: (type: DepositType?, accountNumber: Int) -> Unit,
-    activateSavings: (type: DepositType?, accountNumber: Int) -> Unit,
+    onDepositClick: (savings: SavingsAccountWithAssociationsEntity, type: SavingAccountDepositTypeEntity?) -> Unit,
+    onWithdrawButtonClicked: (savings: SavingsAccountWithAssociationsEntity, type: SavingAccountDepositTypeEntity?) -> Unit,
+    approveSavings: (type: SavingAccountDepositTypeEntity?, accountNumber: Int) -> Unit,
+    activateSavings: (type: SavingAccountDepositTypeEntity?, accountNumber: Int) -> Unit,
     viewmodel: SavingsAccountSummaryViewModel = hiltViewModel(),
 ) {
     val uiState by viewmodel.savingsAccountSummaryUiState.collectAsStateWithLifecycle()
@@ -129,8 +127,8 @@ internal fun SavingsAccountSummaryScreen(
     onRetry: () -> Unit,
     loadMoreSavingsAccountInfo: () -> Unit,
     loadDocuments: () -> Unit,
-    onDepositButtonClicked: (savings: SavingsAccountWithAssociations) -> Unit,
-    onWithdrawButtonClicked: (savings: SavingsAccountWithAssociations) -> Unit,
+    onDepositButtonClicked: (savings: SavingsAccountWithAssociationsEntity) -> Unit,
+    onWithdrawButtonClicked: (savings: SavingsAccountWithAssociationsEntity) -> Unit,
     approveSavings: () -> Unit,
     modifier: Modifier = Modifier,
     activateSavings: () -> Unit,
@@ -203,9 +201,9 @@ internal fun SavingsAccountSummaryScreen(
 
 @Composable
 private fun SavingsAccountSummaryContent(
-    savingsAccountWithAssociations: SavingsAccountWithAssociations,
-    onDepositButtonClicked: (savingsAccountWithAssociations: SavingsAccountWithAssociations) -> Unit,
-    onWithdrawButtonClicked: (savingsAccountWithAssociations: SavingsAccountWithAssociations) -> Unit,
+    savingsAccountWithAssociations: SavingsAccountWithAssociationsEntity,
+    onDepositButtonClicked: (savingsAccountWithAssociations: SavingsAccountWithAssociationsEntity) -> Unit,
+    onWithdrawButtonClicked: (savingsAccountWithAssociations: SavingsAccountWithAssociationsEntity) -> Unit,
     approveSavings: () -> Unit,
     modifier: Modifier = Modifier,
     activateSavings: () -> Unit,
@@ -343,7 +341,7 @@ private fun SavingsAccountSummaryContent(
                             }
                         },
 
-                        ) {
+                    ) {
                         Text(
                             text = getSavingsButtonText(
                                 context = context,
@@ -359,7 +357,7 @@ private fun SavingsAccountSummaryContent(
 
 @Composable
 private fun TransactionItemRow(
-    transaction: Transaction,
+    transaction: SavingsAccountTransactionEntity,
     modifier: Modifier = Modifier,
 ) {
     var showTransactionDetails by rememberSaveable {
@@ -430,7 +428,7 @@ private fun TransactionItemRow(
 @Composable
 private fun SummaryDialogBox(
     onDismissCall: () -> Unit,
-    transaction: Transaction,
+    transaction: SavingsAccountTransactionEntity,
 ) {
     AlertDialog(
         onDismissRequest = { onDismissCall.invoke() },
@@ -500,7 +498,7 @@ private fun DialogBoxRowItem(
             .padding(horizontal = 8.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
 
-        ) {
+    ) {
         Text(
             modifier = Modifier.weight(5f),
             style = MaterialTheme.typography.bodyMedium,
@@ -540,7 +538,7 @@ private fun FarApartTextItem(title: String, value: String) {
     }
 }
 
-private fun getSavingsButtonText(context: Context, status: Status?): String {
+private fun getSavingsButtonText(context: Context, status: SavingsAccountStatusEntity?): String {
     return when {
         status?.submittedAndPendingApproval == true -> {
             context.resources.getString(R.string.feature_savings_approve_savings)
@@ -560,7 +558,7 @@ private fun getSavingsButtonText(context: Context, status: Status?): String {
     }
 }
 
-private fun savingsButtonVisibilityStatus(status: Status?): Boolean {
+private fun savingsButtonVisibilityStatus(status: SavingsAccountStatusEntity?): Boolean {
     return when {
         status?.submittedAndPendingApproval == true -> {
             true
@@ -580,7 +578,7 @@ private fun savingsButtonVisibilityStatus(status: Status?): Boolean {
     }
 }
 
-private fun depositAndWithdrawButtonVisibility(status: Status?): Boolean {
+private fun depositAndWithdrawButtonVisibility(status: SavingsAccountStatusEntity?): Boolean {
     return when {
         status?.submittedAndPendingApproval == true -> {
             false
@@ -603,7 +601,7 @@ private fun depositAndWithdrawButtonVisibility(status: Status?): Boolean {
 class SavingsAccountSummaryScreenPreviewProvider :
     PreviewParameterProvider<SavingsAccountSummaryUiState> {
 
-    val summary = Summary(
+    val summary = SavingsAccountSummaryEntity(
         savingsId = 2232,
         currency = null,
         totalDeposits = 4332.333,
@@ -612,12 +610,12 @@ class SavingsAccountSummaryScreenPreviewProvider :
         totalInterestEarned = 234.34,
     )
 
-    val transaction = Transaction(
-        transactionType = TransactionType(
+    val transaction = SavingsAccountTransactionEntity(
+        transactionType = SavingsTransactionTypeEntity(
             value = "Transfer",
         ),
         date = listOf(2, 3, 2022),
-        currency = Currency(
+        currency = SavingAccountCurrencyEntity(
             code = null,
         ),
     )
@@ -626,7 +624,7 @@ class SavingsAccountSummaryScreenPreviewProvider :
             SavingsAccountSummaryUiState.ShowProgressbar,
             SavingsAccountSummaryUiState.ShowFetchingError(R.string.feature_savings_failed_to_fetch_savingsaccount),
             SavingsAccountSummaryUiState.ShowSavingAccount(
-                SavingsAccountWithAssociations(
+                SavingsAccountWithAssociationsEntity(
                     clientId = 343434343,
                     accountNo = 3830948,
                     clientName = "Pronay",
@@ -636,7 +634,7 @@ class SavingsAccountSummaryScreenPreviewProvider :
                         transaction,
                         transaction,
                     ),
-                    status = Status(),
+                    status = SavingsAccountStatusEntity(),
                     summary = summary,
                 ),
             ),

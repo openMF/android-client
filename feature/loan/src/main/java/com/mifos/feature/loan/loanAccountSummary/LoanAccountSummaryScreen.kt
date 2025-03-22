@@ -61,9 +61,9 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.loan.R
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
-import com.mifos.room.entities.accounts.loans.Status
-import com.mifos.room.entities.accounts.loans.Summary
+import com.mifos.room.entities.accounts.loans.LoanStatusEntity
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 
 /**
  * Created by Pronay Sarker on 01/07/2024 (5:50 AM)
@@ -76,9 +76,9 @@ internal fun LoanAccountSummaryScreen(
     onRepaymentScheduleClicked: (loanId: Int) -> Unit,
     onDocumentsClicked: (loanId: Int) -> Unit,
     onChargesClicked: (loanId: Int) -> Unit,
-    approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociations) -> Unit,
+    approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: (loanId: Int) -> Unit,
-    onRepaymentClick: (loanWithAssociations: LoanWithAssociations) -> Unit,
+    onRepaymentClick: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     viewModel: LoanAccountSummaryViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.loanAccountSummaryUiState.collectAsStateWithLifecycle()
@@ -118,9 +118,9 @@ internal fun LoanAccountSummaryScreen(
     onRepaymentScheduleClicked: () -> Unit,
     onDocumentsClicked: () -> Unit,
     onChargesClicked: () -> Unit,
-    approveLoan: (loanWithAssociations: LoanWithAssociations) -> Unit,
+    approveLoan: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: () -> Unit,
-    makeRepayment: (loanWithAssociations: LoanWithAssociations) -> Unit,
+    makeRepayment: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
 ) {
     val snackbarHostState = remember {
         androidx.compose.material3.SnackbarHostState()
@@ -218,7 +218,7 @@ internal fun LoanAccountSummaryScreen(
 
 @Composable
 private fun LoanAccountSummaryContent(
-    loanWithAssociations: LoanWithAssociations,
+    loanWithAssociations: LoanWithAssociationsEntity,
     makeRepayment: () -> Unit,
     approveLoan: () -> Unit,
     disburseLoan: () -> Unit,
@@ -381,7 +381,7 @@ private fun LoanAccountSummaryContent(
 }
 
 @Composable
-private fun LoanSummaryDataTable(loanSummary: Summary, inflateLoanSummary: Boolean) {
+private fun LoanSummaryDataTable(loanSummary: LoansAccountSummaryEntity, inflateLoanSummary: Boolean) {
     // dataTable should be empty if [inflateLoanSummary] is false
     val summary = if (inflateLoanSummary) loanSummary else null
     Column {
@@ -512,7 +512,7 @@ private fun DataTableRow(
     }
 }
 
-private fun getButtonText(context: Context, status: Status): String {
+private fun getButtonText(context: Context, status: LoanStatusEntity): String {
     return when {
         status.active == true || status.closedObligationsMet == true -> {
             context.resources.getString(R.string.feature_loan_make_Repayment)
@@ -532,7 +532,7 @@ private fun getButtonText(context: Context, status: Status): String {
     }
 }
 
-private fun getButtonActiveStatus(status: Status): Boolean {
+private fun getButtonActiveStatus(status: LoanStatusEntity): Boolean {
     return when {
         status.active == true || status.pendingApproval == true || status.waitingForDisbursal == true -> {
             true
@@ -545,7 +545,7 @@ private fun getButtonActiveStatus(status: Status): Boolean {
 }
 
 @Composable
-private fun getInflateLoanSummaryValue(status: Status): Boolean {
+private fun getInflateLoanSummaryValue(status: LoanStatusEntity): Boolean {
     return when {
         status.active == true || status.closedObligationsMet == true -> {
             true
@@ -563,7 +563,7 @@ private fun getInflateLoanSummaryValue(status: Status): Boolean {
 
 private class LoanAccountSummaryPreviewProvider :
     PreviewParameterProvider<LoanAccountSummaryUiState> {
-    private val demoSummary = Summary(
+    private val demoSummary = LoansAccountSummaryEntity(
         loanId = 12345,
         principalDisbursed = 10000.0,
         principalOutstanding = 6000.0,
@@ -601,9 +601,9 @@ private class LoanAccountSummaryPreviewProvider :
             LoanAccountSummaryUiState.ShowProgressbar,
             LoanAccountSummaryUiState.ShowFetchingError("Could not fetch summary"),
             LoanAccountSummaryUiState.ShowLoanById(
-                LoanWithAssociations(
+                LoanWithAssociationsEntity(
                     accountNo = "90927493938",
-                    status = Status(
+                    status = LoanStatusEntity(
                         closedObligationsMet = true,
                     ),
                     clientName = "Pronay sarker",

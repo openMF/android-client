@@ -23,7 +23,7 @@ fun MifosFAB(
     icon: ImageVector,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    //todo use bluesecondary color
+    // todo use bluesecondary color
 //    containerColor: Color = BlueSecondary,
     containerColor: Color = Color.Blue,
 ) {

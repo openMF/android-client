@@ -19,7 +19,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class SavingsTransactionData(
     @IgnoredOnParcel
-    val savingsAccountWithAssociations: SavingsAccountWithAssociations = SavingsAccountWithAssociations(),
-    val depositType: DepositType?,
+    val savingsAccountWithAssociations: SavingsAccountWithAssociationsEntity = SavingsAccountWithAssociationsEntity(),
+    val depositType: SavingAccountDepositTypeEntity?,
     val transactionType: String,
 ) : Parcelable

@@ -72,7 +72,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil3.compose.AsyncImage
+import coil.compose.AsyncImage
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -80,7 +80,7 @@ import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.feature.client.R
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogScreen
-import com.mifos.room.entities.client.Client
+import com.mifos.room.entities.client.ClientEntity
 
 /**
  * Created by Aditya Gupta on 21/02/24.
@@ -213,7 +213,7 @@ internal fun ClientListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SelectionModeTopAppBar(
-    currentSelectedItems: List<Client>,
+    currentSelectedItems: List<ClientEntity>,
     syncClicked: () -> Unit,
     resetSelectionMode: () -> Unit,
 ) {
@@ -258,19 +258,19 @@ private fun SelectionModeTopAppBar(
     )
 }
 
-class ClientSelectionState(initialSelectedItems: List<Client> = emptyList()) {
-    private val _selectedItems = mutableStateListOf<Client>().also { it.addAll(initialSelectedItems) }
-    var selectedItems: State<List<Client>> = derivedStateOf { _selectedItems }
+class ClientSelectionState(initialSelectedItems: List<ClientEntity> = emptyList()) {
+    private val _selectedItems = mutableStateListOf<ClientEntity>().also { it.addAll(initialSelectedItems) }
+    var selectedItems: State<List<ClientEntity>> = derivedStateOf { _selectedItems }
 
-    fun add(client: Client) {
+    fun add(client: ClientEntity) {
         _selectedItems.add(client)
     }
 
-    fun remove(client: Client) {
+    fun remove(client: ClientEntity) {
         _selectedItems.remove(client)
     }
 
-    fun contains(client: Client): Boolean {
+    fun contains(client: ClientEntity): Boolean {
         return _selectedItems.contains(client)
     }
     fun isEmpty(): Boolean {
@@ -284,14 +284,14 @@ class ClientSelectionState(initialSelectedItems: List<Client> = emptyList()) {
     fun size(): Int {
         return _selectedItems.size
     }
-    fun toList(): List<Client> {
+    fun toList(): List<ClientEntity> {
         return _selectedItems.toList()
     }
 }
 
 @Composable
 private fun LazyColumnForClientListApi(
-    clientPagingList: LazyPagingItems<Client>,
+    clientPagingList: LazyPagingItems<ClientEntity>,
     isInSelectionMode: Boolean,
     selectedItems: ClientSelectionState,
     failedRefresh: () -> Unit,
@@ -449,7 +449,7 @@ private fun LazyColumnForClientListApi(
 }
 
 @Composable
-private fun LazyColumnForClientListDb(clientList: List<Client>) {
+private fun LazyColumnForClientListDb(clientList: List<ClientEntity>) {
     LazyColumn {
         items(clientList) { client ->
 
@@ -531,19 +531,19 @@ private fun ClientListScreenPreview() {
 @Composable
 private fun LazyColumnForClientListDbPreview() {
     val clientList = listOf(
-        Client(
+        ClientEntity(
             id = 1,
             displayName = "Arian",
             accountNo = "1234567890",
             sync = true,
         ),
-        Client(
+        ClientEntity(
             id = 2,
             displayName = "oreo",
             accountNo = "9876543210",
             sync = false,
         ),
-        Client(
+        ClientEntity(
             id = 2,
             displayName = "biscuit",
             accountNo = "98765983210",

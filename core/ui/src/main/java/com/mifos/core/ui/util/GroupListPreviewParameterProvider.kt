@@ -13,13 +13,13 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
-import com.mifos.core.entity.group.Group
 import com.mifos.core.testing.repository.sampleGroups
+import com.mifos.room.entities.group.GroupEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class GroupListSuccessPreviewParameterProvider : PreviewParameterProvider<Flow<PagingData<Group>>> {
-    override val values: Sequence<Flow<PagingData<Group>>>
+class GroupListSuccessPreviewParameterProvider : PreviewParameterProvider<Flow<PagingData<GroupEntity>>> {
+    override val values: Sequence<Flow<PagingData<GroupEntity>>>
         get() = sequenceOf(
             flowOf(
                 PagingData.from(
@@ -34,8 +34,8 @@ class GroupListSuccessPreviewParameterProvider : PreviewParameterProvider<Flow<P
         )
 }
 
-class GroupListEmptyPreviewParameterProvider : PreviewParameterProvider<Flow<PagingData<Group>>> {
-    override val values: Sequence<Flow<PagingData<Group>>>
+class GroupListEmptyPreviewParameterProvider : PreviewParameterProvider<Flow<PagingData<GroupEntity>>> {
+    override val values: Sequence<Flow<PagingData<GroupEntity>>>
         get() = sequenceOf(
             flowOf(
                 PagingData.empty(
@@ -49,8 +49,8 @@ class GroupListEmptyPreviewParameterProvider : PreviewParameterProvider<Flow<Pag
         )
 }
 
-class GroupListLoadingPreviewParameterProvider : PreviewParameterProvider<Flow<PagingData<Group>>> {
-    override val values: Sequence<Flow<PagingData<Group>>>
+class GroupListLoadingPreviewParameterProvider : PreviewParameterProvider<Flow<PagingData<GroupEntity>>> {
+    override val values: Sequence<Flow<PagingData<GroupEntity>>>
         get() = sequenceOf(
             flowOf(
                 PagingData.empty(
@@ -64,8 +64,8 @@ class GroupListLoadingPreviewParameterProvider : PreviewParameterProvider<Flow<P
         )
 }
 
-class GroupListErrorPreviewParameterProvider : PreviewParameterProvider<Flow<PagingData<Group>>> {
-    override val values: Sequence<Flow<PagingData<Group>>>
+class GroupListErrorPreviewParameterProvider : PreviewParameterProvider<Flow<PagingData<GroupEntity>>> {
+    override val values: Sequence<Flow<PagingData<GroupEntity>>>
         get() = sequenceOf(
             flowOf(
                 PagingData.empty(
@@ -79,7 +79,7 @@ class GroupListErrorPreviewParameterProvider : PreviewParameterProvider<Flow<Pag
         )
 }
 
-class GroupListItemPreviewParameterProvider : PreviewParameterProvider<Group> {
-    override val values: Sequence<Group>
+class GroupListItemPreviewParameterProvider : PreviewParameterProvider<GroupEntity> {
+    override val values: Sequence<GroupEntity>
         get() = sequenceOf(sampleGroups[1])
 }

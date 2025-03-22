@@ -18,12 +18,14 @@ import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.ClientAccounts
-import com.mifos.room.entities.client.Client
-import com.mifos.room.entities.client.ClientPayload
-import com.mifos.room.entities.templates.clients.ClientsTemplate
+import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
+import org.openapitools.client.models.PostAuthenticationRequest
+import org.openapitools.client.models.PostAuthenticationResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -39,6 +41,13 @@ import rx.Observable
  * @author fomenkoo
  */
 interface ClientService {
+
+    @POST("authentication")
+    suspend fun authenticate(
+        @Body postAuthenticationRequest: PostAuthenticationRequest,
+        @Query("returnClientList") returnClientList: Boolean? = false,
+    ): PostAuthenticationResponse
+
     /**
      * @param b      True Enabling the Pagination of the API
      * @param offset Value give from which position Fetch ClientList
@@ -50,10 +59,10 @@ interface ClientService {
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Observable<Page<Client>>
+    ): Observable<Page<ClientEntity>>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}")
-    suspend fun getClient(@Path("clientId") clientId: Int): Client
+    suspend fun getClient(@Path("clientId") clientId: Int): ClientEntity
 
     @Multipart
     @POST(APIEndPoint.CLIENTS + "/{clientId}/images")
@@ -69,10 +78,10 @@ interface ClientService {
     //    @GET("/clients/{clientId}/images")
     //    Observable<TypedString> getClientImage(@Path("clientId") int clientId);
     @POST(APIEndPoint.CLIENTS)
-    suspend fun createClient(@Body clientPayload: ClientPayload?): Client?
+    suspend fun createClient(@Body clientPayload: ClientPayloadEntity?): ClientEntity?
 
     @get:GET(APIEndPoint.CLIENTS + "/template")
-    val clientTemplate: Flow<ClientsTemplate>
+    val clientTemplate: Flow<ClientsTemplateEntity>
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/accounts")
     fun getClientAccounts(@Path("clientId") clientId: Int): Observable<ClientAccounts>

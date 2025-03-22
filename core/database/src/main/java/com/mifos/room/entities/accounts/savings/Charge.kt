@@ -10,49 +10,46 @@
 package com.mifos.room.entities.accounts.savings
 
 import android.os.Parcelable
-import com.mifos.core.entity.accounts.savings.Currency
-import com.mifos.core.model.objects.account.saving.ChargeCalculationType
-import com.mifos.core.model.objects.account.saving.ChargeTimeType
+import com.mifos.room.entities.client.ChargeCalculationTypeEntity
+import com.mifos.room.entities.client.ChargeTimeTypeEntity
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import javax.annotation.processing.Generated
 
 @Parcelize
-@Generated("org.jsonschema2pojo")
 data class Charge(
-    var id: Int? = null,
+    val id: Int? = null,
 
-    var chargeId: Int? = null,
+    val chargeId: Int? = null,
 
-    var accountId: Int? = null,
+    val accountId: Int? = null,
 
-    var name: String? = null,
-
-    @IgnoredOnParcel
-    var chargeTimeType: ChargeTimeType? = null,
+    val name: String? = null,
 
     @IgnoredOnParcel
-    var chargeCalculationType: ChargeCalculationType? = null,
+    val chargeTimeType: ChargeTimeTypeEntity? = null,
 
-    var percentage: Int? = null,
+    @IgnoredOnParcel
+    val chargeCalculationType: ChargeCalculationTypeEntity? = null,
 
-    var amountPercentageAppliedTo: Int? = null,
+    val percentage: Int? = null,
 
-    var currency: Currency? = null,
+    val amountPercentageAppliedTo: Int? = null,
 
-    var amount: Double? = null,
+    val currency: SavingAccountCurrencyEntity? = null,
 
-    var amountPaid: Double? = null,
+    val amount: Double? = null,
 
-    var amountWaived: Double? = null,
+    val amountPaid: Double? = null,
 
-    var amountWrittenOff: Double? = null,
+    val amountWaived: Double? = null,
 
-    var amountOutstanding: Double? = null,
+    val amountWrittenOff: Double? = null,
 
-    var amountOrPercentage: Double? = null,
+    val amountOutstanding: Double? = null,
 
-    var penalty: Boolean? = null,
+    val amountOrPercentage: Double? = null,
+
+    val penalty: Boolean? = null,
 
     val additionalProperties: MutableMap<String, String> = HashMap(),
 ) : Parcelable {

@@ -12,8 +12,8 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class SavingsAccountTransactionRepositoryImp @Inject constructor(
         type: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Flow<SavingsAccountTransactionTemplate?> {
+    ): Flow<SavingsAccountTransactionTemplateEntity?> {
         return dataManagerSavings.getSavingsAccountTransactionTemplate(
             type,
             savingsAccountId,
@@ -40,7 +40,7 @@ class SavingsAccountTransactionRepositoryImp @Inject constructor(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
-        request: SavingsAccountTransactionRequest,
+        request: SavingsAccountTransactionRequestEntity,
     ): Flow<SavingsAccountTransactionResponse?> {
         return dataManagerSavings.processTransaction(
             savingsAccountType,
@@ -50,7 +50,7 @@ class SavingsAccountTransactionRepositoryImp @Inject constructor(
         )
     }
 
-    override fun getSavingsAccountTransaction(savingAccountId: Int): Flow<SavingsAccountTransactionRequest?> {
+    override fun getSavingsAccountTransaction(savingAccountId: Int): Flow<SavingsAccountTransactionRequestEntity?> {
         return dataManagerSavings.getSavingsAccountTransaction(savingAccountId)
     }
 }

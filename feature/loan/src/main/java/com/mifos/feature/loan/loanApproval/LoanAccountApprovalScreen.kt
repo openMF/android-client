@@ -12,7 +12,6 @@ package com.mifos.feature.loan.loanApproval
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,7 +23,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,10 +54,9 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.network.GenericResponse
 import com.mifos.feature.loan.R
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -87,7 +84,7 @@ internal fun LoanAccountApprovalScreen(
 @Composable
 internal fun LoanAccountApprovalScreen(
     uiState: LoanAccountApprovalUiState,
-    loanWithAssociations: LoanWithAssociations?,
+    loanWithAssociations: LoanWithAssociationsEntity?,
     navigateBack: () -> Unit,
     onLoanApprove: (loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval) -> Unit,
 ) {
@@ -149,7 +146,7 @@ internal fun LoanAccountApprovalScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoanAccountApprovalContent(
-    loanWithAssociations: LoanWithAssociations?,
+    loanWithAssociations: LoanWithAssociationsEntity?,
     onLoanApprove: (loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval) -> Unit,
 ) {
     var approvedAmount by rememberSaveable {
@@ -396,7 +393,7 @@ private fun PreviewLoanAccountApprovalScreen(
 ) {
     LoanAccountApprovalScreen(
         uiState = loanAccountApprovalUiState,
-        loanWithAssociations = LoanWithAssociations(),
+        loanWithAssociations = LoanWithAssociationsEntity(),
         navigateBack = { },
     ) {
     }

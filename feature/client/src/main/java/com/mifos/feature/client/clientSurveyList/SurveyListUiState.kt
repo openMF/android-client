@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.client.clientSurveyList
 
-import com.mifos.room.entities.survey.Survey
+import com.mifos.room.entities.survey.SurveyEntity
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -20,5 +20,5 @@ sealed class SurveyListUiState {
 
     data class ShowFetchingError(val message: Int) : SurveyListUiState()
 
-    data class ShowAllSurvey(val syncSurvey: List<Survey>) : SurveyListUiState()
+    data class ShowAllSurvey(val syncSurvey: List<SurveyEntity>) : SurveyListUiState()
 }

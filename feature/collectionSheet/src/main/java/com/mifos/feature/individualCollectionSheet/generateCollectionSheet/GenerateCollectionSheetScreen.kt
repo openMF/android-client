@@ -12,7 +12,6 @@
 package com.mifos.feature.individualCollectionSheet.generateCollectionSheet
 
 import android.widget.Toast
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,17 +53,16 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.group.Center
-import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.organisation.Office
-import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.collectionsheet.CenterDetail
 import com.mifos.room.entities.collectionsheet.CollectionSheetPayload
 import com.mifos.room.entities.collectionsheet.CollectionSheetResponse
 import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
+import com.mifos.room.entities.group.CenterEntity
+import com.mifos.room.entities.group.GroupEntity
+import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.entities.organisation.StaffEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -129,10 +126,10 @@ internal fun GenerateCollectionSheetScreen(
     centerDetailsState: List<CenterDetail>?,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit,
-    officeList: List<Office>,
-    staffList: List<Staff>,
-    centerList: List<Center>,
-    groupList: List<Group>,
+    officeList: List<OfficeEntity>,
+    staffList: List<StaffEntity>,
+    centerList: List<CenterEntity>,
+    groupList: List<GroupEntity>,
     onOfficeSelected: (Int) -> Unit,
     onStaffSelected: (Int, Int) -> Unit,
     onCenterDetails: (String, Int, Int) -> Unit,
@@ -206,10 +203,10 @@ internal fun GenerateCollectionSheetScreen(
 @Composable
 private fun GenerateCollectionSheetContent(
     centerDetailsState: List<CenterDetail>?,
-    officeList: List<Office>,
-    staffList: List<Staff>,
-    centerList: List<Center>,
-    groupList: List<Group>,
+    officeList: List<OfficeEntity>,
+    staffList: List<StaffEntity>,
+    centerList: List<CenterEntity>,
+    groupList: List<GroupEntity>,
     collectionSheetState: CollectionSheetResponse?,
     onOfficeSelected: (Int) -> Unit,
     onStaffSelected: (Int, Int) -> Unit,
@@ -303,7 +300,7 @@ private fun GenerateCollectionSheetContent(
             },
             onOptionSelected = { index, value ->
                 selectedOffice = value
-                officeList[index].id?.let {
+                officeList[index].id.let {
                     selectedOfficeId = it
                     onOfficeSelected(it)
                 }

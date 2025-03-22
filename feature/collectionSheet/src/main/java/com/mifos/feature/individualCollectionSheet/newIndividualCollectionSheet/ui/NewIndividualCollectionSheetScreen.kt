@@ -11,7 +11,6 @@
 
 package com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet.ui
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,7 +22,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,11 +58,11 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.entity.organisation.Office
-import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
+import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.entities.organisation.StaffEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -230,7 +228,7 @@ internal fun NewIndividualCollectionSheetScreen(
                         selectedStaff = ""
                     },
                     onOptionSelected = { index, value ->
-                        state.officeList[index].id?.let {
+                        state.officeList[index].id.let {
                             getStaffList(it)
                             officeId = it
                         }
@@ -438,11 +436,11 @@ private fun NewIndividualCollectionSheetPreview(
 }
 
 val sampleStaffList = List(10) {
-    Staff(firstname = "FirstName", lastname = "LastName", isActive = true)
+    StaffEntity(firstname = "FirstName", lastname = "LastName", isActive = true)
 }
 
 val sampleOfficeList = List(10) {
-    Office(name = "Name")
+    OfficeEntity(id = it, name = "Name")
 }
 
 @Preview

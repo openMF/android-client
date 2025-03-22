@@ -63,8 +63,8 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.offline.R
 import com.mifos.feature.offline.syncSavingsAccountTransaction.getPaymentTypeName
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 
 @Composable
 internal fun SyncLoanRepaymentTransactionScreenRoute(
@@ -168,8 +168,8 @@ internal fun SyncLoanRepaymentTransactionScreen(
 
 @Composable
 private fun LoanRepaymentTransactionsList(
-    loanRepaymentRequests: List<LoanRepaymentRequest>,
-    paymentTypeOptions: List<PaymentTypeOption>,
+    loanRepaymentRequests: List<LoanRepaymentRequestEntity>,
+    paymentTypeOptions: List<PaymentTypeOptionEntity>,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
@@ -181,8 +181,8 @@ private fun LoanRepaymentTransactionsList(
 
 @Composable
 private fun LoanRepaymentTransactionItem(
-    request: LoanRepaymentRequest,
-    paymentTypeOptions: List<PaymentTypeOption>,
+    request: LoanRepaymentRequestEntity,
+    paymentTypeOptions: List<PaymentTypeOptionEntity>,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -353,7 +353,7 @@ private fun SyncLoanRepaymentTransactionScreenPreview(
 
 // Sample data for previews
 val sampleLoanRepaymentRequests = List(5) { index ->
-    LoanRepaymentRequest(
+    LoanRepaymentRequestEntity(
         loanId = index,
         accountNumber = "LOAN-$index",
         paymentTypeId = index.toString(),
@@ -364,7 +364,7 @@ val sampleLoanRepaymentRequests = List(5) { index ->
 }
 
 val samplePaymentTypeOptions = List(3) { index ->
-    PaymentTypeOption(
+    PaymentTypeOptionEntity(
         id = index,
         name = "Payment Type $index",
         description = "Description for Payment Type $index",

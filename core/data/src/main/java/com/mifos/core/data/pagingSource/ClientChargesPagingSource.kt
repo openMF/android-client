@@ -14,17 +14,16 @@ import androidx.paging.PagingState
 import com.mifos.core.common.utils.DatabaseFetchException
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.datamanager.DataManagerCharge
-import com.mifos.room.entities.client.Charges
+import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
 
 class ClientChargesPagingSource(
     private val clientId: Int,
     private val dataManagerCharge: DataManagerCharge,
 ) :
-    PagingSource<Int, Charges>() {
+    PagingSource<Int, ChargesEntity>() {
 
-    override fun getRefreshKey(state: PagingState<Int, Charges>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, ChargesEntity>): Int? {
         return state.anchorPosition?.let { position ->
             state.closestPageToPosition(position)?.prevKey?.plus(10) ?: state.closestPageToPosition(
                 position,
@@ -32,7 +31,7 @@ class ClientChargesPagingSource(
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Charges> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ChargesEntity> {
         val position = params.key ?: 0
         return try {
             val getClientCharges = getClientChargeList(clientId, position)
@@ -53,8 +52,8 @@ class ClientChargesPagingSource(
     private suspend fun getClientChargeList(
         clientId: Int,
         position: Int,
-    ): Pair<List<Charges>, Int> {
-        var page: Page<Charges>? = null
+    ): Pair<List<ChargesEntity>, Int> {
+        var page: Page<ChargesEntity>? = null
 
         dataManagerCharge.getClientCharges(
             clientId = clientId,

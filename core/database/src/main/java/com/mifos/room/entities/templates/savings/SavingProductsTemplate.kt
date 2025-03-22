@@ -10,11 +10,11 @@
 package com.mifos.room.entities.templates.savings
 
 import android.os.Parcelable
-import com.mifos.core.entity.accounts.savings.Currency
+import com.mifos.core.model.objects.account.loan.Currency
 import com.mifos.core.model.objects.account.saving.FieldOfficerOptions
 import com.mifos.core.model.objects.commonfiles.InterestType
 import com.mifos.core.model.objects.template.saving.AccountOptions
-import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.PaymentTypeOptionEntity
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
@@ -27,60 +27,61 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 class SavingProductsTemplate(
-    var currency: Currency? = null,
+    val currency: Currency? = null,
 
     @IgnoredOnParcel
-    var interestCompoundingPeriodType: InterestType? = null,
+    val interestCompoundingPeriodType: InterestType? = null,
 
     @IgnoredOnParcel
-    var interestPostingPeriodType: InterestType? = null,
+    val interestPostingPeriodType: InterestType? = null,
 
     @IgnoredOnParcel
-    var interestCalculationType: InterestType? = null,
+    val interestCalculationType: InterestType? = null,
 
     @IgnoredOnParcel
-    var interestCalculationDaysInYearType: InterestType? = null,
+    val interestCalculationDaysInYearType: InterestType? = null,
 
     @IgnoredOnParcel
-    var accountingRule: InterestType? = null,
-
-    var currencyOptions: List<Currency>? = null,
+    val accountingRule: InterestType? = null,
 
     @IgnoredOnParcel
-    var interestCompoundingPeriodTypeOptions: List<InterestType>? = null,
+    val currencyOptions: List<Currency>? = null,
 
     @IgnoredOnParcel
-    var interestPostingPeriodTypeOptions: List<InterestType>? = null,
+    val interestCompoundingPeriodTypeOptions: List<InterestType>? = null,
 
     @IgnoredOnParcel
-    var interestCalculationTypeOptions: List<InterestType>? = null,
+    val interestPostingPeriodTypeOptions: List<InterestType>? = null,
 
     @IgnoredOnParcel
-    var interestCalculationDaysInYearTypeOptions: List<InterestType>? = null,
+    val interestCalculationTypeOptions: List<InterestType>? = null,
 
     @IgnoredOnParcel
-    var lockinPeriodFrequencyTypeOptions: List<InterestType>? = null,
+    val interestCalculationDaysInYearTypeOptions: List<InterestType>? = null,
 
     @IgnoredOnParcel
-    var withdrawalFeeTypeOptions: List<InterestType>? = null,
-
-    var paymentTypeOptions: List<PaymentTypeOption>? = null,
+    val lockinPeriodFrequencyTypeOptions: List<InterestType>? = null,
 
     @IgnoredOnParcel
-    var accountingRuleOptions: List<InterestType>? = null,
+    val withdrawalFeeTypeOptions: List<InterestType>? = null,
+
+    val paymentTypeOptions: List<PaymentTypeOptionEntity>? = null,
 
     @IgnoredOnParcel
-    var liabilityAccountOptions: AccountOptions? = null,
+    val accountingRuleOptions: List<InterestType>? = null,
 
     @IgnoredOnParcel
-    var assetAccountOptions: List<AccountOptions>? = null,
+    val liabilityAccountOptions: AccountOptions? = null,
 
     @IgnoredOnParcel
-    var expenseAccountOptions: List<AccountOptions>? = null,
+    val assetAccountOptions: List<AccountOptions>? = null,
 
     @IgnoredOnParcel
-    var incomeAccountOptions: List<AccountOptions>? = null,
+    val expenseAccountOptions: List<AccountOptions>? = null,
 
     @IgnoredOnParcel
-    var fieldOfficerOptions: List<FieldOfficerOptions>? = null,
+    val incomeAccountOptions: List<AccountOptions>? = null,
+
+    @IgnoredOnParcel
+    val fieldOfficerOptions: List<FieldOfficerOptions>? = null,
 ) : Parcelable

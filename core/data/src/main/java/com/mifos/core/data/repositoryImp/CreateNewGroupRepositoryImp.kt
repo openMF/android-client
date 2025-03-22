@@ -13,7 +13,7 @@ import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerOffices
-import com.mifos.room.entities.group.GroupPayload
+import com.mifos.room.entities.group.GroupPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class CreateNewGroupRepositoryImp @Inject constructor(
         return dataManagerOffices.offices()
     }
 
-    override suspend fun createGroup(groupPayload: GroupPayload): SaveResponse {
+    override suspend fun createGroup(groupPayload: GroupPayloadEntity): SaveResponse {
         return dataManagerGroups.createGroup(groupPayload)
     }
 }

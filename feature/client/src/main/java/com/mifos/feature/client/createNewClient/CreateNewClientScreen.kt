@@ -27,7 +27,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,11 +43,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -93,7 +90,7 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.rememberAsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -102,11 +99,11 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.feature.client.R
-import com.mifos.room.entities.client.ClientPayload
-import com.mifos.room.entities.noncore.DataTable
+import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.organisation.OfficeEntity
-import com.mifos.room.entities.organisation.Staff
-import com.mifos.room.entities.templates.clients.ClientsTemplate
+import com.mifos.room.entities.organisation.StaffEntity
+import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
@@ -120,7 +117,7 @@ import java.util.Objects
 @Composable
 internal fun CreateNewClientScreen(
     navigateBack: () -> Unit,
-    hasDatatables: (datatables: List<DataTable>, clientPayload: ClientPayload) -> Unit,
+    hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
     viewmodel: CreateNewClientViewModel = hiltViewModel(),
 ) {
     val uiState by viewmodel.createNewClientUiState.collectAsStateWithLifecycle()
@@ -151,12 +148,12 @@ internal fun CreateNewClientScreen(
     uiState: CreateNewClientUiState,
     onRetry: () -> Unit,
     officeList: List<OfficeEntity>,
-    staffInOffices: List<Staff>,
+    staffInOffices: List<StaffEntity>,
     loadStaffInOffice: (officeId: Int) -> Unit,
     navigateBack: () -> Unit,
-    createClient: (clientPayload: ClientPayload) -> Unit,
+    createClient: (clientPayload: ClientPayloadEntity) -> Unit,
     uploadImage: (id: Int, imageUri: Uri) -> Unit,
-    hasDatatables: (datatables: List<DataTable>, clientPayload: ClientPayload) -> Unit,
+    hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
 ) {
     val context = LocalContext.current
     var createClientWithImage by rememberSaveable { mutableStateOf(false) }
@@ -250,11 +247,11 @@ internal fun CreateNewClientScreen(
 @Composable
 private fun CreateNewClientContent(
     officeList: List<OfficeEntity>,
-    staffInOffices: List<Staff>,
-    clientTemplate: ClientsTemplate,
+    staffInOffices: List<StaffEntity>,
+    clientTemplate: ClientsTemplateEntity,
     loadStaffInOffice: (officeId: Int) -> Unit,
-    createClient: (clientPayload: ClientPayload) -> Unit,
-    onHasDatatables: (datatables: List<DataTable>, clientPayload: ClientPayload) -> Unit,
+    createClient: (clientPayload: ClientPayloadEntity) -> Unit,
+    onHasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
     setUriForUpload: (uri: Uri) -> Unit,
 ) {
     var firstName by rememberSaveable { mutableStateOf("") }
@@ -318,13 +315,13 @@ private fun CreateNewClientContent(
 
     val hasDatatables by rememberSaveable {
         mutableStateOf(
-            clientTemplate.dataTables.isNotEmpty(),
+            clientTemplate.dataTables?.isNotEmpty() ?: false,
         )
     }
 
     LaunchedEffect(key1 = Unit) {
         if (officeList.isNotEmpty()) {
-            officeList[0].id?.let { loadStaffInOffice.invoke(it) }
+            officeList[0].id.let { loadStaffInOffice.invoke(it) }
         }
     }
     LaunchedEffect(key1 = staffInOffices) {
@@ -467,17 +464,19 @@ private fun CreateNewClientContent(
             onMobileNumberChange = { mobileNumber = it },
             onExternalIdChange = { externalId = it },
         )
-        MifosTextFieldDropdown(
-            value = gender,
-            onValueChanged = { gender = it },
-            onOptionSelected = { index, value ->
-                gender = value
-                genderId = clientTemplate.genderOptions[index].id
-            },
-            label = R.string.feature_client_gender,
-            options = clientTemplate.genderOptions.map { it.name },
-            readOnly = true,
-        )
+        clientTemplate.genderOptions?.let { list ->
+            MifosTextFieldDropdown(
+                value = gender,
+                onValueChanged = { gender = it },
+                onOptionSelected = { index, value ->
+                    gender = value
+                    genderId = list[index].id
+                },
+                label = R.string.feature_client_gender,
+                options = list.map { it.name },
+                readOnly = true,
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -491,33 +490,35 @@ private fun CreateNewClientContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        MifosTextFieldDropdown(
-            value = client,
-            onValueChanged = { client = it },
-            onOptionSelected = { index, value ->
-                client = value
-                selectedClientId = clientTemplate.clientTypeOptions[index].id
-            },
-            label = R.string.feature_client_client,
-            options = clientTemplate.clientTypeOptions.sortedBy { it.name }.map { it.name },
-            readOnly = true,
-        )
+        clientTemplate.clientTypeOptions?.let { list ->
+            MifosTextFieldDropdown(
+                value = client,
+                onValueChanged = { client = it },
+                onOptionSelected = { index, value ->
+                    client = value
+                    selectedClientId = list[index].id
+                },
+                label = R.string.feature_client_client,
+                options = list.sortedBy { it.name }.map { it.name },
+                readOnly = true,
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        MifosTextFieldDropdown(
-            value = clientClassification,
-            onValueChanged = { clientClassification = it },
-            onOptionSelected = { index, value ->
-                clientClassification = value
-                selectedClientClassificationId =
-                    clientTemplate.clientClassificationOptions[index].id
-            },
-            label = R.string.feature_client_client_classification,
-            options = clientTemplate.clientClassificationOptions.sortedBy { it.name }
-                .map { it.name },
-            readOnly = true,
-        )
+        clientTemplate.clientClassificationOptions?.let { list ->
+            MifosTextFieldDropdown(
+                value = clientClassification,
+                onValueChanged = { clientClassification = it },
+                onOptionSelected = { index, value ->
+                    clientClassification = value
+                    selectedClientClassificationId =
+                        list[index].id
+                },
+                label = R.string.feature_client_client_classification,
+                options = list.sortedBy { it.name }.map { it.name },
+                readOnly = true,
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -626,13 +627,13 @@ data class Name(
 private fun handleSubmitClick(
     context: Context,
     clientNames: Name,
-    clientTemplate: ClientsTemplate,
-    createClient: (clientPayload: ClientPayload) -> Unit,
+    clientTemplate: ClientsTemplateEntity,
+    createClient: (clientPayload: ClientPayloadEntity) -> Unit,
     isActive: Boolean,
-    onHasDatatables: (datatables: List<DataTable>, clientPayload: ClientPayload) -> Unit,
+    onHasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
     selectedImageUri: Uri,
     setUriForUpload: (uri: Uri) -> Unit,
-    staffInOffices: List<Staff>,
+    staffInOffices: List<StaffEntity>,
     hasDatatables: Boolean,
     selectedOfficeId: Int?,
     selectedClientId: Int,
@@ -671,7 +672,9 @@ private fun handleSubmitClick(
     )
 
     if (hasDatatables) {
-        onHasDatatables.invoke(clientTemplate.dataTables, clientPayload)
+        clientTemplate.dataTables?.let {
+            onHasDatatables.invoke(it, clientPayload)
+        }
     } else {
         setUriForUpload.invoke(selectedImageUri)
         clientPayload = clientPayload.copy(
@@ -685,20 +688,20 @@ private fun createClientPayload(
     firstName: String,
     lastName: String,
     selectedOfficeId: Int?,
-    staffInOffices: List<Staff>,
+    staffInOffices: List<StaffEntity>,
     isActive: Boolean,
     activationDate: Long,
     dateOfBirth: Long,
     middleName: String,
     mobileNumber: String,
     externalId: String,
-    clientTemplate: ClientsTemplate,
+    clientTemplate: ClientsTemplateEntity,
     genderId: Int,
     selectedStaffId: Int?,
     selectedClientId: Int,
     selectedClientClassificationId: Int,
-): ClientPayload {
-    var clientPayload = ClientPayload(
+): ClientPayloadEntity {
+    var clientPayload = ClientPayloadEntity(
         // Mandatory fields
         firstname = firstName,
         lastname = lastName,
@@ -713,7 +716,6 @@ private fun createClientPayload(
         dateOfBirth = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(dateOfBirth),
     )
 
-
     // Optional fields
     if (middleName.isNotEmpty()) {
         clientPayload = clientPayload.copy(middlename = middleName)
@@ -724,16 +726,16 @@ private fun createClientPayload(
     if (externalId.isNotEmpty()) {
         clientPayload = clientPayload.copy(externalId = externalId)
     }
-    if (clientTemplate.genderOptions.isNotEmpty()) {
+    if (clientTemplate.genderOptions?.isNotEmpty() == true) {
         clientPayload = clientPayload.copy(genderId = genderId)
     }
     if (staffInOffices.isNotEmpty()) {
         clientPayload = clientPayload.copy(staffId = selectedStaffId)
     }
-    if (clientTemplate.clientTypeOptions.isNotEmpty()) {
+    if (clientTemplate.clientTypeOptions?.isNotEmpty() == true) {
         clientPayload = clientPayload.copy(clientTypeId = selectedClientId)
     }
-    if (clientTemplate.clientClassificationOptions.isNotEmpty()) {
+    if (clientTemplate.clientClassificationOptions?.isNotEmpty() == true) {
         clientPayload = clientPayload.copy(clientClassificationId = selectedClientClassificationId)
     }
     return clientPayload
@@ -1030,7 +1032,7 @@ private class CreateNewClientScreenPreviewProvider :
     override val values: Sequence<CreateNewClientUiState>
         get() = sequenceOf(
             CreateNewClientUiState.ShowClientTemplate(
-                ClientsTemplate(
+                ClientsTemplateEntity(
                     officeOptions = listOf(),
                     staffOptions = listOf(),
                     genderOptions = listOf(),

@@ -10,41 +10,41 @@
 package com.mifos.room.utils.typeconverters
 
 import androidx.room.TypeConverter
-import com.mifos.room.entities.accounts.savings.DepositType
-import com.mifos.room.entities.group.CenterDate
-import com.mifos.room.entities.group.GroupDate
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import com.mifos.room.entities.group.CenterDateEntity
+import com.mifos.room.entities.group.GroupDateEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class CenterTypeConverters {
 
     @TypeConverter
-    fun fromCenterDate(centerDate: CenterDate?): String? {
+    fun fromCenterDate(centerDate: CenterDateEntity?): String? {
         return centerDate?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toCenterDate(json: String?): CenterDate? {
+    fun toCenterDate(json: String?): CenterDateEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
     @TypeConverter
-    fun fromDepositType(type: DepositType?): String? {
+    fun fromDepositType(type: SavingAccountDepositTypeEntity?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toDepositType(json: String?): DepositType? {
+    fun toDepositType(json: String?): SavingAccountDepositTypeEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
     @TypeConverter
-    fun fromGroupDate(groupDate: GroupDate?): String? {
+    fun fromGroupDate(groupDate: GroupDateEntity?): String? {
         return groupDate?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toGroupDate(json: String?): GroupDate? {
+    fun toGroupDate(json: String?): GroupDateEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 }

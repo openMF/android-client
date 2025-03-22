@@ -47,7 +47,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.feature.loan.R
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 
 /**
  * Created by Pronay Sarker on 03/07/2024 (9:18 AM)
@@ -305,7 +305,7 @@ private fun BottomBarLoanRepaymentSchedule(
 private class LoanRepaymentSchedulePreviewProvider :
     PreviewParameterProvider<LoanRepaymentScheduleUiState> {
 
-    val loanWithAssociations = LoanWithAssociations(
+    val loanWithAssociations = LoanWithAssociationsEntity(
         repaymentSchedule = RepaymentSchedule(
             periods = listOf(
                 Period(

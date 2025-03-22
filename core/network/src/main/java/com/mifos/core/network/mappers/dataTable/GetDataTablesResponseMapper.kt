@@ -9,12 +9,8 @@
  */
 package com.mifos.core.network.mappers.dataTable
 
-import com.mifos.core.objects.noncore.ColumnHeader_Table.columnDisplayType
-import com.mifos.core.objects.noncore.ColumnHeader_Table.columnLength
-import com.mifos.core.objects.noncore.ColumnHeader_Table.columnPrimaryKey
-import com.mifos.core.objects.noncore.ColumnHeader_Table.columnType
 import com.mifos.room.entities.noncore.ColumnHeader
-import com.mifos.room.entities.noncore.DataTable
+import com.mifos.room.entities.noncore.DataTableEntity
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetDataTablesResponse
 import org.openapitools.client.models.ResultsetColumnHeaderData
@@ -23,10 +19,10 @@ import org.openapitools.client.models.ResultsetColumnHeaderData
  * Created by Aditya Gupta on 31/08/23.
  */
 
-object GetDataTablesResponseMapper : AbstractMapper<GetDataTablesResponse, DataTable>() {
+object GetDataTablesResponseMapper : AbstractMapper<GetDataTablesResponse, DataTableEntity>() {
 
-    override fun mapFromEntity(entity: GetDataTablesResponse): DataTable {
-        return DataTable(
+    override fun mapFromEntity(entity: GetDataTablesResponse): DataTableEntity {
+        return DataTableEntity(
             applicationTableName = entity.applicationTableName,
             registeredTableName = entity.registeredTableName,
             columnHeaderData = entity.columnHeaderData!!.map {
@@ -42,7 +38,7 @@ object GetDataTablesResponseMapper : AbstractMapper<GetDataTablesResponse, DataT
         )
     }
 
-    override fun mapToEntity(domainModel: DataTable): GetDataTablesResponse {
+    override fun mapToEntity(domainModel: DataTableEntity): GetDataTablesResponse {
         return GetDataTablesResponse(
             applicationTableName = domainModel.applicationTableName,
             registeredTableName = domainModel.registeredTableName,

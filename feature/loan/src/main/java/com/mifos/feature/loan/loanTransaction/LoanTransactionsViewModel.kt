@@ -13,7 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanTransactionsRepository
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,14 +44,14 @@ class LoanTransactionsViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(
-                object : Subscriber<LoanWithAssociations>() {
+                object : Subscriber<LoanWithAssociationsEntity>() {
                     override fun onCompleted() {}
                     override fun onError(e: Throwable) {
                         _loanTransactionsUiState.value =
                             LoanTransactionsUiState.ShowFetchingError(e.message.toString())
                     }
 
-                    override fun onNext(loanWithAssociations: LoanWithAssociations) {
+                    override fun onNext(loanWithAssociations: LoanWithAssociationsEntity) {
                         _loanTransactionsUiState.value =
                             LoanTransactionsUiState.ShowLoanTransaction(loanWithAssociations)
                     }

@@ -61,8 +61,8 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.offline.R
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 
 @Composable
 internal fun SyncSavingsAccountTransactionScreenRoute(
@@ -172,8 +172,8 @@ internal fun SyncSavingsAccountTransactionScreen(
 
 @Composable
 private fun SavingsAccountTransactionItem(
-    transaction: SavingsAccountTransactionRequest,
-    paymentTypeOptions: List<PaymentTypeOption>,
+    transaction: SavingsAccountTransactionRequestEntity,
+    paymentTypeOptions: List<PaymentTypeOptionEntity>,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -273,7 +273,7 @@ private fun ErrorStateScreen(
 
 fun getPaymentTypeName(
     paymentId: Int,
-    paymentTypeOptions: List<PaymentTypeOption>?,
+    paymentTypeOptions: List<PaymentTypeOptionEntity>?,
 ): String? {
     return paymentTypeOptions
         ?.firstOrNull { it.id == paymentId }
@@ -327,7 +327,7 @@ private fun SyncSavingsAccountTransactionScreenPreview(
 
 // Sample data for previews
 val sampleSavingsAccountTransactions = List(5) { index ->
-    SavingsAccountTransactionRequest(
+    SavingsAccountTransactionRequestEntity(
         savingAccountId = index,
         transactionDate = "2023-07-${15 + index}",
         transactionAmount = "${100 + index * 10}",
@@ -342,7 +342,7 @@ val sampleSavingsAccountTransactions = List(5) { index ->
 }
 
 val samplePaymentTypeOptions = List(3) { index ->
-    PaymentTypeOption(
+    PaymentTypeOptionEntity(
         id = index,
         name = "Payment Type $index",
         description = "Description for Payment Type $index",

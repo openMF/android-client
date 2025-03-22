@@ -11,7 +11,7 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.room.entities.client.ClientPayload
+import com.mifos.room.entities.client.ClientPayloadEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -19,22 +19,22 @@ class SyncClientPayloadsRepositoryImp @Inject constructor(
     private val dataManagerClient: DataManagerClient,
 ) : SyncClientPayloadsRepository {
 
-    override fun allDatabaseClientPayload(): Flow<List<ClientPayload>> {
+    override fun allDatabaseClientPayload(): Flow<List<ClientPayloadEntity>> {
         return dataManagerClient.allDatabaseClientPayload
     }
 
-    override suspend fun createClient(clientPayload: ClientPayload): Int? {
+    override suspend fun createClient(clientPayload: ClientPayloadEntity): Int? {
         return dataManagerClient.createClient(clientPayload)
     }
 
     override fun deleteAndUpdatePayloads(
         id: Int,
         clientCreationTIme: Long,
-    ): Flow<List<ClientPayload>> {
+    ): Flow<List<ClientPayloadEntity>> {
         return dataManagerClient.deleteAndUpdatePayloads(id, clientCreationTIme)
     }
 
-    override suspend fun updateClientPayload(clientPayload: ClientPayload) {
+    override suspend fun updateClientPayload(clientPayload: ClientPayloadEntity) {
         dataManagerClient.updateClientPayload(clientPayload)
     }
 }

@@ -14,10 +14,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.feature.client.R
-import com.mifos.room.entities.client.ClientPayload
+import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
-import com.mifos.room.entities.organisation.Staff
-import com.mifos.room.entities.templates.clients.ClientsTemplate
+import com.mifos.room.entities.organisation.StaffEntity
+import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,11 +26,7 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.ResponseBody
 import retrofit2.HttpException
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import java.io.File
 import javax.inject.Inject
 
@@ -48,15 +44,15 @@ class CreateNewClientViewModel @Inject constructor(
         MutableStateFlow<CreateNewClientUiState>(CreateNewClientUiState.ShowProgressbar)
     val createNewClientUiState: StateFlow<CreateNewClientUiState> get() = _createNewClientUiState
 
-    private val _staffInOffices = MutableStateFlow<List<Staff>>(emptyList())
-    val staffInOffices: StateFlow<List<Staff>> get() = _staffInOffices
+    private val _staffInOffices = MutableStateFlow<List<StaffEntity>>(emptyList())
+    val staffInOffices: StateFlow<List<StaffEntity>> get() = _staffInOffices
 
     private val _showOffices = MutableStateFlow<List<OfficeEntity>>(emptyList())
     val showOffices: StateFlow<List<OfficeEntity>> get() = _showOffices
 
     fun loadOfficeAndClientTemplate() {
         _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
-        //todo combine these 2
+        // todo combine these 2
         loadClientTemplate()
         loadOffices()
     }
@@ -68,7 +64,7 @@ class CreateNewClientViewModel @Inject constructor(
                     CreateNewClientUiState.ShowError(R.string.feature_client_failed_to_fetch_client_template)
             }.collect {
                 _createNewClientUiState.value =
-                    CreateNewClientUiState.ShowClientTemplate(it ?: ClientsTemplate())
+                    CreateNewClientUiState.ShowClientTemplate(it ?: ClientsTemplateEntity())
             }
         }
     }
@@ -97,7 +93,7 @@ class CreateNewClientViewModel @Inject constructor(
         }
     }
 
-    fun createClient(clientPayload: ClientPayload) {
+    fun createClient(clientPayload: ClientPayloadEntity) {
         viewModelScope.launch {
             _createNewClientUiState.value = CreateNewClientUiState.ShowProgressbar
 

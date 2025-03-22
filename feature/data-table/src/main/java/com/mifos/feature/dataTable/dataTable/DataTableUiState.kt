@@ -9,8 +9,7 @@
  */
 package com.mifos.feature.dataTable.dataTable
 
-import com.mifos.room.entities.noncore.DataTable
-
+import com.mifos.room.entities.noncore.DataTableEntity
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -21,7 +20,7 @@ sealed class DataTableUiState {
 
     data class ShowError(val message: Int) : DataTableUiState()
 
-    data class ShowDataTables(val dataTables: List<DataTable>) : DataTableUiState()
+    data class ShowDataTables(val dataTables: List<DataTableEntity>) : DataTableUiState()
 
     data object ShowEmptyDataTables : DataTableUiState()
 }

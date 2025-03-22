@@ -30,7 +30,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -47,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -67,11 +67,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.noncoreobjects.Document
+import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.document.R
 import com.mifos.feature.document.documentDialog.DocumentDialogScreen
@@ -206,7 +202,6 @@ internal fun DocumentListScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_document_title),
         onBackPressed = onBackPressed,
         actions = {
@@ -225,7 +220,7 @@ internal fun DocumentListScreen(
                         if (state.documents.isEmpty()) {
                             MifosEmptyUi(
                                 text = stringResource(id = R.string.feature_document_no_document),
-                                icon = MifosIcons.fileTask,
+                                icon = MifosIcons.FileTask,
                             )
                         } else {
                             DocumentListContent(
@@ -264,7 +259,6 @@ private fun DocumentListContent(
     Column(modifier = modifier) {
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(Color.LightGray),
             shape = RectangleShape,
         ) {
             Row(
@@ -283,7 +277,6 @@ private fun DocumentListContent(
                         fontWeight = FontWeight.Normal,
                         fontStyle = FontStyle.Normal,
                     ),
-                    color = Black,
                     textAlign = TextAlign.Start,
                     maxLines = 1,
                 )
@@ -295,7 +288,6 @@ private fun DocumentListContent(
                         fontWeight = FontWeight.Normal,
                         fontStyle = FontStyle.Normal,
                     ),
-                    color = Black,
                     textAlign = TextAlign.Start,
                     maxLines = 1,
                 )
@@ -338,7 +330,6 @@ private fun DocumentItem(
                     fontWeight = FontWeight.Normal,
                     fontStyle = FontStyle.Normal,
                 ),
-                color = Black,
                 textAlign = TextAlign.Start,
                 maxLines = 1,
             )
@@ -350,15 +341,13 @@ private fun DocumentItem(
                     fontWeight = FontWeight.Normal,
                     fontStyle = FontStyle.Normal,
                 ),
-                color = DarkGray,
                 textAlign = TextAlign.Start,
                 maxLines = 1,
             )
             Icon(
                 modifier = Modifier.size(18.dp),
-                imageVector = MifosIcons.cloudDownload,
+                imageVector = MifosIcons.CloudDownload,
                 contentDescription = null,
-                tint = DarkGray,
             )
         }
     }
@@ -379,7 +368,6 @@ private fun SelectOptionsDialog(
         ),
     ) {
         Card(
-            colors = CardDefaults.cardColors(White),
             shape = RoundedCornerShape(20.dp),
         ) {
             Column(
@@ -396,14 +384,12 @@ private fun SelectOptionsDialog(
                         fontWeight = FontWeight.Normal,
                         fontStyle = FontStyle.Normal,
                     ),
-                    color = Color.Black,
                     textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
                     onClick = { downloadDocument() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_document_download_document),
@@ -419,7 +405,6 @@ private fun SelectOptionsDialog(
                 }
                 Button(
                     onClick = { updateDocument() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_document_update_document),
@@ -435,7 +420,6 @@ private fun SelectOptionsDialog(
                 }
                 Button(
                     onClick = { removeDocument() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_document_remove_document),

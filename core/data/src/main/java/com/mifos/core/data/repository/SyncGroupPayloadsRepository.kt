@@ -10,16 +10,16 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.model.objects.responses.SaveResponse
-import com.mifos.room.entities.group.GroupPayload
+import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.Flow
 
 interface SyncGroupPayloadsRepository {
 
-    fun allDatabaseGroupPayload(): Flow<List<GroupPayload>>
+    fun allDatabaseGroupPayload(): Flow<List<GroupPayloadEntity>>
 
-    suspend fun createGroup(groupPayload: GroupPayload): SaveResponse
+    suspend fun createGroup(groupPayload: GroupPayloadEntity): SaveResponse
 
-    fun deleteAndUpdateGroupPayloads(id: Int): Flow<List<GroupPayload>>
+    fun deleteAndUpdateGroupPayloads(id: Int): Flow<List<GroupPayloadEntity>>
 
-    suspend fun updateGroupPayload(groupPayload: GroupPayload)
+    suspend fun updateGroupPayload(groupPayload: GroupPayloadEntity)
 }

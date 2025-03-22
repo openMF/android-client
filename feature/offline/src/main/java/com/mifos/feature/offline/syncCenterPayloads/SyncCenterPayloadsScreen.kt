@@ -53,7 +53,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.offline.R
-import com.mifos.room.entities.center.CenterPayload
+import com.mifos.room.entities.center.CenterPayloadEntity
 
 @Composable
 internal fun SyncCenterPayloadsScreenRoute(
@@ -142,7 +142,7 @@ internal fun SyncCenterPayloadsScreen(
 
 @Composable
 private fun CenterPayloadsList(
-    centerPayloads: List<CenterPayload>,
+    centerPayloads: List<CenterPayloadEntity>,
     modifier: Modifier = Modifier,
 ) {
     if (centerPayloads.isEmpty()) {
@@ -158,7 +158,7 @@ private fun CenterPayloadsList(
 
 @Composable
 private fun CenterPayloadItem(
-    payload: CenterPayload,
+    payload: CenterPayloadEntity,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -261,12 +261,12 @@ class SyncCenterPayloadsUiStateProvider : PreviewParameterProvider<SyncCenterPay
 
 // Sample data for previews
 val sampleCenterPayloads = List(5) { index ->
-    CenterPayload(
+    CenterPayloadEntity(
         name = "Center $index",
         officeId = index + 1,
         activationDate = "2023-07-${15 + index}",
         active = index % 2 == 0,
-        errorMessage = if (index % 3 == 0) "Error in payload" else null
+        errorMessage = if (index % 3 == 0) "Error in payload" else null,
     )
 }
 

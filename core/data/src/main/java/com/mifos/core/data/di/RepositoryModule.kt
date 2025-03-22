@@ -15,8 +15,8 @@ import com.mifos.core.data.repository.LoginRepository
 import com.mifos.core.data.repositoryImp.ClientDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientListRepositoryImp
 import com.mifos.core.data.repositoryImp.LoginRepositoryImp
+import com.mifos.core.network.datamanager.DataManagerAuth
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.core.network.datamanger.DataManagerAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

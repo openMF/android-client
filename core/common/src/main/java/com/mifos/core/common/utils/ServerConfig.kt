@@ -21,7 +21,17 @@ data class ServerConfig(
     val apiPath: String,
     val port: String,
     val tenant: String,
-)
+) {
+    companion object {
+        val DEFAULT = ServerConfig(
+            protocol = "https://",
+            endPoint = "tt.mifos.community",
+            apiPath = "/fineract-provider/api/v1/",
+            port = "80",
+            tenant = "default",
+        )
+    }
+}
 
 fun ServerConfig.getInstanceUrl(): String {
     return "$protocol$endPoint$apiPath"

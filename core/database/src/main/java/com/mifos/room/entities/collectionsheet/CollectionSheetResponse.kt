@@ -13,7 +13,7 @@ import android.os.Parcelable
 import com.mifos.core.model.objects.collectionsheets.AttendanceTypeOption
 import com.mifos.core.model.objects.collectionsheets.SavingsProduct
 import com.mifos.core.model.objects.organisations.LoanProducts
-import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.PaymentTypeOptionEntity
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -27,9 +27,9 @@ data class CollectionSheetResponse(
 
     var groups: List<GroupCollectionSheet> = ArrayList(),
 
-    var loanProducts: List<LoanProducts> = ArrayList(),
+    var loanProducts: List<com.mifos.core.model.objects.organisations.LoanProducts> = ArrayList(),
 
-    var paymentTypeOptions: List<PaymentTypeOption> = ArrayList(),
+    var paymentTypeOptions: List<PaymentTypeOptionEntity> = ArrayList(),
 
     var savingsProducts: List<SavingsProduct> = ArrayList(),
 ) : Parcelable

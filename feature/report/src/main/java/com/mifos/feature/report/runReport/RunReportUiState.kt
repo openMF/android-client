@@ -11,7 +11,6 @@ package com.mifos.feature.report.runReport
 
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 
-
 sealed class RunReportUiState {
 
     data object Loading : RunReportUiState()

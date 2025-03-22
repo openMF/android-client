@@ -75,7 +75,6 @@ import com.mifos.core.designsystem.component.MifosPaginationSweetError
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.testing.repository.sampleGroups
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosFAB
 import com.mifos.core.ui.components.SelectionModeTopAppBar
@@ -87,7 +86,7 @@ import com.mifos.core.ui.util.GroupListLoadingPreviewParameterProvider
 import com.mifos.core.ui.util.GroupListSuccessPreviewParameterProvider
 import com.mifos.feature.groups.R
 import com.mifos.feature.groups.syncGroupDialog.SyncGroupDialogScreen
-import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.group.GroupEntity
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -105,7 +104,7 @@ internal fun GroupsListRoute(
     )
 
     val selectedItems = remember {
-        mutableStateListOf<Group>()
+        mutableStateListOf<GroupEntity>()
     }
 
     BackHandler(
@@ -141,11 +140,11 @@ internal fun GroupsListRoute(
 fun GroupsListScreen(
     lazyListState: LazyListState,
     swipeRefreshState: SwipeRefreshState,
-    selectedItems: List<Group>,
-    data: LazyPagingItems<Group>,
+    selectedItems: List<GroupEntity>,
+    data: LazyPagingItems<GroupEntity>,
     onAddGroupClick: () -> Unit,
     onGroupClick: (groupId: Int) -> Unit,
-    onSelectItem: (Group) -> Unit,
+    onSelectItem: (GroupEntity) -> Unit,
     modifier: Modifier = Modifier,
     resetSelectionMode: () -> Unit,
 ) {
@@ -226,7 +225,7 @@ fun GroupsListScreen(
     }
 }
 
-private fun LazyListScope.refreshState(data: LazyPagingItems<Group>) {
+private fun LazyListScope.refreshState(data: LazyPagingItems<GroupEntity>) {
     when (data.loadState.refresh) {
         is LoadState.Error -> {
             item {
@@ -255,7 +254,7 @@ private fun LazyListScope.refreshState(data: LazyPagingItems<Group>) {
     }
 }
 
-private fun LazyListScope.appendState(data: LazyPagingItems<Group>) {
+private fun LazyListScope.appendState(data: LazyPagingItems<GroupEntity>) {
     when (data.loadState.append) {
         is LoadState.Loading -> {
             item {
@@ -290,11 +289,11 @@ private fun LazyListScope.appendState(data: LazyPagingItems<Group>) {
 }
 
 private fun LazyListScope.successState(
-    pagingItems: LazyPagingItems<Group>,
+    pagingItems: LazyPagingItems<GroupEntity>,
     isInSelectionMode: Boolean,
-    isSelected: (Group) -> Boolean,
+    isSelected: (GroupEntity) -> Boolean,
     onGroupClick: (groupId: Int) -> Unit,
-    onSelectItem: (Group) -> Unit,
+    onSelectItem: (GroupEntity) -> Unit,
 ) {
     items(
         count = pagingItems.itemCount,
@@ -318,7 +317,7 @@ private fun LazyListScope.successState(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun GroupItem(
-    group: Group,
+    group: GroupEntity,
     doesSelected: Boolean,
     inSelectionMode: Boolean,
     onGroupClick: () -> Unit,
@@ -380,7 +379,7 @@ private fun GroupItem(
 @Composable
 private fun GroupListScreenLoadingState(
     @PreviewParameter(GroupListLoadingPreviewParameterProvider::class)
-    data: Flow<PagingData<Group>>,
+    data: Flow<PagingData<GroupEntity>>,
 ) {
     GroupsListScreen(
         lazyListState = rememberLazyListState(),
@@ -398,7 +397,7 @@ private fun GroupListScreenLoadingState(
 @Composable
 private fun GroupListScreenEmptyState(
     @PreviewParameter(GroupListEmptyPreviewParameterProvider::class)
-    data: Flow<PagingData<Group>>,
+    data: Flow<PagingData<GroupEntity>>,
 ) {
     GroupsListScreen(
         lazyListState = rememberLazyListState(),
@@ -416,7 +415,7 @@ private fun GroupListScreenEmptyState(
 @Composable
 private fun GroupListScreenErrorState(
     @PreviewParameter(GroupListErrorPreviewParameterProvider::class)
-    data: Flow<PagingData<Group>>,
+    data: Flow<PagingData<GroupEntity>>,
 ) {
     GroupsListScreen(
         lazyListState = rememberLazyListState(),
@@ -434,7 +433,7 @@ private fun GroupListScreenErrorState(
 @Composable
 private fun GroupListScreenPopulatedAndSuccessState(
     @PreviewParameter(GroupListSuccessPreviewParameterProvider::class)
-    data: Flow<PagingData<Group>>,
+    data: Flow<PagingData<GroupEntity>>,
 ) {
     GroupsListScreen(
         lazyListState = rememberLazyListState(),
@@ -452,7 +451,7 @@ private fun GroupListScreenPopulatedAndSuccessState(
 @Composable
 private fun GroupListScreenPopulatedAndSelectedItem(
     @PreviewParameter(GroupListSuccessPreviewParameterProvider::class)
-    data: Flow<PagingData<Group>>,
+    data: Flow<PagingData<GroupEntity>>,
 ) {
     GroupsListScreen(
         lazyListState = rememberLazyListState(),
@@ -472,7 +471,7 @@ private fun GroupListScreenPopulatedAndSelectedItem(
 @Composable
 private fun GroupItemSelectedState(
     @PreviewParameter(GroupListItemPreviewParameterProvider::class)
-    group: Group,
+    group: GroupEntity,
 ) {
     GroupItem(
         group = group,
@@ -487,7 +486,7 @@ private fun GroupItemSelectedState(
 @Composable
 private fun GroupItemIsNotSelectedState(
     @PreviewParameter(GroupListItemPreviewParameterProvider::class)
-    group: Group,
+    group: GroupEntity,
 ) {
     GroupItem(
         group = group,

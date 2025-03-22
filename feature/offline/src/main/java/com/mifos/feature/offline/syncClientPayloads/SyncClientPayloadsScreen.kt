@@ -57,7 +57,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.offline.R
-import com.mifos.room.entities.client.ClientPayload
+import com.mifos.room.entities.client.ClientPayloadEntity
 
 @Composable
 internal fun SyncClientPayloadsScreenRoute(
@@ -151,7 +151,7 @@ internal fun SyncClientPayloadsScreen(
 
 @Composable
 private fun ClientPayloadsList(
-    clientPayloads: List<ClientPayload>,
+    clientPayloads: List<ClientPayloadEntity>,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
@@ -163,7 +163,7 @@ private fun ClientPayloadsList(
 
 @Composable
 private fun ClientPayloadItem(
-    payload: ClientPayload,
+    payload: ClientPayloadEntity,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -328,7 +328,7 @@ private fun SyncClientPayloadsScreenPreview(
 }
 
 // Sample data for previews
-//val sampleClientPayloads = List(5) { index ->
+// val sampleClientPayloads = List(5) { index ->
 //    ClientPayload().apply {
 //        firstname = "John$index"
 //        middlename = "Sam$index"
@@ -342,11 +342,11 @@ private fun SyncClientPayloadsScreenPreview(
 //        dateOfBirth = "1990-01-0$index"
 //        errorMessage = if (index % 2 == 0) null else "Error in payload"
 //    }
-//}
+// }
 
-//@Preview(showBackground = true)
-//@Composable
-//private fun ClientPayloadItemPreview() {
+// @Preview(showBackground = true)
+// @Composable
+// private fun ClientPayloadItemPreview() {
 //    val sampleClientPayload = ClientPayload().apply {
 //        firstname = "John"
 //        middlename = "Michael"
@@ -362,7 +362,7 @@ private fun SyncClientPayloadsScreenPreview(
 //    }
 //
 //    ClientPayloadItem(payload = sampleClientPayload)
-//}
+// }
 
 class PayloadFieldPreviewProvider : PreviewParameterProvider<Pair<String, String>> {
     override val values = sequenceOf(

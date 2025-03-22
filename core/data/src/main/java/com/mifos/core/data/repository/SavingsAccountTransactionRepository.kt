@@ -10,8 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -23,14 +23,14 @@ interface SavingsAccountTransactionRepository {
         type: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Flow<SavingsAccountTransactionTemplate?>
+    ): Flow<SavingsAccountTransactionTemplateEntity?>
 
     fun processTransaction(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
-        request: SavingsAccountTransactionRequest,
+        request: SavingsAccountTransactionRequestEntity,
     ): Flow<SavingsAccountTransactionResponse?>
 
-    fun getSavingsAccountTransaction(savingAccountId: Int): Flow<SavingsAccountTransactionRequest?>
+    fun getSavingsAccountTransaction(savingAccountId: Int): Flow<SavingsAccountTransactionRequestEntity?>
 }

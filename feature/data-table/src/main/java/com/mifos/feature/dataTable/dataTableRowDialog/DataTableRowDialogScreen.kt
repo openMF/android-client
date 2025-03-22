@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +31,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -46,13 +44,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-
-import com.mifos.core.entity.noncore.DataTable
 import com.mifos.feature.data_table.R
+import com.mifos.room.entities.noncore.DataTableEntity
 
 @Composable
 fun DataTableRowDialogScreen(
-    dataTable: DataTable,
+    dataTable: DataTableEntity,
     entityId: Int,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
@@ -80,7 +77,7 @@ fun DataTableRowDialogScreen(
 
 @Composable
 fun DataTableRowDialogScreen(
-    dataTable: DataTable,
+    dataTable: DataTableEntity,
     state: DataTableRowDialogUiState,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
@@ -159,7 +156,7 @@ fun DataTableRowDialogScreen(
 
 @Composable
 fun DataTableRowDialogContent(
-    table: DataTable,
+    table: DataTableEntity,
     onCreate: (HashMap<String, String>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -292,7 +289,7 @@ private fun DataTableRowDialogScreenPreview(
     @PreviewParameter(DataTableRowDialogUiStateProvider::class) state: DataTableRowDialogUiState,
 ) {
     DataTableRowDialogScreen(
-        dataTable = DataTable(),
+        dataTable = DataTableEntity(),
         state = state,
         onDismiss = {},
         onSuccess = {},

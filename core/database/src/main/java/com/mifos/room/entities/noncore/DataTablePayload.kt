@@ -10,7 +10,6 @@
 package com.mifos.room.entities.noncore
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -21,21 +20,13 @@ import kotlinx.parcelize.RawValue
 data class DataTablePayload(
 
     @PrimaryKey(autoGenerate = true)
-    @Transient
-    @ColumnInfo(name = "id")
-    var id: Int? = null,
+    val id: Int? = null,
 
-    @ColumnInfo(name = "clientCreationTime")
-    @Transient
-    var clientCreationTime: Long? = null,
+    val clientCreationTime: Long? = null,
 
-    @ColumnInfo(name = "dataTableString")
-    @Transient
-    var dataTableString: String? = null,
+    val dataTableString: String? = null,
 
-    @ColumnInfo(name = "registeredTableName")
-    var registeredTableName: String? = null,
+    val registeredTableName: String? = null,
 
-    @ColumnInfo(name = "data")
-    var data: HashMap<String, @RawValue Any>? = null,
+    val data: Map<String, @RawValue Any>? = null,
 ) : Parcelable

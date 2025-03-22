@@ -10,12 +10,12 @@
 package com.mifos.core.network.mappers.clients
 
 import com.mifos.room.entities.accounts.ClientAccounts
-import com.mifos.room.entities.accounts.loans.LoanAccount
-import com.mifos.room.entities.accounts.loans.LoanType
-import com.mifos.room.entities.accounts.savings.Currency
-import com.mifos.room.entities.accounts.savings.DepositType
-import com.mifos.room.entities.accounts.savings.SavingsAccount
-import com.mifos.room.entities.accounts.savings.Status
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.loans.LoanTypeEntity
+import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountStatusEntity
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetClientsClientIdAccountsResponse
 import org.openapitools.client.models.GetClientsLoanAccounts
@@ -36,20 +36,20 @@ object GetClientsClientIdAccountMapper :
     override fun mapFromEntity(entity: GetClientsClientIdAccountsResponse): ClientAccounts {
         return ClientAccounts(
             savingsAccounts = entity.savingsAccounts?.map {
-                SavingsAccount(
+                SavingsAccountEntity(
                     id = it.id?.toInt(),
                     accountNo = it.accountNo,
                     productId = it.productId?.toInt(),
                     productName = it.productName,
                     depositType = it.depositType?.let { deposit ->
-                        DepositType(
+                        SavingAccountDepositTypeEntity(
                             id = deposit.id?.toInt(),
                             code = deposit.code,
-                            value = deposit.value
+                            value = deposit.value,
                         )
                     },
                     status = it.status?.let { status ->
-                        Status(
+                        SavingsAccountStatusEntity(
                             id = status.id?.toInt(),
                             code = status.code,
                             value = status.value,
@@ -58,31 +58,31 @@ object GetClientsClientIdAccountMapper :
                             rejected = status.rejected,
                             withdrawnByApplicant = status.withdrawnByApplicant,
                             active = status.active,
-                            closed = status.closed
+                            closed = status.closed,
                         )
                     },
                     currency = it.currency?.let { currency ->
-                        Currency(
+                        SavingAccountCurrencyEntity(
                             code = currency.code,
                             name = currency.name,
                             nameCode = currency.nameCode,
                             decimalPlaces = currency.decimalPlaces,
                             displaySymbol = currency.displaySymbol,
-                            displayLabel = currency.displayLabel
+                            displayLabel = currency.displayLabel,
                         )
-                    }
+                    },
                 )
             } ?: emptyList(),
 
             loanAccounts = entity.loanAccounts?.map {
-                LoanAccount(
+                LoanAccountEntity(
                     id = it.id?.toInt(),
                     accountNo = it.accountNo,
                     externalId = it.externalId ?: "",
                     productId = it.productId?.toInt(),
                     productName = it.productName,
                     status = it.status?.let { status ->
-                        com.mifos.room.entities.accounts.loans.Status(
+                        com.mifos.room.entities.accounts.loans.LoanStatusEntity(
                             id = status.id?.toInt(),
                             code = status.code,
                             value = status.description,
@@ -93,19 +93,19 @@ object GetClientsClientIdAccountMapper :
                             closedWrittenOff = status.closedWrittenOff,
                             closedRescheduled = status.closedRescheduled,
                             closed = status.closed,
-                            overpaid = status.overpaid
+                            overpaid = status.overpaid,
                         )
                     },
                     loanType = it.loanType?.let { loanType ->
-                        LoanType(
+                        LoanTypeEntity(
                             id = loanType.id?.toInt(),
                             code = loanType.code,
-                            value = loanType.description
+                            value = loanType.description,
                         )
                     },
-                    loanCycle = it.loanCycle
+                    loanCycle = it.loanCycle,
                 )
-            } ?: emptyList()
+            } ?: emptyList(),
         )
     }
 

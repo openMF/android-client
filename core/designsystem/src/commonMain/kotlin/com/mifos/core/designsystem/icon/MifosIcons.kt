@@ -33,10 +33,8 @@ import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.ModeNight
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Paid
@@ -153,5 +151,4 @@ object MifosIcons {
     val Error2 = Icons.Filled.Error
     val Notifications = Icons.Filled.Notifications
     val NavigationDrawer = Icons.Default.Menu
-
 }

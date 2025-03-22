@@ -10,7 +10,7 @@
 package com.mifos.room.entities.collectionsheet
 
 import android.os.Parcelable
-import com.mifos.core.entity.accounts.savings.Currency
+import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -19,19 +19,19 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class SavingsCollectionSheet(
     // The accountId is of String type only. It's not a mistake.
-    var accountId: String? = null,
+    val accountId: String? = null,
 
-    var accountStatusId: Int = 0,
+    val accountStatusId: Int = 0,
 
-    var currency: Currency? = null,
+    val currency: SavingAccountCurrencyEntity? = null,
 
-    var depositAccountType: String? = null,
+    val depositAccountType: String? = null,
 
-    var dueAmount: Int = 0,
+    val dueAmount: Int = 0,
 
-    var productId: Int = 0,
+    val productId: Int = 0,
 
-    var productName: String? = null,
+    val productName: String? = null,
 
-    var savingsId: Int = 0,
+    val savingsId: Int = 0,
 ) : Parcelable

@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet.ui
 
-import com.mifos.core.entity.organisation.Office
-import com.mifos.core.entity.organisation.Staff
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
+import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.entities.organisation.StaffEntity
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -22,9 +22,9 @@ data class NewIndividualCollectionSheetUiState(
 
     val error: String? = null,
 
-    val officeList: List<Office> = emptyList(),
+    val officeList: List<OfficeEntity> = emptyList(),
 
-    val staffList: List<Staff> = emptyList(),
+    val staffList: List<StaffEntity> = emptyList(),
 
     val individualCollectionSheet: IndividualCollectionSheet? = null,
 )

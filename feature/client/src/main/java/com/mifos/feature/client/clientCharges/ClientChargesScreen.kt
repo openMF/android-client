@@ -63,7 +63,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.client.R
 import com.mifos.feature.client.clientChargeDialog.ChargeDialogScreen
-import com.mifos.room.entities.client.Charges
+import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
@@ -158,7 +158,7 @@ internal fun ClientChargesScreen(
 
 @Composable
 private fun ClientChargeContent(
-    chargesPage: LazyPagingItems<Charges>,
+    chargesPage: LazyPagingItems<ChargesEntity>,
     onRetry: () -> Unit,
 ) {
     when (chargesPage.loadState.refresh) {
@@ -213,7 +213,7 @@ private fun ClientChargeContent(
 }
 
 @Composable
-private fun ChargesItems(charges: Charges) {
+private fun ChargesItems(charges: ChargesEntity) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -305,5 +305,5 @@ private fun ClientChargesScreenPreview(
 }
 
 val sampleClientCharge = List(10) {
-    Charges(name = "charge $it", amount = it.toDouble())
+    ChargesEntity(name = "charge $it", amount = it.toDouble())
 }

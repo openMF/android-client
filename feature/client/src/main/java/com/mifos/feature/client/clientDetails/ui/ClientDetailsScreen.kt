@@ -24,7 +24,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -50,7 +49,6 @@ import androidx.compose.material.icons.outlined.HomeWork
 import androidx.compose.material.icons.outlined.MobileFriendly
 import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -93,7 +91,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
+import coil.compose.AsyncImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -102,11 +100,10 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.client.R
-import com.mifos.room.entities.accounts.loans.LoanAccount
-import com.mifos.room.entities.accounts.savings.DepositType
-import com.mifos.room.entities.accounts.savings.SavingsAccount
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.Objects
@@ -129,7 +126,7 @@ internal fun ClientDetailsScreen(
     survey: (Int) -> Unit,
     uploadSignature: (Int) -> Unit,
     loanAccountSelected: (Int) -> Unit,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateClient: (Int) -> Unit,
     clientDetailsViewModel: ClientDetailsViewModel = hiltViewModel(),
 ) {
@@ -378,7 +375,7 @@ internal fun ClientDetailsScreen(
 private fun MifosClientDetailsScreen(
     loanAccountSelected: (Int) -> Unit,
     padding: PaddingValues,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     clientDetailsViewModel: ClientDetailsViewModel = hiltViewModel(),
 ) {
     val client = clientDetailsViewModel.client.collectAsStateWithLifecycle().value
@@ -471,12 +468,16 @@ private fun MifosClientDetailsScreen(
                 value = it,
             )
         }
-        client?.groupNames?.let {
-            MifosClientDetailsText(
-                icon = Icons.Outlined.Groups,
-                field = stringResource(id = R.string.feature_client_group),
-                value = it,
-            )
+        client?.groups?.let { list ->
+            list.forEach { group ->
+                group.name?.let {
+                    MifosClientDetailsText(
+                        icon = Icons.Outlined.Groups,
+                        field = stringResource(id = R.string.feature_client_group),
+                        value = it,
+                    )
+                }
+            }
         }
         Spacer(modifier = Modifier.height(20.dp))
         if (loanAccounts != null && savingsAccounts != null) {
@@ -521,7 +522,7 @@ private fun Context.createImageFile(): File {
 @Composable
 private fun MifosLoanAccountExpendableCard(
     accountType: String,
-    loanAccounts: List<LoanAccount>,
+    loanAccounts: List<LoanAccountEntity>,
     loanAccountSelected: (Int) -> Unit,
 ) {
     var expendableState by remember { mutableStateOf(false) }
@@ -587,7 +588,7 @@ private fun MifosLoanAccountExpendableCard(
 
 @Composable
 private fun MifosLoanAccountsLazyColumn(
-    loanAccounts: List<LoanAccount>,
+    loanAccounts: List<LoanAccountEntity>,
     loanAccountSelected: (Int) -> Unit,
 ) {
     Card(
@@ -696,8 +697,8 @@ private fun MifosLoanAccountsLazyColumn(
 @Composable
 private fun MifosSavingsAccountExpendableCard(
     accountType: String,
-    savingsAccount: List<SavingsAccount>,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccount: List<SavingsAccountEntity>,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
 ) {
     var expendableState by remember { mutableStateOf(false) }
     val rotateState by animateFloatAsState(
@@ -762,8 +763,8 @@ private fun MifosSavingsAccountExpendableCard(
 
 @Composable
 private fun MifosSavingsAccountsLazyColumn(
-    savingsAccounts: List<SavingsAccount>,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccounts: List<SavingsAccountEntity>,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
 ) {
     Card(
         modifier = Modifier

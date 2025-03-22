@@ -84,7 +84,7 @@ enum class SettingsCardItem(
     LANGUAGE(
         title = R.string.feature_settings_language,
         details = R.string.feature_settings_language_desc,
-        icon = MifosIcons.Language ,
+        icon = MifosIcons.Language,
     ),
     THEME(
         title = R.string.feature_settings_theme,

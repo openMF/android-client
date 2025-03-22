@@ -12,7 +12,7 @@ package com.mifos.room.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.mifos.room.entities.client.Charges
+import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -22,8 +22,8 @@ import kotlinx.coroutines.flow.Flow
 interface ChargeDao {
 
     @Query("SELECT * FROM Charges where clientId = :clientId")
-    fun getClientCharges(clientId: Int): Flow<List<Charges>>
+    fun getClientCharges(clientId: Int): Flow<List<ChargesEntity>>
 
-    @Insert
-    suspend fun insertAllCharges(vararg charges: List<Charges>)
+    @Insert(entity = ChargesEntity::class)
+    suspend fun insertAllCharges(charges: List<ChargesEntity>)
 }
