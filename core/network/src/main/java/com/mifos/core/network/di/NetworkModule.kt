@@ -13,8 +13,7 @@ import android.content.Context
 import androidx.core.os.trace
 import coil.ImageLoader
 import coil.util.DebugLogger
-import com.mifos.core.datastore.PrefManager
-import com.mifos.core.model.getInstanceUrl
+import com.mifos.core.common.utils.getInstanceUrl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,20 +30,20 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideBaseApiManager(prefManager: PrefManager): com.mifos.core.network.BaseApiManager {
+    fun provideBaseApiManager(prefManager: com.mifos.core.datastore.PrefManager): com.mifos.core.network.BaseApiManager {
         return com.mifos.core.network.BaseApiManager(prefManager)
     }
 
     @Provides
     @Singleton
-    fun provideSdkBaseApiManager(prefManager: PrefManager): BaseApiManager {
+    fun provideSdkBaseApiManager(prefManager: com.mifos.core.datastore.PrefManager): BaseApiManager {
         val usernamePassword: Pair<String, String> = prefManager.usernamePassword
         val baseManager = BaseApiManager.getInstance()
         baseManager.createService(
             usernamePassword.first,
             usernamePassword.second,
-            prefManager.serverConfig.getInstanceUrl().dropLast(3),
-            prefManager.serverConfig.tenant,
+            prefManager.getServerConfig.getInstanceUrl().dropLast(3),
+            prefManager.getServerConfig.tenant,
             false,
         )
         return baseManager

@@ -18,7 +18,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,9 +30,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -69,13 +66,10 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.entity.group.GroupPayload
-import com.mifos.core.entity.organisation.Office
-import com.mifos.core.objects.responses.SaveResponse
+import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.feature.groups.R
+import com.mifos.room.entities.group.GroupPayloadEntity
+import com.mifos.room.entities.organisation.OfficeEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -85,10 +79,8 @@ import java.util.Locale
 
 @Composable
 internal fun CreateNewGroupScreen(
-    onGroupCreated: (group: SaveResponse?, userStatus: Boolean) -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: CreateNewGroupViewModel = hiltViewModel(),
-    navigateBack: () -> Unit,
+    onGroupCreated: (group: SaveResponse?, userStatus: Boolean) -> Unit,
 ) {
     val uiState by viewModel.createNewGroupUiState.collectAsStateWithLifecycle()
 
@@ -97,7 +89,6 @@ internal fun CreateNewGroupScreen(
     }
 
     CreateNewGroupScreen(
-        modifier = modifier,
         uiState = uiState,
         onRetry = { viewModel.loadOffices() },
         invokeGroupCreation = { groupPayload ->
@@ -105,7 +96,6 @@ internal fun CreateNewGroupScreen(
         },
         onGroupCreated = { onGroupCreated(it, viewModel.getUserStatus()) },
         getResponse = { viewModel.getResponse() },
-        navigateBack = navigateBack,
     )
 }
 
@@ -113,11 +103,10 @@ internal fun CreateNewGroupScreen(
 internal fun CreateNewGroupScreen(
     uiState: CreateNewGroupUiState,
     onRetry: () -> Unit,
-    invokeGroupCreation: (GroupPayload) -> Unit,
+    invokeGroupCreation: (GroupPayloadEntity) -> Unit,
     onGroupCreated: (group: SaveResponse?) -> Unit,
-    getResponse: () -> String,
     modifier: Modifier = Modifier,
-    navigateBack: () -> Unit,
+    getResponse: () -> String,
 ) {
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -125,9 +114,8 @@ internal fun CreateNewGroupScreen(
     MifosScaffold(
         modifier = modifier,
         title = stringResource(id = R.string.feature_groups_create_new_group),
+        onBackPressed = {},
         snackbarHostState = snackbarHostState,
-        icon = MifosIcons.arrowBack,
-        onBackPressed = navigateBack,
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -166,9 +154,9 @@ internal fun CreateNewGroupScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CreateNewGroupContent(
-    officeList: List<Office>,
+    officeList: List<OfficeEntity>,
     modifier: Modifier = Modifier,
-    invokeGroupCreation: (GroupPayload) -> Unit,
+    invokeGroupCreation: (GroupPayloadEntity) -> Unit,
 ) {
     var groupName by rememberSaveable {
         mutableStateOf("")
@@ -287,7 +275,7 @@ private fun CreateNewGroupContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 submittedOnDate,
             ),
-            label = R.string.feature_groups_submit_date,
+            label = stringResource(R.string.feature_groups_submit_date),
             openDatePicker = {
                 submitDatePicker = true
             },
@@ -309,9 +297,9 @@ private fun CreateNewGroupContent(
         ) {
             Checkbox(
                 modifier = Modifier.padding(start = 8.dp),
-                colors = CheckboxDefaults.colors(
-                    if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
+//                colors = CheckboxDefaults.colors(
+//                    if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//                ),
                 checked = isActive,
                 onCheckedChange = { isActive = !isActive },
             )
@@ -335,7 +323,7 @@ private fun CreateNewGroupContent(
                 value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                     activationDate,
                 ),
-                label = R.string.feature_groups_activation_date,
+                label = stringResource(R.string.feature_groups_activation_date),
                 openDatePicker = {
                     activationDatePicker = true
                 },
@@ -349,9 +337,9 @@ private fun CreateNewGroupContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .heightIn(46.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//            ),
             onClick = {
                 if (validateFields(groupName, selectedOffice, context)) {
                     if (Network.isOnline(context)) {
@@ -374,7 +362,7 @@ private fun CreateNewGroupContent(
                         )
 
                         invokeGroupCreation.invoke(
-                            GroupPayload(
+                            GroupPayloadEntity(
                                 name = groupName,
                                 externalId = externalId,
                                 active = isActive,
@@ -400,11 +388,7 @@ private fun CreateNewGroupContent(
     }
 }
 
-private fun validateFields(
-    groupName: String,
-    officeName: String,
-    context: Context,
-): Boolean {
+private fun validateFields(groupName: String, officeName: String, context: Context): Boolean {
     return when {
         groupName.isEmpty() -> {
             Toast.makeText(
@@ -446,8 +430,7 @@ private fun validateFields(
     }
 }
 
-private class CreateNewGroupScreenPreviewProvider :
-    PreviewParameterProvider<CreateNewGroupUiState> {
+private class CreateNewGroupScreenPreviewProvider : PreviewParameterProvider<CreateNewGroupUiState> {
     override val values: Sequence<CreateNewGroupUiState>
         get() = sequenceOf(
             CreateNewGroupUiState.ShowProgressbar,
@@ -460,8 +443,7 @@ private class CreateNewGroupScreenPreviewProvider :
 @Composable
 @Preview(showSystemUi = true)
 private fun PreviewCreateNewGroupScreen(
-    @PreviewParameter(CreateNewGroupScreenPreviewProvider::class)
-    createNewGroupUiState: CreateNewGroupUiState,
+    @PreviewParameter(CreateNewGroupScreenPreviewProvider::class) createNewGroupUiState: CreateNewGroupUiState,
 ) {
     CreateNewGroupScreen(
         uiState = createNewGroupUiState,
@@ -470,6 +452,5 @@ private fun PreviewCreateNewGroupScreen(
         onGroupCreated = { _ ->
         },
         getResponse = { "" },
-        navigateBack = {},
     )
 }

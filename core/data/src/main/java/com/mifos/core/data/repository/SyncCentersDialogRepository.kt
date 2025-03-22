@@ -12,15 +12,15 @@ package com.mifos.core.data.repository
 import com.mifos.room.entities.accounts.CenterAccounts
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.room.entities.client.Client
-import com.mifos.room.entities.group.Center
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
+import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.CenterWithAssociations
-import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.group.GroupWithAssociations
-import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -30,9 +30,9 @@ interface SyncCentersDialogRepository {
 
     fun syncCenterAccounts(centerId: Int): Flow<CenterAccounts>
 
-    fun syncLoanById(loanId: Int): Flow<LoanWithAssociations>
+    fun syncLoanById(loanId: Int): Flow<LoanWithAssociationsEntity>
 
-    fun syncLoanRepaymentTemplate(loanId: Int): Flow<LoanRepaymentTemplate>
+    fun syncLoanRepaymentTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity>
 
     fun getCenterWithAssociations(centerId: Int): Flow<CenterWithAssociations>
 
@@ -42,21 +42,21 @@ interface SyncCentersDialogRepository {
 
     suspend fun syncClientAccounts(clientId: Int): ClientAccounts
 
-    suspend fun syncGroupInDatabase(group: Group)
+    suspend fun syncGroupInDatabase(group: GroupEntity)
 
-    suspend fun syncClientInDatabase(client: Client)
+    suspend fun syncClientInDatabase(client: ClientEntity)
 
-    suspend fun syncCenterInDatabase(center: Center)
+    suspend fun syncCenterInDatabase(center: CenterEntity)
 
     fun syncSavingsAccount(
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Flow<SavingsAccountWithAssociations>
+    ): Flow<SavingsAccountWithAssociationsEntity>
 
     fun syncSavingsAccountTransactionTemplate(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Flow<SavingsAccountTransactionTemplate>
+    ): Flow<SavingsAccountTransactionTemplateEntity>
 }

@@ -9,10 +9,10 @@
  */
 package com.mifos.core.data.repositoryImp
 
+import com.mifos.core.common.utils.Page
 import com.mifos.core.data.repository.GroupsListRepository
-import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.datamanager.DataManagerGroups
-import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.group.GroupEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -20,10 +20,10 @@ class GroupsListRepositoryImpl @Inject constructor(
     private val dataManager: DataManagerGroups,
 ) : GroupsListRepository {
 
-    override suspend fun getAllGroups(paged: Boolean, offset: Int, limit: Int): List<Group> =
+    override suspend fun getAllGroups(paged: Boolean, offset: Int, limit: Int): List<GroupEntity> =
         dataManager.getGroups(paged, offset, limit).pageItems
 
-    override fun getAllLocalGroups(): Flow<Page<Group>> {
+    override fun getAllLocalGroups(): Flow<Page<GroupEntity>> {
         return dataManager.databaseGroups
     }
 }

@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.users
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
@@ -33,7 +33,7 @@ data class UserLatLng(
 }
 
 // @Serializable
-// class UserLatLng : Parcelable {
+// class UserLatLng : com.mifos.core.model.utils.Parcelable {
 //    @SerialName("lat")
 //    var lat: Double = 0.0
 //
@@ -50,7 +50,7 @@ data class UserLatLng(
 //        return 0
 //    }
 //
-//    override fun writeToParcel(dest: Parcel, flags: Int) {
+//    override fun writeToParcel(dest: com.mifos.core.model.utils.Parcel, flags: Int) {
 //        dest.writeValue(lat)
 //        dest.writeValue(lng)
 //    }
@@ -60,7 +60,7 @@ data class UserLatLng(
 //        lng = longitude
 //    }
 //
-//    private constructor(parcel: Parcel) {
+//    private constructor(parcel: com.mifos.core.model.utils.Parcel) {
 //        lat = parcel.readValue(Double::class.java.classLoader) as Double
 //        lng = parcel.readValue(Double::class.java.classLoader) as Double
 //    }
@@ -68,7 +68,7 @@ data class UserLatLng(
 //    companion object {
 //        @JvmField
 //        val CREATOR: Creator<core.mifos.core.objects.users.UserLatLng> = object : Creator<core.mifos.core.objects.users.UserLatLng> {
-//            override fun createFromParcel(source: Parcel): core.mifos.core.objects.users.UserLatLng {
+//            override fun createFromParcel(source: com.mifos.core.model.utils.Parcel): core.mifos.core.objects.users.UserLatLng {
 //                return core.mifos.core.objects.users.UserLatLng(source)
 //            }
 //

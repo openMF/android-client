@@ -13,10 +13,10 @@ import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerOffices
 import com.mifos.core.network.datamanager.DataManagerStaff
-import com.mifos.room.entities.client.ClientPayload
+import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
-import com.mifos.room.entities.organisation.Staff
-import com.mifos.room.entities.templates.clients.ClientsTemplate
+import com.mifos.room.entities.organisation.StaffEntity
+import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class CreateNewClientRepositoryImp @Inject constructor(
     private val dataManagerStaff: DataManagerStaff,
 ) : CreateNewClientRepository {
 
-    override fun clientTemplate(): Flow<ClientsTemplate> {
+    override fun clientTemplate(): Flow<ClientsTemplateEntity> {
         return dataManagerClient.clientTemplate
     }
 
@@ -38,11 +38,11 @@ class CreateNewClientRepositoryImp @Inject constructor(
         return dataManagerOffices.offices()
     }
 
-    override fun getStaffInOffice(officeId: Int): Flow<List<Staff>> {
+    override fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {
         return dataManagerStaff.getStaffInOffice(officeId)
     }
 
-    override suspend fun createClient(clientPayload: ClientPayload): Int? {
+    override suspend fun createClient(clientPayload: ClientPayloadEntity): Int? {
         return dataManagerClient.createClient(clientPayload)
     }
 

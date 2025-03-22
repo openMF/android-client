@@ -9,10 +9,10 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.room.entities.client.ClientPayload
+import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
-import com.mifos.room.entities.organisation.Staff
-import com.mifos.room.entities.templates.clients.ClientsTemplate
+import com.mifos.room.entities.organisation.StaffEntity
+import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 
@@ -21,13 +21,13 @@ import okhttp3.MultipartBody
  */
 interface CreateNewClientRepository {
 
-    fun clientTemplate(): Flow<ClientsTemplate>
+    fun clientTemplate(): Flow<ClientsTemplateEntity>
 
     fun offices(): Flow<List<OfficeEntity>>
 
-    fun getStaffInOffice(officeId: Int): Flow<List<Staff>>
+    fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>>
 
-    suspend fun createClient(clientPayload: ClientPayload): Int?
+    suspend fun createClient(clientPayload: ClientPayloadEntity): Int?
 
     suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?)
 }

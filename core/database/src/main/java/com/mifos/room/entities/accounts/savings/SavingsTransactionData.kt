@@ -10,8 +10,7 @@
 package com.mifos.room.entities.accounts.savings
 
 import android.os.Parcelable
-import com.mifos.core.entity.accounts.savings.DepositType
-import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -19,7 +18,8 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class SavingsTransactionData(
-    val savingsAccountWithAssociations: SavingsAccountWithAssociations,
-    val depositType: DepositType?,
+    @IgnoredOnParcel
+    val savingsAccountWithAssociations: SavingsAccountWithAssociationsEntity = SavingsAccountWithAssociationsEntity(),
+    val depositType: SavingAccountDepositTypeEntity?,
     val transactionType: String,
 ) : Parcelable

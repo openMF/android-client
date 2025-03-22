@@ -21,12 +21,10 @@ dependencies {
 
     implementation(projects.core.domain)
 
-    implementation(libs.coil.kt.compose)
+    implementation(libs.coil.kt2)
+    implementation(libs.coil.kt2.compose)
 
     //DBFlow dependencies
-    kapt(libs.dbflow.processor)
-    implementation(libs.dbflow)
-    kapt(libs.github.dbflow.processor)
     testImplementation(libs.hilt.android.testing)
     testImplementation(projects.core.testing)
 

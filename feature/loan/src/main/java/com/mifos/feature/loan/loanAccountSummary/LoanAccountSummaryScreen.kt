@@ -14,7 +14,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +27,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -62,15 +60,10 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
 import com.mifos.feature.loan.R
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
-import com.mifos.room.entities.accounts.loans.Status
-import com.mifos.room.entities.accounts.loans.Summary
+import com.mifos.room.entities.accounts.loans.LoanStatusEntity
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 
 /**
  * Created by Pronay Sarker on 01/07/2024 (5:50 AM)
@@ -83,9 +76,9 @@ internal fun LoanAccountSummaryScreen(
     onRepaymentScheduleClicked: (loanId: Int) -> Unit,
     onDocumentsClicked: (loanId: Int) -> Unit,
     onChargesClicked: (loanId: Int) -> Unit,
-    approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociations) -> Unit,
+    approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: (loanId: Int) -> Unit,
-    onRepaymentClick: (loanWithAssociations: LoanWithAssociations) -> Unit,
+    onRepaymentClick: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     viewModel: LoanAccountSummaryViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.loanAccountSummaryUiState.collectAsStateWithLifecycle()
@@ -125,9 +118,9 @@ internal fun LoanAccountSummaryScreen(
     onRepaymentScheduleClicked: () -> Unit,
     onDocumentsClicked: () -> Unit,
     onChargesClicked: () -> Unit,
-    approveLoan: (loanWithAssociations: LoanWithAssociations) -> Unit,
+    approveLoan: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: () -> Unit,
-    makeRepayment: (loanWithAssociations: LoanWithAssociations) -> Unit,
+    makeRepayment: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
 ) {
     val snackbarHostState = remember {
         androidx.compose.material3.SnackbarHostState()
@@ -137,14 +130,14 @@ internal fun LoanAccountSummaryScreen(
     }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
+//        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_loan_loan_account_summary),
         onBackPressed = navigateBack,
         snackbarHostState = snackbarHostState,
         actions = {
             IconButton(onClick = { openDropdown = !openDropdown }) {
                 Icon(
-                    imageVector = MifosIcons.moreVert,
+                    imageVector = MifosIcons.MoreVert,
                     contentDescription = null,
                 )
             }
@@ -225,7 +218,7 @@ internal fun LoanAccountSummaryScreen(
 
 @Composable
 private fun LoanAccountSummaryContent(
-    loanWithAssociations: LoanWithAssociations,
+    loanWithAssociations: LoanWithAssociationsEntity,
     makeRepayment: () -> Unit,
     approveLoan: () -> Unit,
     disburseLoan: () -> Unit,
@@ -354,9 +347,9 @@ private fun LoanAccountSummaryContent(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
                 .height(45.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//            ),
             onClick = when {
                 loanWithAssociations.status.active == true -> {
                     { makeRepayment.invoke() }
@@ -388,7 +381,7 @@ private fun LoanAccountSummaryContent(
 }
 
 @Composable
-private fun LoanSummaryDataTable(loanSummary: Summary, inflateLoanSummary: Boolean) {
+private fun LoanSummaryDataTable(loanSummary: LoansAccountSummaryEntity, inflateLoanSummary: Boolean) {
     // dataTable should be empty if [inflateLoanSummary] is false
     val summary = if (inflateLoanSummary) loanSummary else null
     Column {
@@ -398,7 +391,7 @@ private fun LoanSummaryDataTable(loanSummary: Summary, inflateLoanSummary: Boole
             amountColumnValue = stringResource(id = R.string.feature_loan_amount_paid),
             balanceColumnValue = stringResource(id = R.string.feature_loan_balance),
             isHeader = true,
-            color = BluePrimary.copy(alpha = .3f),
+            color = Color.Blue.copy(alpha = .3f),
         )
 
         DataTableRow(
@@ -413,7 +406,7 @@ private fun LoanSummaryDataTable(loanSummary: Summary, inflateLoanSummary: Boole
             loanColumnValue = summary?.interestCharged?.toString() ?: "",
             amountColumnValue = summary?.interestPaid?.toString() ?: "",
             balanceColumnValue = summary?.interestOutstanding?.toString() ?: "",
-            color = BluePrimary.copy(alpha = .1f),
+            color = Color.Blue.copy(alpha = .3f),
         )
 
         DataTableRow(
@@ -428,7 +421,7 @@ private fun LoanSummaryDataTable(loanSummary: Summary, inflateLoanSummary: Boole
             loanColumnValue = summary?.penaltyChargesCharged?.toString() ?: "",
             amountColumnValue = summary?.penaltyChargesPaid?.toString() ?: "",
             balanceColumnValue = summary?.penaltyChargesOutstanding?.toString() ?: "",
-            color = BluePrimary.copy(alpha = .1f),
+            color = Color.Blue.copy(alpha = .3f),
         )
 
         DataTableRow(
@@ -451,13 +444,13 @@ private fun LoanSummaryFarApartTextItem(title: String, value: String) {
         Text(
             style = MaterialTheme.typography.bodyLarge,
             text = title,
-            color = Black,
+            color = Color.Black,
         )
 
         Text(
             style = MaterialTheme.typography.bodyLarge,
             text = value,
-            color = DarkGray,
+            color = Color.DarkGray,
         )
     }
 }
@@ -469,7 +462,7 @@ private fun DataTableRow(
     amountColumnValue: String,
     balanceColumnValue: String,
     isHeader: Boolean = false,
-    color: Color = White,
+    color: Color = Color.White,
 ) {
     Row(
         modifier = Modifier
@@ -519,7 +512,7 @@ private fun DataTableRow(
     }
 }
 
-private fun getButtonText(context: Context, status: Status): String {
+private fun getButtonText(context: Context, status: LoanStatusEntity): String {
     return when {
         status.active == true || status.closedObligationsMet == true -> {
             context.resources.getString(R.string.feature_loan_make_Repayment)
@@ -539,7 +532,7 @@ private fun getButtonText(context: Context, status: Status): String {
     }
 }
 
-private fun getButtonActiveStatus(status: Status): Boolean {
+private fun getButtonActiveStatus(status: LoanStatusEntity): Boolean {
     return when {
         status.active == true || status.pendingApproval == true || status.waitingForDisbursal == true -> {
             true
@@ -552,7 +545,7 @@ private fun getButtonActiveStatus(status: Status): Boolean {
 }
 
 @Composable
-private fun getInflateLoanSummaryValue(status: Status): Boolean {
+private fun getInflateLoanSummaryValue(status: LoanStatusEntity): Boolean {
     return when {
         status.active == true || status.closedObligationsMet == true -> {
             true
@@ -570,7 +563,7 @@ private fun getInflateLoanSummaryValue(status: Status): Boolean {
 
 private class LoanAccountSummaryPreviewProvider :
     PreviewParameterProvider<LoanAccountSummaryUiState> {
-    private val demoSummary = Summary(
+    private val demoSummary = LoansAccountSummaryEntity(
         loanId = 12345,
         principalDisbursed = 10000.0,
         principalOutstanding = 6000.0,
@@ -608,9 +601,9 @@ private class LoanAccountSummaryPreviewProvider :
             LoanAccountSummaryUiState.ShowProgressbar,
             LoanAccountSummaryUiState.ShowFetchingError("Could not fetch summary"),
             LoanAccountSummaryUiState.ShowLoanById(
-                LoanWithAssociations(
+                LoanWithAssociationsEntity(
                     accountNo = "90927493938",
-                    status = Status(
+                    status = LoanStatusEntity(
                         closedObligationsMet = true,
                     ),
                     clientName = "Pronay sarker",

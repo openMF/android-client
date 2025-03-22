@@ -12,7 +12,6 @@ package com.mifos.feature.savings.savingsAccountTransaction
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +26,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,6 +45,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -65,15 +65,10 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.entity.templates.savings.SavingsAccountTransactionTemplate
-import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.feature.savings.R
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -124,7 +119,7 @@ internal fun SavingsAccountTransactionScreen(
     onRetry: () -> Unit,
     transactionType: String,
     loadSavingAccountTemplate: () -> Unit,
-    onProcessTransaction: (request: SavingsAccountTransactionRequest) -> Unit,
+    onProcessTransaction: (request: SavingsAccountTransactionRequestEntity) -> Unit,
     modifier: Modifier = Modifier,
     setUserOffline: () -> Unit,
 ) {
@@ -142,7 +137,6 @@ internal fun SavingsAccountTransactionScreen(
         modifier = modifier,
         snackbarHostState = snackBarHostState,
         title = topbarTitle,
-        icon = MifosIcons.arrowBack,
         onBackPressed = navigateBack,
     ) {
         Box(
@@ -230,8 +224,8 @@ private fun SavingsAccountTransactionContent(
     clientName: String?,
     savingsAccountNumber: Int?,
     navigateBack: () -> Unit,
-    savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate,
-    onProcessTransaction: (savingsAccountTransactionRequest: SavingsAccountTransactionRequest) -> Unit,
+    savingsAccountTransactionTemplate: SavingsAccountTransactionTemplateEntity,
+    onProcessTransaction: (savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity) -> Unit,
     modifier: Modifier = Modifier,
     setUserOffline: () -> Unit,
 ) {
@@ -277,16 +271,16 @@ private fun SavingsAccountTransactionContent(
                 TextButton(
                     onClick = {
                         showReviewTransactionDialog = false
-                        val savingsAccountTransactionRequest = SavingsAccountTransactionRequest()
-
-                        savingsAccountTransactionRequest.locale = "en"
-                        savingsAccountTransactionRequest.dateFormat = "dd MM yyyy"
-                        savingsAccountTransactionRequest.transactionDate = SimpleDateFormat(
-                            "dd MMMM yyyy",
-                            Locale.getDefault(),
-                        ).format(transactionDate)
-                        savingsAccountTransactionRequest.transactionAmount = amount
-                        savingsAccountTransactionRequest.paymentTypeId = paymentTypeId.toString()
+                        val savingsAccountTransactionRequest = SavingsAccountTransactionRequestEntity(
+                            locale = "en",
+                            dateFormat = "dd MM yyyy",
+                            transactionDate = SimpleDateFormat(
+                                "dd MMMM yyyy",
+                                Locale.getDefault(),
+                            ).format(transactionDate),
+                            transactionAmount = amount,
+                            paymentTypeId = paymentTypeId.toString(),
+                        )
 
                         val builtTransactionRequestAsJson =
                             Gson().toJson(savingsAccountTransactionRequest)
@@ -369,7 +363,7 @@ private fun SavingsAccountTransactionContent(
                 "dd-MMMM-yyyy",
                 Locale.getDefault(),
             ).format(transactionDate),
-            label = R.string.feature_savings_date,
+            label = stringResource(R.string.feature_savings_date),
             modifier = Modifier.fillMaxWidth(),
         ) {
             openDatepicker = true
@@ -409,9 +403,9 @@ private fun SavingsAccountTransactionContent(
         ) {
             Button(
                 modifier = Modifier.heightIn(46.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//                ),
                 onClick = { navigateBack.invoke() },
             ) {
                 Text(text = stringResource(id = R.string.feature_savings_cancel))
@@ -419,9 +413,9 @@ private fun SavingsAccountTransactionContent(
 
             Button(
                 modifier = Modifier.heightIn(46.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//                ),
                 onClick = {
                     if (isAmountValid(context, amount)) {
                         if (Network.isOnline(context = context)) {
@@ -511,7 +505,7 @@ class SavingsAccountTransactionScreenPreviewProvider :
     override val values: Sequence<SavingsAccountTransactionUiState>
         get() = sequenceOf(
             SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
-                SavingsAccountTransactionTemplate(
+                SavingsAccountTransactionTemplateEntity(
                     paymentTypeOptions = listOf(),
                 ),
             ),

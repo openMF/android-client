@@ -40,6 +40,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -56,13 +58,10 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.entity.client.Charges
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.loan.R
 import com.mifos.feature.loan.loanChargeDialog.LoanChargeDialogScreen
+import com.mifos.room.entities.client.ChargesEntity
 
 @Composable
 internal fun LoanChargeScreen(
@@ -123,7 +122,6 @@ internal fun LoanChargeScreen(
     }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_loan_loan_charges),
         onBackPressed = onBackPressed,
         actions = {
@@ -148,7 +146,7 @@ internal fun LoanChargeScreen(
                         if (state.loanCharges.isEmpty()) {
                             MifosEmptyUi(
                                 text = stringResource(id = R.string.feature_loan_no_loan_charges),
-                                icon = MifosIcons.fileTask,
+                                icon = MifosIcons.FileTask,
                             )
                         } else {
                             LoanChargesContent(loanCharges = state.loanCharges)
@@ -168,7 +166,7 @@ internal fun LoanChargeScreen(
 
 @Composable
 private fun LoanChargesContent(
-    loanCharges: List<Charges>,
+    loanCharges: List<ChargesEntity>,
 ) {
     LazyColumn {
         items(loanCharges) { charges ->
@@ -181,7 +179,7 @@ private fun LoanChargesContent(
 
 @Composable
 private fun LoanChargeItem(
-    charges: Charges,
+    charges: ChargesEntity,
 ) {
     Card(
         modifier = Modifier
@@ -189,9 +187,9 @@ private fun LoanChargeItem(
             .padding(8.dp),
         shape = RoundedCornerShape(0.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = BlueSecondary,
-        ),
+//        colors = CardDefaults.cardColors(
+//            containerColor = BlueSecondary,
+//        ),
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         MifosLoanChargeDetailsText(
@@ -275,5 +273,5 @@ private fun LoanChargeScreenPreview(
 }
 
 val sampleLoanChargeList = List(10) {
-    Charges(name = "name $it", chargeId = it, amount = it.toDouble())
+    ChargesEntity(name = "name $it", chargeId = it, amount = it.toDouble())
 }

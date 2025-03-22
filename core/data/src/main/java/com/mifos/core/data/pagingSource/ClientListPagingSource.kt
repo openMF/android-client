@@ -11,9 +11,8 @@ package com.mifos.core.data.pagingSource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.room.entities.client.Client
+import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
@@ -23,9 +22,9 @@ import kotlinx.coroutines.flow.map
 
 class ClientListPagingSource(
     private val dataManagerClient: DataManagerClient,
-) : PagingSource<Int, Client>() {
+) : PagingSource<Int, ClientEntity>() {
 
-    override fun getRefreshKey(state: PagingState<Int, Client>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, ClientEntity>): Int? {
         return state.anchorPosition?.let { position ->
             state.closestPageToPosition(position)?.prevKey?.plus(10) ?: state.closestPageToPosition(
                 position,
@@ -33,7 +32,7 @@ class ClientListPagingSource(
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Client> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ClientEntity> {
         val position = params.key ?: 0
         return try {
             val getClients = getClientList(position)
@@ -51,26 +50,27 @@ class ClientListPagingSource(
         }
     }
 
-    private suspend fun getClientList(position: Int): Pair<List<Client>, Int> {
+    private suspend fun getClientList(position: Int): Pair<List<ClientEntity>, Int> {
         val response = dataManagerClient.getAllClients(position, 10)
         return Pair(response.pageItems, response.totalFilteredRecords)
     }
 
-    private suspend fun getClientDbList(): List<Client> {
+    private suspend fun getClientDbList(): List<ClientEntity> {
         return dataManagerClient.allDatabaseClients
             .map { it.pageItems }
             .firstOrNull() ?: emptyList()
     }
 
     private fun getClientListWithSync(
-        clientList: List<Client>,
-        clientDbList: List<Client>,
-    ): List<Client> {
+        clientList: List<ClientEntity>,
+        clientDbList: List<ClientEntity>,
+    ): List<ClientEntity> {
         if (clientDbList.isNotEmpty()) {
             clientList.forEach { client ->
                 clientDbList.forEach { clientDb ->
                     if (client.id == clientDb.id) {
-                        client.sync = true
+                        // TODO:: Unused result of data class copy, fix this implementation
+                        client.copy(sync = true)
                     }
                 }
             }

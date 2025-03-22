@@ -15,10 +15,10 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.feature.groups.R
-import com.mifos.room.entities.accounts.loans.LoanAccount
-import com.mifos.room.entities.accounts.savings.SavingsAccount
-import com.mifos.room.entities.client.Client
-import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.zipmodels.GroupAndGroupAccounts
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,13 +40,13 @@ class GroupDetailsViewModel @Inject constructor(
         MutableStateFlow<GroupDetailsUiState>(GroupDetailsUiState.Loading)
     val groupDetailsUiState = _groupDetailsUiState.asStateFlow()
 
-    private val _loanAccounts = MutableStateFlow<List<LoanAccount>>(emptyList())
+    private val _loanAccounts = MutableStateFlow<List<LoanAccountEntity>>(emptyList())
     val loanAccounts = _loanAccounts.asStateFlow()
 
-    private val _savingsAccounts = MutableStateFlow<List<SavingsAccount>>(emptyList())
+    private val _savingsAccounts = MutableStateFlow<List<SavingsAccountEntity>>(emptyList())
     val savingsAccounts = _savingsAccounts.asStateFlow()
 
-    private val _groupAssociateClients = MutableStateFlow<List<Client>>(emptyList())
+    private val _groupAssociateClients = MutableStateFlow<List<ClientEntity>>(emptyList())
     val groupAssociateClients = _groupAssociateClients.asStateFlow()
 
     fun getGroupDetails(groupId: Int) {
@@ -62,7 +62,7 @@ class GroupDetailsViewModel @Inject constructor(
                     GroupDetailsUiState.Error(R.string.feature_groups_failed_to_fetch_group_and_account)
             }.collect { account ->
                 _groupDetailsUiState.value =
-                    GroupDetailsUiState.ShowGroup(account.group ?: Group())
+                    GroupDetailsUiState.ShowGroup(account.group ?: GroupEntity())
                 _loanAccounts.value = account.groupAccounts?.loanAccounts ?: emptyList()
                 _savingsAccounts.value = account.groupAccounts?.savingsAccounts ?: emptyList()
             }

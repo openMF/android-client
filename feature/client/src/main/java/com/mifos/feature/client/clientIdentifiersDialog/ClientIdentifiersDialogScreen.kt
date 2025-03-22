@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,7 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -53,10 +52,8 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.noncoreobjects.IdentifierPayload
-import com.mifos.core.objects.noncoreobjects.IdentifierTemplate
+import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
+import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.feature.client.R
 
 @Composable
@@ -114,11 +111,11 @@ internal fun ClientIdentifiersDialogScreen(
                         Text(
                             text = stringResource(id = R.string.feature_client_create_identifier_dialog),
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                            color = BluePrimary,
+//                            color = BluePrimary,
                         )
                         IconButton(onClick = { onDismiss() }) {
                             Icon(
-                                imageVector = MifosIcons.close,
+                                imageVector = MifosIcons.Close,
                                 contentDescription = "",
                                 tint = colorResource(android.R.color.darker_gray),
                                 modifier = Modifier
@@ -220,11 +217,11 @@ private fun ClientIdentifiersContent(
                 uniqueIdError = false
             },
             label = stringResource(id = R.string.feature_client_identifier_unique_id),
-            error = if (uniqueIdError) R.string.feature_client_identifier_message_field_required else null,
+            error = if (uniqueIdError) stringResource(R.string.feature_client_identifier_message_field_required) else null,
             trailingIcon = {
                 if (uniqueIdError) {
                     Icon(
-                        imageVector = MifosIcons.error,
+                        imageVector = MifosIcons.Error,
                         contentDescription = null,
                     )
                 }
@@ -238,11 +235,11 @@ private fun ClientIdentifiersContent(
                 descriptionError = false
             },
             label = stringResource(id = R.string.feature_client_identifier_description),
-            error = if (descriptionError) R.string.feature_client_identifier_message_field_required else null,
+            error = if (descriptionError) stringResource(R.string.feature_client_identifier_message_field_required) else null,
             trailingIcon = {
                 if (descriptionError) {
                     Icon(
-                        imageVector = MifosIcons.error,
+                        imageVector = MifosIcons.Error,
                         contentDescription = null,
                     )
                 }
@@ -279,12 +276,12 @@ private fun ClientIdentifiersContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            colors = ButtonColors(
-                containerColor = BluePrimary,
-                contentColor = White,
-                disabledContainerColor = BluePrimary,
-                disabledContentColor = Gray,
-            ),
+//            colors = ButtonColors(
+//                containerColor = BluePrimary,
+//                contentColor = White,
+//                disabledContainerColor = BluePrimary,
+//                disabledContentColor = Gray,
+//            ),
         ) {
             Text(text = stringResource(id = R.string.feature_client_identifier_submit))
         }

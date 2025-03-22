@@ -29,6 +29,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,10 +47,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.White
 import com.mifos.core.designsystem.theme.aboutItemTextStyle
 import com.mifos.core.designsystem.theme.aboutItemTextStyleBold
 
@@ -95,7 +94,6 @@ internal fun AboutScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(R.string.feature_about),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
@@ -158,7 +156,7 @@ private fun AboutScreenContent(
             style = TextStyle(
                 fontSize = 16.sp,
             ),
-            color = BluePrimary,
+            color = Color.Blue,
             textAlign = TextAlign.Center,
         )
         LazyColumn {

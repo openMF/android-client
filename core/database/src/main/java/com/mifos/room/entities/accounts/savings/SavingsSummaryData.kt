@@ -10,7 +10,6 @@
 package com.mifos.room.entities.accounts.savings
 
 import android.os.Parcelable
-import com.mifos.core.entity.accounts.savings.DepositType
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -19,5 +18,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class SavingsSummaryData(
     val id: Int,
-    val type: DepositType,
+    val type: SavingAccountDepositTypeEntity,
 ) : Parcelable

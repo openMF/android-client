@@ -9,13 +9,15 @@
  */
 package com.mifos.room.entities.organisation
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "OfficeOpeningDate")
 data class OfficeOpeningDateEntity(
     @PrimaryKey
-    val officeId: Int? = null,
+    @ColumnInfo(index = true)
+    val officeId: Int,
 
     val year: Int? = null,
 

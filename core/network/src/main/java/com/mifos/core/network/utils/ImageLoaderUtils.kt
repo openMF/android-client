@@ -14,7 +14,6 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.ImageResult
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.model.getInstanceUrl
 import com.mifos.core.network.MifosInterceptor
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -27,7 +26,7 @@ class ImageLoaderUtils @Inject constructor(
 
     private fun buildImageUrl(clientId: Int): String {
         return (
-            prefManager.serverConfig.getInstanceUrl() +
+            prefManager.getInstanceUrl() +
                 "clients/" +
                 clientId +
                 "/images?maxHeight=120&maxWidth=120"
@@ -37,8 +36,8 @@ class ImageLoaderUtils @Inject constructor(
     suspend fun loadImage(clientId: Int): ImageResult {
         val request = ImageRequest.Builder(context)
             .data(buildImageUrl(clientId))
-            .addHeader(MifosInterceptor.HEADER_TENANT, prefManager.serverConfig.tenant)
-            .addHeader(MifosInterceptor.HEADER_AUTH, prefManager.token)
+            .addHeader(MifosInterceptor.HEADER_TENANT, prefManager.getTenant())
+            .addHeader(MifosInterceptor.HEADER_AUTH, prefManager.getToken())
             .addHeader("Accept", "application/octet-stream")
             .build()
         return imageLoader.execute(request)

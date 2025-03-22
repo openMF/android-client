@@ -9,13 +9,13 @@
  */
 package com.mifos.core.network.mappers.clients
 
-import com.mifos.core.entity.accounts.loan.LoanAccount
-import com.mifos.core.entity.accounts.loan.LoanType
-import com.mifos.core.entity.accounts.savings.Currency
-import com.mifos.core.entity.accounts.savings.DepositType
-import com.mifos.core.entity.accounts.savings.SavingsAccount
-import com.mifos.core.entity.accounts.savings.Status
 import com.mifos.room.entities.accounts.ClientAccounts
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.loans.LoanTypeEntity
+import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountStatusEntity
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetClientsClientIdAccountsResponse
 import org.openapitools.client.models.GetClientsLoanAccounts
@@ -34,68 +34,79 @@ object GetClientsClientIdAccountMapper :
     AbstractMapper<GetClientsClientIdAccountsResponse, ClientAccounts>() {
 
     override fun mapFromEntity(entity: GetClientsClientIdAccountsResponse): ClientAccounts {
-        return ClientAccounts().apply {
+        return ClientAccounts(
             savingsAccounts = entity.savingsAccounts?.map {
-                SavingsAccount().apply {
-                    id = it.id?.toInt()
-                    accountNo = it.accountNo
-                    productId = it.productId?.toInt()
-                    productName = it.productName
-                    depositType = DepositType().apply {
-                        id = it.depositType?.id?.toInt()
-                        code = it.depositType?.code
-                        value = it.depositType?.value
-                    }
-                    status = Status().apply {
-                        id = it.status?.id?.toInt()
-                        code = it.status?.code
-                        value = it.status?.value
-                        submittedAndPendingApproval = it.status?.submittedAndPendingApproval
-                        approved = it.status?.approved
-                        rejected = it.status?.rejected
-                        withdrawnByApplicant = it.status?.withdrawnByApplicant
-                        active = it.status?.active
-                        closed = it.status?.closed
-                    }
-                    currency = Currency().apply {
-                        code = it.currency!!.code
-                        name = it.currency!!.name
-                        nameCode = it.currency!!.nameCode
-                        decimalPlaces = it.currency!!.decimalPlaces
-                        displaySymbol = it.currency!!.displaySymbol
-                        displayLabel = it.currency!!.displayLabel
-                    }
-                }
-            }!!
+                SavingsAccountEntity(
+                    id = it.id?.toInt(),
+                    accountNo = it.accountNo,
+                    productId = it.productId?.toInt(),
+                    productName = it.productName,
+                    depositType = it.depositType?.let { deposit ->
+                        SavingAccountDepositTypeEntity(
+                            id = deposit.id?.toInt(),
+                            code = deposit.code,
+                            value = deposit.value,
+                        )
+                    },
+                    status = it.status?.let { status ->
+                        SavingsAccountStatusEntity(
+                            id = status.id?.toInt(),
+                            code = status.code,
+                            value = status.value,
+                            submittedAndPendingApproval = status.submittedAndPendingApproval,
+                            approved = status.approved,
+                            rejected = status.rejected,
+                            withdrawnByApplicant = status.withdrawnByApplicant,
+                            active = status.active,
+                            closed = status.closed,
+                        )
+                    },
+                    currency = it.currency?.let { currency ->
+                        SavingAccountCurrencyEntity(
+                            code = currency.code,
+                            name = currency.name,
+                            nameCode = currency.nameCode,
+                            decimalPlaces = currency.decimalPlaces,
+                            displaySymbol = currency.displaySymbol,
+                            displayLabel = currency.displayLabel,
+                        )
+                    },
+                )
+            } ?: emptyList(),
+
             loanAccounts = entity.loanAccounts?.map {
-                LoanAccount().apply {
-                    id = it.id?.toInt()
-                    accountNo = it.accountNo
-                    externalId = it.externalId.toString()
-                    productId = it.productId?.toInt()
-                    productName = it.productName
-                    status = com.mifos.core.entity.accounts.loan.Status().apply {
-                        id = it.status?.id?.toInt()
-                        code = it.status?.code
-                        value = it.status?.description
-                        pendingApproval = it.status?.pendingApproval
-                        waitingForDisbursal = it.status?.waitingForDisbursal
-                        active = it.status?.active
-                        closedObligationsMet = it.status?.closedObligationsMet
-                        closedWrittenOff = it.status?.closedWrittenOff
-                        closedRescheduled = it.status?.closedRescheduled
-                        closed = it.status?.closed
-                        overpaid = it.status?.overpaid
-                    }
-                    loanType = LoanType().apply {
-                        id = it.loanType?.id?.toInt()
-                        code = it.loanType?.code
-                        value = it.loanType?.description
-                    }
-                    loanCycle = it.loanCycle
-                }
-            }!!
-        }
+                LoanAccountEntity(
+                    id = it.id?.toInt(),
+                    accountNo = it.accountNo,
+                    externalId = it.externalId ?: "",
+                    productId = it.productId?.toInt(),
+                    productName = it.productName,
+                    status = it.status?.let { status ->
+                        com.mifos.room.entities.accounts.loans.LoanStatusEntity(
+                            id = status.id?.toInt(),
+                            code = status.code,
+                            value = status.description,
+                            pendingApproval = status.pendingApproval,
+                            waitingForDisbursal = status.waitingForDisbursal,
+                            active = status.active,
+                            closedObligationsMet = status.closedObligationsMet,
+                            closedWrittenOff = status.closedWrittenOff,
+                            closedRescheduled = status.closedRescheduled,
+                            closed = status.closed,
+                            overpaid = status.overpaid,
+                        )
+                    },
+                    loanType = it.loanType?.let { loanType ->
+                        LoanTypeEntity(
+                            id = loanType.id?.toInt(),
+                            code = loanType.code,
+                            value = loanType.description,
+                        )
+                    },
+                    loanCycle = it.loanCycle,
+                )
+            } ?: emptyList(),
+        )
     }
 
     override fun mapToEntity(domainModel: ClientAccounts): GetClientsClientIdAccountsResponse {

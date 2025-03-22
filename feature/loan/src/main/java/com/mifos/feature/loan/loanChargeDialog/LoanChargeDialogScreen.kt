@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,7 +46,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -64,11 +62,9 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.client.Charges
-import com.mifos.core.payloads.ChargesPayload
+import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.feature.loan.R
+import com.mifos.room.entities.client.ChargesEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -181,11 +177,11 @@ internal fun LoanChargeDialogScreen(
                                 Text(
                                     text = stringResource(id = R.string.feature_loan_charge_dialog),
                                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                                    color = BluePrimary,
+//                                    color = BluePrimary,
                                 )
                                 IconButton(onClick = { onDismiss() }) {
                                     Icon(
-                                        imageVector = MifosIcons.close,
+                                        imageVector = MifosIcons.Close,
                                         contentDescription = "",
                                         tint = colorResource(android.R.color.darker_gray),
                                         modifier = Modifier
@@ -195,9 +191,9 @@ internal fun LoanChargeDialogScreen(
                                 }
                             }
 
-                            name?.let {
+                            name?.let { itemValue ->
                                 MifosTextFieldDropdown(
-                                    value = it,
+                                    value = itemValue,
                                     onValueChanged = { value ->
                                         name = value
                                     },
@@ -205,7 +201,7 @@ internal fun LoanChargeDialogScreen(
                                     readOnly = true,
                                     onOptionSelected = { index, value ->
 
-                                        state.list[index].id?.let {
+                                        state.list[index].id.let {
                                             chargeId = it
                                         }
                                         name = value
@@ -221,11 +217,11 @@ internal fun LoanChargeDialogScreen(
                                     amountError = false
                                 },
                                 label = stringResource(id = R.string.feature_loan_amount),
-                                error = if (amountError) R.string.feature_loan_message_field_required else null,
+                                error = if (amountError) stringResource(R.string.feature_loan_message_field_required) else null,
                                 trailingIcon = {
                                     if (amountError) {
                                         Icon(
-                                            imageVector = MifosIcons.error,
+                                            imageVector = MifosIcons.Error,
                                             contentDescription = null,
                                         )
                                     }
@@ -239,7 +235,7 @@ internal fun LoanChargeDialogScreen(
                                 ).format(
                                     dueDate,
                                 ),
-                                label = R.string.feature_loan_charge_due_date,
+                                label = stringResource(R.string.feature_loan_charge_due_date),
                                 openDatePicker = {
                                     showDatePicker = true
                                 },
@@ -276,12 +272,12 @@ internal fun LoanChargeDialogScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(50.dp),
-                                colors = ButtonColors(
-                                    containerColor = BluePrimary,
-                                    contentColor = White,
-                                    disabledContainerColor = BluePrimary,
-                                    disabledContentColor = Gray,
-                                ),
+//                                colors = ButtonColors(
+//                                    containerColor = BluePrimary,
+//                                    contentColor = White,
+//                                    disabledContainerColor = BluePrimary,
+//                                    disabledContentColor = Gray,
+//                                ),
                             ) {
                                 Text(text = stringResource(id = R.string.feature_loan_charge_submit))
                             }
@@ -336,5 +332,5 @@ private fun LoanChargeDialogScreenPreview(
 }
 
 val sampleChargeList = List(10) {
-    Charges(name = "name $it")
+    ChargesEntity(name = "name $it")
 }

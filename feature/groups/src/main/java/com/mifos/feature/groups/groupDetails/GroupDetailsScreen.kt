@@ -16,7 +16,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,7 +35,6 @@ import androidx.compose.material.icons.outlined.HomeWork
 import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -55,6 +53,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -74,19 +75,12 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.accounts.loan.LoanAccount
-import com.mifos.core.entity.accounts.savings.DepositType
-import com.mifos.core.entity.accounts.savings.SavingsAccount
-import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.group.Group
 import com.mifos.feature.groups.R
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.group.GroupEntity
 
 @Composable
 internal fun GroupDetailsScreen(
@@ -94,11 +88,11 @@ internal fun GroupDetailsScreen(
     addLoanAccount: (Int) -> Unit,
     addSavingsAccount: (groupId: Int, clientId: Int, isGroupAccount: Boolean) -> Unit,
     documents: (Int, String) -> Unit,
-    groupClients: (List<Client>) -> Unit,
+    groupClients: (List<ClientEntity>) -> Unit,
     moreGroupInfo: (String, Int) -> Unit,
     notes: (Int, String) -> Unit,
     loanAccountSelected: (Int) -> Unit,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateGroup: (Int, String) -> Unit,
     viewModel: GroupDetailsViewModel = hiltViewModel(),
 ) {
@@ -147,10 +141,10 @@ internal fun GroupDetailsScreen(
 @Composable
 internal fun GroupDetailsScreen(
     state: GroupDetailsUiState,
-    loanAccounts: List<LoanAccount>,
-    savingsAccounts: List<SavingsAccount>,
+    loanAccounts: List<LoanAccountEntity>,
+    savingsAccounts: List<SavingsAccountEntity>,
     loanAccountSelected: (Int) -> Unit,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     onBackPressed: () -> Unit,
     onMenuClick: (MenuItems) -> Unit,
     modifier: Modifier = Modifier,
@@ -162,7 +156,6 @@ internal fun GroupDetailsScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_groups_group),
         onBackPressed = onBackPressed,
         actions = {
@@ -227,9 +220,9 @@ internal fun GroupDetailsScreen(
                         .fillMaxWidth()
                         .heightIn(44.dp)
                         .padding(start = 16.dp, end = 16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                    ),
+//                    colors = ButtonDefaults.buttonColors(
+//                        containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//                    ),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_groups_activate_group),
@@ -265,11 +258,11 @@ internal fun GroupDetailsScreen(
 
 @Composable
 fun GroupDetailsContent(
-    group: Group,
-    loanAccounts: List<LoanAccount>,
-    savingsAccounts: List<SavingsAccount>,
+    group: GroupEntity,
+    loanAccounts: List<LoanAccountEntity>,
+    savingsAccounts: List<SavingsAccountEntity>,
     loanAccountSelected: (Int) -> Unit,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     modifier: Modifier = Modifier,
     activateGroup: () -> Unit,
 ) {
@@ -366,7 +359,7 @@ fun MifosCenterDetailsText(
             modifier = Modifier.size(18.dp),
             imageVector = icon,
             contentDescription = null,
-            tint = DarkGray,
+            tint = Color.DarkGray,
         )
         Text(
             modifier = Modifier
@@ -398,7 +391,7 @@ fun MifosCenterDetailsText(
 @Composable
 fun MifosLoanAccountExpendableCard(
     accountType: String,
-    loanAccounts: List<LoanAccount>,
+    loanAccounts: List<LoanAccountEntity>,
     modifier: Modifier = Modifier,
     loanAccountSelected: (Int) -> Unit,
 ) {
@@ -419,7 +412,7 @@ fun MifosLoanAccountExpendableCard(
                 ),
             ),
         shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(BlueSecondary),
+        colors = CardDefaults.cardColors(Color.Blue),
     ) {
         Column(
             modifier = Modifier
@@ -468,7 +461,7 @@ fun MifosLoanAccountExpendableCard(
 
 @Composable
 fun MifosLoanAccountsLazyColumn(
-    loanAccounts: List<LoanAccount>,
+    loanAccounts: List<LoanAccountEntity>,
     modifier: Modifier = Modifier,
     loanAccountSelected: (Int) -> Unit,
 ) {
@@ -579,8 +572,8 @@ fun MifosLoanAccountsLazyColumn(
 @Composable
 private fun MifosSavingsAccountExpendableCard(
     accountType: String,
-    savingsAccount: List<SavingsAccount>,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccount: List<SavingsAccountEntity>,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
 ) {
     var expendableState by remember { mutableStateOf(false) }
     val rotateState by animateFloatAsState(
@@ -599,7 +592,7 @@ private fun MifosSavingsAccountExpendableCard(
                 ),
             ),
         shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(BlueSecondary),
+//        colors = CardDefaults.cardColors(BlueSecondary),
     ) {
         Column(
             modifier = Modifier
@@ -648,9 +641,9 @@ private fun MifosSavingsAccountExpendableCard(
 
 @Composable
 private fun MifosSavingsAccountsLazyColumn(
-    savingsAccounts: List<SavingsAccount>,
+    savingsAccounts: List<SavingsAccountEntity>,
     modifier: Modifier = Modifier,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -761,8 +754,8 @@ private class GroupDetailsUiStateProvider : PreviewParameterProvider<GroupDetail
         get() = sequenceOf(
             GroupDetailsUiState.Loading,
             GroupDetailsUiState.Error(R.string.feature_groups_failed_to_fetch_group_and_account),
-            GroupDetailsUiState.ShowGroup(group = Group(name = "Group", active = true)),
-            GroupDetailsUiState.ShowGroup(group = Group(name = "Group", active = false)),
+            GroupDetailsUiState.ShowGroup(group = GroupEntity(name = "Group", active = true)),
+            GroupDetailsUiState.ShowGroup(group = GroupEntity(name = "Group", active = false)),
         )
 }
 
@@ -794,9 +787,9 @@ enum class MenuItems {
 }
 
 private val sampleLoanAccountList = List(10) {
-    LoanAccount(id = it, productName = "Product $it")
+    LoanAccountEntity(id = it, productName = "Product $it")
 }
 
 private val sampleSavingAccountList = List(10) {
-    SavingsAccount(id = it, productName = "Product $it")
+    SavingsAccountEntity(id = it, productName = "Product $it")
 }

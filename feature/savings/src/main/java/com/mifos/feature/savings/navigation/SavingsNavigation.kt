@@ -16,13 +16,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.entity.accounts.savings.DepositType
-import com.mifos.core.entity.accounts.savings.SavingsAccountWithAssociations
 import com.mifos.feature.savings.savingsAccount.SavingsAccountScreen
 import com.mifos.feature.savings.savingsAccountActivate.SavingsAccountActivateScreen
 import com.mifos.feature.savings.savingsAccountApproval.SavingsAccountApprovalScreen
 import com.mifos.feature.savings.savingsAccountSummary.SavingsAccountSummaryScreen
 import com.mifos.feature.savings.savingsAccountTransaction.SavingsAccountTransactionScreen
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 
 /**
  * Created by Pronay Sarker on 14/08/2024 (1:10 PM)
@@ -107,10 +107,10 @@ fun NavGraphBuilder.savingsSummaryScreen(
     onBackPressed: () -> Unit,
     loadMoreSavingsAccountInfo: (Int) -> Unit,
     loadDocuments: (Int) -> Unit,
-    onDepositClick: (SavingsAccountWithAssociations, DepositType?) -> Unit,
-    onWithdrawButtonClicked: (SavingsAccountWithAssociations, DepositType?) -> Unit,
-    approveSavings: (savingsAccountType: DepositType?, savingsAccountNumber: Int) -> Unit,
-    activateSavings: (savingsAccountType: DepositType?, savingsAccountNumber: Int) -> Unit,
+    onDepositClick: (SavingsAccountWithAssociationsEntity, SavingAccountDepositTypeEntity?) -> Unit,
+    onWithdrawButtonClicked: (SavingsAccountWithAssociationsEntity, SavingAccountDepositTypeEntity?) -> Unit,
+    approveSavings: (savingsAccountType: SavingAccountDepositTypeEntity?, savingsAccountNumber: Int) -> Unit,
+    activateSavings: (savingsAccountType: SavingAccountDepositTypeEntity?, savingsAccountNumber: Int) -> Unit,
 ) {
     composable(
         route = SavingsScreens.SavingsAccountSummary.route,
@@ -191,14 +191,14 @@ fun NavController.navigateToSavingsAccountActivate(savingsAccountId: Int) {
     navigate(SavingsScreens.SavingsAccountActivate.argument(savingsAccountId))
 }
 
-fun NavController.navigateToSavingsAccountSummaryScreen(id: Int, type: DepositType) {
+fun NavController.navigateToSavingsAccountSummaryScreen(id: Int, type: SavingAccountDepositTypeEntity) {
     navigate(SavingsScreens.SavingsAccountSummary.argument(id, type))
 }
 
 fun NavController.navigateToSavingsAccountTransactionScreen(
-    savingsAccountWithAssociations: SavingsAccountWithAssociations,
+    savingsAccountWithAssociations: SavingsAccountWithAssociationsEntity,
     transactionType: String,
-    depositType: DepositType?,
+    depositType: SavingAccountDepositTypeEntity?,
 ) {
     navigate(
         SavingsScreens.SavingsAccountTransaction.argument(

@@ -16,13 +16,13 @@ import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.room.entities.client.Client
-import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
+import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.group.GroupWithAssociations
-import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -40,11 +40,11 @@ class SyncGroupsDialogRepositoryImp @Inject constructor(
         return dataManagerGroups.syncGroupAccounts(groupId)
     }
 
-    override fun syncLoanById(loanId: Int): Flow<LoanWithAssociations> {
+    override fun syncLoanById(loanId: Int): Flow<LoanWithAssociationsEntity> {
         return dataManagerLoan.syncLoanById(loanId)
     }
 
-    override fun syncLoanRepaymentTemplate(loanId: Int): Flow<LoanRepaymentTemplate> {
+    override fun syncLoanRepaymentTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity> {
         return dataManagerLoan.syncLoanRepaymentTemplate(loanId)
     }
 
@@ -52,7 +52,7 @@ class SyncGroupsDialogRepositoryImp @Inject constructor(
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Flow<SavingsAccountWithAssociations> {
+    ): Flow<SavingsAccountWithAssociationsEntity> {
         return dataManagerSavings.syncSavingsAccount(type, savingsAccountId, association)
     }
 
@@ -60,7 +60,7 @@ class SyncGroupsDialogRepositoryImp @Inject constructor(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Flow<SavingsAccountTransactionTemplate?> {
+    ): Flow<SavingsAccountTransactionTemplateEntity?> {
         return dataManagerSavings.getSavingsAccountTransactionTemplate(
             savingsAccountType,
             savingsAccountId,
@@ -72,7 +72,7 @@ class SyncGroupsDialogRepositoryImp @Inject constructor(
         return dataManagerGroups.getGroupWithAssociations(groupId)
     }
 
-    override suspend fun syncClientInDatabase(client: Client) {
+    override suspend fun syncClientInDatabase(client: ClientEntity) {
         dataManagerClient.syncClientInDatabase(client)
     }
 
@@ -80,7 +80,7 @@ class SyncGroupsDialogRepositoryImp @Inject constructor(
         return dataManagerClient.getClientAccounts(clientId)
     }
 
-    override suspend fun syncGroupInDatabase(group: Group) {
+    override suspend fun syncGroupInDatabase(group: GroupEntity) {
         dataManagerGroups.syncGroupInDatabase(group)
     }
 }

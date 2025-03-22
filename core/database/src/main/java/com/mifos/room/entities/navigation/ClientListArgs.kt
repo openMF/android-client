@@ -10,7 +10,7 @@
 package com.mifos.room.entities.navigation
 
 import android.os.Parcelable
-import com.mifos.core.entity.client.Client
+import com.mifos.room.entities.client.ClientEntity
 import kotlinx.parcelize.Parcelize
 
 /*
@@ -19,7 +19,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ClientListArgs(
-    var clientsList: List<Client> = ArrayList(),
+    val clientsList: List<ClientEntity> = emptyList(),
 
-    var isParentFragment: Boolean = false,
+    val isParentFragment: Boolean = false,
 ) : Parcelable

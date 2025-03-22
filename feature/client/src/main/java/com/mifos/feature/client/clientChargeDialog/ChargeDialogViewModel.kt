@@ -14,8 +14,8 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.CreateChargesUseCase
 import com.mifos.core.domain.useCases.GetAllChargesV2UseCase
-import com.mifos.core.objects.template.client.ChargeTemplate
-import com.mifos.core.payloads.ChargesPayload
+import com.mifos.core.model.objects.payloads.ChargesPayload
+import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

@@ -50,17 +50,16 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.noncore.DataTable
 import com.mifos.feature.data_table.R
+import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.noncore.DataTableEntity
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun DataTableListScreen(
     onBackPressed: () -> Unit,
-    clientCreated: (Client, Boolean) -> Unit,
+    clientCreated: (ClientEntity, Boolean) -> Unit,
     viewModel: DataTableListViewModel = hiltViewModel(),
 ) {
     val dataTables = viewModel.arg.dataTableList
@@ -86,16 +85,15 @@ fun DataTableListScreen(
 @Composable
 fun DataTableListScreen(
     uiState: DataTableListUiState,
-    dataTableList: List<DataTable>,
+    dataTableList: List<DataTableEntity>,
     onBackPressed: () -> Unit,
-    clientCreated: (Client) -> Unit,
+    clientCreated: (ClientEntity) -> Unit,
     onSaveClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_data_table_associated_datatables),
         onBackPressed = onBackPressed,
         snackbarHostState = snackBarHostState,
@@ -145,7 +143,7 @@ fun DataTableListScreen(
 
 @Composable
 fun DataTableListContent(
-    dataTableList: List<DataTable>,
+    dataTableList: List<DataTableEntity>,
     onSaveClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -184,7 +182,7 @@ fun DataTableListContent(
 
 @Composable
 fun TableColumnHeader(
-    table: DataTable,
+    table: DataTableEntity,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current

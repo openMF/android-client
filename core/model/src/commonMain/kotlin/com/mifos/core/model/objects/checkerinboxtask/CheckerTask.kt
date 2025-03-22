@@ -9,14 +9,16 @@
  */
 package com.mifos.core.model.objects.checkerinboxtask
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-import java.util.Date
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.Serializable
 
 // TODO migrate to KMP
 @Parcelize
+@Serializable
 data class CheckerTask(
     var id: Int,
     var madeOnDate: Long,
@@ -29,13 +31,14 @@ data class CheckerTask(
 
     var selectedFlag = false
 
+    // todo fix this - date
     fun getDate(): String {
-        val date = Date(madeOnDate)
-        val dateFormat = SimpleDateFormat("dd MMM yyyy")
-        return dateFormat.format(date)
+        val instant = Instant.fromEpochMilliseconds(madeOnDate)
+        val localDate = instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+        return "${localDate.dayOfMonth} ${localDate.month.name.take(3).lowercase().replaceFirstChar { it.uppercase() }} ${localDate.year}"
     }
 
-    fun getTimeStamp(): Timestamp {
-        return Timestamp(madeOnDate)
+    fun getTimeStamp(): Instant {
+        return Instant.fromEpochMilliseconds(madeOnDate)
     }
 }

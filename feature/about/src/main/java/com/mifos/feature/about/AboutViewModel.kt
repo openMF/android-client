@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.about
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.White
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,7 +32,7 @@ class AboutViewModel @Inject constructor() : ViewModel() {
                     icon = null,
                     title = R.string.feature_about_app_version,
                     subtitle = null,
-                    color = BlueSecondary,
+                    color = Color.Blue,
                     id = AboutItems.APP_VERSION,
                 ),
                 AboutItem(
@@ -60,7 +60,7 @@ class AboutViewModel @Inject constructor() : ViewModel() {
                     icon = null,
                     title = R.string.feature_about_license,
                     subtitle = R.string.feature_about_license_sub,
-                    color = BlueSecondary,
+                    color = Color.Blue,
                     id = AboutItems.LICENSE,
                 ),
             )

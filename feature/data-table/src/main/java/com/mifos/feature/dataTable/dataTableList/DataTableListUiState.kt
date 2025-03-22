@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
-import com.mifos.core.entity.client.Client
+import com.mifos.room.entities.client.ClientEntity
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -21,6 +21,6 @@ sealed class DataTableListUiState {
     data class ShowMessage(val messageResId: Int? = null, val message: String? = null) :
         DataTableListUiState()
 
-    data class Success(val messageResId: Int? = null, val client: Client? = null) :
+    data class Success(val messageResId: Int? = null, val client: ClientEntity? = null) :
         DataTableListUiState()
 }

@@ -10,12 +10,12 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
-import com.mifos.core.entity.organisation.Staff
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerCollectionSheet
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -35,7 +35,7 @@ class NewIndividualCollectionSheetRepositoryImp @Inject constructor(
         return dataManager.offices()
     }
 
-    override suspend fun getStaffInOffice(officeId: Int): List<Staff> {
+    override suspend fun getStaffInOffice(officeId: Int): List<StaffEntity> {
         return dataManager.getStaffInOffice(officeId)
     }
 }

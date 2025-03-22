@@ -9,9 +9,9 @@
  */
 package com.mifos.core.model.objects
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
 import com.mifos.core.model.objects.commonfiles.InterestType
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
 
 /**
  * Created by ishankhanna on 14/02/14.

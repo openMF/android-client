@@ -9,16 +9,16 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.entity.organisation.Office
+import com.mifos.core.common.utils.Page
 import com.mifos.core.model.objects.clients.ActivatePayload
-import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.centers.GetCentersResponseMapper
 import com.mifos.core.network.mappers.offices.GetOfficeResponseMapper
 import com.mifos.room.entities.accounts.CenterAccounts
-import com.mifos.room.entities.center.CenterPayload
-import com.mifos.room.entities.group.Center
+import com.mifos.room.entities.center.CenterPayloadEntity
+import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.helper.CenterDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -56,7 +56,7 @@ class DataManagerCenter @Inject constructor(
      * @param limit  Maximum Number of centers will come in response
      * @return Centers List page from offset to max Limit
      */
-    suspend fun getCenters(paged: Boolean, offset: Int, limit: Int): Page<Center> {
+    suspend fun getCenters(paged: Boolean, offset: Int, limit: Int): Page<CenterEntity> {
         return baseApiManager.getCenterApi()
             .retrieveAll23(
                 null, null, null, null, null, paged,
@@ -88,7 +88,7 @@ class DataManagerCenter @Inject constructor(
      * @param center Center
      * @return Center
      */
-    suspend fun syncCenterInDatabase(center: Center) {
+    suspend fun syncCenterInDatabase(center: CenterEntity) {
         return centerDatabaseHelper.saveCenter(center)
     }
 
@@ -122,7 +122,7 @@ class DataManagerCenter @Inject constructor(
             .getCenterWithGroupMembersAndCollectionMeetingCalendar(id)
     }
 
-    suspend fun createCenter(centerPayload: CenterPayload?) {
+    suspend fun createCenter(centerPayload: CenterPayloadEntity?) {
         when (prefManager.userStatus) {
             false -> mBaseApiManager.centerApi.createCenter(centerPayload)
             true ->
@@ -157,10 +157,10 @@ class DataManagerCenter @Inject constructor(
      *
      * @return Page of Center List
      */
-    val allDatabaseCenters: Flow<Page<Center>>
+    val allDatabaseCenters: Flow<Page<CenterEntity>>
         get() = centerDatabaseHelper.readAllCenters()
 
-    suspend fun offices(): List<Office> {
+    suspend fun offices(): List<OfficeEntity> {
         return baseApiManager.getOfficeApi().retrieveOffices(null, null, null)
             .map(GetOfficeResponseMapper::mapFromEntity)
     }
@@ -170,7 +170,7 @@ class DataManagerCenter @Inject constructor(
      *
      * @return List<CenterPayload>
      </CenterPayload> */
-    val allDatabaseCenterPayload: Flow<List<CenterPayload>>
+    val allDatabaseCenterPayload: Flow<List<CenterPayloadEntity>>
         get() = centerDatabaseHelper.readAllCenterPayload()
 
     /**
@@ -181,7 +181,7 @@ class DataManagerCenter @Inject constructor(
      * @param id of the centerPayload in Database
      * @return List<CenterPayload></CenterPayload>>
      */
-    fun deleteAndUpdateCenterPayloads(id: Int): Flow<List<CenterPayload>> {
+    fun deleteAndUpdateCenterPayloads(id: Int): Flow<List<CenterPayloadEntity>> {
         return centerDatabaseHelper.deleteAndUpdateCenterPayloads(id)
     }
 
@@ -191,7 +191,7 @@ class DataManagerCenter @Inject constructor(
      * @param centerPayload CenterPayload
      * @return CenterPayload
      */
-    suspend fun updateCenterPayload(centerPayload: CenterPayload) {
+    suspend fun updateCenterPayload(centerPayload: CenterPayloadEntity) {
         return centerDatabaseHelper.updateDatabaseCenterPayload(centerPayload)
     }
 

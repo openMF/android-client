@@ -9,21 +9,21 @@
  */
 package com.mifos.room.entities.zipmodels
 
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
-import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 
 /**
  *
  * Created by Rajan Maurya on 08/08/16.
  */
 class LoanAndLoanRepayment {
-    var loanWithAssociations: LoanWithAssociations? = null
-    var loanRepaymentTemplate: LoanRepaymentTemplate? = null
+    var loanWithAssociations: LoanWithAssociationsEntity? = null
+    var loanRepaymentTemplate: LoanRepaymentTemplateEntity? = null
 
     constructor()
     constructor(
-        loanWithAssociations: LoanWithAssociations?,
-        loanRepaymentTemplate: LoanRepaymentTemplate?,
+        loanWithAssociations: LoanWithAssociationsEntity?,
+        loanRepaymentTemplate: LoanRepaymentTemplateEntity?,
     ) {
         this.loanWithAssociations = loanWithAssociations
         this.loanRepaymentTemplate = loanRepaymentTemplate

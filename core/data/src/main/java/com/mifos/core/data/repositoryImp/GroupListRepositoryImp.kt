@@ -13,7 +13,7 @@ import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.core.network.DataManager
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.GroupWithAssociations
-import rx.Observable
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
@@ -22,11 +22,11 @@ import javax.inject.Inject
 class GroupListRepositoryImp @Inject constructor(private val dataManager: DataManager) :
     GroupListRepository {
 
-    override fun getGroups(groupId: Int): Observable<GroupWithAssociations> {
+    override fun getGroups(groupId: Int): Flow<GroupWithAssociations> {
         return dataManager.getGroups(groupId)
     }
 
-    override fun getGroupsByCenter(id: Int): Observable<CenterWithAssociations> {
+    override fun getGroupsByCenter(id: Int): Flow<CenterWithAssociations> {
         return dataManager.getGroupsByCenter(id)
     }
 }

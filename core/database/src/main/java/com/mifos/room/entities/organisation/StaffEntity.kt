@@ -9,9 +9,12 @@
  */
 package com.mifos.room.entities.organisation
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(tableName = "Staff")
 data class StaffEntity(
     @PrimaryKey
@@ -32,4 +35,4 @@ data class StaffEntity(
     val isLoanOfficer: Boolean? = null,
 
     val isActive: Boolean? = null,
-)
+) : Parcelable

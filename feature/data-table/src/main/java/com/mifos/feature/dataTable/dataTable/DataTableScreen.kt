@@ -31,19 +31,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.data_table.R
+import com.mifos.room.entities.noncore.DataTableEntity
 
 /**
  * Created on 27/06/2024 (11:38 PM) by Pronay Sarker
@@ -53,7 +49,7 @@ import com.mifos.feature.data_table.R
 fun DataTableScreen(
     navigateBack: () -> Unit,
     viewModel: DataTableViewModel = hiltViewModel(),
-    onClick: (table: String, entityId: Int, dataTable: DataTable) -> Unit,
+    onClick: (table: String, entityId: Int, dataTable: DataTableEntity) -> Unit,
 ) {
     val tableName = viewModel.args.tableName
     val entityId = viewModel.args.entityId
@@ -82,14 +78,13 @@ fun DataTableScreen(
     navigateBack: () -> Unit,
     onRefresh: () -> Unit,
     isRefreshing: Boolean,
-    onClick: (dataTable: DataTable) -> Unit,
+    onClick: (dataTable: DataTableEntity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val pullRefreshState = rememberPullToRefreshState()
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_data_table_title),
         onBackPressed = navigateBack,
         snackbarHostState = snackbarHostState,
@@ -134,8 +129,8 @@ fun DataTableScreen(
 
 @Composable
 fun DataTableContent(
-    dataTable: List<DataTable>,
-    onClick: (dataTable: DataTable) -> Unit,
+    dataTable: List<DataTableEntity>,
+    onClick: (dataTable: DataTableEntity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -152,8 +147,8 @@ fun DataTableContent(
 
 @Composable
 fun DataTableItem(
-    dataTable: DataTable,
-    onClick: (dataTable: DataTable) -> Unit,
+    dataTable: DataTableEntity,
+    onClick: (dataTable: DataTableEntity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -183,44 +178,44 @@ fun DataTableItem(
     }
 }
 
-class DataTablePreviewProvider : PreviewParameterProvider<DataTableUiState> {
-    val dataTable: List<DataTable> = listOf(
-        DataTable(
-            applicationTableName = "AppTable1",
-            columnHeaderData = listOf(),
-            registeredTableName = "registered Table Name",
-        ),
-        DataTable(
-            applicationTableName = "AppTable1",
-            columnHeaderData = listOf(),
-            registeredTableName = "registered Table Name",
-        ),
-        DataTable(
-            applicationTableName = "AppTable1",
-            columnHeaderData = listOf(),
-            registeredTableName = "registered Table Name",
-        ),
-    )
-
-    override val values: Sequence<DataTableUiState>
-        get() = sequenceOf(
-            DataTableUiState.ShowEmptyDataTables,
-            DataTableUiState.ShowProgressbar,
-            DataTableUiState.ShowDataTables(dataTable),
-            DataTableUiState.ShowError(R.string.feature_data_table_failed_to_fetch_data_table),
-        )
-}
-
-@Composable
-@Preview(showSystemUi = true)
-private fun PreviewDataTable(
-    @PreviewParameter(DataTablePreviewProvider::class) dataTableUiState: DataTableUiState,
-) {
-    DataTableScreen(
-        uiState = dataTableUiState,
-        navigateBack = { },
-        onRefresh = { },
-        isRefreshing = false,
-        onClick = { },
-    )
-}
+// class DataTablePreviewProvider : PreviewParameterProvider<DataTableUiState> {
+//    val dataTable: List<DataTable> = listOf(
+//        DataTable(
+//            applicationTableName = "AppTable1",
+//            columnHeaderData = listOf(),
+//            registeredTableName = "registered Table Name",
+//        ),
+//        DataTable(
+//            applicationTableName = "AppTable1",
+//            columnHeaderData = listOf(),
+//            registeredTableName = "registered Table Name",
+//        ),
+//        DataTable(
+//            applicationTableName = "AppTable1",
+//            columnHeaderData = listOf(),
+//            registeredTableName = "registered Table Name",
+//        ),
+//    )
+//
+//    override val values: Sequence<DataTableUiState>
+//        get() = sequenceOf(
+//            DataTableUiState.ShowEmptyDataTables,
+//            DataTableUiState.ShowProgressbar,
+//            DataTableUiState.ShowDataTables(dataTable),
+//            DataTableUiState.ShowError(R.string.feature_data_table_failed_to_fetch_data_table),
+//        )
+// }
+//
+// @Composable
+// @Preview(showSystemUi = true)
+// private fun PreviewDataTable(
+//    @PreviewParameter(DataTablePreviewProvider::class) dataTableUiState: DataTableUiState,
+// ) {
+//    DataTableScreen(
+//        uiState = dataTableUiState,
+//        navigateBack = { },
+//        onRefresh = { },
+//        isRefreshing = false,
+//        onClick = { },
+//    )
+// }

@@ -11,15 +11,15 @@ package com.mifos.room.helper
 
 import com.mifos.core.common.network.Dispatcher
 import com.mifos.core.common.network.MifosDispatchers
-import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.common.utils.Page
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.entities.accounts.GroupAccounts
-import com.mifos.room.entities.accounts.loans.LoanAccount
-import com.mifos.room.entities.accounts.savings.SavingsAccount
-import com.mifos.room.entities.group.Group
-import com.mifos.room.entities.group.GroupDate
-import com.mifos.room.entities.group.GroupPayload
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.group.GroupDateEntity
+import com.mifos.room.entities.group.GroupEntity
+import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
@@ -45,10 +45,10 @@ class GroupsDaoHelper @Inject constructor(
      * @param group
      * @return Observable.just(Group)
      */
-    suspend fun saveGroup(group: Group) {
+    suspend fun saveGroup(group: GroupEntity) {
         val updatedGroup = if (group.activationDate.isNotEmpty()) {
             val groupDate = group.id?.toLong()?.let {
-                GroupDate(
+                GroupDateEntity(
                     it,
                     0,
                     group.activationDate[0],
@@ -68,9 +68,9 @@ class GroupsDaoHelper @Inject constructor(
      *
      * @return List Of Groups
      */
-    fun readAllGroups(): Flow<Page<Group>> {
+    fun readAllGroups(): Flow<Page<GroupEntity>> {
         return groupsDao.getAllGroups().map { groups ->
-            Page<Group>().apply { pageItems = groups }
+            Page<GroupEntity>().apply { pageItems = groups }
         }.flowOn(ioDispatcher)
     }
 
@@ -80,8 +80,8 @@ class GroupsDaoHelper @Inject constructor(
      * @param limit
      * @return List Of Groups
      */
-    suspend fun readAllGroups(offset: Int, limit: Int): Page<Group> {
-        val groupPage = Page<Group>()
+    suspend fun readAllGroups(offset: Int, limit: Int): Page<GroupEntity> {
+        val groupPage = Page<GroupEntity>()
         groupPage.pageItems = groupsDao.getAllGroups(offset, limit)
         return groupPage
     }
@@ -92,7 +92,7 @@ class GroupsDaoHelper @Inject constructor(
      * @param groupId Group Id
      * @return Group
      */
-    fun getGroup(groupId: Int): Flow<Group> {
+    fun getGroup(groupId: Int): Flow<GroupEntity> {
         return groupsDao.getGroupById(groupId).map { group ->
             group.copy(
                 activationDate = listOf(
@@ -118,13 +118,12 @@ class GroupsDaoHelper @Inject constructor(
         val loanAccounts = groupAccounts.loanAccounts
         val savingsAccounts = groupAccounts.savingsAccounts
 
-        for (loanAccount: LoanAccount in loanAccounts) {
+        for (loanAccount: LoanAccountEntity in loanAccounts) {
             val updatedLoanAccount = loanAccount.copy(groupId = groupId.toLong())
             groupsDao.insertLoanAccount(updatedLoanAccount)
         }
-        for (savingsAccount: SavingsAccount in savingsAccounts) {
-            savingsAccount.groupId = groupId.toLong()
-            groupsDao.insertSavingsAccount(savingsAccount)
+        for (savingsAccount: SavingsAccountEntity in savingsAccounts) {
+            groupsDao.insertSavingsAccount(savingsAccount.copy(groupId = groupId.toLong()))
         }
     }
 
@@ -147,12 +146,12 @@ class GroupsDaoHelper @Inject constructor(
         }.flowOn(ioDispatcher)
     }
 
-    suspend fun saveGroupPayload(groupPayload: GroupPayload): SaveResponse {
+    suspend fun saveGroupPayload(groupPayload: GroupPayloadEntity): SaveResponse {
         groupsDao.insertGroupPayload(groupPayload)
         return SaveResponse()
     }
 
-    fun realAllGroupPayload(): Flow<List<GroupPayload>> {
+    fun realAllGroupPayload(): Flow<List<GroupPayloadEntity>> {
         return groupsDao.getAllGroupPayloads().flowOn(ioDispatcher)
     }
 
@@ -162,7 +161,7 @@ class GroupsDaoHelper @Inject constructor(
      * @param id is Id of the Client Payload in which reference client was saved into Database
      * @return List<ClientPayload></ClientPayload>>
      */
-    fun deleteAndUpdateGroupPayloads(id: Int): Flow<List<GroupPayload>> {
+    fun deleteAndUpdateGroupPayloads(id: Int): Flow<List<GroupPayloadEntity>> {
         return flow {
             groupsDao.deleteGroupPayloadById(id)
             val groupPayloads = groupsDao.getAllGroupPayloads()
@@ -170,7 +169,7 @@ class GroupsDaoHelper @Inject constructor(
         }.flowOn(ioDispatcher)
     }
 
-    suspend fun updateGroupPayload(groupPayload: GroupPayload) {
+    suspend fun updateGroupPayload(groupPayload: GroupPayloadEntity) {
         groupsDao.updateGroupPayload(groupPayload)
     }
 }

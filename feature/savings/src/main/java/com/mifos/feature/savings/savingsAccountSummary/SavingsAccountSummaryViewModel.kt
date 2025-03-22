@@ -16,7 +16,7 @@ import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.feature.savings.R
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import com.mifos.room.entities.accounts.savings.SavingsSummaryData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,7 +58,7 @@ class SavingsAccountSummaryViewModel @Inject constructor(
             }.collect { savings ->
                 _savingsAccountSummaryUiState.value =
                     SavingsAccountSummaryUiState.ShowSavingAccount(
-                        savings ?: SavingsAccountWithAssociations(),
+                        savings ?: SavingsAccountWithAssociationsEntity(),
                     )
             }
         }

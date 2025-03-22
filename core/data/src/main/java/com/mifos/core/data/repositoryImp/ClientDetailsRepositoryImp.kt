@@ -12,9 +12,8 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.room.entities.accounts.ClientAccounts
-import com.mifos.room.entities.client.Client
+import com.mifos.room.entities.client.ClientEntity
 import okhttp3.MultipartBody
-import okhttp3.ResponseBody
 import javax.inject.Inject
 
 /**
@@ -28,15 +27,15 @@ class ClientDetailsRepositoryImp @Inject constructor(
         dataManagerClient.uploadClientImage(id, file)
     }
 
-    override suspend fun deleteClientImage(clientId: Int): ResponseBody {
-        return dataManagerClient.deleteClientImage(clientId)
+    override suspend fun deleteClientImage(clientId: Int) {
+        dataManagerClient.deleteClientImage(clientId)
     }
 
     override suspend fun getClientAccounts(clientId: Int): ClientAccounts {
         return dataManagerClient.getClientAccounts(clientId)
     }
 
-    override suspend fun getClient(clientId: Int): Client {
+    override suspend fun getClient(clientId: Int): ClientEntity {
         return dataManagerClient.getClient(clientId)
     }
 }

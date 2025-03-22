@@ -9,24 +9,19 @@
  */
 package com.mifos.room.entities.accounts.loans
 
-import com.mifos.core.entity.accounts.loan.LoanType
-import com.mifos.core.entity.accounts.loan.Status
-import com.mifos.core.entity.accounts.loan.Summary
-import com.mifos.core.entity.accounts.loan.Timeline
+import com.mifos.core.model.objects.account.loan.Currency
+import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType
+import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType
+import com.mifos.core.model.objects.account.loan.InterestType
 import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
-import com.mifos.core.objects.account.loan.AmortizationType
-import com.mifos.core.objects.account.loan.Currency
-import com.mifos.core.objects.account.loan.InterestCalculationPeriodType
-import com.mifos.core.objects.account.loan.InterestRateFrequencyType
-import com.mifos.core.objects.account.loan.InterestType
-import com.mifos.core.objects.account.loan.TermPeriodFrequencyType
+import com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType
 
 data class Loan(
     val id: Int? = null,
 
     val accountNo: String? = null,
 
-    val status: Status? = null,
+    val status: LoanStatusEntity? = null,
 
     val clientId: Int? = null,
 
@@ -48,7 +43,7 @@ data class Loan(
 
     val loanOfficerName: String? = null,
 
-    val loanType: LoanType? = null,
+    val loanType: LoanTypeEntity? = null,
 
     val currency: Currency? = null,
 
@@ -84,9 +79,9 @@ data class Loan(
 
     val syncDisbursementWithMeeting: Boolean? = null,
 
-    val timeline: Timeline? = null,
+    val timeline: LoanTimelineEntity? = null,
 
-    val summary: Summary? = null,
+    val summary: LoansAccountSummaryEntity? = null,
 
     val feeChargesAtDisbursementCharged: Double? = null,
 
@@ -104,5 +99,5 @@ data class Loan(
 
     val overdueCharges: List<Any> = emptyList(),
 
-    private val additionalProperties: MutableMap<String, Any> = mutableMapOf(),
+    val additionalProperties: MutableMap<String, Any> = mutableMapOf(),
 )

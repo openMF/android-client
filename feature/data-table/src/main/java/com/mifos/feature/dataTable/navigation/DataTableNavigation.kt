@@ -17,19 +17,19 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.noncore.DataTable
-import com.mifos.core.objects.nav.DataTableNavigationArg
+import com.mifos.core.model.objects.nav.DataTableNavigationArg
 import com.mifos.feature.dataTable.dataTable.DataTableScreen
 import com.mifos.feature.dataTable.dataTableData.DataTableDataScreen
 import com.mifos.feature.dataTable.dataTableList.DataTableListNavArgs
 import com.mifos.feature.dataTable.dataTableList.DataTableListScreen
 import com.mifos.feature.dataTable.dataTableList.FormWidget
+import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.navigation.DataTableDataNavigationArg
+import com.mifos.room.entities.noncore.DataTableEntity
 
 fun NavGraphBuilder.dataTableNavGraph(
     navController: NavController,
-    clientCreated: (Client, Boolean) -> Unit,
+    clientCreated: (ClientEntity, Boolean) -> Unit,
 ) {
     navigation(
         startDestination = DataTableScreens.DataTableScreen.route,
@@ -53,7 +53,7 @@ fun NavGraphBuilder.dataTableNavGraph(
 
 fun NavGraphBuilder.dataTableRoute(
     onBackPressed: () -> Unit,
-    onClick: (table: String, entityId: Int, dataTable: DataTable) -> Unit,
+    onClick: (table: String, entityId: Int, dataTable: DataTableEntity) -> Unit,
 ) {
     composable(
         route = DataTableScreens.DataTableScreen.route,
@@ -91,7 +91,7 @@ fun NavGraphBuilder.dataTableDataRoute(
 
 fun NavGraphBuilder.dataTableListRoute(
     onBackPressed: () -> Unit,
-    clientCreated: (Client, Boolean) -> Unit,
+    clientCreated: (ClientEntity, Boolean) -> Unit,
 ) {
     composable(
         route = DataTableScreens.DataTableListScreen.route,
@@ -120,14 +120,14 @@ fun NavController.navigateToDataTable(
 fun NavController.navigateDataTableData(
     tableName: String,
     entityId: Int,
-    dataTable: DataTable,
+    dataTable: DataTableEntity,
 ) {
     val arg = Gson().toJson(DataTableDataNavigationArg(tableName, entityId, dataTable))
     navigate(DataTableScreens.DataTableDataScreen.argument(arg))
 }
 
 fun NavController.navigateDataTableList(
-    dataTableList: List<DataTable>,
+    dataTableList: List<DataTableEntity>,
     payload: Any?,
     requestType: Int,
     formWidget: MutableList<List<FormWidget>>,

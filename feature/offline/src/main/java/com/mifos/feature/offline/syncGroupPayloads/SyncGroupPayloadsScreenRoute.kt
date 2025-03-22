@@ -9,8 +9,10 @@
  */
 package com.mifos.feature.offline.syncGroupPayloads
 
+import android.Manifest
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,7 +40,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -47,8 +48,8 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosErrorContent
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.group.GroupPayload
 import com.mifos.feature.offline.R
+import com.mifos.room.entities.group.GroupPayloadEntity
 
 @Composable
 internal fun SyncGroupPayloadsScreenRoute(
@@ -84,7 +85,7 @@ internal fun SyncGroupPayloadsScreen(
     uiState: SyncGroupPayloadsUiState,
     onBackPressed: () -> Unit,
     refreshState: Boolean,
-    groupPayloadsList: List<GroupPayload>,
+    groupPayloadsList: List<GroupPayloadEntity>,
     onRefresh: () -> Unit,
     syncGroupPayloads: () -> Unit,
     userStatus: Boolean,
@@ -96,7 +97,6 @@ internal fun SyncGroupPayloadsScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_offline_sync_groups),
         onBackPressed = onBackPressed,
         actions = {
@@ -113,7 +113,7 @@ internal fun SyncGroupPayloadsScreen(
                 },
             ) {
                 Icon(
-                    MifosIcons.sync,
+                    MifosIcons.Sync,
                     contentDescription = stringResource(id = R.string.feature_offline_sync),
                 )
             }
@@ -162,7 +162,7 @@ internal fun SyncGroupPayloadsScreen(
 
 @Composable
 private fun GroupPayloadsContent(
-    groupPayloadList: List<GroupPayload>,
+    groupPayloadList: List<GroupPayloadEntity>,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
@@ -174,7 +174,7 @@ private fun GroupPayloadsContent(
 
 @Composable
 private fun GroupPayloadItem(
-    payload: GroupPayload,
+    payload: GroupPayloadEntity,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -249,6 +249,7 @@ private fun GroupPayloadField(
     }
 }
 
+@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 private fun checkNetworkConnectionAndSync(
     context: Context,
     syncGroupPayloads: () -> Unit,
@@ -264,16 +265,16 @@ private fun checkNetworkConnectionAndSync(
     }
 }
 
-@Preview
-@Composable
-private fun SyncGroupPayloadsScreenPreview() {
-    SyncGroupPayloadsScreen(
-        uiState = SyncGroupPayloadsUiState.Success(),
-        onRefresh = { },
-        onBackPressed = { },
-        refreshState = false,
-        syncGroupPayloads = { },
-        groupPayloadsList = dummyGroupPayloads,
-        userStatus = true,
-    )
-}
+// @Preview
+// @Composable
+// private fun SyncGroupPayloadsScreenPreview() {
+//    SyncGroupPayloadsScreen(
+//        uiState = SyncGroupPayloadsUiState.Success(),
+//        onRefresh = { },
+//        onBackPressed = { },
+//        refreshState = false,
+//        syncGroupPayloads = { },
+//        groupPayloadsList = dummyGroupPayloads,
+//        userStatus = true,
+//    )
+// }

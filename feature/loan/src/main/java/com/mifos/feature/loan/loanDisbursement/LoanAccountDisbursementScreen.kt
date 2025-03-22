@@ -11,7 +11,6 @@ package com.mifos.feature.loan.loanDisbursement
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +22,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,12 +56,9 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.objects.account.loan.LoanDisbursement
+import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.feature.loan.R
-import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -109,7 +104,6 @@ internal fun LoanAccountDisbursementScreen(
     MifosScaffold(
         snackbarHostState = snackbarHostState,
         title = stringResource(id = R.string.feature_loan_disburse_loan),
-        icon = MifosIcons.arrowBack,
         onBackPressed = navigateBack,
     ) {
         Box(
@@ -151,7 +145,7 @@ internal fun LoanAccountDisbursementScreen(
 @Composable
 private fun LoanAccountDisbursementContent(
     initialAmount: String,
-    paymentTypeOptions: List<PaymentTypeOption>,
+    paymentTypeOptions: List<PaymentTypeOptionEntity>,
     onDisburseLoan: (loanDisbursement: LoanDisbursement) -> Unit,
 ) {
     var disbursementDate by rememberSaveable {
@@ -221,7 +215,7 @@ private fun LoanAccountDisbursementContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 disbursementDate,
             ),
-            label = R.string.feature_loan_approval_disbursement_date,
+            label = stringResource(R.string.feature_loan_approval_disbursement_date),
             openDatePicker = {
                 showDatePickerDialog = true
             },
@@ -267,9 +261,9 @@ private fun LoanAccountDisbursementContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .heightIn(44.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//            ),
             onClick = {
                 if (Network.isOnline(context)) {
                     if (isFieldValid(amount = amount, context = context)) {

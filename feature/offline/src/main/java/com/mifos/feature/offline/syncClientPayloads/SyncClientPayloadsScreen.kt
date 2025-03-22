@@ -9,8 +9,10 @@
  */
 package com.mifos.feature.offline.syncClientPayloads
 
+import android.Manifest
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -54,8 +56,8 @@ import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.client.ClientPayload
 import com.mifos.feature.offline.R
+import com.mifos.room.entities.client.ClientPayloadEntity
 
 @Composable
 internal fun SyncClientPayloadsScreenRoute(
@@ -101,7 +103,6 @@ internal fun SyncClientPayloadsScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_offline_sync_clients_payloads),
         onBackPressed = onBackPressed,
         actions = {
@@ -114,7 +115,7 @@ internal fun SyncClientPayloadsScreen(
                 },
             ) {
                 Icon(
-                    MifosIcons.sync,
+                    MifosIcons.Sync,
                     contentDescription = stringResource(id = R.string.feature_offline_sync_clients),
                 )
             }
@@ -150,7 +151,7 @@ internal fun SyncClientPayloadsScreen(
 
 @Composable
 private fun ClientPayloadsList(
-    clientPayloads: List<ClientPayload>,
+    clientPayloads: List<ClientPayloadEntity>,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
@@ -162,7 +163,7 @@ private fun ClientPayloadsList(
 
 @Composable
 private fun ClientPayloadItem(
-    payload: ClientPayload,
+    payload: ClientPayloadEntity,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -287,6 +288,7 @@ private fun ErrorStateScreen(
     }
 }
 
+@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 private fun checkNetworkConnectionAndSync(
     context: Context,
     syncClientPayloads: () -> Unit,
@@ -306,7 +308,7 @@ class SyncClientPayloadsUiStateProvider : PreviewParameterProvider<SyncClientPay
     override val values = sequenceOf(
         SyncClientPayloadsUiState.ShowProgressbar,
         SyncClientPayloadsUiState.ShowError("Failed to load client payloads"),
-        SyncClientPayloadsUiState.ShowPayloads(sampleClientPayloads),
+//        SyncClientPayloadsUiState.ShowPayloads(sampleClientPayloads),
     )
 }
 
@@ -326,41 +328,41 @@ private fun SyncClientPayloadsScreenPreview(
 }
 
 // Sample data for previews
-val sampleClientPayloads = List(5) { index ->
-    ClientPayload().apply {
-        firstname = "John$index"
-        middlename = "Sam$index"
-        lastname = "Doe$index"
-        mobileNo = "123456789$index"
-        externalId = "EXT-$index"
-        officeId = index
-        active = index % 2 == 0
-        activationDate = "2023-07-${15 + index}"
-        genderId = if (index % 3 == 0) 24 else 22
-        dateOfBirth = "1990-01-0$index"
-        errorMessage = if (index % 2 == 0) null else "Error in payload"
-    }
-}
+// val sampleClientPayloads = List(5) { index ->
+//    ClientPayload().apply {
+//        firstname = "John$index"
+//        middlename = "Sam$index"
+//        lastname = "Doe$index"
+//        mobileNo = "123456789$index"
+//        externalId = "EXT-$index"
+//        officeId = index
+//        active = index % 2 == 0
+//        activationDate = "2023-07-${15 + index}"
+//        genderId = if (index % 3 == 0) 24 else 22
+//        dateOfBirth = "1990-01-0$index"
+//        errorMessage = if (index % 2 == 0) null else "Error in payload"
+//    }
+// }
 
-@Preview(showBackground = true)
-@Composable
-private fun ClientPayloadItemPreview() {
-    val sampleClientPayload = ClientPayload().apply {
-        firstname = "John"
-        middlename = "Michael"
-        lastname = "Doe"
-        mobileNo = "1234567890"
-        externalId = "EXT-001"
-        genderId = 22
-        dateOfBirth = "1990-01-01"
-        officeId = 12
-        activationDate = "2023-07-15"
-        active = true
-        errorMessage = null
-    }
-
-    ClientPayloadItem(payload = sampleClientPayload)
-}
+// @Preview(showBackground = true)
+// @Composable
+// private fun ClientPayloadItemPreview() {
+//    val sampleClientPayload = ClientPayload().apply {
+//        firstname = "John"
+//        middlename = "Michael"
+//        lastname = "Doe"
+//        mobileNo = "1234567890"
+//        externalId = "EXT-001"
+//        genderId = 22
+//        dateOfBirth = "1990-01-01"
+//        officeId = 12
+//        activationDate = "2023-07-15"
+//        active = true
+//        errorMessage = null
+//    }
+//
+//    ClientPayloadItem(payload = sampleClientPayload)
+// }
 
 class PayloadFieldPreviewProvider : PreviewParameterProvider<Pair<String, String>> {
     override val values = sequenceOf(

@@ -19,7 +19,9 @@ import javax.inject.Singleton
  * Created by Rajan Maurya on 19/02/17.
  */
 @Singleton
-class DataManagerAuth @Inject constructor(private val baseApiManager: BaseApiManager) {
+class DataManagerAuth @Inject constructor(
+    private val baseApiManager: BaseApiManager,
+) {
     /**
      * @param username Username
      * @param password Password
@@ -27,6 +29,6 @@ class DataManagerAuth @Inject constructor(private val baseApiManager: BaseApiMan
      */
     suspend fun login(username: String, password: String): PostAuthenticationResponse {
         val body = PostAuthenticationRequest(username = username, password = password)
-        return baseApiManager.authApi.authenticate(body)
+        return baseApiManager.clientsApi.authenticate(body, true)
     }
 }

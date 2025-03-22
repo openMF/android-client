@@ -24,7 +24,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -50,7 +49,6 @@ import androidx.compose.material.icons.outlined.HomeWork
 import androidx.compose.material.icons.outlined.MobileFriendly
 import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -72,6 +70,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -99,17 +100,10 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.accounts.loan.LoanAccount
-import com.mifos.core.entity.accounts.savings.DepositType
-import com.mifos.core.entity.accounts.savings.SavingsAccount
 import com.mifos.feature.client.R
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.Objects
@@ -132,7 +126,7 @@ internal fun ClientDetailsScreen(
     survey: (Int) -> Unit,
     uploadSignature: (Int) -> Unit,
     loanAccountSelected: (Int) -> Unit,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateClient: (Int) -> Unit,
     clientDetailsViewModel: ClientDetailsViewModel = hiltViewModel(),
 ) {
@@ -224,7 +218,6 @@ internal fun ClientDetailsScreen(
     }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_client),
         onBackPressed = onBackPressed,
         actions = {
@@ -318,9 +311,6 @@ internal fun ClientDetailsScreen(
                         .heightIn(44.dp)
                         .padding(start = 16.dp, end = 16.dp),
                     contentPadding = PaddingValues(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                    ),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_activate_client),
@@ -385,7 +375,7 @@ internal fun ClientDetailsScreen(
 private fun MifosClientDetailsScreen(
     loanAccountSelected: (Int) -> Unit,
     padding: PaddingValues,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     clientDetailsViewModel: ClientDetailsViewModel = hiltViewModel(),
 ) {
     val client = clientDetailsViewModel.client.collectAsStateWithLifecycle().value
@@ -478,12 +468,16 @@ private fun MifosClientDetailsScreen(
                 value = it,
             )
         }
-        client?.groupNames?.let {
-            MifosClientDetailsText(
-                icon = Icons.Outlined.Groups,
-                field = stringResource(id = R.string.feature_client_group),
-                value = it,
-            )
+        client?.groups?.let { list ->
+            list.forEach { group ->
+                group.name?.let {
+                    MifosClientDetailsText(
+                        icon = Icons.Outlined.Groups,
+                        field = stringResource(id = R.string.feature_client_group),
+                        value = it,
+                    )
+                }
+            }
         }
         Spacer(modifier = Modifier.height(20.dp))
         if (loanAccounts != null && savingsAccounts != null) {
@@ -528,7 +522,7 @@ private fun Context.createImageFile(): File {
 @Composable
 private fun MifosLoanAccountExpendableCard(
     accountType: String,
-    loanAccounts: List<LoanAccount>,
+    loanAccounts: List<LoanAccountEntity>,
     loanAccountSelected: (Int) -> Unit,
 ) {
     var expendableState by remember { mutableStateOf(false) }
@@ -548,7 +542,7 @@ private fun MifosLoanAccountExpendableCard(
                 ),
             ),
         shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(BlueSecondary),
+//        colors = CardDefaults.cardColors(BlueSecondary),
     ) {
         Column(
             modifier = Modifier
@@ -594,7 +588,7 @@ private fun MifosLoanAccountExpendableCard(
 
 @Composable
 private fun MifosLoanAccountsLazyColumn(
-    loanAccounts: List<LoanAccount>,
+    loanAccounts: List<LoanAccountEntity>,
     loanAccountSelected: (Int) -> Unit,
 ) {
     Card(
@@ -703,8 +697,8 @@ private fun MifosLoanAccountsLazyColumn(
 @Composable
 private fun MifosSavingsAccountExpendableCard(
     accountType: String,
-    savingsAccount: List<SavingsAccount>,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccount: List<SavingsAccountEntity>,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
 ) {
     var expendableState by remember { mutableStateOf(false) }
     val rotateState by animateFloatAsState(
@@ -723,7 +717,7 @@ private fun MifosSavingsAccountExpendableCard(
                 ),
             ),
         shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(BlueSecondary),
+//        colors = CardDefaults.cardColors(BlueSecondary),
     ) {
         Column(
             modifier = Modifier
@@ -769,8 +763,8 @@ private fun MifosSavingsAccountExpendableCard(
 
 @Composable
 private fun MifosSavingsAccountsLazyColumn(
-    savingsAccounts: List<SavingsAccount>,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccounts: List<SavingsAccountEntity>,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -913,7 +907,7 @@ private fun MifosSelectImageDialog(
 
                 Button(
                     onClick = { takeImage() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary),
+//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_take_new_image),
@@ -929,7 +923,7 @@ private fun MifosSelectImageDialog(
                 }
                 Button(
                     onClick = { uploadImage() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary),
+//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_upload_new_image),
@@ -945,7 +939,7 @@ private fun MifosSelectImageDialog(
                 }
                 Button(
                     onClick = { deleteImage() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary),
+//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_delete_image),

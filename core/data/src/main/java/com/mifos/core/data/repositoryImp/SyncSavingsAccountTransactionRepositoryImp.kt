@@ -13,8 +13,8 @@ import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -26,11 +26,11 @@ class SyncSavingsAccountTransactionRepositoryImp @Inject constructor(
     private val dataManagerLoan: DataManagerLoan,
 ) : SyncSavingsAccountTransactionRepository {
 
-    override fun allSavingsAccountTransactions(): Flow<List<SavingsAccountTransactionRequest>> {
+    override fun allSavingsAccountTransactions(): Flow<List<SavingsAccountTransactionRequestEntity>> {
         return dataManagerSavings.allSavingsAccountTransactions
     }
 
-    override fun paymentTypeOption(): Flow<List<PaymentTypeOption>> {
+    override fun paymentTypeOption(): Flow<List<PaymentTypeOptionEntity>> {
         return dataManagerLoan.paymentTypeOption
     }
 
@@ -38,7 +38,7 @@ class SyncSavingsAccountTransactionRepositoryImp @Inject constructor(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
-        request: SavingsAccountTransactionRequest,
+        request: SavingsAccountTransactionRequestEntity,
     ): Flow<SavingsAccountTransactionResponse?> {
         return dataManagerSavings.processTransaction(
             savingsAccountType,
@@ -48,11 +48,11 @@ class SyncSavingsAccountTransactionRepositoryImp @Inject constructor(
         )
     }
 
-    override fun deleteAndUpdateTransactions(savingsAccountId: Int): Flow<List<SavingsAccountTransactionRequest>> {
+    override fun deleteAndUpdateTransactions(savingsAccountId: Int): Flow<List<SavingsAccountTransactionRequestEntity>> {
         return dataManagerSavings.deleteAndUpdateTransactions(savingsAccountId)
     }
 
-    override suspend fun updateLoanRepaymentTransaction(savingsAccountTransactionRequest: SavingsAccountTransactionRequest) {
+    override suspend fun updateLoanRepaymentTransaction(savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity) {
         dataManagerSavings.updateLoanRepaymentTransaction(savingsAccountTransactionRequest)
     }
 }

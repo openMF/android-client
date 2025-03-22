@@ -9,8 +9,10 @@
  */
 package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
+import android.Manifest
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,8 +63,8 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.offline.R
 import com.mifos.feature.offline.syncSavingsAccountTransaction.getPaymentTypeName
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 
 @Composable
 internal fun SyncLoanRepaymentTransactionScreenRoute(
@@ -109,7 +111,6 @@ internal fun SyncLoanRepaymentTransactionScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_offline_sync_loanrepayment),
         onBackPressed = onBackPressed,
         actions = {
@@ -126,7 +127,7 @@ internal fun SyncLoanRepaymentTransactionScreen(
                 },
             ) {
                 Icon(
-                    MifosIcons.sync,
+                    MifosIcons.Sync,
                     contentDescription = stringResource(id = R.string.feature_offline_sync_loanrepayment),
                 )
             }
@@ -167,8 +168,8 @@ internal fun SyncLoanRepaymentTransactionScreen(
 
 @Composable
 private fun LoanRepaymentTransactionsList(
-    loanRepaymentRequests: List<LoanRepaymentRequest>,
-    paymentTypeOptions: List<PaymentTypeOption>,
+    loanRepaymentRequests: List<LoanRepaymentRequestEntity>,
+    paymentTypeOptions: List<PaymentTypeOptionEntity>,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
@@ -180,8 +181,8 @@ private fun LoanRepaymentTransactionsList(
 
 @Composable
 private fun LoanRepaymentTransactionItem(
-    request: LoanRepaymentRequest,
-    paymentTypeOptions: List<PaymentTypeOption>,
+    request: LoanRepaymentRequestEntity,
+    paymentTypeOptions: List<PaymentTypeOptionEntity>,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -306,6 +307,7 @@ private fun EmptyLoanRepaymentsScreen(
     }
 }
 
+@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 internal fun checkNetworkConnectionAndSync(
     context: Context,
     syncLoanRepaymentTransactions: () -> Unit,
@@ -351,7 +353,7 @@ private fun SyncLoanRepaymentTransactionScreenPreview(
 
 // Sample data for previews
 val sampleLoanRepaymentRequests = List(5) { index ->
-    LoanRepaymentRequest(
+    LoanRepaymentRequestEntity(
         loanId = index,
         accountNumber = "LOAN-$index",
         paymentTypeId = index.toString(),
@@ -362,7 +364,7 @@ val sampleLoanRepaymentRequests = List(5) { index ->
 }
 
 val samplePaymentTypeOptions = List(3) { index ->
-    PaymentTypeOption(
+    PaymentTypeOptionEntity(
         id = index,
         name = "Payment Type $index",
         description = "Description for Payment Type $index",

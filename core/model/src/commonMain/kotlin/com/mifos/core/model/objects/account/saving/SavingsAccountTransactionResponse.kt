@@ -10,12 +10,15 @@
 package com.mifos.core.model.objects.account.saving
 
 import com.mifos.core.model.objects.Changes
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by ishankhanna on 12/06/14.
  */
 @Serializable
+@Parcelize
 data class SavingsAccountTransactionResponse(
     var officeId: Int? = null,
 
@@ -26,4 +29,4 @@ data class SavingsAccountTransactionResponse(
     var resourceId: Int? = null,
 
     var changes: Changes? = null,
-)
+) : Parcelable

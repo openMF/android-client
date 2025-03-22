@@ -9,11 +9,10 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.core.entity.client.ClientPayload
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
-import com.mifos.room.entities.center.CenterPayload
-import com.mifos.room.entities.group.GroupPayload
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import com.mifos.room.entities.center.CenterPayloadEntity
+import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -21,13 +20,13 @@ import kotlinx.coroutines.flow.Flow
  */
 interface OfflineDashboardRepository {
 
-    fun allDatabaseClientPayload(): Flow<List<com.mifos.room.entities.client.ClientPayload>>
+    fun allDatabaseClientPayload(): Flow<List<com.mifos.room.entities.client.ClientPayloadEntity>>
 
-    fun allDatabaseGroupPayload(): Flow<List<GroupPayload>>
+    fun allDatabaseGroupPayload(): Flow<List<GroupPayloadEntity>>
 
-    fun allDatabaseCenterPayload(): Flow<List<CenterPayload>>
+    fun allDatabaseCenterPayload(): Flow<List<CenterPayloadEntity>>
 
-    fun databaseLoanRepayments(): Flow<List<LoanRepaymentRequest>>
+    fun databaseLoanRepayments(): Flow<List<LoanRepaymentRequestEntity>>
 
-    fun allSavingsAccountTransactions(): Flow<List<com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest>>
+    fun allSavingsAccountTransactions(): Flow<List<SavingsAccountTransactionRequestEntity>>
 }

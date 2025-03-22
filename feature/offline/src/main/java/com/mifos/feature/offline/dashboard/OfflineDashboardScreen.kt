@@ -113,7 +113,6 @@ internal fun OfflineDashboardScreen(
         modifier = modifier,
         snackbarHostState = snackBarHostState,
         onBackPressed = onBackPressed,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_offline_offline_Sync),
     ) {
         Box(
@@ -124,7 +123,7 @@ internal fun OfflineDashboardScreen(
             if (errorVisibility) {
                 MifosEmptyUi(
                     text = stringResource(id = R.string.feature_offline_nothing_to_sync),
-                    icon = MifosIcons.assignmentTurnedIn,
+                    icon = MifosIcons.AssignmentTurnedIn,
                 )
             } else {
                 when (uiState) {

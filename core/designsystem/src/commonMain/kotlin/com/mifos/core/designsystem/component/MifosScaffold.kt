@@ -37,25 +37,27 @@ import androidx.compose.ui.graphics.Color
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MifosScaffold(
-    backPress: () -> Unit,
+    onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
-    topBarTitle: String? = null,
+    title: String? = null,
     floatingActionButtonContent: FloatingActionButtonContent? = null,
     pullToRefreshState: MifosPullToRefreshState = rememberMifosPullToRefreshState(),
-    snackbarHost: @Composable () -> Unit = {},
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     actions: @Composable RowScope.() -> Unit = {},
+    bottomBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit = {},
 ) {
     Scaffold(
         topBar = {
-            if (topBarTitle != null) {
+            if (title != null) {
                 MifosTopBar(
-                    topBarTitle = topBarTitle,
-                    backPress = backPress,
+                    topBarTitle = title,
+                    backPress = onBackPressed,
                     actions = actions,
                 )
             }
         },
+        bottomBar = bottomBar,
         floatingActionButton = {
             floatingActionButtonContent?.let { content ->
                 FloatingActionButton(
@@ -65,7 +67,7 @@ fun MifosScaffold(
                 )
             }
         },
-        snackbarHost = snackbarHost,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0f),
         content = { paddingValues ->
             val internalPullToRefreshState = rememberPullToRefreshState()

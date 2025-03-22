@@ -20,10 +20,6 @@ android {
 dependencies {
     implementation(projects.core.domain)
 
-    //DBFlow dependencies
-    kapt(libs.dbflow.processor)
-    implementation(libs.dbflow)
-    kapt(libs.github.dbflow.processor)
     testImplementation(libs.hilt.android.testing)
     testImplementation(projects.core.testing)
 

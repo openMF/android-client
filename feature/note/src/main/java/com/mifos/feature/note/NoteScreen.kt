@@ -40,8 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.noncore.Note
+import com.mifos.core.model.objects.Note
 import com.mifos.core.ui.components.MifosEmptyUi
 
 @Composable
@@ -77,7 +76,6 @@ internal fun NoteScreen(
     val pullRefreshState = rememberPullToRefreshState()
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_note_Note),
         onBackPressed = onBackPressed,
         snackbarHostState = snackBarHostState,

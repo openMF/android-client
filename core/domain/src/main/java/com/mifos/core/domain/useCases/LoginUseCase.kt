@@ -20,7 +20,9 @@ import org.openapitools.client.models.PostAuthenticationResponse
  * Created by Aditya Gupta on 11/02/24.
  */
 
-class LoginUseCase(private val loginRepository: LoginRepository) {
+class LoginUseCase(
+    private val loginRepository: LoginRepository,
+) {
 
     operator fun invoke(
         username: String,

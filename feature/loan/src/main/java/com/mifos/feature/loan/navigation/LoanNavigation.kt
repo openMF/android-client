@@ -16,7 +16,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.feature.loan.groupLoanAccount.GroupLoanAccountScreen
 import com.mifos.feature.loan.loanAccount.LoanAccountScreen
@@ -27,7 +26,8 @@ import com.mifos.feature.loan.loanDisbursement.LoanAccountDisbursementScreen
 import com.mifos.feature.loan.loanRepayment.LoanRepaymentScreen
 import com.mifos.feature.loan.loanRepaymentSchedule.LoanRepaymentScheduleScreen
 import com.mifos.feature.loan.loanTransaction.LoanTransactionsScreen
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.noncore.DataTableEntity
 
 /**
  * Created by Pronay Sarker on 16/08/2024 (2:24 AM)
@@ -92,7 +92,7 @@ fun NavGraphBuilder.groupLoanScreen(
 
 fun NavGraphBuilder.addLoanAccountScreen(
     onBackPressed: () -> Unit,
-    dataTable: (List<DataTable>, LoansPayload) -> Unit,
+    dataTable: (List<DataTableEntity>, LoansPayload) -> Unit,
 ) {
     composable(
         route = LoanScreens.LoanAccountScreen.route,
@@ -114,9 +114,9 @@ fun NavGraphBuilder.loanAccountSummary(
     onRepaymentScheduleClicked: (loanId: Int) -> Unit,
     onDocumentsClicked: (Int) -> Unit,
     onChargesClicked: (Int) -> Unit,
-    approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociations) -> Unit,
+    approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: (Int) -> Unit,
-    onRepaymentClick: (LoanWithAssociations) -> Unit,
+    onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
 ) {
     composable(
         route = LoanScreens.LoanAccountSummaryScreen.route,
@@ -255,12 +255,12 @@ fun NavController.navigateToLoanChargesScreen(loanAccountNumber: Int) {
 
 fun NavController.navigateToLoanApprovalScreen(
     loanId: Int,
-    loanWithAssociations: LoanWithAssociations,
+    loanWithAssociations: LoanWithAssociationsEntity,
 ) {
     navigate(LoanScreens.LoanApprovalScreen.argument(loanId, loanWithAssociations))
 }
 
-fun NavController.navigateToLoanRepaymentScreen(loanWithAssociations: LoanWithAssociations) {
+fun NavController.navigateToLoanRepaymentScreen(loanWithAssociations: LoanWithAssociationsEntity) {
     navigate(LoanScreens.LoanRepaymentScreen.argument(loanWithAssociations))
 }
 

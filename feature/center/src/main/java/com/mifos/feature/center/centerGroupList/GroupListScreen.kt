@@ -45,17 +45,17 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.client.Client
-import com.mifos.core.entity.client.Status
-import com.mifos.core.entity.group.Group
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.center.R
+import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientStatusEntity
 import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.group.GroupEntity
 
 @Composable
 internal fun GroupListScreen(
     onBackPressed: () -> Unit,
-    loadClientsOfGroup: (List<Client>) -> Unit,
+    loadClientsOfGroup: (List<ClientEntity>) -> Unit,
     viewModel: GroupListViewModel = hiltViewModel(),
 ) {
     val centerId by viewModel.centerId.collectAsStateWithLifecycle()
@@ -98,7 +98,6 @@ internal fun GroupListScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_center_groups),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
@@ -115,7 +114,7 @@ internal fun GroupListScreen(
                     if (state.centerWithAssociations.groupMembers.isEmpty()) {
                         MifosEmptyUi(
                             text = stringResource(id = R.string.feature_center_no_group_list_to_show),
-                            icon = MifosIcons.fileTask,
+                            icon = MifosIcons.FileTask,
                         )
                     } else {
                         GroupListContent(
@@ -143,7 +142,7 @@ private fun GroupListContent(
 
 @Composable
 private fun GroupItem(
-    group: Group,
+    group: GroupEntity,
     onGroupClick: (Int) -> Unit,
 ) {
     Card(
@@ -179,14 +178,14 @@ private fun GroupItem(
                 Text(
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.bodySmall,
-                    text = if (group.status?.value?.let { Status.isActive(it) } == true) {
+                    text = if (group.status?.value?.let { ClientStatusEntity.isActive(it) } == true) {
                         stringResource(id = R.string.feature_center_active)
                     } else {
                         stringResource(id = R.string.feature_center_inactive)
                     },
                 )
                 Canvas(modifier = Modifier.size(16.dp)) {
-                    if (group.status?.value?.let { Status.isActive(it) } == true) {
+                    if (group.status?.value?.let { ClientStatusEntity.isActive(it) } == true) {
                         drawRect(Color.Green)
                     } else {
                         drawRect(Color.Red)

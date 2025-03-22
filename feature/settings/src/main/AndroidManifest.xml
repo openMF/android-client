@@ -8,7 +8,7 @@
 
     See https://github.com/openMF/android-client/blob/master/LICENSE.md
 -->
-<manifest>
-
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

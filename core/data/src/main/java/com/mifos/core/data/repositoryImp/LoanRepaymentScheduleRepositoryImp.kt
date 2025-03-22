@@ -11,7 +11,7 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import com.mifos.core.network.DataManager
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import rx.Observable
 import javax.inject.Inject
 
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class LoanRepaymentScheduleRepositoryImp @Inject constructor(private val dataManager: DataManager) :
     LoanRepaymentScheduleRepository {
 
-    override fun getLoanRepaySchedule(loanId: Int): Observable<LoanWithAssociations> {
+    override fun getLoanRepaySchedule(loanId: Int): Observable<LoanWithAssociationsEntity> {
         return dataManager.getLoanRepaySchedule(loanId)
     }
 }

@@ -9,9 +9,8 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.Page
 import com.mifos.core.model.objects.clients.ActivatePayload
-import com.mifos.core.model.objects.clients.Page
-import com.mifos.core.model.objects.noncoreobjects.ClientAccounts
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
@@ -22,14 +21,14 @@ import com.mifos.core.network.mappers.clients.GetClientResponseMapper
 import com.mifos.core.network.mappers.clients.GetClientsClientIdAccountMapper
 import com.mifos.core.network.mappers.clients.GetIdentifiersTemplateMapper
 import com.mifos.core.network.mappers.clients.IdentifierMapper
-import com.mifos.room.entities.client.Client
-import com.mifos.room.entities.client.ClientPayload
-import com.mifos.room.entities.templates.clients.ClientsTemplate
+import com.mifos.room.entities.accounts.ClientAccounts
+import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.helper.ClientDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import okhttp3.MultipartBody
-import okhttp3.ResponseBody
 import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import org.openapitools.client.models.PostClientsClientIdRequest
 import org.openapitools.client.models.PostClientsClientIdResponse
@@ -65,7 +64,7 @@ class DataManagerClient @Inject constructor(
      * @param limit  Maximum Number of clients will come in response
      * @return Client List from offset to max Limit
      */
-    suspend fun getAllClients(offset: Int, limit: Int): Page<Client> {
+    suspend fun getAllClients(offset: Int, limit: Int): Page<ClientEntity> {
         return baseApiManager.getClientsApi().retrieveAll21(
             null, null, null,
             null, null, null,
@@ -99,7 +98,7 @@ class DataManagerClient @Inject constructor(
      *
      * @return Page of Client List
      */
-    val allDatabaseClients: Flow<Page<Client>>
+    val allDatabaseClients: Flow<Page<ClientEntity>>
         get() = clientDatabaseHelper.readAllClients()
 
     /**
@@ -108,7 +107,7 @@ class DataManagerClient @Inject constructor(
      * @param clientId for Query in database or REST API request.
      * @return The Client Details
      */
-    suspend fun getClient(clientId: Int): Client {
+    suspend fun getClient(clientId: Int): ClientEntity {
         return mBaseApiManager.clientsApi.getClient(clientId)
     }
 //    fun getClient(clientId: Int): Observable<Client> {
@@ -124,7 +123,7 @@ class DataManagerClient @Inject constructor(
 //        }
 //    }
 
-    suspend fun syncClientInDatabase(client: Client) {
+    suspend fun syncClientInDatabase(client: ClientEntity) {
         clientDatabaseHelper.saveClient(client)
     }
 
@@ -188,8 +187,8 @@ class DataManagerClient @Inject constructor(
      * @param clientId Client ID
      * @return ResponseBody is the Retrofit 2 response
      */
-    fun deleteClientImage(clientId: Int): Flow<ResponseBody> {
-        return mBaseApiManager.clientsApi.deleteClientImage(clientId)
+    suspend fun deleteClientImage(clientId: Int) {
+        mBaseApiManager.clientsApi.deleteClientImage(clientId)
     }
 
     /**
@@ -215,7 +214,7 @@ class DataManagerClient @Inject constructor(
      *
      * @return ClientTemplate
      */
-    val clientTemplate: Flow<ClientsTemplate>
+    val clientTemplate: Flow<ClientsTemplateEntity>
         get() = when (prefManager.userStatus) {
             false ->
                 mBaseApiManager.clientsApi.clientTemplate
@@ -244,7 +243,7 @@ class DataManagerClient @Inject constructor(
      * @param clientPayload Client details filled by user
      * @return Client
      */
-    suspend fun createClient(clientPayload: ClientPayload?): Int? {
+    suspend fun createClient(clientPayload: ClientPayloadEntity): Int? {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.clientsApi.createClient(clientPayload)?.clientId
 
@@ -265,7 +264,7 @@ class DataManagerClient @Inject constructor(
      *
      * @return List<ClientPayload></ClientPayload>>
      */
-    val allDatabaseClientPayload: Flow<List<ClientPayload>>
+    val allDatabaseClientPayload: Flow<List<ClientPayloadEntity>>
         get() = clientDatabaseHelper.readAllClientPayload()
 
     /**
@@ -279,7 +278,7 @@ class DataManagerClient @Inject constructor(
     fun deleteAndUpdatePayloads(
         id: Int,
         clientCreationTIme: Long,
-    ): Flow<List<ClientPayload>> {
+    ): Flow<List<ClientPayloadEntity>> {
         return clientDatabaseHelper.deleteAndUpdatePayloads(id, clientCreationTIme)
     }
 
@@ -289,7 +288,7 @@ class DataManagerClient @Inject constructor(
      * @param clientPayload ClientPayload
      * @return ClientPayload
      */
-    suspend fun updateClientPayload(clientPayload: ClientPayload) {
+    suspend fun updateClientPayload(clientPayload: ClientPayloadEntity) {
         clientDatabaseHelper.updateDatabaseClientPayload(clientPayload)
     }
 

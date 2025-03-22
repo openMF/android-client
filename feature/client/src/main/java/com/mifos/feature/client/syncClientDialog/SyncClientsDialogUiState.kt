@@ -10,7 +10,7 @@
 package com.mifos.feature.client.syncClientDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.core.entity.client.Client
+import com.mifos.room.entities.client.ClientEntity
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -34,5 +34,5 @@ data class SyncClientsDialogData(
     val totalClientSyncCount: Int = 0,
     val clientSyncCount: Int = 0,
     val failedSyncGroupCount: Int = 0,
-    val clientList: List<Client> = listOf(),
+    val clientList: List<ClientEntity> = listOf(),
 )

@@ -10,8 +10,9 @@
 package com.mifos.room.entities.templates.loans
 
 import android.os.Parcelable
-import com.mifos.core.objects.template.loan.Type
-import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.core.model.objects.template.loan.Type
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -19,6 +20,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class LoanTransactionTemplate(
+    @IgnoredOnParcel
     val type: Type? = null,
 
     val date: List<Int> = emptyList(),
@@ -29,5 +31,5 @@ data class LoanTransactionTemplate(
 
     val possibleNextRepaymentDate: List<Int> = emptyList(),
 
-    val paymentTypeOptions: List<PaymentTypeOption> = emptyList(),
+    val paymentTypeOptions: List<PaymentTypeOptionEntity> = emptyList(),
 ) : Parcelable

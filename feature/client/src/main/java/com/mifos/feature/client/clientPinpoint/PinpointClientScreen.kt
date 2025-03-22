@@ -30,7 +30,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -48,6 +47,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -73,9 +73,6 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.White
 import com.mifos.feature.client.R
 
 @Composable
@@ -147,10 +144,10 @@ internal fun PinpointClientScreen(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
             ),
-            title = R.string.feature_client_permission_required,
-            description = R.string.feature_client_approve_permission_description_location,
-            confirmButtonText = R.string.feature_client_proceed,
-            dismissButtonText = R.string.feature_client_dismiss,
+            title = stringResource(R.string.feature_client_permission_required),
+            description = stringResource(R.string.feature_client_approve_permission_description_location),
+            confirmButtonText = stringResource(R.string.feature_client_proceed),
+            dismissButtonText = stringResource(R.string.feature_client_dismiss),
             onGranted = {
                 showPermissionDialog = false
                 onAddAddress(
@@ -162,7 +159,6 @@ internal fun PinpointClientScreen(
     }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = "Pinpoint Client",
         onBackPressed = onBackPressed,
         actions = {
@@ -170,7 +166,7 @@ internal fun PinpointClientScreen(
                 showPermissionDialog = true
             }) {
                 Icon(
-                    imageVector = MifosIcons.addLocation,
+                    imageVector = MifosIcons.AddLocation,
                     contentDescription = null,
                 )
             }
@@ -304,7 +300,7 @@ private fun PinpointLocationItem(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
-                color = Black,
+//                color = Black,
             ),
         )
     }
@@ -348,7 +344,7 @@ private fun PinPointSelectDialog(
 
                 Button(
                     onClick = { updateAddress() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary),
+//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_update_client_address),
@@ -364,7 +360,7 @@ private fun PinPointSelectDialog(
                 }
                 Button(
                     onClick = { deleteAddress() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary),
+//                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_client_delete_image),

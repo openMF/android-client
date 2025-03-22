@@ -16,21 +16,20 @@ import com.mifos.core.common.network.Dispatcher
 import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.common.utils.Constants.DATA_TABLE_NAME_CLIENT
 import com.mifos.core.common.utils.MapDeserializer
-import com.mifos.core.model.objects.clients.Page
-import com.mifos.core.objects.noncore.DataTablePayload_Table.dataTableString
+import com.mifos.core.common.utils.Page
 import com.mifos.room.dao.ClientDao
 import com.mifos.room.entities.accounts.ClientAccounts
-import com.mifos.room.entities.accounts.loans.LoanAccount
-import com.mifos.room.entities.accounts.savings.SavingsAccount
-import com.mifos.room.entities.client.Client
-import com.mifos.room.entities.client.ClientDate
-import com.mifos.room.entities.client.ClientPayload
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.client.ClientDateEntity
+import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.noncore.ColumnHeader
 import com.mifos.room.entities.noncore.ColumnValue
-import com.mifos.room.entities.noncore.DataTable
-import com.mifos.room.entities.templates.clients.ClientsTemplate
-import com.mifos.room.entities.templates.clients.Options
+import com.mifos.room.entities.noncore.DataTableEntity
+import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import com.mifos.room.entities.templates.clients.OptionsEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -39,7 +38,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.map
 import java.lang.reflect.Type
 import javax.inject.Inject
@@ -75,11 +73,11 @@ class ClientDaoHelper @Inject constructor(
      * @param client Client
      * @return saved Client
      */
-    suspend fun saveClient(client: Client) {
+    suspend fun saveClient(client: ClientEntity) {
         val clientDate = client.activationDate.getOrNull(0)?.let { year ->
             client.activationDate.getOrNull(1)?.let { month ->
                 client.activationDate.getOrNull(2)?.let { day ->
-                    ClientDate(client.id.toLong(), 0, year, month, day)
+                    ClientDateEntity(client.id, 0, year, month, day)
                 }
             }
         }
@@ -93,9 +91,9 @@ class ClientDaoHelper @Inject constructor(
      * @return List Of Client
      */
 
-    fun readAllClients(): Flow<Page<Client>> {
+    fun readAllClients(): Flow<Page<ClientEntity>> {
         return clientDao.getAllClients().map { clients ->
-            Page<Client>().apply {
+            Page<ClientEntity>().apply {
                 pageItems = clients
             }
         }.flowOn(ioDispatcher)
@@ -123,7 +121,7 @@ class ClientDaoHelper @Inject constructor(
      * @param clientId of the client
      * @return A 'Flow' of 'Client'
      */
-    fun getClient(clientId: Int): Flow<Client?> {
+    fun getClient(clientId: Int): Flow<ClientEntity?> {
         return clientDao.getClientByClientId(clientId).map { client ->
             client?.copy(
                 activationDate = listOf(
@@ -149,12 +147,12 @@ class ClientDaoHelper @Inject constructor(
         val loanAccounts = clientAccounts.loanAccounts
         val savingsAccounts = clientAccounts.savingsAccounts
 
-        for (loanAccount: LoanAccount in loanAccounts) {
+        for (loanAccount: LoanAccountEntity in loanAccounts) {
             val updatedLoanAccount = loanAccount.copy(clientId = clientId.toLong())
             clientDao.insertLoanAccount(updatedLoanAccount)
         }
 
-        for (savingsAccount: SavingsAccount in savingsAccounts) {
+        for (savingsAccount: SavingsAccountEntity in savingsAccounts) {
             val updatedSavingsAccount = savingsAccount.copy(clientId = clientId.toLong())
             clientDao.insertSavingsAccount(updatedSavingsAccount)
         }
@@ -183,43 +181,51 @@ class ClientDaoHelper @Inject constructor(
      * @return void
      */
     suspend fun saveClientTemplate(
-        clientsTemplate: ClientsTemplate,
+        clientsTemplate: ClientsTemplateEntity,
     ) {
         clientDao.insertClientsTemplate(clientsTemplate)
-        clientDao.insertOfficeOptions(clientsTemplate.officeOptions)
-        clientDao.insertStaffOptions(clientsTemplate.staffOptions)
-        clientDao.insertSavingProductOptions(clientsTemplate.savingProductOptions)
-        for (option: Options in clientsTemplate.genderOptions) {
-            option.optionType = GENDER_OPTIONS
-            clientDao.insertOption(option)
+        clientsTemplate.officeOptions?.let { clientDao.insertOfficeOptions(it) }
+        clientsTemplate.staffOptions?.let { clientDao.insertStaffOptions(it) }
+        clientsTemplate.savingProductOptions?.let { clientDao.insertSavingProductOptions(it) }
+        clientsTemplate.genderOptions?.let {
+            for (option: OptionsEntity in it) {
+                val data = option.copy(optionType = GENDER_OPTIONS)
+                clientDao.insertOption(data)
+            }
         }
-        for (option: Options in clientsTemplate.clientTypeOptions) {
-            option.optionType = CLIENT_TYPE_OPTIONS
-            clientDao.insertOption(option)
+        clientsTemplate.clientTypeOptions?.let {
+            for (option: OptionsEntity in it) {
+                val data = option.copy(optionType = CLIENT_TYPE_OPTIONS)
+                clientDao.insertOption(data)
+            }
+        }
+        clientsTemplate.clientClassificationOptions?.let {
+            for (option: OptionsEntity in it) {
+                val data = option.copy(optionType = CLIENT_CLASSIFICATION_OPTIONS)
+                clientDao.insertOption(data)
+            }
         }
 
-        for (option: Options in clientsTemplate.clientClassificationOptions) {
-            option.optionType = CLIENT_CLASSIFICATION_OPTIONS
-            clientDao.insertOption(option)
-        }
-        clientDao.insertInterestTypes(clientsTemplate.clientLegalFormOptions)
+        clientsTemplate.clientLegalFormOptions?.let { clientDao.insertInterestTypes(it) }
 
-        for (dataTable: DataTable in clientsTemplate.dataTables) {
-            clientDao.deleteDataTables()
-            clientDao.deleteColumnHeaders()
-            clientDao.deleteColumnValues()
+        clientsTemplate.dataTables?.let {
+            for (dataTable: DataTableEntity in it) {
+                clientDao.deleteDataTables()
+                clientDao.deleteColumnHeaders()
+                clientDao.deleteColumnValues()
 
-            clientDao.insertDataTable(dataTable)
+                clientDao.insertDataTable(dataTable)
 
-            for (columnHeader: ColumnHeader in dataTable.columnHeaderData) {
-                val updatedColumnHeader =
-                    columnHeader.copy(registeredTableName = dataTable.applicationTableName)
-                clientDao.insertColumnHeader(updatedColumnHeader)
+                for (columnHeader: ColumnHeader in dataTable.columnHeaderData) {
+                    val updatedColumnHeader =
+                        columnHeader.copy(registeredTableName = dataTable.applicationTableName)
+                    clientDao.insertColumnHeader(updatedColumnHeader)
 
-                for (columnValue: ColumnValue in columnHeader.columnValues) {
-                    val updatedColumnValue =
-                        columnValue.copy(registeredTableName = dataTable.registeredTableName)
-                    clientDao.insertColumnValue(updatedColumnValue)
+                    for (columnValue: ColumnValue in columnHeader.columnValues) {
+                        val updatedColumnValue =
+                            columnValue.copy(registeredTableName = dataTable.registeredTableName)
+                        clientDao.insertColumnValue(updatedColumnValue)
+                    }
                 }
             }
         }
@@ -230,7 +236,7 @@ class ClientDaoHelper @Inject constructor(
      *
      * @return ClientTemplate
      */
-    fun readClientTemplate(): Flow<ClientsTemplate> = flow {
+    fun readClientTemplate(): Flow<ClientsTemplateEntity> = flow {
         val clientsTemplate = clientDao.getClientsTemplate()
         val officeOptions = clientDao.getOfficeOptions().first()
         val staffOptions = clientDao.getStaffOptions().first()
@@ -278,25 +284,29 @@ class ClientDaoHelper @Inject constructor(
      * @param clientPayload created in offline mode
      * @return Client
      */
-    suspend fun saveClientPayloadToDB(clientPayload: com.mifos.core.entity.client.ClientPayload?) {
-        val currentTime = System.currentTimeMillis()
-        val updatedClientPayload = clientPayload?.copy(
-            clientCreationTime = currentTime,
-        )
-        updatedClientPayload.datatables?.let { datatables ->
-            if (datatables.isNotEmpty()) {
-                datatables.forEach { dataTablePayload ->
-                    dataTablePayload.clientCreationTime = currentTime
-                    // Use kotlinx.serialization to convert data to JSON string
-                    val jsonString = json.encodeToString(dataTablePayload.data)
-                    dataTablePayload.dataTableString = jsonString
-                    clientDao.insertDataTablePayload(dataTablePayload)
-                }
-            }
-        }
-
-        clientDao.insertClientPayload(updatedClientPayload)
+    @Suppress("UnusedParameter")
+    suspend fun saveClientPayloadToDB(clientPayload: ClientPayloadEntity) {
     }
+    // todo Use kotlinx.serialization to convert data to JSON string and remove the upper function
+//    suspend fun saveClientPayloadToDB(clientPayload: com.mifos.core.entity.client.ClientPayload?) {
+//        val currentTime = System.currentTimeMillis()
+//        val updatedClientPayload = clientPayload?.copy(
+//            clientCreationTime = currentTime,
+//        )
+//        updatedClientPayload.datatables?.let { datatables ->
+//            if (datatables.isNotEmpty()) {
+//                datatables.forEach { dataTablePayload ->
+//                    dataTablePayload.clientCreationTime = currentTime
+//                    // Use kotlinx.serialization to convert data to JSON string
+//                    val jsonString = json.encodeToString(dataTablePayload.data)
+//                    dataTablePayload.dataTableString = jsonString
+//                    clientDao.insertDataTablePayload(dataTablePayload)
+//                }
+//            }
+//        }
+//
+//        clientDao.insertClientPayload(updatedClientPayload)
+//    }
 
     /**
      * Reading All Entries in the ClientPayload_Table
@@ -304,29 +314,8 @@ class ClientDaoHelper @Inject constructor(
      * @return List<ClientPayload></ClientPayload>>
      */
 
-    fun readAllClientPayload(): Flow<List<ClientPayload>> {
-        return flow {
-            val clientPayloads = clientDao.getAllClientPayload().firstOrNull().orEmpty()
-
-            if (clientPayloads.isNotEmpty()) {
-                for (clientPayload in clientPayloads) {
-                    val dataTablePayloads = clientPayload.clientCreationTime?.let { time ->
-                        clientDao.getDataTablePayloadByCreationTime(time)
-                            .mapNotNull { it.firstOrNull() }
-                    }
-
-                    if (dataTablePayloads != null) {
-                        for (dataTablePayload in dataTablePayloads) {
-                            dataTablePayload.data = gson.fromJson<HashMap<String, Any>>(
-                                dataTablePayload.dataTableString, type,
-                            )
-                        }
-                    }
-                    clientPayload.datatables = dataTablePayloads
-                }
-            }
-            emit(clientPayloads)
-        }.flowOn(ioDispatcher)
+    fun readAllClientPayload(): Flow<List<ClientPayloadEntity>> {
+        return clientDao.getAllClientPayload().flowOn(ioDispatcher)
     }
 
     /**
@@ -340,7 +329,7 @@ class ClientDaoHelper @Inject constructor(
     fun deleteAndUpdatePayloads(
         id: Int,
         clientCreationTIme: Long,
-    ): Flow<List<ClientPayload>> {
+    ): Flow<List<ClientPayloadEntity>> {
         return flow {
             clientDao.deleteClientPayloadById(id)
             clientDao.deleteDataTablePayloadByCreationTime(clientCreationTIme)
@@ -354,7 +343,7 @@ class ClientDaoHelper @Inject constructor(
      * @param clientPayload The client payload data to be updated in the database.
      * @return List<ClientPayload> A flow emitting the updated client payload.
      */
-    suspend fun updateDatabaseClientPayload(clientPayload: ClientPayload) {
+    suspend fun updateDatabaseClientPayload(clientPayload: ClientPayloadEntity) {
         clientDao.updateDatabaseClientPayload(clientPayload)
     }
 

@@ -9,15 +9,15 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.common.utils.Page
+import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.groups.GetGroupsResponseMapper
-import com.mifos.core.objects.clients.ActivatePayload
 import com.mifos.room.entities.accounts.GroupAccounts
-import com.mifos.room.entities.group.Group
-import com.mifos.room.entities.group.GroupPayload
+import com.mifos.room.entities.group.GroupEntity
+import com.mifos.room.entities.group.GroupPayloadEntity
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.helper.ClientDaoHelper
 import com.mifos.room.helper.GroupsDaoHelper
@@ -58,7 +58,7 @@ class DataManagerGroups @Inject constructor(
      * @param limit  Maximum Number of clients will come in response
      * @return Groups List page from offset to max Limit
      */
-    suspend fun getGroups(paged: Boolean, offset: Int, limit: Int): Page<Group> {
+    suspend fun getGroups(paged: Boolean, offset: Int, limit: Int): Page<GroupEntity> {
         return when (prefManager.userStatus) {
             false -> baseApiManager.getGroupApi().retrieveAll24(
                 null,
@@ -120,7 +120,7 @@ class DataManagerGroups @Inject constructor(
      *
      * @return Page<Group>
      </Group></Group> */
-    val databaseGroups: Flow<Page<Group>>
+    val databaseGroups: Flow<Page<GroupEntity>>
         get() = databaseHelperGroups.readAllGroups()
 
     /**
@@ -130,7 +130,7 @@ class DataManagerGroups @Inject constructor(
      * @param groupId Group Id
      * @return Group
      */
-    fun getGroup(groupId: Int): Flow<Group> {
+    fun getGroup(groupId: Int): Flow<GroupEntity> {
         return when (prefManager.userStatus) {
             false -> flow { emit(mBaseApiManager.groupApi.getGroup(groupId)) }
             true ->
@@ -147,7 +147,7 @@ class DataManagerGroups @Inject constructor(
      * @param group Group
      * @return Group
      */
-    suspend fun syncGroupInDatabase(group: Group) {
+    suspend fun syncGroupInDatabase(group: GroupEntity) {
         return databaseHelperGroups.saveGroup(group)
     }
 
@@ -205,7 +205,7 @@ class DataManagerGroups @Inject constructor(
      * @param groupPayload GroupPayload
      * @return Group
      */
-    suspend fun createGroup(groupPayload: GroupPayload): SaveResponse {
+    suspend fun createGroup(groupPayload: GroupPayloadEntity): SaveResponse {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.groupApi.createGroup(groupPayload)
 
@@ -222,7 +222,7 @@ class DataManagerGroups @Inject constructor(
      *
      * @return List<GroupPayload>
      </GroupPayload> */
-    val allDatabaseGroupPayload: Flow<List<GroupPayload>>
+    val allDatabaseGroupPayload: Flow<List<GroupPayloadEntity>>
         get() = databaseHelperGroups.realAllGroupPayload()
 
     /**
@@ -233,7 +233,7 @@ class DataManagerGroups @Inject constructor(
      * @param id of the groupPayload in Database
      * @return List<GroupPayload></GroupPayload>>
      */
-    fun deleteAndUpdateGroupPayloads(id: Int): Flow<List<GroupPayload>> {
+    fun deleteAndUpdateGroupPayloads(id: Int): Flow<List<GroupPayloadEntity>> {
         return databaseHelperGroups.deleteAndUpdateGroupPayloads(id)
     }
 
@@ -243,7 +243,7 @@ class DataManagerGroups @Inject constructor(
      * @param groupPayload GroupPayload
      * @return GroupPayload
      */
-    suspend fun updateGroupPayload(groupPayload: GroupPayload) {
+    suspend fun updateGroupPayload(groupPayload: GroupPayloadEntity) {
         databaseHelperGroups.updateGroupPayload(groupPayload)
     }
 

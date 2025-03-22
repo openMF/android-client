@@ -9,7 +9,9 @@
  */
 package com.mifos.room.di
 
+import com.mifos.room.dao.CenterDao
 import com.mifos.room.dao.ChargeDao
+import com.mifos.room.dao.ClientDao
 import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
@@ -27,28 +29,29 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DaoModule {
+
+    @Provides
+    @Singleton
+    fun providesCenterDao(database: MifosDatabase): CenterDao {
+        return database.centerDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providesChargeDao(database: MifosDatabase): ChargeDao {
+        return database.chargeDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providesClientDao(database: MifosDatabase): ClientDao {
+        return database.clientDao()
+    }
+
     @Provides
     @Singleton
     fun providesColumnValueDao(database: MifosDatabase): ColumnValueDao {
         return database.columnValueDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesLoanDao(database: MifosDatabase): LoanDao {
-        return database.loanDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesSurveyDao(database: MifosDatabase): SurveyDao {
-        return database.surveyDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesStaffDao(database: MifosDatabase): StaffDao {
-        return database.staffDao()
     }
 
     @Provides
@@ -59,19 +62,31 @@ object DaoModule {
 
     @Provides
     @Singleton
+    fun providesLoanDao(database: MifosDatabase): LoanDao {
+        return database.loanDao()
+    }
+
+    @Provides
+    @Singleton
     fun providesOfficeDao(database: MifosDatabase): OfficeDao {
         return database.officeDao()
     }
 
     @Provides
     @Singleton
-    fun providesClientDao(database: MifosDatabase): ChargeDao {
-        return database.chargeDao()
+    fun providesSavingsDao(database: MifosDatabase): SavingsDao {
+        return database.savingsDao()
     }
 
     @Provides
     @Singleton
-    fun providesSavingsDao(database: MifosDatabase): SavingsDao {
-        return database.savingsDao()
+    fun providesStaffDao(database: MifosDatabase): StaffDao {
+        return database.staffDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providesSurveyDao(database: MifosDatabase): SurveyDao {
+        return database.surveyDao()
     }
 }

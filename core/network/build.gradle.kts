@@ -12,16 +12,11 @@ plugins {
     alias(libs.plugins.mifos.android.library.jacoco)
     alias(libs.plugins.mifos.android.hilt)
     alias(libs.plugins.secrets)
-    alias(libs.plugins.kotlin.serialization)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
 }
 
 android {
     namespace = "com.mifos.core.network"
-
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
 
     testOptions {
         unitTests {
@@ -50,13 +45,11 @@ dependencies {
     // sdk client
     implementation(libs.fineract.client)
 
-    //DBFlow dependencies
-    kapt(libs.dbflow.processor)
-    implementation(libs.dbflow)
-
     //Square dependencies
-    implementation(libs.retrofit.core)
-    implementation(libs.converter.json)
+    implementation("com.squareup.retrofit2:retrofit:2.9.0") {
+        // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
+        exclude(module = "okhttp")
+    }
     implementation(libs.converter.gson)
     implementation(libs.converter.scalars)
     implementation(libs.adapter.rxjava)
@@ -69,7 +62,5 @@ dependencies {
     implementation(libs.stetho)
     implementation(libs.stetho.okhttp3)
 
-    implementation(libs.coil.kt.compose)
-
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.coil.kt2)
 }

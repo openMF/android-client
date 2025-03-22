@@ -14,7 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.feature.offline.R
-import com.mifos.room.entities.group.GroupPayload
+import com.mifos.room.entities.group.GroupPayloadEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,7 +38,7 @@ class SyncGroupPayloadsViewModel @Inject constructor(
     )
 
     val groupPayloadsList get() = _groupPayloadsList
-    private val _groupPayloadsList = MutableStateFlow<List<GroupPayload>>(listOf())
+    private val _groupPayloadsList = MutableStateFlow<List<GroupPayloadEntity>>(listOf())
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
@@ -94,7 +94,7 @@ class SyncGroupPayloadsViewModel @Inject constructor(
             }
     }
 
-    private fun syncGroupPayload(groupPayload: GroupPayload?) {
+    private fun syncGroupPayload(groupPayload: GroupPayloadEntity?) {
         viewModelScope.launch {
             _syncGroupPayloadsUiState.value =
                 SyncGroupPayloadsUiState.Loading

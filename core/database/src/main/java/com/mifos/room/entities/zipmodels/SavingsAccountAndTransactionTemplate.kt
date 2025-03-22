@@ -9,20 +9,20 @@
  */
 package com.mifos.room.entities.zipmodels
 
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 
 /**
  * Created by Rajan Maurya on 21/08/16.
  */
 class SavingsAccountAndTransactionTemplate {
-    var savingsAccountWithAssociations: SavingsAccountWithAssociations? = null
-    var savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate? = null
+    var savingsAccountWithAssociations: SavingsAccountWithAssociationsEntity? = null
+    var savingsAccountTransactionTemplate: SavingsAccountTransactionTemplateEntity? = null
 
     constructor()
     constructor(
-        savingsAccountWithAssociations: SavingsAccountWithAssociations?,
-        savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate?,
+        savingsAccountWithAssociations: SavingsAccountWithAssociationsEntity?,
+        savingsAccountTransactionTemplate: SavingsAccountTransactionTemplateEntity?,
     ) {
         this.savingsAccountWithAssociations = savingsAccountWithAssociations
         this.savingsAccountTransactionTemplate = savingsAccountTransactionTemplate

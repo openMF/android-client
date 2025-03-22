@@ -40,6 +40,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -59,52 +60,46 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import com.mifos.feature.splash.navigation.SplashScreens
+import com.mifos.mifosxdroid.HomeDestinationsScreen
 import com.mifos.mifosxdroid.R
-import com.mifos.mifosxdroid.components.HomeDestinationsScreen
 import com.mifos.mifosxdroid.components.MifosNavigationBar
 import com.mifos.mifosxdroid.components.Navigation
 import com.mifos.mifosxdroid.components.NavigationConstants
 import kotlinx.coroutines.launch
 
-fun NavGraphBuilder.homeGraph(
-    onClickLogout: () -> Unit,
-    onUpdateConfig: () -> Unit,
-) {
+fun NavGraphBuilder.homeGraph() {
     navigation(
         startDestination = HomeScreens.HomeScreen.route,
-        route = MifosNavGraph.MAIN_GRAPH,
+        route = "home_screen_route",
     ) {
-        homeNavigate(
-            onClickLogout = onClickLogout,
-            onUpdateConfig = onUpdateConfig,
-        )
+        homeNavigate()
     }
 }
 
-private fun NavGraphBuilder.homeNavigate(
-    onClickLogout: () -> Unit,
-    onUpdateConfig: () -> Unit,
-) {
+fun NavGraphBuilder.homeNavigate() {
     composable(
         route = HomeScreens.HomeScreen.route,
     ) {
-        HomeNavigation(
-            onClickLogout = onClickLogout,
-            onUpdateConfig = onUpdateConfig,
-        )
+        HomeNavigation()
+    }
+}
+
+fun NavController.navigateHome() {
+    navigate(HomeScreens.HomeScreen.route) {
+        popBackStack(route = SplashScreens.SplashScreenRoute.route, inclusive = true)
     }
 }
 
 @Composable
-private fun HomeNavigation(
-    onClickLogout: () -> Unit,
+fun HomeNavigation(
     modifier: Modifier = Modifier,
-    onUpdateConfig: () -> Unit,
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -192,7 +187,15 @@ private fun HomeNavigation(
                 navigationDrawerTabs.forEachIndexed { index, item ->
                     NavigationDrawerItem(
                         label = {
-                            Text(text = item.title)
+                            Text(
+                                text = item.title,
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    fontStyle = FontStyle.Normal,
+                                ),
+                                color = Color.Black,
+                            )
                         },
                         selected = index == selectedItemIndex,
                         onClick = {
@@ -226,8 +229,7 @@ private fun HomeNavigation(
                                 )
                             }
                         },
-                        modifier = Modifier
-                            .padding(NavigationDrawerItemDefaults.ItemPadding),
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                     )
                     if (index == (navigationDrawerTabs.size - 2)) {
                         HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
@@ -240,24 +242,18 @@ private fun HomeNavigation(
         Scaffold(
             topBar = {
                 if (isNavScreen) {
-                    val title = NavigationConstants.getNavTitle(route)
                     TopAppBar(
                         title = {
-                            Text(
-                                text = title,
-                                fontWeight = FontWeight.SemiBold,
-                            )
+                            Text("Dashboard")
                         },
                         navigationIcon = {
-                            IconButton(
-                                onClick = {
-                                    scope.launch {
-                                        drawerState.apply {
-                                            if (isClosed) open() else close()
-                                        }
+                            IconButton(onClick = {
+                                scope.launch {
+                                    drawerState.apply {
+                                        if (isClosed) open() else close()
                                     }
-                                },
-                            ) {
+                                }
+                            }) {
                                 Icon(
                                     imageVector = Icons.Default.Menu,
                                     contentDescription = "Menu",
@@ -265,27 +261,30 @@ private fun HomeNavigation(
                             }
                         },
                         actions = {
-                            IconButton(onClick = onClickLogout) {
+                            IconButton(onClick = { }) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Rounded.Logout,
                                     contentDescription = null,
                                 )
                             }
                         },
+                        colors = TopAppBarDefaults.topAppBarColors(Color.White),
                     )
                 }
             },
             bottomBar = {
                 if (isNavScreen) {
-                    route?.let {
-                        MifosNavigationBar(route = it) { target ->
-                            navController.apply {
-                                navigate(target) {
-                                    restoreState = true
-                                    launchSingleTop = true
-                                    graph.startDestinationRoute?.let {
-                                        popUpTo(route = HomeDestinationsScreen.SearchScreen.route) {
-                                            saveState = true
+                    Column {
+                        route?.let {
+                            MifosNavigationBar(route = it) { target ->
+                                navController.apply {
+                                    navigate(target) {
+                                        restoreState = true
+                                        launchSingleTop = true
+                                        graph.startDestinationRoute?.let {
+                                            popUpTo(route = HomeDestinationsScreen.SearchScreen.route) {
+                                                saveState = true
+                                            }
                                         }
                                     }
                                 }
@@ -294,12 +293,9 @@ private fun HomeNavigation(
                     }
                 }
             },
+            containerColor = Color.White,
         ) { paddingValues ->
-            Navigation(
-                navController = navController,
-                padding = paddingValues,
-                onUpdateConfig = onUpdateConfig,
-            )
+            Navigation(navController = navController, padding = paddingValues)
         }
     }
 }

@@ -14,19 +14,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
+import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.domain.useCases.DeleteIdentifierUseCase
-import com.mifos.core.domain.useCases.GetClientIdentifiersUseCase
 import com.mifos.feature.client.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ClientIdentifiersViewModel @Inject constructor(
-    private val getClientIdentifiersUseCase: GetClientIdentifiersUseCase,
+//    private val getClientIdentifiersUseCase: GetClientIdentifiersUseCase,
+    private val clientIdentifiersRepository: ClientIdentifiersRepository,
     private val deleteIdentifierUseCase: DeleteIdentifierUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -47,23 +49,18 @@ class ClientIdentifiersViewModel @Inject constructor(
     }
 
     fun loadIdentifiers(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        getClientIdentifiersUseCase(clientId).collect { result ->
-            when (result) {
-                is Resource.Error ->
-                    _clientIdentifiersUiState.value =
-                        ClientIdentifiersUiState.Error(
-                            R.string.feature_client_failed_to_load_client_identifiers,
-                        )
-
-                is Resource.Loading ->
-                    _clientIdentifiersUiState.value =
-                        ClientIdentifiersUiState.Loading
-
-                is Resource.Success ->
-                    _clientIdentifiersUiState.value =
-                        ClientIdentifiersUiState.ClientIdentifiers(result.data ?: emptyList())
+        _clientIdentifiersUiState.value =
+            ClientIdentifiersUiState.Loading
+        clientIdentifiersRepository.getClientIdentifiers(clientId)
+            .catch {
+                _clientIdentifiersUiState.value =
+                    ClientIdentifiersUiState.Error(
+                        R.string.feature_client_failed_to_load_client_identifiers,
+                    )
+            }.collect {
+                _clientIdentifiersUiState.value =
+                    ClientIdentifiersUiState.ClientIdentifiers(it)
             }
-        }
     }
 
     fun deleteIdentifier(clientId: Int, identifierId: Int) = viewModelScope.launch(Dispatchers.IO) {

@@ -10,7 +10,6 @@
 package com.mifos.feature.savings.savingsAccountApproval
 
 import android.widget.Toast
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,11 +52,8 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
+import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.account.loan.SavingsApproval
 import com.mifos.feature.savings.R
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -99,7 +94,6 @@ internal fun SavingsAccountApprovalScreen(
         snackbarHostState = snackbarHostState,
         title = stringResource(id = R.string.feature_savings_approve_savings),
         onBackPressed = navigateBack,
-        icon = MifosIcons.arrowBack,
     ) {
         Box(
             modifier = Modifier
@@ -207,7 +201,7 @@ private fun SavingsAccountApprovalContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 approvalDate,
             ),
-            label = R.string.feature_savings_approval_savings_date,
+            label = stringResource(R.string.feature_savings_approval_savings_date),
         ) {
             showDatePickerDialog = true
         }
@@ -228,9 +222,6 @@ private fun SavingsAccountApprovalContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .heightIn(44.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
             onClick = {
                 if (Network.isOnline(context)) {
                     approveLoan.invoke(

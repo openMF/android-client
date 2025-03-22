@@ -10,7 +10,7 @@
 package com.mifos.feature.client.clientCharges
 
 import androidx.paging.PagingData
-import com.mifos.core.entity.client.Charges
+import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -22,5 +22,5 @@ sealed class ClientChargeUiState {
 
     data class Error(val message: Int) : ClientChargeUiState()
 
-    data class ChargesList(val chargesPage: Flow<PagingData<Charges>>) : ClientChargeUiState()
+    data class ChargesList(val chargesPage: Flow<PagingData<ChargesEntity>>) : ClientChargeUiState()
 }

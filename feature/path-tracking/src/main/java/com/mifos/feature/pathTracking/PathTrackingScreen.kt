@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MyLocation
@@ -47,6 +48,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -74,10 +77,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.PermissionBox
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.users.UserLocation
+import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.feature.path.tracking.R
 
 @Composable
@@ -174,10 +174,10 @@ internal fun PathTrackingScreen(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
             ),
-            title = R.string.feature_path_tracking_permission_required,
-            description = R.string.feature_path_tracking_approve_permission_description_location,
-            confirmButtonText = R.string.feature_path_tracking_proceed,
-            dismissButtonText = R.string.feature_path_tracking_dismiss,
+            title = stringResource(R.string.feature_path_tracking_permission_required),
+            description = stringResource(R.string.feature_path_tracking_approve_permission_description_location),
+            confirmButtonText = stringResource(R.string.feature_path_tracking_proceed),
+            dismissButtonText = stringResource(R.string.feature_path_tracking_dismiss),
             onGranted = {
                 updateUserStatus(true)
             },
@@ -186,7 +186,6 @@ internal fun PathTrackingScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_path_tracking_track_my_path),
         onBackPressed = onBackPressed,
         actions = {

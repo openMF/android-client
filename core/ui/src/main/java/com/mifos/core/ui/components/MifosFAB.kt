@@ -11,7 +11,6 @@ package com.mifos.core.ui.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,7 +23,9 @@ fun MifosFAB(
     icon: ImageVector,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = FloatingActionButtonDefaults.containerColor,
+    // todo use bluesecondary color
+//    containerColor: Color = BlueSecondary,
+    containerColor: Color = Color.Blue,
 ) {
     Box(
         modifier = modifier,

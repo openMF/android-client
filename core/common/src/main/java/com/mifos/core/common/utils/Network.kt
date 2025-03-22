@@ -9,9 +9,11 @@
  */
 package com.mifos.core.common.utils
 
+import android.Manifest
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import androidx.annotation.RequiresPermission
 
 /**
  * Created by Aditya Gupta on 11/02/24.
@@ -19,6 +21,7 @@ import android.net.NetworkCapabilities
 
 object Network {
 
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     fun isOnline(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

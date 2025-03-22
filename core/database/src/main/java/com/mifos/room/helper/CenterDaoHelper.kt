@@ -11,12 +11,12 @@ package com.mifos.room.helper
 
 import com.mifos.core.common.network.Dispatcher
 import com.mifos.core.common.network.MifosDispatchers
-import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.common.utils.Page
 import com.mifos.room.dao.CenterDao
 import com.mifos.room.entities.accounts.CenterAccounts
-import com.mifos.room.entities.center.CenterPayload
-import com.mifos.room.entities.group.Center
-import com.mifos.room.entities.group.CenterDate
+import com.mifos.room.entities.center.CenterPayloadEntity
+import com.mifos.room.entities.group.CenterDateEntity
+import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.CenterWithAssociations
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -42,17 +42,19 @@ class CenterDaoHelper @Inject constructor(
      */
     // (todo from old code)
     //  TODO Implement Observable Transaction to load Center List
-    fun readAllCenters(): Flow<Page<Center>> {
+    fun readAllCenters(): Flow<Page<CenterEntity>> {
         return centerDatabase.readAllCenters().map { centers ->
-            Page<Center>().apply { pageItems = centers }
+            Page<CenterEntity>().apply { pageItems = centers }
         }.flowOn(ioDispatcher)
     }
 
-    suspend fun saveCenterPayload(centerPayload: CenterPayload?) {
-        centerDatabase.saveCenterPayload(centerPayload)
+    suspend fun saveCenterPayload(centerPayload: CenterPayloadEntity?) {
+        centerPayload?.let {
+            centerDatabase.saveCenterPayload(centerPayload)
+        }
     }
 
-    fun readAllCenterPayload(): Flow<List<CenterPayload>> {
+    fun readAllCenterPayload(): Flow<List<CenterPayloadEntity>> {
         return centerDatabase.readAllCenterPayload()
             .flowOn(ioDispatcher)
     }
@@ -77,15 +79,15 @@ class CenterDaoHelper @Inject constructor(
      * @param center
      * @return Observable.just(Center)
      */
-    suspend fun saveCenter(center: Center) {
-        var updatedCenter: Center = center
+    suspend fun saveCenter(center: CenterEntity) {
+        var updatedCenter: CenterEntity = center
 
         if (center.activationDate.isNotEmpty()) {
             val centerDate = center.id?.let {
                 center.activationDate[0]?.let { it1 ->
                     center.activationDate[1]?.let { it2 ->
                         center.activationDate[2]?.let { it3 ->
-                            CenterDate(
+                            CenterDateEntity(
                                 it.toLong(),
                                 0,
                                 it1,
@@ -108,14 +110,14 @@ class CenterDaoHelper @Inject constructor(
      * @return List<CenterPayload></CenterPayload>>
      */
     // todo recheck logic
-    fun deleteAndUpdateCenterPayloads(id: Int): Flow<List<CenterPayload>> {
+    fun deleteAndUpdateCenterPayloads(id: Int): Flow<List<CenterPayloadEntity>> {
         return flow {
             centerDatabase.deleteCenterPayloadById(id)
             emitAll(centerDatabase.readAllCenterPayload())
         }.flowOn(ioDispatcher)
     }
 
-    suspend fun updateDatabaseCenterPayload(centerPayload: CenterPayload) {
+    suspend fun updateDatabaseCenterPayload(centerPayload: CenterPayloadEntity) {
         centerDatabase.updateCenterPayload(centerPayload)
     }
 
@@ -139,8 +141,11 @@ class CenterDaoHelper @Inject constructor(
             centerDatabase.saveLoanAccount(updatedLoanAccount)
         }
         for (savingsAccount in savingsAccounts) {
-            savingsAccount.centerId = centerId.toLong()
-            centerDatabase.saveSavingsAccount(savingsAccount)
+            centerDatabase.saveSavingsAccount(
+                savingsAccount.copy(
+                    centerId = centerId.toLong(),
+                ),
+            )
         }
         for (memberLoanAccount in memberLoanAccounts) {
             val updatedLoanAccount = memberLoanAccount.copy(centerId = centerId.toLong())

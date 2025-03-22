@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.individualCollectionSheet.paymentDetails
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +21,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -49,10 +47,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageResult
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
+import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
+import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
-import com.mifos.core.objects.collectionsheets.LoanAndClientName
 import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 
@@ -81,11 +78,11 @@ internal fun PaymentsDetailsScreen(
     payload: IndividualCollectionSheetPayload,
     loanAndClientNameItem: LoanAndClientName,
     paymentTypeOptionList: List<String>,
-    paymentTypeOptions: List<com.mifos.core.model.objects.account.loan.PaymentTypeOptions>,
+    paymentTypeOptions: List<PaymentTypeOptions>,
     modifier: Modifier = Modifier,
     getClientImage: (Int) -> ImageResult?,
 ) {
-    val loanCollectionSheetItem = loanAndClientNameItem?.loan
+    val loanCollectionSheetItem = loanAndClientNameItem.loan
     val scrollState = rememberScrollState()
 
     val bulkRepaymentTransactions by rememberSaveable { mutableStateOf(BulkRepaymentTransactions()) }
@@ -106,11 +103,11 @@ internal fun PaymentsDetailsScreen(
     var noPaymentVisibility by rememberSaveable { mutableStateOf(true) }
 
     fun onSaveAdditionalItem(transaction: BulkRepaymentTransactions, position: Int) {
-        payload!!.bulkRepaymentTransactions[position] = transaction
+        payload.bulkRepaymentTransactions[position] = transaction
     }
 
     fun onShowSheetMandatoryItem(transaction: BulkRepaymentTransactions, position: Int) {
-        payload!!.bulkRepaymentTransactions[position] = transaction
+        payload.bulkRepaymentTransactions[position] = transaction
     }
 
     fun cancelAdditional() { // done
@@ -118,7 +115,7 @@ internal fun PaymentsDetailsScreen(
             if (totalCharges.isNotEmpty()) totalCharges.toDoubleOrNull() ?: 0.0 else 0.0
         val charge2: Double = if (totalDues.isNotEmpty()) totalDues.toDoubleOrNull() ?: 0.0 else 0.0
 
-        bulkRepaymentTransactions.loanId = loanAndClientNameItem?.loan!!.loanId
+        bulkRepaymentTransactions.loanId = loanAndClientNameItem.loan!!.loanId
         bulkRepaymentTransactions.transactionAmount = charge1 + charge2
         showAdditionalDetails = false
         bulkRepaymentTransactions.paymentTypeId = null
@@ -133,7 +130,7 @@ internal fun PaymentsDetailsScreen(
     fun saveAdditional() {
         var isAnyDetailNull = false
 
-        bulkRepaymentTransactions.loanId = loanAndClientNameItem?.loan!!.loanId
+        bulkRepaymentTransactions.loanId = loanAndClientNameItem.loan!!.loanId
         val charge1: Double =
             if (totalCharges.isNotEmpty()) totalCharges.toDoubleOrNull() ?: 0.0 else 0.0
         val charge2: Double = if (totalDues.isNotEmpty()) totalDues.toDoubleOrNull() ?: 0.0 else 0.0
@@ -214,7 +211,7 @@ internal fun PaymentsDetailsScreen(
                         .padding(end = 16.dp),
                 ) {
                     Text(
-                        text = loanAndClientNameItem?.clientName ?: "This is Tv name",
+                        text = loanAndClientNameItem.clientName ?: "This is Tv name",
                         style = TextStyle(
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
@@ -272,9 +269,6 @@ internal fun PaymentsDetailsScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
             onClick = {
                 showAdditionalDetails = !showAdditionalDetails
             },
@@ -309,7 +303,7 @@ internal fun PaymentsDetailsScreen(
                         onValueChanged = { paymentType = it },
                         onOptionSelected = { index, value ->
                             paymentType = value
-                            bulkRepaymentTransactions.paymentTypeId = paymentTypeOptions!![index].id
+                            bulkRepaymentTransactions.paymentTypeId = paymentTypeOptions[index].id
                         },
                         options = paymentTypeOptionList ?: emptyList(),
                         readOnly = true,
@@ -385,9 +379,6 @@ private fun ButtonRow(
     ) {
         Button(
             modifier = Modifier.height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
             onClick = { cancelAdditional() },
         ) {
             Text(text = stringResource(id = R.string.feature_collection_sheet_cancel))
@@ -395,9 +386,6 @@ private fun ButtonRow(
 
         Button(
             modifier = Modifier.height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
             onClick = { saveAdditional() },
         ) {
             Text(text = stringResource(id = R.string.feature_collection_sheet_save))

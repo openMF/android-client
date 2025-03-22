@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.offline.syncGroupPayloads
 
-import com.mifos.core.entity.group.GroupPayload
 import com.mifos.feature.offline.R
+import com.mifos.room.entities.group.GroupPayloadEntity
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -36,7 +36,7 @@ enum class GroupPayloadEmptyState(
 }
 
 val dummyGroupPayloads = listOf(
-    GroupPayload(
+    GroupPayloadEntity(
         id = 1,
         errorMessage = null,
         officeId = 101,
@@ -48,7 +48,7 @@ val dummyGroupPayloads = listOf(
         locale = "en",
         dateFormat = "dd MMM yyyy",
     ),
-    GroupPayload(
+    GroupPayloadEntity(
         id = 2,
         errorMessage = "Error syncing group",
         officeId = 102,
@@ -60,7 +60,7 @@ val dummyGroupPayloads = listOf(
         locale = "en",
         dateFormat = "dd MMM yyyy",
     ),
-    GroupPayload(
+    GroupPayloadEntity(
         id = 3,
         errorMessage = null,
         officeId = 103,
