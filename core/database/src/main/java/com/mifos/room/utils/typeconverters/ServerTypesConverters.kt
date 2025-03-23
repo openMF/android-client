@@ -10,7 +10,7 @@
 package com.mifos.room.utils.typeconverters
 
 import androidx.room.TypeConverter
-import com.mifos.room.entities.accounts.savings.ServerTypes
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity.ServerTypes
 
 class ServerTypesConverters {
     @TypeConverter

@@ -9,8 +9,10 @@
  */
 package com.mifos.feature.offline.syncSavingsAccountTransaction
 
+import android.Manifest
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,10 +59,10 @@ import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.offline.R
-import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 
 @Composable
 internal fun SyncSavingsAccountTransactionScreenRoute(
@@ -109,7 +111,6 @@ internal fun SyncSavingsAccountTransactionScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_offline_sync_savingsAccountTransactions),
         onBackPressed = onBackPressed,
         actions = {
@@ -140,7 +141,7 @@ internal fun SyncSavingsAccountTransactionScreen(
                     is SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions -> {
                         MifosEmptyUi(
                             text = stringResource(id = R.string.feature_offline_nothing_to_sync),
-                            icon = MifosIcons.sync,
+                            icon = MifosIcons.Sync,
                         )
                     }
 
@@ -171,8 +172,8 @@ internal fun SyncSavingsAccountTransactionScreen(
 
 @Composable
 private fun SavingsAccountTransactionItem(
-    transaction: SavingsAccountTransactionRequest,
-    paymentTypeOptions: List<PaymentTypeOption>,
+    transaction: SavingsAccountTransactionRequestEntity,
+    paymentTypeOptions: List<PaymentTypeOptionEntity>,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -272,13 +273,14 @@ private fun ErrorStateScreen(
 
 fun getPaymentTypeName(
     paymentId: Int,
-    paymentTypeOptions: List<PaymentTypeOption>?,
+    paymentTypeOptions: List<PaymentTypeOptionEntity>?,
 ): String? {
     return paymentTypeOptions
         ?.firstOrNull { it.id == paymentId }
         ?.name
 }
 
+@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 private fun checkNetworkConnectionAndSync(
     context: Context,
     syncSavingsAccountTransactions: () -> Unit,
@@ -325,7 +327,7 @@ private fun SyncSavingsAccountTransactionScreenPreview(
 
 // Sample data for previews
 val sampleSavingsAccountTransactions = List(5) { index ->
-    SavingsAccountTransactionRequest(
+    SavingsAccountTransactionRequestEntity(
         savingAccountId = index,
         transactionDate = "2023-07-${15 + index}",
         transactionAmount = "${100 + index * 10}",
@@ -340,7 +342,7 @@ val sampleSavingsAccountTransactions = List(5) { index ->
 }
 
 val samplePaymentTypeOptions = List(3) { index ->
-    PaymentTypeOption(
+    PaymentTypeOptionEntity(
         id = index,
         name = "Payment Type $index",
         description = "Description for Payment Type $index",

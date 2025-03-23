@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.client.createNewClient
 
-import com.mifos.core.entity.templates.clients.ClientsTemplate
+import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -26,7 +26,7 @@ sealed class CreateNewClientUiState {
 
     data class OnImageUploadSuccess(val message: Int) : CreateNewClientUiState()
 
-    data class ShowClientTemplate(val clientsTemplate: ClientsTemplate) : CreateNewClientUiState()
+    data class ShowClientTemplate(val clientsTemplate: ClientsTemplateEntity) : CreateNewClientUiState()
 
     data class ShowClientCreatedSuccessfully(val message: Int) : CreateNewClientUiState()
 

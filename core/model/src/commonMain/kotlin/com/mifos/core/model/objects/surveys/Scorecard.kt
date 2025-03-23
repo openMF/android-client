@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.surveys
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
 
 /**
  * Created by Nasim Banu on 28,January,2016.
@@ -22,7 +22,7 @@ data class Scorecard(
 
     var clientId: Int = 0,
 
-    var createdOn: Date? = null,
-
+//    var createdOn: Date? = null,
+    var createdOn: List<Int> = emptyList(),
     var scorecardValues: List<ScorecardValues>? = null,
 ) : Parcelable

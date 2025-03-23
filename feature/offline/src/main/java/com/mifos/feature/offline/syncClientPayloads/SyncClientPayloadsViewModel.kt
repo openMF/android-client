@@ -15,7 +15,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.FileUtils.LOG_TAG
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.room.entities.client.ClientPayload
+import com.mifos.room.entities.client.ClientPayloadEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -42,7 +42,7 @@ class SyncClientPayloadsViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
-    private var mClientPayloads: MutableList<ClientPayload> = mutableListOf()
+    private var mClientPayloads: MutableList<ClientPayloadEntity> = mutableListOf()
     private var mClientSyncIndex = 0
 
     fun getUserStatus(): Boolean {
@@ -70,7 +70,7 @@ class SyncClientPayloadsViewModel @Inject constructor(
         }
     }
 
-    private fun syncClientPayload(clientPayload: ClientPayload?) {
+    private fun syncClientPayload(clientPayload: ClientPayloadEntity?) {
         viewModelScope.launch {
             _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
 
@@ -113,7 +113,7 @@ class SyncClientPayloadsViewModel @Inject constructor(
         }
     }
 
-    fun updateClientPayload(clientPayload: ClientPayload?) {
+    fun updateClientPayload(clientPayload: ClientPayloadEntity?) {
         viewModelScope.launch {
             _syncClientPayloadsUiState.value = SyncClientPayloadsUiState.ShowProgressbar
 

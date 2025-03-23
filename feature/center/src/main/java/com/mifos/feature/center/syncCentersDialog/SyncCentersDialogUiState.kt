@@ -10,7 +10,7 @@
 package com.mifos.feature.center.syncCentersDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.room.entities.group.Center
+import com.mifos.room.entities.group.CenterEntity
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -34,5 +34,5 @@ data class SyncCentersDialogData(
     val totalGroupsSyncCount: Int = 0,
     val clientSyncCount: Int = 0,
     val failedSyncGroupCount: Int = 0,
-    val centersList: List<Center> = listOf(),
+    val centersList: List<CenterEntity> = listOf(),
 )

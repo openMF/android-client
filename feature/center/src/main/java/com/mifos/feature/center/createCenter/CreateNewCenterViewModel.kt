@@ -14,7 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.feature.center.R
-import com.mifos.room.entities.center.CenterPayload
+import com.mifos.room.entities.center.CenterPayloadEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,8 +24,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateNewCenterViewModel @Inject constructor(
-//    private val getOfficeListUseCase: GetOfficeListUseCase,
-//    private val createNewCenterUseCase: CreateNewCenterUseCase,
     private val repository: CreateNewCenterRepository,
     private val collectionSheetRepo: NewIndividualCollectionSheetRepository,
 ) : ViewModel() {
@@ -50,7 +48,7 @@ class CreateNewCenterViewModel @Inject constructor(
         }
     }
 
-    fun createNewCenter(centerPayload: CenterPayload) {
+    fun createNewCenter(centerPayload: CenterPayloadEntity) {
         viewModelScope.launch {
             _createNewCenterUiState.value = CreateNewCenterUiState.Loading
             try {

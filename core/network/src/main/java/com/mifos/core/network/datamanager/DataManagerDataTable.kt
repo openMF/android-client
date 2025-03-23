@@ -10,12 +10,11 @@
 package com.mifos.core.network.datamanager
 
 import com.google.gson.JsonArray
-import com.mifos.core.databasehelper.DatabaseHelperDataTable
-import com.mifos.core.entity.noncore.DataTable
+import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.dataTable.GetDataTablesResponseMapper
-import com.mifos.core.objects.users.UserLocation
+import com.mifos.room.entities.noncore.DataTableEntity
 import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import rx.Observable
 import javax.inject.Inject
@@ -30,7 +29,6 @@ import javax.inject.Singleton
 @Singleton
 class DataManagerDataTable @Inject constructor(
     val mBaseApiManager: BaseApiManager,
-    val mDatabaseHelperDataTable: DatabaseHelperDataTable,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
 ) {
     /**
@@ -42,7 +40,7 @@ class DataManagerDataTable @Inject constructor(
      * @param tableName DataTable Name
      * @return List<DataTable>
      </DataTable> */
-    suspend fun getDataTable(tableName: String?): List<DataTable> {
+    suspend fun getDataTable(tableName: String?): List<DataTableEntity> {
         return baseApiManager.getDataTableApi().getDatatables(tableName).map(
             GetDataTablesResponseMapper::mapFromEntity,
         )

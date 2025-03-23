@@ -16,13 +16,13 @@ import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.entity.accounts.loan.Loans
-import com.mifos.core.entity.client.ClientPayload
-import com.mifos.core.entity.noncore.DataTable
-import com.mifos.core.entity.noncore.DataTablePayload
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.feature.data_table.R
+import com.mifos.room.entities.accounts.loans.Loan
+import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.entities.noncore.DataTableEntity
+import com.mifos.room.entities.noncore.DataTablePayload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -50,14 +50,14 @@ class DataTableListViewModel @Inject constructor(
         MutableStateFlow(DataTableListUiState.Loading)
     val dataTableListUiState: StateFlow<DataTableListUiState> = _dataTableListUiState
 
-    private val _dataTableList: MutableStateFlow<List<DataTable>?> = MutableStateFlow(null)
-    val dataTableList: StateFlow<List<DataTable>?> = _dataTableList
+    private val _dataTableList: MutableStateFlow<List<DataTableEntity>?> = MutableStateFlow(null)
+    val dataTableList: StateFlow<List<DataTableEntity>?> = _dataTableList
 
     private var requestType: Int = 0
     private var dataTablePayloadElements: ArrayList<DataTablePayload>? = null
-    private var clientLoansPayload: LoansPayload? = null
+    private var clientLoanPayload: LoansPayload? = null
     private var groupLoanPayload: GroupLoanPayload? = null
-    private var clientPayload: ClientPayload? = null
+    private var clientPayload: ClientPayloadEntity? = null
     private var formWidgetsList: MutableList<List<FormWidget>> = ArrayList()
 
     fun getUserStatus(): Boolean {
@@ -65,7 +65,7 @@ class DataTableListViewModel @Inject constructor(
     }
 
     fun initArgs(
-        dataTables: List<DataTable>,
+        dataTables: List<DataTableEntity>,
         requestType: Int,
         formWidgetsList: MutableList<List<FormWidget>>,
         payload: Any?,
@@ -74,28 +74,30 @@ class DataTableListViewModel @Inject constructor(
         this.requestType = requestType
         this.formWidgetsList = formWidgetsList
         when (requestType) {
-            Constants.CLIENT_LOAN -> clientLoansPayload = payload as LoansPayload?
+            Constants.CLIENT_LOAN -> clientLoanPayload = payload as LoansPayload?
             Constants.GROUP_LOAN -> groupLoanPayload = payload as GroupLoanPayload?
-            Constants.CREATE_CLIENT -> clientPayload = payload as ClientPayload?
+            Constants.CREATE_CLIENT -> clientPayload = payload as ClientPayloadEntity?
         }
     }
 
     fun processDataTable() {
         val dataTables = dataTableList.value ?: listOf()
         for (i in dataTables.indices) {
-            val dataTablePayload = DataTablePayload()
-            dataTablePayload.registeredTableName = dataTables[i].registeredTableName
-            dataTablePayload.data = addDataTableInput(formWidgets = formWidgetsList[i])
+            val dataTablePayload = DataTablePayload(
+                registeredTableName = dataTables[i].registeredTableName,
+                data = addDataTableInput(formWidgets = formWidgetsList[i]),
+            )
+
             dataTablePayloadElements?.add(dataTablePayload)
         }
         when (requestType) {
             Constants.CLIENT_LOAN -> {
-                clientLoansPayload?.dataTables = dataTablePayloadElements
-                createLoansAccount(clientLoansPayload)
+                clientLoanPayload?.dataTables = dataTablePayloadElements
+                createLoanAccount(clientLoanPayload)
             }
 
             Constants.CREATE_CLIENT -> {
-                clientPayload?.datatables = dataTablePayloadElements
+                clientPayload = clientPayload?.copy(datatables = dataTablePayloadElements)
                 clientPayload?.let { createClient(it) }
             }
 
@@ -105,12 +107,12 @@ class DataTableListViewModel @Inject constructor(
         }
     }
 
-    private fun createLoansAccount(loansPayload: LoansPayload?) {
+    private fun createLoanAccount(loansPayload: LoansPayload?) {
         _dataTableListUiState.value = DataTableListUiState.Loading
         repository.createLoansAccount(loansPayload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Loans>() {
+            .subscribe(object : Subscriber<Loan>() {
                 override fun onCompleted() {
                 }
 
@@ -119,7 +121,7 @@ class DataTableListViewModel @Inject constructor(
                         DataTableListUiState.ShowMessage(R.string.feature_data_table_generic_failure_message)
                 }
 
-                override fun onNext(loans: Loans) {
+                override fun onNext(loans: Loan) {
                     _dataTableListUiState.value =
                         DataTableListUiState.ShowMessage(R.string.feature_data_table_loan_creation_success)
                 }
@@ -131,7 +133,7 @@ class DataTableListViewModel @Inject constructor(
         repository.createGroupLoansAccount(loansPayload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<Loans?>() {
+            .subscribe(object : Subscriber<Loan?>() {
                 override fun onCompleted() {
                 }
 
@@ -140,22 +142,23 @@ class DataTableListViewModel @Inject constructor(
                         DataTableListUiState.ShowMessage(R.string.feature_data_table_generic_failure_message)
                 }
 
-                override fun onNext(loans: Loans?) {
+                override fun onNext(loans: Loan?) {
                     _dataTableListUiState.value =
                         DataTableListUiState.ShowMessage(R.string.feature_data_table_loan_creation_success)
                 }
             })
     }
 
-    private fun createClient(clientPayload: ClientPayload) {
+    private fun createClient(clientPayload: ClientPayloadEntity) {
         viewModelScope.launch {
             _dataTableListUiState.value = DataTableListUiState.Loading
 
             try {
-                val client = repository.createClient(clientPayload)
+                val clientId = repository.createClient(clientPayload)
 
-                if (client?.clientId != null) {
-                    _dataTableListUiState.value = DataTableListUiState.Success(client = client)
+                if (clientId != null) {
+                    // todo uncomment and resolve
+//                    _dataTableListUiState.value = DataTableListUiState.Success(client = clientPayload)
                 } else {
                     _dataTableListUiState.value =
                         DataTableListUiState.Success(messageResId = R.string.feature_data_table_waiting_for_checker_approval)

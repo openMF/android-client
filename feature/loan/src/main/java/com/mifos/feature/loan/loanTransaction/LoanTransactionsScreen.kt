@@ -47,6 +47,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -62,13 +63,11 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.account.loan.Transaction
-import com.mifos.core.objects.account.loan.Type
+import com.mifos.core.model.objects.account.loan.Transaction
+import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.loan.R
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 
 /**
  * Created by Pronay Sarker on 04/07/2024 (11:31 AM)
@@ -106,7 +105,6 @@ internal fun LoanTransactionsScreen(
     MifosScaffold(
         snackbarHostState = snackbarHostState,
         title = stringResource(id = R.string.feature_loan_loan_transactions),
-        icon = MifosIcons.arrowBack,
         onBackPressed = navigateBack,
     ) {
         Box(
@@ -177,7 +175,7 @@ private fun LoanTransactionsItemRow(transaction: Transaction) {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
-                        imageVector = if (!showDetails) MifosIcons.arrowDown else MifosIcons.arrowUp,
+                        imageVector = if (!showDetails) MifosIcons.ArrowDown else MifosIcons.ArrowUp,
                         contentDescription = "",
                     )
 
@@ -297,7 +295,7 @@ private fun LoanTransactionsItemDetailsCard(
                 )
             }
 
-            HorizontalDivider(color = Black)
+            HorizontalDivider(color = Color.Black)
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -414,7 +412,7 @@ private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTra
             LoanTransactionsUiState.ShowFetchingError(""),
             LoanTransactionsUiState.ShowProgressBar,
             LoanTransactionsUiState.ShowLoanTransaction(
-                LoanWithAssociations(
+                LoanWithAssociationsEntity(
                     transactions = listOf(
                         transaction,
                         transaction,

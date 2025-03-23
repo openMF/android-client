@@ -39,6 +39,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -60,12 +61,9 @@ import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.entity.client.Charges
 import com.mifos.feature.client.R
 import com.mifos.feature.client.clientChargeDialog.ChargeDialogScreen
+import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
@@ -125,7 +123,6 @@ internal fun ClientChargesScreen(
     }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_client_charges),
         onBackPressed = onBackPressed,
         actions = {
@@ -161,7 +158,7 @@ internal fun ClientChargesScreen(
 
 @Composable
 private fun ClientChargeContent(
-    chargesPage: LazyPagingItems<Charges>,
+    chargesPage: LazyPagingItems<ChargesEntity>,
     onRetry: () -> Unit,
 ) {
     when (chargesPage.loadState.refresh) {
@@ -216,16 +213,16 @@ private fun ClientChargeContent(
 }
 
 @Composable
-private fun ChargesItems(charges: Charges) {
+private fun ChargesItems(charges: ChargesEntity) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         shape = RoundedCornerShape(0.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = BlueSecondary,
-        ),
+//        colors = CardDefaults.cardColors(
+//            containerColor = BlueSecondary,
+//        ),
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         MifosCenterDetailsText(
@@ -265,7 +262,6 @@ private fun MifosCenterDetailsText(field: String, value: String) {
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
             ),
-            color = Black,
             textAlign = TextAlign.Start,
         )
         Text(
@@ -309,5 +305,5 @@ private fun ClientChargesScreenPreview(
 }
 
 val sampleClientCharge = List(10) {
-    Charges(name = "charge $it", amount = it.toDouble())
+    ChargesEntity(name = "charge $it", amount = it.toDouble())
 }

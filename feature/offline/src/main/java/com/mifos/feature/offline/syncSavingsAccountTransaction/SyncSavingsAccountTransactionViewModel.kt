@@ -11,12 +11,11 @@ package com.mifos.feature.offline.syncSavingsAccountTransaction
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.feature.offline.R
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,10 +31,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SyncSavingsAccountTransactionViewModel @Inject constructor(
-    private val processTransactionUseCase: ProcessTransactionUseCase,
-//    private val allSavingsAccountTransactionsUseCase: AllSavingsAccountTransactionsUseCase,
-//    private val updateLoanRepaymentTransactionSavingsUseCase: UpdateLoanRepaymentTransactionSavingsUseCase,
-//    private val deleteAndUpdateTransactionsUseCase: DeleteAndUpdateTransactionsUseCase,
+//    private val processTransactionUseCase: ProcessTransactionUseCase,
     private val repository: SyncSavingsAccountTransactionRepository,
     private val prefManager: PrefManager,
 ) : ViewModel() {
@@ -45,7 +41,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
     val syncSavingsAccountTransactionUiState: StateFlow<SyncSavingsAccountTransactionUiState>
         get() = _syncSavingsAccountTransactionUiState
 
-    private var mPaymentTypeOptions: List<PaymentTypeOption> = emptyList()
+    private var mPaymentTypeOptions: List<PaymentTypeOptionEntity> = emptyList()
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
@@ -57,7 +53,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
         _isRefreshing.value = false
     }
 
-    private var mSavingsAccountTransactionRequests: MutableList<SavingsAccountTransactionRequest> =
+    private var mSavingsAccountTransactionRequests: MutableList<SavingsAccountTransactionRequestEntity> =
         ArrayList()
 
     private var mTransactionIndex = 0
@@ -127,8 +123,8 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
      * @param errorMessage Server Error Message
      */
     fun showTransactionSyncFailed(errorMessage: String?) {
-        val transaction = mSavingsAccountTransactionRequests[mTransactionIndex]
-        transaction.errorMessage = errorMessage
+        val transaction =
+            mSavingsAccountTransactionRequests[mTransactionIndex].copy(errorMessage = errorMessage)
         updateSavingsAccountTransaction(transaction)
     }
 
@@ -138,7 +134,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
      *
      * @param transaction SavingsAccountTransactionRequest
      */
-    fun showTransactionUpdatedSuccessfully(transaction: SavingsAccountTransactionRequest) {
+    fun showTransactionUpdatedSuccessfully(transaction: SavingsAccountTransactionRequestEntity) {
         mSavingsAccountTransactionRequests[mTransactionIndex] = transaction
         updateUiState()
         mTransactionIndex += 1
@@ -154,7 +150,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
      *
      * @param transactions List<SavingsAccountTransactionRequest>
      </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
-    fun showTransactionDeletedAndUpdated(transactions: MutableList<SavingsAccountTransactionRequest>) {
+    fun showTransactionDeletedAndUpdated(transactions: MutableList<SavingsAccountTransactionRequestEntity>) {
         mTransactionIndex = 0
         mSavingsAccountTransactionRequests = transactions
         updateUiState()
@@ -249,18 +245,19 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
         type: String?,
         accountId: Int,
         transactionType: String?,
-        request: SavingsAccountTransactionRequest?,
+        request: SavingsAccountTransactionRequestEntity?,
     ) = viewModelScope.launch(Dispatchers.IO) {
-        processTransactionUseCase(type, accountId, transactionType, request!!).collect { result ->
-            when (result) {
-                is Resource.Error -> showTransactionSyncFailed(result.message)
-
-                is Resource.Loading ->
-                    _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.Loading
-
-                is Resource.Success -> showTransactionSyncSuccessfully()
-            }
+        _syncSavingsAccountTransactionUiState.value =
+            SyncSavingsAccountTransactionUiState.Loading
+        repository.processTransaction(
+            type,
+            accountId,
+            transactionType,
+            request!!,
+        ).catch {
+            showTransactionSyncFailed(it.message)
+        }.collect {
+            showTransactionSyncSuccessfully()
         }
     }
 
@@ -283,7 +280,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
                 }
                 .collect { savingsAccountTransactionRequests ->
                     showTransactionDeletedAndUpdated(
-                        savingsAccountTransactionRequests as MutableList<SavingsAccountTransactionRequest>,
+                        savingsAccountTransactionRequests as MutableList<SavingsAccountTransactionRequestEntity>,
                     )
                 }
         }
@@ -296,7 +293,7 @@ class SyncSavingsAccountTransactionViewModel @Inject constructor(
      *
      * @param request SavingsAccountTransactionRequest
      */
-    private fun updateSavingsAccountTransaction(request: SavingsAccountTransactionRequest?) =
+    private fun updateSavingsAccountTransaction(request: SavingsAccountTransactionRequestEntity?) =
         viewModelScope.launch {
             _syncSavingsAccountTransactionUiState.value =
                 SyncSavingsAccountTransactionUiState.Loading

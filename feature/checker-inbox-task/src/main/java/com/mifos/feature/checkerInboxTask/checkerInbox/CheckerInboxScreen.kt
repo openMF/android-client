@@ -58,6 +58,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -75,10 +78,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.LightGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.checkerinboxtask.CheckerTask
+import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.checkerInboxTask.checkerInboxDialog.CheckerInboxTasksFilterDialog
 import com.mifos.feature.checker_inbox_task.R
@@ -243,37 +243,37 @@ private fun CheckerInboxScreen(
     MifosDialogBox(
         showDialogState = showApproveDialog,
         onDismiss = { showApproveDialog = false },
-        title = R.string.feature_checker_inbox_task_are_you_sure_you_want_to_approve_this_task,
-        confirmButtonText = R.string.feature_checker_inbox_task_yes,
+        title = stringResource(R.string.feature_checker_inbox_task_are_you_sure_you_want_to_approve_this_task),
+        confirmButtonText = stringResource(R.string.feature_checker_inbox_task_yes),
         onConfirm = {
             onApprove(approveId)
             showApproveDialog = false
         },
-        dismissButtonText = R.string.feature_checker_inbox_task_no,
+        dismissButtonText = stringResource(R.string.feature_checker_inbox_task_no),
     )
 
     MifosDialogBox(
         showDialogState = showRejectDialog,
         onDismiss = { showRejectDialog = false },
-        title = R.string.feature_checker_inbox_task_are_you_sure_you_want_to_reject_this_task,
-        confirmButtonText = R.string.feature_checker_inbox_task_yes,
+        title = stringResource(R.string.feature_checker_inbox_task_are_you_sure_you_want_to_reject_this_task),
+        confirmButtonText = stringResource(R.string.feature_checker_inbox_task_yes),
         onConfirm = {
             onReject(rejectId)
             showRejectDialog = false
         },
-        dismissButtonText = R.string.feature_checker_inbox_task_no,
+        dismissButtonText = stringResource(R.string.feature_checker_inbox_task_no),
     )
 
     MifosDialogBox(
         showDialogState = showDeleteDialog,
         onDismiss = { showDeleteDialog = false },
-        title = R.string.feature_checker_inbox_task_are_you_sure_you_want_to_delete_this_task,
-        confirmButtonText = R.string.feature_checker_inbox_task_yes,
+        title = stringResource(R.string.feature_checker_inbox_task_are_you_sure_you_want_to_delete_this_task),
+        confirmButtonText = stringResource(R.string.feature_checker_inbox_task_yes),
         onConfirm = {
             onDelete(deleteId)
             showDeleteDialog = false
         },
-        dismissButtonText = R.string.feature_checker_inbox_task_no,
+        dismissButtonText = stringResource(R.string.feature_checker_inbox_task_no),
     )
 
     Scaffold(
@@ -288,7 +288,7 @@ private fun CheckerInboxScreen(
                             resetSelectionMode()
                         }) {
                             Icon(
-                                imageVector = MifosIcons.check,
+                                imageVector = MifosIcons.Check,
                                 tint = Color.Green,
                                 contentDescription = null,
                             )
@@ -298,7 +298,7 @@ private fun CheckerInboxScreen(
                             resetSelectionMode()
                         }) {
                             Icon(
-                                imageVector = MifosIcons.close,
+                                imageVector = MifosIcons.Close,
                                 tint = Color.Yellow,
                                 contentDescription = null,
                             )
@@ -308,7 +308,7 @@ private fun CheckerInboxScreen(
                             resetSelectionMode()
                         }) {
                             Icon(
-                                imageVector = MifosIcons.delete,
+                                imageVector = MifosIcons.Delete,
                                 tint = Color.Red,
                                 contentDescription = null,
                             )
@@ -323,7 +323,7 @@ private fun CheckerInboxScreen(
                             onClick = { onBackPressed() },
                         ) {
                             Icon(
-                                imageVector = MifosIcons.arrowBack,
+                                imageVector = MifosIcons.ArrowBack,
                                 contentDescription = null,
                                 tint = Black,
                             )
@@ -361,7 +361,7 @@ private fun CheckerInboxScreen(
                 ) {
                     Image(
                         modifier = Modifier.weight(1f),
-                        imageVector = MifosIcons.search,
+                        imageVector = MifosIcons.Search,
                         contentDescription = null,
                     )
                     TextField(
@@ -386,7 +386,7 @@ private fun CheckerInboxScreen(
                         onClick = { filter.invoke() },
                     ) {
                         Icon(
-                            imageVector = MifosIcons.filter,
+                            imageVector = MifosIcons.Filter,
                             contentDescription = null,
                         )
                     }
@@ -629,21 +629,21 @@ private fun CheckerInboxItem(
                 ) {
                     IconButton(onClick = { onApprove(checkerTask.id) }) {
                         Icon(
-                            imageVector = MifosIcons.check,
+                            imageVector = MifosIcons.Check,
                             tint = Color.Green,
                             contentDescription = null,
                         )
                     }
                     IconButton(onClick = { onReject(checkerTask.id) }) {
                         Icon(
-                            imageVector = MifosIcons.close,
+                            imageVector = MifosIcons.Close,
                             tint = Color.Yellow,
                             contentDescription = null,
                         )
                     }
                     IconButton(onClick = { onDelete(checkerTask.id) }) {
                         Icon(
-                            imageVector = MifosIcons.delete,
+                            imageVector = MifosIcons.Delete,
                             tint = Color.Red,
                             contentDescription = null,
                         )
@@ -664,6 +664,7 @@ private fun CheckerInboxItem(
     }
 }
 
+@Suppress("UnusedParameter")
 private fun getFilteredList(
     searchQuery: String,
     fromDate: Timestamp?,
@@ -688,19 +689,22 @@ private fun getFilteredList(
         return checkerList
     }
 
-    val aLL = "ALL"
-    return checkerList.filter { checkerTask ->
-        val isDateInRange = if (fromDate == null) {
-            !checkerTask.getTimeStamp().after(toDate)
-        } else {
-            checkerTask.getTimeStamp().after(fromDate) && checkerTask.getTimeStamp().before(toDate)
-        }
+    // TODO:: Fix this based on KMP implementation
+//    val aLL = "ALL"
+//    return checkerList.filter { checkerTask ->
+//        val isDateInRange = if (fromDate == null) {
+//            !checkerTask.getTimeStamp().after(toDate)
+//        } else {
+//            checkerTask.getTimeStamp().after(fromDate) && checkerTask.getTimeStamp().before(toDate)
+//        }
+//
+//        val isActionMatch = action == aLL || action.equals(checkerTask.actionName, true)
+//        val isEntityMatch = entity == aLL || entity.equals(checkerTask.entityName, true)
+//
+//        isDateInRange && isActionMatch && isEntityMatch
+//    }
 
-        val isActionMatch = action == aLL || action.equals(checkerTask.actionName, true)
-        val isEntityMatch = entity == aLL || entity.equals(checkerTask.entityName, true)
-
-        isDateInRange && isActionMatch && isEntityMatch
-    }
+    return checkerList
 }
 
 class CheckerInboxUiStateProvider : PreviewParameterProvider<CheckerInboxUiState> {

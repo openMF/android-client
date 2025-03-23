@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.designsystem.theme.SummerSky
 import com.mifos.feature.splash.R
 
 @Composable
@@ -58,7 +57,6 @@ internal fun SplashScreen(
 
     MifosScaffold(
         modifier = modifier,
-        containerColor = SummerSky,
     ) { paddingValues ->
         Column(
             modifier = Modifier

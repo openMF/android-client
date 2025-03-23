@@ -13,10 +13,10 @@ import com.mifos.core.common.network.Dispatcher
 import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.room.dao.SavingsDao
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.room.entities.accounts.savings.SavingsTransactionDate
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
+import com.mifos.room.entities.accounts.savings.SavingsTransactionDateEntity
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
@@ -44,13 +44,13 @@ class SavingsDaoHelper @Inject constructor(
      * @return SavingsAccountWithAssociations.
      */
     fun saveSavingsAccount(
-        savingsAccountWithAssociations: SavingsAccountWithAssociations,
-    ): Flow<SavingsAccountWithAssociations> = flow {
+        savingsAccountWithAssociations: SavingsAccountWithAssociationsEntity,
+    ): Flow<SavingsAccountWithAssociationsEntity> = flow {
         val updatedTransactions = savingsAccountWithAssociations.transactions.map { transaction ->
             transaction.id?.let { id ->
                 transaction.copy(
                     savingsAccountId = savingsAccountWithAssociations.id,
-                    savingsTransactionDate = SavingsTransactionDate(
+                    savingsTransactionDate = SavingsTransactionDateEntity(
                         id,
                         transaction.date.getOrNull(0),
                         transaction.date.getOrNull(1),
@@ -80,7 +80,7 @@ class SavingsDaoHelper @Inject constructor(
      * @param savingsAccountId Savings Account Id
      * @return SavingsAccountWithAssociations SavingsAccountSummary Template.
      */
-    fun readSavingsAccount(savingsAccountId: Int): Flow<SavingsAccountWithAssociations?> =
+    fun readSavingsAccount(savingsAccountId: Int): Flow<SavingsAccountWithAssociationsEntity?> =
         savingsDao.getSavingsAccountWithAssociations(savingsAccountId)
             .map { savingsAccountWithAssociations ->
                 savingsAccountWithAssociations?.copy(
@@ -105,7 +105,7 @@ class SavingsDaoHelper @Inject constructor(
      * @return SavingsAccountTransactionTemplate
      */
     suspend fun saveSavingsAccountTransactionTemplate(
-        savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate,
+        savingsAccountTransactionTemplate: SavingsAccountTransactionTemplateEntity,
     ) {
         savingsDao.insertAllPaymentTypeOption(savingsAccountTransactionTemplate.paymentTypeOptions)
         savingsDao.insertSavingsAccountTransactionTemplate(savingsAccountTransactionTemplate)
@@ -120,7 +120,7 @@ class SavingsDaoHelper @Inject constructor(
      * @param savingsAccountId SavingAccount id
      * @return SavingsAccountTransactionTemplate
      */
-    fun readSavingsAccountTransactionTemplate(savingsAccountId: Int): Flow<SavingsAccountTransactionTemplate?> =
+    fun readSavingsAccountTransactionTemplate(savingsAccountId: Int): Flow<SavingsAccountTransactionTemplateEntity?> =
         savingsDao.getSavingsAccountTransactionTemplate(savingsAccountId)
             .map { savingsAccountTransactionTemplate ->
                 savingsAccountTransactionTemplate?.copy(
@@ -145,7 +145,7 @@ class SavingsDaoHelper @Inject constructor(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
-        savingsAccountTransactionRequest: SavingsAccountTransactionRequest,
+        savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity,
     ): Flow<SavingsAccountTransactionResponse?> = flow {
         savingsDao.insertSavingsAccountTransactionRequest(
             savingsAccountTransactionRequest.copy(
@@ -167,7 +167,7 @@ class SavingsDaoHelper @Inject constructor(
      */
     fun getSavingsAccountTransaction(
         savingsAccountId: Int,
-    ): Flow<SavingsAccountTransactionRequest?> {
+    ): Flow<SavingsAccountTransactionRequestEntity?> {
         return savingsDao.getSavingsAccountTransactionRequest(savingsAccountId)
             .flowOn(ioDispatcher)
     }
@@ -178,7 +178,7 @@ class SavingsDaoHelper @Inject constructor(
      *
      * @return List<SavingsAccountTransactionRequest>
      </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
-    fun allSavingsAccountTransaction(): Flow<List<SavingsAccountTransactionRequest>> {
+    fun allSavingsAccountTransaction(): Flow<List<SavingsAccountTransactionRequestEntity>> {
         return savingsDao.getAllSavingsAccountTransactionRequest()
             .flowOn(ioDispatcher)
     }
@@ -192,7 +192,7 @@ class SavingsDaoHelper @Inject constructor(
      * @param savingsAccountId SavingsAccount Id
      * @return List<SavingsAccountTransactionRequest>
      </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest></SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
-    fun deleteAndUpdateTransaction(savingsAccountId: Int): Flow<List<SavingsAccountTransactionRequest>> =
+    fun deleteAndUpdateTransaction(savingsAccountId: Int): Flow<List<SavingsAccountTransactionRequestEntity>> =
         flow {
             savingsDao.deleteSavingsAccountTransactionRequest(savingsAccountId)
             emitAll(savingsDao.getAllSavingsAccountTransactionRequest())
@@ -207,7 +207,7 @@ class SavingsDaoHelper @Inject constructor(
      * @return SavingsAccountTransactionRequest
      */
     suspend fun updateSavingsAccountTransaction(
-        savingsAccountTransactionRequest: SavingsAccountTransactionRequest,
+        savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity,
     ) {
         savingsDao.updateSavingsAccountTransactionRequest(savingsAccountTransactionRequest)
     }

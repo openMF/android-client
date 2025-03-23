@@ -10,11 +10,11 @@
 package com.mifos.core.data.repository
 
 import com.mifos.room.entities.accounts.ClientAccounts
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.room.entities.client.Client
-import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
+import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -24,21 +24,21 @@ interface SyncClientsDialogRepository {
 
     suspend fun syncClientAccounts(clientId: Int): ClientAccounts
 
-    fun syncLoanById(loanId: Int): Flow<LoanWithAssociations>
+    fun syncLoanById(loanId: Int): Flow<LoanWithAssociationsEntity>
 
-    fun syncLoanRepaymentTemplate(loanId: Int): Flow<LoanRepaymentTemplate>
+    fun syncLoanRepaymentTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity>
 
     fun syncSavingsAccount(
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Flow<SavingsAccountWithAssociations>
+    ): Flow<SavingsAccountWithAssociationsEntity>
 
     fun syncSavingsAccountTransactionTemplate(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Flow<SavingsAccountTransactionTemplate?>
+    ): Flow<SavingsAccountTransactionTemplateEntity?>
 
-    suspend fun syncClientInDatabase(client: Client)
+    suspend fun syncClientInDatabase(client: ClientEntity)
 }

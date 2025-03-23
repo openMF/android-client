@@ -12,7 +12,6 @@
 package com.mifos.feature.activate
 
 import android.widget.Toast
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +20,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -52,10 +50,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.objects.clients.ActivatePayload
+import com.mifos.core.model.objects.clients.ActivatePayload
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -109,7 +104,6 @@ internal fun ActivateScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_activate),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
@@ -183,7 +177,7 @@ private fun ActivateContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 activateDate,
             ),
-            label = R.string.feature_activate_activation_date,
+            label = stringResource(R.string.feature_activate_activation_date),
             openDatePicker = {
                 showDatePicker = true
             },
@@ -204,9 +198,6 @@ private fun ActivateContent(
                 .heightIn(44.dp)
                 .padding(start = 16.dp, end = 16.dp),
             contentPadding = PaddingValues(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
         ) {
             Text(text = stringResource(id = R.string.feature_activate), fontSize = 16.sp)
         }

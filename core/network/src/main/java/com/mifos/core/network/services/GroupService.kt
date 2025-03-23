@@ -9,15 +9,14 @@
  */
 package com.mifos.core.network.services
 
+import com.mifos.core.common.utils.Page
+import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.clients.ActivatePayload
-import com.mifos.core.objects.clients.Page
-import com.mifos.core.objects.responses.SaveResponse
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.GroupAccounts
-import com.mifos.room.entities.group.Group
-import com.mifos.room.entities.group.GroupPayload
+import com.mifos.room.entities.group.GroupEntity
+import com.mifos.room.entities.group.GroupPayloadEntity
 import com.mifos.room.entities.group.GroupWithAssociations
 import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Body
@@ -37,7 +36,7 @@ interface GroupService {
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Observable<Page<Group>>
+    ): Observable<Page<GroupEntity>>
 
     @GET(APIEndPoint.GROUPS + "/{groupId}?associations=all")
     fun getGroupWithAssociations(@Path("groupId") groupId: Int): Flow<GroupWithAssociations>
@@ -46,13 +45,13 @@ interface GroupService {
     suspend fun getAllGroupsInOffice(
         @Query("officeId") officeId: Int,
         @QueryMap params: Map<String, String>,
-    ): List<Group>
+    ): List<GroupEntity>
 
     @POST(APIEndPoint.GROUPS)
-    suspend fun createGroup(@Body groupPayload: GroupPayload?): SaveResponse
+    suspend fun createGroup(@Body groupPayload: GroupPayloadEntity?): SaveResponse
 
     @GET(APIEndPoint.GROUPS + "/{groupId}")
-    suspend fun getGroup(@Path("groupId") groupId: Int): Group
+    suspend fun getGroup(@Path("groupId") groupId: Int): GroupEntity
 
     @GET(APIEndPoint.GROUPS + "/{groupId}/accounts")
     suspend fun getGroupAccounts(@Path("groupId") groupId: Int): GroupAccounts

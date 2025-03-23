@@ -10,7 +10,7 @@
 package com.mifos.core.network.model
 
 import android.os.Parcelable
-import com.mifos.core.entity.noncore.DataTablePayload
+import com.mifos.room.entities.noncore.DataTablePayload
 import kotlinx.parcelize.Parcelize
 
 /**

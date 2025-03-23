@@ -9,14 +9,12 @@
  */
 package com.mifos.core.network.services
 
+import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
-import com.mifos.core.objects.clients.ChargeCreationResponse
-import com.mifos.core.objects.clients.Page
-import com.mifos.core.objects.template.client.ChargeTemplate
-import com.mifos.core.payloads.ChargesPayload
 import com.mifos.room.basemodel.APIEndPoint
-import com.mifos.room.entities.client.Charges
+import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.http.Body
@@ -44,7 +42,7 @@ interface ChargeService {
         @Path("clientId") clientId: Int,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Flow<Page<Charges>>
+    ): Flow<Page<ChargesEntity>>
 
     @POST(APIEndPoint.CLIENTS + "/{clientId}/charges")
     suspend fun createCharges(
@@ -53,7 +51,7 @@ interface ChargeService {
     ): ChargeCreationResponse
 
     @GET(APIEndPoint.LOANS + "/{loanId}/charges")
-    fun getListOfLoanCharges(@Path("loanId") loanId: Int): Observable<Page<Charges>>
+    fun getListOfLoanCharges(@Path("loanId") loanId: Int): Observable<Page<ChargesEntity>>
 
     @POST(APIEndPoint.LOANS + "/{loanId}/charges")
     suspend fun createLoanCharges(

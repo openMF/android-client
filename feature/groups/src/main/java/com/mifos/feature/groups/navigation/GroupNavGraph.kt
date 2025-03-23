@@ -17,12 +17,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.entity.accounts.savings.DepositType
-import com.mifos.core.entity.client.Client
-import com.mifos.core.objects.responses.SaveResponse
+import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.feature.groups.createNewGroup.CreateNewGroupScreen
 import com.mifos.feature.groups.groupDetails.GroupDetailsScreen
 import com.mifos.feature.groups.groupList.GroupsListRoute
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import com.mifos.room.entities.client.ClientEntity
 
 /**
  * Created by Pronay Sarker on 13/08/2024
@@ -34,11 +34,11 @@ fun NavGraphBuilder.groupNavGraph(
     addGroupLoanAccount: (Int) -> Unit,
     addSavingsAccount: (Int, Int, Boolean) -> Unit,
     loadDocumentList: (Int, String) -> Unit,
-    clientListFragment: (List<Client>) -> Unit,
+    clientListFragment: (List<ClientEntity>) -> Unit,
     loadGroupDataTables: (String, Int) -> Unit,
     loadNotes: (Int, String) -> Unit,
     loadLoanAccountSummary: (Int) -> Unit,
-    loadSavingsAccountSummary: (Int, DepositType) -> Unit,
+    loadSavingsAccountSummary: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateGroup: (Int, String) -> Unit,
 ) {
     navigation(
@@ -94,11 +94,11 @@ fun NavGraphBuilder.groupDetailsRoute(
     addGroupLoanAccount: (Int) -> Unit,
     addSavingsAccount: (Int, Int, Boolean) -> Unit,
     loadDocumentList: (Int, String) -> Unit,
-    clientListFragment: (List<Client>) -> Unit,
+    clientListFragment: (List<ClientEntity>) -> Unit,
     loadGroupDataTables: (String, Int) -> Unit,
     loadNotes: (Int, String) -> Unit,
     loadLoanAccountSummary: (Int) -> Unit,
-    loadSavingsAccountSummary: (Int, DepositType) -> Unit,
+    loadSavingsAccountSummary: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateGroup: (Int, String) -> Unit,
 ) {
     composable(

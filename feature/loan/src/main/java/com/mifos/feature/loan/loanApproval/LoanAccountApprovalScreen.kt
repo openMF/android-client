@@ -12,7 +12,6 @@ package com.mifos.feature.loan.loanApproval
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,7 +23,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,12 +54,9 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
 import com.mifos.core.network.GenericResponse
 import com.mifos.feature.loan.R
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -89,7 +84,7 @@ internal fun LoanAccountApprovalScreen(
 @Composable
 internal fun LoanAccountApprovalScreen(
     uiState: LoanAccountApprovalUiState,
-    loanWithAssociations: LoanWithAssociations?,
+    loanWithAssociations: LoanWithAssociationsEntity?,
     navigateBack: () -> Unit,
     onLoanApprove: (loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval) -> Unit,
 ) {
@@ -101,7 +96,7 @@ internal fun LoanAccountApprovalScreen(
     MifosScaffold(
         snackbarHostState = snackBarHostState,
         title = stringResource(id = R.string.feature_loan_approve_loan),
-        icon = MifosIcons.arrowBack,
+//        icon = MifosIcons.arrowBack,
         onBackPressed = navigateBack,
     ) {
         Box(
@@ -151,7 +146,7 @@ internal fun LoanAccountApprovalScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoanAccountApprovalContent(
-    loanWithAssociations: LoanWithAssociations?,
+    loanWithAssociations: LoanWithAssociationsEntity?,
     onLoanApprove: (loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval) -> Unit,
 ) {
     var approvedAmount by rememberSaveable {
@@ -257,7 +252,7 @@ private fun LoanAccountApprovalContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 approveDate,
             ),
-            label = R.string.feature_loan_approved_on,
+            label = stringResource(R.string.feature_loan_approved_on),
             openDatePicker = {
                 pickApproveDate = true
             },
@@ -267,7 +262,7 @@ private fun LoanAccountApprovalContent(
 
         MifosDatePickerTextField(
             value = disbursementDate ?: "null",
-            label = R.string.feature_loan_expected_disbursement_on,
+            label = stringResource(R.string.feature_loan_expected_disbursement_on),
             openDatePicker = {
                 pickDisbursementDate = true
             },
@@ -310,9 +305,9 @@ private fun LoanAccountApprovalContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .heightIn(46.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//            ),
             onClick = {
                 if (isFieldValid(amount = approvedAmount, context = context) &&
                     isFieldValid(amount = transactionAmount, context = context)
@@ -398,7 +393,7 @@ private fun PreviewLoanAccountApprovalScreen(
 ) {
     LoanAccountApprovalScreen(
         uiState = loanAccountApprovalUiState,
-        loanWithAssociations = LoanWithAssociations(),
+        loanWithAssociations = LoanWithAssociationsEntity(),
         navigateBack = { },
     ) {
     }

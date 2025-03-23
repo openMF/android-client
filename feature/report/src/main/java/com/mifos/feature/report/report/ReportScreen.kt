@@ -31,6 +31,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -44,10 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.PermissionBox
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.runreport.FullParameterListResponse
+import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.feature.report.R
 import kotlinx.coroutines.launch
 
@@ -106,10 +105,10 @@ internal fun ReportScreen(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 )
             },
-            title = R.string.feature_report_permission_required,
-            description = R.string.feature_report_external_approve_permission_description,
-            confirmButtonText = R.string.feature_report_proceed,
-            dismissButtonText = R.string.feature_report_dismiss,
+            title = stringResource(R.string.feature_report_permission_required),
+            description = stringResource(R.string.feature_report_external_approve_permission_description),
+            confirmButtonText = stringResource(R.string.feature_report_proceed),
+            dismissButtonText = stringResource(R.string.feature_report_dismiss),
             onGranted = {
                 LaunchedEffect(key1 = Unit) {
                     scope.launch {
@@ -122,7 +121,6 @@ internal fun ReportScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(R.string.feature_report_title),
         onBackPressed = onBackPressed,
         actions = {

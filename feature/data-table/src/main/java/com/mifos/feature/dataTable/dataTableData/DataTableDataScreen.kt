@@ -29,7 +29,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -48,6 +47,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -69,14 +71,10 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.noncore.DataTable
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.dataTable.dataTableRowDialog.DataTableRowDialogScreen
 import com.mifos.feature.data_table.R
+import com.mifos.room.entities.noncore.DataTableEntity
 
 @Composable
 fun DataTableDataScreen(
@@ -113,7 +111,7 @@ fun DataTableDataScreen(
 
 @Composable
 fun DataTableDataScreen(
-    dataTable: DataTable,
+    dataTable: DataTableEntity,
     entityId: Int,
     state: DataTableDataUiState,
     onBackPressed: () -> Unit,
@@ -158,7 +156,6 @@ fun DataTableDataScreen(
     }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_data_table_title),
         onBackPressed = onBackPressed,
         actions = {
@@ -385,7 +382,6 @@ fun SelectOptionsDialog(
 
                 Button(
                     onClick = { deleteDataTable() },
-                    colors = ButtonDefaults.buttonColors(BlueSecondary),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_data_table_delete_data_table),
@@ -410,7 +406,7 @@ private fun DataTableDataScreenPreview(
     @PreviewParameter(DataTableDataUiStateProvider::class) state: DataTableDataUiState,
 ) {
     DataTableDataScreen(
-        dataTable = DataTable(),
+        dataTable = DataTableEntity(),
         entityId = 1,
         state = state,
         onBackPressed = {},

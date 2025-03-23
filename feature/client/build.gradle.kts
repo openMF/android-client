@@ -27,7 +27,7 @@ dependencies {
     implementation(libs.accompanist.permission)
     implementation(libs.accompanist.swiperefresh)
 
-    implementation(libs.coil.kt.compose)
+    implementation(libs.coil.kt2.compose)
     implementation(libs.androidx.paging.compose)
     implementation(project(":feature:data-table"))
 

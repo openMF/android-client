@@ -12,7 +12,6 @@
 package com.mifos.feature.center.createCenter
 
 import android.widget.Toast
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,7 +21,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -45,10 +43,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -59,11 +53,10 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.entity.center.CenterPayload
-import com.mifos.core.entity.organisation.Office
 import com.mifos.feature.center.R
+import com.mifos.room.entities.center.CenterPayloadEntity
+import com.mifos.room.entities.organisation.OfficeEntity
+import org.openapitools.client.models.Office
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -94,7 +87,7 @@ internal fun CreateNewCenterScreen(
 internal fun CreateNewCenterScreen(
     state: CreateNewCenterUiState,
     onRetry: () -> Unit,
-    createCenter: (CenterPayload) -> Unit,
+    createCenter: (CenterPayloadEntity) -> Unit,
     onCreateSuccess: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -102,6 +95,7 @@ internal fun CreateNewCenterScreen(
     MifosScaffold(
         title = stringResource(id = R.string.feature_center_create_new_center),
         snackbarHostState = snackbarHostState,
+        onBackPressed = {},
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             when (state) {
@@ -129,11 +123,12 @@ internal fun CreateNewCenterScreen(
 }
 
 @Composable
-private fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterPayload) -> Unit) {
+private fun CreateNewCenterContent(
+    offices: List<OfficeEntity>,
+    createCenter: (CenterPayloadEntity) -> Unit,
+) {
     val context = LocalContext.current
-    var centerName by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(""))
-    }
+    var centerName by rememberSaveable { mutableStateOf("") }
     var centerNameValidator by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedOffice by rememberSaveable { mutableStateOf("") }
     var selectedOfficeValidator by rememberSaveable { mutableStateOf<String?>(null) }
@@ -152,12 +147,12 @@ private fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterP
 
     LaunchedEffect(key1 = centerName) {
         centerNameValidator = when {
-            centerName.text.trim()
+            centerName.trim()
                 .isEmpty() -> context.getString(R.string.feature_center_center_name_empty)
 
-            centerName.text.length < 4 -> context.getString(R.string.feature_center_center_name_should_be_more_than_4_characters)
+            centerName.length < 4 -> context.getString(R.string.feature_center_center_name_should_be_more_than_4_characters)
 
-            centerName.text.contains("[^a-zA-Z ]".toRegex()) -> context.getString(R.string.feature_center_center_name_should_not_contains_special_characters_or_numbers)
+            centerName.contains("[^a-zA-Z ]".toRegex()) -> context.getString(R.string.feature_center_center_name_should_not_contains_special_characters_or_numbers)
 
             else -> null
         }
@@ -220,7 +215,7 @@ private fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterP
         MifosOutlinedTextField(
             value = centerName,
             onValueChange = { centerName = it },
-            label = R.string.feature_center_center_name,
+            label = stringResource(R.string.feature_center_center_name),
             error = null,
         )
 
@@ -231,7 +226,7 @@ private fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterP
             },
             onOptionSelected = { index, value ->
                 selectedOffice = value
-                offices[index].id?.let {
+                offices[index].id.let {
                     officeId = it
                 }
             },
@@ -258,7 +253,7 @@ private fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterP
                 value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                     activateDate,
                 ),
-                label = R.string.feature_center_activation_date,
+                label = stringResource(R.string.feature_center_activation_date),
                 openDatePicker = {
                     showDatePicker = true
                 },
@@ -270,8 +265,8 @@ private fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterP
             onClick = {
                 if (validateAllFields()) {
                     createCenter(
-                        CenterPayload(
-                            name = centerName.text,
+                        CenterPayloadEntity(
+                            name = centerName,
                             active = isActivate,
                             activationDate = if (isActivate) {
                                 SimpleDateFormat(
@@ -295,37 +290,39 @@ private fun CreateNewCenterContent(offices: List<Office>, createCenter: (CenterP
                 .heightIn(44.dp)
                 .padding(start = 16.dp, end = 16.dp),
             contentPadding = PaddingValues(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//            ),
         ) {
             Text(text = stringResource(id = R.string.feature_center_create), fontSize = 16.sp)
         }
     }
 }
 
-class CreateNewCenterUiStateProvider : PreviewParameterProvider<CreateNewCenterUiState> {
-
-    override val values = sequenceOf(
-        CreateNewCenterUiState.Loading,
-        CreateNewCenterUiState.Error(R.string.feature_center_failed_to_load_offices),
-        CreateNewCenterUiState.Offices(sampleOfficeList),
-        CreateNewCenterUiState.CenterCreatedSuccessfully,
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun CreateNewCenterPreview(
-    @PreviewParameter(CreateNewCenterUiStateProvider::class) state: CreateNewCenterUiState,
-) {
-    CreateNewCenterScreen(
-        state = state,
-        onRetry = {},
-        createCenter = {},
-        onCreateSuccess = {},
-    )
-}
+// class CreateNewCenterUiStateProvider : PreviewParameterProvider<CreateNewCenterUiState> {
+//
+//    override val values = sequenceOf(
+//        CreateNewCenterUiState.Loading,
+//        CreateNewCenterUiState.Error(R.string.feature_center_failed_to_load_offices),
+//        CreateNewCenterUiState.Offices(
+// //            sampleOfficeList
+//        ),
+//        CreateNewCenterUiState.CenterCreatedSuccessfully,
+//    )
+// }
+//
+// @Preview(showBackground = true)
+// @Composable
+// private fun CreateNewCenterPreview(
+//    @PreviewParameter(CreateNewCenterUiStateProvider::class) state: CreateNewCenterUiState,
+// ) {
+//    CreateNewCenterScreen(
+//        state = state,
+//        onRetry = {},
+//        createCenter = {},
+//        onCreateSuccess = {},
+//    )
+// }
 
 val sampleOfficeList = List(10) {
     Office(name = "Office $it")

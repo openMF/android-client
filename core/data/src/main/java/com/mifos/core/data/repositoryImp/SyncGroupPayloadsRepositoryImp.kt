@@ -12,7 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.datamanager.DataManagerGroups
-import com.mifos.room.entities.group.GroupPayload
+import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -20,19 +20,19 @@ class SyncGroupPayloadsRepositoryImp @Inject constructor(
     private val dataManagerGroups: DataManagerGroups,
 ) : SyncGroupPayloadsRepository {
 
-    override fun allDatabaseGroupPayload(): Flow<List<GroupPayload>> {
+    override fun allDatabaseGroupPayload(): Flow<List<GroupPayloadEntity>> {
         return dataManagerGroups.allDatabaseGroupPayload
     }
 
-    override suspend fun createGroup(groupPayload: GroupPayload): SaveResponse {
+    override suspend fun createGroup(groupPayload: GroupPayloadEntity): SaveResponse {
         return dataManagerGroups.createGroup(groupPayload)
     }
 
-    override fun deleteAndUpdateGroupPayloads(id: Int): Flow<List<GroupPayload>> {
+    override fun deleteAndUpdateGroupPayloads(id: Int): Flow<List<GroupPayloadEntity>> {
         return dataManagerGroups.deleteAndUpdateGroupPayloads(id)
     }
 
-    override suspend fun updateGroupPayload(groupPayload: GroupPayload) {
+    override suspend fun updateGroupPayload(groupPayload: GroupPayloadEntity) {
         dataManagerGroups.updateGroupPayload(groupPayload)
     }
 }

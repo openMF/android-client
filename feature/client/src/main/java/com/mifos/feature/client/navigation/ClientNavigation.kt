@@ -17,10 +17,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.entity.accounts.savings.DepositType
-import com.mifos.core.entity.client.ClientPayload
-import com.mifos.core.entity.noncore.DataTable
-import com.mifos.core.entity.survey.Survey
 import com.mifos.feature.client.clientCharges.ClientChargesScreen
 import com.mifos.feature.client.clientDetails.ui.ClientDetailsScreen
 import com.mifos.feature.client.clientIdentifiers.ClientIdentifiersScreen
@@ -31,6 +27,10 @@ import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 import com.mifos.feature.dataTable.dataTableList.FormWidget
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.entities.noncore.DataTableEntity
+import com.mifos.room.entities.survey.SurveyEntity
 import kotlin.reflect.KFunction4
 
 fun NavGraphBuilder.clientNavGraph(
@@ -42,11 +42,11 @@ fun NavGraphBuilder.clientNavGraph(
     moreClientInfo: (Int) -> Unit,
     notes: (Int) -> Unit,
     loanAccountSelected: (Int) -> Unit,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateClient: (Int) -> Unit,
-    hasDatatables: KFunction4<List<DataTable>, Any?, Int, MutableList<List<FormWidget>>, Unit>,
+    hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidget>>, Unit>,
     onDocumentClicked: (Int, String) -> Unit,
-    onCardClicked: (Int, List<Survey>) -> Unit,
+    onCardClicked: (Int, List<SurveyEntity>) -> Unit,
 ) {
     navigation(
         startDestination = ClientScreens.ClientListScreen.route,
@@ -129,7 +129,7 @@ fun NavGraphBuilder.clientDetailRoute(
     survey: (Int) -> Unit,
     uploadSignature: (Int) -> Unit,
     loanAccountSelected: (Int) -> Unit,
-    savingsAccountSelected: (Int, DepositType) -> Unit,
+    savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateClient: (Int) -> Unit,
 ) {
     composable(
@@ -211,7 +211,7 @@ fun NavGraphBuilder.clientSignatureRoute(
 
 fun NavGraphBuilder.clientSurveyListRoute(
     onBackPressed: () -> Unit,
-    onCardClicked: (Int, List<Survey>) -> Unit,
+    onCardClicked: (Int, List<SurveyEntity>) -> Unit,
 ) {
     composable(
         route = ClientScreens.ClientSurveyListScreen.route,
@@ -233,14 +233,14 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
     ) {
         SurveyQuestionScreen(
             navigateBack = onBackPressed,
-            survey = Survey(),
+            survey = SurveyEntity(),
         )
     }
 }
 
 fun NavGraphBuilder.createClientRoute(
     onBackPressed: () -> Unit,
-    hasDatatables: (List<DataTable>, ClientPayload, Int, MutableList<List<FormWidget>>) -> Unit,
+    hasDatatables: (List<DataTableEntity>, ClientPayloadEntity, Int, MutableList<List<FormWidget>>) -> Unit,
 ) {
     composable(
         route = ClientScreens.CreateClientScreen.route,

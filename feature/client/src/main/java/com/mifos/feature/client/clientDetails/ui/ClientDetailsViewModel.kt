@@ -17,13 +17,13 @@ import androidx.lifecycle.viewModelScope
 import coil.request.ImageResult
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.useCases.DeleteClientImageUseCase
+import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
-import com.mifos.core.entity.accounts.loan.LoanAccount
-import com.mifos.core.entity.accounts.savings.SavingsAccount
-import com.mifos.core.entity.client.Client
 import com.mifos.core.network.utils.ImageLoaderUtils
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.client.ClientEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,13 +36,12 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-
 @HiltViewModel
 class ClientDetailsViewModel @Inject constructor(
     private val uploadClientImageUseCase: UploadClientImageUseCase,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
-    private val deleteClientImageUseCase: DeleteClientImageUseCase,
     private val imageLoaderUtils: ImageLoaderUtils,
+    private val clientDetailsRepo: ClientDetailsRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -52,13 +51,13 @@ class ClientDetailsViewModel @Inject constructor(
         MutableStateFlow<ClientDetailsUiState>(ClientDetailsUiState.Empty)
     val clientDetailsUiState = _clientDetailsUiState.asStateFlow()
 
-    private val loanAccounts = MutableStateFlow<List<LoanAccount>?>(null)
+    private val loanAccounts = MutableStateFlow<List<LoanAccountEntity>?>(null)
     val loanAccount = loanAccounts.asStateFlow()
 
-    private val _savingsAccounts = MutableStateFlow<List<SavingsAccount>?>(null)
+    private val _savingsAccounts = MutableStateFlow<List<SavingsAccountEntity>?>(null)
     val savingsAccounts = _savingsAccounts.asStateFlow()
 
-    private val _client = MutableStateFlow<Client?>(null)
+    private val _client = MutableStateFlow<ClientEntity?>(null)
     val client = _client.asStateFlow()
 
     private val _showLoading = MutableStateFlow(true)
@@ -89,22 +88,17 @@ class ClientDetailsViewModel @Inject constructor(
     }
 
     fun deleteClientImage(clientId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        deleteClientImageUseCase(clientId).collect { result ->
-            when (result) {
-                is Resource.Error -> {
-                    _clientDetailsUiState.value =
-                        ClientDetailsUiState.ShowError(result.message ?: "Unexpected error")
-                    _showLoading.value = false
-                }
+        _showLoading.value = true
+        try {
+            clientDetailsRepo.deleteClientImage(clientId)
 
-                is Resource.Loading -> _showLoading.value = true
-
-                is Resource.Success -> {
-                    _clientDetailsUiState.value =
-                        ClientDetailsUiState.ShowClientImageDeletedSuccessfully
-                    _showLoading.value = false
-                }
-            }
+            _clientDetailsUiState.value =
+                ClientDetailsUiState.ShowClientImageDeletedSuccessfully
+            _showLoading.value = false
+        } catch (e: Exception) {
+            _clientDetailsUiState.value =
+                ClientDetailsUiState.ShowError(e.message ?: "Unexpected error")
+            _showLoading.value = false
         }
     }
 

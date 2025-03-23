@@ -1,0 +1,116 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.room.entities.client
+
+import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.json.Json
+
+/**
+ * Created by nellyk on 2/15/2016.
+ */
+@Parcelize
+@Entity(
+    tableName = "Charges",
+    foreignKeys = [
+        ForeignKey(
+            entity = ChargeTimeTypeEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["chargeTimeType"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = ClientDateEntity::class,
+            parentColumns = ["clientId"],
+            childColumns = ["chargeDueDate"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = ChargeCalculationTypeEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["id"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = ClientChargeCurrencyEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["id"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
+)
+data class ChargesEntity(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(index = true)
+    val id: Int = 0,
+
+    val clientId: Int? = null,
+
+    val loanId: Int? = null,
+
+    val chargeId: Int? = null,
+
+    val name: String? = null,
+
+    @ColumnInfo(index = true)
+    val chargeTimeType: ChargeTimeTypeEntity? = null,
+
+    @ColumnInfo(index = true)
+    val chargeDueDate: ClientDateEntity? = null,
+
+    val dueDate: String? = null,
+
+    @ColumnInfo(index = true)
+    val chargeCalculationType: ChargeCalculationTypeEntity? = null,
+
+    @ColumnInfo(index = true)
+    val currency: ClientChargeCurrencyEntity? = null,
+
+    val amount: Double? = null,
+
+    val amountPaid: Double? = null,
+
+    val amountWaived: Double? = null,
+
+    val amountWrittenOff: Double? = null,
+
+    val amountOutstanding: Double? = null,
+
+    val penalty: Boolean? = null,
+
+    val active: Boolean? = null,
+
+    val paid: Boolean? = null,
+
+    val waived: Boolean? = null,
+) : Parcelable {
+
+    val formattedDueDate: String
+        get() {
+            val pattern = "%s-%s-%s"
+
+            val dueDateList = try {
+                dueDate?.let { Json.decodeFromString<List<Int>>(it) }
+            } catch (e: kotlinx.serialization.SerializationException) {
+                emptyList()
+            }
+
+            if (dueDateList != null) {
+                if (dueDateList.size > 2) {
+                    return String.format(pattern, dueDateList[0], dueDateList[1], dueDateList[2])
+                }
+            }
+            return "No Due Date"
+        }
+}

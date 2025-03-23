@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.noncoreobjects
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
 
 /**
  * Created by ishankhanna on 03/07/14.

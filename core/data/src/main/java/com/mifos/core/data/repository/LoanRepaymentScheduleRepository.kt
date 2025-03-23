@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import rx.Observable
 
 /**
@@ -17,5 +17,5 @@ import rx.Observable
  */
 interface LoanRepaymentScheduleRepository {
 
-    fun getLoanRepaySchedule(loanId: Int): Observable<LoanWithAssociations>
+    fun getLoanRepaySchedule(loanId: Int): Observable<LoanWithAssociationsEntity>
 }

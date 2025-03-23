@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.noncore.Note
+import com.mifos.core.model.objects.Note
 
 interface NoteRepository {
 

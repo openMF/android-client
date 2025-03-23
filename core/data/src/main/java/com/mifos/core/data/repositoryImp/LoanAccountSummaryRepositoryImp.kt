@@ -11,7 +11,7 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.network.datamanager.DataManagerLoan
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -22,7 +22,7 @@ class LoanAccountSummaryRepositoryImp @Inject constructor(
     private val dataManagerLoan: DataManagerLoan,
 ) : LoanAccountSummaryRepository {
 
-    override fun getLoanById(loanId: Int): Flow<LoanWithAssociations?> {
+    override fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity?> {
         return dataManagerLoan.getLoanById(loanId)
     }
 }

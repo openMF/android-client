@@ -15,10 +15,9 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.FileUtils.LOG_TAG
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.entity.center.CenterPayload_Table.errorMessage
 import com.mifos.feature.offline.R
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,8 +47,8 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
-    private var mLoanRepaymentRequests: MutableList<LoanRepaymentRequest> = mutableListOf()
-    private var mPaymentTypeOptions: List<PaymentTypeOption> = emptyList()
+    private var mLoanRepaymentRequests: MutableList<LoanRepaymentRequestEntity> = mutableListOf()
+    private var mPaymentTypeOptions: List<PaymentTypeOptionEntity> = emptyList()
     private var mClientSyncIndex = 0
 
     fun getUserStatus(): Boolean {
@@ -112,7 +111,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
         }
     }
 
-    private fun syncLoanRepayment(loanId: Int, loanRepaymentRequest: LoanRepaymentRequest?) {
+    private fun syncLoanRepayment(loanId: Int, loanRepaymentRequest: LoanRepaymentRequestEntity?) {
         viewModelScope.launch {
             _syncLoanRepaymentTransactionUiState.value =
                 SyncLoanRepaymentTransactionUiState.ShowProgressbar
@@ -126,14 +125,14 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 val eLoanRepaymentRequest = mLoanRepaymentRequests[mClientSyncIndex].copy(
-                    errorMessage = errorMessage.toString(),
+                    errorMessage = e.message.toString(),
                 )
                 updateLoanRepayment(eLoanRepaymentRequest)
             }
         }
     }
 
-    fun deleteAndUpdateLoanRepayments(loanId: Int) {
+    private fun deleteAndUpdateLoanRepayments(loanId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             _syncLoanRepaymentTransactionUiState.value =
                 SyncLoanRepaymentTransactionUiState.ShowProgressbar
@@ -144,7 +143,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
             }.collect { loanRepaymentRequests ->
                 mClientSyncIndex = 0
                 mLoanRepaymentRequests =
-                    loanRepaymentRequests as MutableList<LoanRepaymentRequest>
+                    loanRepaymentRequests as MutableList<LoanRepaymentRequestEntity>
                 if (mLoanRepaymentRequests.isNotEmpty()) {
                     syncGroupPayload()
                 } else {
@@ -158,7 +157,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
         }
     }
 
-    fun updateLoanRepayment(loanRepaymentRequest: LoanRepaymentRequest?) {
+    private fun updateLoanRepayment(loanRepaymentRequest: LoanRepaymentRequestEntity?) {
         viewModelScope.launch {
             SyncLoanRepaymentTransactionUiState.ShowProgressbar
 
@@ -169,7 +168,7 @@ class SyncLoanRepaymentTransactionViewModel @Inject constructor(
                         SyncLoanRepaymentTransactionUiState.ShowError(R.string.feature_offline_failed_to_load_loanrepayment)
                 }
                 .collect {
-                    mLoanRepaymentRequests[mClientSyncIndex] = it ?: LoanRepaymentRequest()
+                    mLoanRepaymentRequests[mClientSyncIndex] = it ?: LoanRepaymentRequestEntity()
                     mClientSyncIndex += 1
                     if (mLoanRepaymentRequests.size != mClientSyncIndex) {
                         syncGroupPayload()

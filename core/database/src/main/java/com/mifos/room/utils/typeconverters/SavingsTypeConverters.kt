@@ -15,9 +15,9 @@ import com.mifos.core.model.objects.account.saving.InterestCalculationType
 import com.mifos.core.model.objects.account.saving.InterestCompoundingPeriodType
 import com.mifos.core.model.objects.account.saving.InterestPostingPeriodType
 import com.mifos.core.model.objects.account.saving.LockinPeriodFrequencyType
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.savings.SavingsTransactionDate
-import com.mifos.room.entities.accounts.savings.TransactionType
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.savings.SavingsTransactionDateEntity
+import com.mifos.room.entities.accounts.savings.SavingsTransactionTypeEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -25,23 +25,23 @@ import kotlinx.serialization.json.Json
 class SavingsTypeConverters {
 
     @TypeConverter
-    fun fromTransactionType(type: TransactionType?): String? {
+    fun fromTransactionType(type: SavingsTransactionTypeEntity?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toTransactionType(json: String?): TransactionType? {
-        return json?.let { Json.decodeFromString<TransactionType>(it) }
+    fun toTransactionType(json: String?): SavingsTransactionTypeEntity? {
+        return json?.let { Json.decodeFromString<SavingsTransactionTypeEntity>(it) }
     }
 
     @TypeConverter
-    fun fromSavingsTransactionDate(date: SavingsTransactionDate?): String? {
+    fun fromSavingsTransactionDate(date: SavingsTransactionDateEntity?): String? {
         return date?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toSavingsTransactionDate(json: String?): SavingsTransactionDate? {
-        return json?.let { Json.decodeFromString<SavingsTransactionDate>(it) }
+    fun toSavingsTransactionDate(json: String?): SavingsTransactionDateEntity? {
+        return json?.let { Json.decodeFromString<SavingsTransactionDateEntity>(it) }
     }
 
     @TypeConverter
@@ -105,12 +105,12 @@ class SavingsTypeConverters {
     }
 
     @TypeConverter
-    fun fromPaymentTypeOption(paymentTypeOption: PaymentTypeOption?): String? {
+    fun fromPaymentTypeOption(paymentTypeOption: PaymentTypeOptionEntity?): String? {
         return paymentTypeOption?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toPaymentTypeOption(json: String?): PaymentTypeOption? {
-        return json?.let { Json.decodeFromString<PaymentTypeOption>(it) }
+    fun toPaymentTypeOption(json: String?): PaymentTypeOptionEntity? {
+        return json?.let { Json.decodeFromString<PaymentTypeOptionEntity>(it) }
     }
 }

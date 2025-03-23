@@ -103,10 +103,10 @@ playService = "18.5.0"
 realmVersion = "1.13.0"
 recyclerview = "1.4.0"
 roborazzi = "1.26.0"
-room = "2.7.0-alpha12"
-roomKtxVersion = "2.7.0-alpha12"
-roomRuntimeVersion = "2.7.0-alpha12"
-roomTestingVersion = "2.7.0-alpha12"
+room = "2.7.0-rc02"
+roomKtxVersion = "2.7.0-rc02"
+roomRuntimeVersion = "2.7.0-rc02"
+roomTestingVersion = "2.7.0-rc02"
 retrofit = "2.11.0"
 rxandroidVersion = "1.1.0"
 rxjava = "1.3.8"
@@ -150,7 +150,8 @@ koinAnnotationsVersion = "1.4.0-RC4"
 
 # CMP Libraries
 compose-plugin = "1.7.0-rc01"
-coil = "3.0.4"
+coil = "3.1.0"
+coil2 = "2.7.0"
 backHandlerVersion = "2.1.0"
 constraintLayout = "0.4.0"
 multiplatformSettings = "1.2.0"
@@ -174,6 +175,7 @@ jbSavedState = "1.2.2"
 packageName = "AndroidClient"
 packageNamespace = "org.mifos.client.desktop"
 packageVersion = "1.0.0"
+material3Android = "1.3.1"
 
 [libraries]
 
@@ -502,6 +504,9 @@ ktorfit-lib = { group = "de.jensklingenberg.ktorfit", name = "ktorfit-lib", vers
 
 coil-core = { group = "io.coil-kt.coil3", name = "coil-core", version.ref = "coil" }
 coil-kt = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
+# Required Coil V2 for network module. should be removed when migrated to Coil V3.
+coil-kt2 = { group = "io.coil-kt", name = "coil", version.ref = "coil2" }
+coil-kt2-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil2" }
 coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
 coil-svg = { group = "io.coil-kt.coil3", name = "coil-svg", version.ref = "coil" }
 
@@ -525,6 +530,7 @@ moko-permission = { group = "dev.icerock.moko", name = "permissions", version.re
 moko-permission-compose = { group = "dev.icerock.moko", name = "permissions-compose", version.ref = "mokoPermission" }
 
 window-size = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowsSizeClass" }
+androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 
 [plugins]
 

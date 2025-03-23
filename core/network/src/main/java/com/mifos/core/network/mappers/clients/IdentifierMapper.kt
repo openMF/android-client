@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.mappers.clients
 
-import com.mifos.core.objects.noncoreobjects.DocumentType
-import com.mifos.core.objects.noncoreobjects.Identifier
+import com.mifos.core.model.objects.noncoreobjects.DocumentType
+import com.mifos.core.model.objects.noncoreobjects.Identifier
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetClientsClientIdIdentifiersResponse
 import org.openapitools.client.models.GetClientsDocumentType
@@ -20,18 +20,18 @@ import org.openapitools.client.models.GetClientsDocumentType
  */
 object IdentifierMapper : AbstractMapper<GetClientsClientIdIdentifiersResponse, Identifier>() {
     override fun mapFromEntity(entity: GetClientsClientIdIdentifiersResponse): Identifier {
-        return Identifier().apply {
-            id = entity.id?.toInt()
-            clientId = entity.clientId?.toInt()
-            documentKey = entity.documentKey
-            description = entity.description
+        return Identifier(
+            id = entity.id?.toInt(),
+            clientId = entity.clientId?.toInt(),
+            documentKey = entity.documentKey,
+            description = entity.description,
             documentType = entity.documentType?.let {
-                DocumentType().apply {
-                    id = it.id?.toInt()
-                    name = it.name
-                }
-            }
-        }
+                DocumentType(
+                    id = it.id?.toInt(),
+                    name = it.name,
+                )
+            },
+        )
     }
 
     override fun mapToEntity(domainModel: Identifier): GetClientsClientIdIdentifiersResponse {

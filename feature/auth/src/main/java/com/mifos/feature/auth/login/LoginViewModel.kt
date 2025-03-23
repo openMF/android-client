@@ -15,10 +15,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Network
 import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.PrefManager
+import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
-import com.mifos.core.model.getInstanceUrl
 import com.mifos.feature.auth.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -41,7 +42,7 @@ class LoginViewModel @Inject constructor(
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val baseApiManager: BaseApiManager,
-    private val loginUseCase: com.mifos.core.domain.useCases.LoginUseCase,
+    private val loginUseCase: LoginUseCase,
 ) :
     ViewModel() {
 
@@ -68,14 +69,6 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun setupPrefManger(username: String, password: String) {
-        // Updating Services
-        baseApiManager.createService(
-            username,
-            password,
-            prefManager.getServerConfig.getInstanceUrl().dropLast(3),
-            prefManager.getServerConfig.tenant,
-            true,
-        )
         if (Network.isOnline(context)) {
             login(username, password)
         } else {
@@ -99,7 +92,11 @@ class LoginViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        result.data?.let { onLoginSuccessful(it, username, password) }
+                        result.data?.let {
+                            if (it.userId != null && it.authenticated == true) {
+                                onLoginSuccessful(it, username, password)
+                            }
+                        }
                     }
                 }
             }
@@ -111,6 +108,15 @@ class LoginViewModel @Inject constructor(
         username: String,
         password: String,
     ) {
+        // Updating Services
+        baseApiManager.createService(
+            username = username,
+            password = password,
+            baseUrl = prefManager.getServerConfig.getInstanceUrl().dropLast(3),
+            tenant = prefManager.getServerConfig.tenant,
+            secured = false,
+        )
+
         // Saving username password
         prefManager.usernamePassword = Pair(username, password)
         // Saving userID

@@ -10,23 +10,24 @@
 package com.mifos.room.utils.typeconverters
 
 import androidx.room.TypeConverter
+import com.mifos.core.model.objects.Changes
+import com.mifos.core.model.objects.account.loan.AmortizationType
+import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType
+import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType
+import com.mifos.core.model.objects.account.loan.InterestType
 import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
-import com.mifos.core.objects.account.loan.AmortizationType
-import com.mifos.core.objects.account.loan.InterestCalculationPeriodType
-import com.mifos.core.objects.account.loan.InterestRateFrequencyType
-import com.mifos.core.objects.account.loan.InterestType
-import com.mifos.core.objects.account.loan.RepaymentSchedule
-import com.mifos.core.objects.account.loan.TermPeriodFrequencyType
-import com.mifos.core.objects.account.loan.Transaction
-import com.mifos.core.objects.template.loan.Currency
-import com.mifos.core.objects.template.loan.Type
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.loans.ActualDisbursementDate
-import com.mifos.room.entities.accounts.loans.LoanType
-import com.mifos.room.entities.accounts.loans.Status
-import com.mifos.room.entities.accounts.loans.Summary
-import com.mifos.room.entities.accounts.loans.Timeline
+import com.mifos.core.model.objects.account.loan.RepaymentSchedule
+import com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType
+import com.mifos.core.model.objects.account.loan.Transaction
+import com.mifos.core.model.objects.account.loan.Type
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
+import com.mifos.room.entities.accounts.loans.LoanStatusEntity
+import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
+import com.mifos.room.entities.accounts.loans.LoanTypeEntity
+import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
+import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -37,32 +38,32 @@ import kotlinx.serialization.json.Json
 class LoanTypeConverters {
 
     @TypeConverter
-    fun fromStatus(status: Status?): String? {
+    fun fromStatus(status: LoanStatusEntity?): String? {
         return status?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toStatus(json: String?): Status? {
+    fun toStatus(json: String?): LoanStatusEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
     @TypeConverter
-    fun fromLoanType(type: LoanType?): String? {
+    fun fromLoanType(type: LoanTypeEntity?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toLoanType(json: String?): LoanType? {
+    fun toLoanType(json: String?): LoanTypeEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
     @TypeConverter
-    fun fromCurrency(currency: Currency?): String? {
+    fun fromCurrency(currency: SavingAccountCurrencyEntity?): String? {
         return currency?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toCurrency(json: String?): Currency? {
+    fun toCurrency(json: String?): SavingAccountCurrencyEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
@@ -92,17 +93,17 @@ class LoanTypeConverters {
     }
 
     @TypeConverter
-    fun fromSummary(summary: Summary?): String? {
-        return summary?.let { Json.encodeToString(it) }
-    }
-
-    @TypeConverter
-    fun toSummary(json: String?): Summary? {
+    fun toInterestRateFrequencyType(json: String?): InterestRateFrequencyType? {
         return json?.let { Json.decodeFromString(it) }
     }
 
     @TypeConverter
-    fun toInterestRateFrequencyType(json: String?): InterestRateFrequencyType? {
+    fun fromSummary(summary: LoansAccountSummaryEntity?): String? {
+        return summary?.let { Json.encodeToString(it) }
+    }
+
+    @TypeConverter
+    fun toSummary(json: String?): LoansAccountSummaryEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
@@ -137,12 +138,12 @@ class LoanTypeConverters {
     }
 
     @TypeConverter
-    fun fromTimeline(timeline: Timeline?): String? {
+    fun fromTimeline(timeline: LoanTimelineEntity?): String? {
         return timeline?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toTimeline(json: String?): Timeline? {
+    fun toTimeline(json: String?): LoanTimelineEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
@@ -187,12 +188,12 @@ class LoanTypeConverters {
     }
 
     @TypeConverter
-    fun fromActualDisbursementDate(date: ActualDisbursementDate?): String? {
+    fun fromActualDisbursementDate(date: ActualDisbursementDateEntity?): String? {
         return date?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toActualDisbursementDate(json: String?): ActualDisbursementDate? {
+    fun toActualDisbursementDate(json: String?): ActualDisbursementDateEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
@@ -207,12 +208,12 @@ class LoanTypeConverters {
     }
 
     @TypeConverter
-    fun fromMutableListPaymentTypeOptions(type: MutableList<PaymentTypeOption>?): String? {
+    fun fromMutableListPaymentTypeOptions(type: MutableList<PaymentTypeOptionEntity>?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toMutableListPaymentTypeOptions(json: String?): MutableList<PaymentTypeOption>? {
+    fun toMutableListPaymentTypeOptions(json: String?): MutableList<PaymentTypeOptionEntity>? {
         return json?.let { Json.decodeFromString(it) }
     }
 
@@ -224,5 +225,15 @@ class LoanTypeConverters {
     @TypeConverter
     fun toPeriodList(periodList: List<Period>?): String? {
         return periodList?.let { Json.encodeToString(it) }
+    }
+
+    @TypeConverter
+    fun toChanges(changes: Changes?): String {
+        return Json.encodeToString(changes)
+    }
+
+    @TypeConverter
+    fun fromChanges(changes: String?): Changes? {
+        return changes?.let { Json.decodeFromString(changes) }
     }
 }

@@ -13,13 +13,13 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.Creator
 import com.mifos.room.entities.accounts.GroupAccounts
-import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.group.GroupEntity
 
 /**
  * Created by Rajan Maurya on 11/09/16.
  */
 class GroupAndGroupAccounts : Parcelable {
-    var group: Group? = null
+    var group: GroupEntity? = null
     var groupAccounts: GroupAccounts? = null
     override fun describeContents(): Int {
         return 0
@@ -31,13 +31,13 @@ class GroupAndGroupAccounts : Parcelable {
     }
 
     constructor()
-    constructor(group: Group?, groupAccounts: GroupAccounts?) {
+    constructor(group: GroupEntity?, groupAccounts: GroupAccounts?) {
         this.group = group
         this.groupAccounts = groupAccounts
     }
 
     private constructor(parcel: Parcel) {
-        group = parcel.readParcelable(Group::class.java.classLoader)
+        group = parcel.readParcelable(GroupEntity::class.java.classLoader)
         groupAccounts = parcel.readParcelable(GroupAccounts::class.java.classLoader)
     }
 

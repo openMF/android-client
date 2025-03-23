@@ -14,44 +14,44 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
-import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LoanDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveLoanWithAssociations(loanWithAssociations: LoanWithAssociations)
+    suspend fun saveLoanWithAssociations(loanWithAssociations: LoanWithAssociationsEntity)
 
     @Query("SELECT * FROM LoanWithAssociations WHERE id = :loanId LIMIT 1")
-    fun getLoanById(loanId: Int): Flow<LoanWithAssociations?>
+    fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLoanRepaymentTransaction(request: LoanRepaymentRequest)
+    suspend fun insertLoanRepaymentTransaction(request: LoanRepaymentRequestEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPaymentTypeOption(paymentTypeOption: PaymentTypeOption)
+    suspend fun insertPaymentTypeOption(paymentTypeOption: PaymentTypeOptionEntity)
 
     @Query("SELECT * FROM PaymentTypeOption")
-    fun getPaymentTypeOptions(): Flow<List<PaymentTypeOption>>
+    fun getPaymentTypeOptions(): Flow<List<PaymentTypeOptionEntity>>
 
-    @Query("SELECT * FROM LoanRepaymentRequest WHERE loanId = :loanId LIMIT 1")
-    suspend fun getLoanRepaymentRequest(loanId: Int): LoanRepaymentRequest?
+    @Query("SELECT * FROM LoanRepaymentRequestEntity WHERE loanId = :loanId LIMIT 1")
+    suspend fun getLoanRepaymentRequest(loanId: Int): LoanRepaymentRequestEntity?
 
     @Update
-    suspend fun updateLoanRepaymentRequest(loanRepaymentRequest: LoanRepaymentRequest)
+    suspend fun updateLoanRepaymentRequest(loanRepaymentRequest: LoanRepaymentRequestEntity)
 
-    @Query("SELECT * FROM LoanRepaymentRequest ORDER BY timeStamp ASC")
-    fun readAllLoanRepaymentTransaction(): Flow<List<LoanRepaymentRequest>>
+    @Query("SELECT * FROM LoanRepaymentRequestEntity ORDER BY timeStamp ASC")
+    fun readAllLoanRepaymentTransaction(): Flow<List<LoanRepaymentRequestEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLoanRepaymentTemplate(template: LoanRepaymentTemplate)
+    suspend fun insertLoanRepaymentTemplate(template: LoanRepaymentTemplateEntity)
 
     @Query("SELECT * FROM LoanRepaymentTemplate WHERE loanId = :loanId LIMIT 1")
-    fun getLoanRepaymentTemplate(loanId: Int): LoanRepaymentTemplate?
+    fun getLoanRepaymentTemplate(loanId: Int): LoanRepaymentTemplateEntity?
 
     @Query("DELETE FROM LoanRepaymentTemplate WHERE loanId = :loanId")
     suspend fun deleteLoanRepaymentByLoanId(loanId: Int)

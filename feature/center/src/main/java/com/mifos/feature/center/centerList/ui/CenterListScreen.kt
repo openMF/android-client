@@ -53,6 +53,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -69,20 +73,15 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.LightGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.group.Center
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.R
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
+import com.mifos.room.entities.group.CenterEntity
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
@@ -163,7 +162,7 @@ internal fun CenterListScreen(
                             },
                         ) {
                             Icon(
-                                imageVector = MifosIcons.sync,
+                                imageVector = MifosIcons.Sync,
                                 contentDescription = "Sync Items",
                             )
                             Text(text = stringResource(id = R.string.feature_center_sync))
@@ -176,7 +175,7 @@ internal fun CenterListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { createNewCenter() },
-                containerColor = BlueSecondary,
+//                containerColor = ,
             ) {
                 Icon(
                     imageVector = MifosIcons.Add,
@@ -242,21 +241,21 @@ internal fun CenterListScreen(
     }
 }
 
-private class SelectedItemsState(initialSelectedItems: List<Center> = emptyList()) {
-    private val _selectedItems = mutableStateListOf<Center>().also { it.addAll(initialSelectedItems) }
-    val selectedItems: State<List<Center>> = derivedStateOf { _selectedItems }
+private class SelectedItemsState(initialSelectedItems: List<CenterEntity> = emptyList()) {
+    private val _selectedItems = mutableStateListOf<CenterEntity>().also { it.addAll(initialSelectedItems) }
+    val selectedItems: State<List<CenterEntity>> = derivedStateOf { _selectedItems }
 
-    fun add(item: Center) {
+    fun add(item: CenterEntity) {
         _selectedItems.add(item)
     }
 
-    fun remove(item: Center) {
+    fun remove(item: CenterEntity) {
         _selectedItems.remove(item)
     }
-    fun toList(): List<Center> {
+    fun toList(): List<CenterEntity> {
         return _selectedItems.toList()
     }
-    fun contains(item: Center): Boolean {
+    fun contains(item: CenterEntity): Boolean {
         return _selectedItems.contains(item)
     }
 
@@ -274,7 +273,7 @@ private class SelectedItemsState(initialSelectedItems: List<Center> = emptyList(
 
 @Composable
 private fun CenterListContent(
-    centerPagingList: LazyPagingItems<Center>,
+    centerPagingList: LazyPagingItems<CenterEntity>,
     isInSelectionMode: Boolean,
     selectedItems: SelectedItemsState,
     onRefresh: () -> Unit,
@@ -474,7 +473,7 @@ private fun CenterListContent(
 
 @Composable
 private fun CenterListDbContent(
-    centerList: List<Center>,
+    centerList: List<CenterEntity>,
 ) {
     LazyColumn {
         items(centerList) { center ->
@@ -631,7 +630,7 @@ private fun CenterListScreenPreview(
 }
 
 val sampleCenterListDb = List(10) {
-    Center(
+    CenterEntity(
         name = "Center $it",
         officeId = it,
         officeName = "Office $it",

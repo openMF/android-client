@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.loanRepaymentSchedule
 
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 
 /**
  * Created by Aditya Gupta on 12/08/23.
@@ -20,6 +20,6 @@ sealed class LoanRepaymentScheduleUiState {
 
     data class ShowFetchingError(val message: String) : LoanRepaymentScheduleUiState()
 
-    data class ShowLoanRepaySchedule(val loanWithAssociations: LoanWithAssociations) :
+    data class ShowLoanRepaySchedule(val loanWithAssociations: LoanWithAssociationsEntity) :
         LoanRepaymentScheduleUiState()
 }

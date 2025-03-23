@@ -11,9 +11,9 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.network.datamanager.DataManagerSurveys
-import com.mifos.room.entities.survey.QuestionDatas
-import com.mifos.room.entities.survey.ResponseDatas
-import com.mifos.room.entities.survey.Survey
+import com.mifos.room.entities.survey.QuestionDatasEntity
+import com.mifos.room.entities.survey.ResponseDatasEntity
+import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -23,19 +23,19 @@ import javax.inject.Inject
 class SurveyListRepositoryImp @Inject constructor(private val dataManagerSurveys: DataManagerSurveys) :
     SurveyListRepository {
 
-    override fun allSurvey(): Flow<List<Survey>> {
+    override fun allSurvey(): Flow<List<SurveyEntity>> {
         return dataManagerSurveys.allSurvey
     }
 
-    override fun databaseSurveys(): Flow<List<Survey>> {
+    override fun databaseSurveys(): Flow<List<SurveyEntity>> {
         return dataManagerSurveys.databaseSurveys
     }
 
-    override fun getDatabaseQuestionData(surveyId: Int): Flow<List<QuestionDatas>> {
+    override fun getDatabaseQuestionData(surveyId: Int): Flow<List<QuestionDatasEntity>> {
         return dataManagerSurveys.getDatabaseQuestionData(surveyId)
     }
 
-    override fun getDatabaseResponseDatas(questionId: Int): Flow<List<ResponseDatas>> {
+    override fun getDatabaseResponseDatas(questionId: Int): Flow<List<ResponseDatasEntity>> {
         return dataManagerSurveys.getDatabaseResponseDatas(questionId)
     }
 }

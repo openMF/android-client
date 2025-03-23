@@ -10,10 +10,10 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.GroupLoanAccountRepository
-import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
+import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.DataManager
-import com.mifos.core.objects.template.loan.GroupLoanTemplate
+import com.mifos.room.entities.accounts.loans.Loan
 import rx.Observable
 import javax.inject.Inject
 
@@ -30,7 +30,7 @@ class GroupLoanAccountRepositoryImp @Inject constructor(private val dataManager:
         return dataManager.getGroupLoansAccountTemplate(groupId, productId)
     }
 
-    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload): Observable<Loans> {
+    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload): Observable<Loan> {
         return dataManager.createGroupLoansAccount(loansPayload)
     }
 }

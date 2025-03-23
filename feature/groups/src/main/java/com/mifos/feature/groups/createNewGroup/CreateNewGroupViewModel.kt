@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.room.entities.group.GroupPayload
+import com.mifos.room.entities.group.GroupPayloadEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -64,7 +64,7 @@ class CreateNewGroupViewModel @Inject constructor(
         }
     }
 
-    fun createGroup(groupPayload: GroupPayload) {
+    fun createGroup(groupPayload: GroupPayloadEntity) {
         _createNewGroupUiState.value =
             CreateNewGroupUiState.ShowProgressbar
 

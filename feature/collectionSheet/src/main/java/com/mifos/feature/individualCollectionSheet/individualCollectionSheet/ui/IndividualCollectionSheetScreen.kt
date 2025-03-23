@@ -24,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTabRow
-import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.utility.TabContent
 import com.mifos.feature.collection_sheet.R
 import com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet.ui.NewIndividualCollectionSheetScreen
@@ -52,7 +51,6 @@ internal fun IndividualCollectionSheetScreen(
     )
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_collection_sheet_individual_collection_sheet),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,

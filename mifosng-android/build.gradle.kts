@@ -165,10 +165,6 @@ dependencies {
     // Kotlin standard library
     implementation(libs.kotlin.stdlib)
 
-    //DBFlow dependencies
-    kapt(libs.dbflow.processor)
-    implementation(libs.dbflow)
-
     // App's Support dependencies, including test
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.legacy.support.v4)
@@ -240,10 +236,6 @@ dependencies {
     // Navigation Components
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-
-    // Hilt dependency
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
 
     // fineract sdk dependencies
     implementation(libs.mifos.android.sdk.arch)

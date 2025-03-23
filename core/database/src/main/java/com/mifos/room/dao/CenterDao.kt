@@ -14,43 +14,43 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.mifos.room.entities.accounts.loans.LoanAccount
-import com.mifos.room.entities.accounts.savings.SavingsAccount
-import com.mifos.room.entities.center.CenterPayload
-import com.mifos.room.entities.group.Center
-import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.center.CenterPayloadEntity
+import com.mifos.room.entities.group.CenterEntity
+import com.mifos.room.entities.group.GroupEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CenterDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveCenter(center: Center)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = CenterEntity::class)
+    suspend fun saveCenter(center: CenterEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveLoanAccount(loanAccount: LoanAccount)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = LoanAccountEntity::class)
+    suspend fun saveLoanAccount(loanAccount: LoanAccountEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveSavingsAccount(savingsAccount: SavingsAccount)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = SavingsAccountEntity::class)
+    suspend fun saveSavingsAccount(savingsAccount: SavingsAccountEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveMemberLoanAccount(loanAccount: LoanAccount)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = LoanAccountEntity::class)
+    suspend fun saveMemberLoanAccount(loanAccount: LoanAccountEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveCenterPayload(centerPayload: CenterPayload?)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = CenterPayloadEntity::class)
+    suspend fun saveCenterPayload(centerPayload: CenterPayloadEntity)
 
-    @Update
-    suspend fun updateCenterPayload(centerPayload: CenterPayload?)
+    @Update(entity = CenterPayloadEntity::class)
+    suspend fun updateCenterPayload(centerPayload: CenterPayloadEntity)
 
     @Query("DELETE FROM CenterPayload WHERE id = :id")
     suspend fun deleteCenterPayloadById(id: Int)
 
     @Query("SELECT * FROM Center")
-    fun readAllCenters(): Flow<List<Center>>
+    fun readAllCenters(): Flow<List<CenterEntity>>
 
     @Query("SELECT * FROM CenterPayload")
-    fun readAllCenterPayload(): Flow<List<CenterPayload>>
+    fun readAllCenterPayload(): Flow<List<CenterPayloadEntity>>
 
     @Query("SELECT * FROM GroupTable WHERE centerId = :centerId")
-    fun getCenterAssociateGroups(centerId: Int): Flow<List<Group>>
+    fun getCenterAssociateGroups(centerId: Int): Flow<List<GroupEntity>>
 }

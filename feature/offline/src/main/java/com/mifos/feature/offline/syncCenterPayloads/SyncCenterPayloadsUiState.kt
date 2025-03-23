@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.offline.syncCenterPayloads
 
-import com.mifos.room.entities.center.CenterPayload
+import com.mifos.room.entities.center.CenterPayloadEntity
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -20,5 +20,5 @@ sealed class SyncCenterPayloadsUiState {
 
     data class ShowError(val message: String) : SyncCenterPayloadsUiState()
 
-    data class ShowCenters(val centerPayloads: List<CenterPayload>) : SyncCenterPayloadsUiState()
+    data class ShowCenters(val centerPayloads: List<CenterPayloadEntity>) : SyncCenterPayloadsUiState()
 }

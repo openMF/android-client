@@ -10,8 +10,9 @@
 package com.mifos.room.entities.collectionsheet
 
 import android.os.Parcelable
-import com.mifos.core.entity.accounts.loan.Status
-import com.mifos.core.objects.collectionsheets.CollectionMeetingCalendar
+import com.mifos.core.model.objects.collectionsheets.CollectionMeetingCalendar
+import com.mifos.room.entities.accounts.loans.LoanStatusEntity
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -20,33 +21,34 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class MeetingFallCalendar(
     // It's not a mistake. This AccountNo field DOES expect a String.
-    var accountNo: String? = null,
+    val accountNo: String? = null,
 
-    var activationDate: IntArray,
+    val activationDate: List<Int>,
 
-    var isActive: Boolean = false,
+    val isActive: Boolean = false,
 
-    var collectionMeetingCalendar: CollectionMeetingCalendar? = null,
+    @IgnoredOnParcel
+    val collectionMeetingCalendar: CollectionMeetingCalendar? = null,
 
-    var hierarchy: String? = null,
+    val hierarchy: String? = null,
 
-    var id: Int = 0,
+    val id: Int = 0,
 
-    var installmentDue: Int = 0,
+    val installmentDue: Int = 0,
 
-    var name: String? = null,
+    val name: String? = null,
 
-    var officeId: Int = 0,
+    val officeId: Int = 0,
 
-    var staffId: Int = 0,
+    val staffId: Int = 0,
 
-    var staffName: String? = null,
+    val staffName: String? = null,
 
-    var status: Status? = null,
+    val status: LoanStatusEntity? = null,
 
-    var totalCollected: Int = 0,
+    val totalCollected: Int = 0,
 
-    var totalOverdue: Int = 0,
+    val totalOverdue: Int = 0,
 
-    var totaldue: Int = 0,
+    val totaldue: Int = 0,
 ) : Parcelable

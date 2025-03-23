@@ -17,7 +17,7 @@ object GetOfficeResponseMapper : AbstractMapper<GetOfficesResponse, OfficeEntity
 
     override fun mapFromEntity(entity: GetOfficesResponse): OfficeEntity {
         return OfficeEntity(
-            id = entity.id?.toInt(),
+            id = entity.id?.toInt()!!,
             externalId = entity.externalId,
             name = entity.name,
             nameDecorated = entity.nameDecorated,
@@ -28,7 +28,7 @@ object GetOfficeResponseMapper : AbstractMapper<GetOfficesResponse, OfficeEntity
 
     override fun mapToEntity(domainModel: OfficeEntity): GetOfficesResponse {
         return GetOfficesResponse(
-            id = domainModel.id?.toLong(),
+            id = domainModel.id.toLong(),
             name = domainModel.name,
             nameDecorated = domainModel.nameDecorated,
             externalId = domainModel.externalId,

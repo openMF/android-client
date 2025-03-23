@@ -9,10 +9,12 @@
  */
 package com.mifos.core.common.utils
 
+import android.Manifest
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.annotation.MainThread
+import androidx.annotation.RequiresPermission
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,6 +24,7 @@ class NetworkUtilsWrapper @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
 
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     @MainThread
     fun isNetworkConnected(): Boolean {
         val connectivityManager =

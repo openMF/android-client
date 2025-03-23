@@ -9,8 +9,8 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.objects.clients.ChargeCreationResponse
-import com.mifos.core.payloads.ChargesPayload
+import com.mifos.core.model.objects.clients.ChargeCreationResponse
+import com.mifos.core.model.objects.payloads.ChargesPayload
 import okhttp3.ResponseBody
 
 /**

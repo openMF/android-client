@@ -10,7 +10,7 @@
 package com.mifos.room.helper
 
 import com.mifos.room.dao.StaffDao
-import com.mifos.room.entities.organisation.Staff
+import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -20,11 +20,11 @@ import javax.inject.Inject
 class StaffDaoHelper @Inject constructor(
     private val staffDao: StaffDao,
 ) {
-    suspend fun saveAllStaffOfOffices(staffs: List<Staff>) {
+    suspend fun saveAllStaffOfOffices(staffs: List<StaffEntity>) {
         staffDao.insertStaffs(staffs)
     }
 
-    fun getAllStaffOffices(officeId: Int): Flow<List<Staff>> {
+    fun getAllStaffOffices(officeId: Int): Flow<List<StaffEntity>> {
         return staffDao.getAllStaff(officeId)
     }
 }

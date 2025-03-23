@@ -14,10 +14,10 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.mifos.room.entities.accounts.loans.LoanAccount
-import com.mifos.room.entities.accounts.savings.SavingsAccount
-import com.mifos.room.entities.group.Group
-import com.mifos.room.entities.group.GroupPayload
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.group.GroupEntity
+import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -27,38 +27,38 @@ import kotlinx.coroutines.flow.Flow
 interface GroupsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGroup(group: Group)
+    suspend fun insertGroup(group: GroupEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLoanAccount(loanAccount: LoanAccount)
+    suspend fun insertLoanAccount(loanAccount: LoanAccountEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSavingsAccount(savingsAccount: SavingsAccount)
+    suspend fun insertSavingsAccount(savingsAccount: SavingsAccountEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGroupPayload(groupPayload: GroupPayload)
+    suspend fun insertGroupPayload(groupPayload: GroupPayloadEntity)
 
     @Update
-    suspend fun updateGroupPayload(payload: GroupPayload)
+    suspend fun updateGroupPayload(payload: GroupPayloadEntity)
 
     @Query("DELETE FROM GroupPayload where id = :groupId")
     suspend fun deleteGroupPayloadById(groupId: Int)
 
     @Query("SELECT * FROM GroupTable")
-    fun getAllGroups(): Flow<List<Group>>
+    fun getAllGroups(): Flow<List<GroupEntity>>
 
     @Query("SELECT * FROM GroupTable LIMIT :limit OFFSET :offset")
-    suspend fun getAllGroups(offset: Int, limit: Int): List<Group>
+    suspend fun getAllGroups(offset: Int, limit: Int): List<GroupEntity>
 
     @Query("SELECT * FROM GroupTable WHERE id = :groupId")
-    fun getGroupById(groupId: Int): Flow<Group>
+    fun getGroupById(groupId: Int): Flow<GroupEntity>
 
-    @Query("SELECT * FROM LoanAccount WHERE groupId = :groupId")
-    fun getLoanAccountsByGroupId(groupId: Int): Flow<List<LoanAccount>>
+    @Query("SELECT * FROM LoanAccountEntity WHERE groupId = :groupId")
+    fun getLoanAccountsByGroupId(groupId: Int): Flow<List<LoanAccountEntity>>
 
     @Query("SELECT * FROM GroupPayload")
-    fun getAllGroupPayloads(): Flow<List<GroupPayload>>
+    fun getAllGroupPayloads(): Flow<List<GroupPayloadEntity>>
 
     @Query("SELECT * FROM SavingsAccount WHERE groupId = :groupId")
-    fun getSavingsAccountsByGroupId(groupId: Int): Flow<List<SavingsAccount>>
+    fun getSavingsAccountsByGroupId(groupId: Int): Flow<List<SavingsAccountEntity>>
 }

@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.offline.syncSavingsAccountTransaction
 
-import com.mifos.core.entity.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.room.entities.PaymentTypeOption
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -21,8 +21,8 @@ sealed class SyncSavingsAccountTransactionUiState {
     data class ShowError(val message: Int) : SyncSavingsAccountTransactionUiState()
 
     data class ShowSavingsAccountTransactions(
-        val savingsList: MutableList<SavingsAccountTransactionRequest>,
-        val paymentTypeOptions: List<PaymentTypeOption>,
+        val savingsList: MutableList<SavingsAccountTransactionRequestEntity>,
+        val paymentTypeOptions: List<PaymentTypeOptionEntity>,
     ) :
         SyncSavingsAccountTransactionUiState()
 

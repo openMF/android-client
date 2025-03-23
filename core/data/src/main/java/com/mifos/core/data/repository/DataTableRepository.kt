@@ -9,12 +9,12 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.noncore.DataTable
+import com.mifos.room.entities.noncore.DataTableEntity
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
 interface DataTableRepository {
 
-    suspend fun getDataTable(tableName: String?): List<DataTable>
+    suspend fun getDataTable(tableName: String?): List<DataTableEntity>
 }

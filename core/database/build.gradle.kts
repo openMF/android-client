@@ -13,7 +13,7 @@ plugins {
     alias(libs.plugins.mifos.android.room)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.mifos.android.library.jacoco)
-    id(libs.plugins.kotlin.parcelize.get().pluginId)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -25,31 +25,11 @@ android {
 }
 
 dependencies {
-    api(projects.core.common)
     api(projects.core.model)
-    api(projects.core.datastore)
+    api(projects.core.common)
 
     implementation(libs.converter.gson)
-
     implementation(libs.kotlinx.serialization.json)
-    //rxjava dependencies
-    implementation(libs.rxandroid)
-    implementation(libs.rxjava)
-
-    //DBFlow dependencies
-    kapt(libs.dbflow.processor)
-    implementation(libs.dbflow)
-    kapt(libs.github.dbflow.processor)
-
-    //room dependencies
-//    implementation(libs.room.runtime)
-//    implementation(libs.room.ktx)
-//    ksp(libs.room.compiler)
-//    kspTest(libs.room.compiler)
-
-    // Hilt dependency
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
 
     // fineract sdk dependencies
     implementation(libs.mifos.android.sdk.arch)

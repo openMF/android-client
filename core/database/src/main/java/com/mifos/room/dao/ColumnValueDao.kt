@@ -19,13 +19,13 @@ import com.mifos.room.entities.noncore.ColumnValue
 
 @Dao
 interface ColumnValueDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = ColumnValue::class)
     suspend fun insert(columnValue: ColumnValue)
 
-    @Update
+    @Update(entity = ColumnValue::class)
     suspend fun update(columnValue: ColumnValue)
 
-    @Delete
+    @Delete(entity = ColumnValue::class)
     suspend fun delete(columnValue: ColumnValue)
 
     @Query("SELECT * FROM ColumnValue WHERE id = :id")
