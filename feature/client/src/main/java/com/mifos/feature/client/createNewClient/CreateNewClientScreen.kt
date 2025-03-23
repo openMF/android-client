@@ -291,7 +291,7 @@ private fun CreateNewClientContent(
     val file = context.createTempImageFile()
     val imgUri = FileProvider.getUriForFile(
         Objects.requireNonNull(context),
-        "com.mifos.mifosxdroid" + ".provider",
+        context.packageName + ".provider",
         file,
     )
     val cameraLauncher = rememberLauncherForActivityResult(
