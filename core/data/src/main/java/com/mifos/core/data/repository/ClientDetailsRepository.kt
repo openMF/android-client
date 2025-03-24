@@ -10,9 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.room.entities.accounts.ClientAccounts
-import com.mifos.room.entities.client.Client
+import com.mifos.room.entities.client.ClientEntity
 import okhttp3.MultipartBody
-import okhttp3.ResponseBody
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -21,9 +20,9 @@ interface ClientDetailsRepository {
 
     suspend fun uploadClientImage(id: Int, file: MultipartBody.Part?)
 
-    suspend fun deleteClientImage(clientId: Int): ResponseBody
+    suspend fun deleteClientImage(clientId: Int)
 
     suspend fun getClientAccounts(clientId: Int): ClientAccounts
 
-    suspend fun getClient(clientId: Int): Client
+    suspend fun getClient(clientId: Int): ClientEntity
 }

@@ -13,6 +13,7 @@ import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.network.datamanager.DataManagerClient
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import javax.inject.Inject
 
@@ -24,7 +25,9 @@ class ClientIdentifiersRepositoryImp @Inject constructor(
 ) : ClientIdentifiersRepository {
 
     override fun getClientIdentifiers(clientId: Int): Flow<List<Identifier>> {
-        return dataManagerClient.getClientIdentifiers(clientId)
+        return flow {
+            emit(dataManagerClient.getClientIdentifiers(clientId))
+        }
     }
 
     override suspend fun deleteClientIdentifier(

@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,7 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -58,8 +57,6 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.White
 import com.mifos.feature.checker_inbox_task.R
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
@@ -232,10 +229,10 @@ private fun CheckerInboxTasksFilterDialog(
                         Text(
                             text = stringResource(id = R.string.feature_checker_inbox_task_filter_checkers),
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                            color = BluePrimary,
+//                            color = BluePrimary,
                         )
                         Icon(
-                            imageVector = MifosIcons.cancel,
+                            imageVector = MifosIcons.Cancel,
                             contentDescription = "",
                             tint = colorResource(android.R.color.darker_gray),
                             modifier = Modifier
@@ -249,7 +246,7 @@ private fun CheckerInboxTasksFilterDialog(
 
                     MifosDatePickerTextField(
                         value = if (fromDate == 0L) "" else formatter.format(Date(fromDate)),
-                        label = R.string.feature_checker_inbox_task_select_from_date,
+                        label = stringResource(R.string.feature_checker_inbox_task_select_from_date),
                         openDatePicker = {
                             if (fromDate == 0L) {
                                 fromDatePickerState.selectedDateMillis = System.currentTimeMillis()
@@ -264,7 +261,7 @@ private fun CheckerInboxTasksFilterDialog(
 
                     MifosDatePickerTextField(
                         value = if (toDate == 0L) "" else formatter.format(Date(toDate)),
-                        label = R.string.feature_checker_inbox_task_select_to_date,
+                        label = stringResource(R.string.feature_checker_inbox_task_select_to_date),
                         openDatePicker = {
                             if (toDate == 0L) {
                                 toDatePickerState.selectedDateMillis = System.currentTimeMillis()
@@ -310,15 +307,15 @@ private fun CheckerInboxTasksFilterDialog(
 
                     MifosOutlinedTextField(
                         value = resourceId,
-                        onValueChange = { value ->
+                        onValueChanged = { value ->
                             resourceId = value
                             resourceIdError = false
                         },
-                        label = R.string.feature_checker_inbox_task_resourceId,
+                        label = stringResource(R.string.feature_checker_inbox_task_resourceId),
                         error = null,
                         trailingIcon = {
                             if (resourceIdError) {
-                                Icon(imageVector = MifosIcons.error, contentDescription = null)
+                                Icon(imageVector = MifosIcons.Error, contentDescription = null)
                             }
                         },
                     )
@@ -335,12 +332,6 @@ private fun CheckerInboxTasksFilterDialog(
                             },
                             modifier = Modifier
                                 .height(40.dp),
-                            colors = ButtonColors(
-                                containerColor = BluePrimary,
-                                contentColor = White,
-                                disabledContainerColor = BluePrimary,
-                                disabledContentColor = White,
-                            ),
                         ) {
                             Text(text = stringResource(id = R.string.feature_checker_inbox_task_clear_filter))
                         }
@@ -361,12 +352,6 @@ private fun CheckerInboxTasksFilterDialog(
                             },
                             modifier = Modifier
                                 .height(40.dp),
-                            colors = ButtonColors(
-                                containerColor = BluePrimary,
-                                contentColor = White,
-                                disabledContainerColor = BluePrimary,
-                                disabledContentColor = Gray,
-                            ),
                         ) {
                             Text(text = stringResource(id = R.string.feature_checker_inbox_task_apply_filter))
                         }

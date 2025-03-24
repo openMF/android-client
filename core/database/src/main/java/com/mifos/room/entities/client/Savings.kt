@@ -9,7 +9,7 @@
  */
 package com.mifos.room.entities.client
 
-import com.mifos.room.entities.accounts.savings.DepositType
+import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 
 /**
  * Created by nellyk on 2/19/2016.
@@ -23,13 +23,13 @@ data class Savings(
 
     val productName: String? = null,
 
-    val status: Status? = null,
+    val status: ClientStatusEntity? = null,
 
-    val currency: Currency? = null,
+    val currency: ClientChargeCurrencyEntity? = null,
 
     val accountBalance: Double? = null,
 
     val additionalProperties: Map<String, Any> = emptyMap(),
 
-    val depositType: DepositType? = null,
+    val depositType: SavingAccountDepositTypeEntity? = null,
 )

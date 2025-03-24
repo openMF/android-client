@@ -9,13 +9,13 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.model.objects.clients.Page
-import com.mifos.room.entities.group.Group
+import com.mifos.core.common.utils.Page
+import com.mifos.room.entities.group.GroupEntity
 import kotlinx.coroutines.flow.Flow
 
 interface GroupsListRepository {
 
-    suspend fun getAllGroups(paged: Boolean, offset: Int, limit: Int): List<Group>
+    suspend fun getAllGroups(paged: Boolean, offset: Int, limit: Int): List<GroupEntity>
 
-    fun getAllLocalGroups(): Flow<Page<Group>>
+    fun getAllLocalGroups(): Flow<Page<GroupEntity>>
 }

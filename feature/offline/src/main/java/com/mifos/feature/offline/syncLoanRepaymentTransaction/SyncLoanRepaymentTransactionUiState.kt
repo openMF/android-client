@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -22,8 +22,8 @@ sealed class SyncLoanRepaymentTransactionUiState {
     data class ShowError(val message: Int) : SyncLoanRepaymentTransactionUiState()
 
     data class ShowLoanRepaymentTransactions(
-        val loanRepaymentRequests: List<LoanRepaymentRequest>,
-        val paymentTypeOptions: List<PaymentTypeOption>,
+        val loanRepaymentRequests: List<LoanRepaymentRequestEntity>,
+        val paymentTypeOptions: List<PaymentTypeOptionEntity>,
     ) : SyncLoanRepaymentTransactionUiState()
 
     data class ShowEmptyLoanRepayments(val message: String) : SyncLoanRepaymentTransactionUiState()

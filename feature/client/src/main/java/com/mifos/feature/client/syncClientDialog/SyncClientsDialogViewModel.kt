@@ -17,9 +17,9 @@ import com.mifos.core.data.repository.SyncClientsDialogRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.client.R
-import com.mifos.room.entities.accounts.loans.LoanAccount
-import com.mifos.room.entities.accounts.savings.SavingsAccount
-import com.mifos.room.entities.client.Client
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,10 +46,10 @@ class SyncClientsDialogViewModel @Inject constructor(
     private val prefManager: PrefManager,
 ) : ViewModel() {
 
-    private var mClientList: List<Client> = ArrayList()
-    private val mFailedSyncClient: MutableList<Client> = ArrayList()
-    private var mLoanAccountList: List<LoanAccount> = ArrayList()
-    private var mSavingsAccountList: List<SavingsAccount> = ArrayList()
+    private var mClientList: List<ClientEntity> = ArrayList()
+    private val mFailedSyncClient: MutableList<ClientEntity> = ArrayList()
+    private var mLoanAccountList: List<LoanAccountEntity> = ArrayList()
+    private var mSavingsAccountList: List<SavingsAccountEntity> = ArrayList()
     private var mLoanAccountSyncStatus = false
     private var mClientSyncIndex = 0
     private var mLoanAndRepaymentSyncIndex = 0
@@ -65,7 +65,7 @@ class SyncClientsDialogViewModel @Inject constructor(
     )
     val syncClientData: StateFlow<SyncClientsDialogData> = _syncClientData
 
-    fun setClientList(clientsList: List<Client>) {
+    fun setClientList(clientsList: List<ClientEntity>) {
         mClientList = clientsList
         _syncClientData.update { it.copy(clientList = clientsList) }
     }
@@ -260,7 +260,7 @@ class SyncClientsDialogViewModel @Inject constructor(
      *
      * @param client
      */
-    fun syncClient(client: com.mifos.room.entities.client.Client) {
+    fun syncClient(client: com.mifos.room.entities.client.ClientEntity) {
         val updatedClient = client.copy(
             groupId = mClientList[mClientSyncIndex].id,
             sync = true,
@@ -303,16 +303,16 @@ class SyncClientsDialogViewModel @Inject constructor(
         }
     }
 
-    fun getActiveLoanAccounts(loanAccountList: List<LoanAccount>?): List<LoanAccount> {
-        val loanAccounts: MutableList<LoanAccount> = ArrayList()
+    fun getActiveLoanAccounts(loanAccountList: List<LoanAccountEntity>?): List<LoanAccountEntity> {
+        val loanAccounts: MutableList<LoanAccountEntity> = ArrayList()
         Observable.from(loanAccountList)
             .filter { loanAccount -> loanAccount.status?.active }
             .subscribe { loanAccount -> loanAccounts.add(loanAccount) }
         return loanAccounts
     }
 
-    fun getSyncableSavingsAccounts(savingsAccounts: List<SavingsAccount>?): List<SavingsAccount> {
-        val accounts: MutableList<SavingsAccount> = ArrayList()
+    fun getSyncableSavingsAccounts(savingsAccounts: List<SavingsAccountEntity>?): List<SavingsAccountEntity> {
+        val accounts: MutableList<SavingsAccountEntity> = ArrayList()
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
                 savingsAccount.depositType?.value == "Savings" &&

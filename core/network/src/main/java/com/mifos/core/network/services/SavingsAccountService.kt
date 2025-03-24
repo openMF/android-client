@@ -9,18 +9,17 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.client.Savings
-import com.mifos.core.entity.templates.savings.SavingProductsTemplate
-import com.mifos.core.model.APIEndPoint
+import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.account.loan.SavingsApproval
-import com.mifos.core.objects.account.saving.SavingsAccountTransactionResponse
-import com.mifos.core.objects.organisations.ProductSavings
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.basemodel.APIEndPoint
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
+import com.mifos.room.entities.client.Savings
+import com.mifos.room.entities.templates.savings.SavingProductsTemplate
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -54,7 +53,7 @@ interface SavingsAccountService {
         @Path("savingsAccountType") savingsAccountType: String?,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("associations") association: String?,
-    ): Flow<SavingsAccountWithAssociations>
+    ): Flow<SavingsAccountWithAssociationsEntity>
 
     /**
      * This Method for Retrieving Savings Account Transaction Template from REST API
@@ -71,7 +70,7 @@ interface SavingsAccountService {
         @Path("savingsAccountType") savingsAccountType: String?,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("command") transactionType: String?,
-    ): Flow<SavingsAccountTransactionTemplate>
+    ): Flow<SavingsAccountTransactionTemplateEntity>
 
     /**
      * This Service making POST Request to the REST API :
@@ -89,7 +88,7 @@ interface SavingsAccountService {
         @Path("savingsAccountType") savingsAccountType: String?,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("command") transactionType: String?,
-        @Body savingsAccountTransactionRequest: SavingsAccountTransactionRequest?,
+        @Body savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity?,
     ): SavingsAccountTransactionResponse
 
     @POST(APIEndPoint.CREATE_SAVINGS_ACCOUNTS + "/{savingsAccountId}/?command=activate")

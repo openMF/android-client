@@ -11,8 +11,8 @@ package com.mifos.room.entities.group
 
 import android.os.Parcelable
 import com.mifos.room.entities.Timeline
-import com.mifos.room.entities.client.Client
-import com.mifos.room.entities.client.Status
+import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientStatusEntity
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -26,7 +26,7 @@ data class GroupWithAssociations(
 
     val name: String? = null,
 
-    val status: Status? = null,
+    val status: ClientStatusEntity? = null,
 
     val active: Boolean? = null,
 
@@ -44,7 +44,7 @@ data class GroupWithAssociations(
 
     val groupLevel: Int? = null,
 
-    val clientMembers: List<Client> = emptyList(),
+    val clientMembers: List<ClientEntity> = emptyList(),
 
     val timeline: Timeline? = null,
 ) : Parcelable

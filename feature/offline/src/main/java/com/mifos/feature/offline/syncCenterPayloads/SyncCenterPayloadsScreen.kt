@@ -9,8 +9,10 @@
  */
 package com.mifos.feature.offline.syncCenterPayloads
 
+import android.Manifest
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -49,9 +51,9 @@ import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.center.CenterPayload
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.offline.R
+import com.mifos.room.entities.center.CenterPayloadEntity
 
 @Composable
 internal fun SyncCenterPayloadsScreenRoute(
@@ -92,7 +94,6 @@ internal fun SyncCenterPayloadsScreen(
 
     MifosScaffold(
         modifier = modifier,
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_offline_sync_centers_payloads),
         onBackPressed = onBackPressed,
         actions = {
@@ -105,7 +106,7 @@ internal fun SyncCenterPayloadsScreen(
                 },
             ) {
                 Icon(
-                    MifosIcons.sync,
+                    MifosIcons.Sync,
                     contentDescription = stringResource(id = R.string.feature_offline_sync_centers),
                 )
             }
@@ -141,7 +142,7 @@ internal fun SyncCenterPayloadsScreen(
 
 @Composable
 private fun CenterPayloadsList(
-    centerPayloads: List<CenterPayload>,
+    centerPayloads: List<CenterPayloadEntity>,
     modifier: Modifier = Modifier,
 ) {
     if (centerPayloads.isEmpty()) {
@@ -157,7 +158,7 @@ private fun CenterPayloadsList(
 
 @Composable
 private fun CenterPayloadItem(
-    payload: CenterPayload,
+    payload: CenterPayloadEntity,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -219,6 +220,7 @@ private fun PayloadField(
     }
 }
 
+@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 private fun checkNetworkConnectionAndSync(
     context: Context,
     syncCenterPayloads: () -> Unit,
@@ -259,27 +261,27 @@ class SyncCenterPayloadsUiStateProvider : PreviewParameterProvider<SyncCenterPay
 
 // Sample data for previews
 val sampleCenterPayloads = List(5) { index ->
-    CenterPayload().apply {
-        name = "Center $index"
-        officeId = index + 1
-        activationDate = "2023-07-${15 + index}"
-        active = index % 2 == 0
-        errorMessage = if (index % 3 == 0) "Error in payload" else null
-    }
+    CenterPayloadEntity(
+        name = "Center $index",
+        officeId = index + 1,
+        activationDate = "2023-07-${15 + index}",
+        active = index % 2 == 0,
+        errorMessage = if (index % 3 == 0) "Error in payload" else null,
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun CenterPayloadItemPreview() {
-    val sampleCenterPayload = CenterPayload().apply {
-        name = "Sample Center"
-        officeId = 12345
-        activationDate = "2023-07-15"
-        active = true
-        errorMessage = null
-    }
+//    val sampleCenterPayload = CenterPayload().apply {
+//        name = "Sample Center"
+//        officeId = 12345
+//        activationDate = "2023-07-15"
+//        active = true
+//        errorMessage = null
+//    }
 
-    CenterPayloadItem(payload = sampleCenterPayload)
+//    CenterPayloadItem(payload = sampleCenterPayload)
 }
 
 @Preview(showBackground = true)

@@ -128,7 +128,6 @@ internal fun SignatureScreen(
     )
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_client_signature_title),
         onBackPressed = onBackPressed,
         actions = {
@@ -144,7 +143,7 @@ internal fun SignatureScreen(
                 image?.let { uploadSignature(it) }
             }) {
                 Icon(
-                    imageVector = MifosIcons.upload,
+                    imageVector = MifosIcons.Upload,
                     contentDescription = null,
                 )
             }
@@ -219,7 +218,7 @@ internal fun SignatureScreen(
 
 private data class BottomNavigationItem(
     val label: String = "",
-    val icon: ImageVector = MifosIcons.close,
+    val icon: ImageVector = MifosIcons.Close,
     val route: String = "",
 ) {
 
@@ -228,11 +227,11 @@ private data class BottomNavigationItem(
         return listOf(
             BottomNavigationItem(
                 label = stringResource(id = R.string.feature_client_signature_reset),
-                icon = MifosIcons.close,
+                icon = MifosIcons.Close,
             ),
             BottomNavigationItem(
                 label = stringResource(id = R.string.feature_client_signature_gallery),
-                icon = MifosIcons.gallery,
+                icon = MifosIcons.Gallery,
             ),
         )
     }

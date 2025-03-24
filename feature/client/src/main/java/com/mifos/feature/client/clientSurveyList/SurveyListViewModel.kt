@@ -14,8 +14,8 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.feature.client.R
-import com.mifos.room.entities.survey.QuestionDatas
-import com.mifos.room.entities.survey.Survey
+import com.mifos.room.entities.survey.QuestionDatasEntity
+import com.mifos.room.entities.survey.SurveyEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,8 +36,8 @@ class SurveyListViewModel @Inject constructor(
         MutableStateFlow<SurveyListUiState>(SurveyListUiState.ShowProgressbar)
     val surveyListUiState: StateFlow<SurveyListUiState> get() = _surveyListUiState
 
-    private var mDbSurveyList: List<Survey>? = null
-    private lateinit var mSyncSurveyList: List<Survey>
+    private var mDbSurveyList: List<SurveyEntity>? = null
+    private lateinit var mSyncSurveyList: List<SurveyEntity>
 
     fun loadSurveyList() {
         viewModelScope.launch {
@@ -78,7 +78,7 @@ class SurveyListViewModel @Inject constructor(
         }
     }
 
-    private fun loadDatabaseQuestionData(surveyId: Int, survey: Survey?) {
+    private fun loadDatabaseQuestionData(surveyId: Int, survey: SurveyEntity?) {
         viewModelScope.launch {
             _surveyListUiState.value = SurveyListUiState.ShowProgressbar
 
@@ -99,7 +99,7 @@ class SurveyListViewModel @Inject constructor(
         }
     }
 
-    private fun loadDatabaseResponseDatas(questionId: Int, questionDatas: QuestionDatas) {
+    private fun loadDatabaseResponseDatas(questionId: Int, questionDatas: QuestionDatasEntity) {
         viewModelScope.launch {
             _surveyListUiState.value = SurveyListUiState.ShowProgressbar
 
@@ -127,11 +127,11 @@ class SurveyListViewModel @Inject constructor(
         }
     }
 
-    private fun setAlreadySurveySyncStatus(surveys: List<Survey>) {
+    private fun setAlreadySurveySyncStatus(surveys: List<SurveyEntity>) {
         checkSurveyAlreadySyncedOrNot(surveys)
     }
 
-    private fun checkSurveyAlreadySyncedOrNot(surveys: List<Survey>) {
+    private fun checkSurveyAlreadySyncedOrNot(surveys: List<SurveyEntity>) {
         if (mDbSurveyList.isNullOrEmpty()) return
 
         mSyncSurveyList = surveys.map { syncSurvey ->

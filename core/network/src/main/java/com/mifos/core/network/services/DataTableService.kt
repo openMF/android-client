@@ -10,10 +10,10 @@
 package com.mifos.core.network.services
 
 import com.google.gson.JsonArray
-import com.mifos.core.entity.noncore.DataTable
+import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.users.UserLocation
 import com.mifos.room.basemodel.APIEndPoint
+import com.mifos.room.entities.noncore.DataTableEntity
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -27,7 +27,7 @@ import rx.Observable
  */
 interface DataTableService {
     @GET(APIEndPoint.DATATABLES)
-    fun getTableOf(@Query("apptable") table: String?): Observable<List<DataTable>>
+    fun getTableOf(@Query("apptable") table: String?): Observable<List<DataTableEntity>>
 
     @GET(APIEndPoint.DATATABLES + "/{dataTableName}/{entityId}/")
     suspend fun getDataOfDataTable(

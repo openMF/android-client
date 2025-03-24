@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.auth.login
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -52,7 +51,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -69,10 +71,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mifos.core.designsystem.component.MifosAndroidClientIcon
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
 import com.mifos.feature.auth.R
 
 /**
@@ -181,7 +179,7 @@ internal fun LoginScreen(
         ) {
             Spacer(modifier = Modifier.height(80.dp))
 
-            MifosAndroidClientIcon(R.drawable.feature_auth_mifos_logo)
+            MifosAndroidClientIcon(imageVector = painterResource(R.drawable.feature_auth_mifos_logo))
 
             Text(
                 modifier = Modifier
@@ -201,12 +199,12 @@ internal fun LoginScreen(
 
             MifosOutlinedTextField(
                 value = userName,
-                onValueChange = { value ->
+                onValueChanged = { value ->
                     userName = value
                 },
                 icon = Icons.Filled.Person,
-                label = R.string.feature_auth_username,
-                error = usernameError.value,
+                label = stringResource(R.string.feature_auth_username),
+                error = usernameError.value?.let { it1 -> stringResource(it1) },
                 trailingIcon = {
                     if (usernameError.value != null) {
                         Icon(imageVector = Icons.Filled.Error, contentDescription = null)
@@ -218,13 +216,13 @@ internal fun LoginScreen(
 
             MifosOutlinedTextField(
                 value = password,
-                onValueChange = { value ->
+                onValueChanged = { value ->
                     password = value
                 },
                 visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                 icon = Icons.Filled.Lock,
-                label = R.string.feature_auth_password,
-                error = passwordError.value,
+                label = stringResource(R.string.feature_auth_password),
+                error = passwordError.value?.let { it1 -> stringResource(it1) },
                 trailingIcon = {
                     if (passwordError.value == null) {
                         val image = if (passwordVisibility) {
@@ -250,9 +248,6 @@ internal fun LoginScreen(
                     .heightIn(44.dp)
                     .padding(start = 16.dp, end = 16.dp),
                 contentPadding = PaddingValues(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
             ) {
                 Text(text = "Login", fontSize = 16.sp)
             }

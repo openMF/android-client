@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -45,14 +44,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.noncore.DataTable
 import com.mifos.feature.data_table.R
+import com.mifos.room.entities.noncore.DataTableEntity
 
 @Composable
 fun DataTableRowDialogScreen(
-    dataTable: DataTable,
+    dataTable: DataTableEntity,
     entityId: Int,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
@@ -80,7 +77,7 @@ fun DataTableRowDialogScreen(
 
 @Composable
 fun DataTableRowDialogScreen(
-    dataTable: DataTable,
+    dataTable: DataTableEntity,
     state: DataTableRowDialogUiState,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
@@ -129,11 +126,11 @@ fun DataTableRowDialogScreen(
                                 Text(
                                     text = stringResource(id = R.string.feature_data_table_add_data_table),
                                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                                    color = BluePrimary,
+                                    color = Color.Blue,
                                 )
                                 IconButton(onClick = { onDismiss() }) {
                                     Icon(
-                                        imageVector = MifosIcons.close,
+                                        imageVector = MifosIcons.Close,
                                         contentDescription = "",
                                         tint = colorResource(android.R.color.darker_gray),
                                         modifier = Modifier
@@ -159,7 +156,7 @@ fun DataTableRowDialogScreen(
 
 @Composable
 fun DataTableRowDialogContent(
-    table: DataTable,
+    table: DataTableEntity,
     onCreate: (HashMap<String, String>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -175,12 +172,12 @@ fun DataTableRowDialogContent(
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
-        colors = ButtonColors(
-            containerColor = BluePrimary,
-            contentColor = White,
-            disabledContainerColor = BluePrimary,
-            disabledContentColor = Color.Gray,
-        ),
+//        colors = ButtonColors(
+//            containerColor = BluePrimary,
+//            contentColor = White,
+//            disabledContainerColor = BluePrimary,
+//            disabledContentColor = Color.Gray,
+//        ),
     ) {
         Text(text = stringResource(id = R.string.feature_data_table_submit))
     }
@@ -292,7 +289,7 @@ private fun DataTableRowDialogScreenPreview(
     @PreviewParameter(DataTableRowDialogUiStateProvider::class) state: DataTableRowDialogUiState,
 ) {
     DataTableRowDialogScreen(
-        dataTable = DataTable(),
+        dataTable = DataTableEntity(),
         state = state,
         onDismiss = {},
         onSuccess = {},

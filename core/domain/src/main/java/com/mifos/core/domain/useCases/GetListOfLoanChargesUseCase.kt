@@ -11,14 +11,14 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.LoanChargeRepository
-import com.mifos.core.entity.client.Charges
+import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetListOfLoanChargesUseCase @Inject constructor(private val repository: LoanChargeRepository) {
 
-    suspend operator fun invoke(loanId: Int): Flow<Resource<List<Charges>>> = flow {
+    suspend operator fun invoke(loanId: Int): Flow<Resource<List<ChargesEntity>>> = flow {
         try {
             emit(Resource.Loading())
             val response = repository.getListOfLoanCharges(loanId)

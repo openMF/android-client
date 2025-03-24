@@ -10,12 +10,12 @@
 package com.mifos.room.helper
 
 import com.mifos.room.dao.LoanDao
-import com.mifos.room.entities.PaymentTypeOption
-import com.mifos.room.entities.accounts.loans.ActualDisbursementDate
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
-import com.mifos.room.entities.accounts.loans.LoanRepaymentResponse
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
-import com.mifos.room.entities.templates.loans.LoanRepaymentTemplate
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
@@ -32,7 +32,7 @@ class LoanDaoHelper @Inject constructor(
      *
      * @param loanWithAssociations
      */
-    fun saveLoanById(loanWithAssociations: LoanWithAssociations): Flow<LoanWithAssociations> {
+    fun saveLoanById(loanWithAssociations: LoanWithAssociationsEntity): Flow<LoanWithAssociationsEntity> {
         return flow {
             // Setting Loan Id in Summary Table
             val updatedSummary = loanWithAssociations.summary.copy(
@@ -42,7 +42,7 @@ class LoanDaoHelper @Inject constructor(
             val updatedTimeline = loanWithAssociations.timeline.copy(
                 loanId = loanWithAssociations.id,
                 actualDisburseDate = loanWithAssociations.timeline.actualDisbursementDate?.let {
-                    ActualDisbursementDate(
+                    ActualDisbursementDateEntity(
                         loanId = loanWithAssociations.id,
                         year = it.getOrNull(0),
                         month = it.getOrNull(1),
@@ -67,7 +67,7 @@ class LoanDaoHelper @Inject constructor(
      * @param loanId
      * @return LoanWithAssociation
      */
-    fun getLoanById(loanId: Int): Flow<LoanWithAssociations?> {
+    fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity?> {
         return flow {
             val loan = loanDao.getLoanById(loanId).firstOrNull()
 
@@ -95,8 +95,8 @@ class LoanDaoHelper @Inject constructor(
      */
     suspend fun saveLoanRepaymentTransaction(
         loanId: Int,
-        loanRepaymentRequest: LoanRepaymentRequest,
-    ): LoanRepaymentResponse {
+        loanRepaymentRequest: LoanRepaymentRequestEntity,
+    ): LoanRepaymentResponseEntity {
         // Setting Loan Id and Time Stamp
         val updatedLoanRepaymentRequest = loanRepaymentRequest.copy(
             loanId = loanId,
@@ -105,7 +105,7 @@ class LoanDaoHelper @Inject constructor(
 
         // Saving Transaction In Database Table
         loanDao.insertLoanRepaymentTransaction(updatedLoanRepaymentRequest)
-        return LoanRepaymentResponse()
+        return LoanRepaymentResponseEntity()
     }
 
     /**
@@ -113,7 +113,7 @@ class LoanDaoHelper @Inject constructor(
      *
      * @return Flow<List<LoanRepaymentRequest>>
      </LoanRepaymentRequest> */
-    fun readAllLoanRepaymentTransaction(): Flow<List<LoanRepaymentRequest>> {
+    fun readAllLoanRepaymentTransaction(): Flow<List<LoanRepaymentRequestEntity>> {
         return loanDao.readAllLoanRepaymentTransaction()
     }
 
@@ -128,7 +128,7 @@ class LoanDaoHelper @Inject constructor(
      * @param loanId Loan Id
      * @return LoanRepaymentRequest by Loan Id
      */
-    suspend fun getDatabaseLoanRepaymentByLoanId(loanId: Int): LoanRepaymentRequest? {
+    suspend fun getDatabaseLoanRepaymentByLoanId(loanId: Int): LoanRepaymentRequestEntity? {
         return loanDao.getLoanRepaymentRequest(loanId)
     }
 
@@ -141,7 +141,7 @@ class LoanDaoHelper @Inject constructor(
      * @return LoanRepaymentRequest
      */
     suspend fun updateLoanRepaymentTransaction(
-        loanRepaymentRequest: LoanRepaymentRequest,
+        loanRepaymentRequest: LoanRepaymentRequestEntity,
     ) {
         loanDao.updateLoanRepaymentRequest(loanRepaymentRequest)
     }
@@ -155,7 +155,7 @@ class LoanDaoHelper @Inject constructor(
      * @return List<LoanRepaymentRequest>
      </LoanRepaymentRequest></LoanRepaymentRequest> */
     // TODO recheck logic in DatabaseHelperLoan.deleteAndUpdateLoanRepayments()
-    fun deleteAndUpdateLoanRepayments(loanId: Int): Flow<List<LoanRepaymentRequest>> {
+    fun deleteAndUpdateLoanRepayments(loanId: Int): Flow<List<LoanRepaymentRequestEntity>> {
         return flow {
             loanDao.deleteLoanRepaymentByLoanId(loanId)
             emitAll(loanDao.readAllLoanRepaymentTransaction())
@@ -172,8 +172,8 @@ class LoanDaoHelper @Inject constructor(
      */
     suspend fun saveLoanRepaymentTemplate(
         loanId: Int,
-        loanRepaymentTemplate: LoanRepaymentTemplate,
-    ): LoanRepaymentTemplate {
+        loanRepaymentTemplate: LoanRepaymentTemplateEntity,
+    ): LoanRepaymentTemplateEntity {
         val updatedLoanRepaymentTemplate = loanRepaymentTemplate.copy(loanId = loanId)
 
         updatedLoanRepaymentTemplate.paymentTypeOptions?.forEach { paymentTypeOption ->
@@ -191,7 +191,7 @@ class LoanDaoHelper @Inject constructor(
      * @return List<PaymentTypeOption>
      </PaymentTypeOption> */
 
-    val getAllPaymentTypeOption: Flow<List<PaymentTypeOption>> = loanDao.getPaymentTypeOptions()
+    val getAllPaymentTypeOption: Flow<List<PaymentTypeOptionEntity>> = loanDao.getPaymentTypeOptions()
 
     /**
      * This Method retrieve the LoanRepaymentTemplate from Database LoanRepaymentTemplate_Table
@@ -201,7 +201,7 @@ class LoanDaoHelper @Inject constructor(
      * @param loanId Loan Id of the LoanRepaymentTemplate.
      * @return LoanRepaymentTemplate from Database Query.
      */
-    fun getLoanRepayTemplate(loanId: Int): Flow<LoanRepaymentTemplate?> {
+    fun getLoanRepayTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity?> {
         return flow {
             val loanRepaymentTemplate = loanDao.getLoanRepaymentTemplate(loanId)
             val paymentTypeOptions = loanDao.getPaymentTypeOptions().first()

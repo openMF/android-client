@@ -29,13 +29,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -54,7 +52,6 @@ import com.mifos.core.common.utils.LanguageHelper
 import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
-import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.settings.R
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
@@ -115,7 +112,6 @@ internal fun SettingsScreen(
     updateTheme: (theme: AppTheme) -> Unit,
     updateLanguage: (language: MifosAppLanguage) -> Unit,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
     var showLanguageUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showEndpointUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showThemeUpdateDialog by rememberSaveable { mutableStateOf(false) }
@@ -126,10 +122,8 @@ internal fun SettingsScreen(
     val context = LocalContext.current
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
-        title = stringResource(id = R.string.feature_settings),
         onBackPressed = onBackPressed,
-        snackbarHostState = snackbarHostState,
+        title = stringResource(R.string.feature_settings),
     ) { paddingValues ->
         Column(
             Modifier.padding(paddingValues),
@@ -179,7 +173,7 @@ internal fun SettingsScreen(
 
     if (showLanguageUpdateDialog) {
         MifosRadioButtonDialog(
-            titleResId = R.string.feature_settings_choose_language,
+            title = stringResource(R.string.feature_settings_choose_language),
             items = stringArrayResource(R.array.feature_settings_languages),
             selectItem = { _, index -> updateLanguage(MifosAppLanguage.entries[index]) },
             onDismissRequest = { showLanguageUpdateDialog = false },
@@ -189,7 +183,7 @@ internal fun SettingsScreen(
 
     if (showThemeUpdateDialog) {
         MifosRadioButtonDialog(
-            titleResId = R.string.feature_settings_change_app_theme,
+            title = stringResource(R.string.feature_settings_change_app_theme),
             items = AppTheme.entries.map { it.themeName }.toTypedArray(),
             selectItem = { _, index -> updateTheme(AppTheme.entries[index]) },
             onDismissRequest = { showThemeUpdateDialog = false },

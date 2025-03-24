@@ -10,9 +10,10 @@
 package com.mifos.room.entities.collectionsheet
 
 import android.os.Parcelable
-import com.mifos.core.objects.collectionsheets.BulkSavingsDueTransaction
+import com.mifos.core.model.objects.collectionsheets.BulkSavingsDueTransaction
 import com.mifos.room.entities.client.ClientsAttendance
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -24,6 +25,7 @@ data class CollectionSheetPayload(
 
     var bulkRepaymentTransactions: MutableList<BulkRepaymentTransactions> = ArrayList(),
 
+    @IgnoredOnParcel
     var bulkSavingsDueTransactions: MutableList<BulkSavingsDueTransaction> = ArrayList(),
 
     var calendarId: Int? = 0,

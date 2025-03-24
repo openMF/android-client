@@ -13,9 +13,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.mifos.room.entities.survey.QuestionDatas
-import com.mifos.room.entities.survey.ResponseDatas
-import com.mifos.room.entities.survey.Survey
+import com.mifos.room.entities.survey.QuestionDatasEntity
+import com.mifos.room.entities.survey.ResponseDatasEntity
+import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -25,20 +25,20 @@ import kotlinx.coroutines.flow.Flow
 interface SurveyDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSurvey(survey: Survey)
+    suspend fun insertSurvey(survey: SurveyEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertQuestionData(questionData: QuestionDatas)
+    suspend fun insertQuestionData(questionData: QuestionDatasEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertResponseData(responseDatas: ResponseDatas)
+    suspend fun insertResponseData(responseDatas: ResponseDatasEntity)
 
     @Query("SELECT * FROM Survey")
-    fun getAllSurveys(): Flow<List<Survey>>
+    fun getAllSurveys(): Flow<List<SurveyEntity>>
 
     @Query("SELECT * FROM QuestionDatas WHERE surveyId = :surveyId ORDER BY sequenceNo ASC")
-    fun getQuestionDatas(surveyId: Int): Flow<List<QuestionDatas>>
+    fun getQuestionDatas(surveyId: Int): Flow<List<QuestionDatasEntity>>
 
     @Query("SELECT * FROM ResponseDatas WHERE questionId = :questionId ORDER BY sequenceNo ASC")
-    fun getResponseDatas(questionId: Int): Flow<List<ResponseDatas>>
+    fun getResponseDatas(questionId: Int): Flow<List<ResponseDatasEntity>>
 }

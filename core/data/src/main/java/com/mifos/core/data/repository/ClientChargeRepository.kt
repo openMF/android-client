@@ -10,7 +10,7 @@
 package com.mifos.core.data.repository
 
 import androidx.paging.PagingData
-import com.mifos.room.entities.client.Charges
+import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -18,5 +18,5 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ClientChargeRepository {
 
-    fun getClientCharges(clientId: Int): Flow<PagingData<Charges>>
+    fun getClientCharges(clientId: Int): Flow<PagingData<ChargesEntity>>
 }

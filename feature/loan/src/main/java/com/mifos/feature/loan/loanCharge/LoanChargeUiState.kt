@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.loanCharge
 
-import com.mifos.core.entity.client.Charges
+import com.mifos.room.entities.client.ChargesEntity
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -20,5 +20,5 @@ sealed class LoanChargeUiState {
 
     data class Error(val message: Int) : LoanChargeUiState()
 
-    data class LoanChargesList(val loanCharges: List<Charges>) : LoanChargeUiState()
+    data class LoanChargesList(val loanCharges: List<ChargesEntity>) : LoanChargeUiState()
 }

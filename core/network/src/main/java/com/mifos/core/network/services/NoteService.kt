@@ -9,20 +9,20 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.entity.noncore.Note
+import com.mifos.core.model.objects.Note
 import com.mifos.room.basemodel.APIEndPoint
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface NoteService {
 
+    /**
+     * @param entityType              - Type for which note is being fetched (Client or Group)
+     * @param entityId                - Id of Entity
+     */
     @GET("{entityType}/{entityId}/" + APIEndPoint.NOTES)
     fun getNotes(
         @Path("entityType") entityType: String?,
         @Path("entityId") entityId: Int,
     ): List<Note>
-    /**
-     * @param entityType              - Type for which note is being fetched (Client or Group)
-     * @param entityId                - Id of Entity
-     */
 }

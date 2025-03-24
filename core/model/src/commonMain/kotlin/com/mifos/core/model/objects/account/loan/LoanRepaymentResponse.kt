@@ -9,9 +9,9 @@
  */
 package com.mifos.core.model.objects.account.loan
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
 import com.mifos.core.model.objects.Changes
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 @Parcelize

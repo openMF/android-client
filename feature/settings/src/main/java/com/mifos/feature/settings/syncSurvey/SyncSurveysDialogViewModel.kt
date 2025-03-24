@@ -12,14 +12,13 @@ package com.mifos.feature.settings.syncSurvey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.NetworkUtilsWrapper
-import com.mifos.room.entities.survey.QuestionDatas
-import com.mifos.room.entities.survey.ResponseDatas
-import com.mifos.room.entities.survey.Survey
+import com.mifos.room.entities.survey.QuestionDatasEntity
+import com.mifos.room.entities.survey.ResponseDatasEntity
+import com.mifos.room.entities.survey.SurveyEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.subscribe
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import rx.Observable
@@ -43,10 +42,10 @@ class SyncSurveysDialogViewModel @Inject constructor(
     val syncSurveysDialogUiState: StateFlow<SyncSurveysDialogUiState>
         get() = _syncSurveysDialogUiState
 
-    private var mSurveyList: List<Survey> = ArrayList()
-    private val mFailedSyncSurvey: MutableList<Survey> = ArrayList()
-    private var mQuestionDatasList: List<QuestionDatas> = ArrayList()
-    private var mResponseDatasList: List<ResponseDatas> = ArrayList()
+    private var mSurveyList: List<SurveyEntity> = ArrayList()
+    private val mFailedSyncSurvey: MutableList<SurveyEntity> = ArrayList()
+    private var mQuestionDatasList: List<QuestionDatasEntity> = ArrayList()
+    private var mResponseDatasList: List<ResponseDatasEntity> = ArrayList()
     private var mSurveySyncIndex = 0
     private var mQuestionDataSyncIndex = 0
     private var mResponseDataSyncIndex = 0
@@ -188,7 +187,7 @@ class SyncSurveysDialogViewModel @Inject constructor(
      *
      * @param survey
      */
-    private fun syncSurvey(survey: Survey) {
+    private fun syncSurvey(survey: SurveyEntity) {
         val updatedSurvey = survey.copy(isSync = true)
         viewModelScope.launch {
             try {
@@ -221,7 +220,7 @@ class SyncSurveysDialogViewModel @Inject constructor(
      *
      * @param surveyId int, questionDatas QuestionDatas
      */
-    private fun syncQuestionData(surveyId: Int, questionDatas: QuestionDatas) {
+    private fun syncQuestionData(surveyId: Int, questionDatas: QuestionDatasEntity) {
         viewModelScope.launch {
             repository.syncQuestionDataInDatabase(surveyId, questionDatas)
                 .catch { e ->
@@ -248,7 +247,7 @@ class SyncSurveysDialogViewModel @Inject constructor(
      *
      * @param questionId int, responseDatas ResponseDatas
      */
-    private fun syncResponseData(questionId: Int, responseDatas: ResponseDatas) {
+    private fun syncResponseData(questionId: Int, responseDatas: ResponseDatasEntity) {
         viewModelScope.launch {
             repository.syncResponseDataInDatabase(questionId, responseDatas)
                 .catch { e ->

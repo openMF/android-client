@@ -17,9 +17,9 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import com.mifos.room.entities.accounts.savings.SavingsTransactionData
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -74,14 +74,14 @@ class SavingsAccountTransactionViewModel @Inject constructor(
                 }.collect { template ->
                     _savingsAccountTransactionUiState.value =
                         SavingsAccountTransactionUiState.ShowSavingAccountTemplate(
-                            template ?: SavingsAccountTransactionTemplate(),
+                            template ?: SavingsAccountTransactionTemplateEntity(),
                         )
                 }
             }
         }
     }
 
-    fun processTransaction(request: SavingsAccountTransactionRequest) {
+    fun processTransaction(request: SavingsAccountTransactionRequestEntity) {
         viewModelScope.launch {
             if (accountId != null) {
                 _savingsAccountTransactionUiState.value =

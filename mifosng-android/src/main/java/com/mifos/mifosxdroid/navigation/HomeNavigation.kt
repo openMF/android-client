@@ -66,8 +66,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.White
 import com.mifos.feature.splash.navigation.SplashScreens
 import com.mifos.mifosxdroid.HomeDestinationsScreen
 import com.mifos.mifosxdroid.R
@@ -196,7 +194,7 @@ fun HomeNavigation(
                                     fontWeight = FontWeight.Medium,
                                     fontStyle = FontStyle.Normal,
                                 ),
-                                color = Black,
+                                color = Color.Black,
                             )
                         },
                         selected = index == selectedItemIndex,
@@ -270,7 +268,7 @@ fun HomeNavigation(
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(White),
+                        colors = TopAppBarDefaults.topAppBarColors(Color.White),
                     )
                 }
             },
@@ -295,7 +293,7 @@ fun HomeNavigation(
                     }
                 }
             },
-            containerColor = White,
+            containerColor = Color.White,
         ) { paddingValues ->
             Navigation(navController = navController, padding = paddingValues)
         }

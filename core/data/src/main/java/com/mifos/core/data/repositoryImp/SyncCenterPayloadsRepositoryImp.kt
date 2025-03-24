@@ -11,7 +11,7 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SyncCenterPayloadsRepository
 import com.mifos.core.network.datamanager.DataManagerCenter
-import com.mifos.room.entities.center.CenterPayload
+import com.mifos.room.entities.center.CenterPayloadEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -21,19 +21,19 @@ import javax.inject.Inject
 class SyncCenterPayloadsRepositoryImp @Inject constructor(private val dataManagerCenter: DataManagerCenter) :
     SyncCenterPayloadsRepository {
 
-    override fun allDatabaseCenterPayload(): Flow<List<CenterPayload>> {
+    override fun allDatabaseCenterPayload(): Flow<List<CenterPayloadEntity>> {
         return dataManagerCenter.allDatabaseCenterPayload
     }
 
-    override suspend fun createCenter(centerPayload: CenterPayload?) {
+    override suspend fun createCenter(centerPayload: CenterPayloadEntity?) {
         dataManagerCenter.createCenter(centerPayload)
     }
 
-    override fun deleteAndUpdateCenterPayloads(id: Int): Flow<List<CenterPayload>> {
+    override fun deleteAndUpdateCenterPayloads(id: Int): Flow<List<CenterPayloadEntity>> {
         return dataManagerCenter.deleteAndUpdateCenterPayloads(id)
     }
 
-    override suspend fun updateCenterPayload(centerPayload: CenterPayload) {
+    override suspend fun updateCenterPayload(centerPayload: CenterPayloadEntity) {
         dataManagerCenter.updateCenterPayload(centerPayload)
     }
 }

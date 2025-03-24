@@ -9,30 +9,30 @@
  */
 package com.mifos.core.model.objects
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-class Changes(
-    var transactionDate: String? = null,
+data class Changes(
+    val transactionDate: String? = null,
 
-    var transactionAmount: String? = null,
+    val transactionAmount: String? = null,
 
-    var locale: String? = null,
+    val locale: String? = null,
 
-    var dateFormat: String? = null,
+    val dateFormat: String? = null,
 
-    var note: String? = null,
+    val note: String? = null,
 
-    var accountNumber: String? = null,
+    val accountNumber: String? = null,
 
-    var checkNumber: String? = null,
+    val checkNumber: String? = null,
 
-    var routingCode: String? = null,
+    val routingCode: String? = null,
 
-    var receiptNumber: String? = null,
+    val receiptNumber: String? = null,
 
-    var bankNumber: String? = null,
+    val bankNumber: String? = null,
 ) : Parcelable

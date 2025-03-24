@@ -9,7 +9,7 @@
  */
 package com.mifos.room.entities.zipmodels
 
-import com.mifos.core.objects.organisations.ProductSavings
+import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 
 /**

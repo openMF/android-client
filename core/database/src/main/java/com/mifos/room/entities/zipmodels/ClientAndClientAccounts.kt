@@ -10,7 +10,7 @@
 package com.mifos.room.entities.zipmodels
 
 import com.mifos.room.entities.accounts.ClientAccounts
-import com.mifos.room.entities.client.Client
+import com.mifos.room.entities.client.ClientEntity
 
 /**
  * Model for Observable.zip. This Model used to combine the Client and ClientAccount in response
@@ -18,6 +18,6 @@ import com.mifos.room.entities.client.Client
  * Created by Rajan Maurya on 01/07/16.
  */
 class ClientAndClientAccounts {
-    var client: Client? = null
+    var client: ClientEntity? = null
     var clientAccounts: ClientAccounts? = null
 }

@@ -14,70 +14,70 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.mifos.room.entities.accounts.loans.LoanAccount
-import com.mifos.room.entities.accounts.savings.SavingsAccount
-import com.mifos.room.entities.client.Client
-import com.mifos.room.entities.client.ClientPayload
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.ColumnHeader
 import com.mifos.room.entities.noncore.ColumnValue
-import com.mifos.room.entities.noncore.DataTable
+import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.noncore.DataTablePayload
-import com.mifos.room.entities.templates.clients.ClientsTemplate
-import com.mifos.room.entities.templates.clients.InterestType
-import com.mifos.room.entities.templates.clients.OfficeOptions
-import com.mifos.room.entities.templates.clients.Options
-import com.mifos.room.entities.templates.clients.SavingProductOptions
-import com.mifos.room.entities.templates.clients.StaffOptions
+import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import com.mifos.room.entities.templates.clients.InterestTypeEntity
+import com.mifos.room.entities.templates.clients.OfficeOptionsEntity
+import com.mifos.room.entities.templates.clients.OptionsEntity
+import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
+import com.mifos.room.entities.templates.clients.StaffOptionsEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ClientDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertClient(client: Client)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = ClientEntity::class)
+    suspend fun insertClient(client: ClientEntity)
 
     @Query("SELECT * FROM Client")
-    fun getAllClients(): Flow<List<Client>>
+    fun getAllClients(): Flow<List<ClientEntity>>
 
     @Query("SELECT * FROM Client WHERE groupId = :groupId")
-    fun getClientsByGroupId(groupId: Int): Flow<List<Client>>
+    fun getClientsByGroupId(groupId: Int): Flow<List<ClientEntity>>
 
     @Query("SELECT * FROM Client WHERE id = :clientId LIMIT 1")
-    fun getClientByClientId(clientId: Int): Flow<Client?>
+    fun getClientByClientId(clientId: Int): Flow<ClientEntity?>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLoanAccount(loanAccount: LoanAccount)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = LoanAccountEntity::class)
+    suspend fun insertLoanAccount(loanAccount: LoanAccountEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSavingsAccount(savingsAccount: SavingsAccount)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = SavingsAccountEntity::class)
+    suspend fun insertSavingsAccount(savingsAccount: SavingsAccountEntity)
 
-    @Query("SELECT * FROM LoanAccount WHERE clientId = :clientId")
-    fun getLoanAccountsByClientId(clientId: Long): Flow<List<LoanAccount>>
+    @Query("SELECT * FROM LoanAccountEntity WHERE clientId = :clientId")
+    fun getLoanAccountsByClientId(clientId: Long): Flow<List<LoanAccountEntity>>
 
     @Query("SELECT * FROM SavingsAccount WHERE clientId = :clientId")
-    fun getSavingsAccountsByClientId(clientId: Long): Flow<List<SavingsAccount>>
+    fun getSavingsAccountsByClientId(clientId: Long): Flow<List<SavingsAccountEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertClientsTemplate(clientsTemplate: ClientsTemplate)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = ClientsTemplateEntity::class)
+    suspend fun insertClientsTemplate(clientsTemplate: ClientsTemplateEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOfficeOptions(officeOptions: List<OfficeOptions>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = OfficeOptionsEntity::class)
+    suspend fun insertOfficeOptions(officeOptions: List<OfficeOptionsEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStaffOptions(staffOptions: List<StaffOptions>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = StaffOptionsEntity::class)
+    suspend fun insertStaffOptions(staffOptions: List<StaffOptionsEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSavingProductOptions(savingProductOptions: List<SavingProductOptions>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = SavingProductOptionsEntity::class)
+    suspend fun insertSavingProductOptions(savingProductOptions: List<SavingProductOptionsEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOption(options: Options)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = OptionsEntity::class)
+    suspend fun insertOption(options: OptionsEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertInterestTypes(interestTypes: List<InterestType>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = InterestTypeEntity::class)
+    suspend fun insertInterestTypes(interestTypes: List<InterestTypeEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = ColumnHeader::class)
     suspend fun insertColumnHeader(columnHeader: ColumnHeader)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = ColumnValue::class)
     suspend fun insertColumnValue(columnValue: ColumnValue)
 
     @Query("DELETE FROM DataTable")
@@ -90,25 +90,25 @@ interface ClientDao {
     suspend fun deleteColumnValues()
 
     @Query("SELECT * FROM ClientsTemplate LIMIT 1")
-    suspend fun getClientsTemplate(): ClientsTemplate
+    suspend fun getClientsTemplate(): ClientsTemplateEntity
 
     @Query("SELECT * FROM ClientTemplateOfficeOptions")
-    fun getOfficeOptions(): Flow<List<OfficeOptions>>
+    fun getOfficeOptions(): Flow<List<OfficeOptionsEntity>>
 
     @Query("SELECT * FROM ClientTemplateStaffOptions")
-    fun getStaffOptions(): Flow<List<StaffOptions>>
+    fun getStaffOptions(): Flow<List<StaffOptionsEntity>>
 
     @Query("SELECT * FROM ClientTemplateSavingProductsOptions")
-    fun getSavingProductOptions(): Flow<List<SavingProductOptions>>
+    fun getSavingProductOptions(): Flow<List<SavingProductOptionsEntity>>
 
     @Query("SELECT * FROM ClientTemplateOptions WHERE optionType = :optionType")
-    fun getOptions(optionType: String): Flow<List<Options>>
+    fun getOptions(optionType: String): Flow<List<OptionsEntity>>
 
     @Query("SELECT * FROM ClientTemplateInterest")
-    fun getAllInterestType(): Flow<List<InterestType>>
+    fun getAllInterestType(): Flow<List<InterestTypeEntity>>
 
     @Query("SELECT * FROM DataTable where applicationTableName = :tableName")
-    fun getDatatableByTableName(tableName: String): Flow<List<DataTable>>
+    fun getDatatableByTableName(tableName: String): Flow<List<DataTableEntity>>
 
     @Query("SELECT * FROM ColumnHeader WHERE registeredTableName = :tableName")
     fun getColumnHeadersByTableName(tableName: String): Flow<List<ColumnHeader>>
@@ -116,20 +116,20 @@ interface ClientDao {
     @Query("SELECT * FROM ColumnValue WHERE registeredTableName = :tableName")
     fun getColumnValuesByTableName(tableName: String): Flow<List<ColumnValue>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertClientPayload(clientPayload: ClientPayload)
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = ClientPayloadEntity::class)
+    suspend fun insertClientPayload(clientPayload: ClientPayloadEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDataTablePayload(dataTablePayloads: DataTablePayload)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDataTable(dataTable: DataTable)
+    suspend fun insertDataTable(dataTable: DataTableEntity)
 
     @Query("SELECT * FROM ClientPayload")
-    fun getAllClientPayload(): Flow<List<ClientPayload>>
+    fun getAllClientPayload(): Flow<List<ClientPayloadEntity>>
 
     @Query("SELECT * FROM DataTablePayload WHERE clientCreationTime = :clientCreationTime")
-    fun getDataTablePayloadByCreationTime(clientCreationTime: Long): List<Flow<DataTablePayload>>
+    fun getDataTablePayloadByCreationTime(clientCreationTime: Long): Flow<List<DataTablePayload>>
 
     @Query("DELETE FROM ClientPayload WHERE id = :id")
     suspend fun deleteClientPayloadById(id: Int)
@@ -138,7 +138,7 @@ interface ClientDao {
     suspend fun deleteDataTablePayloadByCreationTime(clientCreationTime: Long)
 
     @Update
-    suspend fun updateDatabaseClientPayload(clientPayload: ClientPayload): Flow<ClientPayload>
+    suspend fun updateDatabaseClientPayload(clientPayload: ClientPayloadEntity)
 
     companion object {
         const val GENDER_OPTIONS = "genderOptions"

@@ -18,7 +18,7 @@ import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetGroupLoansAccountTemplateUseCase
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
-import com.mifos.core.objects.template.loan.GroupLoanTemplate
+import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.feature.loan.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

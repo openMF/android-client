@@ -9,21 +9,21 @@
  */
 package com.mifos.core.network.mappers.centers
 
-import com.mifos.core.entity.group.Center
-import com.mifos.core.objects.clients.Page
+import com.mifos.core.common.utils.Page
+import com.mifos.room.entities.group.CenterEntity
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetCentersResponse
 
-object GetCentersResponseMapper : AbstractMapper<GetCentersResponse, Page<Center>>() {
+object GetCentersResponseMapper : AbstractMapper<GetCentersResponse, Page<CenterEntity>>() {
 
-    override fun mapFromEntity(entity: GetCentersResponse): Page<Center> {
-        return Page<Center>().apply {
+    override fun mapFromEntity(entity: GetCentersResponse): Page<CenterEntity> {
+        return Page<CenterEntity>().apply {
             totalFilteredRecords = entity.totalFilteredRecords!!
             pageItems = CenterMapper.mapFromEntityList(entity.pageItems!!.toList())
         }
     }
 
-    override fun mapToEntity(domainModel: Page<Center>): GetCentersResponse {
+    override fun mapToEntity(domainModel: Page<CenterEntity>): GetCentersResponse {
         return GetCentersResponse(
             totalFilteredRecords = domainModel.totalFilteredRecords,
             pageItems = CenterMapper.mapToEntityList(domainModel.pageItems).toSet(),

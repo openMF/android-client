@@ -17,14 +17,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.core.designsystem.theme.BlueSecondary
 
 @Composable
 fun MifosFAB(
     icon: ImageVector,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = BlueSecondary,
+    // todo use bluesecondary color
+//    containerColor: Color = BlueSecondary,
+    containerColor: Color = Color.Blue,
 ) {
     Box(
         modifier = modifier,

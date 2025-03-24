@@ -11,7 +11,7 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ class SavingsAccountSummaryRepositoryImp @Inject constructor(
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Flow<SavingsAccountWithAssociations?> {
+    ): Flow<SavingsAccountWithAssociationsEntity?> {
         return dataManagerSavings.getSavingsAccount(type, savingsAccountId, association)
     }
 }

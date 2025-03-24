@@ -15,7 +15,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.FileUtils.LOG_TAG
 import com.mifos.core.data.repository.SyncCenterPayloadsRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.room.entities.center.CenterPayload
+import com.mifos.room.entities.center.CenterPayloadEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +42,7 @@ class SyncCenterPayloadsViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
-    private var mCenterPayloads: MutableList<CenterPayload> = mutableListOf()
+    private var mCenterPayloads: MutableList<CenterPayloadEntity> = mutableListOf()
     private var centerSyncIndex = 0
 
     fun getUserStatus(): Boolean {
@@ -68,7 +68,7 @@ class SyncCenterPayloadsViewModel @Inject constructor(
         }
     }
 
-    private fun syncCenterPayload(centerPayload: CenterPayload?) {
+    private fun syncCenterPayload(centerPayload: CenterPayloadEntity?) {
         viewModelScope.launch {
             _syncCenterPayloadsUiState.value =
                 SyncCenterPayloadsUiState.ShowProgressbar
@@ -107,7 +107,7 @@ class SyncCenterPayloadsViewModel @Inject constructor(
         }
     }
 
-    private fun updateCenterPayload(centerPayload: CenterPayload?) {
+    private fun updateCenterPayload(centerPayload: CenterPayloadEntity?) {
         deleteAndUpdateCenterPayload(
             mCenterPayloads[centerSyncIndex].id,
         )

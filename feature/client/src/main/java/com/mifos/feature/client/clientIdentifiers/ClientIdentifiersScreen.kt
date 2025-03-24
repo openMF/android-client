@@ -43,6 +43,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,12 +59,9 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.LightGray
-import com.mifos.core.designsystem.theme.LightGreen
-import com.mifos.core.designsystem.theme.White
 import com.mifos.core.designsystem.theme.identifierTextStyleDark
 import com.mifos.core.designsystem.theme.identifierTextStyleLight
-import com.mifos.core.objects.noncoreobjects.Identifier
+import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.client.R
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen
@@ -132,7 +132,6 @@ internal fun ClientIdentifiersScreen(
     }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_client_identifiers),
         onBackPressed = onBackPressed,
         actions = {
@@ -157,7 +156,7 @@ internal fun ClientIdentifiersScreen(
                             true -> {
                                 MifosEmptyUi(
                                     text = stringResource(id = R.string.feature_client_there_is_no_identifier_to_show),
-                                    icon = MifosIcons.fileTask,
+                                    icon = MifosIcons.FileTask,
                                 )
                             }
 
@@ -234,7 +233,8 @@ private fun ClientIdentifiersItem(
                     .height(94.dp),
             ) {
                 drawRect(
-                    color = LightGreen,
+                    // TODO use lightGreen color
+                    color = Color.Green,
                     size = Size(size.width, size.height),
                 )
             }
@@ -256,7 +256,7 @@ private fun ClientIdentifiersItem(
                 )
             }
             IconButton(modifier = Modifier.weight(.5f), onClick = { showMenu = showMenu.not() }) {
-                Icon(imageVector = MifosIcons.moreVert, contentDescription = null)
+                Icon(imageVector = MifosIcons.MoreVert, contentDescription = null)
                 DropdownMenu(
                     modifier = Modifier.background(White),
                     expanded = showMenu,

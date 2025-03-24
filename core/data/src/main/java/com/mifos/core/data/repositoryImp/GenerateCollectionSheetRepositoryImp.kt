@@ -10,17 +10,17 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
-import com.mifos.core.entity.group.Center
-import com.mifos.core.entity.group.Group
+import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerCollectionSheet
-import com.mifos.core.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.room.entities.collectionsheet.CenterDetail
 import com.mifos.room.entities.collectionsheet.CollectionSheetPayload
 import com.mifos.room.entities.collectionsheet.CollectionSheetResponse
 import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
+import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.group.GroupEntity
 import javax.inject.Inject
 
 /**
@@ -34,14 +34,14 @@ class GenerateCollectionSheetRepositoryImp @Inject constructor(
     override suspend fun getCentersInOffice(
         id: Int,
         params: Map<String, String>,
-    ): List<Center> {
+    ): List<CenterEntity> {
         return dataManager.getCentersInOffice(id, params)
     }
 
     override suspend fun getGroupsByOffice(
         office: Int,
         params: Map<String, String>,
-    ): List<Group> {
+    ): List<GroupEntity> {
         return dataManager.getGroupsByOffice(office, params)
     }
 

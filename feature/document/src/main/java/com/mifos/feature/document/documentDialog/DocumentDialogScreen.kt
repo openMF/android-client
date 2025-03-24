@@ -18,7 +18,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,10 +30,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
@@ -67,11 +65,8 @@ import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.White
+import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.noncoreobjects.Document
 import com.mifos.feature.document.R
 import java.io.File
 
@@ -108,13 +103,20 @@ internal fun DocumentDialogScreen(
     }
     val permissionsLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
-    ) {
-            permissionsMap: Map<String, Boolean> ->
+    ) { permissionsMap: Map<String, Boolean> ->
         permissionsMap.forEach { (permission, isGranted) ->
             if (isGranted) {
-                Toast.makeText(context, context.getString(R.string.feature_document_permission_granted), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.feature_document_permission_granted),
+                    Toast.LENGTH_SHORT,
+                ).show()
             } else {
-                Toast.makeText(context, context.getString(R.string.feature_document_permission_denied), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.feature_document_permission_denied),
+                    Toast.LENGTH_SHORT,
+                ).show()
             }
         }
     }
@@ -161,12 +163,22 @@ internal fun DocumentDialogScreen(
 
 private fun checkPermission(context: Context): Boolean {
     if (Build.VERSION.SDK_INT >= 33) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES) == PermissionChecker.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_MEDIA_IMAGES,
+            ) == PermissionChecker.PERMISSION_GRANTED
+        ) {
             return true
         }
     } else {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+            ) == PermissionChecker.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            ) == PermissionChecker.PERMISSION_GRANTED
         ) {
             return true
         }
@@ -208,7 +220,10 @@ internal fun DocumentDialogScreen(
             LaunchedEffect(true) {
                 Toast.makeText(
                     context,
-                    String.format(context.getString(R.string.feature_document_uploaded_successfully), filename),
+                    String.format(
+                        context.getString(R.string.feature_document_uploaded_successfully),
+                        filename,
+                    ),
                     Toast.LENGTH_SHORT,
                 ).show()
             }
@@ -219,7 +234,10 @@ internal fun DocumentDialogScreen(
             LaunchedEffect(true) {
                 Toast.makeText(
                     context,
-                    String.format(context.getString(R.string.feature_document_document_updated_successfully), filename),
+                    String.format(
+                        context.getString(R.string.feature_document_document_updated_successfully),
+                        filename,
+                    ),
                     Toast.LENGTH_SHORT,
                 ).show()
             }
@@ -307,10 +325,10 @@ private fun DocumentDialogContent(
                     Text(
                         text = dialogTitle,
                         fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                        color = BluePrimary,
+                        color = MaterialTheme.colorScheme.primary,
                     )
                     Icon(
-                        imageVector = MifosIcons.cancel,
+                        imageVector = MifosIcons.Cancel,
                         contentDescription = "",
                         tint = colorResource(android.R.color.darker_gray),
                         modifier = Modifier
@@ -322,30 +340,30 @@ private fun DocumentDialogContent(
 
                 MifosOutlinedTextField(
                     value = name,
-                    onValueChange = { value ->
+                    onValueChanged = { value ->
                         name = value
                         nameError = false
                     },
-                    label = R.string.feature_document_name,
-                    error = if (nameError) R.string.feature_document_message_field_required else null,
+                    label = stringResource(R.string.feature_document_name),
+                    error = if (nameError) stringResource(R.string.feature_document_message_field_required) else null,
                     trailingIcon = {
                         if (nameError) {
-                            Icon(imageVector = MifosIcons.error, contentDescription = null)
+                            Icon(imageVector = MifosIcons.Error, contentDescription = null)
                         }
                     },
                 )
 
                 MifosOutlinedTextField(
                     value = description,
-                    onValueChange = { value ->
+                    onValueChanged = { value ->
                         description = value
                         descriptionError = false
                     },
-                    label = R.string.feature_document_description,
-                    error = if (descriptionError) R.string.feature_document_message_field_required else null,
+                    label = stringResource(R.string.feature_document_description),
+                    error = if (descriptionError) stringResource(R.string.feature_document_message_field_required) else null,
                     trailingIcon = {
                         if (descriptionError) {
-                            Icon(imageVector = MifosIcons.error, contentDescription = null)
+                            Icon(imageVector = MifosIcons.Error, contentDescription = null)
                         }
                     },
                 )
@@ -361,14 +379,11 @@ private fun DocumentDialogContent(
                         .padding(start = 16.dp, end = 16.dp),
                     trailingIcon = {
                         if (descriptionError) {
-                            Icon(imageVector = MifosIcons.error, contentDescription = null)
+                            Icon(imageVector = MifosIcons.Error, contentDescription = null)
                         }
                     },
                     enabled = false,
                     maxLines = 1,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                    ),
                     textStyle = LocalDensity.current.run {
                         TextStyle(fontSize = 18.sp)
                     },
@@ -419,12 +434,6 @@ private fun DialogButton(
             .fillMaxWidth()
             .height(50.dp)
             .padding(20.dp, 0.dp, 20.dp, 0.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = BluePrimary,
-            contentColor = White,
-            disabledContainerColor = BluePrimary,
-            disabledContentColor = White,
-        ),
     ) {
         Text(text = text)
     }

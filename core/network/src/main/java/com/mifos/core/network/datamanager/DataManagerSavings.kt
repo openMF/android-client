@@ -9,17 +9,17 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.entity.client.Savings
-import com.mifos.core.entity.templates.savings.SavingProductsTemplate
+import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
+import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
-import com.mifos.core.objects.account.loan.SavingsApproval
-import com.mifos.core.objects.organisations.ProductSavings
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
+import com.mifos.room.entities.client.Savings
+import com.mifos.room.entities.templates.savings.SavingProductsTemplate
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import com.mifos.room.helper.SavingsDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -57,7 +57,7 @@ class DataManagerSavings @Inject constructor(
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Flow<SavingsAccountWithAssociations?> {
+    ): Flow<SavingsAccountWithAssociationsEntity?> {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
                 type,
@@ -94,7 +94,7 @@ class DataManagerSavings @Inject constructor(
         type: String?,
         savingsAccountId: Int,
         association: String?,
-    ): Flow<SavingsAccountWithAssociations> {
+    ): Flow<SavingsAccountWithAssociationsEntity> {
         return flow {
             mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(type, savingsAccountId, association)
                 .collect { savingsWithTransaction ->
@@ -129,7 +129,7 @@ class DataManagerSavings @Inject constructor(
         type: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Flow<SavingsAccountTransactionTemplate?> {
+    ): Flow<SavingsAccountTransactionTemplateEntity?> {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.savingsApi.getSavingsAccountTransactionTemplate(
                 type,
@@ -162,7 +162,7 @@ class DataManagerSavings @Inject constructor(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Flow<SavingsAccountTransactionTemplate> {
+    ): Flow<SavingsAccountTransactionTemplateEntity> {
         return mBaseApiManager.savingsApi.getSavingsAccountTransactionTemplate(
             savingsAccountType,
             savingsAccountId,
@@ -191,7 +191,7 @@ class DataManagerSavings @Inject constructor(
         savingsAccountType: String?,
         savingsAccountId: Int,
         transactionType: String?,
-        request: SavingsAccountTransactionRequest,
+        request: SavingsAccountTransactionRequestEntity,
     ): Flow<SavingsAccountTransactionResponse?> {
         return when (prefManager.userStatus) {
             false -> flow {
@@ -230,7 +230,7 @@ class DataManagerSavings @Inject constructor(
      */
     fun getSavingsAccountTransaction(
         savingAccountId: Int,
-    ): Flow<SavingsAccountTransactionRequest?> {
+    ): Flow<SavingsAccountTransactionRequestEntity?> {
         return databaseHelperSavings.getSavingsAccountTransaction(savingAccountId)
     }
 
@@ -241,7 +241,7 @@ class DataManagerSavings @Inject constructor(
      *
      * @return List<SavingsAccountTransactionRequest></SavingsAccountTransactionRequest>>
      </SavingsAccountTransactionRequest> */
-    val allSavingsAccountTransactions: Flow<List<SavingsAccountTransactionRequest>>
+    val allSavingsAccountTransactions: Flow<List<SavingsAccountTransactionRequestEntity>>
         get() = databaseHelperSavings.allSavingsAccountTransaction()
 
     /**
@@ -254,7 +254,7 @@ class DataManagerSavings @Inject constructor(
      </SavingsAccountTransaction> */
     fun deleteAndUpdateTransactions(
         savingsAccountId: Int,
-    ): Flow<List<SavingsAccountTransactionRequest>> {
+    ): Flow<List<SavingsAccountTransactionRequestEntity>> {
         return databaseHelperSavings.deleteAndUpdateTransaction(savingsAccountId)
     }
 
@@ -267,7 +267,7 @@ class DataManagerSavings @Inject constructor(
      * @return LoanRepaymentRequest
      */
     suspend fun updateLoanRepaymentTransaction(
-        savingsAccountTransactionRequest: SavingsAccountTransactionRequest,
+        savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity,
     ) {
         databaseHelperSavings.updateSavingsAccountTransaction(
             savingsAccountTransactionRequest,

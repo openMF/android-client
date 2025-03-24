@@ -12,7 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.room.entities.accounts.GroupAccounts
-import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.group.GroupWithAssociations
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -24,7 +24,7 @@ class GroupDetailsRepositoryImp @Inject constructor(
     private val dataManagerGroups: DataManagerGroups,
 ) : GroupDetailsRepository {
 
-    override fun getGroup(groupId: Int): Flow<Group> {
+    override fun getGroup(groupId: Int): Flow<GroupEntity> {
         return dataManagerGroups.getGroup(groupId)
     }
 

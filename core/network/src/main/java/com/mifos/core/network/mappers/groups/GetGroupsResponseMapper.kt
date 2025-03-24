@@ -9,21 +9,21 @@
  */
 package com.mifos.core.network.mappers.groups
 
-import com.mifos.core.entity.group.Group
-import com.mifos.core.objects.clients.Page
+import com.mifos.core.common.utils.Page
+import com.mifos.room.entities.group.GroupEntity
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetGroupsResponse
 
-object GetGroupsResponseMapper : AbstractMapper<GetGroupsResponse, Page<Group>>() {
+object GetGroupsResponseMapper : AbstractMapper<GetGroupsResponse, Page<GroupEntity>>() {
 
-    override fun mapFromEntity(entity: GetGroupsResponse): Page<Group> {
-        return Page<Group>().apply {
+    override fun mapFromEntity(entity: GetGroupsResponse): Page<GroupEntity> {
+        return Page<GroupEntity>().apply {
             totalFilteredRecords = entity.totalFilteredRecords!!
             pageItems = GroupMapper.mapFromEntityList(entity.pageItems!!.toList())
         }
     }
 
-    override fun mapToEntity(domainModel: Page<Group>): GetGroupsResponse {
+    override fun mapToEntity(domainModel: Page<GroupEntity>): GetGroupsResponse {
         return GetGroupsResponse(
             totalFilteredRecords = domainModel.totalFilteredRecords,
             pageItems = GroupMapper.mapToEntityList(domainModel.pageItems).toSet(),

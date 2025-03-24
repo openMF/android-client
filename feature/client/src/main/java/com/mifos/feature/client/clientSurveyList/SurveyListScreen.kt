@@ -44,10 +44,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.survey.Survey
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.client.R
+import com.mifos.room.entities.survey.SurveyEntity
 
 /**
  * Created by Pronay Sarker on 03/07/2024 (6:05 AM)
@@ -56,7 +55,7 @@ import com.mifos.feature.client.R
 @Composable
 internal fun SurveyListScreen(
     navigateBack: () -> Unit,
-    onCardClicked: (index: Int, surveys: List<Survey>) -> Unit,
+    onCardClicked: (index: Int, surveys: List<SurveyEntity>) -> Unit,
     viewModel: SurveyListViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.surveyListUiState.collectAsStateWithLifecycle()
@@ -78,7 +77,7 @@ internal fun SurveyListScreen(
     uiState: SurveyListUiState,
     navigateBack: () -> Unit,
     onRetry: () -> Unit,
-    onCardClicked: (index: Int, surveys: List<Survey>) -> Unit,
+    onCardClicked: (index: Int, surveys: List<SurveyEntity>) -> Unit,
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -86,7 +85,6 @@ internal fun SurveyListScreen(
 
     MifosScaffold(
         snackbarHostState = snackbarHostState,
-        icon = MifosIcons.arrowBack,
         onBackPressed = navigateBack,
         title = stringResource(id = R.string.feature_client_surveys),
     ) {
@@ -120,8 +118,8 @@ internal fun SurveyListScreen(
 
 @Composable
 private fun SurveyListContent(
-    surveyList: List<Survey>,
-    onCardClicked: (index: Int, surveys: List<Survey>) -> Unit,
+    surveyList: List<SurveyEntity>,
+    onCardClicked: (index: Int, surveys: List<SurveyEntity>) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -199,11 +197,11 @@ private fun SurveyCardItem(
 
 private class SurveyListPreviewProvider : PreviewParameterProvider<SurveyListUiState> {
     var demoSurvey = listOf(
-        Survey(name = "Survey header", description = "Survey description"),
-        Survey(name = "Header", description = null),
-        Survey(name = "General Knowledge", description = "What is the capital of MARS"),
-        Survey(name = "Favourite youtuber?", description = "Dhinkchak pooja"),
-        Survey(name = "Phone survey", description = "Samsung is better than iphone"),
+        SurveyEntity(name = "Survey header", description = "Survey description"),
+        SurveyEntity(name = "Header", description = null),
+        SurveyEntity(name = "General Knowledge", description = "What is the capital of MARS"),
+        SurveyEntity(name = "Favourite youtuber?", description = "Dhinkchak pooja"),
+        SurveyEntity(name = "Phone survey", description = "Samsung is better than iphone"),
     )
 
     override val values: Sequence<SurveyListUiState>

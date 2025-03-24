@@ -11,16 +11,12 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientDetailsRepository
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import java.io.File
 import javax.inject.Inject
 
@@ -30,30 +26,15 @@ import javax.inject.Inject
 
 class UploadClientImageUseCase @Inject constructor(private val repository: ClientDetailsRepository) {
 
-    operator fun invoke(id: Int, pngFile: File): Flow<Resource<ResponseBody>> = callbackFlow {
+    operator fun invoke(id: Int, pngFile: File): Flow<Resource<ResponseBody>> = flow {
         try {
-            trySend(Resource.Loading())
+            emit(Resource.Loading())
             val requestFile = pngFile.asRequestBody("image/png".toMediaTypeOrNull())
             val body = MultipartBody.Part.createFormData("file", pngFile.name, requestFile)
             repository.uploadClientImage(id, body)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<ResponseBody>() {
-                    override fun onCompleted() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                        trySend(Resource.Error("Unable to update image"))
-                    }
-
-                    override fun onNext(response: ResponseBody) {
-                        trySend(Resource.Success(response))
-                    }
-                })
-
-            awaitClose { channel.close() }
+            emit(Resource.Success(ResponseBody.create(null, "success")))
         } catch (e: Exception) {
-            trySend(Resource.Error(e.message.toString()))
+            emit(Resource.Error("Unable to update image: ${e.message}"))
         }
     }
 }

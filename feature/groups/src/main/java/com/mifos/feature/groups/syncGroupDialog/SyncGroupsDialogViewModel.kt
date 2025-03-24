@@ -16,11 +16,11 @@ import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.entity.client.Client
 import com.mifos.feature.groups.R
-import com.mifos.room.entities.accounts.loans.LoanAccount
-import com.mifos.room.entities.accounts.savings.SavingsAccount
-import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +31,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.subscribe
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -49,11 +48,11 @@ class SyncGroupsDialogViewModel @Inject constructor(
     private val prefManager: PrefManager,
 ) : ViewModel() {
 
-    private var mGroupList: List<Group> = emptyList()
-    private val mFailedSyncGroup: MutableList<Group> = mutableListOf()
-    private var mClients: List<Client> = emptyList()
-    private var mLoanAccountList: List<LoanAccount> = emptyList()
-    private var mSavingsAccountList: List<SavingsAccount> = emptyList()
+    private var mGroupList: List<GroupEntity> = emptyList()
+    private val mFailedSyncGroup: MutableList<GroupEntity> = mutableListOf()
+    private var mClients: List<ClientEntity> = emptyList()
+    private var mLoanAccountList: List<LoanAccountEntity> = emptyList()
+    private var mSavingsAccountList: List<SavingsAccountEntity> = emptyList()
     private var mLoanAccountSyncStatus = false
     private var mGroupSyncIndex = 0
     private var mClientSyncIndex = 0
@@ -71,7 +70,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
     )
     val syncGroupData: StateFlow<SyncGroupDialogData> = _syncGroupData
 
-    fun setGroupList(groupList: List<Group>) {
+    fun setGroupList(groupList: List<GroupEntity>) {
         mGroupList = groupList
         _syncGroupData.update { it.copy(groupList = groupList) }
     }
@@ -306,7 +305,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
      *
      * @param client
      */
-    private fun syncClient(client: com.mifos.room.entities.client.Client) {
+    private fun syncClient(client: com.mifos.room.entities.client.ClientEntity) {
         val updatedClient = client.copy(
             groupId = mGroupList[mGroupSyncIndex].id,
             sync = true,
@@ -468,7 +467,7 @@ class SyncGroupsDialogViewModel @Inject constructor(
      *
      * @param group Group
      */
-    private fun syncGroup(group: Group) {
+    private fun syncGroup(group: GroupEntity) {
         val updatedGroup = group.copy(sync = true)
         viewModelScope.launch {
             try {
@@ -556,16 +555,16 @@ class SyncGroupsDialogViewModel @Inject constructor(
         }
     }
 
-    fun getActiveLoanAccounts(loanAccountList: List<LoanAccount>?): List<LoanAccount> {
-        val loanAccounts: MutableList<LoanAccount> = ArrayList()
+    fun getActiveLoanAccounts(loanAccountList: List<LoanAccountEntity>?): List<LoanAccountEntity> {
+        val loanAccounts: MutableList<LoanAccountEntity> = ArrayList()
         Observable.from(loanAccountList)
             .filter { loanAccount -> loanAccount.status?.active }
             .subscribe { loanAccount -> loanAccounts.add(loanAccount) }
         return loanAccounts
     }
 
-    fun getActiveSavingsAccounts(savingsAccounts: List<SavingsAccount>?): List<SavingsAccount> {
-        val accounts: MutableList<SavingsAccount> = ArrayList()
+    fun getActiveSavingsAccounts(savingsAccounts: List<SavingsAccountEntity>?): List<SavingsAccountEntity> {
+        val accounts: MutableList<SavingsAccountEntity> = ArrayList()
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
                 savingsAccount.status?.active == true &&
@@ -575,8 +574,8 @@ class SyncGroupsDialogViewModel @Inject constructor(
         return accounts
     }
 
-    fun getSyncableSavingsAccounts(savingsAccounts: List<SavingsAccount>?): List<SavingsAccount> {
-        val accounts: MutableList<SavingsAccount> = ArrayList()
+    fun getSyncableSavingsAccounts(savingsAccounts: List<SavingsAccountEntity>?): List<SavingsAccountEntity> {
+        val accounts: MutableList<SavingsAccountEntity> = ArrayList()
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
                 savingsAccount.depositType?.value == "Savings" &&

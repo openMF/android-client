@@ -10,7 +10,7 @@
 package com.mifos.feature.groups.syncGroupDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.room.entities.group.Group
+import com.mifos.room.entities.group.GroupEntity
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -33,5 +33,5 @@ data class SyncGroupDialogData(
     val totalClientSyncCount: Int = 0,
     val clientSyncCount: Int = 0,
     val failedSyncGroupCount: Int = 0,
-    val groupList: List<Group> = listOf(),
+    val groupList: List<GroupEntity> = listOf(),
 )

@@ -15,9 +15,10 @@ import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequest
-import com.mifos.room.entities.center.CenterPayload
-import com.mifos.room.entities.group.GroupPayload
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import com.mifos.room.entities.center.CenterPayloadEntity
+import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -32,23 +33,23 @@ class OfflineDashboardRepositoryImp @Inject constructor(
     private val dataManagerSavings: DataManagerSavings,
 ) : OfflineDashboardRepository {
 
-    override fun allDatabaseClientPayload(): Flow<List<com.mifos.room.entities.client.ClientPayload>> {
+    override fun allDatabaseClientPayload(): Flow<List<com.mifos.room.entities.client.ClientPayloadEntity>> {
         return dataManagerClient.allDatabaseClientPayload
     }
 
-    override fun allDatabaseGroupPayload(): Flow<List<GroupPayload>> {
+    override fun allDatabaseGroupPayload(): Flow<List<GroupPayloadEntity>> {
         return dataManagerGroups.allDatabaseGroupPayload
     }
 
-    override fun allDatabaseCenterPayload(): Flow<List<CenterPayload>> {
+    override fun allDatabaseCenterPayload(): Flow<List<CenterPayloadEntity>> {
         return dataManagerCenter.allDatabaseCenterPayload
     }
 
-    override fun databaseLoanRepayments(): Flow<List<LoanRepaymentRequest>> {
+    override fun databaseLoanRepayments(): Flow<List<LoanRepaymentRequestEntity>> {
         return dataManagerLoan.databaseLoanRepayments
     }
 
-    override fun allSavingsAccountTransactions(): Flow<List<com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest>> {
+    override fun allSavingsAccountTransactions(): Flow<List<SavingsAccountTransactionRequestEntity>> {
         return dataManagerSavings.allSavingsAccountTransactions
     }
 }

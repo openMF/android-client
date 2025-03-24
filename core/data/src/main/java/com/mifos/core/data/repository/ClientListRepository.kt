@@ -10,8 +10,8 @@
 package com.mifos.core.data.repository
 
 import androidx.paging.PagingData
-import com.mifos.core.model.objects.clients.Page
-import com.mifos.room.entities.client.Client
+import com.mifos.core.common.utils.Page
+import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ClientListRepository {
 
-    fun getAllClients(): Flow<PagingData<Client>>
+    fun getAllClients(): Flow<PagingData<ClientEntity>>
 
-    fun allDatabaseClients(): Flow<Page<Client>>
+    fun allDatabaseClients(): Flow<Page<ClientEntity>>
 }

@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.mappers.dataTable
 
-import com.mifos.core.entity.noncore.ColumnHeader
-import com.mifos.core.entity.noncore.DataTable
+import com.mifos.room.entities.noncore.ColumnHeader
+import com.mifos.room.entities.noncore.DataTableEntity
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetDataTablesResponse
 import org.openapitools.client.models.ResultsetColumnHeaderData
@@ -19,26 +19,26 @@ import org.openapitools.client.models.ResultsetColumnHeaderData
  * Created by Aditya Gupta on 31/08/23.
  */
 
-object GetDataTablesResponseMapper : AbstractMapper<GetDataTablesResponse, DataTable>() {
+object GetDataTablesResponseMapper : AbstractMapper<GetDataTablesResponse, DataTableEntity>() {
 
-    override fun mapFromEntity(entity: GetDataTablesResponse): DataTable {
-        return DataTable().apply {
-            applicationTableName = entity.applicationTableName
-            registeredTableName = entity.registeredTableName
+    override fun mapFromEntity(entity: GetDataTablesResponse): DataTableEntity {
+        return DataTableEntity(
+            applicationTableName = entity.applicationTableName,
+            registeredTableName = entity.registeredTableName,
             columnHeaderData = entity.columnHeaderData!!.map {
-                ColumnHeader().apply {
-                    columnCode = it.columnCode
-                    columnType = it.columnType?.name
-                    columnDisplayType = it.columnDisplayType?.name
-                    columnLength = it.columnLength?.toInt()
-                    columnNullable = it.isColumnNullable
-                    columnPrimaryKey = it.isColumnPrimaryKey
-                }
-            }
-        }
+                ColumnHeader(
+                    columnCode = it.columnCode,
+                    columnType = it.columnType?.name,
+                    columnDisplayType = it.columnDisplayType?.name,
+                    columnLength = it.columnLength?.toInt(),
+                    columnNullable = it.isColumnNullable,
+                    columnPrimaryKey = it.isColumnPrimaryKey,
+                )
+            },
+        )
     }
 
-    override fun mapToEntity(domainModel: DataTable): GetDataTablesResponse {
+    override fun mapToEntity(domainModel: DataTableEntity): GetDataTablesResponse {
         return GetDataTablesResponse(
             applicationTableName = domainModel.applicationTableName,
             registeredTableName = domainModel.registeredTableName,

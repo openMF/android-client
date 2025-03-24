@@ -9,21 +9,21 @@
  */
 package com.mifos.core.network.mappers.clients
 
-import com.mifos.core.entity.client.Client
-import com.mifos.core.objects.clients.Page
+import com.mifos.core.common.utils.Page
+import com.mifos.room.entities.client.ClientEntity
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetClientsResponse
 
-object GetClientResponseMapper : AbstractMapper<GetClientsResponse, Page<Client>>() {
+object GetClientResponseMapper : AbstractMapper<GetClientsResponse, Page<ClientEntity>>() {
 
-    override fun mapFromEntity(entity: GetClientsResponse): Page<Client> {
-        return Page<Client>().apply {
+    override fun mapFromEntity(entity: GetClientsResponse): Page<ClientEntity> {
+        return Page<ClientEntity>().apply {
             totalFilteredRecords = entity.totalFilteredRecords!!
             pageItems = ClientMapper.mapFromEntityList(entity.pageItems!!.toList())
         }
     }
 
-    override fun mapToEntity(domainModel: Page<Client>): GetClientsResponse {
+    override fun mapToEntity(domainModel: Page<ClientEntity>): GetClientsResponse {
         return GetClientsResponse(
             totalFilteredRecords = domainModel.totalFilteredRecords,
             pageItems = ClientMapper.mapToEntityList(domainModel.pageItems).toSet(),

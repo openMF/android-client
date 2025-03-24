@@ -9,31 +9,31 @@
  */
 package com.mifos.core.network.mappers.groups
 
-import com.mifos.core.entity.client.Status
-import com.mifos.core.entity.group.Group
+import com.mifos.room.entities.client.ClientStatusEntity
+import com.mifos.room.entities.group.GroupEntity
 import org.mifos.core.data.AbstractMapper
 import org.openapitools.client.models.GetGroupsPageItems
 import org.openapitools.client.models.GetGroupsStatus
 
-object GroupMapper : AbstractMapper<GetGroupsPageItems, Group>() {
+object GroupMapper : AbstractMapper<GetGroupsPageItems, GroupEntity>() {
 
-    override fun mapFromEntity(entity: GetGroupsPageItems): Group {
-        return Group().apply {
-            id = entity.id?.toInt()
-            name = entity.name
-            active = entity.active
-            officeId = entity.officeId?.toInt()
-            officeName = entity.officeName
-            hierarchy = entity.hierarchy
-            status = Status().apply {
-                id = entity.status?.id!!.toInt()
-                code = entity.status?.code
-                value = entity.status?.description
-            }
-        }
+    override fun mapFromEntity(entity: GetGroupsPageItems): GroupEntity {
+        return GroupEntity(
+            id = entity.id?.toInt(),
+            name = entity.name,
+            active = entity.active,
+            officeId = entity.officeId?.toInt(),
+            officeName = entity.officeName,
+            hierarchy = entity.hierarchy,
+            status = ClientStatusEntity(
+                id = entity.status?.id!!.toInt(),
+                code = entity.status?.code,
+                value = entity.status?.description,
+            ),
+        )
     }
 
-    override fun mapToEntity(domainModel: Group): GetGroupsPageItems {
+    override fun mapToEntity(domainModel: GroupEntity): GetGroupsPageItems {
         return GetGroupsPageItems(
             id = domainModel.id?.toLong(),
             name = domainModel.name,

@@ -13,9 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Resource
-import com.mifos.core.domain.useCases.GetGroupsByCenterUseCase
-import com.mifos.core.domain.useCases.GetGroupsUseCase
+import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.feature.center.R
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.GroupWithAssociations
@@ -23,13 +21,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class GroupListViewModel @Inject constructor(
-    private val getGroupsUseCase: GetGroupsUseCase,
-    private val getGroupsByCenterUseCase: GetGroupsByCenterUseCase,
+    private val groupRepo: GroupListRepository,
+//    private val getGroupsByCenterUseCase: GetGroupsByCenterUseCase,
+    private val repository: GroupListRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -42,31 +42,24 @@ class GroupListViewModel @Inject constructor(
     val groupAssociationState = _groupAssociationState.asStateFlow()
 
     fun loadGroupByCenter(id: Int) = viewModelScope.launch(Dispatchers.IO) {
-        getGroupsByCenterUseCase(id).collect { result ->
-            when (result) {
-                is Resource.Error ->
-                    _groupListUiState.value =
-                        GroupListUiState.Error(R.string.feature_center_failed_to_load_group_list)
-
-                is Resource.Loading -> _groupListUiState.value = GroupListUiState.Loading
-
-                is Resource.Success ->
-                    _groupListUiState.value =
-                        GroupListUiState.GroupList(result.data ?: CenterWithAssociations())
-            }
+        _groupListUiState.value = GroupListUiState.Loading
+        repository.getGroupsByCenter(id).catch {
+            _groupListUiState.value =
+                GroupListUiState.Error(R.string.feature_center_failed_to_load_group_list)
+        }.collect {
+            _groupListUiState.value =
+                GroupListUiState.GroupList(it ?: CenterWithAssociations())
         }
     }
 
-    fun loadGroups(groupId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        getGroupsUseCase(groupId).collect { result ->
-            when (result) {
-                is Resource.Error ->
-                    _groupListUiState.value =
-                        GroupListUiState.Error(R.string.feature_center_failed_to_load_group_list)
-
-                is Resource.Loading -> _groupListUiState.value = GroupListUiState.Loading
-
-                is Resource.Success -> _groupAssociationState.value = result.data
+    fun loadGroups(groupId: Int) {
+        _groupListUiState.value = GroupListUiState.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            groupRepo.getGroups(groupId).catch {
+                _groupListUiState.value =
+                    GroupListUiState.Error(R.string.feature_center_failed_to_load_group_list)
+            }.collect {
+                _groupAssociationState.value = it
             }
         }
     }

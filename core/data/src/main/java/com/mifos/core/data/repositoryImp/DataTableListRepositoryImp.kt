@@ -10,13 +10,13 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.DataTableListRepository
-import com.mifos.core.entity.accounts.loan.Loans
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.room.entities.client.ClientPayload
+import com.mifos.room.entities.accounts.loans.Loan
+import com.mifos.room.entities.client.ClientPayloadEntity
 import rx.Observable
 import javax.inject.Inject
 
@@ -29,15 +29,15 @@ class DataTableListRepositoryImp @Inject constructor(
     private val dataManagerClient: DataManagerClient,
 ) : DataTableListRepository {
 
-    override fun createLoansAccount(loansPayload: LoansPayload?): Observable<Loans> {
+    override fun createLoansAccount(loansPayload: LoansPayload?): Observable<Loan> {
         return dataManagerLoan.createLoansAccount(loansPayload)
     }
 
-    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Observable<Loans> {
+    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Observable<Loan> {
         return dataManager.createGroupLoansAccount(loansPayload)
     }
 
-    override suspend fun createClient(clientPayload: ClientPayload): Int? {
+    override suspend fun createClient(clientPayload: ClientPayloadEntity): Int? {
         return dataManagerClient.createClient(clientPayload)
     }
 }

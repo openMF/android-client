@@ -11,7 +11,7 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.BaseApiManager
-import com.mifos.room.entities.client.Charges
+import com.mifos.room.entities.client.ChargesEntity
 import com.mifos.room.helper.ChargeDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -49,7 +49,7 @@ class DataManagerCharge @Inject constructor(
         clientId: Int,
         offset: Int,
         limit: Int,
-    ): Flow<Page<Charges>> {
+    ): Flow<Page<ChargesEntity>> {
         return when (prefManager.userStatus) {
             false -> mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit).map {
                 chargeDatabase.saveClientCharges(it, clientId)

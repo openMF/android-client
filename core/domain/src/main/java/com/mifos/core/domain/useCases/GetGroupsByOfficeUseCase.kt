@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
-import com.mifos.core.entity.group.Group
+import com.mifos.room.entities.group.GroupEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -23,7 +23,7 @@ class GetGroupsByOfficeUseCase @Inject constructor(
     suspend operator fun invoke(
         officeId: Int,
         params: Map<String, String>,
-    ): Flow<Resource<List<Group>>> = flow {
+    ): Flow<Resource<List<GroupEntity>>> = flow {
         try {
             emit(Resource.Loading())
             val response = repository.getGroupsByOffice(officeId, params)

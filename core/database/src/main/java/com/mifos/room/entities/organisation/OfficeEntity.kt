@@ -19,14 +19,14 @@ import androidx.room.PrimaryKey
         ForeignKey(
             entity = OfficeOpeningDateEntity::class,
             parentColumns = ["officeId"],
-            childColumns = ["officeOpeningDate"],
+            childColumns = ["id"],
             onDelete = ForeignKey.CASCADE,
         ),
     ],
 )
 data class OfficeEntity(
     @PrimaryKey
-    val id: Int? = null,
+    val id: Int,
 
     val externalId: String? = null,
 
@@ -37,5 +37,4 @@ data class OfficeEntity(
     val officeOpeningDate: OfficeOpeningDateEntity? = null,
 
     val openingDate: List<Int?> = emptyList(),
-
 )

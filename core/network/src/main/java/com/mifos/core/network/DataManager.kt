@@ -9,28 +9,27 @@
  */
 package com.mifos.core.network
 
-import com.mifos.core.entity.accounts.loan.LoanWithAssociations
-import com.mifos.core.entity.accounts.loan.Loans
-import com.mifos.core.entity.group.Center
-import com.mifos.core.entity.group.CenterWithAssociations
-import com.mifos.core.entity.group.Group
-import com.mifos.core.entity.group.GroupWithAssociations
-import com.mifos.core.entity.organisation.Staff
+import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.model.objects.databaseobjects.CollectionSheet
+import com.mifos.core.model.objects.databaseobjects.OfflineCenter
+import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
+import com.mifos.core.model.objects.responses.SaveResponse
+import com.mifos.core.model.objects.template.client.ChargeTemplate
+import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload
-import com.mifos.core.objects.clients.ChargeCreationResponse
-import com.mifos.core.objects.clients.Page
-import com.mifos.core.objects.databaseobjects.CollectionSheet
-import com.mifos.core.objects.databaseobjects.OfflineCenter
-import com.mifos.core.objects.responses.SaveResponse
-import com.mifos.core.objects.template.client.ChargeTemplate
-import com.mifos.core.objects.template.loan.GroupLoanTemplate
-import com.mifos.core.payloads.ChargesPayload
-import com.mifos.room.entities.client.Charges
+import com.mifos.room.entities.accounts.loans.Loan
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.client.ChargesEntity
+import com.mifos.room.entities.group.CenterEntity
+import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.entities.group.GroupEntity
+import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.ResponseBody
@@ -63,11 +62,11 @@ class DataManager {
     /**
      * Center API
      */
-    fun getGroupsByCenter(id: Int): Observable<CenterWithAssociations> {
+    fun getGroupsByCenter(id: Int): Flow<CenterWithAssociations> {
         return mBaseApiManager.centerApi.getAllGroupsForCenter(id)
     }
 
-    suspend fun getCentersInOffice(id: Int, params: Map<String, String>): List<Center> {
+    suspend fun getCentersInOffice(id: Int, params: Map<String, String>): List<CenterEntity> {
         return mBaseApiManager.centerApi.getAllCentersInOffice(id, params)
     }
 
@@ -112,7 +111,7 @@ class DataManager {
      * Charges API
      */
     // TODO Remove this Method After fixing the Charge Test
-    fun getClientCharges(clientId: Int, offset: Int, limit: Int): Flow<Page<Charges>> {
+    fun getClientCharges(clientId: Int, offset: Int, limit: Int): Flow<Page<ChargesEntity>> {
         return mBaseApiManager.chargeApi.getListOfCharges(clientId, offset, limit)
     }
 
@@ -141,14 +140,14 @@ class DataManager {
     /**
      * Groups API
      */
-    fun getGroups(groupid: Int): Observable<GroupWithAssociations> {
+    fun getGroups(groupid: Int): Flow<GroupWithAssociations> {
         return mBaseApiManager.groupApi.getGroupWithAssociations(groupid)
     }
 
     suspend fun getGroupsByOffice(
         office: Int,
         params: Map<String, String>,
-    ): List<Group> {
+    ): List<GroupEntity> {
         return mBaseApiManager.groupApi.getAllGroupsInOffice(office, params)
     }
 
@@ -157,24 +156,24 @@ class DataManager {
      */
     fun offices(): Flow<List<OfficeEntity>> {
         return flow {
-            emit(mBaseApiManager.officeApi.allOffices())
+//            emit(GetOfficeResponseMapper.mapFromEntity(mBaseApiManager.officeApi.allOffices()))
         }
     }
 
     /**
      * Staff API
      */
-    suspend fun getStaffInOffice(officeId: Int): List<Staff> {
+    suspend fun getStaffInOffice(officeId: Int): List<StaffEntity> {
         return mBaseApiManager.staffApi.getStaffForOffice(officeId)
     }
 
-    val allStaff: Observable<List<Staff>>
+    val allStaff: Observable<List<StaffEntity>>
         get() = mBaseApiManager.staffApi.allStaff
 
     /**
      * Loans API
      */
-    fun getLoanTransactions(loan: Int): Observable<LoanWithAssociations> {
+    fun getLoanTransactions(loan: Int): Observable<LoanWithAssociationsEntity> {
         return mBaseApiManager.loanApi.getLoanWithTransactions(loan)
     }
 
@@ -185,11 +184,11 @@ class DataManager {
         return mBaseApiManager.loanApi.getGroupLoansAccountTemplate(groupId, productId)
     }
 
-    fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Observable<Loans> {
+    fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Observable<Loan> {
         return mBaseApiManager.loanApi.createGroupLoansAccount(loansPayload)
     }
 
-    fun getLoanRepaySchedule(loanId: Int): Observable<LoanWithAssociations> {
+    fun getLoanRepaySchedule(loanId: Int): Observable<LoanWithAssociationsEntity> {
         return mBaseApiManager.loanApi.getLoanRepaymentSchedule(loanId)
     }
 
@@ -200,11 +199,11 @@ class DataManager {
         return mBaseApiManager.loanApi.approveLoanApplication(loanId, loanApproval)
     }
 
-    suspend fun getListOfLoanCharges(loanId: Int): List<Charges> {
+    suspend fun getListOfLoanCharges(loanId: Int): List<ChargesEntity> {
         return mBaseApiManager.loanApi.getListOfLoanCharges(loanId)
     }
 
-    fun getListOfCharges(clientId: Int): Observable<Page<Charges>> {
+    fun getListOfCharges(clientId: Int): Observable<Page<ChargesEntity>> {
         return mBaseApiManager.loanApi.getListOfCharges(clientId)
     }
 }

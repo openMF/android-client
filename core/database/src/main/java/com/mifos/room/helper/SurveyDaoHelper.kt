@@ -10,9 +10,9 @@
 package com.mifos.room.helper
 
 import com.mifos.room.dao.SurveyDao
-import com.mifos.room.entities.survey.QuestionDatas
-import com.mifos.room.entities.survey.ResponseDatas
-import com.mifos.room.entities.survey.Survey
+import com.mifos.room.entities.survey.QuestionDatasEntity
+import com.mifos.room.entities.survey.ResponseDatasEntity
+import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -29,7 +29,7 @@ class SurveyDaoHelper @Inject constructor(
      * @param survey Survey
      * @return saved Survey
      */
-    suspend fun saveSurvey(survey: Survey) {
+    suspend fun saveSurvey(survey: SurveyEntity) {
         surveyDao.insertSurvey(survey)
     }
 
@@ -41,8 +41,8 @@ class SurveyDaoHelper @Inject constructor(
      */
     fun saveQuestionData(
         surveyId: Int,
-        questionDatas: QuestionDatas,
-    ): Flow<QuestionDatas> {
+        questionDatas: QuestionDatasEntity,
+    ): Flow<QuestionDatasEntity> {
         return flow {
             val updatedQuestionData = questionDatas.copy(surveyId = surveyId)
             surveyDao.insertQuestionData(updatedQuestionData)
@@ -58,8 +58,8 @@ class SurveyDaoHelper @Inject constructor(
      */
     fun saveResponseData(
         questionId: Int,
-        responseDatas: ResponseDatas,
-    ): Flow<ResponseDatas> {
+        responseDatas: ResponseDatasEntity,
+    ): Flow<ResponseDatasEntity> {
         return flow {
             val updatedResponseData = responseDatas.copy(questionId = questionId)
             surveyDao.insertResponseData(updatedResponseData)
@@ -72,7 +72,7 @@ class SurveyDaoHelper @Inject constructor(
      *
      * @return List Of Surveys
      */
-    fun readAllSurveys(): Flow<List<Survey>> {
+    fun readAllSurveys(): Flow<List<SurveyEntity>> {
         return surveyDao.getAllSurveys()
     }
 
@@ -81,7 +81,7 @@ class SurveyDaoHelper @Inject constructor(
      * and return the QuestionDatasList
      * @return List Of QuestionDatas
      */
-    fun getQuestionDatas(surveyId: Int): Flow<List<QuestionDatas>> {
+    fun getQuestionDatas(surveyId: Int): Flow<List<QuestionDatasEntity>> {
         return surveyDao.getQuestionDatas(surveyId)
     }
 
@@ -90,7 +90,7 @@ class SurveyDaoHelper @Inject constructor(
      * and return the ResponseDatasList
      * @return List Of ResponseDatas
      */
-    fun getResponseDatas(questionId: Int): Flow<List<ResponseDatas>> {
+    fun getResponseDatas(questionId: Int): Flow<List<ResponseDatasEntity>> {
         return surveyDao.getResponseDatas(questionId)
     }
 }

@@ -10,44 +10,46 @@
 package com.mifos.room.entities.accounts.savings
 
 import android.os.Parcelable
-import com.mifos.core.entity.accounts.savings.Currency
+import com.mifos.room.entities.client.ChargeCalculationTypeEntity
+import com.mifos.room.entities.client.ChargeTimeTypeEntity
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import javax.annotation.processing.Generated
 
 @Parcelize
-@Generated("org.jsonschema2pojo")
 data class Charge(
-    var id: Int? = null,
+    val id: Int? = null,
 
-    var chargeId: Int? = null,
+    val chargeId: Int? = null,
 
-    var accountId: Int? = null,
+    val accountId: Int? = null,
 
-    var name: String? = null,
+    val name: String? = null,
 
-    var chargeTimeType: com.mifos.core.model.objects.account.saving.ChargeTimeType? = null,
+    @IgnoredOnParcel
+    val chargeTimeType: ChargeTimeTypeEntity? = null,
 
-    var chargeCalculationType: com.mifos.core.model.objects.account.saving.ChargeCalculationType? = null,
+    @IgnoredOnParcel
+    val chargeCalculationType: ChargeCalculationTypeEntity? = null,
 
-    var percentage: Int? = null,
+    val percentage: Int? = null,
 
-    var amountPercentageAppliedTo: Int? = null,
+    val amountPercentageAppliedTo: Int? = null,
 
-    var currency: Currency? = null,
+    val currency: SavingAccountCurrencyEntity? = null,
 
-    var amount: Double? = null,
+    val amount: Double? = null,
 
-    var amountPaid: Double? = null,
+    val amountPaid: Double? = null,
 
-    var amountWaived: Double? = null,
+    val amountWaived: Double? = null,
 
-    var amountWrittenOff: Double? = null,
+    val amountWrittenOff: Double? = null,
 
-    var amountOutstanding: Double? = null,
+    val amountOutstanding: Double? = null,
 
-    var amountOrPercentage: Double? = null,
+    val amountOrPercentage: Double? = null,
 
-    var penalty: Boolean? = null,
+    val penalty: Boolean? = null,
 
     val additionalProperties: MutableMap<String, String> = HashMap(),
 ) : Parcelable {

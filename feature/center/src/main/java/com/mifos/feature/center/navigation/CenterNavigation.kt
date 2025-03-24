@@ -17,11 +17,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.entity.client.Client
 import com.mifos.feature.center.centerDetails.CenterDetailsScreen
 import com.mifos.feature.center.centerGroupList.GroupListScreen
 import com.mifos.feature.center.centerList.ui.CenterListScreen
 import com.mifos.feature.center.createCenter.CreateNewCenterScreen
+import com.mifos.room.entities.client.ClientEntity
 
 fun NavGraphBuilder.centerNavGraph(
     navController: NavController,
@@ -91,7 +91,7 @@ fun NavGraphBuilder.centerDetailScreenRoute(
 
 fun NavGraphBuilder.centerGroupListScreenRoute(
     onBackPressed: () -> Unit,
-    loadClientsOfGroup: (List<Client>) -> Unit,
+    loadClientsOfGroup: (List<ClientEntity>) -> Unit,
 ) {
     composable(
         route = CenterScreens.CenterGroupListScreen.route,

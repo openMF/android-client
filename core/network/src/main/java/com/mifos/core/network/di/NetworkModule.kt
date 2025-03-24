@@ -13,7 +13,7 @@ import android.content.Context
 import androidx.core.os.trace
 import coil.ImageLoader
 import coil.util.DebugLogger
-import com.mifos.core.model.getInstanceUrl
+import com.mifos.core.common.utils.getInstanceUrl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

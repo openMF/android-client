@@ -10,34 +10,34 @@
 package com.mifos.feature.settings.syncSurvey
 
 import com.mifos.core.network.datamanager.DataManagerSurveys
-import com.mifos.room.entities.survey.QuestionDatas
-import com.mifos.room.entities.survey.ResponseDatas
-import com.mifos.room.entities.survey.Survey
+import com.mifos.room.entities.survey.QuestionDatasEntity
+import com.mifos.room.entities.survey.ResponseDatasEntity
+import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SyncSurveysDialogRepositoryImp @Inject constructor(private val dataManagerSurvey: DataManagerSurveys) :
     SyncSurveysDialogRepository {
 
-    override suspend fun syncSurveyInDatabase(survey: Survey) {
+    override suspend fun syncSurveyInDatabase(survey: SurveyEntity) {
         dataManagerSurvey.syncSurveyInDatabase(survey)
     }
 
     override fun syncQuestionDataInDatabase(
         surveyId: Int,
-        questionDatas: QuestionDatas,
-    ): Flow<QuestionDatas> {
+        questionDatas: QuestionDatasEntity,
+    ): Flow<QuestionDatasEntity> {
         return dataManagerSurvey.syncQuestionDataInDatabase(surveyId, questionDatas)
     }
 
     override fun syncResponseDataInDatabase(
         questionId: Int,
-        responseDatas: ResponseDatas,
-    ): Flow<ResponseDatas> {
+        responseDatas: ResponseDatasEntity,
+    ): Flow<ResponseDatasEntity> {
         return dataManagerSurvey.syncResponseDataInDatabase(questionId, responseDatas)
     }
 
-    override fun allSurvey(): Flow<List<Survey>> {
+    override fun allSurvey(): Flow<List<SurveyEntity>> {
         return dataManagerSurvey.allSurvey
     }
 }

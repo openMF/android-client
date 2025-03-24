@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.nav
 
-import com.mifos.core.common.utils.Parcelable
-import com.mifos.core.common.utils.Parcelize
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
 
 /*
  * Created by Aditya Gupta on 22/7/23.

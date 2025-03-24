@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.loanAccountSummary
 
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -20,5 +20,5 @@ sealed class LoanAccountSummaryUiState {
 
     data class ShowFetchingError(val message: String) : LoanAccountSummaryUiState()
 
-    data class ShowLoanById(val loanWithAssociations: LoanWithAssociations) : LoanAccountSummaryUiState()
+    data class ShowLoanById(val loanWithAssociations: LoanWithAssociationsEntity) : LoanAccountSummaryUiState()
 }

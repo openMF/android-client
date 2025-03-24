@@ -57,6 +57,10 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -74,14 +78,9 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosPagingAppendProgress
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BlueSecondary
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.LightGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.entity.client.Client
 import com.mifos.feature.client.R
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogScreen
+import com.mifos.room.entities.client.ClientEntity
 
 /**
  * Created by Aditya Gupta on 21/02/24.
@@ -143,7 +142,7 @@ internal fun ClientListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { createNewClient() },
-                containerColor = BlueSecondary,
+//                containerColor = BlueSecondary,
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
@@ -214,14 +213,14 @@ internal fun ClientListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SelectionModeTopAppBar(
-    currentSelectedItems: List<Client>,
+    currentSelectedItems: List<ClientEntity>,
     syncClicked: () -> Unit,
     resetSelectionMode: () -> Unit,
 ) {
     val selectedItems = currentSelectedItems.toMutableStateList()
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = BlueSecondary,
+//            containerColor = BlueSecondary,
         ),
         title = {
             Text(
@@ -238,7 +237,7 @@ private fun SelectionModeTopAppBar(
                 Icon(
                     imageVector = Icons.Rounded.Close,
                     contentDescription = null,
-                    tint = Black,
+                    tint = Color.Black,
                 )
             }
         },
@@ -252,26 +251,26 @@ private fun SelectionModeTopAppBar(
                 Icon(
                     imageVector = Icons.Rounded.Sync,
                     contentDescription = null,
-                    tint = Black,
+                    tint = Color.Black,
                 )
             }
         },
     )
 }
 
-class ClientSelectionState(initialSelectedItems: List<Client> = emptyList()) {
-    private val _selectedItems = mutableStateListOf<Client>().also { it.addAll(initialSelectedItems) }
-    var selectedItems: State<List<Client>> = derivedStateOf { _selectedItems }
+class ClientSelectionState(initialSelectedItems: List<ClientEntity> = emptyList()) {
+    private val _selectedItems = mutableStateListOf<ClientEntity>().also { it.addAll(initialSelectedItems) }
+    var selectedItems: State<List<ClientEntity>> = derivedStateOf { _selectedItems }
 
-    fun add(client: Client) {
+    fun add(client: ClientEntity) {
         _selectedItems.add(client)
     }
 
-    fun remove(client: Client) {
+    fun remove(client: ClientEntity) {
         _selectedItems.remove(client)
     }
 
-    fun contains(client: Client): Boolean {
+    fun contains(client: ClientEntity): Boolean {
         return _selectedItems.contains(client)
     }
     fun isEmpty(): Boolean {
@@ -285,14 +284,14 @@ class ClientSelectionState(initialSelectedItems: List<Client> = emptyList()) {
     fun size(): Int {
         return _selectedItems.size
     }
-    fun toList(): List<Client> {
+    fun toList(): List<ClientEntity> {
         return _selectedItems.toList()
     }
 }
 
 @Composable
 private fun LazyColumnForClientListApi(
-    clientPagingList: LazyPagingItems<Client>,
+    clientPagingList: LazyPagingItems<ClientEntity>,
     isInSelectionMode: Boolean,
     selectedItems: ClientSelectionState,
     failedRefresh: () -> Unit,
@@ -390,7 +389,7 @@ private fun LazyColumnForClientListApi(
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = Black,
+                                    color = Color.Black,
                                 ),
                             )
                         }
@@ -450,7 +449,7 @@ private fun LazyColumnForClientListApi(
 }
 
 @Composable
-private fun LazyColumnForClientListDb(clientList: List<Client>) {
+private fun LazyColumnForClientListDb(clientList: List<ClientEntity>) {
     LazyColumn {
         items(clientList) { client ->
 
@@ -491,7 +490,7 @@ private fun LazyColumnForClientListDb(clientList: List<Client>) {
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal,
                                     fontStyle = FontStyle.Normal,
-                                    color = Black,
+                                    color = Color.Black,
                                 ),
                             )
                         }
@@ -532,19 +531,19 @@ private fun ClientListScreenPreview() {
 @Composable
 private fun LazyColumnForClientListDbPreview() {
     val clientList = listOf(
-        Client(
+        ClientEntity(
             id = 1,
             displayName = "Arian",
             accountNo = "1234567890",
             sync = true,
         ),
-        Client(
+        ClientEntity(
             id = 2,
             displayName = "oreo",
             accountNo = "9876543210",
             sync = false,
         ),
-        Client(
+        ClientEntity(
             id = 2,
             displayName = "biscuit",
             accountNo = "98765983210",

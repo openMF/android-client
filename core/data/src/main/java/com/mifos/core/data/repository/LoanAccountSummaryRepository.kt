@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.room.entities.accounts.loans.LoanWithAssociations
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -17,5 +17,5 @@ import kotlinx.coroutines.flow.Flow
  */
 interface LoanAccountSummaryRepository {
 
-    fun getLoanById(loanId: Int): Flow<LoanWithAssociations?>
+    fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity?>
 }

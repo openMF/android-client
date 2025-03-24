@@ -9,6 +9,7 @@
  */
 package com.mifos.core.data.repository
 
+import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.network.GenericResponse
 import rx.Observable
 
@@ -17,5 +18,5 @@ import rx.Observable
  */
 interface LoanAccountApprovalRepository {
 
-    fun approveLoan(loanId: Int, loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval?): Observable<GenericResponse>
+    fun approveLoan(loanId: Int, loanApproval: LoanApproval?): Observable<GenericResponse>
 }

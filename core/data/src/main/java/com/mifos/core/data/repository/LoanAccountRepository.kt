@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.entity.accounts.loan.Loans
-import com.mifos.core.entity.templates.loans.LoanTemplate
 import com.mifos.core.network.model.LoansPayload
+import com.mifos.room.entities.accounts.loans.Loan
+import com.mifos.room.entities.templates.loans.LoanTemplate
 import rx.Observable
 
 /**
@@ -23,5 +23,5 @@ interface LoanAccountRepository {
 
     suspend fun getLoansAccountTemplate(clientId: Int, productId: Int): Observable<LoanTemplate>
 
-    suspend fun createLoansAccount(loansPayload: LoansPayload): Observable<Loans>
+    suspend fun createLoansAccount(loansPayload: LoansPayload): Observable<Loan>
 }

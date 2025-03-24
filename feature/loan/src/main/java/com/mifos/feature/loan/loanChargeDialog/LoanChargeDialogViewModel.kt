@@ -14,9 +14,9 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.CreateLoanChargesUseCase
 import com.mifos.core.domain.useCases.GetAllChargesV3UseCase
-import com.mifos.core.entity.client.Charges
-import com.mifos.core.payloads.ChargesPayload
+import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.feature.loan.R
+import com.mifos.room.entities.client.ChargesEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -80,7 +80,7 @@ class LoanChargeDialogViewModel @Inject constructor(
         }
 
     private fun mapResourceBodyToChargeList(result: ResponseBody) {
-        val charges: MutableList<Charges> = ArrayList()
+        val charges: MutableList<ChargesEntity> = ArrayList()
         var reader: BufferedReader? = null
         val sb = StringBuilder()
         try {
@@ -94,9 +94,10 @@ class LoanChargeDialogViewModel @Inject constructor(
                 val chargesTypes = obj.getJSONArray("chargeOptions")
                 for (i in 0 until chargesTypes.length()) {
                     val chargesObject = chargesTypes.getJSONObject(i)
-                    val charge = Charges()
-                    charge.id = chargesObject.optInt("id")
-                    charge.name = chargesObject.optString("name")
+                    val charge = ChargesEntity(
+                        id = chargesObject.optInt("id"),
+                        name = chargesObject.optString("name"),
+                    )
                     charges.add(charge)
                 }
             }

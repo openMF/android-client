@@ -10,6 +10,7 @@
 plugins {
     alias(libs.plugins.mifos.kmp.library)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android{
@@ -17,10 +18,15 @@ android{
 }
 
 kotlin {
+    androidTarget {
+        compilerOptions {
+            freeCompilerArgs.addAll("-P", "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=com.mifos.core.model.utils.Parcelize")
+        }
+    }
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.common)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.datetime)
         }
     }
 }

@@ -9,24 +9,24 @@
  */
 package com.mifos.feature.settings.syncSurvey
 
-import com.mifos.room.entities.survey.QuestionDatas
-import com.mifos.room.entities.survey.ResponseDatas
-import com.mifos.room.entities.survey.Survey
+import com.mifos.room.entities.survey.QuestionDatasEntity
+import com.mifos.room.entities.survey.ResponseDatasEntity
+import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.Flow
 
 interface SyncSurveysDialogRepository {
 
-    suspend fun syncSurveyInDatabase(survey: Survey)
+    suspend fun syncSurveyInDatabase(survey: SurveyEntity)
 
     fun syncQuestionDataInDatabase(
         surveyId: Int,
-        questionDatas: QuestionDatas,
-    ): Flow<QuestionDatas>
+        questionDatas: QuestionDatasEntity,
+    ): Flow<QuestionDatasEntity>
 
     fun syncResponseDataInDatabase(
         questionId: Int,
-        responseDatas: ResponseDatas,
-    ): Flow<ResponseDatas>
+        responseDatas: ResponseDatasEntity,
+    ): Flow<ResponseDatasEntity>
 
-    fun allSurvey(): Flow<List<Survey>>
+    fun allSurvey(): Flow<List<SurveyEntity>>
 }

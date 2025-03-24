@@ -9,7 +9,7 @@
  */
 package com.mifos.room.entities.navigation
 
-import com.mifos.core.entity.noncore.DataTable
+import com.mifos.room.entities.noncore.DataTableEntity
 
 data class DataTableDataNavigationArg(
 
@@ -17,5 +17,5 @@ data class DataTableDataNavigationArg(
 
     val entityId: Int,
 
-    val dataTable: DataTable,
+    val dataTable: DataTableEntity,
 )

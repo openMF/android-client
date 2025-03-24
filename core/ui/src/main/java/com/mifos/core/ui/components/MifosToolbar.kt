@@ -21,7 +21,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.mifos.core.designsystem.theme.BlueSecondary
+// import com.mifos.core.designsystem.theme.BlueSecondary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +29,9 @@ fun SelectionModeTopAppBar(
     itemCount: Int,
     resetSelectionMode: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = BlueSecondary,
+    // use bluesecondary color
+//    containerColor: Color = BlueSecondary,
+    containerColor: Color = Color.Blue,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(

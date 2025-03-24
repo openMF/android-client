@@ -12,7 +12,6 @@
 package com.mifos.feature.loan.loanAccount
 
 import android.widget.Toast
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,7 +26,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -64,12 +62,10 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.entity.noncore.DataTable
+import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.feature.loan.R
+import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -77,7 +73,7 @@ import java.util.Locale
 @Composable
 fun LoanAccountScreen(
     onBackPressed: () -> Unit,
-    dataTable: (List<DataTable>, LoansPayload) -> Unit,
+    dataTable: (List<DataTableEntity>, LoansPayload) -> Unit,
     viewModel: LoanAccountViewModel = hiltViewModel(),
 ) {
     val state by viewModel.loanAccountUiState.collectAsStateWithLifecycle()
@@ -118,14 +114,14 @@ fun LoanAccountScreen(
     onRetry: () -> Unit,
     onLoanProductSelected: (Int) -> Unit,
     createLoanAccount: (LoansPayload) -> Unit,
-    dataTable: (List<DataTable>, LoansPayload) -> Unit,
+    dataTable: (List<DataTableEntity>, LoansPayload) -> Unit,
     fetchTemplate: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
+//        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_loan_application),
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
@@ -177,11 +173,11 @@ fun LoanAccountScreen(
 @Composable
 private fun LoanAccountContent(
     clientsId: Int,
-    productLoans: List<com.mifos.core.model.objects.organisations.LoanProducts>,
+    productLoans: List<LoanProducts>,
     loanTemplate: LoanTemplate,
     onLoanProductSelected: (Int) -> Unit,
     createLoanAccount: (LoansPayload) -> Unit,
-    dataTable: (List<DataTable>, LoansPayload) -> Unit,
+    dataTable: (List<DataTableEntity>, LoansPayload) -> Unit,
 ) {
     var selectedLoanProduct by rememberSaveable { mutableStateOf("") }
     var selectedLoanProductId by rememberSaveable { mutableIntStateOf(0) }
@@ -349,7 +345,7 @@ private fun LoanAccountContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 submissionDate,
             ),
-            label = R.string.feature_loan_submission_date,
+            label = stringResource(R.string.feature_loan_submission_date),
             openDatePicker = {
                 showSubmissionDatePicker = true
             },
@@ -359,7 +355,7 @@ private fun LoanAccountContent(
             value = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
                 disbursementDate,
             ),
-            label = R.string.feature_loan_disbursed_date,
+            label = stringResource(R.string.feature_loan_disbursed_date),
             openDatePicker = {
                 showDisbursementDatePicker = true
             },
@@ -601,9 +597,9 @@ private fun LoanAccountContent(
                 .heightIn(44.dp)
                 .padding(start = 16.dp, end = 16.dp),
             contentPadding = PaddingValues(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-            ),
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//            ),
         ) {
             Text(text = stringResource(id = R.string.feature_loan_submit), fontSize = 16.sp)
         }
@@ -642,5 +638,5 @@ private fun LoanAccountScreenPreview(
 }
 
 val sampleLoanList = List(10) {
-    com.mifos.core.model.objects.organisations.LoanProducts(name = "Loan $it", id = it)
+    LoanProducts(name = "Loan $it", id = it)
 }

@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.offline.syncClientPayloads
 
-import com.mifos.core.entity.client.ClientPayload
+import com.mifos.room.entities.client.ClientPayloadEntity
 
 /**
  * Created by Aditya Gupta on 16/08/23.
@@ -20,5 +20,5 @@ sealed class SyncClientPayloadsUiState {
 
     data class ShowError(val message: String) : SyncClientPayloadsUiState()
 
-    data class ShowPayloads(val clientPayloads: List<ClientPayload>) : SyncClientPayloadsUiState()
+    data class ShowPayloads(val clientPayloads: List<ClientPayloadEntity>) : SyncClientPayloadsUiState()
 }

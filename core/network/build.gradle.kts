@@ -45,10 +45,6 @@ dependencies {
     // sdk client
     implementation(libs.fineract.client)
 
-    //DBFlow dependencies
-    kapt(libs.dbflow.processor)
-    implementation(libs.dbflow)
-
     //Square dependencies
     implementation("com.squareup.retrofit2:retrofit:2.9.0") {
         // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
@@ -66,5 +62,5 @@ dependencies {
     implementation(libs.stetho)
     implementation(libs.stetho.okhttp3)
 
-    implementation(libs.coil.kt.compose)
+    implementation(libs.coil.kt2)
 }

@@ -12,7 +12,7 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.staffs.StaffMapper
-import com.mifos.room.entities.organisation.Staff
+import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.helper.StaffDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -34,7 +34,7 @@ class DataManagerStaff @Inject constructor(
      * @param officeId
      * @return
      */
-    fun getStaffInOffice(officeId: Int): Flow<List<Staff>> {
+    fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {
         return when (prefManager.userStatus) {
             false -> flow {
                 baseApiManager.getStaffApi().retrieveAll16(

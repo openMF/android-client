@@ -84,17 +84,17 @@ enum class SettingsCardItem(
     LANGUAGE(
         title = R.string.feature_settings_language,
         details = R.string.feature_settings_language_desc,
-        icon = MifosIcons.language,
+        icon = MifosIcons.Language,
     ),
     THEME(
         title = R.string.feature_settings_theme,
         details = R.string.feature_settings_theme_desc,
-        icon = MifosIcons.theme,
+        icon = MifosIcons.Theme,
     ),
     PASSCODE(
         title = R.string.feature_settings_change_passcode,
         details = R.string.feature_settings_change_passcode_desc,
-        icon = MifosIcons.password,
+        icon = MifosIcons.Password,
     ),
     ENDPOINT(
         title = R.string.feature_settings_instance_url,

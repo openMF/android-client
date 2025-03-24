@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.savings.savingsAccountSummary
 
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociations
+import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -20,6 +20,6 @@ sealed class SavingsAccountSummaryUiState {
 
     data class ShowFetchingError(val message: Int) : SavingsAccountSummaryUiState()
 
-    data class ShowSavingAccount(val savingsAccountWithAssociations: SavingsAccountWithAssociations) :
+    data class ShowSavingAccount(val savingsAccountWithAssociations: SavingsAccountWithAssociationsEntity) :
         SavingsAccountSummaryUiState()
 }

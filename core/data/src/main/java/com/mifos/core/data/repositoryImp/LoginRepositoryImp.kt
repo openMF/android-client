@@ -10,7 +10,7 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.LoginRepository
-import com.mifos.core.network.datamanger.DataManagerAuth
+import com.mifos.core.network.datamanager.DataManagerAuth
 import org.openapitools.client.models.PostAuthenticationResponse
 import javax.inject.Inject
 

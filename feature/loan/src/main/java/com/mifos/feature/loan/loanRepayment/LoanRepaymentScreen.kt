@@ -12,7 +12,6 @@ package com.mifos.feature.loan.loanRepayment
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +26,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,6 +46,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -64,15 +64,11 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.entity.PaymentTypeOption
-import com.mifos.core.entity.accounts.loan.LoanRepaymentRequest
-import com.mifos.core.entity.templates.loans.LoanRepaymentTemplate
 import com.mifos.feature.loan.R
+import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
+import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -119,7 +115,7 @@ internal fun LoanRepaymentScreen(
     uiState: LoanRepaymentUiState,
     navigateBack: () -> Unit,
     onRetry: () -> Unit,
-    submitPayment: (request: LoanRepaymentRequest) -> Unit,
+    submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
     onLoanRepaymentDoesNotExistInDatabase: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -131,7 +127,6 @@ internal fun LoanRepaymentScreen(
         snackbarHostState = snackbarHostState,
         onBackPressed = navigateBack,
         title = stringResource(id = R.string.feature_loan_loan_repayment),
-        icon = MifosIcons.arrowBack,
     ) {
         Box(
             modifier = Modifier.padding(it),
@@ -206,9 +201,9 @@ private fun LoanRepaymentContent(
     loanProductName: String,
     amountInArrears: Double?,
     loanAccountNumber: String,
-    loanRepaymentTemplate: LoanRepaymentTemplate,
+    loanRepaymentTemplate: LoanRepaymentTemplateEntity,
     navigateBack: () -> Unit,
-    submitPayment: (request: LoanRepaymentRequest) -> Unit,
+    submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
 ) {
     var paymentType by rememberSaveable { mutableStateOf("") }
     var amount by rememberSaveable { mutableStateOf("") }
@@ -319,7 +314,7 @@ private fun LoanRepaymentContent(
             ).format(
                 repaymentDate,
             ),
-            label = R.string.feature_loan_repayment_date,
+            label = stringResource(R.string.feature_loan_repayment_date),
         ) {
             showDatePickerDialog = true
         }
@@ -402,9 +397,9 @@ private fun LoanRepaymentContent(
             Button(
                 modifier = Modifier
                     .heightIn(46.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//                ),
                 onClick = { navigateBack.invoke() },
             ) {
                 Text(text = stringResource(id = R.string.feature_loan_cancel))
@@ -413,9 +408,9 @@ private fun LoanRepaymentContent(
             Button(
                 modifier = Modifier
                     .heightIn(46.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                ),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//                ),
                 onClick = {
                     if (isAllFieldsValid(
                             amount = amount,
@@ -469,7 +464,7 @@ private fun ShowLoanRepaymentConfirmationDialog(
     fees: String,
     total: String,
     context: Context,
-    submitPayment: (request: LoanRepaymentRequest) -> Unit,
+    submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -478,20 +473,19 @@ private fun ShowLoanRepaymentConfirmationDialog(
                 onClick = {
                     onDismiss()
                     if (Network.isOnline(context)) {
-                        val request = LoanRepaymentRequest()
-
-                        request.accountNumber = loanAccountNumber
-                        request.paymentTypeId = paymentTypeId
-                        request.dateFormat = "dd MM yyyy"
-                        request.locale = "en"
-                        request.transactionAmount = total
-                        request.transactionDate = SimpleDateFormat(
-                            "dd MMMM yyyy",
-                            Locale.getDefault(),
-                        ).format(
-                            repaymentDate,
+                        val request = LoanRepaymentRequestEntity(
+                            accountNumber = loanAccountNumber,
+                            paymentTypeId = paymentTypeId,
+                            dateFormat = "dd MM yyyy",
+                            locale = "en",
+                            transactionAmount = total,
+                            transactionDate = SimpleDateFormat(
+                                "dd MMMM yyyy",
+                                Locale.getDefault(),
+                            ).format(
+                                repaymentDate,
+                            ),
                         )
-
                         submitPayment.invoke(request)
                     } else {
                         Toast.makeText(
@@ -592,7 +586,7 @@ private class LoanRepaymentScreenPreviewProvider :
     PreviewParameterProvider<LoanRepaymentUiState> {
 
     private val samplePaymentTypeOptions = mutableListOf(
-        PaymentTypeOption(
+        PaymentTypeOptionEntity(
             id = 1,
             name = "Cash",
             description = "Cash payment",
@@ -601,7 +595,7 @@ private class LoanRepaymentScreenPreviewProvider :
         ),
     )
 
-    private val sampleLoanRepaymentTemplate = LoanRepaymentTemplate(
+    private val sampleLoanRepaymentTemplate = LoanRepaymentTemplateEntity(
         loanId = 101,
         date = mutableListOf(2024, 7, 15),
         amount = 1000.0,
@@ -619,7 +613,7 @@ private class LoanRepaymentScreenPreviewProvider :
             LoanRepaymentUiState.ShowError(R.string.feature_loan_failed_to_load_loan_repayment),
             LoanRepaymentUiState.ShowLoanRepaymentDoesNotExistInDatabase,
             LoanRepaymentUiState.ShowProgressbar,
-            LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully(com.mifos.core.model.objects.account.loan.LoanRepaymentResponse()),
+            LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully(LoanRepaymentResponseEntity()),
         )
 }
 

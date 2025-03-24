@@ -10,7 +10,6 @@
 package com.mifos.feature.center.centerDetails
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +21,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,6 +35,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -56,12 +57,7 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.Black
-import com.mifos.core.designsystem.theme.BluePrimary
-import com.mifos.core.designsystem.theme.BluePrimaryDark
-import com.mifos.core.designsystem.theme.DarkGray
-import com.mifos.core.designsystem.theme.White
-import com.mifos.core.objects.groups.CenterInfo
+import com.mifos.core.model.objects.groups.CenterInfo
 import com.mifos.feature.center.R
 import com.mifos.room.entities.group.CenterWithAssociations
 
@@ -110,7 +106,6 @@ internal fun CenterDetailsScreen(
     var centerActive by remember { mutableStateOf(true) }
 
     MifosScaffold(
-        icon = MifosIcons.arrowBack,
         title = stringResource(id = R.string.feature_center_center),
         onBackPressed = onBackPressed,
         actions = {
@@ -118,7 +113,7 @@ internal fun CenterDetailsScreen(
                 Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
             }
             DropdownMenu(
-                modifier = Modifier.background(White),
+                modifier = Modifier.background(Color.White),
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false },
             ) {
@@ -147,9 +142,9 @@ internal fun CenterDetailsScreen(
                         .fillMaxWidth()
                         .heightIn(44.dp)
                         .padding(start = 16.dp, end = 16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
-                    ),
+//                    colors = ButtonDefaults.buttonColors(
+//                        containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
+//                    ),
                 ) {
                     Text(
                         text = stringResource(id = R.string.feature_center_activate_center),
@@ -203,17 +198,17 @@ private fun CenterDetailsContent(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold,
                 ),
-                color = Black,
+                color = Color.Black,
                 textAlign = TextAlign.Center,
             )
         }
         MifosCenterDetailsText(
-            icon = MifosIcons.date,
+            icon = MifosIcons.Date,
             field = stringResource(id = R.string.feature_center_activation_date),
             value = Utils.getStringOfDate(centerWithAssociations.activationDate),
         )
         MifosCenterDetailsText(
-            icon = MifosIcons.date,
+            icon = MifosIcons.Date,
             field = stringResource(id = R.string.feature_center_next_meeting_on),
             value = if (centerWithAssociations.collectionMeetingCalendar.calendarInstanceId == null) {
                 stringResource(
@@ -225,13 +220,13 @@ private fun CenterDetailsContent(
         )
         centerWithAssociations.collectionMeetingCalendar.humanReadable?.let {
             MifosCenterDetailsText(
-                icon = MifosIcons.eventRepeat,
+                icon = MifosIcons.EventRepeat,
                 field = stringResource(id = R.string.feature_center_meeting_frequency),
                 value = it,
             )
         }
         MifosCenterDetailsText(
-            icon = MifosIcons.person,
+            icon = MifosIcons.Person,
             field = stringResource(id = R.string.feature_center_staff_name),
             value = if (centerWithAssociations.staffName != null) {
                 centerWithAssociations.staffName.toString()
@@ -254,42 +249,42 @@ private fun CenterDetailsContent(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.SemiBold,
             ),
-            color = Black,
+            color = Color.Black,
             textAlign = TextAlign.Center,
         )
 
         MifosCenterDetailsText(
-            icon = MifosIcons.person,
+            icon = MifosIcons.Person,
             field = stringResource(id = R.string.feature_center_active_client),
             value = centerInfo.activeClients.toString(),
         )
         MifosCenterDetailsText(
-            icon = MifosIcons.group,
+            icon = MifosIcons.Group,
             field = stringResource(id = R.string.feature_center_active_group_loan),
             value = centerInfo.activeGroupLoans.toString(),
         )
         MifosCenterDetailsText(
-            icon = MifosIcons.person,
+            icon = MifosIcons.Person,
             field = stringResource(id = R.string.feature_center_active_client_loans),
             value = centerInfo.activeClientLoans.toString(),
         )
         MifosCenterDetailsText(
-            icon = MifosIcons.group,
+            icon = MifosIcons.Group,
             field = stringResource(id = R.string.feature_center_active_group_borrowers),
             value = centerInfo.activeGroupBorrowers.toString(),
         )
         MifosCenterDetailsText(
-            icon = MifosIcons.person,
+            icon = MifosIcons.Person,
             field = stringResource(id = R.string.feature_center_active_client_borrowers),
             value = centerInfo.activeClientBorrowers.toString(),
         )
         MifosCenterDetailsText(
-            icon = MifosIcons.group,
+            icon = MifosIcons.Group,
             field = stringResource(id = R.string.feature_center_active_overdue_group_loans),
             value = centerInfo.overdueGroupLoans.toString(),
         )
         MifosCenterDetailsText(
-            icon = MifosIcons.person,
+            icon = MifosIcons.Person,
             field = stringResource(id = R.string.feature_center_active_group_loan),
             value = centerInfo.overdueClientLoans.toString(),
         )

@@ -10,7 +10,7 @@
 package com.mifos.feature.savings.savingsAccountTransaction
 
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplate
+import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 
 /**
  * Created by Aditya Gupta on 13/08/23.
@@ -21,7 +21,7 @@ sealed class SavingsAccountTransactionUiState {
 
     data class ShowError(val message: String) : SavingsAccountTransactionUiState()
 
-    data class ShowSavingAccountTemplate(val savingsAccountTransactionTemplate: SavingsAccountTransactionTemplate) :
+    data class ShowSavingAccountTemplate(val savingsAccountTransactionTemplate: SavingsAccountTransactionTemplateEntity) :
         SavingsAccountTransactionUiState()
 
     data class ShowTransactionSuccessfullyDone(val savingsAccountTransactionResponse: SavingsAccountTransactionResponse) :

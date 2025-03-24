@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.room.entities.survey.QuestionDatas
-import com.mifos.room.entities.survey.ResponseDatas
-import com.mifos.room.entities.survey.Survey
+import com.mifos.room.entities.survey.QuestionDatasEntity
+import com.mifos.room.entities.survey.ResponseDatasEntity
+import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -19,11 +19,11 @@ import kotlinx.coroutines.flow.Flow
  */
 interface SurveyListRepository {
 
-    fun allSurvey(): Flow<List<Survey>>
+    fun allSurvey(): Flow<List<SurveyEntity>>
 
-    fun databaseSurveys(): Flow<List<Survey>>
+    fun databaseSurveys(): Flow<List<SurveyEntity>>
 
-    fun getDatabaseQuestionData(surveyId: Int): Flow<List<QuestionDatas>>
+    fun getDatabaseQuestionData(surveyId: Int): Flow<List<QuestionDatasEntity>>
 
-    fun getDatabaseResponseDatas(questionId: Int): Flow<List<ResponseDatas>>
+    fun getDatabaseResponseDatas(questionId: Int): Flow<List<ResponseDatasEntity>>
 }
