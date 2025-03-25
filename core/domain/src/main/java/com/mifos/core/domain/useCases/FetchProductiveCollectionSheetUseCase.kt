@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class FetchProductiveCollectionSheetUseCase @Inject constructor(
+class FetchProductiveCollectionSheetUseCase (
     private val repository: GenerateCollectionSheetRepository,
 ) {
 

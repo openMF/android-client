@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class ApproveCheckerUseCase @Inject constructor(val repository: CheckerInboxRepository) {
+class ApproveCheckerUseCase (val repository: CheckerInboxRepository) {
 
     suspend operator fun invoke(auditId: Int): Flow<Resource<GenericResponse>> = flow {
         try {

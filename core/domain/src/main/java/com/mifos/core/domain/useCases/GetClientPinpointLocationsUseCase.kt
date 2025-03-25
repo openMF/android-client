@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetClientPinpointLocationsUseCase @Inject constructor(private val pinPointClientRepository: PinPointClientRepository) {
+class GetClientPinpointLocationsUseCase (private val pinPointClientRepository: PinPointClientRepository) {
 
     suspend operator fun invoke(clientId: Int): Flow<Resource<List<com.mifos.core.model.objects.clients.ClientAddressResponse>>> = flow {
         try {

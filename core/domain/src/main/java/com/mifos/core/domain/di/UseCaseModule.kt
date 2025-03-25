@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.di
 
-import com.mifos.core.data.repository.LoginRepository
 import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
@@ -18,36 +17,15 @@ import com.mifos.core.domain.useCases.ValidateServerEndPointUseCase
 import com.mifos.core.domain.useCases.ValidateServerPortUseCase
 import com.mifos.core.domain.useCases.ValidateServerProtocolUseCase
 import com.mifos.core.domain.useCases.ValidateServerTenantUseCase
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object UseCaseModule {
-
-    @Provides
-    fun provideUsernameValidationUseCase(): UsernameValidationUseCase = UsernameValidationUseCase()
-
-    @Provides
-    fun providePasswordValidationUseCase(): PasswordValidationUseCase = PasswordValidationUseCase()
-
-    @Provides
-    fun provideLoginUseCase(loginRepository: LoginRepository): LoginUseCase = LoginUseCase(loginRepository)
-
-    @Provides
-    fun provideProtocolValidationUseCase() = ValidateServerProtocolUseCase()
-
-    @Provides
-    fun provideApiPathValidationUseCase() = ValidateServerApiPathUseCase()
-
-    @Provides
-    fun provideEndPointValidationUseCase() = ValidateServerEndPointUseCase()
-
-    @Provides
-    fun providePortValidationUseCase() = ValidateServerPortUseCase()
-
-    @Provides
-    fun provideTenantValidationUseCase() = ValidateServerTenantUseCase()
+val UseCaseModule = module {
+    single<UsernameValidationUseCase> { UsernameValidationUseCase() }
+    single<PasswordValidationUseCase> { PasswordValidationUseCase() }
+    single<LoginUseCase> { LoginUseCase(get()) }
+    single<ValidateServerProtocolUseCase> { ValidateServerProtocolUseCase() }
+    single<ValidateServerApiPathUseCase> { ValidateServerApiPathUseCase() }
+    single<ValidateServerEndPointUseCase> { ValidateServerEndPointUseCase() }
+    single<ValidateServerPortUseCase> { ValidateServerPortUseCase() }
+    single<ValidateServerTenantUseCase> { ValidateServerTenantUseCase() }
 }

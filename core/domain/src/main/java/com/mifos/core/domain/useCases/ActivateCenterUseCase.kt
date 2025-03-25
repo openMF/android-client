@@ -17,7 +17,9 @@ import kotlinx.coroutines.flow.flow
 import org.openapitools.client.models.PostCentersCenterIdResponse
 import javax.inject.Inject
 
-class ActivateCenterUseCase @Inject constructor(private val activateRepository: ActivateRepository) {
+class ActivateCenterUseCase(
+    private val activateRepository: ActivateRepository,
+) {
 
     suspend operator fun invoke(
         centerId: Int,

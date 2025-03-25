@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetCentersInOfficeUseCase @Inject constructor(
+class GetCentersInOfficeUseCase (
     private val repository: GenerateCollectionSheetRepository,
 ) {
 

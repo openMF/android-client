@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import javax.inject.Inject
 
-data class ServerConfigValidatorUseCase @Inject constructor(
+data class ServerConfigValidatorUseCase (
     val validateServerProtocol: ValidateServerProtocolUseCase,
     val validateEndPoint: ValidateServerEndPointUseCase,
     val validateApiPath: ValidateServerApiPathUseCase,

@@ -21,7 +21,7 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 
-class ActivateGroupUseCase @Inject constructor(private val activateRepository: ActivateRepository) {
+class ActivateGroupUseCase (private val activateRepository: ActivateRepository) {
 
     suspend operator fun invoke(
         groupId: Int,

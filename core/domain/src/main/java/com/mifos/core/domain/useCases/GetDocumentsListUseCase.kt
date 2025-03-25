@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetDocumentsListUseCase @Inject constructor(private val repository: DocumentListRepository) {
+class GetDocumentsListUseCase (private val repository: DocumentListRepository) {
 
     suspend operator fun invoke(
         entityType: String,

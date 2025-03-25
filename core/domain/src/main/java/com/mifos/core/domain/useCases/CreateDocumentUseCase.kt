@@ -21,7 +21,7 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
 
-class CreateDocumentUseCase @Inject constructor(private val repository: SignatureRepository) {
+class CreateDocumentUseCase (private val repository: SignatureRepository) {
 
     suspend operator fun invoke(
         entityType: String?,

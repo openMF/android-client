@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.zip
 import javax.inject.Inject
 
-class GetCenterDetailsUseCase @Inject constructor(private val repository: CenterDetailsRepository) {
+class GetCenterDetailsUseCase (private val repository: CenterDetailsRepository) {
 
     suspend operator fun invoke(
         centerId: Int,

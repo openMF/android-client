@@ -23,7 +23,7 @@ import javax.inject.Inject
 /**
  * Created by Pronay Sarker on 04/08/2024 (11:59 AM)
  */
-class GetClientSavingsAccountTemplateByProductUseCase @Inject constructor(private val repository: SavingsAccountRepository) {
+class GetClientSavingsAccountTemplateByProductUseCase (private val repository: SavingsAccountRepository) {
 
     suspend operator fun invoke(clientId: Int, productId: Int): Flow<Resource<SavingProductsTemplate?>> = callbackFlow {
         try {

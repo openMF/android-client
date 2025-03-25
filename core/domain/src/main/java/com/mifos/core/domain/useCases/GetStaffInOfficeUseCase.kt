@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetStaffInOfficeUseCase @Inject constructor(private val repository: NewIndividualCollectionSheetRepository) {
+class GetStaffInOfficeUseCase (private val repository: NewIndividualCollectionSheetRepository) {
 
     suspend operator fun invoke(officeId: Int): Flow<Resource<List<StaffEntity>>> = flow {
         try {

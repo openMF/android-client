@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class FetchGroupsAssociatedWithCenterUseCase @Inject constructor(
+class FetchGroupsAssociatedWithCenterUseCase (
     private val repository: GenerateCollectionSheetRepository,
 ) {
 

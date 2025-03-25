@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetIndividualCollectionSheetUseCase @Inject constructor(private val repository: NewIndividualCollectionSheetRepository) {
+class GetIndividualCollectionSheetUseCase (private val repository: NewIndividualCollectionSheetRepository) {
 
     suspend operator fun invoke(payload: RequestCollectionSheetPayload): Flow<Resource<IndividualCollectionSheet>> =
         flow {

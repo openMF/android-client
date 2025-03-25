@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetReportCategoryUseCase @Inject constructor(private val repository: ReportCategoryRepository) {
+class GetReportCategoryUseCase (private val repository: ReportCategoryRepository) {
 
     suspend operator fun invoke(
         reportCategory: String,

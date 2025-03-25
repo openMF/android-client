@@ -10,7 +10,7 @@
 plugins {
     alias(libs.plugins.mifos.android.library)
     alias(libs.plugins.mifos.android.library.jacoco)
-    alias(libs.plugins.mifos.android.hilt)
+//    alias(libs.plugins.mifos.android.hilt)
 }
 
 android {
@@ -40,5 +40,4 @@ dependencies {
     testImplementation (libs.androidx.paging.testing)
 
     implementation(libs.koin.android.v401)
-    implementation(libs.javax.inject)
 }

@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetAllChargesV2UseCase @Inject constructor(private val repository: ChargeDialogRepository) {
+class GetAllChargesV2UseCase (private val repository: ChargeDialogRepository) {
 
     suspend operator fun invoke(clientId: Int): Flow<Resource<ChargeTemplate>> = flow {
         try {

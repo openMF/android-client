@@ -23,7 +23,7 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 18/03/24.
  */
 
-class GetClientDetailsUseCase @Inject constructor(private val repository: ClientDetailsRepository) {
+class GetClientDetailsUseCase (private val repository: ClientDetailsRepository) {
 
     operator fun invoke(clientId: Int): Flow<Resource<ClientAndClientAccounts>> = flow {
         try {

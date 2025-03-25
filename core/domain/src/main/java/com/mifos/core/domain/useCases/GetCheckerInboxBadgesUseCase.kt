@@ -20,7 +20,7 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 21/03/24.
  */
 
-class GetCheckerInboxBadgesUseCase @Inject constructor(
+class GetCheckerInboxBadgesUseCase (
     private val repository: CheckerInboxTasksRepository,
 ) {
     operator fun invoke(): Flow<Resource<Pair<Int, Int>>> = flow {

@@ -24,7 +24,7 @@ import javax.inject.Inject
 /**
  * Created by Pronay Sarker on 04/08/2024 (12:46 PM)
  */
-class ApproveSavingsApplicationUseCase @Inject constructor(private val repository: SavingsAccountApprovalRepository) {
+class ApproveSavingsApplicationUseCase (private val repository: SavingsAccountApprovalRepository) {
 
     suspend operator fun invoke(savingsAccountId: Int, savingsApproval: SavingsApproval?): Flow<Resource<GenericResponse>> =
         callbackFlow {

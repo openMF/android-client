@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetRunReportWithQueryUseCase @Inject constructor(private val repository: ReportDetailRepository) {
+class GetRunReportWithQueryUseCase (private val repository: ReportDetailRepository) {
 
     suspend operator fun invoke(
         reportName: String,

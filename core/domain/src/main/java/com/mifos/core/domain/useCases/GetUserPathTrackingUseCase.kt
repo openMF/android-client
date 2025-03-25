@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetUserPathTrackingUseCase @Inject constructor(private val repository: PathTrackingRepository) {
+class GetUserPathTrackingUseCase (private val repository: PathTrackingRepository) {
 
     suspend operator fun invoke(userId: Int): Flow<Resource<List<UserLocation>>> = flow {
         try {

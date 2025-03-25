@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class SubmitCollectionSheetUseCase @Inject constructor(private val repository: GenerateCollectionSheetRepository) {
+class SubmitCollectionSheetUseCase (private val repository: GenerateCollectionSheetRepository) {
 
     suspend operator fun invoke(
         groupId: Int,

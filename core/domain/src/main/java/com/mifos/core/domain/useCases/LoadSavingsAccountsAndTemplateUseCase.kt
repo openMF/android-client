@@ -24,7 +24,7 @@ import javax.inject.Inject
 /**
  * Created by Pronay Sarker on 04/08/2024 (4:41 PM)
  */
-class LoadSavingsAccountsAndTemplateUseCase @Inject constructor(private val repository: SavingsAccountRepository) {
+class LoadSavingsAccountsAndTemplateUseCase (private val repository: SavingsAccountRepository) {
 
     suspend operator fun invoke(): Flow<Resource<SavingProductsAndTemplate?>> =
         callbackFlow {

@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetGroupsByOfficeUseCase @Inject constructor(
+class GetGroupsByOfficeUseCase (
     private val repository: GenerateCollectionSheetRepository,
 ) {
 

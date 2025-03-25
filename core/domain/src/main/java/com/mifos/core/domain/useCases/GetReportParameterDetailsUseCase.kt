@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetReportParameterDetailsUseCase @Inject constructor(private val repository: ReportDetailRepository) {
+class GetReportParameterDetailsUseCase (private val repository: ReportDetailRepository) {
 
     suspend operator fun invoke(
         parameterName: String,

@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetClientIdentifierTemplateUseCase @Inject constructor(private val repository: ClientIdentifierDialogRepository) {
+class GetClientIdentifierTemplateUseCase (private val repository: ClientIdentifierDialogRepository) {
 
     suspend operator fun invoke(clientId: Int): Flow<Resource<IdentifierTemplate>> = flow {
         try {
