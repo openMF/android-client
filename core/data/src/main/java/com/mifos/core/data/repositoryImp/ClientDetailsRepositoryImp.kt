@@ -9,6 +9,7 @@
  */
 package com.mifos.core.data.repositoryImp
 
+import com.mifos.core.common.network.Dispatcher
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.room.entities.accounts.ClientAccounts
