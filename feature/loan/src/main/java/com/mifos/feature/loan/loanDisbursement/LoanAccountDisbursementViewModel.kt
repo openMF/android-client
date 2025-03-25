@@ -28,8 +28,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-@HiltViewModel
-class LoanAccountDisbursementViewModel @Inject constructor(
+class LoanAccountDisbursementViewModel (
     private val repository: LoanAccountDisbursementRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

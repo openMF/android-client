@@ -65,6 +65,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.feature.client.R
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -73,7 +74,7 @@ internal fun ChargeDialogScreen(
     clientId: Int,
     onDismiss: () -> Unit,
     onCreated: () -> Unit,
-    viewModel: ChargeDialogViewModel = hiltViewModel(),
+    viewModel: ChargeDialogViewModel = koinViewModel(),
 ) {
     val state by viewModel.chargeDialogUiState.collectAsStateWithLifecycle()
 

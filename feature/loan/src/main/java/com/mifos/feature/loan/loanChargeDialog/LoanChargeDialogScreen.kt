@@ -65,6 +65,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.client.ChargesEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -73,7 +74,7 @@ internal fun LoanChargeDialogScreen(
     loanId: Int,
     onSuccess: () -> Unit,
     onDismiss: () -> Unit,
-    viewModel: LoanChargeDialogViewModel = hiltViewModel(),
+    viewModel: LoanChargeDialogViewModel = koinViewModel(),
 ) {
     val state by viewModel.loanChargeDialogUiState.collectAsStateWithLifecycle()
 

@@ -27,8 +27,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class LoanAccountViewModel @Inject constructor(
+class LoanAccountViewModel(
     private val getAllLoanUseCase: GetAllLoanUseCase,
     private val getLoansAccountTemplateUseCase: GetLoansAccountTemplateUseCase,
     private val createLoanAccountUseCase: CreateLoanAccountUseCase,

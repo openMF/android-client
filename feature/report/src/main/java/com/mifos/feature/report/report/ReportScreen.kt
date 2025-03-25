@@ -49,11 +49,12 @@ import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.feature.report.R
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ReportScreen(
     onBackPressed: () -> Unit,
-    viewModel: ReportViewModel = hiltViewModel(),
+    viewModel: ReportViewModel = koinViewModel(),
 ) {
     val report = viewModel.report
     val state by viewModel.reportUiState.collectAsStateWithLifecycle()

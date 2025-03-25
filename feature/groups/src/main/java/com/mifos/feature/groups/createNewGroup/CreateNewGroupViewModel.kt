@@ -24,8 +24,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-@HiltViewModel
-class CreateNewGroupViewModel @Inject constructor(
+class CreateNewGroupViewModel (
 //    private val getGroupOfficesUseCase: GetGroupOfficesUseCase,
 //    private val createNewGroupUseCase: CreateNewGroupUseCase,
     private val repository: CreateNewGroupRepository,

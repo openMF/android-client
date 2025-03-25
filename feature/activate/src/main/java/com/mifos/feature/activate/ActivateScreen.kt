@@ -51,13 +51,14 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.clients.ActivatePayload
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
 internal fun ActivateScreen(
     onBackPressed: () -> Unit,
-    viewModel: ActivateViewModel = hiltViewModel(),
+    viewModel: ActivateViewModel = koinViewModel(),
 ) {
     val state by viewModel.activateUiState.collectAsStateWithLifecycle()
     val id by viewModel.id.collectAsStateWithLifecycle()

@@ -65,10 +65,11 @@ import com.mifos.feature.offline.R
 import com.mifos.feature.offline.syncSavingsAccountTransaction.getPaymentTypeName
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SyncLoanRepaymentTransactionScreenRoute(
-    viewModel: SyncLoanRepaymentTransactionViewModel = hiltViewModel(),
+    viewModel: SyncLoanRepaymentTransactionViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.syncLoanRepaymentTransactionUiState.collectAsStateWithLifecycle()

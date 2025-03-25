@@ -65,11 +65,12 @@ import com.mifos.feature.client.R
 import com.mifos.feature.client.clientChargeDialog.ChargeDialogScreen
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.flowOf
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ClientChargesScreen(
     onBackPressed: () -> Unit,
-    viewModel: ClientChargesViewModel = hiltViewModel(),
+    viewModel: ClientChargesViewModel = koinViewModel(),
 ) {
     val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val clientChargeUiState by viewModel.clientChargesUiState.collectAsStateWithLifecycle()

@@ -41,8 +41,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncCentersDialogViewModel @Inject constructor(
+class SyncCentersDialogViewModel(
     private val repository: SyncCentersDialogRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefManager: PrefManager,
@@ -167,9 +166,9 @@ class SyncCentersDialogViewModel @Inject constructor(
                     )
                     // Updating UI
                     maxSingleSyncCenterProgressBar = (
-                        mLoanAccountList.size +
-                            mSavingsAccountList.size + mMemberLoanAccountsList.size
-                        )
+                            mLoanAccountList.size +
+                                    mSavingsAccountList.size + mMemberLoanAccountsList.size
+                            )
                     checkAccountsSyncStatusAndSyncAccounts()
                 }
         }
@@ -777,7 +776,7 @@ class SyncCentersDialogViewModel @Inject constructor(
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
                 savingsAccount.status?.active == true &&
-                    !savingsAccount.depositType!!.isRecurring
+                        !savingsAccount.depositType!!.isRecurring
             }
             .subscribe { savingsAccount -> accounts.add(savingsAccount) }
         return accounts
@@ -796,8 +795,8 @@ class SyncCentersDialogViewModel @Inject constructor(
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
                 savingsAccount.depositType?.value == "Savings" &&
-                    savingsAccount.status?.active == true &&
-                    !savingsAccount.depositType!!.isRecurring
+                        savingsAccount.status?.active == true &&
+                        !savingsAccount.depositType!!.isRecurring
             }
             .subscribe { savingsAccount -> accounts.add(savingsAccount) }
         return accounts

@@ -105,6 +105,7 @@ import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -118,7 +119,7 @@ import java.util.Objects
 internal fun CreateNewClientScreen(
     navigateBack: () -> Unit,
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
-    viewmodel: CreateNewClientViewModel = hiltViewModel(),
+    viewmodel: CreateNewClientViewModel = koinViewModel(),
 ) {
     val uiState by viewmodel.createNewClientUiState.collectAsStateWithLifecycle()
     val officeList by viewmodel.showOffices.collectAsStateWithLifecycle()

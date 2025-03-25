@@ -62,11 +62,12 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.loan.R
 import com.mifos.feature.loan.loanChargeDialog.LoanChargeDialogScreen
 import com.mifos.room.entities.client.ChargesEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun LoanChargeScreen(
     onBackPressed: () -> Unit,
-    viewModel: LoanChargeViewModel = hiltViewModel(),
+    viewModel: LoanChargeViewModel = koinViewModel(),
 ) {
     val state by viewModel.loanChargeUiState.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()

@@ -26,8 +26,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-@HiltViewModel
-class SurveySubmitViewModel @Inject constructor(
+class SurveySubmitViewModel (
     private val repository: SurveySubmitRepository,
     private val prefManager: PrefManager,
     private val savedStateHandle: SavedStateHandle,

@@ -39,8 +39,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncClientsDialogViewModel @Inject constructor(
+class SyncClientsDialogViewModel (
     private val repository: SyncClientsDialogRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefManager: PrefManager,

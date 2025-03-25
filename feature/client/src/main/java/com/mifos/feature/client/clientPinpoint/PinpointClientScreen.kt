@@ -74,11 +74,12 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.client.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun PinpointClientScreen(
     onBackPressed: () -> Unit,
-    viewModel: PinPointClientViewModel = hiltViewModel(),
+    viewModel: PinPointClientViewModel = koinViewModel(),
 ) {
     val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val state by viewModel.pinPointClientUiState.collectAsStateWithLifecycle()

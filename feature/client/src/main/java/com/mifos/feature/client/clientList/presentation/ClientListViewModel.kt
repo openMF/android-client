@@ -25,8 +25,7 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 21/02/24.
  */
 
-@HiltViewModel
-class ClientListViewModel @Inject constructor(
+class ClientListViewModel (
     private val repository: ClientListRepository,
     private val prefManager: PrefManager,
 ) : ViewModel() {

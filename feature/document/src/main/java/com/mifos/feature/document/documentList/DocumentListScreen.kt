@@ -71,10 +71,11 @@ import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.document.R
 import com.mifos.feature.document.documentDialog.DocumentDialogScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun DocumentListScreen(
-    viewModel: DocumentListViewModel = hiltViewModel(),
+    viewModel: DocumentListViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val context = LocalContext.current

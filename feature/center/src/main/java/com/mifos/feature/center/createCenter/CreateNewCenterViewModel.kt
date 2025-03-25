@@ -22,8 +22,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class CreateNewCenterViewModel @Inject constructor(
+class CreateNewCenterViewModel(
     private val repository: CreateNewCenterRepository,
     private val collectionSheetRepo: NewIndividualCollectionSheetRepository,
 ) : ViewModel() {

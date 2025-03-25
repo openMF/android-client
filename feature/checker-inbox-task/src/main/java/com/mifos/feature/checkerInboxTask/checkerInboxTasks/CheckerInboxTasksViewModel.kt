@@ -24,8 +24,7 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 21/03/24.
  */
 
-@HiltViewModel
-class CheckerInboxTasksViewModel @Inject constructor(
+class CheckerInboxTasksViewModel(
     private val getCheckerInboxBadgesUseCase: GetCheckerInboxBadgesUseCase,
 ) : ViewModel() {
 

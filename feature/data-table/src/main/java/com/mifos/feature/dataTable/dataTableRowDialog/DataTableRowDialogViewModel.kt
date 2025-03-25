@@ -21,8 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class DataTableRowDialogViewModel @Inject constructor(
+class DataTableRowDialogViewModel(
     private val addDataTableEntryUseCase: AddDataTableEntryUseCase,
 ) : ViewModel() {
 

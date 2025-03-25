@@ -51,12 +51,13 @@ import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientStatusEntity
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.GroupEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun GroupListScreen(
     onBackPressed: () -> Unit,
     loadClientsOfGroup: (List<ClientEntity>) -> Unit,
-    viewModel: GroupListViewModel = hiltViewModel(),
+    viewModel: GroupListViewModel = koinViewModel(),
 ) {
     val centerId by viewModel.centerId.collectAsStateWithLifecycle()
     val state by viewModel.groupListUiState.collectAsStateWithLifecycle()

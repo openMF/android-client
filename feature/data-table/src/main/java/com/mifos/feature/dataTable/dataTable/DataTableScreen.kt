@@ -40,6 +40,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.data_table.R
 import com.mifos.room.entities.noncore.DataTableEntity
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created on 27/06/2024 (11:38 PM) by Pronay Sarker
@@ -48,7 +49,7 @@ import com.mifos.room.entities.noncore.DataTableEntity
 @Composable
 fun DataTableScreen(
     navigateBack: () -> Unit,
-    viewModel: DataTableViewModel = hiltViewModel(),
+    viewModel: DataTableViewModel = koinViewModel(),
     onClick: (table: String, entityId: Int, dataTable: DataTableEntity) -> Unit,
 ) {
     val tableName = viewModel.args.tableName

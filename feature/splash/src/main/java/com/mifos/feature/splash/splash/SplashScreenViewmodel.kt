@@ -20,8 +20,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class SplashScreenViewmodel @Inject constructor(
+class SplashScreenViewmodel (
     private val prefManager: PrefManager,
 ) : ViewModel() {
 

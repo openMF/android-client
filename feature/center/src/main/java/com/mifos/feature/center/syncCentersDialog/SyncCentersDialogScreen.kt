@@ -40,13 +40,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.feature.center.R
 import com.mifos.room.entities.group.CenterEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SyncCenterDialogScreen(
     dismiss: () -> Unit,
     hide: () -> Unit,
     centers: List<CenterEntity>? = listOf(),
-    viewModel: SyncCentersDialogViewModel = hiltViewModel(),
+    viewModel: SyncCentersDialogViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.syncCentersDialogUiState.collectAsStateWithLifecycle()
     val uiData by viewModel.syncCenterData.collectAsStateWithLifecycle()

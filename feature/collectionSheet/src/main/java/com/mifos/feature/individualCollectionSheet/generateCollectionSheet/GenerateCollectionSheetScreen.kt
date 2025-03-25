@@ -63,13 +63,14 @@ import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
 internal fun GenerateCollectionSheetScreen(
     onBackPressed: () -> Unit,
-    viewModel: GenerateCollectionSheetViewModel = hiltViewModel(),
+    viewModel: GenerateCollectionSheetViewModel = koinViewModel(),
 ) {
     val state by viewModel.generateCollectionSheetUiState.collectAsStateWithLifecycle()
     val officeList by viewModel.officeListState.collectAsStateWithLifecycle()

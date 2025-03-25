@@ -19,8 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class AboutViewModel @Inject constructor() : ViewModel() {
+class AboutViewModel : ViewModel() {
 
     private val _aboutUiState = MutableStateFlow<AboutUiState>(AboutUiState.Loading)
     val aboutUiState = _aboutUiState.asStateFlow()

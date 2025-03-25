@@ -53,6 +53,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.feature.data_table.R
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.noncore.DataTableEntity
+import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -60,7 +61,7 @@ import java.time.format.DateTimeFormatter
 fun DataTableListScreen(
     onBackPressed: () -> Unit,
     clientCreated: (ClientEntity, Boolean) -> Unit,
-    viewModel: DataTableListViewModel = hiltViewModel(),
+    viewModel: DataTableListViewModel = koinViewModel(),
 ) {
     val dataTables = viewModel.arg.dataTableList
     val requestType = viewModel.arg.requestType

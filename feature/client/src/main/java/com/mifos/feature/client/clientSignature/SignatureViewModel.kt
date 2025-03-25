@@ -27,8 +27,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import javax.inject.Inject
 
-@HiltViewModel
-class SignatureViewModel @Inject constructor(
+class SignatureViewModel (
     private val createDocumentUseCase: CreateDocumentUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

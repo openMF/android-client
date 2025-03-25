@@ -25,8 +25,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class ActivateViewModel @Inject constructor(
+class ActivateViewModel (
     private val activateClientUseCase: ActivateClientUseCase,
     private val activateCenterUseCase: ActivateCenterUseCase,
     private val activateGroupUseCase: ActivateGroupUseCase,

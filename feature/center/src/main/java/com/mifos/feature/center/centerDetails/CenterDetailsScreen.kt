@@ -60,6 +60,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.groups.CenterInfo
 import com.mifos.feature.center.R
 import com.mifos.room.entities.group.CenterWithAssociations
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun CenterDetailsScreen(
@@ -67,7 +68,7 @@ internal fun CenterDetailsScreen(
     onActivateCenter: (Int) -> Unit,
     addSavingsAccount: (Int) -> Unit,
     groupList: (Int) -> Unit,
-    viewModel: CenterDetailsViewModel = hiltViewModel(),
+    viewModel: CenterDetailsViewModel = koinViewModel(),
 ) {
     val centerId by viewModel.centerId.collectAsStateWithLifecycle()
     val state by viewModel.centerDetailsUiState.collectAsStateWithLifecycle()

@@ -63,10 +63,11 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SyncSavingsAccountTransactionScreenRoute(
-    viewModel: SyncSavingsAccountTransactionViewModel = hiltViewModel(),
+    viewModel: SyncSavingsAccountTransactionViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.syncSavingsAccountTransactionUiState.collectAsStateWithLifecycle()

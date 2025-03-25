@@ -88,13 +88,14 @@ import com.mifos.feature.groups.R
 import com.mifos.feature.groups.syncGroupDialog.SyncGroupDialogScreen
 import com.mifos.room.entities.group.GroupEntity
 import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun GroupsListRoute(
     paddingValues: PaddingValues,
     onAddGroupClick: () -> Unit,
     onGroupClick: (groupId: Int) -> Unit,
-    viewModel: GroupsListViewModel = hiltViewModel(),
+    viewModel: GroupsListViewModel = koinViewModel(),
 ) {
     val data = viewModel.data.collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()

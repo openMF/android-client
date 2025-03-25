@@ -25,8 +25,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class DocumentListViewModel @Inject constructor(
+class DocumentListViewModel(
     private val getDocumentsListUseCase: GetDocumentsListUseCase,
     private val downloadDocumentUseCase: DownloadDocumentUseCase,
     private val removeDocumentUseCase: RemoveDocumentUseCase,

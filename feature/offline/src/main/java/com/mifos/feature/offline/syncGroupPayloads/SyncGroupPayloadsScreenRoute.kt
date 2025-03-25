@@ -50,10 +50,11 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.group.GroupPayloadEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SyncGroupPayloadsScreenRoute(
-    viewModel: SyncGroupPayloadsViewModel = hiltViewModel(),
+    viewModel: SyncGroupPayloadsViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.syncGroupPayloadsUiState.collectAsStateWithLifecycle()

@@ -42,11 +42,12 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.Note
 import com.mifos.core.ui.components.MifosEmptyUi
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun NoteScreen(
     onBackPressed: () -> Unit,
-    viewModel: NoteViewModel = hiltViewModel(),
+    viewModel: NoteViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.noteUiState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()

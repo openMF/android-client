@@ -69,12 +69,13 @@ import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.collectionsheet.ClientCollectionSheet
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun IndividualCollectionSheetDetailsScreen(
     onBackPressed: () -> Unit,
     submit: (Int, IndividualCollectionSheetPayload, List<String>, LoanAndClientName, List<PaymentTypeOptions>, Int) -> Unit,
-    viewModel: IndividualCollectionSheetDetailsViewModel = hiltViewModel(),
+    viewModel: IndividualCollectionSheetDetailsViewModel = koinViewModel(),
 ) {
     val state by viewModel.individualCollectionSheetDetailsUiState.collectAsStateWithLifecycle()
     val loansAndClientNames =

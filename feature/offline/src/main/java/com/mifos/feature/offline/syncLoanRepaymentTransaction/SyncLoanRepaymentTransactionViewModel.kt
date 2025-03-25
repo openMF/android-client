@@ -31,8 +31,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncLoanRepaymentTransactionViewModel @Inject constructor(
+class SyncLoanRepaymentTransactionViewModel (
     private val repository: SyncLoanRepaymentTransactionRepository,
     private val prefManager: PrefManager,
 ) : ViewModel() {

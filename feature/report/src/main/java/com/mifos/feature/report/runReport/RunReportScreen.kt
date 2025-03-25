@@ -68,12 +68,13 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.feature.report.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun RunReportScreen(
     onBackPressed: () -> Unit,
     onReportClick: (ClientReportTypeItem) -> Unit,
-    viewModel: RunReportViewModel = hiltViewModel(),
+    viewModel: RunReportViewModel = koinViewModel(),
 ) {
     val state by viewModel.runReportUiState.collectAsStateWithLifecycle()
     var category by rememberSaveable { mutableStateOf(MenuItems.Client.name) }

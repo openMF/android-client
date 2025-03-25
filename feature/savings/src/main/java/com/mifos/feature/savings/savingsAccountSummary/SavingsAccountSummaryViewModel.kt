@@ -28,8 +28,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-@HiltViewModel
-class SavingsAccountSummaryViewModel @Inject constructor(
+class SavingsAccountSummaryViewModel (
 //    private val getSavingsAccountUseCase: GetSavingsAccountUseCase,
     savedStateHandle: SavedStateHandle,
     private val repository: SavingsAccountSummaryRepository,

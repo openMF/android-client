@@ -26,8 +26,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-@HiltViewModel
-class SurveyListViewModel @Inject constructor(
+class SurveyListViewModel (
     private val repository: SurveyListRepository,
     private val prefManager: PrefManager,
 ) : ViewModel() {

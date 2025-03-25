@@ -25,8 +25,7 @@ import java.io.File
 import java.io.FileWriter
 import javax.inject.Inject
 
-@HiltViewModel
-class ReportViewModel @Inject constructor(
+class ReportViewModel (
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 

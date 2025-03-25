@@ -14,19 +14,51 @@ import androidx.core.os.trace
 import coil.ImageLoader
 import coil.util.DebugLogger
 import com.mifos.core.common.utils.getInstanceUrl
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import okhttp3.Call
 import okhttp3.OkHttpClient
+import org.koin.dsl.module
 import org.mifos.core.apimanager.BaseApiManager
-import javax.inject.Singleton
+
+
+val networkModule = module {
+
+    single { com.mifos.core.datastore.PrefManager() }
+
+    single {
+        com.mifos.core.network.BaseApiManager(get())
+    }
+
+    single {
+        val prefManager: com.mifos.core.datastore.PrefManager = get()
+        val usernamePassword: Pair<String, String> = prefManager.usernamePassword
+        val baseManager = BaseApiManager.getInstance()
+        baseManager.createService(
+            usernamePassword.first,
+            usernamePassword.second,
+            prefManager.getServerConfig.getInstanceUrl().dropLast(3),
+            prefManager.getServerConfig.tenant,
+            false,
+        )
+        baseManager
+    }
+
+    single<Call.Factory> {
+        trace("MifosHttpClient") { OkHttpClient.Builder().build() }
+    }
+
+    single { (context: Context) ->
+        ImageLoader.Builder(context)
+            .callFactory { get<Call.Factory>() }
+            .apply {
+                logger(DebugLogger())
+            }
+            .build()
+    }
+}
 
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule {
+object NetworkModusle {
 
     @Provides
     @Singleton

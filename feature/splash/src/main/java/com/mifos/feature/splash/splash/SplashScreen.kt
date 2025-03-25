@@ -26,11 +26,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.feature.splash.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SplashScreen(
     navigatePasscode: () -> Unit,
-    viewmodel: SplashScreenViewmodel = hiltViewModel(),
+    viewmodel: SplashScreenViewmodel = koinViewModel(),
     navigateLogin: () -> Unit,
 ) {
     val state by viewmodel.isAuthenticated.collectAsStateWithLifecycle()

@@ -54,10 +54,11 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.center.CenterPayloadEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SyncCenterPayloadsScreenRoute(
-    viewModel: SyncCenterPayloadsViewModel = hiltViewModel(),
+    viewModel: SyncCenterPayloadsViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.syncCenterPayloadsUiState.collectAsStateWithLifecycle()

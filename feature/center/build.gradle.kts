@@ -36,4 +36,7 @@ dependencies {
 
     //coil
     implementation(libs.coil.kt.compose)
+
+    implementation(libs.koin.android.v401)
+    implementation(libs.koin.androidx.compose.v350)
 }

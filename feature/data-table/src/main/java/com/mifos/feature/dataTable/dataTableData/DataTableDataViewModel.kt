@@ -27,8 +27,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class DataTableDataViewModel @Inject constructor(
+class DataTableDataViewModel (
     private val getDataTableInfoUseCase: GetDataTableInfoUseCase,
     private val deleteDataTableEntryUseCase: DeleteDataTableEntryUseCase,
     private val savedStateHandle: SavedStateHandle,

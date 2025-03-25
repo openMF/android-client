@@ -57,6 +57,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.network.GenericResponse
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -67,7 +68,7 @@ import java.util.Locale
 @Composable
 internal fun LoanAccountApprovalScreen(
     navigateBack: () -> Unit,
-    viewModel: LoanAccountApprovalViewModel = hiltViewModel(),
+    viewModel: LoanAccountApprovalViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.loanAccountApprovalUiState.collectAsStateWithLifecycle()
 

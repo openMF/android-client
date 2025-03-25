@@ -68,6 +68,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
 import com.mifos.feature.document.R
+import org.koin.androidx.compose.koinViewModel
 import java.io.File
 
 @Composable
@@ -77,7 +78,7 @@ internal fun DocumentDialogScreen(
     closeDialog: () -> Unit,
     entityType: String,
     entityId: Int,
-    viewModel: DocumentDialogViewModel = hiltViewModel(),
+    viewModel: DocumentDialogViewModel = koinViewModel(),
     closeScreen: () -> Unit,
 ) {
     val context = LocalContext.current

@@ -65,13 +65,14 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.feature.loan.R
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
 internal fun GroupLoanAccountScreen(
     onBackPressed: () -> Unit,
-    viewModel: GroupLoanAccountViewModel = hiltViewModel(),
+    viewModel: GroupLoanAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.groupLoanAccountUiState.collectAsStateWithLifecycle()
     val loanProducts by viewModel.loanProducts.collectAsStateWithLifecycle()

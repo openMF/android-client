@@ -26,8 +26,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class UpdateServerConfigViewModel @Inject constructor(
+class UpdateServerConfigViewModel(
     private val prefManager: PrefManager,
     private val validator: ServerConfigValidatorUseCase,
 ) : ViewModel() {

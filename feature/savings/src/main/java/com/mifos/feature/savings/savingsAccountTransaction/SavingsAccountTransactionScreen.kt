@@ -69,6 +69,7 @@ import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResp
 import com.mifos.feature.savings.R
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -79,7 +80,7 @@ import java.util.Locale
 @Composable
 internal fun SavingsAccountTransactionScreen(
     navigateBack: () -> Unit,
-    viewmodel: SavingsAccountTransactionViewModel = hiltViewModel(),
+    viewmodel: SavingsAccountTransactionViewModel = koinViewModel(),
 ) {
     val uiState by viewmodel.savingsAccountTransactionUiState.collectAsStateWithLifecycle()
 

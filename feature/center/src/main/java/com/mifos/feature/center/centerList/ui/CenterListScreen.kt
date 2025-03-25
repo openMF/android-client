@@ -83,13 +83,14 @@ import com.mifos.feature.center.R
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
 import com.mifos.room.entities.group.CenterEntity
 import kotlinx.coroutines.flow.flowOf
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun CenterListScreen(
     paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
     onCenterSelect: (Int) -> Unit,
-    viewModel: CenterListViewModel = hiltViewModel(),
+    viewModel: CenterListViewModel = koinViewModel(),
 ) {
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val state by viewModel.centerListUiState.collectAsStateWithLifecycle()

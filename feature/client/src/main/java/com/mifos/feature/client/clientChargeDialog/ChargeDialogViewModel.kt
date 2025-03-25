@@ -24,8 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class ChargeDialogViewModel @Inject constructor(
+class ChargeDialogViewModel (
     private val getAllChargesV2UseCase: GetAllChargesV2UseCase,
     private val createChargesUseCase: CreateChargesUseCase,
 ) : ViewModel() {

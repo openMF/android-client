@@ -36,8 +36,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-@HiltViewModel
-class ClientDetailsViewModel @Inject constructor(
+class ClientDetailsViewModel(
     private val uploadClientImageUseCase: UploadClientImageUseCase,
     private val getClientDetailsUseCase: GetClientDetailsUseCase,
     private val imageLoaderUtils: ImageLoaderUtils,

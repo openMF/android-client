@@ -48,6 +48,7 @@ import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Pronay Sarker on 03/07/2024 (9:18 AM)
@@ -55,7 +56,7 @@ import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 
 @Composable
 internal fun LoanRepaymentScheduleScreen(
-    viewModel: LoanRepaymentScheduleViewModel = hiltViewModel(),
+    viewModel: LoanRepaymentScheduleViewModel = koinViewModel(),
     navigateBack: () -> Unit,
 ) {
     val uiState by viewModel.loanRepaymentScheduleUiState.collectAsStateWithLifecycle()

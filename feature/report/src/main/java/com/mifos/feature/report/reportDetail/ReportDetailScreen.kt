@@ -67,12 +67,13 @@ import com.mifos.core.model.objects.runreport.DataRow
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.feature.report.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ReportDetailScreen(
     onBackPressed: () -> Unit,
     runReport: (FullParameterListResponse) -> Unit,
-    viewModel: ReportDetailViewModel = hiltViewModel(),
+    viewModel: ReportDetailViewModel = koinViewModel(),
 ) {
     val reportItem = viewModel.reportItem
     val state by viewModel.reportDetailUiState.collectAsStateWithLifecycle()

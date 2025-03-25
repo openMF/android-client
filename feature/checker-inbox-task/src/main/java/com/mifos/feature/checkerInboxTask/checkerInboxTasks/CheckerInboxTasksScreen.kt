@@ -40,6 +40,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.feature.checker_inbox_task.R
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Aditya Gupta on 21/03/24.
@@ -49,7 +50,7 @@ import com.mifos.feature.checker_inbox_task.R
 internal fun CheckerInboxTasksScreen(
     onBackPressed: () -> Unit,
     checkerInbox: () -> Unit,
-    checkerInboxTasksViewModel: CheckerInboxTasksViewModel = hiltViewModel(),
+    checkerInboxTasksViewModel: CheckerInboxTasksViewModel = koinViewModel(),
 ) {
     val state =
         checkerInboxTasksViewModel.checkerInboxTasksUiState.collectAsStateWithLifecycle().value

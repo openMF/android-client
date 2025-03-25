@@ -52,10 +52,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.feature.settings.R
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SyncSurveysDialog(
-    viewModel: SyncSurveysDialogViewModel = hiltViewModel(),
+    viewModel: SyncSurveysDialogViewModel = koinViewModel(),
     closeDialog: () -> Unit,
 ) {
     val state by viewModel.syncSurveysDialogUiState.collectAsState()

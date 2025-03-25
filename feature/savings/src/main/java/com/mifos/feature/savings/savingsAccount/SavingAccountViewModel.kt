@@ -32,8 +32,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-@HiltViewModel
-class SavingAccountViewModel @Inject constructor(
+class SavingAccountViewModel(
     private val loadSavingsAccountsAndTemplateUseCase: LoadSavingsAccountsAndTemplateUseCase,
     private val createSavingsAccountUseCase: CreateSavingsAccountUseCase,
     private val getGroupSavingsAccountTemplateByProductUseCase: GetGroupSavingsAccountTemplateByProductUseCase,

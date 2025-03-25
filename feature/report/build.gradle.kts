@@ -26,4 +26,7 @@ dependencies {
     testImplementation(projects.core.testing)
 
     androidTestImplementation(projects.core.testing)
+
+    implementation(libs.koin.android.v401)
+    implementation(libs.koin.androidx.compose.v350)
 }

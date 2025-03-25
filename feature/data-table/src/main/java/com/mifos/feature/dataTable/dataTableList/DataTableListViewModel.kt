@@ -35,8 +35,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-@HiltViewModel
-class DataTableListViewModel @Inject constructor(
+class DataTableListViewModel(
     private val repository: DataTableListRepository,
     private val prefManager: PrefManager,
     savedStateHandle: SavedStateHandle,

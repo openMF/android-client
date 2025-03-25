@@ -63,12 +63,13 @@ import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
 internal fun NewIndividualCollectionSheetScreen(
-    viewModel: NewIndividualCollectionSheetViewModel = hiltViewModel(),
+    viewModel: NewIndividualCollectionSheetViewModel = koinViewModel(),
     onDetail: (String, IndividualCollectionSheet) -> Unit,
 ) {
     val state = viewModel.newIndividualCollectionSheetUiState.collectAsStateWithLifecycle().value

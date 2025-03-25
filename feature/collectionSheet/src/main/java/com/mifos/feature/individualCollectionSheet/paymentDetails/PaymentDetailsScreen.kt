@@ -52,13 +52,14 @@ import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Pronay Sarker on 24/08/2024 (4:20 PM)
  */
 @Composable
 internal fun PaymentDetailsScreenRoute(
-    viewModel: PaymentDetailsViewModel = hiltViewModel(),
+    viewModel: PaymentDetailsViewModel = koinViewModel(),
 ) {
     PaymentsDetailsScreen(
         clientId = viewModel.clientId,

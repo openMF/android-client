@@ -35,16 +35,14 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 06/08/23.
  */
 
-@HiltViewModel
-class LoginViewModel @Inject constructor(
+class LoginViewModel (
     @ApplicationContext private val context: Context,
     private val prefManager: PrefManager,
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val baseApiManager: BaseApiManager,
     private val loginUseCase: LoginUseCase,
-) :
-    ViewModel() {
+) : ViewModel() {
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
     val loginUiState = _loginUiState.asStateFlow()

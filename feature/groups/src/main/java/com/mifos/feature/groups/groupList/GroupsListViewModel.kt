@@ -20,8 +20,7 @@ import javax.inject.Inject
 
 const val PAGE_SIZE = 10
 
-@HiltViewModel
-class GroupsListViewModel @Inject constructor(
+class GroupsListViewModel (
     repository: GroupsListRepository,
 ) : ViewModel() {
 

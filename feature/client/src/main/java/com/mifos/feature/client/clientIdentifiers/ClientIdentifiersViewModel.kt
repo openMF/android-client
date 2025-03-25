@@ -25,8 +25,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class ClientIdentifiersViewModel @Inject constructor(
+class ClientIdentifiersViewModel(
 //    private val getClientIdentifiersUseCase: GetClientIdentifiersUseCase,
     private val clientIdentifiersRepository: ClientIdentifiersRepository,
     private val deleteIdentifierUseCase: DeleteIdentifierUseCase,

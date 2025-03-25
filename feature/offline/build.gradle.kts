@@ -22,4 +22,7 @@ dependencies {
 
     //material
     implementation (libs.androidx.material.v168)
+
+    implementation(libs.koin.android.v401)
+    implementation(libs.koin.androidx.compose.v350)
 }

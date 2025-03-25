@@ -28,8 +28,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-@HiltViewModel
-class PinPointClientViewModel @Inject constructor(
+class PinPointClientViewModel (
     private val getClientPinpointLocationsUseCase: GetClientPinpointLocationsUseCase,
     private val addClientPinpointLocationUseCase: AddClientPinpointLocationUseCase,
     private val deleteClientAddressPinpointUseCase: DeleteClientAddressPinpointUseCase,

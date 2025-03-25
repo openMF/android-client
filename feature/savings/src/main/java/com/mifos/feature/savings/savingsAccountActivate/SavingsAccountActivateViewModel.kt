@@ -26,8 +26,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-@HiltViewModel
-class SavingsAccountActivateViewModel @Inject constructor(
+class SavingsAccountActivateViewModel (
     private val activateSavingsUseCase: ActivateSavingsUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

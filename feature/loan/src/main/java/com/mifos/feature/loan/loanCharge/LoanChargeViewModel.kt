@@ -23,8 +23,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class LoanChargeViewModel @Inject constructor(
+class LoanChargeViewModel(
     private val getListOfLoanChargesUseCase: GetListOfLoanChargesUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

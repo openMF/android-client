@@ -59,6 +59,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.utility.PathState
 import com.mifos.feature.client.R
+import org.koin.androidx.compose.koinViewModel
 import java.io.ByteArrayOutputStream
 import java.io.File
 import kotlin.math.roundToInt
@@ -66,7 +67,7 @@ import kotlin.math.roundToInt
 @Composable
 internal fun SignatureScreen(
     onBackPressed: () -> Unit,
-    viewmodel: SignatureViewModel = hiltViewModel(),
+    viewmodel: SignatureViewModel = koinViewModel(),
 ) {
     val clientId by viewmodel.clientId.collectAsStateWithLifecycle()
     val state by viewmodel.signatureUiState.collectAsStateWithLifecycle()

@@ -33,8 +33,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-@HiltViewModel
-class CreateNewClientViewModel @Inject constructor(
+class CreateNewClientViewModel(
     private val repository: CreateNewClientRepository,
 //    private val clientTemplateUseCase: ClientTemplateUseCase,
 //    private val getOfficeListUseCase: GetOfficeListUseCase,

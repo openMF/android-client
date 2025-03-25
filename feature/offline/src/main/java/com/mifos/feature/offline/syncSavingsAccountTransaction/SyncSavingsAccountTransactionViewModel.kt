@@ -29,8 +29,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncSavingsAccountTransactionViewModel @Inject constructor(
+class SyncSavingsAccountTransactionViewModel (
 //    private val processTransactionUseCase: ProcessTransactionUseCase,
     private val repository: SyncSavingsAccountTransactionRepository,
     private val prefManager: PrefManager,

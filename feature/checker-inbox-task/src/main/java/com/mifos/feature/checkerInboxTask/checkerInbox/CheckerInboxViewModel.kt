@@ -24,8 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class CheckerInboxViewModel @Inject constructor(
+class CheckerInboxViewModel (
     val getCheckerInboxUseCase: GetCheckerTasksUseCase,
     val approveCheckerUseCase: ApproveCheckerUseCase,
     val rejectCheckerUseCase: RejectCheckerUseCase,

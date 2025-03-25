@@ -81,6 +81,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.feature.client.R
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogScreen
 import com.mifos.room.entities.client.ClientEntity
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Aditya Gupta on 21/02/24.
@@ -91,7 +92,7 @@ internal fun ClientListScreen(
     paddingValues: PaddingValues,
     createNewClient: () -> Unit,
     onClientSelect: (Int) -> Unit,
-    viewModel: ClientListViewModel = hiltViewModel(),
+    viewModel: ClientListViewModel = koinViewModel(),
 ) {
     LaunchedEffect(key1 = true) {
         viewModel.getClientList()

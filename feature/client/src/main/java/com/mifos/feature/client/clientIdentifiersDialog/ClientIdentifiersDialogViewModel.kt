@@ -24,8 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class ClientIdentifiersDialogViewModel @Inject constructor(
+class ClientIdentifiersDialogViewModel(
     private val getClientIdentifierTemplateUseCase: GetClientIdentifierTemplateUseCase,
     private val createClientIdentifierUseCase: CreateClientIdentifierUseCase,
 ) : ViewModel() {

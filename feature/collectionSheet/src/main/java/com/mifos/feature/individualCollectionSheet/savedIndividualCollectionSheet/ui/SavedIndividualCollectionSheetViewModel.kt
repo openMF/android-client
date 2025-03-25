@@ -13,8 +13,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-@HiltViewModel
-class SavedIndividualCollectionSheetViewModel @Inject constructor() : ViewModel() {
+class SavedIndividualCollectionSheetViewModel : ViewModel() {
 
-    // Saved Individual Collection Sheet need to be integrated with API.
+    //  TODO Saved Individual Collection Sheet need to be integrated with API.
 }

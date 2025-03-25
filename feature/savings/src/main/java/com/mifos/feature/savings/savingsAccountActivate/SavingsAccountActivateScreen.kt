@@ -54,6 +54,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.network.GenericResponse
 import com.mifos.feature.savings.R
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -64,7 +65,7 @@ import java.util.Locale
 @Composable
 internal fun SavingsAccountActivateScreen(
     navigateBack: () -> Unit,
-    viewModel: SavingsAccountActivateViewModel = hiltViewModel(),
+    viewModel: SavingsAccountActivateViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.savingsAccountActivateUiState.collectAsStateWithLifecycle()
     val savingsAccountId by viewModel.savingsAccountId.collectAsStateWithLifecycle()

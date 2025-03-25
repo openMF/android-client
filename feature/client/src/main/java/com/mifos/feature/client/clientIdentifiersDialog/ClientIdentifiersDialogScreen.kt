@@ -55,13 +55,14 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.feature.client.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ClientIdentifiersDialogScreen(
     clientId: Int,
     onDismiss: () -> Unit,
     onIdentifierCreated: () -> Unit,
-    viewModel: ClientIdentifiersDialogViewModel = hiltViewModel(),
+    viewModel: ClientIdentifiersDialogViewModel = koinViewModel(),
 ) {
     val state by viewModel.clientIdentifierDialogUiState.collectAsStateWithLifecycle()
 

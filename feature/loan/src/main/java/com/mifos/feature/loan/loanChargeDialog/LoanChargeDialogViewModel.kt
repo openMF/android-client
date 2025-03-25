@@ -28,8 +28,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import javax.inject.Inject
 
-@HiltViewModel
-class LoanChargeDialogViewModel @Inject constructor(
+class LoanChargeDialogViewModel (
     private val getAllChargesV3UseCase: GetAllChargesV3UseCase,
     private val createLoanChargesUseCase: CreateLoanChargesUseCase,
 ) : ViewModel() {

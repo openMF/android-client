@@ -79,11 +79,12 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.feature.path.tracking.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PathTrackingScreen(
     onBackPressed: () -> Unit,
-    viewModel: PathTrackingViewModel = hiltViewModel(),
+    viewModel: PathTrackingViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
     val state by viewModel.pathTrackingUiState.collectAsStateWithLifecycle()

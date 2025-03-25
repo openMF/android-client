@@ -69,6 +69,7 @@ import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -78,7 +79,7 @@ import java.util.Locale
 @Composable
 internal fun LoanRepaymentScreen(
     navigateBack: () -> Unit,
-    viewmodel: LoanRepaymentViewModel = hiltViewModel(),
+    viewmodel: LoanRepaymentViewModel = koinViewModel(),
 ) {
     val uiState by viewmodel.loanRepaymentUiState.collectAsStateWithLifecycle()
 

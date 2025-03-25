@@ -35,13 +35,14 @@ import com.mifos.core.ui.util.DevicePreviews
 import com.mifos.core.ui.util.SearchResultPreviewParameter
 import com.mifos.feature.search.components.SearchBox
 import com.mifos.feature.search.components.SearchScreenResult
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchScreenRoute(
     onFabClick: (FabType) -> Unit,
     onSearchOptionClick: (SearchedEntity) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = hiltViewModel(),
+    viewModel: SearchViewModel = koinViewModel(),
 ) {
     val state by viewModel.state
     val searchResultState by viewModel.searchResult.collectAsStateWithLifecycle()

@@ -56,6 +56,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.feature.center.R
 import com.mifos.room.entities.center.CenterPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
+import org.koin.androidx.compose.koinViewModel
 import org.openapitools.client.models.Office
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -63,7 +64,7 @@ import java.util.Locale
 @Composable
 internal fun CreateNewCenterScreen(
     onCreateSuccess: () -> Unit,
-    viewModel: CreateNewCenterViewModel = hiltViewModel(),
+    viewModel: CreateNewCenterViewModel = koinViewModel(),
 ) {
     val state by viewModel.createNewCenterUiState.collectAsStateWithLifecycle()
 

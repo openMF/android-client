@@ -27,8 +27,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncSurveysDialogViewModel @Inject constructor(
+class SyncSurveysDialogViewModel(
     private val repository: SyncSurveysDialogRepository,
 ) :
     ViewModel() {

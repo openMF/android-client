@@ -70,6 +70,7 @@ import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.feature.groups.R
 import com.mifos.room.entities.group.GroupPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -79,7 +80,7 @@ import java.util.Locale
 
 @Composable
 internal fun CreateNewGroupScreen(
-    viewModel: CreateNewGroupViewModel = hiltViewModel(),
+    viewModel: CreateNewGroupViewModel = koinViewModel(),
     onGroupCreated: (group: SaveResponse?, userStatus: Boolean) -> Unit,
 ) {
     val uiState by viewModel.createNewGroupUiState.collectAsStateWithLifecycle()

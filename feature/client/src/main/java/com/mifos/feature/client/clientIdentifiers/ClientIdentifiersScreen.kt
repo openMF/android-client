@@ -65,12 +65,13 @@ import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.client.R
 import com.mifos.feature.client.clientIdentifiersDialog.ClientIdentifiersDialogScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ClientIdentifiersScreen(
     onBackPressed: () -> Unit,
     onDocumentClicked: (Int) -> Unit,
-    viewModel: ClientIdentifiersViewModel = hiltViewModel(),
+    viewModel: ClientIdentifiersViewModel = koinViewModel(),
 ) {
     val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val state by viewModel.clientIdentifiersUiState.collectAsStateWithLifecycle()

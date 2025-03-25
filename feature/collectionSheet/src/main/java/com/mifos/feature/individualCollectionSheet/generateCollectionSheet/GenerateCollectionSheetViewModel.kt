@@ -40,8 +40,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class GenerateCollectionSheetViewModel @Inject constructor(
+class GenerateCollectionSheetViewModel(
 //    private val getOfficeListUseCase: GetOfficeListUseCase,
     private val newIndividualCollectionSheetRepository: NewIndividualCollectionSheetRepository,
     private val getStaffInOfficeUseCase: GetStaffInOfficeUseCase,

@@ -72,6 +72,7 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountSummaryEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import com.mifos.room.entities.accounts.savings.SavingsTransactionTypeEntity
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Pronay Sarker on 10/07/2024 (6:21 PM)
@@ -86,7 +87,7 @@ internal fun SavingsAccountSummaryScreen(
     onWithdrawButtonClicked: (savings: SavingsAccountWithAssociationsEntity, type: SavingAccountDepositTypeEntity?) -> Unit,
     approveSavings: (type: SavingAccountDepositTypeEntity?, accountNumber: Int) -> Unit,
     activateSavings: (type: SavingAccountDepositTypeEntity?, accountNumber: Int) -> Unit,
-    viewmodel: SavingsAccountSummaryViewModel = hiltViewModel(),
+    viewmodel: SavingsAccountSummaryViewModel = koinViewModel(),
 ) {
     val uiState by viewmodel.savingsAccountSummaryUiState.collectAsStateWithLifecycle()
     val accountId = viewmodel.savingsNavigationData.id

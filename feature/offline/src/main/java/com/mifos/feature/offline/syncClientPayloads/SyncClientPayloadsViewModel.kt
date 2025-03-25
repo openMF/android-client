@@ -27,8 +27,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncClientPayloadsViewModel @Inject constructor(
+class SyncClientPayloadsViewModel (
     private val repository: SyncClientPayloadsRepository,
     private val prefManager: PrefManager,
 ) : ViewModel() {

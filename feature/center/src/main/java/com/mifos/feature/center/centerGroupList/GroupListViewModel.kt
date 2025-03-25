@@ -25,8 +25,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class GroupListViewModel @Inject constructor(
+class GroupListViewModel(
     private val groupRepo: GroupListRepository,
 //    private val getGroupsByCenterUseCase: GetGroupsByCenterUseCase,
     private val repository: GroupListRepository,

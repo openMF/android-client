@@ -10,7 +10,8 @@
 plugins {
     alias(libs.plugins.mifos.android.library)
     alias(libs.plugins.mifos.android.library.jacoco)
-    alias(libs.plugins.mifos.android.hilt)
+//    alias(libs.plugins.mifos.android.hilt)
+
     alias(libs.plugins.secrets)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
 }
@@ -63,4 +64,7 @@ dependencies {
     implementation(libs.stetho.okhttp3)
 
     implementation(libs.coil.kt2)
+
+    implementation(libs.koin.android.v401)
+
 }

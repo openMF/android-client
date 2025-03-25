@@ -29,8 +29,7 @@ import kotlinx.coroutines.launch
 import rx.Observable
 import javax.inject.Inject
 
-@HiltViewModel
-class IndividualCollectionSheetDetailsViewModel @Inject constructor(
+class IndividualCollectionSheetDetailsViewModel (
     private val saveIndividualCollectionSheetUseCase: SaveIndividualCollectionSheetUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

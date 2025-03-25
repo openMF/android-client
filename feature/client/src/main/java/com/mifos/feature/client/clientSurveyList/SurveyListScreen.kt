@@ -47,6 +47,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.client.R
 import com.mifos.room.entities.survey.SurveyEntity
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Pronay Sarker on 03/07/2024 (6:05 AM)
@@ -56,7 +57,7 @@ import com.mifos.room.entities.survey.SurveyEntity
 internal fun SurveyListScreen(
     navigateBack: () -> Unit,
     onCardClicked: (index: Int, surveys: List<SurveyEntity>) -> Unit,
-    viewModel: SurveyListViewModel = hiltViewModel(),
+    viewModel: SurveyListViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.surveyListUiState.collectAsStateWithLifecycle()
 

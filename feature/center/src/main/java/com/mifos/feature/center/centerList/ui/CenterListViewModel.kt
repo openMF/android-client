@@ -22,8 +22,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class CenterListViewModel @Inject constructor(
+class CenterListViewModel(
     private val prefManager: PrefManager,
     private val repository: CenterListRepository,
 ) : ViewModel() {

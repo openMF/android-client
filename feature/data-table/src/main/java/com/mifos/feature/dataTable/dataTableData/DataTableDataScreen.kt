@@ -75,10 +75,11 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.dataTable.dataTableRowDialog.DataTableRowDialogScreen
 import com.mifos.feature.data_table.R
 import com.mifos.room.entities.noncore.DataTableEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DataTableDataScreen(
-    viewModel: DataTableDataViewModel = hiltViewModel(),
+    viewModel: DataTableDataViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val dataTable = viewModel.arg.dataTable

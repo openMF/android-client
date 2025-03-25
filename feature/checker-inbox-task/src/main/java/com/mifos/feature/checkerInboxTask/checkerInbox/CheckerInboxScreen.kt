@@ -82,12 +82,13 @@ import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.checkerInboxTask.checkerInboxDialog.CheckerInboxTasksFilterDialog
 import com.mifos.feature.checker_inbox_task.R
+import org.koin.androidx.compose.koinViewModel
 import java.sql.Timestamp
 
 @Composable
 internal fun CheckerInboxScreen(
     onBackPressed: () -> Unit,
-    viewModel: CheckerInboxViewModel = hiltViewModel(),
+    viewModel: CheckerInboxViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
     val state by viewModel.checkerInboxUiState.collectAsStateWithLifecycle()

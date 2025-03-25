@@ -81,6 +81,7 @@ import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.group.GroupEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun GroupDetailsScreen(
@@ -94,7 +95,7 @@ internal fun GroupDetailsScreen(
     loanAccountSelected: (Int) -> Unit,
     savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateGroup: (Int, String) -> Unit,
-    viewModel: GroupDetailsViewModel = hiltViewModel(),
+    viewModel: GroupDetailsViewModel = koinViewModel(),
 ) {
     val groupId by viewModel.groupId.collectAsStateWithLifecycle()
     val state by viewModel.groupDetailsUiState.collectAsStateWithLifecycle()
