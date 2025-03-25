@@ -133,7 +133,6 @@ import org.koin.dsl.module
 
 private val ioDispatcher = named(MifosDispatchers.IO.name)
 
-
 val RepositoryModule = module {
     // Auth
     single<LoginRepository> { LoginRepositoryImp(get()) }

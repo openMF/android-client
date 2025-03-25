@@ -38,4 +38,7 @@ dependencies {
     testImplementation(projects.core.testing)
     testImplementation (libs.androidx.paging.common.ktx)
     testImplementation (libs.androidx.paging.testing)
+
+    implementation(libs.koin.android.v401)
+    implementation(libs.javax.inject)
 }
