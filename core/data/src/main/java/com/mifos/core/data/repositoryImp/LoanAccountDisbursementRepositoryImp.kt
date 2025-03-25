@@ -34,6 +34,6 @@ class LoanAccountDisbursementRepositoryImp @Inject constructor(private val dataM
         loanId: Int,
         loanDisbursement: LoanDisbursement?,
     ): Observable<GenericResponse> {
-        return disburseLoan(loanId, loanDisbursement)
+        return dataManagerLoan.disburseLoan(loanId, loanDisbursement)
     }
 }
