@@ -20,7 +20,7 @@ import javax.inject.Inject
 /**
  * Created by Pronay Sarker on 12/02/2025 (9:32 PM)
  */
-class SurveyDaoHelper @Inject constructor(
+class SurveyDaoHelper (
     private val surveyDao: SurveyDao,
 ) {
     /**

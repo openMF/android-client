@@ -45,7 +45,7 @@ dependencies {
 
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.kotlinx.serialization.json)
-    testImplementation(projects.core.testing)
+//    testImplementation(projects.core.testing)
     
     implementation(libs.mifos.koin.android)
     implementation(libs.koin.androidx.compose.v350)

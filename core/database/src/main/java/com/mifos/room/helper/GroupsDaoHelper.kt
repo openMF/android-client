@@ -34,7 +34,7 @@ import javax.inject.Inject
  * Whenever DataManager send response to save or request to read from Database then this class
  * save the response or read the all values from database and return as accordingly.
  */
-class GroupsDaoHelper @Inject constructor(
+class GroupsDaoHelper (
     private val groupsDao: GroupsDao,
     @Dispatcher(MifosDispatchers.IO)
     private val ioDispatcher: CoroutineDispatcher,

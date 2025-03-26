@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Created by Pronay Sarker on 14/02/2025 (2:17 AM)
  */
-class StaffDaoHelper @Inject constructor(
+class StaffDaoHelper (
     private val staffDao: StaffDao,
 ) {
     suspend fun saveAllStaffOfOffices(staffs: List<StaffEntity>) {

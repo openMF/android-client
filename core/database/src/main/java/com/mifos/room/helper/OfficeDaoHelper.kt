@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class OfficeDaoHelper @Inject constructor(
+class OfficeDaoHelper (
     private val officeDao: OfficeDao,
 ) {
 

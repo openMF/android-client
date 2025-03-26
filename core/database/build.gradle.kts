@@ -37,7 +37,7 @@ dependencies {
     // sdk client
     implementation(libs.fineract.client)
 
-    androidTestImplementation(projects.core.testing)
+//    androidTestImplementation(projects.core.testing)
 
     implementation(libs.mifos.koin.android)
 

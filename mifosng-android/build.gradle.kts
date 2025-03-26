@@ -20,7 +20,8 @@ plugins {
     alias(libs.plugins.mifos.android.application.compose)
     alias(libs.plugins.mifos.android.application.flavors)
 //    alias(libs.plugins.mifos.android.application.jacoco)
-    alias(libs.plugins.mifos.android.hilt)
+//    alias(libs.plugins.mifos.android.hilt)
+    alias(libs.plugins.mifos.android.koin)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.secrets)
     alias(libs.plugins.androidx.navigation)
@@ -262,6 +263,7 @@ dependencies {
     //coil
     implementation(libs.coil.kt.compose)
 
+    implementation(projects.cmpShared)
 }
 
 dependencyGuard {

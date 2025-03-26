@@ -49,7 +49,7 @@ import javax.inject.Singleton
  * save the response or read the all values from database and return as accordingly.
  */
 @Singleton
-class ClientDaoHelper @Inject constructor(
+class ClientDaoHelper (
     private val clientDao: ClientDao,
     @Dispatcher(MifosDispatchers.IO)
     private val ioDispatcher: CoroutineDispatcher,

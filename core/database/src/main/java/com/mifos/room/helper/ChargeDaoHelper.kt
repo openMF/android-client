@@ -24,7 +24,7 @@ import javax.inject.Inject
 /**
  * Created by Pronay Sarker on 14/02/2025 (3:36 PM)
  */
-class ChargeDaoHelper @Inject constructor(
+class ChargeDaoHelper (
     private val chargeDao: ChargeDao,
     @Dispatcher(MifosDispatchers.IO)
     private val ioDispatcher: CoroutineDispatcher,

@@ -30,8 +30,8 @@ const val USER_DETAILS = "user_details"
 const val AUTH_USERNAME = "auth_username"
 const val AUTH_PASSWORD = "auth_password"
 
-class PrefManager @Inject constructor(
-    @ApplicationContext context: Context,
+class PrefManager(
+    context: Context,
 ) : UserPreferences<User>() {
 
     private val serverConfigKey = Key.Custom("SERVER_CONFIG_KEY")

@@ -573,6 +573,8 @@ wire = { id = "com.squareup.wire", version.ref = "wire" }
 mifos-cmp-feature = { id = "mifos.cmp.feature", version = "unspecified" }
 mifos-kmp-koin = { id = "mifos.kmp.koin", version = "unspecified" }
 mifos-kmp-library = { id = "mifos.kmp.library", version = "unspecified" }
+mifos-android-koin = {id = "mifos.android.koin", version = "unspecified"}
+
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }

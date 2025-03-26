@@ -29,7 +29,4 @@ dependencies {
     androidTestImplementation(projects.core.testing)
 
     implementation(libs.maps.compose)
-
-    implementation(libs.mifos.koin.android)
-    implementation(libs.koin.androidx.compose.v350)
 }

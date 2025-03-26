@@ -39,7 +39,4 @@ dependencies {
     implementation(libs.androidx.material)
 
     implementation(libs.maps.compose)
-
-    implementation(libs.mifos.koin.android)
-    implementation(libs.koin.androidx.compose.v350)
 }
