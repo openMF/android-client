@@ -9,7 +9,7 @@
  */
 plugins {
     alias(libs.plugins.mifos.android.library)
-    alias(libs.plugins.mifos.android.hilt)
+    alias(libs.plugins.mifos.android.koin)
     alias(libs.plugins.mifos.android.library.jacoco)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
 }
@@ -45,8 +45,5 @@ dependencies {
 
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.kotlinx.serialization.json)
-//    testImplementation(projects.core.testing)
-    
-    implementation(libs.mifos.koin.android)
-    implementation(libs.koin.androidx.compose.v350)
+    testImplementation(projects.core.testing)
 }

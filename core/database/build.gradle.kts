@@ -9,7 +9,7 @@
  */
 plugins {
     alias(libs.plugins.mifos.android.library)
-    alias(libs.plugins.mifos.android.hilt)
+    alias(libs.plugins.mifos.android.koin)
     alias(libs.plugins.mifos.android.room)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.mifos.android.library.jacoco)
@@ -37,8 +37,5 @@ dependencies {
     // sdk client
     implementation(libs.fineract.client)
 
-//    androidTestImplementation(projects.core.testing)
-
-    implementation(libs.mifos.koin.android)
-
+    androidTestImplementation(projects.core.testing)
 }

@@ -9,7 +9,7 @@
  */
 plugins {
     alias(libs.plugins.mifos.android.library)
-    alias(libs.plugins.mifos.android.hilt)
+    alias(libs.plugins.mifos.android.koin)
     alias(libs.plugins.mifos.android.library.jacoco)
     alias(libs.plugins.secrets)
     alias(libs.plugins.kotlin.serialization)
@@ -37,6 +37,5 @@ dependencies {
 
     implementation(libs.converter.gson)
 
-    implementation(libs.mifos.koin.android)
     implementation(libs.javax.inject)
 }
