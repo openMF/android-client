@@ -3,6 +3,8 @@ package com.mifos.cmp.navigation
 import com.mifos.core.common.network.di.DispatchersModule
 import com.mifos.core.data.di.RepositoryModule
 import com.mifos.core.domain.di.UseCaseModule
+import com.mifos.core.network.di.DataManagerModule
+import com.mifos.core.network.di.NetworkModule
 import com.mifos.core.testing.di.TestDispatcherModule
 import com.mifos.core.testing.di.TestDispatchersModule
 import com.mifos.feature.auth.di.AuthModule
@@ -26,6 +28,7 @@ import com.mifos.feature.settings.di.SettingsModule
 import com.mifos.feature.splash.di.SplashModule
 import com.mifos.room.di.DaoModule
 import com.mifos.room.di.DatabaseModule
+import com.mifos.room.di.HelperModule
 
 import org.koin.dsl.module
 
@@ -35,10 +38,19 @@ object KoinModules {
     private val domainModule = module { includes(UseCaseModule) }
     private val dataModules = module { includes(RepositoryModule) }
 //    private val passcodeModules = module { includes(PasscodeModule) }
+
     private val databaseModules = module {
         includes(
             DaoModule,
             DatabaseModule,
+            HelperModule
+        )
+    }
+
+    private val networkModules = module {
+        includes(
+            DataManagerModule,
+            NetworkModule
         )
     }
 
@@ -73,11 +85,6 @@ object KoinModules {
         )
     }
 
-    private val libraryModule = module {
-        includes(
-
-        )
-    }
     val allModules = listOf(
         testingModules,
         commonModules,
@@ -85,6 +92,8 @@ object KoinModules {
         dataModules,
         databaseModules,
         featureModules,
-        libraryModule
+        testingModules,
+//        libraryModule,
+        networkModules
     )
 }
