@@ -15,10 +15,10 @@ class CMPFeatureConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-//                add("commonMainImplementation", project(":core:ui"))
+                add("commonMainImplementation", project(":core:ui"))
                 add("commonMainImplementation", project(":core:designsystem"))
-//                add("commonMainImplementation", project(":core:testing"))
-//                add("commonMainImplementation", project(":core:data"))
+                add("commonMainImplementation", project(":core:testing"))
+                add("commonMainImplementation", project(":core:data"))
 
                 add("commonMainImplementation", libs.findLibrary("koin.compose").get())
                 add("commonMainImplementation", libs.findLibrary("koin.compose.viewmodel").get())
