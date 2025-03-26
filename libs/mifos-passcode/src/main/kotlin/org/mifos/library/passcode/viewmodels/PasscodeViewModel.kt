@@ -23,8 +23,7 @@ import org.mifos.library.passcode.utility.Constants.PASSCODE_LENGTH
 import org.mifos.library.passcode.utility.Step
 import javax.inject.Inject
 
-@HiltViewModel
-internal class PasscodeViewModel @Inject constructor(
+internal class PasscodeViewModel (
     private val passcodeRepository: PasscodeRepository,
 ) : ViewModel() {
 

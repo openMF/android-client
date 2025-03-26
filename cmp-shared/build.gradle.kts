@@ -1,13 +1,17 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.mifos.android.koin)
+    alias(libs.plugins.mifos.kmp.library)
+//    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.mifos.kmp.koin)
 }
 
 android {
-    namespace = "com.pronaycoding.cmp.shared"
+    namespace = "com.mifos.cmp.shared"
 }
 
-dependencies {
-    implementation(projects.cmpNavigation)
+kotlin {
+    sourceSets {
+        androidMain.dependencies {
+            implementation(projects.cmpNavigation)
+        }
+    }
 }

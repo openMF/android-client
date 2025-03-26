@@ -22,19 +22,21 @@ import com.raizlabs.android.dbflow.config.FlowManager
 import dagger.hilt.android.HiltAndroidApp
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.core.logger.Level
 
 /**
  * Created by ishankhanna on 13/03/15.
  */
-@HiltAndroidApp
 class App : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
-        initKoin{
-            androidContext(this@App)
-            androidLogger()
-        }
         instance = this
+
+        initKoin {
+            androidContext(this@App)
+            androidLogger(Level.DEBUG)
+        }
+
 //        JobManager.create(this).addJobCreator(OfflineJobCreator())
         // Initializing the DBFlow and SQL Cipher Encryption
         FlowManager.init(FlowConfig.Builder(this).build())
