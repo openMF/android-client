@@ -15,12 +15,11 @@ import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import rx.Observable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class LoanAccountDisbursementRepositoryImp (private val dataManagerLoan: DataManagerLoan) :
+class LoanAccountDisbursementRepositoryImp(private val dataManagerLoan: DataManagerLoan) :
     LoanAccountDisbursementRepository {
 
     override fun getLoanTransactionTemplate(

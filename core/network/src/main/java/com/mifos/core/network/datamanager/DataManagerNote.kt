@@ -17,7 +17,7 @@ import com.mifos.core.network.BaseApiManager
  * and In Response, We are getting Notes API Observable Response using Retrofit2
  * Created by rahul on 4/3/17.
  */
-class DataManagerNote (
+class DataManagerNote(
     val mBaseApiManager: BaseApiManager,
 ) {
     /**

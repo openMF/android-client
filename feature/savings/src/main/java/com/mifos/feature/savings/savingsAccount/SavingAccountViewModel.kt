@@ -21,13 +21,11 @@ import com.mifos.core.domain.useCases.LoadSavingsAccountsAndTemplateUseCase
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.feature.savings.R
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.

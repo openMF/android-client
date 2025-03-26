@@ -13,12 +13,11 @@ import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.model.objects.surveys.Scorecard
 import com.mifos.core.network.datamanager.DataManagerSurveys
 import rx.Observable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-class SurveySubmitRepositoryImp (private val dataManagerSurveys: DataManagerSurveys) :
+class SurveySubmitRepositoryImp(private val dataManagerSurveys: DataManagerSurveys) :
     SurveySubmitRepository {
 
     override fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Observable<Scorecard> {

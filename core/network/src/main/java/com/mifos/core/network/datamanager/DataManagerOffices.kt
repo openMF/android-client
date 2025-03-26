@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.flow
  *
  * Created by Rajan Maurya on 7/7/16.
  */
-class DataManagerOffices (
+class DataManagerOffices(
     val mBaseApiManager: BaseApiManager,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
     private val officeDaoHelper: OfficeDaoHelper,

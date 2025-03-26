@@ -14,9 +14,8 @@ import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.model.objects.noncoreobjects.Document
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class GetDocumentsListUseCase (private val repository: DocumentListRepository) {
+class GetDocumentsListUseCase(private val repository: DocumentListRepository) {
 
     suspend operator fun invoke(
         entityType: String,

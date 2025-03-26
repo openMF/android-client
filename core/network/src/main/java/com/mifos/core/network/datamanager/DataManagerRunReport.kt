@@ -17,7 +17,7 @@ import com.mifos.core.network.BaseApiManager
 /**
  * Created by Rajan Maurya on 05/02/17.
  */
-class DataManagerRunReport (val mBaseApiManager: BaseApiManager) {
+class DataManagerRunReport(val mBaseApiManager: BaseApiManager) {
     suspend fun getReportCategories(
         reportCategory: String?,
         genericResultSet: Boolean,

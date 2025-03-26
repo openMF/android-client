@@ -12,12 +12,11 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.network.datamanager.DataManagerRunReport
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
-class ReportDetailRepositoryImp (private val dataManager: DataManagerRunReport) :
+class ReportDetailRepositoryImp(private val dataManager: DataManagerRunReport) :
     ReportDetailRepository {
 
     override suspend fun getReportFullParameterList(

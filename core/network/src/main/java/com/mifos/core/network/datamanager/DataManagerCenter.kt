@@ -31,7 +31,7 @@ import org.openapitools.client.models.PostCentersCenterIdResponse
  * DataManagerCenter saving response in Database and response to Presenter as accordingly.
  * Created by Rajan Maurya on 28/6/16.
  */
-class DataManagerCenter (
+class DataManagerCenter(
     val mBaseApiManager: BaseApiManager,
     private val centerDatabaseHelper: CenterDaoHelper,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,

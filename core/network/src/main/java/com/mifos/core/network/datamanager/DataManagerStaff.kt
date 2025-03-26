@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.flow
 /**
  * Created by Rajan Maurya on 7/7/16.
  */
-class DataManagerStaff (
+class DataManagerStaff(
     val mBaseApiManager: BaseApiManager,
 //    private val mDatabaseHelperStaff: DatabaseHelperStaff,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,

@@ -16,7 +16,7 @@ import org.openapitools.client.models.PostAuthenticationResponse
 /**
  * Created by Rajan Maurya on 19/02/17.
  */
-class DataManagerAuth (
+class DataManagerAuth(
     private val baseApiManager: BaseApiManager,
 ) {
     /**

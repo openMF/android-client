@@ -23,14 +23,12 @@ import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.noncore.DataTablePayload
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.

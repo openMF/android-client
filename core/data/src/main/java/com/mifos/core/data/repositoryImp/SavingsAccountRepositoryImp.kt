@@ -16,12 +16,11 @@ import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import rx.Observable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class SavingsAccountRepositoryImp (private val dataManagerSavings: DataManagerSavings) :
+class SavingsAccountRepositoryImp(private val dataManagerSavings: DataManagerSavings) :
     SavingsAccountRepository {
     override fun savingsAccounts(): Observable<List<ProductSavings>> {
         return dataManagerSavings.savingsAccounts

@@ -14,12 +14,11 @@ import com.mifos.core.network.DataManager
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.GroupWithAssociations
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class GroupListRepositoryImp (private val dataManager: DataManager) :
+class GroupListRepositoryImp(private val dataManager: DataManager) :
     GroupListRepository {
 
     override fun getGroups(groupId: Int): Flow<GroupWithAssociations> {

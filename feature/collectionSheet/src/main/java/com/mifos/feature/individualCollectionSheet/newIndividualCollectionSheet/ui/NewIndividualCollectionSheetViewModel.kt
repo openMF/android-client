@@ -17,13 +17,11 @@ import com.mifos.core.domain.useCases.GetIndividualCollectionSheetUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeUseCase
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class NewIndividualCollectionSheetViewModel(
     private val newIndividualCollectionSheetRepository: NewIndividualCollectionSheetRepository,

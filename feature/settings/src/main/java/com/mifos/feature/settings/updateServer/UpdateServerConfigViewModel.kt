@@ -17,14 +17,12 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.ServerConfigValidatorUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class UpdateServerConfigViewModel(
     private val prefManager: PrefManager,

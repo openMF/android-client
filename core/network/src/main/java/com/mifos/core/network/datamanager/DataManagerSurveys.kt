@@ -25,7 +25,7 @@ import rx.Observable
  *
  * Created by Rajan Maurya on 22/08/16.
  */
-class DataManagerSurveys (
+class DataManagerSurveys(
     val mBaseApiManager: BaseApiManager,
 //    private val mDatabaseHelperSurveys: DatabaseHelperSurveys,
     private val surveyDatabaseHelper: SurveyDaoHelper,

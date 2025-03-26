@@ -16,17 +16,15 @@ import com.mifos.core.datastore.PrefManager
 import com.mifos.feature.client.R
 import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class SurveyListViewModel (
+class SurveyListViewModel(
     private val repository: SurveyListRepository,
     private val prefManager: PrefManager,
 ) : ViewModel() {

@@ -19,9 +19,8 @@ import kotlinx.coroutines.flow.callbackFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import javax.inject.Inject
 
-class ActivateGroupUseCase (private val activateRepository: ActivateRepository) {
+class ActivateGroupUseCase(private val activateRepository: ActivateRepository) {
 
     suspend operator fun invoke(
         groupId: Int,

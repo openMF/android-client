@@ -15,7 +15,7 @@ import com.mifos.core.network.BaseApiManager
 /**
  * Created by Rajan Maurya on 12/12/16.
  */
-class DataManagerSearch (
+class DataManagerSearch(
     private val baseApiManager: BaseApiManager,
 ) {
     suspend fun searchResources(

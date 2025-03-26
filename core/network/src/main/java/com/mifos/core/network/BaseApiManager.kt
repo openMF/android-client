@@ -39,7 +39,7 @@ import java.util.Date
 /**
  * @author fomenkoo
  */
-class BaseApiManager (private val prefManager: PrefManager) {
+class BaseApiManager(private val prefManager: PrefManager) {
 
     init {
         createService(prefManager)

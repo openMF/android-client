@@ -39,7 +39,7 @@ include(":lint")
 // Library Modules
 include(":libs:country-code-picker")
 include(":libs:pullrefresh")
-include(":libs:mifos-passcode")
+//include(":libs:mifos-passcode")
 
 include(":feature:about")
 include(":feature:activate")

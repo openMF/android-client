@@ -15,9 +15,8 @@ import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class SaveIndividualCollectionSheetUseCase (private val repository: IndividualCollectionSheetDetailsRepository) {
+class SaveIndividualCollectionSheetUseCase(private val repository: IndividualCollectionSheetDetailsRepository) {
 
     suspend operator fun invoke(payload: IndividualCollectionSheetPayload): Flow<Resource<GenericResponse>> =
         flow {

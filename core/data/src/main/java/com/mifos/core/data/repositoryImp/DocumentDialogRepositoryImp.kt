@@ -14,12 +14,11 @@ import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
 import okhttp3.MultipartBody
 import rx.Observable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class DocumentDialogRepositoryImp (private val dataManagerDocument: DataManagerDocument) :
+class DocumentDialogRepositoryImp(private val dataManagerDocument: DataManagerDocument) :
     DocumentDialogRepository {
 
     override fun createDocument(

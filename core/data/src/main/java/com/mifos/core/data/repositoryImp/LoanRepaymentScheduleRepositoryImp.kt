@@ -13,12 +13,11 @@ import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import com.mifos.core.network.DataManager
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import rx.Observable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
-class LoanRepaymentScheduleRepositoryImp (private val dataManager: DataManager) :
+class LoanRepaymentScheduleRepositoryImp(private val dataManager: DataManager) :
     LoanRepaymentScheduleRepository {
 
     override fun getLoanRepaySchedule(loanId: Int): Observable<LoanWithAssociationsEntity> {

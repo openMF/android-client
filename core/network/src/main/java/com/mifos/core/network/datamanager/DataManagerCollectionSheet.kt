@@ -24,7 +24,7 @@ import com.mifos.room.entities.group.CenterWithAssociations
 /**
  * Created by Tarun on 22-07-2017.
  */
-class DataManagerCollectionSheet (
+class DataManagerCollectionSheet(
     private val mBaseApiManager: BaseApiManager,
 ) {
     /**

@@ -24,7 +24,7 @@ import rx.Observable
  *
  * Created by Rajan Maurya on 3/7/16.
  */
-class DataManagerDataTable (
+class DataManagerDataTable(
     val mBaseApiManager: BaseApiManager,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
 ) {

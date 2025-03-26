@@ -14,9 +14,8 @@ import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class UpdateClientPinpointUseCase (private val pinPointClientRepository: PinPointClientRepository) {
+class UpdateClientPinpointUseCase(private val pinPointClientRepository: PinPointClientRepository) {
 
     suspend operator fun invoke(
         clientId: Int,

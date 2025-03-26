@@ -12,9 +12,8 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.model.objects.Note
 import com.mifos.core.network.datamanager.DataManagerNote
-import javax.inject.Inject
 
-class NoteRepositoryImp (private val dataManagerNote: DataManagerNote) :
+class NoteRepositoryImp(private val dataManagerNote: DataManagerNote) :
     NoteRepository {
 
     override fun getNotes(entityType: String?, entityId: Int): List<Note> {

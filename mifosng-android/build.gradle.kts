@@ -146,7 +146,7 @@ dependencies {
     implementation(projects.feature.search)
     implementation(projects.feature.splash)
 
-    implementation(projects.libs.mifosPasscode)
+//    implementation(projects.libs.mifosPasscode)
 
     implementation(projects.core.common)
     implementation(projects.core.ui)

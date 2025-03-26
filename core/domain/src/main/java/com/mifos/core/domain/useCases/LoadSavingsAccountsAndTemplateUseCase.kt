@@ -19,12 +19,11 @@ import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import javax.inject.Inject
 
 /**
  * Created by Pronay Sarker on 04/08/2024 (4:41 PM)
  */
-class LoadSavingsAccountsAndTemplateUseCase (private val repository: SavingsAccountRepository) {
+class LoadSavingsAccountsAndTemplateUseCase(private val repository: SavingsAccountRepository) {
 
     suspend operator fun invoke(): Flow<Resource<SavingProductsAndTemplate?>> =
         callbackFlow {

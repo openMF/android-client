@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.map
  *
  * Created by Rajan Maurya on 4/7/16.
  */
-class DataManagerCharge (
+class DataManagerCharge(
     val mBaseApiManager: BaseApiManager,
 //    val mDatabaseHelperCharge: DatabaseHelperCharge,
     val chargeDatabase: ChargeDaoHelper,

@@ -9,15 +9,10 @@
  */
 package com.mifos.core.testing.di
 
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.koin.dsl.module
-import javax.inject.Singleton
 
 val TestDispatcherModule = module {
-    single<TestDispatcher> { UnconfinedTestDispatcher()}
+    single<TestDispatcher> { UnconfinedTestDispatcher() }
 }

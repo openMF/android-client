@@ -20,7 +20,7 @@ import rx.Observable
  * This DataManager Class for Handling the every request regarding the Document.
  * Created by Rajan Maurya on 02/09/16.
  */
-class DataManagerDocument (val mBaseApiManager: BaseApiManager) {
+class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
     /**
      * This Method for Fetching the Document List with EntityType and EntityId from the REST API.
      * REST END POINT:

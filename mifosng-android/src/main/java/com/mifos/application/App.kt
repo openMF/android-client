@@ -67,4 +67,3 @@ class App : MultiDexApplication() {
         }
     }
 }
-

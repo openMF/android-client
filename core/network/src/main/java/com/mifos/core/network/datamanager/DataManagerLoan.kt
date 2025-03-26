@@ -29,7 +29,7 @@ import rx.Observable
 /**
  * Created by Rajan Maurya on 15/07/16.
  */
-class DataManagerLoan (
+class DataManagerLoan(
     val mBaseApiManager: BaseApiManager,
 //    val mDatabaseHelperLoan: DatabaseHelperLoan,
     val loanDaoHelper: LoanDaoHelper,

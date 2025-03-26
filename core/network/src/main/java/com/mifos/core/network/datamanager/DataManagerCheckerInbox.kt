@@ -15,7 +15,7 @@ import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import rx.Observable
 
-class DataManagerCheckerInbox (
+class DataManagerCheckerInbox(
     private val mBaseApiManager: BaseApiManager,
 ) {
 

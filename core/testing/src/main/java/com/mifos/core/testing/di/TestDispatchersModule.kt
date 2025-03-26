@@ -19,4 +19,3 @@ val TestDispatchersModule = module {
     single<CoroutineDispatcher>(named(MifosDispatchers.IO)) { get<TestDispatcher>() }
     single<CoroutineDispatcher>(named(MifosDispatchers.Default)) { get<TestDispatcher>() }
 }
-

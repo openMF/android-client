@@ -16,8 +16,8 @@ import android.net.NetworkCapabilities
 import androidx.annotation.MainThread
 import androidx.annotation.RequiresPermission
 
-class NetworkUtilsWrapper (
-  private val context: Context,
+class NetworkUtilsWrapper(
+    private val context: Context,
 ) {
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     @MainThread

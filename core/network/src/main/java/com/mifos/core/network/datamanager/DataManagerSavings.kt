@@ -29,7 +29,7 @@ import rx.Observable
 /**
  * Created by Rajan Maurya on 17/08/16.
  */
-class DataManagerSavings (
+class DataManagerSavings(
     val mBaseApiManager: BaseApiManager,
 //    val mDatabaseHelperSavings: DatabaseHelperSavings,
     private val databaseHelperSavings: SavingsDaoHelper,

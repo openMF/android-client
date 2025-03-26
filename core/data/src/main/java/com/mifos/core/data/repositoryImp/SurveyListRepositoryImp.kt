@@ -15,12 +15,11 @@ import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class SurveyListRepositoryImp (private val dataManagerSurveys: DataManagerSurveys) :
+class SurveyListRepositoryImp(private val dataManagerSurveys: DataManagerSurveys) :
     SurveyListRepository {
 
     override fun allSurvey(): Flow<List<SurveyEntity>> {

@@ -12,12 +12,11 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.LoanChargeRepository
 import com.mifos.core.network.DataManager
 import com.mifos.room.entities.client.ChargesEntity
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class LoanChargeRepositoryImp (private val dataManager: DataManager) :
+class LoanChargeRepositoryImp(private val dataManager: DataManager) :
     LoanChargeRepository {
 
     override suspend fun getListOfLoanCharges(loanId: Int): List<ChargesEntity> {

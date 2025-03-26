@@ -16,9 +16,8 @@ import com.mifos.room.entities.group.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.zip
-import javax.inject.Inject
 
-class GetCenterDetailsUseCase (private val repository: CenterDetailsRepository) {
+class GetCenterDetailsUseCase(private val repository: CenterDetailsRepository) {
 
     suspend operator fun invoke(
         centerId: Int,

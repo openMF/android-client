@@ -38,7 +38,7 @@ import org.openapitools.client.models.PostClientsClientIdResponse
  * and In Response, We are getting Client API Observable Response using Retrofit2 .
  * Created by Rajan Maurya on 24/06/16.
  */
-class DataManagerClient (
+class DataManagerClient(
     val mBaseApiManager: BaseApiManager,
 //    private val mDatabaseHelperClient: DatabaseHelperClient,
     private val clientDatabaseHelper: ClientDaoHelper,

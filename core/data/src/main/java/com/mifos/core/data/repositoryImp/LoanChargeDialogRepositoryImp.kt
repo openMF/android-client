@@ -14,12 +14,11 @@ import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.network.DataManager
 import okhttp3.ResponseBody
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class LoanChargeDialogRepositoryImp (private val dataManager: DataManager) :
+class LoanChargeDialogRepositoryImp(private val dataManager: DataManager) :
     LoanChargeDialogRepository {
 
     override suspend fun getAllChargesV3(loanId: Int): ResponseBody {

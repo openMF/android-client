@@ -31,7 +31,7 @@ import rx.Observable
  * DataManagerGroups saving response in Database and response to Presenter as accordingly
  * Created by Rajan Maurya on 28/06/16.
  */
-class DataManagerGroups (
+class DataManagerGroups(
     val mBaseApiManager: BaseApiManager,
     private val databaseHelperGroups: GroupsDaoHelper,
 //    private val mDatabaseHelperClient: DatabaseHelperClient,

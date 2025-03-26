@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.cmp.navigation
 
 import com.mifos.core.common.network.di.DispatchersModule
@@ -7,9 +16,9 @@ import com.mifos.core.network.di.DataManagerModule
 import com.mifos.core.network.di.NetworkModule
 import com.mifos.core.testing.di.TestDispatcherModule
 import com.mifos.core.testing.di.TestDispatchersModule
-import com.mifos.feature.auth.di.AuthModule
 import com.mifos.feature.about.di.AboutModule
 import com.mifos.feature.activate.di.ActivateModule
+import com.mifos.feature.auth.di.AuthModule
 import com.mifos.feature.center.di.CenterModule
 import com.mifos.feature.checkerInboxTask.di.CheckerInboxTaskModule
 import com.mifos.feature.client.di.ClientModule
@@ -29,7 +38,6 @@ import com.mifos.feature.splash.di.SplashModule
 import com.mifos.room.di.DaoModule
 import com.mifos.room.di.DatabaseModule
 import com.mifos.room.di.HelperModule
-
 import org.koin.dsl.module
 
 object KoinModules {
@@ -43,21 +51,21 @@ object KoinModules {
         includes(
             DaoModule,
             DatabaseModule,
-            HelperModule
+            HelperModule,
         )
     }
 
     private val networkModules = module {
         includes(
             DataManagerModule,
-            NetworkModule
+            NetworkModule,
         )
     }
 
     private val testingModules = module {
         includes(
             TestDispatcherModule,
-            TestDispatchersModule
+            TestDispatchersModule,
         )
     }
 
@@ -94,6 +102,6 @@ object KoinModules {
         featureModules,
         testingModules,
 //        libraryModule,
-        networkModules
+        networkModules,
     )
 }

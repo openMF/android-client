@@ -15,13 +15,11 @@ import coil.request.ImageRequest
 import coil.request.ImageResult
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.MifosInterceptor
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 
-class ImageLoaderUtils @Inject constructor(
+class ImageLoaderUtils(
     private val prefManager: PrefManager,
     private val imageLoader: ImageLoader,
-    @ApplicationContext private val context: Context,
+    private val context: Context,
 ) {
 
     private fun buildImageUrl(clientId: Int): String {
