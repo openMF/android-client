@@ -9,26 +9,16 @@
  */
 package com.mifos.room.di
 
-import android.content.Context
 import androidx.room.Room
 import com.mifos.room.db.MifosDatabase
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Singleton
+import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object DatabaseModule {
-
-    @Provides
-    @Singleton
-    fun providesDatabase(@ApplicationContext context: Context): MifosDatabase {
-        return Room.databaseBuilder(
-            context = context,
+val DatabaseModule = module {
+    single {
+        Room.databaseBuilder(
+            context = androidContext(),
             klass = MifosDatabase::class.java,
             name = "mifos-database",
         ).enableMultiInstanceInvalidation()

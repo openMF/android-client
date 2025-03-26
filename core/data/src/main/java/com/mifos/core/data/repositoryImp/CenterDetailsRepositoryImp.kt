@@ -22,7 +22,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class CenterDetailsRepositoryImp @Inject constructor(
+class CenterDetailsRepositoryImp (
     private val dataManagerCenter: DataManagerCenter,
     private val dataManagerRunReport: DataManagerRunReport,
 ) : CenterDetailsRepository {

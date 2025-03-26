@@ -23,7 +23,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class ActivateRepositoryImp @Inject constructor(
+class ActivateRepositoryImp (
     private val dataManagerClient: DataManagerClient,
     private val dataManagerCenter: DataManagerCenter,
     private val dataManagerGroups: DataManagerGroups,

@@ -9,7 +9,7 @@ android {
 }
 
 dependencies {
-    implementation(libs.koin.android.v401)
+    implementation(libs.mifos.koin.android)
     implementation(libs.koin.androidx.compose.v350)
 
     implementation(projects.feature.auth)
@@ -28,4 +28,7 @@ dependencies {
     implementation(projects.feature.savings)
     implementation(projects.feature.search)
     implementation(projects.feature.settings)
+
+    implementation(projects.core.domain)
+
 }

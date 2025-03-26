@@ -39,5 +39,5 @@ dependencies {
     testImplementation (libs.androidx.paging.common.ktx)
     testImplementation (libs.androidx.paging.testing)
 
-    implementation(libs.koin.android.v401)
+    implementation(libs.mifos.koin.android)
 }

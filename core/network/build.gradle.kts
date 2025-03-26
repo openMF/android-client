@@ -65,6 +65,6 @@ dependencies {
 
     implementation(libs.coil.kt2)
 
-    implementation(libs.koin.android.v401)
+    implementation(libs.mifos.koin.android)
 
 }
