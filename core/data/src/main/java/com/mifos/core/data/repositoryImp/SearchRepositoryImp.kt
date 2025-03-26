@@ -24,7 +24,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class SearchRepositoryImp @Inject constructor(
+class SearchRepositoryImp (
     private val dataManagerSearch: DataManagerSearch,
     @Dispatcher(MifosDispatchers.IO)
     private val ioDispatcher: CoroutineDispatcher,

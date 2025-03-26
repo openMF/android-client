@@ -22,7 +22,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class ClientChargeRepositoryImp @Inject constructor(
+class ClientChargeRepositoryImp (
     private val dataManagerCharge: DataManagerCharge,
 ) : ClientChargeRepository {
 

@@ -19,7 +19,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class DocumentDialogRepositoryImp @Inject constructor(private val dataManagerDocument: DataManagerDocument) :
+class DocumentDialogRepositoryImp (private val dataManagerDocument: DataManagerDocument) :
     DocumentDialogRepository {
 
     override fun createDocument(

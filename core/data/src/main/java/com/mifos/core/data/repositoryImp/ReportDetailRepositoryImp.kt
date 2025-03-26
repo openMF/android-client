@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
-class ReportDetailRepositoryImp @Inject constructor(private val dataManager: DataManagerRunReport) :
+class ReportDetailRepositoryImp (private val dataManager: DataManagerRunReport) :
     ReportDetailRepository {
 
     override suspend fun getReportFullParameterList(

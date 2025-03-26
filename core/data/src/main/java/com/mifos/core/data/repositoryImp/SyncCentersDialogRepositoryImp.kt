@@ -33,7 +33,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class SyncCentersDialogRepositoryImp @Inject constructor(
+class SyncCentersDialogRepositoryImp (
     private val dataManagerCenter: DataManagerCenter,
     private val dataManagerLoan: DataManagerLoan,
     private val dataManagerSavings: DataManagerSavings,

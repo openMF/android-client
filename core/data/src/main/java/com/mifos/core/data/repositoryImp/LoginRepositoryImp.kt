@@ -18,7 +18,7 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 06/08/23.
  */
 
-class LoginRepositoryImp @Inject constructor(private val dataManagerAuth: DataManagerAuth) :
+class LoginRepositoryImp (private val dataManagerAuth: DataManagerAuth) :
     LoginRepository {
 
     override suspend fun login(username: String, password: String): PostAuthenticationResponse {

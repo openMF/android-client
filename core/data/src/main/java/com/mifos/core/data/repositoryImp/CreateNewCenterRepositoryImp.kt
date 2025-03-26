@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class CreateNewCenterRepositoryImp @Inject constructor(private val dataManagerCenter: DataManagerCenter) :
+class CreateNewCenterRepositoryImp (private val dataManagerCenter: DataManagerCenter) :
     CreateNewCenterRepository {
 
     override suspend fun createCenter(centerPayload: CenterPayloadEntity) {

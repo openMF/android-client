@@ -18,7 +18,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class LoanAccountApprovalRepositoryImp @Inject constructor(private val dataManager: DataManager) :
+class LoanAccountApprovalRepositoryImp (private val dataManager: DataManager) :
     LoanAccountApprovalRepository {
 
     override fun approveLoan(

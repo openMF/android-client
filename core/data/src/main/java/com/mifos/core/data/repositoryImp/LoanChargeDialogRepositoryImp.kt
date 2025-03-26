@@ -19,7 +19,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class LoanChargeDialogRepositoryImp @Inject constructor(private val dataManager: DataManager) :
+class LoanChargeDialogRepositoryImp (private val dataManager: DataManager) :
     LoanChargeDialogRepository {
 
     override suspend fun getAllChargesV3(loanId: Int): ResponseBody {

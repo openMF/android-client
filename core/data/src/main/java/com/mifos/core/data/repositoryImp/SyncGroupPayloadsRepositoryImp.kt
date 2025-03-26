@@ -16,7 +16,7 @@ import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class SyncGroupPayloadsRepositoryImp @Inject constructor(
+class SyncGroupPayloadsRepositoryImp (
     private val dataManagerGroups: DataManagerGroups,
 ) : SyncGroupPayloadsRepository {
 

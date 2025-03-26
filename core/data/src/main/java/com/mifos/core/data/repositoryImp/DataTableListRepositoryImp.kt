@@ -23,7 +23,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class DataTableListRepositoryImp @Inject constructor(
+class DataTableListRepositoryImp (
     private val dataManagerLoan: DataManagerLoan,
     private val dataManager: DataManager,
     private val dataManagerClient: DataManagerClient,

@@ -19,7 +19,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class SignatureRepositoryImp @Inject constructor(private val dataManagerDocument: DataManagerDocument) :
+class SignatureRepositoryImp (private val dataManagerDocument: DataManagerDocument) :
     SignatureRepository {
 
     override fun createDocument(

@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class PinPointClientRepositoryImp @Inject constructor(private val dataManagerClient: DataManagerClient) :
+class PinPointClientRepositoryImp (private val dataManagerClient: DataManagerClient) :
     PinPointClientRepository {
 
     override suspend fun getClientPinpointLocations(clientId: Int): List<com.mifos.core.model.objects.clients.ClientAddressResponse> {

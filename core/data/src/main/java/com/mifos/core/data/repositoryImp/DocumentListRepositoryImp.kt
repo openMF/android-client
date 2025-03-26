@@ -19,7 +19,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class DocumentListRepositoryImp @Inject constructor(private val dataManagerDocument: DataManagerDocument) :
+class DocumentListRepositoryImp (private val dataManagerDocument: DataManagerDocument) :
     DocumentListRepository {
 
     override suspend fun getDocumentsList(entityType: String, entityId: Int): List<Document> {

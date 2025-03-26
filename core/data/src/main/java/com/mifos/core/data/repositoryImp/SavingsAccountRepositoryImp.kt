@@ -21,7 +21,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class SavingsAccountRepositoryImp @Inject constructor(private val dataManagerSavings: DataManagerSavings) :
+class SavingsAccountRepositoryImp (private val dataManagerSavings: DataManagerSavings) :
     SavingsAccountRepository {
     override fun savingsAccounts(): Observable<List<ProductSavings>> {
         return dataManagerSavings.savingsAccounts

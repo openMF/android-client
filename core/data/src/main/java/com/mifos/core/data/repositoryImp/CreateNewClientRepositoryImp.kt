@@ -24,7 +24,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class CreateNewClientRepositoryImp @Inject constructor(
+class CreateNewClientRepositoryImp (
     private val dataManagerClient: DataManagerClient,
     private val dataManagerOffices: DataManagerOffices,
     private val dataManagerStaff: DataManagerStaff,

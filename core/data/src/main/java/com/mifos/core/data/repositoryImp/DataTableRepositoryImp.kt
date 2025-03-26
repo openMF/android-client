@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class DataTableRepositoryImp @Inject constructor(private val dataManagerDataTable: DataManagerDataTable) :
+class DataTableRepositoryImp (private val dataManagerDataTable: DataManagerDataTable) :
     DataTableRepository {
 
     override suspend fun getDataTable(tableName: String?): List<DataTableEntity> {

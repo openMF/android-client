@@ -18,7 +18,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class SyncCenterPayloadsRepositoryImp @Inject constructor(private val dataManagerCenter: DataManagerCenter) :
+class SyncCenterPayloadsRepositoryImp (private val dataManagerCenter: DataManagerCenter) :
     SyncCenterPayloadsRepository {
 
     override fun allDatabaseCenterPayload(): Flow<List<CenterPayloadEntity>> {

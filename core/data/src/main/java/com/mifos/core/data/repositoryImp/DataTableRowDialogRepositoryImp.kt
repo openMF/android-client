@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-class DataTableRowDialogRepositoryImp @Inject constructor(private val dataManagerDataTable: DataManagerDataTable) :
+class DataTableRowDialogRepositoryImp (private val dataManagerDataTable: DataManagerDataTable) :
     DataTableRowDialogRepository {
 
     override suspend fun addDataTableEntry(

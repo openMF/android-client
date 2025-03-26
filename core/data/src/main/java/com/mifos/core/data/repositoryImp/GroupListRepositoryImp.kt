@@ -19,7 +19,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class GroupListRepositoryImp @Inject constructor(private val dataManager: DataManager) :
+class GroupListRepositoryImp (private val dataManager: DataManager) :
     GroupListRepository {
 
     override fun getGroups(groupId: Int): Flow<GroupWithAssociations> {

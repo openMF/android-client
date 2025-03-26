@@ -15,7 +15,7 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class SyncClientPayloadsRepositoryImp @Inject constructor(
+class SyncClientPayloadsRepositoryImp (
     private val dataManagerClient: DataManagerClient,
 ) : SyncClientPayloadsRepository {
 

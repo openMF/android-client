@@ -25,7 +25,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class OfflineDashboardRepositoryImp @Inject constructor(
+class OfflineDashboardRepositoryImp (
     private val dataManagerClient: DataManagerClient,
     private val dataManagerGroups: DataManagerGroups,
     private val dataManagerCenter: DataManagerCenter,

@@ -20,7 +20,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class GroupDetailsRepositoryImp @Inject constructor(
+class GroupDetailsRepositoryImp (
     private val dataManagerGroups: DataManagerGroups,
 ) : GroupDetailsRepository {
 

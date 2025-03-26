@@ -18,7 +18,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-class SavingsAccountActivateRepositoryImp @Inject constructor(private val dataManagerSavings: DataManagerSavings) :
+class SavingsAccountActivateRepositoryImp (private val dataManagerSavings: DataManagerSavings) :
     SavingsAccountActivateRepository {
 
     override fun activateSavings(

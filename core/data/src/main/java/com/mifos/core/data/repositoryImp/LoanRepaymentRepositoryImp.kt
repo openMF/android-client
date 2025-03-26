@@ -20,7 +20,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class LoanRepaymentRepositoryImp @Inject constructor(
+class LoanRepaymentRepositoryImp (
     private val dataManagerLoan: DataManagerLoan,
 ) : LoanRepaymentRepository {
 

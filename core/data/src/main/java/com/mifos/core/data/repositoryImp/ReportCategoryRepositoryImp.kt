@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
-class ReportCategoryRepositoryImp @Inject constructor(private val dataManager: DataManagerRunReport) :
+class ReportCategoryRepositoryImp (private val dataManager: DataManagerRunReport) :
     ReportCategoryRepository {
 
     override suspend fun getReportCategories(

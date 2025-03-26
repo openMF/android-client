@@ -18,7 +18,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class SavingsAccountSummaryRepositoryImp @Inject constructor(
+class SavingsAccountSummaryRepositoryImp (
     private val dataManagerSavings: DataManagerSavings,
 ) : SavingsAccountSummaryRepository {
 

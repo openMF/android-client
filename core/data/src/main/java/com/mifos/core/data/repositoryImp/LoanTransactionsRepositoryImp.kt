@@ -18,7 +18,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
-class LoanTransactionsRepositoryImp @Inject constructor(private val dataManager: DataManager) :
+class LoanTransactionsRepositoryImp (private val dataManager: DataManager) :
     LoanTransactionsRepository {
 
     override fun getLoanTransactions(loan: Int): Observable<LoanWithAssociationsEntity> {

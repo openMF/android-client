@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class PathTrackingRepositoryImp @Inject constructor(private val dataManagerDataTable: DataManagerDataTable) :
+class PathTrackingRepositoryImp (private val dataManagerDataTable: DataManagerDataTable) :
     PathTrackingRepository {
 
     override suspend fun getUserPathTracking(userId: Int): List<UserLocation> {

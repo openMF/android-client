@@ -29,7 +29,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class SyncGroupsDialogRepositoryImp @Inject constructor(
+class SyncGroupsDialogRepositoryImp (
     private val dataManagerGroups: DataManagerGroups,
     private val dataManagerLoan: DataManagerLoan,
     private val dataManagerSavings: DataManagerSavings,

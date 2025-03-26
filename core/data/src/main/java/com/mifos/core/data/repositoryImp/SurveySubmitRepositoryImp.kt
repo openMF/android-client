@@ -18,7 +18,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-class SurveySubmitRepositoryImp @Inject constructor(private val dataManagerSurveys: DataManagerSurveys) :
+class SurveySubmitRepositoryImp (private val dataManagerSurveys: DataManagerSurveys) :
     SurveySubmitRepository {
 
     override fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Observable<Scorecard> {

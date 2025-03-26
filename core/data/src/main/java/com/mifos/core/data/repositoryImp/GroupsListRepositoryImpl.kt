@@ -16,7 +16,7 @@ import com.mifos.room.entities.group.GroupEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GroupsListRepositoryImpl @Inject constructor(
+class GroupsListRepositoryImpl (
     private val dataManager: DataManagerGroups,
 ) : GroupsListRepository {
 

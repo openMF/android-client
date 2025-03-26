@@ -20,7 +20,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class SurveyListRepositoryImp @Inject constructor(private val dataManagerSurveys: DataManagerSurveys) :
+class SurveyListRepositoryImp (private val dataManagerSurveys: DataManagerSurveys) :
     SurveyListRepository {
 
     override fun allSurvey(): Flow<List<SurveyEntity>> {

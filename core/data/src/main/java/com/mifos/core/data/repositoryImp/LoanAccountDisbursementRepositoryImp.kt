@@ -20,7 +20,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class LoanAccountDisbursementRepositoryImp @Inject constructor(private val dataManagerLoan: DataManagerLoan) :
+class LoanAccountDisbursementRepositoryImp (private val dataManagerLoan: DataManagerLoan) :
     LoanAccountDisbursementRepository {
 
     override fun getLoanTransactionTemplate(

@@ -20,7 +20,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class ClientIdentifiersRepositoryImp @Inject constructor(
+class ClientIdentifiersRepositoryImp (
     private val dataManagerClient: DataManagerClient,
 ) : ClientIdentifiersRepository {
 

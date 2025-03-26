@@ -21,7 +21,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class SyncSavingsAccountTransactionRepositoryImp @Inject constructor(
+class SyncSavingsAccountTransactionRepositoryImp (
     private val dataManagerSavings: DataManagerSavings,
     private val dataManagerLoan: DataManagerLoan,
 ) : SyncSavingsAccountTransactionRepository {

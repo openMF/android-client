@@ -21,7 +21,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class CreateNewGroupRepositoryImp @Inject constructor(
+class CreateNewGroupRepositoryImp (
     private val dataManagerOffices: DataManagerOffices,
     private val dataManagerGroups: DataManagerGroups,
 ) : CreateNewGroupRepository {

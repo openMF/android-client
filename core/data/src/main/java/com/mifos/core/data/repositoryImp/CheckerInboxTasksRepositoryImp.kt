@@ -20,7 +20,7 @@ import javax.inject.Inject
  * Created by Aditya Gupta on 21/03/24.
  */
 
-class CheckerInboxTasksRepositoryImp @Inject constructor(private val dataManagerCheckerInbox: DataManagerCheckerInbox) :
+class CheckerInboxTasksRepositoryImp (private val dataManagerCheckerInbox: DataManagerCheckerInbox) :
     CheckerInboxTasksRepository {
 
     override suspend fun getRescheduleLoansTaskList(): Flow<List<com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask>> {

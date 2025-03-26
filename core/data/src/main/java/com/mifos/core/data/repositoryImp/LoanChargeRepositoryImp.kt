@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class LoanChargeRepositoryImp @Inject constructor(private val dataManager: DataManager) :
+class LoanChargeRepositoryImp (private val dataManager: DataManager) :
     LoanChargeRepository {
 
     override suspend fun getListOfLoanCharges(loanId: Int): List<ChargesEntity> {

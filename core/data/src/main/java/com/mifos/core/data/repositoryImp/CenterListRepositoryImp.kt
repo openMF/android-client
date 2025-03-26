@@ -24,7 +24,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class CenterListRepositoryImp @Inject constructor(private val dataManagerCenter: DataManagerCenter) :
+class CenterListRepositoryImp (private val dataManagerCenter: DataManagerCenter) :
     CenterListRepository {
 
     override fun getAllCenters(): Flow<PagingData<CenterEntity>> {

@@ -18,7 +18,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class IndividualCollectionSheetDetailsRepositoryImp @Inject constructor(private val dataManagerCollection: DataManagerCollectionSheet) :
+class IndividualCollectionSheetDetailsRepositoryImp (private val dataManagerCollection: DataManagerCollectionSheet) :
     IndividualCollectionSheetDetailsRepository {
 
     override suspend fun saveIndividualCollectionSheet(payload: IndividualCollectionSheetPayload): GenericResponse {
