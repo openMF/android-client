@@ -47,8 +47,7 @@ kotlin {
             implementation(projects.feature.settings)
             implementation(projects.feature.splash)
 
-            implementation(project.libs.mifos.passcode)
-
+//            implementation(project.libs.mifos.passcode)
         }
     }
 }
