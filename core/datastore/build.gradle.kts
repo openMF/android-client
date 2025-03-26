@@ -8,9 +8,8 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.library)
-    alias(libs.plugins.mifos.android.library.jacoco)
-    alias(libs.plugins.mifos.android.hilt)
+    alias(libs.plugins.mifos.kmp.library)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -26,15 +25,16 @@ android {
     }
 }
 
-dependencies {
-    api(projects.core.model)
-    api(projects.core.common)
-
-    api(libs.converter.gson)
-
-    // fineract sdk dependencies
-    api(libs.mifos.android.sdk.arch)
-
-    // sdk client
-    api(libs.fineract.client)
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.serialization)
+            implementation(libs.multiplatform.settings.coroutines)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.core)
+            api(projects.core.model)
+            api(projects.core.common)
+        }
+    }
 }

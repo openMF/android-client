@@ -1,0 +1,35 @@
+/*
+ * Copyright 2024 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
+package com.mifos.core.model.objects
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class ServerConfig(
+    val protocol: String,
+    val endPoint: String,
+    val apiPath: String,
+    val port: String,
+    val tenant: String,
+) {
+    companion object {
+        val DEFAULT = ServerConfig(
+            protocol = "https://",
+            endPoint = "dev.mifos.io",
+            apiPath = "/fineract-provider/api/v1/",
+            port = "80",
+            tenant = "default",
+        )
+    }
+}
+
+fun ServerConfig.getInstanceUrl(): String {
+    return "$protocol$endPoint$apiPath"
+}
