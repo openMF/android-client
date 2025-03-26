@@ -15,16 +15,19 @@ import com.mifos.room.db.MifosDatabase
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import kotlin.coroutines.CoroutineContext
 
 val DatabaseModule = module {
     single {
+        val ioContext: CoroutineContext = getKoin().get(named(MifosDispatchers.IO.name))
+
         Room.databaseBuilder(
             context = androidApplication(),
             klass = MifosDatabase::class.java,
             name = "mifos-database",
         ).enableMultiInstanceInvalidation()
             .fallbackToDestructiveMigration(true)
-            .setQueryCoroutineContext(get(named(MifosDispatchers.IO.name)))
+            .setQueryCoroutineContext(ioContext)
             .build()
     }
 }

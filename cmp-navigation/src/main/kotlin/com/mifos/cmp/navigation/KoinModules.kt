@@ -42,7 +42,7 @@ import org.koin.dsl.module
 
 object KoinModules {
 
-    private val commonModules = module { DispatchersModule }
+    private val commonModules = module { includes(DispatchersModule) }
     private val domainModule = module { includes(UseCaseModule) }
     private val dataModules = module { includes(RepositoryModule) }
 //    private val passcodeModules = module { includes(Passco ) }

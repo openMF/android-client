@@ -14,15 +14,22 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import kotlin.coroutines.CoroutineContext
 
 val DispatchersModule = module {
-//    includes(ioDispatcherModule)
+    includes(ioDispatcherModule)
     single<CoroutineDispatcher>(named(MifosDispatchers.IO.name)) { Dispatchers.IO }
     single<CoroutineDispatcher>(named(MifosDispatchers.Default.name)) { Dispatchers.Default }
+    single<CoroutineContext>(named(MifosDispatchers.IO.name)) { Dispatchers.IO } // ✅ Add this
     single<CoroutineScope>(named("ApplicationScope")) {
         CoroutineScope(SupervisorJob() + Dispatchers.Default)
     }
 }
-// val ioDispatcherModule: Module
+
+val ioDispatcherModule: Module
+    get() = module {
+        single<CoroutineDispatcher>(named(MifosDispatchers.IO.name)) { Dispatchers.IO }
+    }

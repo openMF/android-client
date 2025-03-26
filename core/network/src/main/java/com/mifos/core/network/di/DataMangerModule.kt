@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.di
 
+import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerAuth
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerCharge
@@ -29,6 +30,7 @@ import com.mifos.core.network.datamanager.DataManagerSurveys
 import org.koin.dsl.module
 
 val DataManagerModule = module {
+    single { DataManager() }
     single { DataManagerAuth(get()) }
     single { DataManagerCenter(get(), get(), get(), get()) }
     single { DataManagerCharge(get(), get(), get()) }

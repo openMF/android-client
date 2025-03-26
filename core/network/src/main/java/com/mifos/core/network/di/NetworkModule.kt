@@ -24,6 +24,8 @@ val NetworkModule = module {
 
     single { com.mifos.core.network.BaseApiManager(get()) }
 
+    single { BaseApiManager }
+
     single {
         val prefManager: PrefManager = get()
         val usernamePassword: Pair<String, String> = prefManager.usernamePassword

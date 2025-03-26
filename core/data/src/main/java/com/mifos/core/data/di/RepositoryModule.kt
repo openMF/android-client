@@ -34,6 +34,7 @@ import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.core.data.repository.GroupLoanAccountRepository
+import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.data.repository.IndividualCollectionSheetDetailsRepository
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.core.data.repository.LoanAccountDisbursementRepository
@@ -93,6 +94,7 @@ import com.mifos.core.data.repositoryImp.GenerateCollectionSheetRepositoryImp
 import com.mifos.core.data.repositoryImp.GroupDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.GroupListRepositoryImp
 import com.mifos.core.data.repositoryImp.GroupLoanAccountRepositoryImp
+import com.mifos.core.data.repositoryImp.GroupsListRepositoryImpl
 import com.mifos.core.data.repositoryImp.IndividualCollectionSheetDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanAccountApprovalRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanAccountDisbursementRepositoryImp
@@ -134,8 +136,9 @@ import org.koin.dsl.module
 private val ioDispatcher = named(MifosDispatchers.IO.name)
 
 val RepositoryModule = module {
-    // Auth
+
     single<LoginRepository> { LoginRepositoryImp(get()) }
+    single<SearchRepository> { SearchRepositoryImp(get(), get(ioDispatcher)) }
 
     // Client
     single<ClientDetailsRepository> { ClientDetailsRepositoryImp(get()) }
@@ -150,6 +153,7 @@ val RepositoryModule = module {
     single<CenterDetailsRepository> { CenterDetailsRepositoryImp(get(), get()) }
     single<CenterListRepository> { CenterListRepositoryImp(get()) }
     single<CreateNewCenterRepository> { CreateNewCenterRepositoryImp(get()) }
+    single<GroupsListRepository> { GroupsListRepositoryImpl(get()) }
 
     // Group
     single<GroupDetailsRepository> { GroupDetailsRepositoryImp(get()) }
