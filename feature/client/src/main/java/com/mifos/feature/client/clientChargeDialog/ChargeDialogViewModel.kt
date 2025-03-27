@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 
 class ChargeDialogViewModel(
     private val getAllChargesV2UseCase: GetAllChargesV2UseCase,
-    private val createChargesUseCase: CreateChargesUseCase,
+    private val createChargesUseCase: com.mifos.core.domain.useCases.CreateChargesUseCase,
 ) : ViewModel() {
 
     private val _chargeDialogUiState =
