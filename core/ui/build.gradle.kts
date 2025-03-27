@@ -8,27 +8,40 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.library)
-    alias(libs.plugins.mifos.android.library.compose)
-    alias(libs.plugins.mifos.android.library.jacoco)
+    alias(libs.plugins.mifos.kmp.library)
+    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "com.mifos.core.ui"
-
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
-dependencies {
-    api(libs.androidx.metrics)
-    api(projects.core.designsystem)
-    api(projects.core.model)
-    api(projects.core.testing)
 
-    implementation(libs.coil.kt.compose)
-    implementation(libs.androidx.paging.compose)
 
-    androidTestImplementation(projects.core.testing)
+kotlin{
+    sourceSets{
+        androidMain.dependencies {
+            api(libs.androidx.metrics)
+            implementation(libs.androidx.compose.runtime)
+        }
+        commonMain.dependencies {
+            api(projects.core.designsystem)
+            api(libs.kotlinx.datetime)
+            implementation(libs.jb.composeViewmodel)
+            implementation(libs.jb.lifecycleViewmodel)
+            implementation(libs.jb.lifecycleViewmodelSavedState)
+            implementation(libs.coil.kt)
+            implementation(libs.coil.kt.compose)
+            implementation(libs.jb.composeNavigation)
+            implementation(libs.filekit.compose)
+            implementation(libs.filekit.core)
+            implementation(compose.material3)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
+        }
+    }
 }
