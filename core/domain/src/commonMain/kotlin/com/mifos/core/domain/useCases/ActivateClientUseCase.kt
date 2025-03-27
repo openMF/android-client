@@ -14,22 +14,22 @@ import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.openapitools.client.models.PostCentersCenterIdResponse
+import org.openapitools.client.models.PostClientsClientIdResponse
 
-class ActivateCenterUseCase(
+class ActivateClientUseCase(
     private val activateRepository: ActivateRepository,
 ) {
 
     suspend operator fun invoke(
-        centerId: Int,
-        centerPayload: ActivatePayload,
-    ): Flow<Resource<PostCentersCenterIdResponse>> = flow {
+        clientId: Int,
+        clientPayload: ActivatePayload,
+    ): Flow<Resource<PostClientsClientIdResponse>> = flow {
+        emit(Resource.Loading())
         try {
-            emit(Resource.Loading())
-            val response = activateRepository.activateCenter(centerId, centerPayload)
+            val response = activateRepository.activateClient(clientId, clientPayload)
             emit(Resource.Success(response))
         } catch (exception: Exception) {
             emit(Resource.Error(exception.message.toString()))
-        }
+        }.flowOn(Dispatchers.IO)
     }
 }

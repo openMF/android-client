@@ -12,24 +12,25 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
+import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import org.openapitools.client.models.PostClientsClientIdResponse
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.Dispatchers
 
-class ActivateClientUseCase(
+class ActivateGroupUseCase(
     private val activateRepository: ActivateRepository,
 ) {
 
     suspend operator fun invoke(
-        clientId: Int,
-        clientPayload: ActivatePayload,
-    ): Flow<Resource<PostClientsClientIdResponse>> = flow {
+        groupId: Int,
+        groupPayload: ActivatePayload,
+    ): Flow<Resource<GenericResponse>> = callbackFlow {
+        emit(Resource.Loading())
         try {
-            emit(Resource.Loading())
-            val response = activateRepository.activateClient(clientId, clientPayload)
+            val response = activateRepository.activateGroup(groupId, groupPayload)
             emit(Resource.Success(response))
         } catch (exception: Exception) {
             emit(Resource.Error(exception.message.toString()))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 }
