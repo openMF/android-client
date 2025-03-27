@@ -12,7 +12,7 @@ package com.mifos.room.di
 import androidx.room.Room
 import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.room.db.MifosDatabase
-import org.koin.android.ext.koin.androidApplication
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import kotlin.coroutines.CoroutineContext
@@ -22,7 +22,7 @@ val DatabaseModule = module {
         val ioContext: CoroutineContext = getKoin().get(named(MifosDispatchers.IO.name))
 
         Room.databaseBuilder(
-            context = androidApplication(),
+            context = androidContext(),
             klass = MifosDatabase::class.java,
             name = "mifos-database",
         ).enableMultiInstanceInvalidation()

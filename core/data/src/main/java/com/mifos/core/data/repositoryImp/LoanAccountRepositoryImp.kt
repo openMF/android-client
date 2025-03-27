@@ -19,8 +19,9 @@ import rx.Observable
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class LoanAccountRepositoryImp(private val dataManagerLoan: DataManagerLoan) :
-    LoanAccountRepository {
+class LoanAccountRepositoryImp(
+    private val dataManagerLoan: DataManagerLoan,
+) : LoanAccountRepository {
 
     override suspend fun allLoans(): Observable<List<com.mifos.core.model.objects.organisations.LoanProducts>> {
         return dataManagerLoan.allLoans

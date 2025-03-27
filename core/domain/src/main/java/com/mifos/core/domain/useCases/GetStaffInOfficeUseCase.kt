@@ -15,7 +15,9 @@ import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetStaffInOfficeUseCase(private val repository: NewIndividualCollectionSheetRepository) {
+class GetStaffInOfficeUseCase(
+    private val repository: NewIndividualCollectionSheetRepository,
+) {
 
     suspend operator fun invoke(officeId: Int): Flow<Resource<List<StaffEntity>>> = flow {
         try {

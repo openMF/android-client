@@ -78,84 +78,77 @@ import com.mifos.core.domain.useCases.ValidateServerEndPointUseCase
 import com.mifos.core.domain.useCases.ValidateServerPortUseCase
 import com.mifos.core.domain.useCases.ValidateServerProtocolUseCase
 import com.mifos.core.domain.useCases.ValidateServerTenantUseCase
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val UseCaseModule = module {
-    single<ActivateCenterUseCase> { ActivateCenterUseCase(get()) }
-    single<ActivateClientUseCase> { ActivateClientUseCase(get()) }
-    single<ActivateGroupUseCase> { ActivateGroupUseCase(get()) }
-    single<ActivateSavingsUseCase> { ActivateSavingsUseCase(get()) }
-    single<AddClientPinpointLocationUseCase> { AddClientPinpointLocationUseCase(get()) }
-    single<AddDataTableEntryUseCase> { AddDataTableEntryUseCase(get()) }
-    single<ApproveCheckerUseCase> { ApproveCheckerUseCase(get()) }
-    single<ApproveSavingsApplicationUseCase> { ApproveSavingsApplicationUseCase((get())) }
-    single<CreateChargesUseCase> { CreateChargesUseCase(get()) }
-    single<CreateClientIdentifierUseCase> { CreateClientIdentifierUseCase(get()) }
-    single<CreateDocumentUseCase> { CreateDocumentUseCase(get()) }
-    single<CreateGroupLoansAccountUseCase> { CreateGroupLoansAccountUseCase(get()) }
-    single<CreateLoanAccountUseCase> { CreateLoanAccountUseCase(get()) }
-    single<CreateLoanChargesUseCase> { CreateLoanChargesUseCase(get()) }
-    single<CreateSavingsAccountUseCase> { CreateSavingsAccountUseCase(get()) }
-    single<DeleteCheckerUseCase> { DeleteCheckerUseCase(get()) }
-    single<DeleteClientAddressPinpointUseCase> { DeleteClientAddressPinpointUseCase(get()) }
-    single<DeleteDataTableEntryUseCase> { DeleteDataTableEntryUseCase(get()) }
-    single<DeleteIdentifierUseCase> { DeleteIdentifierUseCase(get()) }
-    single<DownloadDocumentUseCase> { DownloadDocumentUseCase(get()) }
-    single<FetchCenterDetailsUseCase> { FetchCenterDetailsUseCase(get()) }
-    single<FetchCollectionSheetUseCase> { FetchCollectionSheetUseCase(get()) }
-    single<FetchGroupsAssociatedWithCenterUseCase> { FetchGroupsAssociatedWithCenterUseCase(get()) }
-    single { FetchProductiveCollectionSheetUseCase(get()) }
-    single<GetAllChargesV2UseCase> { GetAllChargesV2UseCase(get()) }
-    single<GetAllChargesV3UseCase> { GetAllChargesV3UseCase(get()) }
-    single<GetAllLoanUseCase> { GetAllLoanUseCase(get()) }
-    single<GetCenterDetailsUseCase> { GetCenterDetailsUseCase(get()) }
-    single<GetCentersInOfficeUseCase> { GetCentersInOfficeUseCase(get()) }
-    single<GetCheckerInboxBadgesUseCase> { GetCheckerInboxBadgesUseCase(get()) }
-    single<GetCheckerTasksUseCase> { GetCheckerTasksUseCase(get()) }
-    single<GetClientDetailsUseCase> { GetClientDetailsUseCase(get()) }
-    single<GetClientIdentifierTemplateUseCase> { GetClientIdentifierTemplateUseCase(get()) }
-    single<GetClientPinpointLocationsUseCase> { GetClientPinpointLocationsUseCase(get()) }
-    single<GetClientSavingsAccountTemplateByProductUseCase> {
-        GetClientSavingsAccountTemplateByProductUseCase(
-            get(),
-        )
-    }
-    single<GetDataTableInfoUseCase> { GetDataTableInfoUseCase(get()) }
-    single<GetDocumentsListUseCase> { GetDocumentsListUseCase(get()) }
-    single<GetGroupLoansAccountTemplateUseCase> { GetGroupLoansAccountTemplateUseCase(get()) }
-    single<GetGroupSavingsAccountTemplateByProductUseCase> {
-        GetGroupSavingsAccountTemplateByProductUseCase(
-            get(),
-        )
-    }
-    single<GetGroupsByCenterUseCase> { GetGroupsByCenterUseCase() }
-    single<GetGroupsByOfficeUseCase> { GetGroupsByOfficeUseCase(get()) }
-    single<GetIndividualCollectionSheetUseCase> { GetIndividualCollectionSheetUseCase(get()) }
-    single<GetListOfLoanChargesUseCase> { GetListOfLoanChargesUseCase(get()) }
-    single<GetLoansAccountTemplateUseCase> { GetLoansAccountTemplateUseCase(get()) }
-    single<GetReportCategoryUseCase> { GetReportCategoryUseCase(get()) }
-    single<GetReportFullParameterListUseCase> { GetReportFullParameterListUseCase(get()) }
-    single<GetReportParameterDetailsUseCase> { GetReportParameterDetailsUseCase(get()) }
-    single<GetRunReportOfficesUseCase> { GetRunReportOfficesUseCase(get()) }
-    single<GetRunReportProductUseCase> { GetRunReportProductUseCase(get()) }
-    single<GetRunReportWithQueryUseCase> { GetRunReportWithQueryUseCase(get()) }
-    single<GetStaffInOfficeUseCase> { GetStaffInOfficeUseCase(get()) }
-    single<GetUserPathTrackingUseCase> { GetUserPathTrackingUseCase(get()) }
-    single<GroupsListPagingDataSource> { GroupsListPagingDataSource(get(), get()) } // todo provide limit
-    single<LoadSavingsAccountsAndTemplateUseCase> { LoadSavingsAccountsAndTemplateUseCase(get()) }
-    single<RejectCheckerUseCase> { RejectCheckerUseCase(get()) }
-    single<RemoveDocumentUseCase> { RemoveDocumentUseCase(get()) }
-    single<SaveIndividualCollectionSheetUseCase> { SaveIndividualCollectionSheetUseCase(get()) }
-    single<SubmitCollectionSheetUseCase> { SubmitCollectionSheetUseCase(get()) }
-    single<SubmitProductiveSheetUseCase> { SubmitProductiveSheetUseCase(get()) }
-    single<UpdateClientPinpointUseCase> { UpdateClientPinpointUseCase(get()) }
-    single<UploadClientImageUseCase> { UploadClientImageUseCase(get()) }
-    single<UsernameValidationUseCase> { UsernameValidationUseCase() }
-    single<PasswordValidationUseCase> { PasswordValidationUseCase() }
-    single<LoginUseCase> { LoginUseCase(get()) }
-    single<ValidateServerProtocolUseCase> { ValidateServerProtocolUseCase() }
-    single<ValidateServerApiPathUseCase> { ValidateServerApiPathUseCase() }
-    single<ValidateServerEndPointUseCase> { ValidateServerEndPointUseCase() }
-    single<ValidateServerPortUseCase> { ValidateServerPortUseCase() }
-    single<ValidateServerTenantUseCase> { ValidateServerTenantUseCase() }
+    factoryOf(::ActivateCenterUseCase)
+    factoryOf(::ActivateClientUseCase)
+    factoryOf(::ActivateGroupUseCase)
+    factoryOf(::ActivateSavingsUseCase)
+    factoryOf(::AddClientPinpointLocationUseCase)
+    factoryOf(::AddDataTableEntryUseCase)
+    factoryOf(::ApproveCheckerUseCase)
+    factoryOf(::ApproveSavingsApplicationUseCase)
+    factoryOf(::CreateChargesUseCase)
+    factoryOf(::CreateClientIdentifierUseCase)
+    factoryOf(::CreateDocumentUseCase)
+    factoryOf(::CreateGroupLoansAccountUseCase)
+    factoryOf(::CreateLoanAccountUseCase)
+    factoryOf(::CreateLoanChargesUseCase)
+    factoryOf(::CreateSavingsAccountUseCase)
+    factoryOf(::DeleteCheckerUseCase)
+    factoryOf(::DeleteClientAddressPinpointUseCase)
+    factoryOf(::DeleteDataTableEntryUseCase)
+    factoryOf(::DeleteIdentifierUseCase)
+    factoryOf(::DownloadDocumentUseCase)
+    factoryOf(::FetchCenterDetailsUseCase)
+    factoryOf(::FetchCollectionSheetUseCase)
+    factoryOf(::FetchGroupsAssociatedWithCenterUseCase)
+    factoryOf(::FetchProductiveCollectionSheetUseCase)
+    factoryOf(::GetAllChargesV2UseCase)
+    factoryOf(::GetAllChargesV3UseCase)
+    factoryOf(::GetAllLoanUseCase)
+    factoryOf(::GetCenterDetailsUseCase)
+    factoryOf(::GetCentersInOfficeUseCase)
+    factoryOf(::GetCheckerInboxBadgesUseCase)
+    factoryOf(::GetCheckerTasksUseCase)
+    factoryOf(::GetClientDetailsUseCase)
+    factoryOf(::GetClientIdentifierTemplateUseCase)
+    factoryOf(::GetClientPinpointLocationsUseCase)
+    factoryOf(::GetClientSavingsAccountTemplateByProductUseCase)
+    factoryOf(::GetDataTableInfoUseCase)
+    factoryOf(::GetDocumentsListUseCase)
+    factoryOf(::GetGroupLoansAccountTemplateUseCase)
+    factoryOf(::GetGroupSavingsAccountTemplateByProductUseCase)
+    factoryOf(::GetGroupsByCenterUseCase)
+    factoryOf(::GetGroupsByOfficeUseCase)
+    factoryOf(::GetIndividualCollectionSheetUseCase)
+    factoryOf(::GetListOfLoanChargesUseCase)
+    factoryOf(::GetLoansAccountTemplateUseCase)
+    factoryOf(::GetReportCategoryUseCase)
+    factoryOf(::GetReportFullParameterListUseCase)
+    factoryOf(::GetReportParameterDetailsUseCase)
+    factoryOf(::GetRunReportOfficesUseCase)
+    factoryOf(::GetRunReportProductUseCase)
+    factoryOf(::GetRunReportWithQueryUseCase)
+    factoryOf(::GetStaffInOfficeUseCase)
+    factoryOf(::GetUserPathTrackingUseCase)
+    factoryOf(::GroupsListPagingDataSource)
+    factoryOf(::LoadSavingsAccountsAndTemplateUseCase)
+    factoryOf(::LoginUseCase)
+    factoryOf(::PasswordValidationUseCase)
+    factoryOf(::RejectCheckerUseCase)
+    factoryOf(::RemoveDocumentUseCase)
+    factoryOf(::SaveIndividualCollectionSheetUseCase)
+    factoryOf(::SubmitCollectionSheetUseCase)
+    factoryOf(::SubmitProductiveSheetUseCase)
+    factoryOf(::UpdateClientPinpointUseCase)
+    factoryOf(::UploadClientImageUseCase)
+    factoryOf(::UsernameValidationUseCase)
+    factoryOf(::ValidateServerProtocolUseCase)
+    factoryOf(::ValidateServerApiPathUseCase)
+    factoryOf(::ValidateServerEndPointUseCase)
+    factoryOf(::ValidateServerPortUseCase)
+    factoryOf(::ValidateServerTenantUseCase)
 }

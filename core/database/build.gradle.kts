@@ -38,4 +38,5 @@ dependencies {
     implementation(libs.fineract.client)
 
     androidTestImplementation(projects.core.testing)
+    implementation(libs.koin.android)
 }

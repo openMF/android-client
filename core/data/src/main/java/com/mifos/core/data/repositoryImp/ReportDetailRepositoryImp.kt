@@ -16,8 +16,9 @@ import com.mifos.core.network.datamanager.DataManagerRunReport
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
-class ReportDetailRepositoryImp(private val dataManager: DataManagerRunReport) :
-    ReportDetailRepository {
+class ReportDetailRepositoryImp(
+    private val dataManager: DataManagerRunReport,
+) : ReportDetailRepository {
 
     override suspend fun getReportFullParameterList(
         reportName: String,

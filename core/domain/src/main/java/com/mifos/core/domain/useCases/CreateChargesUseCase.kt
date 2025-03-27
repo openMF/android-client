@@ -16,7 +16,9 @@ import com.mifos.core.model.objects.payloads.ChargesPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class CreateChargesUseCase(private val repository: ChargeDialogRepository) {
+class CreateChargesUseCase(
+    private val repository: ChargeDialogRepository,
+) {
 
     suspend operator fun invoke(
         clientId: Int,

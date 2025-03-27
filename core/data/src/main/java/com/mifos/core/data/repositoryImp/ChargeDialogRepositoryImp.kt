@@ -18,8 +18,9 @@ import com.mifos.core.network.DataManager
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-class ChargeDialogRepositoryImp(private val dataManager: DataManager) :
-    ChargeDialogRepository {
+class ChargeDialogRepositoryImp(
+    private val dataManager: DataManager,
+) : ChargeDialogRepository {
 
     override suspend fun getAllChargesV2(clientId: Int): ChargeTemplate {
         return dataManager.getAllChargesV2(clientId)

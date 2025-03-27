@@ -16,8 +16,9 @@ import com.mifos.room.entities.center.CenterPayloadEntity
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class CreateNewCenterRepositoryImp(private val dataManagerCenter: DataManagerCenter) :
-    CreateNewCenterRepository {
+class CreateNewCenterRepositoryImp(
+    private val dataManagerCenter: DataManagerCenter,
+) : CreateNewCenterRepository {
 
     override suspend fun createCenter(centerPayload: CenterPayloadEntity) {
         dataManagerCenter.createCenter(centerPayload)

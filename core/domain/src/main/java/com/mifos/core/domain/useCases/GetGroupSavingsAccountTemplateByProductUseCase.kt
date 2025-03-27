@@ -22,7 +22,9 @@ import rx.schedulers.Schedulers
 /**
  * Created by Pronay Sarker on 04/08/2024 (12:13 PM)
  */
-class GetGroupSavingsAccountTemplateByProductUseCase(private val repository: SavingsAccountRepository) {
+class GetGroupSavingsAccountTemplateByProductUseCase(
+    private val repository: SavingsAccountRepository,
+) {
 
     suspend operator fun invoke(groupId: Int, productId: Int): Flow<Resource<SavingProductsTemplate?>> = callbackFlow {
         try {

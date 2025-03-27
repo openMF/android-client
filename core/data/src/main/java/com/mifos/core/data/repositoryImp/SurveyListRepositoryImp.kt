@@ -19,8 +19,9 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class SurveyListRepositoryImp(private val dataManagerSurveys: DataManagerSurveys) :
-    SurveyListRepository {
+class SurveyListRepositoryImp(
+    private val dataManagerSurveys: DataManagerSurveys,
+) : SurveyListRepository {
 
     override fun allSurvey(): Flow<List<SurveyEntity>> {
         return dataManagerSurveys.allSurvey

@@ -18,8 +18,9 @@ import rx.Observable
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class DocumentDialogRepositoryImp(private val dataManagerDocument: DataManagerDocument) :
-    DocumentDialogRepository {
+class DocumentDialogRepositoryImp(
+    private val dataManagerDocument: DataManagerDocument,
+) : DocumentDialogRepository {
 
     override fun createDocument(
         entityType: String?,

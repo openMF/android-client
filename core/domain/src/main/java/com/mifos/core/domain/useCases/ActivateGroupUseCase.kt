@@ -20,7 +20,9 @@ import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-class ActivateGroupUseCase(private val activateRepository: ActivateRepository) {
+class ActivateGroupUseCase(
+    private val activateRepository: ActivateRepository,
+) {
 
     suspend operator fun invoke(
         groupId: Int,

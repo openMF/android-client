@@ -16,8 +16,9 @@ import com.mifos.core.network.datamanager.DataManagerRunReport
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
-class ReportCategoryRepositoryImp(private val dataManager: DataManagerRunReport) :
-    ReportCategoryRepository {
+class ReportCategoryRepositoryImp(
+    private val dataManager: DataManagerRunReport,
+) : ReportCategoryRepository {
 
     override suspend fun getReportCategories(
         reportCategory: String,

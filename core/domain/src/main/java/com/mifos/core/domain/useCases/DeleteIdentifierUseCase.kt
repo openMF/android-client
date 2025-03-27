@@ -15,7 +15,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 
-class DeleteIdentifierUseCase(private val repository: ClientIdentifiersRepository) {
+class DeleteIdentifierUseCase(
+    private val repository: ClientIdentifiersRepository,
+) {
 
     suspend operator fun invoke(
         clientId: Int,

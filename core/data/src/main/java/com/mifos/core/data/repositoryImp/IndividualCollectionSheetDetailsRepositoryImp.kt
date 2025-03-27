@@ -17,8 +17,9 @@ import com.mifos.core.network.model.IndividualCollectionSheetPayload
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class IndividualCollectionSheetDetailsRepositoryImp(private val dataManagerCollection: DataManagerCollectionSheet) :
-    IndividualCollectionSheetDetailsRepository {
+class IndividualCollectionSheetDetailsRepositoryImp(
+    private val dataManagerCollection: DataManagerCollectionSheet,
+) : IndividualCollectionSheetDetailsRepository {
 
     override suspend fun saveIndividualCollectionSheet(payload: IndividualCollectionSheetPayload): GenericResponse {
         return dataManagerCollection.saveIndividualCollectionSheet(payload)

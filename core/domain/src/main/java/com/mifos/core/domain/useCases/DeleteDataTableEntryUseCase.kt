@@ -15,7 +15,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 
-class DeleteDataTableEntryUseCase(private val repository: DataTableDataRepository) {
+class DeleteDataTableEntryUseCase(
+    private val repository: DataTableDataRepository,
+) {
 
     suspend operator fun invoke(
         table: String,

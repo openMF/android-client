@@ -15,7 +15,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.ResponseBody
 
-class DownloadDocumentUseCase(private val repository: DocumentListRepository) {
+class DownloadDocumentUseCase(
+    private val repository: DocumentListRepository,
+) {
 
     suspend operator fun invoke(
         entityType: String,

@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.di
 
-import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.data.repository.CenterListRepository
@@ -130,99 +129,88 @@ import com.mifos.core.data.repositoryImp.SyncGroupPayloadsRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncGroupsDialogRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncLoanRepaymentTransactionRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncSavingsAccountTransactionRepositoryImp
-import org.koin.core.qualifier.named
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
-private val ioDispatcher = named(MifosDispatchers.IO.name)
-
 val RepositoryModule = module {
+    single<CoroutineDispatcher> { Dispatchers.IO }
 
-    single<LoginRepository> { LoginRepositoryImp(get()) }
-    single<SearchRepository> { SearchRepositoryImp(get(), get(ioDispatcher)) }
+    singleOf(::LoginRepositoryImp) bind LoginRepository::class
+    singleOf(::SearchRepositoryImp) bind SearchRepository::class
 
     // Client
-    single<ClientDetailsRepository> { ClientDetailsRepositoryImp(get()) }
-    single<ClientListRepository> { ClientListRepositoryImp(get()) }
-    single<ClientChargeRepository> { ClientChargeRepositoryImp(get()) }
-    single<ClientIdentifierDialogRepository> { ClientIdentifierDialogRepositoryImp(get()) }
-    single<ClientIdentifiersRepository> { ClientIdentifiersRepositoryImp(get()) }
-    single<CreateNewClientRepository> { CreateNewClientRepositoryImp(get(), get(), get()) }
-    single<PinPointClientRepository> { PinPointClientRepositoryImp(get()) }
+    singleOf(::ClientDetailsRepositoryImp) bind ClientDetailsRepository::class
+    singleOf(::ClientListRepositoryImp) bind ClientListRepository::class
+    singleOf(::ClientChargeRepositoryImp) bind ClientChargeRepository::class
+    singleOf(::ClientIdentifierDialogRepositoryImp) bind ClientIdentifierDialogRepository::class
+    singleOf(::ClientIdentifiersRepositoryImp) bind ClientIdentifiersRepository::class
+    singleOf(::CreateNewClientRepositoryImp) bind CreateNewClientRepository::class
+    singleOf(::PinPointClientRepositoryImp) bind PinPointClientRepository::class
+
+    // Center
+    singleOf(::CenterDetailsRepositoryImp) bind CenterDetailsRepository::class
+    singleOf(::CenterListRepositoryImp) bind CenterListRepository::class
+    singleOf(::CreateNewCenterRepositoryImp) bind CreateNewCenterRepository::class
+    singleOf(::GroupsListRepositoryImpl) bind GroupsListRepository::class
 
     // Group
-    single<CenterDetailsRepository> { CenterDetailsRepositoryImp(get(), get()) }
-    single<CenterListRepository> { CenterListRepositoryImp(get()) }
-    single<CreateNewCenterRepository> { CreateNewCenterRepositoryImp(get()) }
-    single<GroupsListRepository> { GroupsListRepositoryImpl(get()) }
-
-    // Group
-    single<GroupDetailsRepository> { GroupDetailsRepositoryImp(get()) }
-    single<GroupListRepository> { GroupListRepositoryImp(get()) }
-    single<GroupLoanAccountRepository> { GroupLoanAccountRepositoryImp(get()) }
-    single<CreateNewGroupRepository> { CreateNewGroupRepositoryImp(get(), get()) }
-    single<GenerateCollectionSheetRepository> { GenerateCollectionSheetRepositoryImp(get(), get()) }
+    singleOf(::GroupDetailsRepositoryImp) bind GroupDetailsRepository::class
+    singleOf(::GroupListRepositoryImp) bind GroupListRepository::class
+    singleOf(::GroupLoanAccountRepositoryImp) bind GroupLoanAccountRepository::class
+    singleOf(::CreateNewGroupRepositoryImp) bind CreateNewGroupRepository::class
 
     // Loan
-    single<LoanAccountRepository> { LoanAccountRepositoryImp(get()) }
-    single<LoanAccountApprovalRepository> { LoanAccountApprovalRepositoryImp(get()) }
-    single<LoanAccountDisbursementRepository> { LoanAccountDisbursementRepositoryImp(get()) }
-    single<LoanAccountSummaryRepository> { LoanAccountSummaryRepositoryImp(get()) }
-    single<LoanChargeDialogRepository> { LoanChargeDialogRepositoryImp(get()) }
-    single<LoanChargeRepository> { LoanChargeRepositoryImp(get()) }
-    single<LoanRepaymentRepository> { LoanRepaymentRepositoryImp(get()) }
-    single<LoanRepaymentScheduleRepository> { LoanRepaymentScheduleRepositoryImp(get()) }
-    single<LoanTransactionsRepository> { LoanTransactionsRepositoryImp(get()) }
+    singleOf(::LoanAccountRepositoryImp) bind LoanAccountRepository::class
+    singleOf(::LoanAccountApprovalRepositoryImp) bind LoanAccountApprovalRepository::class
+    singleOf(::LoanAccountDisbursementRepositoryImp) bind LoanAccountDisbursementRepository::class
+    singleOf(::LoanAccountSummaryRepositoryImp) bind LoanAccountSummaryRepository::class
+    singleOf(::LoanChargeDialogRepositoryImp) bind LoanChargeDialogRepository::class
+    singleOf(::LoanChargeRepositoryImp) bind LoanChargeRepository::class
+    singleOf(::LoanRepaymentRepositoryImp) bind LoanRepaymentRepository::class
+    singleOf(::LoanRepaymentScheduleRepositoryImp) bind LoanRepaymentScheduleRepository::class
+    singleOf(::LoanTransactionsRepositoryImp) bind LoanTransactionsRepository::class
 
     // Savings
-    single<SavingsAccountRepository> { SavingsAccountRepositoryImp(get()) }
-    single<SavingsAccountActivateRepository> { SavingsAccountActivateRepositoryImp(get()) }
-    single<SavingsAccountApprovalRepository> { SavingsAccountApprovalRepositoryImp(get()) }
-    single<SavingsAccountSummaryRepository> { SavingsAccountSummaryRepositoryImp(get()) }
-    single<SavingsAccountTransactionRepository> { SavingsAccountTransactionRepositoryImp(get()) }
+    singleOf(::SavingsAccountRepositoryImp) bind SavingsAccountRepository::class
+    singleOf(::SavingsAccountActivateRepositoryImp) bind SavingsAccountActivateRepository::class
+    singleOf(::SavingsAccountApprovalRepositoryImp) bind SavingsAccountApprovalRepository::class
+    singleOf(::SavingsAccountSummaryRepositoryImp) bind SavingsAccountSummaryRepository::class
+    singleOf(::SavingsAccountTransactionRepositoryImp) bind SavingsAccountTransactionRepository::class
 
     // Sync
-    single<SyncCenterPayloadsRepository> { SyncCenterPayloadsRepositoryImp(get()) }
-    single<SyncCentersDialogRepository> {
-        SyncCentersDialogRepositoryImp(get(), get(), get(), get(), get())
-    }
-    single<SyncClientPayloadsRepository> { SyncClientPayloadsRepositoryImp(get()) }
-    single<SyncClientsDialogRepository> { SyncClientsDialogRepositoryImp(get(), get(), get()) }
-    single<SyncGroupPayloadsRepository> { SyncGroupPayloadsRepositoryImp(get()) }
-    single<SyncGroupsDialogRepository> { SyncGroupsDialogRepositoryImp(get(), get(), get(), get()) }
-    single<SyncLoanRepaymentTransactionRepository> { SyncLoanRepaymentTransactionRepositoryImp(get()) }
-    single<SyncSavingsAccountTransactionRepository> {
-        SyncSavingsAccountTransactionRepositoryImp(
-            get(),
-            get(),
-        )
-    }
+    singleOf(::SyncCenterPayloadsRepositoryImp) bind SyncCenterPayloadsRepository::class
+    singleOf(::SyncCentersDialogRepositoryImp) bind SyncCentersDialogRepository::class
+    singleOf(::SyncClientPayloadsRepositoryImp) bind SyncClientPayloadsRepository::class
+    singleOf(::SyncClientsDialogRepositoryImp) bind SyncClientsDialogRepository::class
+    singleOf(::SyncGroupPayloadsRepositoryImp) bind SyncGroupPayloadsRepository::class
+    singleOf(::SyncGroupsDialogRepositoryImp) bind SyncGroupsDialogRepository::class
+    singleOf(::SyncLoanRepaymentTransactionRepositoryImp) bind SyncLoanRepaymentTransactionRepository::class
+    singleOf(::SyncSavingsAccountTransactionRepositoryImp) bind SyncSavingsAccountTransactionRepository::class
 
     // Others
-    single<ActivateRepository> { ActivateRepositoryImp(get(), get(), get()) }
-    single<ChargeDialogRepository> { ChargeDialogRepositoryImp(get()) }
-    single<CheckerInboxRepository> { CheckerInboxRepositoryImp(get()) }
-    single<CheckerInboxTasksRepository> { CheckerInboxTasksRepositoryImp(get()) }
-    single<DataTableDataRepository> { DataTableDataRepositoryImp(get()) }
-    single<DataTableListRepository> { DataTableListRepositoryImp(get(), get(), get()) }
-    single<DataTableRepository> { DataTableRepositoryImp(get()) }
-    single<DataTableRowDialogRepository> { DataTableRowDialogRepositoryImp(get()) }
-    single<DocumentDialogRepository> { DocumentDialogRepositoryImp(get()) }
-    single<DocumentListRepository> { DocumentListRepositoryImp(get()) }
-    single<IndividualCollectionSheetDetailsRepository> {
-        IndividualCollectionSheetDetailsRepositoryImp(get())
-    }
-    single<NewIndividualCollectionSheetRepository> {
-        NewIndividualCollectionSheetRepositoryImp(get(), get())
-    }
-    single<NoteRepository> { NoteRepositoryImp(get()) }
-    single<OfflineDashboardRepository> {
-        OfflineDashboardRepositoryImp(get(), get(), get(), get(), get())
-    }
-    single<PathTrackingRepository> { PathTrackingRepositoryImp(get()) }
-    single<ReportCategoryRepository> { ReportCategoryRepositoryImp(get()) }
-    single<ReportDetailRepository> { ReportDetailRepositoryImp(get()) }
-    single<SearchRepository> { SearchRepositoryImp(get(), get(ioDispatcher)) }
-    single<SignatureRepository> { SignatureRepositoryImp(get()) }
-    single<SurveyListRepository> { SurveyListRepositoryImp(get()) }
-    single<SurveySubmitRepository> { SurveySubmitRepositoryImp(get()) }
+    singleOf(::ActivateRepositoryImp) bind ActivateRepository::class
+    singleOf(::ChargeDialogRepositoryImp) bind ChargeDialogRepository::class
+    singleOf(::CheckerInboxRepositoryImp) bind CheckerInboxRepository::class
+    singleOf(::CheckerInboxTasksRepositoryImp) bind CheckerInboxTasksRepository::class
+    singleOf(::DataTableDataRepositoryImp) bind DataTableDataRepository::class
+    singleOf(::DataTableListRepositoryImp) bind DataTableListRepository::class
+    singleOf(::DataTableRepositoryImp) bind DataTableRepository::class
+    singleOf(::DataTableRowDialogRepositoryImp) bind DataTableRowDialogRepository::class
+    singleOf(::DocumentDialogRepositoryImp) bind DocumentDialogRepository::class
+    singleOf(::DocumentListRepositoryImp) bind DocumentListRepository::class
+    singleOf(::IndividualCollectionSheetDetailsRepositoryImp) bind IndividualCollectionSheetDetailsRepository::class
+    singleOf(::NewIndividualCollectionSheetRepositoryImp) bind NewIndividualCollectionSheetRepository::class
+    singleOf(::GenerateCollectionSheetRepositoryImp) bind GenerateCollectionSheetRepository::class
+    singleOf(::NoteRepositoryImp) bind NoteRepository::class
+    singleOf(::OfflineDashboardRepositoryImp) bind OfflineDashboardRepository::class
+    singleOf(::PathTrackingRepositoryImp) bind PathTrackingRepository::class
+    singleOf(::ReportCategoryRepositoryImp) bind ReportCategoryRepository::class
+    singleOf(::ReportDetailRepositoryImp) bind ReportDetailRepository::class
+    singleOf(::SearchRepositoryImp) bind SearchRepository::class
+    singleOf(::SignatureRepositoryImp) bind SignatureRepository::class
+    singleOf(::SurveyListRepositoryImp) bind SurveyListRepository::class
+    singleOf(::SurveySubmitRepositoryImp) bind SurveySubmitRepository::class
 }

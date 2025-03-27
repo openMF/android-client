@@ -15,7 +15,9 @@ import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class AddClientPinpointLocationUseCase(private val pinPointClientRepository: PinPointClientRepository) {
+class AddClientPinpointLocationUseCase(
+    private val pinPointClientRepository: PinPointClientRepository,
+) {
 
     suspend operator fun invoke(
         clientId: Int,

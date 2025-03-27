@@ -16,7 +16,9 @@ import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class CreateClientIdentifierUseCase(private val repository: ClientIdentifierDialogRepository) {
+class CreateClientIdentifierUseCase(
+    private val repository: ClientIdentifierDialogRepository,
+) {
 
     suspend operator fun invoke(
         clientId: Int,

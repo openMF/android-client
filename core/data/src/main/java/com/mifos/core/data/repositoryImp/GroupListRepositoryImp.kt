@@ -18,8 +18,9 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class GroupListRepositoryImp(private val dataManager: DataManager) :
-    GroupListRepository {
+class GroupListRepositoryImp(
+    private val dataManager: DataManager,
+) : GroupListRepository {
 
     override fun getGroups(groupId: Int): Flow<GroupWithAssociations> {
         return dataManager.getGroups(groupId)

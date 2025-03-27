@@ -17,8 +17,9 @@ import rx.Observable
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
-class LoanRepaymentScheduleRepositoryImp(private val dataManager: DataManager) :
-    LoanRepaymentScheduleRepository {
+class LoanRepaymentScheduleRepositoryImp(
+    private val dataManager: DataManager,
+) : LoanRepaymentScheduleRepository {
 
     override fun getLoanRepaySchedule(loanId: Int): Observable<LoanWithAssociationsEntity> {
         return dataManager.getLoanRepaySchedule(loanId)

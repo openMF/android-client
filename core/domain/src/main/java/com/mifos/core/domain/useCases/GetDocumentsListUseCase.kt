@@ -15,7 +15,9 @@ import com.mifos.core.model.objects.noncoreobjects.Document
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetDocumentsListUseCase(private val repository: DocumentListRepository) {
+class GetDocumentsListUseCase(
+    private val repository: DocumentListRepository,
+) {
 
     suspend operator fun invoke(
         entityType: String,

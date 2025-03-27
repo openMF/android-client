@@ -17,8 +17,9 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class SyncCenterPayloadsRepositoryImp(private val dataManagerCenter: DataManagerCenter) :
-    SyncCenterPayloadsRepository {
+class SyncCenterPayloadsRepositoryImp(
+    private val dataManagerCenter: DataManagerCenter,
+) : SyncCenterPayloadsRepository {
 
     override fun allDatabaseCenterPayload(): Flow<List<CenterPayloadEntity>> {
         return dataManagerCenter.allDatabaseCenterPayload

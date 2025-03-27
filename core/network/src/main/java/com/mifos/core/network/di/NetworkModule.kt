@@ -20,7 +20,7 @@ import org.koin.dsl.module
 import org.mifos.core.apimanager.BaseApiManager
 
 val NetworkModule = module {
-    single { PrefManager(get()) }
+    single { PrefManager(androidContext()) }
 
     single { com.mifos.core.network.BaseApiManager(get()) }
 

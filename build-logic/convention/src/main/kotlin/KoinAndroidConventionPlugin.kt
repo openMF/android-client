@@ -16,7 +16,7 @@ class KoinAndroidConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("koin-android").get())
                 add("implementation", libs.findLibrary("koin.androidx.compose").get())
 
-                add("implementation", libs.findLibrary("koin.android").get())
+                add("implementation", libs.findLibrary("koin.core").get())
                 add("implementation", libs.findLibrary("koin.androidx.navigation").get())
                 add("implementation", libs.findLibrary("koin.androidx.compose").get())
                 add("implementation", libs.findLibrary("koin.core.viewmodel").get())

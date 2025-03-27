@@ -17,8 +17,9 @@ import rx.Observable
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
-class LoanTransactionsRepositoryImp(private val dataManager: DataManager) :
-    LoanTransactionsRepository {
+class LoanTransactionsRepositoryImp(
+    private val dataManager: DataManager,
+) : LoanTransactionsRepository {
 
     override fun getLoanTransactions(loan: Int): Observable<LoanWithAssociationsEntity> {
         return dataManager.getLoanTransactions(loan)

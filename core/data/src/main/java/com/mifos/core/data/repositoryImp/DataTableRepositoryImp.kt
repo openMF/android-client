@@ -16,8 +16,9 @@ import com.mifos.room.entities.noncore.DataTableEntity
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class DataTableRepositoryImp(private val dataManagerDataTable: DataManagerDataTable) :
-    DataTableRepository {
+class DataTableRepositoryImp(
+    private val dataManagerDataTable: DataManagerDataTable,
+) : DataTableRepository {
 
     override suspend fun getDataTable(tableName: String?): List<DataTableEntity> {
         return dataManagerDataTable.getDataTable(tableName)

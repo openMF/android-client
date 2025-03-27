@@ -18,8 +18,9 @@ import rx.Observable
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class SignatureRepositoryImp(private val dataManagerDocument: DataManagerDocument) :
-    SignatureRepository {
+class SignatureRepositoryImp(
+    private val dataManagerDocument: DataManagerDocument,
+) : SignatureRepository {
 
     override fun createDocument(
         entityType: String?,

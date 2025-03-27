@@ -15,7 +15,9 @@ import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetCheckerTasksUseCase(private val repository: CheckerInboxRepository) {
+class GetCheckerTasksUseCase(
+    private val repository: CheckerInboxRepository,
+) {
 
     suspend operator fun invoke(
         actionName: String? = null,

@@ -20,7 +20,9 @@ import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-class CreateGroupLoansAccountUseCase(private val repository: GroupLoanAccountRepository) {
+class CreateGroupLoansAccountUseCase(
+    private val repository: GroupLoanAccountRepository,
+) {
 
     suspend operator fun invoke(loansPayload: GroupLoanPayload): Flow<Resource<Loan>> =
         callbackFlow {

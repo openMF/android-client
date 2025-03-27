@@ -15,7 +15,9 @@ import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetRunReportWithQueryUseCase(private val repository: ReportDetailRepository) {
+class GetRunReportWithQueryUseCase(
+    private val repository: ReportDetailRepository,
+) {
 
     suspend operator fun invoke(
         reportName: String,

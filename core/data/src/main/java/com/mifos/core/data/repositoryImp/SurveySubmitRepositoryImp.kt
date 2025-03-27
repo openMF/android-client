@@ -17,8 +17,9 @@ import rx.Observable
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-class SurveySubmitRepositoryImp(private val dataManagerSurveys: DataManagerSurveys) :
-    SurveySubmitRepository {
+class SurveySubmitRepositoryImp(
+    private val dataManagerSurveys: DataManagerSurveys,
+) : SurveySubmitRepository {
 
     override fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Observable<Scorecard> {
         return dataManagerSurveys.submitScore(surveyId, scorecardPayload)

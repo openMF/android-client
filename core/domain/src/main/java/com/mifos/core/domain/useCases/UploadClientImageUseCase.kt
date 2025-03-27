@@ -23,7 +23,9 @@ import java.io.File
  * Created by Aditya Gupta on 18/03/24.
  */
 
-class UploadClientImageUseCase(private val repository: ClientDetailsRepository) {
+class UploadClientImageUseCase(
+    private val repository: ClientDetailsRepository,
+) {
 
     operator fun invoke(id: Int, pngFile: File): Flow<Resource<ResponseBody>> = flow {
         try {

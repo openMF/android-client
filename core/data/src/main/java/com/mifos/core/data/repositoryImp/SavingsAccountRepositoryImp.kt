@@ -20,8 +20,9 @@ import rx.Observable
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class SavingsAccountRepositoryImp(private val dataManagerSavings: DataManagerSavings) :
-    SavingsAccountRepository {
+class SavingsAccountRepositoryImp(
+    private val dataManagerSavings: DataManagerSavings,
+) : SavingsAccountRepository {
     override fun savingsAccounts(): Observable<List<ProductSavings>> {
         return dataManagerSavings.savingsAccounts
     }

@@ -17,8 +17,9 @@ import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatab
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class DataTableDataRepositoryImp(private val dataManagerDataTable: DataManagerDataTable) :
-    DataTableDataRepository {
+class DataTableDataRepositoryImp(
+    private val dataManagerDataTable: DataManagerDataTable,
+) : DataTableDataRepository {
 
     override suspend fun getDataTableInfo(table: String, entityId: Int): JsonArray {
         return dataManagerDataTable.getDataTableInfo(table, entityId)

@@ -15,7 +15,9 @@ import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class AddDataTableEntryUseCase(private val repository: DataTableRowDialogRepository) {
+class AddDataTableEntryUseCase(
+    private val repository: DataTableRowDialogRepository,
+) {
 
     suspend operator fun invoke(
         table: String,

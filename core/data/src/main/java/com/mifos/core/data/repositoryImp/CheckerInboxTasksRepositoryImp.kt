@@ -19,8 +19,9 @@ import kotlinx.coroutines.flow.flow
  * Created by Aditya Gupta on 21/03/24.
  */
 
-class CheckerInboxTasksRepositoryImp(private val dataManagerCheckerInbox: DataManagerCheckerInbox) :
-    CheckerInboxTasksRepository {
+class CheckerInboxTasksRepositoryImp(
+    private val dataManagerCheckerInbox: DataManagerCheckerInbox,
+) : CheckerInboxTasksRepository {
 
     override suspend fun getRescheduleLoansTaskList(): Flow<List<com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask>> {
         return flow { emit(dataManagerCheckerInbox.getRechdeduleLoansTaskList()) }

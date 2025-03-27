@@ -21,7 +21,6 @@ import kotlin.coroutines.CoroutineContext
 
 val DispatchersModule = module {
     includes(ioDispatcherModule)
-    single<CoroutineDispatcher>(named(MifosDispatchers.IO.name)) { Dispatchers.IO }
     single<CoroutineDispatcher>(named(MifosDispatchers.Default.name)) { Dispatchers.Default }
     single<CoroutineContext>(named(MifosDispatchers.IO.name)) { Dispatchers.IO }
     single<CoroutineScope>(named("ApplicationScope")) {

@@ -19,7 +19,9 @@ import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-class GetLoansAccountTemplateUseCase(private val loanAccountRepository: LoanAccountRepository) {
+class GetLoansAccountTemplateUseCase(
+    private val loanAccountRepository: LoanAccountRepository,
+) {
 
     suspend operator fun invoke(clientId: Int, productId: Int): Flow<Resource<LoanTemplate>> =
         callbackFlow {

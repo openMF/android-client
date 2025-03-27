@@ -22,7 +22,9 @@ import kotlinx.coroutines.withContext
  * Created by Aditya Gupta on 18/03/24.
  */
 
-class GetClientDetailsUseCase(private val repository: ClientDetailsRepository) {
+class GetClientDetailsUseCase(
+    private val repository: ClientDetailsRepository,
+) {
 
     operator fun invoke(clientId: Int): Flow<Resource<ClientAndClientAccounts>> = flow {
         try {

@@ -16,8 +16,9 @@ import com.mifos.core.network.datamanager.DataManagerDataTable
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class PathTrackingRepositoryImp(private val dataManagerDataTable: DataManagerDataTable) :
-    PathTrackingRepository {
+class PathTrackingRepositoryImp(
+    private val dataManagerDataTable: DataManagerDataTable,
+) : PathTrackingRepository {
 
     override suspend fun getUserPathTracking(userId: Int): List<UserLocation> {
         return dataManagerDataTable.getUserPathTracking(userId)

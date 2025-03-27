@@ -18,8 +18,9 @@ import rx.Observable
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-class SavingsAccountApprovalRepositoryImp(private val dataManagerSavings: DataManagerSavings) :
-    SavingsAccountApprovalRepository {
+class SavingsAccountApprovalRepositoryImp(
+    private val dataManagerSavings: DataManagerSavings,
+) : SavingsAccountApprovalRepository {
 
     override fun approveSavingsApplication(
         savingsAccountId: Int,

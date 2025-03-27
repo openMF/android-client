@@ -16,8 +16,9 @@ import com.mifos.core.network.datamanager.DataManagerDataTable
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-class DataTableRowDialogRepositoryImp(private val dataManagerDataTable: DataManagerDataTable) :
-    DataTableRowDialogRepository {
+class DataTableRowDialogRepositoryImp(
+    private val dataManagerDataTable: DataManagerDataTable,
+) : DataTableRowDialogRepository {
 
     override suspend fun addDataTableEntry(
         table: String,

@@ -16,7 +16,9 @@ import com.mifos.core.model.objects.payloads.ChargesPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class CreateLoanChargesUseCase(private val repository: LoanChargeDialogRepository) {
+class CreateLoanChargesUseCase(
+    private val repository: LoanChargeDialogRepository,
+) {
 
     suspend operator fun invoke(
         loanId: Int,

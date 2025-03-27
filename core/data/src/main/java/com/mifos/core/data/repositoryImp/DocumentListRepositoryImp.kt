@@ -18,8 +18,9 @@ import okhttp3.ResponseBody
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class DocumentListRepositoryImp(private val dataManagerDocument: DataManagerDocument) :
-    DocumentListRepository {
+class DocumentListRepositoryImp(
+    private val dataManagerDocument: DataManagerDocument,
+) : DocumentListRepository {
 
     override suspend fun getDocumentsList(entityType: String, entityId: Int): List<Document> {
         return dataManagerDocument.getDocumentsList(entityType, entityId)

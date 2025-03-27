@@ -16,7 +16,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.openapitools.client.models.PostClientsClientIdResponse
 
-class ActivateClientUseCase(private val activateRepository: ActivateRepository) {
+class ActivateClientUseCase(
+    private val activateRepository: ActivateRepository,
+) {
 
     suspend operator fun invoke(
         clientId: Int,

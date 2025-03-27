@@ -22,7 +22,9 @@ import rx.schedulers.Schedulers
 /**
  * Created by Pronay Sarker on 04/08/2024 (12:33 PM)
  */
-class ActivateSavingsUseCase(private val repository: SavingsAccountActivateRepository) {
+class ActivateSavingsUseCase(
+    private val repository: SavingsAccountActivateRepository,
+) {
 
     suspend operator fun invoke(savingsAccountId: Int, request: HashMap<String, String>): Flow<Resource<GenericResponse>> =
         callbackFlow {

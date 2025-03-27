@@ -16,8 +16,9 @@ import com.mifos.core.network.datamanager.DataManagerClient
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class PinPointClientRepositoryImp(private val dataManagerClient: DataManagerClient) :
-    PinPointClientRepository {
+class PinPointClientRepositoryImp(
+    private val dataManagerClient: DataManagerClient,
+) : PinPointClientRepository {
 
     override suspend fun getClientPinpointLocations(clientId: Int): List<com.mifos.core.model.objects.clients.ClientAddressResponse> {
         return dataManagerClient.getClientPinpointLocations(clientId)

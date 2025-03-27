@@ -15,7 +15,9 @@ import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class GetListOfLoanChargesUseCase(private val repository: LoanChargeRepository) {
+class GetListOfLoanChargesUseCase(
+    private val repository: LoanChargeRepository,
+) {
 
     suspend operator fun invoke(loanId: Int): Flow<Resource<List<ChargesEntity>>> = flow {
         try {

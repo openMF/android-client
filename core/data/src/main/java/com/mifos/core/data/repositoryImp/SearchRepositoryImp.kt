@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.network.Dispatcher
-import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.core.network.datamanager.DataManagerSearch
@@ -25,7 +23,6 @@ import kotlinx.coroutines.flow.flowOn
  */
 class SearchRepositoryImp(
     private val dataManagerSearch: DataManagerSearch,
-    @Dispatcher(MifosDispatchers.IO)
     private val ioDispatcher: CoroutineDispatcher,
 ) : SearchRepository {
     override suspend fun searchResources(

@@ -15,7 +15,9 @@ import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class RejectCheckerUseCase(private val repository: CheckerInboxRepository) {
+class RejectCheckerUseCase(
+    private val repository: CheckerInboxRepository,
+) {
 
     operator fun invoke(auditId: Int): Flow<Resource<GenericResponse>> = flow {
         try {

@@ -17,8 +17,9 @@ import rx.Observable
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class LoanAccountApprovalRepositoryImp(private val dataManager: DataManager) :
-    LoanAccountApprovalRepository {
+class LoanAccountApprovalRepositoryImp(
+    private val dataManager: DataManager,
+) : LoanAccountApprovalRepository {
 
     override fun approveLoan(
         loanId: Int,

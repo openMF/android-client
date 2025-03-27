@@ -16,8 +16,9 @@ import com.mifos.room.entities.client.ChargesEntity
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class LoanChargeRepositoryImp(private val dataManager: DataManager) :
-    LoanChargeRepository {
+class LoanChargeRepositoryImp(
+    private val dataManager: DataManager,
+) : LoanChargeRepository {
 
     override suspend fun getListOfLoanCharges(loanId: Int): List<ChargesEntity> {
         return dataManager.getListOfLoanCharges(loanId)

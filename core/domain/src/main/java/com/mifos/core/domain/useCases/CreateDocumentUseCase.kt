@@ -20,7 +20,9 @@ import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
-class CreateDocumentUseCase(private val repository: SignatureRepository) {
+class CreateDocumentUseCase(
+    private val repository: SignatureRepository,
+) {
 
     suspend operator fun invoke(
         entityType: String?,

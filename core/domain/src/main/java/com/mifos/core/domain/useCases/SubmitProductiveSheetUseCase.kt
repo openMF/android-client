@@ -16,7 +16,9 @@ import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class SubmitProductiveSheetUseCase(private val repository: GenerateCollectionSheetRepository) {
+class SubmitProductiveSheetUseCase(
+    private val repository: GenerateCollectionSheetRepository,
+) {
 
     suspend operator fun invoke(
         centerId: Int,

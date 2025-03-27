@@ -23,8 +23,9 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class CenterListRepositoryImp(private val dataManagerCenter: DataManagerCenter) :
-    CenterListRepository {
+class CenterListRepositoryImp(
+    private val dataManagerCenter: DataManagerCenter,
+) : CenterListRepository {
 
     override fun getAllCenters(): Flow<PagingData<CenterEntity>> {
         return Pager(

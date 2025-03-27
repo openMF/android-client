@@ -63,4 +63,5 @@ dependencies {
     implementation(libs.stetho.okhttp3)
 
     implementation(libs.coil.kt2)
+    implementation(libs.koin.android)
 }

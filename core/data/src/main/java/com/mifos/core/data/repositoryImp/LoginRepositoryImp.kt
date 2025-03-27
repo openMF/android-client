@@ -17,8 +17,9 @@ import org.openapitools.client.models.PostAuthenticationResponse
  * Created by Aditya Gupta on 06/08/23.
  */
 
-class LoginRepositoryImp(private val dataManagerAuth: DataManagerAuth) :
-    LoginRepository {
+class LoginRepositoryImp(
+    private val dataManagerAuth: DataManagerAuth,
+) : LoginRepository {
 
     override suspend fun login(username: String, password: String): PostAuthenticationResponse {
         return dataManagerAuth.login(username, password)

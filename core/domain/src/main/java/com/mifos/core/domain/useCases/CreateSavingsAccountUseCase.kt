@@ -24,7 +24,9 @@ import rx.schedulers.Schedulers
  * Created by Pronay Sarker on 04/08/2024 (12:19 PM)
  */
 
-class CreateSavingsAccountUseCase(private val repository: SavingsAccountRepository) {
+class CreateSavingsAccountUseCase(
+    private val repository: SavingsAccountRepository,
+) {
 
     suspend operator fun invoke(savingsPayload: SavingsPayload?): Flow<Resource<Savings?>> = callbackFlow {
         try {

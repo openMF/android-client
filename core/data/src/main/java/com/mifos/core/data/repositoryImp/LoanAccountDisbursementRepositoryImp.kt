@@ -19,8 +19,9 @@ import rx.Observable
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class LoanAccountDisbursementRepositoryImp(private val dataManagerLoan: DataManagerLoan) :
-    LoanAccountDisbursementRepository {
+class LoanAccountDisbursementRepositoryImp(
+    private val dataManagerLoan: DataManagerLoan,
+) : LoanAccountDisbursementRepository {
 
     override fun getLoanTransactionTemplate(
         loanId: Int,
