@@ -45,7 +45,6 @@ object KoinModules {
     private val commonModules = module { includes(DispatchersModule) }
     private val domainModule = module { includes(UseCaseModule) }
     private val dataModules = module { includes(RepositoryModule) }
-//    private val passcodeModules = module { includes(Passco ) }
 
     private val databaseModules = module {
         includes(
@@ -101,7 +100,6 @@ object KoinModules {
         databaseModules,
         featureModules,
         testingModules,
-//        libraryModule,
         networkModules,
     )
 }
