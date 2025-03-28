@@ -26,7 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.model.objects.SearchedEntity
+import com.mifos.core.objects.SearchedEntity
+import com.mifos.core.ui.R
 import com.mifos.core.ui.components.FabButton
 import com.mifos.core.ui.components.FabButtonState
 import com.mifos.core.ui.components.FabType
@@ -76,15 +77,15 @@ internal fun SearchScreenContent(
                 fabButtons = listOf(
                     FabButton(
                         fabType = FabType.CLIENT,
-                        iconRes = com.mifos.core.ui.R.drawable.core_ui_ic_person_black_24dp,
+                        iconRes = R.drawable.core_ui_ic_person_black_24dp,
                     ),
                     FabButton(
                         fabType = FabType.CENTER,
-                        iconRes = com.mifos.core.ui.R.drawable.core_ui_ic_centers_24dp,
+                        iconRes = R.drawable.core_ui_ic_centers_24dp,
                     ),
                     FabButton(
                         fabType = FabType.GROUP,
-                        iconRes = com.mifos.core.ui.R.drawable.core_ui_ic_group_black_24dp,
+                        iconRes = R.drawable.core_ui_ic_group_black_24dp,
                     ),
                 ),
                 fabButtonState = fabButtonState,
