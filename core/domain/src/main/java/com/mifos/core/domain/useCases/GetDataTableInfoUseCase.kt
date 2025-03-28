@@ -14,9 +14,10 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.DataTableDataRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class GetDataTableInfoUseCase @Inject constructor(private val repository: DataTableDataRepository) {
+class GetDataTableInfoUseCase(
+    private val repository: DataTableDataRepository,
+) {
 
     suspend operator fun invoke(table: String, entityId: Int): Flow<Resource<JsonArray>> = flow {
         try {

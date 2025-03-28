@@ -42,7 +42,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageResult
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -52,13 +51,14 @@ import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Pronay Sarker on 24/08/2024 (4:20 PM)
  */
 @Composable
 internal fun PaymentDetailsScreenRoute(
-    viewModel: PaymentDetailsViewModel = hiltViewModel(),
+    viewModel: PaymentDetailsViewModel = koinViewModel(),
 ) {
     PaymentsDetailsScreen(
         clientId = viewModel.clientId,

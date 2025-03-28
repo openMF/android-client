@@ -21,12 +21,11 @@ import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
 import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.group.GroupEntity
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
-class GenerateCollectionSheetRepositoryImp @Inject constructor(
+class GenerateCollectionSheetRepositoryImp(
     private val dataManager: DataManager,
     private val collectionDataManager: DataManagerCollectionSheet,
 ) : GenerateCollectionSheetRepository {

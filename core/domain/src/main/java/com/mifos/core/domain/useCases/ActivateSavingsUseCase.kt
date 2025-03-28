@@ -18,12 +18,13 @@ import kotlinx.coroutines.flow.callbackFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import javax.inject.Inject
 
 /**
  * Created by Pronay Sarker on 04/08/2024 (12:33 PM)
  */
-class ActivateSavingsUseCase @Inject constructor(private val repository: SavingsAccountActivateRepository) {
+class ActivateSavingsUseCase(
+    private val repository: SavingsAccountActivateRepository,
+) {
 
     suspend operator fun invoke(savingsAccountId: Int, request: HashMap<String, String>): Flow<Resource<GenericResponse>> =
         callbackFlow {

@@ -15,9 +15,8 @@ import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class SyncLoanRepaymentTransactionRepositoryImp @Inject constructor(
+class SyncLoanRepaymentTransactionRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
 ) : SyncLoanRepaymentTransactionRepository {
 

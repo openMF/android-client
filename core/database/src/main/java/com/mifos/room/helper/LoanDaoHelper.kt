@@ -21,10 +21,9 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
 // TODO update docs
-class LoanDaoHelper @Inject constructor(
+class LoanDaoHelper(
     private val loanDao: LoanDao,
 ) {
     /**

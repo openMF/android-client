@@ -18,7 +18,6 @@ import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.util.Log
 import android.webkit.MimeTypeMap
 import com.mifos.core.common.utils.AndroidVersionUtil.isApiVersionGreaterOrEqual
 import java.io.File
@@ -200,7 +199,7 @@ object FileUtils {
             out.close()
             inputStream.close()
         } catch (e: Exception) {
-            Log.d(LOG_TAG, e.localizedMessage)
+//            Log.d(LOG_TAG, e.localizedMessage)
         }
     }
 }

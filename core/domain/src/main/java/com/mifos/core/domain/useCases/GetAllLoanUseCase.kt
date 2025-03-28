@@ -17,9 +17,10 @@ import kotlinx.coroutines.flow.callbackFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import javax.inject.Inject
 
-class GetAllLoanUseCase @Inject constructor(private val loanAccountRepository: LoanAccountRepository) {
+class GetAllLoanUseCase(
+    private val loanAccountRepository: LoanAccountRepository,
+) {
 
     suspend operator fun invoke(): Flow<Resource<List<com.mifos.core.model.objects.organisations.LoanProducts>>> = callbackFlow {
         try {

@@ -14,9 +14,10 @@ import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class GetRunReportProductUseCase @Inject constructor(private val repository: ReportDetailRepository) {
+class GetRunReportProductUseCase(
+    private val repository: ReportDetailRepository,
+) {
 
     suspend operator fun invoke(
         parameterName: String,

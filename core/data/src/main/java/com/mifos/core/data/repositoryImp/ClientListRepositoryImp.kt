@@ -18,12 +18,11 @@ import com.mifos.core.data.repository.ClientListRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class ClientListRepositoryImp @Inject constructor(
+class ClientListRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : ClientListRepository {
 

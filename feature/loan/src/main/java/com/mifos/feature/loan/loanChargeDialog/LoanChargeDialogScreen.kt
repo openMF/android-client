@@ -54,7 +54,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -65,6 +64,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.client.ChargesEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -73,7 +73,7 @@ internal fun LoanChargeDialogScreen(
     loanId: Int,
     onSuccess: () -> Unit,
     onDismiss: () -> Unit,
-    viewModel: LoanChargeDialogViewModel = hiltViewModel(),
+    viewModel: LoanChargeDialogViewModel = koinViewModel(),
 ) {
     val state by viewModel.loanChargeDialogUiState.collectAsStateWithLifecycle()
 

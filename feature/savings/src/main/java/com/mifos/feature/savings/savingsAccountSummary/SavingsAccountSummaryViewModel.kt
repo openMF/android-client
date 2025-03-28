@@ -18,18 +18,15 @@ import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.feature.savings.R
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import com.mifos.room.entities.accounts.savings.SavingsSummaryData
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-@HiltViewModel
-class SavingsAccountSummaryViewModel @Inject constructor(
+class SavingsAccountSummaryViewModel(
 //    private val getSavingsAccountUseCase: GetSavingsAccountUseCase,
     savedStateHandle: SavedStateHandle,
     private val repository: SavingsAccountSummaryRepository,

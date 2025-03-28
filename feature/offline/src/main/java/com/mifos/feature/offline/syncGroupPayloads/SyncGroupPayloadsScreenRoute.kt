@@ -41,7 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -50,10 +49,11 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.group.GroupPayloadEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SyncGroupPayloadsScreenRoute(
-    viewModel: SyncGroupPayloadsViewModel = hiltViewModel(),
+    viewModel: SyncGroupPayloadsViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.syncGroupPayloadsUiState.collectAsStateWithLifecycle()

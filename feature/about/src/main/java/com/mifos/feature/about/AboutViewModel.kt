@@ -13,14 +13,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class AboutViewModel @Inject constructor() : ViewModel() {
+class AboutViewModel : ViewModel() {
 
     private val _aboutUiState = MutableStateFlow<AboutUiState>(AboutUiState.Loading)
     val aboutUiState = _aboutUiState.asStateFlow()

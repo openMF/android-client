@@ -63,7 +63,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
@@ -75,10 +74,11 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.dataTable.dataTableRowDialog.DataTableRowDialogScreen
 import com.mifos.feature.data_table.R
 import com.mifos.room.entities.noncore.DataTableEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DataTableDataScreen(
-    viewModel: DataTableDataViewModel = hiltViewModel(),
+    viewModel: DataTableDataViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val dataTable = viewModel.arg.dataTable

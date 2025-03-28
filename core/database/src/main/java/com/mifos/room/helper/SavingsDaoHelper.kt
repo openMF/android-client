@@ -24,13 +24,12 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 /**
  * Created by Pronay Sarker on 17/02/2025 (4:57 PM)
  */
 
-class SavingsDaoHelper @Inject constructor(
+class SavingsDaoHelper(
     private val savingsDao: SavingsDao,
     @Dispatcher(MifosDispatchers.IO)
     private val ioDispatcher: CoroutineDispatcher,

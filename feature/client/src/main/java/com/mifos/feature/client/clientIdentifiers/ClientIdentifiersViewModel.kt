@@ -17,16 +17,13 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.domain.useCases.DeleteIdentifierUseCase
 import com.mifos.feature.client.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ClientIdentifiersViewModel @Inject constructor(
+class ClientIdentifiersViewModel(
 //    private val getClientIdentifiersUseCase: GetClientIdentifiersUseCase,
     private val clientIdentifiersRepository: ClientIdentifiersRepository,
     private val deleteIdentifierUseCase: DeleteIdentifierUseCase,

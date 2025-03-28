@@ -14,9 +14,8 @@ import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.room.entities.group.GroupEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class GetGroupsByOfficeUseCase @Inject constructor(
+class GetGroupsByOfficeUseCase(
     private val repository: GenerateCollectionSheetRepository,
 ) {
 

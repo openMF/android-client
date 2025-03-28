@@ -12,13 +12,13 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerClient
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class PinPointClientRepositoryImp @Inject constructor(private val dataManagerClient: DataManagerClient) :
-    PinPointClientRepository {
+class PinPointClientRepositoryImp(
+    private val dataManagerClient: DataManagerClient,
+) : PinPointClientRepository {
 
     override suspend fun getClientPinpointLocations(clientId: Int): List<com.mifos.core.model.objects.clients.ClientAddressResponse> {
         return dataManagerClient.getClientPinpointLocations(clientId)

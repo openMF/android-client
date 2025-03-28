@@ -10,7 +10,8 @@
 plugins {
     alias(libs.plugins.mifos.android.library)
     alias(libs.plugins.mifos.android.library.jacoco)
-    alias(libs.plugins.mifos.android.hilt)
+    alias(libs.plugins.mifos.android.koin)
+//    alias(libs.plugins.mifos.android.hilt)
 }
 
 android {

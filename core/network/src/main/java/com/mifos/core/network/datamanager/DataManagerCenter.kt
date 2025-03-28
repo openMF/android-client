@@ -24,8 +24,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.openapitools.client.models.PostCentersCenterIdRequest
 import org.openapitools.client.models.PostCentersCenterIdResponse
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This DataManager is for Managing Center API, In which Request is going to Server
@@ -33,8 +31,7 @@ import javax.inject.Singleton
  * DataManagerCenter saving response in Database and response to Presenter as accordingly.
  * Created by Rajan Maurya on 28/6/16.
  */
-@Singleton
-class DataManagerCenter @Inject constructor(
+class DataManagerCenter(
     val mBaseApiManager: BaseApiManager,
     private val centerDatabaseHelper: CenterDaoHelper,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,

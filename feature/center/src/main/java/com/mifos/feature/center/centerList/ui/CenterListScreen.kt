@@ -67,7 +67,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -83,13 +82,14 @@ import com.mifos.feature.center.R
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
 import com.mifos.room.entities.group.CenterEntity
 import kotlinx.coroutines.flow.flowOf
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun CenterListScreen(
     paddingValues: PaddingValues,
     createNewCenter: () -> Unit,
     onCenterSelect: (Int) -> Unit,
-    viewModel: CenterListViewModel = hiltViewModel(),
+    viewModel: CenterListViewModel = koinViewModel(),
 ) {
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
     val state by viewModel.centerListUiState.collectAsStateWithLifecycle()

@@ -13,9 +13,8 @@ import com.mifos.room.dao.OfficeDao
 import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-class OfficeDaoHelper @Inject constructor(
+class OfficeDaoHelper(
     private val officeDao: OfficeDao,
 ) {
 

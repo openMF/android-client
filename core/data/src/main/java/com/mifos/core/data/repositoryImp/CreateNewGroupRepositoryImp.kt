@@ -16,12 +16,11 @@ import com.mifos.core.network.datamanager.DataManagerOffices
 import com.mifos.room.entities.group.GroupPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class CreateNewGroupRepositoryImp @Inject constructor(
+class CreateNewGroupRepositoryImp(
     private val dataManagerOffices: DataManagerOffices,
     private val dataManagerGroups: DataManagerGroups,
 ) : CreateNewGroupRepository {

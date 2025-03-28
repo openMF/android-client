@@ -14,9 +14,8 @@ import com.mifos.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerCheckerInbox
-import javax.inject.Inject
 
-class CheckerInboxRepositoryImp @Inject constructor(
+class CheckerInboxRepositoryImp(
     private val dataManagerCheckerInbox: DataManagerCheckerInbox,
 ) : CheckerInboxRepository {
 

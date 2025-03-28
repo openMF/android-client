@@ -17,8 +17,6 @@ import com.mifos.core.network.mappers.dataTable.GetDataTablesResponseMapper
 import com.mifos.room.entities.noncore.DataTableEntity
 import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import rx.Observable
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This DataManager is for Managing DataTable API, In which Request is going to Server
@@ -26,8 +24,7 @@ import javax.inject.Singleton
  *
  * Created by Rajan Maurya on 3/7/16.
  */
-@Singleton
-class DataManagerDataTable @Inject constructor(
+class DataManagerDataTable(
     val mBaseApiManager: BaseApiManager,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
 ) {

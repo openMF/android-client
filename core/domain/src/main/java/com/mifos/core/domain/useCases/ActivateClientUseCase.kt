@@ -15,9 +15,10 @@ import com.mifos.core.model.objects.clients.ActivatePayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.openapitools.client.models.PostClientsClientIdResponse
-import javax.inject.Inject
 
-class ActivateClientUseCase @Inject constructor(private val activateRepository: ActivateRepository) {
+class ActivateClientUseCase(
+    private val activateRepository: ActivateRepository,
+) {
 
     suspend operator fun invoke(
         clientId: Int,

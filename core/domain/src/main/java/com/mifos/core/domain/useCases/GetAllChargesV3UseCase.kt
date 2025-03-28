@@ -14,9 +14,10 @@ import com.mifos.core.data.repository.LoanChargeDialogRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.ResponseBody
-import javax.inject.Inject
 
-class GetAllChargesV3UseCase @Inject constructor(private val repository: LoanChargeDialogRepository) {
+class GetAllChargesV3UseCase(
+    private val repository: LoanChargeDialogRepository,
+) {
 
     suspend operator fun invoke(loanId: Int): Flow<Resource<ResponseBody>> = flow {
         try {

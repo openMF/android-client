@@ -16,8 +16,6 @@ import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.helper.OfficeDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This DataManager is for Managing Offices API, In which Request is going to Server
@@ -26,8 +24,7 @@ import javax.inject.Singleton
  *
  * Created by Rajan Maurya on 7/7/16.
  */
-@Singleton
-class DataManagerOffices @Inject constructor(
+class DataManagerOffices(
     val mBaseApiManager: BaseApiManager,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
     private val officeDaoHelper: OfficeDaoHelper,

@@ -53,7 +53,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -63,10 +62,11 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun SyncSavingsAccountTransactionScreenRoute(
-    viewModel: SyncSavingsAccountTransactionViewModel = hiltViewModel(),
+    viewModel: SyncSavingsAccountTransactionViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.syncSavingsAccountTransactionUiState.collectAsStateWithLifecycle()

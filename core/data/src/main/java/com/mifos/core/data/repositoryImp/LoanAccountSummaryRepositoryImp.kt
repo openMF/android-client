@@ -13,12 +13,11 @@ import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class LoanAccountSummaryRepositoryImp @Inject constructor(
+class LoanAccountSummaryRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
 ) : LoanAccountSummaryRepository {
 

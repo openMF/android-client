@@ -18,12 +18,13 @@ import kotlinx.coroutines.flow.callbackFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import javax.inject.Inject
 
 /**
  * Created by Pronay Sarker on 04/08/2024 (12:13 PM)
  */
-class GetGroupSavingsAccountTemplateByProductUseCase @Inject constructor(private val repository: SavingsAccountRepository) {
+class GetGroupSavingsAccountTemplateByProductUseCase(
+    private val repository: SavingsAccountRepository,
+) {
 
     suspend operator fun invoke(groupId: Int, productId: Int): Flow<Resource<SavingProductsTemplate?>> = callbackFlow {
         try {

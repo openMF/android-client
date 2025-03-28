@@ -21,16 +21,13 @@ import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.collectionsheet.ClientCollectionSheet
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import rx.Observable
-import javax.inject.Inject
 
-@HiltViewModel
-class IndividualCollectionSheetDetailsViewModel @Inject constructor(
+class IndividualCollectionSheetDetailsViewModel(
     private val saveIndividualCollectionSheetUseCase: SaveIndividualCollectionSheetUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
