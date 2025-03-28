@@ -17,7 +17,6 @@ import com.mifos.core.domain.useCases.GetAllChargesV3UseCase
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.client.ChargesEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,10 +25,8 @@ import okhttp3.ResponseBody
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import javax.inject.Inject
 
-@HiltViewModel
-class LoanChargeDialogViewModel @Inject constructor(
+class LoanChargeDialogViewModel(
     private val getAllChargesV3UseCase: GetAllChargesV3UseCase,
     private val createLoanChargesUseCase: CreateLoanChargesUseCase,
 ) : ViewModel() {

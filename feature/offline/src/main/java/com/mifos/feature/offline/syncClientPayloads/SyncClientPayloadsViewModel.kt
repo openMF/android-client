@@ -16,19 +16,16 @@ import com.mifos.core.common.utils.FileUtils.LOG_TAG
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.room.entities.client.ClientPayloadEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncClientPayloadsViewModel @Inject constructor(
+class SyncClientPayloadsViewModel(
     private val repository: SyncClientPayloadsRepository,
     private val prefManager: PrefManager,
 ) : ViewModel() {

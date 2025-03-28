@@ -32,16 +32,13 @@ import okhttp3.MultipartBody
 import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
 import org.openapitools.client.models.PostClientsClientIdRequest
 import org.openapitools.client.models.PostClientsClientIdResponse
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This DataManager is for Managing Client API, In which Request is going to Server
  * and In Response, We are getting Client API Observable Response using Retrofit2 .
  * Created by Rajan Maurya on 24/06/16.
  */
-@Singleton
-class DataManagerClient @Inject constructor(
+class DataManagerClient(
     val mBaseApiManager: BaseApiManager,
 //    private val mDatabaseHelperClient: DatabaseHelperClient,
     private val clientDatabaseHelper: ClientDaoHelper,

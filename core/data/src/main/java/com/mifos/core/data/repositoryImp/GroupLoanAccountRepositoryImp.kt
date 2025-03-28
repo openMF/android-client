@@ -15,12 +15,11 @@ import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.DataManager
 import com.mifos.room.entities.accounts.loans.Loan
 import rx.Observable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
-class GroupLoanAccountRepositoryImp @Inject constructor(private val dataManager: DataManager) :
+class GroupLoanAccountRepositoryImp(private val dataManager: DataManager) :
     GroupLoanAccountRepository {
 
     override fun getGroupLoansAccountTemplate(

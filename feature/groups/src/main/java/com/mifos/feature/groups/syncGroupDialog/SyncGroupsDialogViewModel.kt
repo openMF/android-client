@@ -23,7 +23,6 @@ import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,13 +35,11 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import rx.Observable
 import rx.plugins.RxJavaPlugins
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncGroupsDialogViewModel @Inject constructor(
+class SyncGroupsDialogViewModel(
     private val repository: SyncGroupsDialogRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefManager: PrefManager,

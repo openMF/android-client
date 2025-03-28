@@ -20,16 +20,13 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.zipmodels.GroupAndGroupAccounts
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class GroupDetailsViewModel @Inject constructor(
+class GroupDetailsViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val repository: GroupDetailsRepository,
 ) : ViewModel() {

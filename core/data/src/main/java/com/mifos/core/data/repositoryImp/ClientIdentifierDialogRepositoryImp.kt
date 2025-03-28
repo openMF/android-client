@@ -14,12 +14,11 @@ import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.core.network.datamanager.DataManagerClient
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class ClientIdentifierDialogRepositoryImp @Inject constructor(
+class ClientIdentifierDialogRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : ClientIdentifierDialogRepository {
 

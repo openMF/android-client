@@ -13,20 +13,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.ClientListRepository
 import com.mifos.core.datastore.PrefManager
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 21/02/24.
  */
 
-@HiltViewModel
-class ClientListViewModel @Inject constructor(
+class ClientListViewModel(
     private val repository: ClientListRepository,
     private val prefManager: PrefManager,
 ) : ViewModel() {

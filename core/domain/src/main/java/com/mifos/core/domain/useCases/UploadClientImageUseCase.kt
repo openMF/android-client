@@ -18,13 +18,14 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import java.io.File
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 18/03/24.
  */
 
-class UploadClientImageUseCase @Inject constructor(private val repository: ClientDetailsRepository) {
+class UploadClientImageUseCase(
+    private val repository: ClientDetailsRepository,
+) {
 
     operator fun invoke(id: Int, pngFile: File): Flow<Resource<ResponseBody>> = flow {
         try {

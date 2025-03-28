@@ -45,7 +45,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -56,6 +55,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.feature.center.R
 import com.mifos.room.entities.center.CenterPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
+import org.koin.androidx.compose.koinViewModel
 import org.openapitools.client.models.Office
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -63,7 +63,7 @@ import java.util.Locale
 @Composable
 internal fun CreateNewCenterScreen(
     onCreateSuccess: () -> Unit,
-    viewModel: CreateNewCenterViewModel = hiltViewModel(),
+    viewModel: CreateNewCenterViewModel = koinViewModel(),
 ) {
     val state by viewModel.createNewCenterUiState.collectAsStateWithLifecycle()
 

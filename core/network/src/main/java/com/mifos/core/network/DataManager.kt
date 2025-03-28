@@ -18,7 +18,6 @@ import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
-import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload
 import com.mifos.room.entities.accounts.loans.Loan
@@ -33,31 +32,17 @@ import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.ResponseBody
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import rx.Observable
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by Rajan Maurya on 4/6/16.
  */
-@Singleton
-class DataManager {
-    private val mBaseApiManager: BaseApiManager
-    private var mDataManagerClient: DataManagerClient? = null
+class DataManager : KoinComponent {
 
-    // TODO : This Constructor is temp after splitting the Datamanager layer into Sub DataManager
-    constructor(baseApiManager: BaseApiManager) {
-        mBaseApiManager = baseApiManager
-    }
-
-    @Inject
-    constructor(
-        baseApiManager: BaseApiManager,
-        dataManagerClient: DataManagerClient?,
-    ) {
-        mBaseApiManager = baseApiManager
-        mDataManagerClient = dataManagerClient
-    }
+    private val mBaseApiManager: BaseApiManager by inject()
+//    private val mDataManagerClient: DataManagerClient by inject()
 
     /**
      * Center API

@@ -55,7 +55,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -69,12 +68,13 @@ import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.collectionsheet.ClientCollectionSheet
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun IndividualCollectionSheetDetailsScreen(
     onBackPressed: () -> Unit,
     submit: (Int, IndividualCollectionSheetPayload, List<String>, LoanAndClientName, List<PaymentTypeOptions>, Int) -> Unit,
-    viewModel: IndividualCollectionSheetDetailsViewModel = hiltViewModel(),
+    viewModel: IndividualCollectionSheetDetailsViewModel = koinViewModel(),
 ) {
     val state by viewModel.individualCollectionSheetDetailsUiState.collectAsStateWithLifecycle()
     val loansAndClientNames =

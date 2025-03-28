@@ -20,15 +20,12 @@ import com.mifos.core.domain.useCases.GetGroupLoansAccountTemplateUseCase
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.feature.loan.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class GroupLoanAccountViewModel @Inject constructor(
+class GroupLoanAccountViewModel(
     private val getAllLoanUseCase: GetAllLoanUseCase,
     private val getGroupLoansAccountTemplateUseCase: GetGroupLoansAccountTemplateUseCase,
     private val createGroupLoansAccountUseCase: CreateGroupLoansAccountUseCase,

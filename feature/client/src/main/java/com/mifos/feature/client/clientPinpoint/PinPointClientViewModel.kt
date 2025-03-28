@@ -18,18 +18,15 @@ import com.mifos.core.domain.useCases.DeleteClientAddressPinpointUseCase
 import com.mifos.core.domain.useCases.GetClientPinpointLocationsUseCase
 import com.mifos.core.domain.useCases.UpdateClientPinpointUseCase
 import com.mifos.feature.client.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-@HiltViewModel
-class PinPointClientViewModel @Inject constructor(
+class PinPointClientViewModel(
     private val getClientPinpointLocationsUseCase: GetClientPinpointLocationsUseCase,
     private val addClientPinpointLocationUseCase: AddClientPinpointLocationUseCase,
     private val deleteClientAddressPinpointUseCase: DeleteClientAddressPinpointUseCase,

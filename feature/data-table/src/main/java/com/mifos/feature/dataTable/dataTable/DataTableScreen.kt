@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -40,6 +39,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.data_table.R
 import com.mifos.room.entities.noncore.DataTableEntity
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created on 27/06/2024 (11:38 PM) by Pronay Sarker
@@ -48,7 +48,7 @@ import com.mifos.room.entities.noncore.DataTableEntity
 @Composable
 fun DataTableScreen(
     navigateBack: () -> Unit,
-    viewModel: DataTableViewModel = hiltViewModel(),
+    viewModel: DataTableViewModel = koinViewModel(),
     onClick: (table: String, entityId: Int, dataTable: DataTableEntity) -> Unit,
 ) {
     val tableName = viewModel.args.tableName

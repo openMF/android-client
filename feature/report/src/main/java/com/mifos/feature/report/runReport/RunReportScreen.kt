@@ -60,7 +60,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
@@ -68,12 +67,13 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.feature.report.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun RunReportScreen(
     onBackPressed: () -> Unit,
     onReportClick: (ClientReportTypeItem) -> Unit,
-    viewModel: RunReportViewModel = hiltViewModel(),
+    viewModel: RunReportViewModel = koinViewModel(),
 ) {
     val state by viewModel.runReportUiState.collectAsStateWithLifecycle()
     var category by rememberSaveable { mutableStateOf(MenuItems.Client.name) }

@@ -54,7 +54,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -67,6 +66,7 @@ import com.mifos.core.network.model.LoansPayload
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -74,7 +74,7 @@ import java.util.Locale
 fun LoanAccountScreen(
     onBackPressed: () -> Unit,
     dataTable: (List<DataTableEntity>, LoansPayload) -> Unit,
-    viewModel: LoanAccountViewModel = hiltViewModel(),
+    viewModel: LoanAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.loanAccountUiState.collectAsStateWithLifecycle()
     val loanAccountTemplateState by viewModel.loanAccountTemplateUiState.collectAsStateWithLifecycle()

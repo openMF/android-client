@@ -39,13 +39,13 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.data_table.R
 import com.mifos.room.entities.noncore.DataTableEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DataTableRowDialogScreen(
@@ -53,7 +53,7 @@ fun DataTableRowDialogScreen(
     entityId: Int,
     onDismiss: () -> Unit,
     onSuccess: () -> Unit,
-    viewModel: DataTableRowDialogViewModel = hiltViewModel(),
+    viewModel: DataTableRowDialogViewModel = koinViewModel(),
 ) {
     val state by viewModel.dataTableRowDialogUiState.collectAsStateWithLifecycle()
 

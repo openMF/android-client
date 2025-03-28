@@ -43,7 +43,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -53,6 +52,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.feature.data_table.R
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.noncore.DataTableEntity
+import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -60,7 +60,7 @@ import java.time.format.DateTimeFormatter
 fun DataTableListScreen(
     onBackPressed: () -> Unit,
     clientCreated: (ClientEntity, Boolean) -> Unit,
-    viewModel: DataTableListViewModel = hiltViewModel(),
+    viewModel: DataTableListViewModel = koinViewModel(),
 ) {
     val dataTables = viewModel.arg.dataTableList
     val requestType = viewModel.arg.requestType

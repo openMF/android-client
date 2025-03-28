@@ -46,7 +46,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -63,13 +62,14 @@ import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
 internal fun GenerateCollectionSheetScreen(
     onBackPressed: () -> Unit,
-    viewModel: GenerateCollectionSheetViewModel = hiltViewModel(),
+    viewModel: GenerateCollectionSheetViewModel = koinViewModel(),
 ) {
     val state by viewModel.generateCollectionSheetUiState.collectAsStateWithLifecycle()
     val officeList by viewModel.officeListState.collectAsStateWithLifecycle()

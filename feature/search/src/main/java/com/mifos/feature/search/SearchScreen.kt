@@ -21,27 +21,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.core.ui.components.FabButton
 import com.mifos.core.ui.components.FabButtonState
 import com.mifos.core.ui.components.FabType
 import com.mifos.core.ui.components.MultiFloatingActionButton
-import com.mifos.core.ui.util.DevicePreviews
-import com.mifos.core.ui.util.SearchResultPreviewParameter
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.components.SearchBox
 import com.mifos.feature.search.components.SearchScreenResult
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchScreenRoute(
     onFabClick: (FabType) -> Unit,
     onSearchOptionClick: (SearchedEntity) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = hiltViewModel(),
+    viewModel: SearchViewModel = koinViewModel(),
 ) {
     val state by viewModel.state
     val searchResultState by viewModel.searchResult.collectAsStateWithLifecycle()
@@ -74,17 +73,17 @@ internal fun SearchScreenContent(
         floatingActionButton = {
             MultiFloatingActionButton(
                 fabButtons = listOf(
-                    FabButton(
-                        fabType = FabType.CLIENT,
-                        iconRes = com.mifos.core.ui.R.drawable.core_ui_ic_person_black_24dp,
+                    FabButton.VectorFab(
+                        type = FabType.CLIENT,
+                        iconRes = MifosIcons.Person,
                     ),
-                    FabButton(
-                        fabType = FabType.CENTER,
-                        iconRes = com.mifos.core.ui.R.drawable.core_ui_ic_centers_24dp,
+                    FabButton.VectorFab(
+                        type = FabType.CENTER,
+                        iconRes = MifosIcons.buildingIcon,
                     ),
-                    FabButton(
-                        fabType = FabType.GROUP,
-                        iconRes = com.mifos.core.ui.R.drawable.core_ui_ic_group_black_24dp,
+                    FabButton.VectorFab(
+                        type = FabType.GROUP,
+                        iconRes = MifosIcons.People,
                     ),
                 ),
                 fabButtonState = fabButtonState,
@@ -119,7 +118,7 @@ internal fun SearchScreenContent(
 }
 
 // Previews
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun SearchScreenContentEmptyStateAndLoadingPreview() {
     SearchScreenContent(
@@ -132,7 +131,7 @@ private fun SearchScreenContentEmptyStateAndLoadingPreview() {
     )
 }
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun SearchScreenContentInitialEmptyStatePreview() {
     SearchScreenContent(
@@ -145,7 +144,7 @@ private fun SearchScreenContentInitialEmptyStatePreview() {
     )
 }
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun SearchScreenContentEmptyResultPreview() {
     SearchScreenContent(
@@ -161,31 +160,13 @@ private fun SearchScreenContentEmptyResultPreview() {
     )
 }
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun SearchScreenContentErrorPreview() {
     SearchScreenContent(
         modifier = Modifier,
         state = SearchScreenState(),
         searchResultState = SearchResultState.Error("Something went wrong!"),
-        onEvent = {},
-        onFabClick = {},
-        onResultItemClick = {},
-    )
-}
-
-@DevicePreviews
-@Composable
-private fun SearchScreenContentSuccessPreview(
-    @PreviewParameter(SearchResultPreviewParameter::class)
-    results: List<SearchedEntity>,
-) {
-    SearchScreenContent(
-        modifier = Modifier,
-        state = SearchScreenState(
-            searchText = "center",
-        ),
-        searchResultState = SearchResultState.Success(results),
         onEvent = {},
         onFabClick = {},
         onResultItemClick = {},

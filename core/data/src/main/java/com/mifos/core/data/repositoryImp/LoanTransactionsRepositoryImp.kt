@@ -13,13 +13,13 @@ import com.mifos.core.data.repository.LoanTransactionsRepository
 import com.mifos.core.network.DataManager
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import rx.Observable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
-class LoanTransactionsRepositoryImp @Inject constructor(private val dataManager: DataManager) :
-    LoanTransactionsRepository {
+class LoanTransactionsRepositoryImp(
+    private val dataManager: DataManager,
+) : LoanTransactionsRepository {
 
     override fun getLoanTransactions(loan: Int): Observable<LoanWithAssociationsEntity> {
         return dataManager.getLoanTransactions(loan)

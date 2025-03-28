@@ -55,7 +55,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -68,13 +67,14 @@ import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
 import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 internal fun SurveyQuestionScreen(
     navigateBack: () -> Unit,
     survey: SurveyEntity?,
-    viewModel: SurveySubmitViewModel = hiltViewModel(),
+    viewModel: SurveySubmitViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
     val uiState by viewModel.surveySubmitUiState.collectAsStateWithLifecycle()

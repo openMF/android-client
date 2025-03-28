@@ -15,20 +15,27 @@ import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
 import androidx.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
+import com.mifos.cmp.navigation.initKoin
 import com.mifos.core.common.utils.LanguageHelper.onAttach
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
-import dagger.hilt.android.HiltAndroidApp
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.logger.Level
 
 /**
  * Created by ishankhanna on 13/03/15.
  */
-@HiltAndroidApp
 class App : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
-
         instance = this
+
+        initKoin {
+            androidContext(this@App)
+            androidLogger(Level.DEBUG)
+        }
+
 //        JobManager.create(this).addJobCreator(OfflineJobCreator())
         // Initializing the DBFlow and SQL Cipher Encryption
         FlowManager.init(FlowConfig.Builder(this).build())

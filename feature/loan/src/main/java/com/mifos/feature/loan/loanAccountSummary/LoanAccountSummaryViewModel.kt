@@ -16,18 +16,15 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-@HiltViewModel
-class LoanAccountSummaryViewModel @Inject constructor(
+class LoanAccountSummaryViewModel(
     savedStateHandle: SavedStateHandle,
     private val repository: LoanAccountSummaryRepository,
 ) : ViewModel() {

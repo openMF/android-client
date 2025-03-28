@@ -35,12 +35,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.offline.R
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Pronay Sarker on 27/08/2024 (12:09 AM)
@@ -53,7 +53,7 @@ internal fun OfflineDashboardRoute(
     syncCenterPayload: () -> Unit,
     syncLoanRepayment: () -> Unit,
     syncSavingsAccountTransactions: () -> Unit,
-    viewModel: OfflineDashboardViewModel = hiltViewModel(),
+    viewModel: OfflineDashboardViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.offlineDashboardUiState.collectAsStateWithLifecycle()
 

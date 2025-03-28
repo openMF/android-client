@@ -50,19 +50,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
-import com.mifos.core.ui.util.DevicePreviews
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.settings.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun UpdateServerConfigScreenRoute(
     onCloseClick: () -> Unit,
     onSuccessful: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: UpdateServerConfigViewModel = hiltViewModel(),
+    viewModel: UpdateServerConfigViewModel = koinViewModel(),
 ) {
     val protocolError by viewModel.protocolError.collectAsStateWithLifecycle()
     val apiPathError by viewModel.apiPathError.collectAsStateWithLifecycle()
@@ -305,7 +305,7 @@ internal fun UpdateServerConfigScreenContent(
     }
 }
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun UpdateServerConfigScreenEmptyData() {
     MaterialTheme {
