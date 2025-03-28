@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.network.com.mifos.core.common.utils
+package com.mifos.core.common.utils
 
 import org.koin.core.annotation.Qualifier
 

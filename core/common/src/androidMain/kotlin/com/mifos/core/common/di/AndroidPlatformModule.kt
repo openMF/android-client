@@ -9,7 +9,7 @@
  */
 package com.mifos.core.common.di
 
-import com.mifos.core.common.network.com.mifos.core.common.utils.MifosDispatchers
+import com.mifos.core.common.utils.MifosDispatchers
 import com.mifos.core.common.utils.ConnectivityManagerNetworkMonitor
 import com.mifos.core.common.utils.NetworkMonitor
 import com.mifos.core.common.utils.TimeZoneBroadcastMonitor

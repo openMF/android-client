@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package utils
+package com.mifos.core.common.utils
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray

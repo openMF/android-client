@@ -9,7 +9,7 @@
  */
 package com.mifos.core.common.di
 
-import com.mifos.core.common.network.com.mifos.core.common.utils.MifosDispatchers
+import com.mifos.core.common.utils.MifosDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.Module
