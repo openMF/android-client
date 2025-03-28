@@ -27,6 +27,7 @@ kotlin{
         androidMain.dependencies {
             api(libs.androidx.metrics)
             implementation(libs.androidx.compose.runtime)
+            implementation(libs.google.oss.licenses)
         }
         commonMain.dependencies {
             api(projects.core.designsystem)
