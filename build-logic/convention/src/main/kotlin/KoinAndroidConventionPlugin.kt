@@ -12,14 +12,7 @@ class KoinAndroidConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                add("implementation", platform(libs.findLibrary("koin-bom").get()))
-                add("implementation", libs.findLibrary("koin-android").get())
-                add("implementation", libs.findLibrary("koin.androidx.compose").get())
-
                 add("implementation", libs.findLibrary("koin.core").get())
-                add("implementation", libs.findLibrary("koin.androidx.navigation").get())
-                add("implementation", libs.findLibrary("koin.androidx.compose").get())
-                add("implementation", libs.findLibrary("koin.core.viewmodel").get())
             }
         }
     }

@@ -53,7 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
-import com.mifos.core.ui.util.DevicePreviews
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.settings.R
 import org.koin.androidx.compose.koinViewModel
 
@@ -305,7 +305,7 @@ internal fun UpdateServerConfigScreenContent(
     }
 }
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun UpdateServerConfigScreenEmptyData() {
     MaterialTheme {

@@ -55,6 +55,10 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("androidTestImplementation", libs.findLibrary("androidx.compose.ui.test").get())
                 add("androidTestImplementation", libs.findLibrary("hilt.android.testing").get())
                 add("androidTestImplementation", libs.findLibrary("androidx.lifecycle.runtimeTesting").get())
+
+                add("implementation", libs.findLibrary("koin.androidx.navigation").get())
+                add("implementation", libs.findLibrary("koin.androidx.compose").get())
+                add("implementation", libs.findLibrary("koin.core.viewmodel").get())
             }
         }
     }
