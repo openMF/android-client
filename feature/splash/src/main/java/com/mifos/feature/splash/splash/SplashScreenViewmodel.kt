@@ -12,16 +12,13 @@ package com.mifos.feature.splash.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.datastore.PrefManager
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SplashScreenViewmodel @Inject constructor(
+class SplashScreenViewmodel(
     private val prefManager: PrefManager,
 ) : ViewModel() {
 

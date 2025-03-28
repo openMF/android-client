@@ -27,14 +27,13 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 /**
  * This DatabaseHelper Managing all Database logic and staff (Saving, Update, Delete).
  * Whenever DataManager send response to save or request to read from Database then this class
  * save the response or read the all values from database and return as accordingly.
  */
-class GroupsDaoHelper @Inject constructor(
+class GroupsDaoHelper(
     private val groupsDao: GroupsDao,
     @Dispatcher(MifosDispatchers.IO)
     private val ioDispatcher: CoroutineDispatcher,

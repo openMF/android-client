@@ -24,8 +24,6 @@ import com.mifos.room.helper.GroupsDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import rx.Observable
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This DataManager is for Managing Groups API, In which Request is going to Server
@@ -33,8 +31,7 @@ import javax.inject.Singleton
  * DataManagerGroups saving response in Database and response to Presenter as accordingly
  * Created by Rajan Maurya on 28/06/16.
  */
-@Singleton
-class DataManagerGroups @Inject constructor(
+class DataManagerGroups(
     val mBaseApiManager: BaseApiManager,
     private val databaseHelperGroups: GroupsDaoHelper,
 //    private val mDatabaseHelperClient: DatabaseHelperClient,

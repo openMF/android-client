@@ -15,13 +15,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.mifos.core.data.repository.GroupsListRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
 const val PAGE_SIZE = 10
 
-@HiltViewModel
-class GroupsListViewModel @Inject constructor(
+class GroupsListViewModel(
     repository: GroupsListRepository,
 ) : ViewModel() {
 

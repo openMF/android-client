@@ -14,13 +14,13 @@ import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerSavings
 import rx.Observable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-class SavingsAccountApprovalRepositoryImp @Inject constructor(private val dataManagerSavings: DataManagerSavings) :
-    SavingsAccountApprovalRepository {
+class SavingsAccountApprovalRepositoryImp(
+    private val dataManagerSavings: DataManagerSavings,
+) : SavingsAccountApprovalRepository {
 
     override fun approveSavingsApplication(
         savingsAccountId: Int,

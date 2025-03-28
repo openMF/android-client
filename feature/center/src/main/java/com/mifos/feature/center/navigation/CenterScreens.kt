@@ -10,6 +10,7 @@
 package com.mifos.feature.center.navigation
 
 import com.mifos.core.common.utils.Constants
+
 sealed class CenterScreens(val route: String) {
 
     data object CenterListScreen : CenterScreens("center_list_screen")

@@ -11,14 +11,11 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.core.network.BaseApiManager
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by Rajan Maurya on 12/12/16.
  */
-@Singleton
-class DataManagerSearch @Inject constructor(
+class DataManagerSearch(
     private val baseApiManager: BaseApiManager,
 ) {
     suspend fun searchResources(

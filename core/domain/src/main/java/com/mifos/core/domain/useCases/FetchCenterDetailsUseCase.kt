@@ -14,9 +14,8 @@ import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.room.entities.collectionsheet.CenterDetail
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class FetchCenterDetailsUseCase @Inject constructor(
+class FetchCenterDetailsUseCase(
     private val repository: GenerateCollectionSheetRepository,
 ) {
 

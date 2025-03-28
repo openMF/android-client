@@ -20,12 +20,11 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.room.entities.center.CenterPayloadEntity
 import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class OfflineDashboardRepositoryImp @Inject constructor(
+class OfflineDashboardRepositoryImp(
     private val dataManagerClient: DataManagerClient,
     private val dataManagerGroups: DataManagerGroups,
     private val dataManagerCenter: DataManagerCenter,

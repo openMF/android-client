@@ -15,9 +15,10 @@ import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class SubmitProductiveSheetUseCase @Inject constructor(private val repository: GenerateCollectionSheetRepository) {
+class SubmitProductiveSheetUseCase(
+    private val repository: GenerateCollectionSheetRepository,
+) {
 
     suspend operator fun invoke(
         centerId: Int,

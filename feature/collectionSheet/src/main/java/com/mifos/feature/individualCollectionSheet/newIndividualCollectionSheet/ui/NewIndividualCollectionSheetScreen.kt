@@ -51,7 +51,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -63,12 +62,13 @@ import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
 internal fun NewIndividualCollectionSheetScreen(
-    viewModel: NewIndividualCollectionSheetViewModel = hiltViewModel(),
+    viewModel: NewIndividualCollectionSheetViewModel = koinViewModel(),
     onDetail: (String, IndividualCollectionSheet) -> Unit,
 ) {
     val state = viewModel.newIndividualCollectionSheetUiState.collectAsStateWithLifecycle().value

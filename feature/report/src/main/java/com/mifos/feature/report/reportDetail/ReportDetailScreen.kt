@@ -56,7 +56,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -67,12 +66,13 @@ import com.mifos.core.model.objects.runreport.DataRow
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.feature.report.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ReportDetailScreen(
     onBackPressed: () -> Unit,
     runReport: (FullParameterListResponse) -> Unit,
-    viewModel: ReportDetailViewModel = hiltViewModel(),
+    viewModel: ReportDetailViewModel = koinViewModel(),
 ) {
     val reportItem = viewModel.reportItem
     val state by viewModel.reportDetailUiState.collectAsStateWithLifecycle()

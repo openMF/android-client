@@ -15,15 +15,12 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.domain.useCases.GetUserPathTrackingUseCase
 import com.mifos.feature.path.tracking.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class PathTrackingViewModel @Inject constructor(
+class PathTrackingViewModel(
     private val getUserPathTrackingUseCase: GetUserPathTrackingUseCase,
     private val prefManager: PrefManager,
 ) : ViewModel() {

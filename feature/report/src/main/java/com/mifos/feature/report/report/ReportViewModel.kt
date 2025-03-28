@@ -16,17 +16,14 @@ import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.feature.report.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileWriter
-import javax.inject.Inject
 
-@HiltViewModel
-class ReportViewModel @Inject constructor(
+class ReportViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 

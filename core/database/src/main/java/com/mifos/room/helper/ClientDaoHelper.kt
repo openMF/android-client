@@ -40,16 +40,13 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import java.lang.reflect.Type
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This DatabaseHelper Managing all Database logic and staff (Saving, Update, Delete).
  * Whenever DataManager send response to save or request to read from Database then this class
  * save the response or read the all values from database and return as accordingly.
  */
-@Singleton
-class ClientDaoHelper @Inject constructor(
+class ClientDaoHelper(
     private val clientDao: ClientDao,
     @Dispatcher(MifosDispatchers.IO)
     private val ioDispatcher: CoroutineDispatcher,

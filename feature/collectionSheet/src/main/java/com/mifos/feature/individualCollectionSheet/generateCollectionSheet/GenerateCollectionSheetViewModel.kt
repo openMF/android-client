@@ -32,16 +32,13 @@ import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class GenerateCollectionSheetViewModel @Inject constructor(
+class GenerateCollectionSheetViewModel(
 //    private val getOfficeListUseCase: GetOfficeListUseCase,
     private val newIndividualCollectionSheetRepository: NewIndividualCollectionSheetRepository,
     private val getStaffInOfficeUseCase: GetStaffInOfficeUseCase,

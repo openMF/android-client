@@ -22,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.model.objects.SearchedEntity
@@ -32,13 +31,14 @@ import com.mifos.core.ui.components.MultiFloatingActionButton
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.components.SearchBox
 import com.mifos.feature.search.components.SearchScreenResult
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchScreenRoute(
     onFabClick: (FabType) -> Unit,
     onSearchOptionClick: (SearchedEntity) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = hiltViewModel(),
+    viewModel: SearchViewModel = koinViewModel(),
 ) {
     val state by viewModel.state
     val searchResultState by viewModel.searchResult.collectAsStateWithLifecycle()

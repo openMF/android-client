@@ -55,7 +55,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -72,6 +71,7 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountSummaryEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import com.mifos.room.entities.accounts.savings.SavingsTransactionTypeEntity
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Pronay Sarker on 10/07/2024 (6:21 PM)
@@ -86,7 +86,7 @@ internal fun SavingsAccountSummaryScreen(
     onWithdrawButtonClicked: (savings: SavingsAccountWithAssociationsEntity, type: SavingAccountDepositTypeEntity?) -> Unit,
     approveSavings: (type: SavingAccountDepositTypeEntity?, accountNumber: Int) -> Unit,
     activateSavings: (type: SavingAccountDepositTypeEntity?, accountNumber: Int) -> Unit,
-    viewmodel: SavingsAccountSummaryViewModel = hiltViewModel(),
+    viewmodel: SavingsAccountSummaryViewModel = koinViewModel(),
 ) {
     val uiState by viewmodel.savingsAccountSummaryUiState.collectAsStateWithLifecycle()
     val accountId = viewmodel.savingsNavigationData.id

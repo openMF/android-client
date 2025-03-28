@@ -24,15 +24,12 @@ import com.mifos.core.model.objects.runreport.DataRow
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.feature.report.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ReportDetailViewModel @Inject constructor(
+class ReportDetailViewModel(
     private val getReportFullParameterListUseCase: GetReportFullParameterListUseCase,
     private val getReportParameterDetailsUseCase: GetReportParameterDetailsUseCase,
     private val getRunReportProductUseCase: GetRunReportProductUseCase,

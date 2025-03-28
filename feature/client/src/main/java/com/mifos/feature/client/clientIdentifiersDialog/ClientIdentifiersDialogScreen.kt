@@ -45,7 +45,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -55,13 +54,14 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.feature.client.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ClientIdentifiersDialogScreen(
     clientId: Int,
     onDismiss: () -> Unit,
     onIdentifierCreated: () -> Unit,
-    viewModel: ClientIdentifiersDialogViewModel = hiltViewModel(),
+    viewModel: ClientIdentifiersDialogViewModel = koinViewModel(),
 ) {
     val state by viewModel.clientIdentifierDialogUiState.collectAsStateWithLifecycle()
 

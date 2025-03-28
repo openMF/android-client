@@ -12,13 +12,13 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.room.entities.center.CenterPayloadEntity
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class CreateNewCenterRepositoryImp @Inject constructor(private val dataManagerCenter: DataManagerCenter) :
-    CreateNewCenterRepository {
+class CreateNewCenterRepositoryImp(
+    private val dataManagerCenter: DataManagerCenter,
+) : CreateNewCenterRepository {
 
     override suspend fun createCenter(centerPayload: CenterPayloadEntity) {
         dataManagerCenter.createCenter(centerPayload)

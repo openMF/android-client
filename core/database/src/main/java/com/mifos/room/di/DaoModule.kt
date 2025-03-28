@@ -9,84 +9,18 @@
  */
 package com.mifos.room.di
 
-import com.mifos.room.dao.CenterDao
-import com.mifos.room.dao.ChargeDao
-import com.mifos.room.dao.ClientDao
-import com.mifos.room.dao.ColumnValueDao
-import com.mifos.room.dao.GroupsDao
-import com.mifos.room.dao.LoanDao
-import com.mifos.room.dao.OfficeDao
-import com.mifos.room.dao.SavingsDao
-import com.mifos.room.dao.StaffDao
-import com.mifos.room.dao.SurveyDao
 import com.mifos.room.db.MifosDatabase
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object DaoModule {
-
-    @Provides
-    @Singleton
-    fun providesCenterDao(database: MifosDatabase): CenterDao {
-        return database.centerDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesChargeDao(database: MifosDatabase): ChargeDao {
-        return database.chargeDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesClientDao(database: MifosDatabase): ClientDao {
-        return database.clientDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesColumnValueDao(database: MifosDatabase): ColumnValueDao {
-        return database.columnValueDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesGroupDao(database: MifosDatabase): GroupsDao {
-        return database.groupsDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesLoanDao(database: MifosDatabase): LoanDao {
-        return database.loanDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesOfficeDao(database: MifosDatabase): OfficeDao {
-        return database.officeDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesSavingsDao(database: MifosDatabase): SavingsDao {
-        return database.savingsDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesStaffDao(database: MifosDatabase): StaffDao {
-        return database.staffDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesSurveyDao(database: MifosDatabase): SurveyDao {
-        return database.surveyDao()
-    }
+val DaoModule = module {
+    single { get<MifosDatabase>().centerDao() }
+    single { get<MifosDatabase>().chargeDao() }
+    single { get<MifosDatabase>().clientDao() }
+    single { get<MifosDatabase>().columnValueDao() }
+    single { get<MifosDatabase>().groupsDao() }
+    single { get<MifosDatabase>().loanDao() }
+    single { get<MifosDatabase>().officeDao() }
+    single { get<MifosDatabase>().savingsDao() }
+    single { get<MifosDatabase>().staffDao() }
+    single { get<MifosDatabase>().surveyDao() }
 }

@@ -105,6 +105,7 @@ import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import java.io.File
 import java.util.Objects
 
@@ -128,7 +129,7 @@ internal fun ClientDetailsScreen(
     loanAccountSelected: (Int) -> Unit,
     savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateClient: (Int) -> Unit,
-    clientDetailsViewModel: ClientDetailsViewModel = hiltViewModel(),
+    clientDetailsViewModel: ClientDetailsViewModel = koinViewModel(),
 ) {
     val clientId by clientDetailsViewModel.clientId.collectAsStateWithLifecycle()
 

@@ -24,12 +24,11 @@ import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class SyncGroupsDialogRepositoryImp @Inject constructor(
+class SyncGroupsDialogRepositoryImp(
     private val dataManagerGroups: DataManagerGroups,
     private val dataManagerLoan: DataManagerLoan,
     private val dataManagerSavings: DataManagerSavings,

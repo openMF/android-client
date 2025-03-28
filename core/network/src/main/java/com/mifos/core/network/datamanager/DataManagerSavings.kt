@@ -25,14 +25,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import rx.Observable
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by Rajan Maurya on 17/08/16.
  */
-@Singleton
-class DataManagerSavings @Inject constructor(
+class DataManagerSavings(
     val mBaseApiManager: BaseApiManager,
 //    val mDatabaseHelperSavings: DatabaseHelperSavings,
     private val databaseHelperSavings: SavingsDaoHelper,

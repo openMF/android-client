@@ -25,14 +25,11 @@ import com.mifos.room.helper.LoanDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import rx.Observable
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by Rajan Maurya on 15/07/16.
  */
-@Singleton
-class DataManagerLoan @Inject constructor(
+class DataManagerLoan(
     val mBaseApiManager: BaseApiManager,
 //    val mDatabaseHelperLoan: DatabaseHelperLoan,
     val loanDaoHelper: LoanDaoHelper,

@@ -19,13 +19,10 @@ import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.core.network.utils.ImageLoaderUtils
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class PaymentDetailsViewModel @Inject constructor(
+class PaymentDetailsViewModel(
     private val imageLoaderUtils: ImageLoaderUtils,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

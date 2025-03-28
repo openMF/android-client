@@ -18,8 +18,6 @@ import com.mifos.room.helper.SurveyDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import rx.Observable
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This DataManager is for Managing Survey API, In which Request is going to Server
@@ -27,8 +25,7 @@ import javax.inject.Singleton
  *
  * Created by Rajan Maurya on 22/08/16.
  */
-@Singleton
-class DataManagerSurveys @Inject constructor(
+class DataManagerSurveys(
     val mBaseApiManager: BaseApiManager,
 //    private val mDatabaseHelperSurveys: DatabaseHelperSurveys,
     private val surveyDatabaseHelper: SurveyDaoHelper,

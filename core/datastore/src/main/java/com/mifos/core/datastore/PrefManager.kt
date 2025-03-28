@@ -15,13 +15,11 @@ import android.preference.PreferenceManager
 import com.mifos.core.common.model.user.User
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.ServerConfig
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.mifos.core.sharedpreference.Key
 import org.mifos.core.sharedpreference.UserPreferences
 import org.openapitools.client.models.PostAuthenticationResponse
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 19/08/23.
@@ -30,8 +28,8 @@ const val USER_DETAILS = "user_details"
 const val AUTH_USERNAME = "auth_username"
 const val AUTH_PASSWORD = "auth_password"
 
-class PrefManager @Inject constructor(
-    @ApplicationContext context: Context,
+class PrefManager(
+    context: Context,
 ) : UserPreferences<User>() {
 
     private val serverConfigKey = Key.Custom("SERVER_CONFIG_KEY")

@@ -14,16 +14,13 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.CenterListRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.feature.center.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class CenterListViewModel @Inject constructor(
+class CenterListViewModel(
     private val prefManager: PrefManager,
     private val repository: CenterListRepository,
 ) : ViewModel() {

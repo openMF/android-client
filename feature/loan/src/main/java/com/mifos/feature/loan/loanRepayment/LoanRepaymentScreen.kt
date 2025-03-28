@@ -55,7 +55,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -69,6 +68,7 @@ import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -78,7 +78,7 @@ import java.util.Locale
 @Composable
 internal fun LoanRepaymentScreen(
     navigateBack: () -> Unit,
-    viewmodel: LoanRepaymentViewModel = hiltViewModel(),
+    viewmodel: LoanRepaymentViewModel = koinViewModel(),
 ) {
     val uiState by viewmodel.loanRepaymentUiState.collectAsStateWithLifecycle()
 
