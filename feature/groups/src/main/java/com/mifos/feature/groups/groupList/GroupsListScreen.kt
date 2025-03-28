@@ -60,7 +60,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -78,13 +77,14 @@ import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.groups.R
 import com.mifos.feature.groups.syncGroupDialog.SyncGroupDialogScreen
 import com.mifos.room.entities.group.GroupEntity
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun GroupsListRoute(
     paddingValues: PaddingValues,
     onAddGroupClick: () -> Unit,
     onGroupClick: (groupId: Int) -> Unit,
-    viewModel: GroupsListViewModel = hiltViewModel(),
+    viewModel: GroupsListViewModel = koinViewModel(),
 ) {
     val data = viewModel.data.collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()
