@@ -61,7 +61,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -71,10 +70,11 @@ import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.document.R
 import com.mifos.feature.document.documentDialog.DocumentDialogScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun DocumentListScreen(
-    viewModel: DocumentListViewModel = hiltViewModel(),
+    viewModel: DocumentListViewModel = koinViewModel(),
     onBackPressed: () -> Unit,
 ) {
     val context = LocalContext.current

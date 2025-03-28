@@ -17,18 +17,15 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-@HiltViewModel
-class SavingsAccountApprovalViewModel @Inject constructor(
+class SavingsAccountApprovalViewModel(
     private val approveSavingsApplicationUseCase: ApproveSavingsApplicationUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

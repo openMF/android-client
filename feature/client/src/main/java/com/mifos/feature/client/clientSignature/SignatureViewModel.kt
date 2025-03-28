@@ -16,7 +16,6 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.CreateDocumentUseCase
 import com.mifos.feature.client.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,10 +24,8 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
-import javax.inject.Inject
 
-@HiltViewModel
-class SignatureViewModel @Inject constructor(
+class SignatureViewModel(
     private val createDocumentUseCase: CreateDocumentUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

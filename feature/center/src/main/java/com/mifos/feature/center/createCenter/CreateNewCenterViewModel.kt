@@ -15,15 +15,12 @@ import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.feature.center.R
 import com.mifos.room.entities.center.CenterPayloadEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class CreateNewCenterViewModel @Inject constructor(
+class CreateNewCenterViewModel(
     private val repository: CreateNewCenterRepository,
     private val collectionSheetRepo: NewIndividualCollectionSheetRepository,
 ) : ViewModel() {

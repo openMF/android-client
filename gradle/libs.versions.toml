@@ -66,6 +66,8 @@ jacoco = "0.8.7"
 junit4 = "4.13.2"
 junitJupiter = "5.8.2"
 junitVersion = "1.2.1"
+koinAndroid = "4.0.1"
+koinAndroidxCompose = "3.5.0"
 kotlinxCoroutinesCoreVersion = "1.10.1"
 kotlinxCoroutinesRx2 = "1.5.1"
 legacySupportV4 = "1.0.0"
@@ -216,6 +218,8 @@ android-maps-utils = { module = "com.google.maps.android:android-maps-utils", ve
 android-iconify-material = { module = "com.joanzapata.iconify:android-iconify-material", version.ref = "androidIconifyMaterial" }
 
 #RxAndroid
+mifos-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
+koin-androidx-compose-v350 = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 rxandroid = { module = "io.reactivex:rxandroid", version.ref = "rxandroidVersion" }
 rxjava = { module = "io.reactivex:rxjava", version.ref = "rxjava" }
@@ -569,6 +573,8 @@ wire = { id = "com.squareup.wire", version.ref = "wire" }
 mifos-cmp-feature = { id = "mifos.cmp.feature", version = "unspecified" }
 mifos-kmp-koin = { id = "mifos.kmp.koin", version = "unspecified" }
 mifos-kmp-library = { id = "mifos.kmp.library", version = "unspecified" }
+mifos-android-koin = {id = "mifos.android.koin", version = "unspecified"}
+
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }

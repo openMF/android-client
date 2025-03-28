@@ -13,14 +13,11 @@ import com.mifos.core.model.objects.groups.CenterInfo
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.core.network.BaseApiManager
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by Rajan Maurya on 05/02/17.
  */
-@Singleton
-class DataManagerRunReport @Inject constructor(val mBaseApiManager: BaseApiManager) {
+class DataManagerRunReport(val mBaseApiManager: BaseApiManager) {
     suspend fun getReportCategories(
         reportCategory: String?,
         genericResultSet: Boolean,

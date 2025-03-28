@@ -13,13 +13,13 @@ import com.mifos.core.data.repository.SyncCenterPayloadsRepository
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.room.entities.center.CenterPayloadEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-class SyncCenterPayloadsRepositoryImp @Inject constructor(private val dataManagerCenter: DataManagerCenter) :
-    SyncCenterPayloadsRepository {
+class SyncCenterPayloadsRepositoryImp(
+    private val dataManagerCenter: DataManagerCenter,
+) : SyncCenterPayloadsRepository {
 
     override fun allDatabaseCenterPayload(): Flow<List<CenterPayloadEntity>> {
         return dataManagerCenter.allDatabaseCenterPayload

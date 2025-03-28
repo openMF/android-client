@@ -12,7 +12,6 @@ package com.mifos.feature.document.documentDialog
 import androidx.lifecycle.ViewModel
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.network.GenericResponse
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -24,16 +23,17 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
 import rx.schedulers.Schedulers
 import java.io.File
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class DocumentDialogViewModel @Inject constructor(private val repository: DocumentDialogRepository) :
-    ViewModel() {
 
-    private val _documentDialogUiState = MutableStateFlow<DocumentDialogUiState>(DocumentDialogUiState.Initial)
+class DocumentDialogViewModel(
+    private val repository: DocumentDialogRepository,
+) : ViewModel() {
+
+    private val _documentDialogUiState =
+        MutableStateFlow<DocumentDialogUiState>(DocumentDialogUiState.Initial)
 
     val documentDialogUiState: StateFlow<DocumentDialogUiState>
         get() = _documentDialogUiState
@@ -44,34 +44,37 @@ class DocumentDialogViewModel @Inject constructor(private val repository: Docume
             .createDocument(type, id, name, desc, getRequestFileBody(file))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<GenericResponse>() {
-                override fun onCompleted() {
-                }
-
-                override fun onError(e: Throwable) {
-                    val errorMessage: String?
-                    try {
-                        if (e is HttpException) {
-                            errorMessage = e.response()?.errorBody()?.string()
-                            _documentDialogUiState.value = errorMessage?.let {
-                                DocumentDialogUiState.ShowUploadError(
-                                    it,
-                                )
-                            }!!
-                        } else {
-                            _documentDialogUiState.value =
-                                DocumentDialogUiState.ShowError(e.message.toString())
-                        }
-                    } catch (throwable: Throwable) {
-                        RxJavaPlugins.getInstance().errorHandler
-                            .handleError(throwable)
+            .subscribe(
+                object : Subscriber<GenericResponse>() {
+                    override fun onCompleted() {
                     }
-                }
 
-                override fun onNext(genericResponse: GenericResponse) {
-                    _documentDialogUiState.value = DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(genericResponse)
-                }
-            })
+                    override fun onError(e: Throwable) {
+                        val errorMessage: String?
+                        try {
+                            if (e is HttpException) {
+                                errorMessage = e.response()?.errorBody()?.string()
+                                _documentDialogUiState.value = errorMessage?.let {
+                                    DocumentDialogUiState.ShowUploadError(
+                                        it,
+                                    )
+                                }!!
+                            } else {
+                                _documentDialogUiState.value =
+                                    DocumentDialogUiState.ShowError(e.message.toString())
+                            }
+                        } catch (throwable: Throwable) {
+                            RxJavaPlugins.getInstance().errorHandler
+                                .handleError(throwable)
+                        }
+                    }
+
+                    override fun onNext(genericResponse: GenericResponse) {
+                        _documentDialogUiState.value =
+                            DocumentDialogUiState.ShowDocumentedCreatedSuccessfully(genericResponse)
+                    }
+                },
+            )
     }
 
     fun updateDocument(
@@ -93,18 +96,20 @@ class DocumentDialogViewModel @Inject constructor(private val repository: Docume
         )
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(object : Subscriber<GenericResponse>() {
-                override fun onCompleted() {}
-                override fun onError(e: Throwable) {
-                    _documentDialogUiState.value =
-                        DocumentDialogUiState.ShowError(e.message.toString())
-                }
+            .subscribe(
+                object : Subscriber<GenericResponse>() {
+                    override fun onCompleted() {}
+                    override fun onError(e: Throwable) {
+                        _documentDialogUiState.value =
+                            DocumentDialogUiState.ShowError(e.message.toString())
+                    }
 
-                override fun onNext(genericResponse: GenericResponse) {
-                    _documentDialogUiState.value =
-                        DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(genericResponse)
-                }
-            })
+                    override fun onNext(genericResponse: GenericResponse) {
+                        _documentDialogUiState.value =
+                            DocumentDialogUiState.ShowDocumentUpdatedSuccessfully(genericResponse)
+                    }
+                },
+            )
     }
 
     private fun getRequestFileBody(file: File): MultipartBody.Part {

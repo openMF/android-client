@@ -14,15 +14,12 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetReportCategoryUseCase
 import com.mifos.feature.report.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class RunReportViewModel @Inject constructor(
+class RunReportViewModel(
     private val getReportCategoryUseCase: GetReportCategoryUseCase,
 ) : ViewModel() {
 

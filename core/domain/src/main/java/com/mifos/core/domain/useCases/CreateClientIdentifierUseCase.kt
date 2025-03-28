@@ -14,15 +14,22 @@ import com.mifos.core.data.repository.ClientIdentifierDialogRepository
 import com.mifos.core.model.objects.noncoreobjects.IdentifierCreationResponse
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
+import kotlinx.coroutines.flow.flow
 
-class CreateClientIdentifierUseCase @Inject constructor(
+class CreateClientIdentifierUseCase(
     private val repository: ClientIdentifierDialogRepository,
 ) {
 
-    operator fun invoke(
+    suspend operator fun invoke(
         clientId: Int,
         identifierPayload: IdentifierPayload,
-    ): Flow<Resource<IdentifierCreationResponse>> =
-        repository.createClientIdentifier(clientId, identifierPayload)
+    ): Flow<Resource<IdentifierCreationResponse>> = flow {
+        try {
+            emit(Resource.Loading())
+            val response = repository.createClientIdentifier(clientId, identifierPayload)
+            emit(Resource.Success(response))
+        } catch (exception: Exception) {
+            emit(Resource.Error(exception.message.toString()))
+        }
+    }
 }

@@ -10,33 +10,36 @@
 package com.mifos.mifosxdroid.navigation
 
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.navigation
-import org.mifos.library.passcode.PASSCODE_SCREEN
-import org.mifos.library.passcode.passcodeRoute
 
-internal fun NavGraphBuilder.passcodeNavGraph(navController: NavHostController) {
+// import org.mifos.library.passcode.PASSCODE_SCREEN
+// import org.mifos.library.passcode.passcodeRoute
+
+internal fun NavGraphBuilder.passcodeNavGraph(
+//    navController: NavHostController,
+) {
     navigation(
         route = MifosNavGraph.PASSCODE_GRAPH,
-        startDestination = PASSCODE_SCREEN,
+        startDestination = "route",
+//        startDestination = PASSCODE_SCREEN,
     ) {
-        passcodeRoute(
-            onForgotButton = {
-                navController.popBackStack()
-                navController.navigate(MifosNavGraph.MAIN_GRAPH)
-            },
-            onSkipButton = {
-                navController.popBackStack()
-                navController.navigate(MifosNavGraph.MAIN_GRAPH)
-            },
-            onPasscodeConfirm = {
-                navController.popBackStack()
-                navController.navigate(MifosNavGraph.MAIN_GRAPH)
-            },
-            onPasscodeRejected = {
-                navController.popBackStack()
-                navController.navigate(MifosNavGraph.MAIN_GRAPH)
-            },
-        )
+//        passcodeRoute(
+//            onForgotButton = {
+//                navController.popBackStack()
+//                navController.navigate(MifosNavGraph.MAIN_GRAPH)
+//            },
+//            onSkipButton = {
+//                navController.popBackStack()
+//                navController.navigate(MifosNavGraph.MAIN_GRAPH)
+//            },
+//            onPasscodeConfirm = {
+//                navController.popBackStack()
+//                navController.navigate(MifosNavGraph.MAIN_GRAPH)
+//            },
+//            onPasscodeRejected = {
+//                navController.popBackStack()
+//                navController.navigate(MifosNavGraph.MAIN_GRAPH)
+//            },
+//        )
     }
 }

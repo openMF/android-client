@@ -14,19 +14,16 @@ import androidx.lifecycle.ViewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 12/08/23.
  */
-@HiltViewModel
-class LoanRepaymentScheduleViewModel @Inject constructor(
+class LoanRepaymentScheduleViewModel(
     private val repository: LoanRepaymentScheduleRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

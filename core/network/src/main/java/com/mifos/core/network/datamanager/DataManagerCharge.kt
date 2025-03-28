@@ -16,8 +16,6 @@ import com.mifos.room.helper.ChargeDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This DataManager is for Managing Charge API, In which Request is going to Server
@@ -27,8 +25,7 @@ import javax.inject.Singleton
  *
  * Created by Rajan Maurya on 4/7/16.
  */
-@Singleton
-class DataManagerCharge @Inject constructor(
+class DataManagerCharge(
     val mBaseApiManager: BaseApiManager,
 //    val mDatabaseHelperCharge: DatabaseHelperCharge,
     val chargeDatabase: ChargeDaoHelper,

@@ -15,15 +15,12 @@ import com.mifos.core.network.GenericResponse
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import rx.Observable
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This DataManager Class for Handling the every request regarding the Document.
  * Created by Rajan Maurya on 02/09/16.
  */
-@Singleton
-class DataManagerDocument @Inject constructor(val mBaseApiManager: BaseApiManager) {
+class DataManagerDocument(val mBaseApiManager: BaseApiManager) {
     /**
      * This Method for Fetching the Document List with EntityType and EntityId from the REST API.
      * REST END POINT:

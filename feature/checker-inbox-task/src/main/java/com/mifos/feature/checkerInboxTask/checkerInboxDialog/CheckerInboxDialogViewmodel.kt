@@ -14,16 +14,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.network.datamanager.DataManagerCheckerInbox
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import javax.inject.Inject
 
-@HiltViewModel
-class CheckerInboxViewModel @Inject constructor(
+class CheckerInboxDialogViewmodel(
     private val dataManager: DataManagerCheckerInbox,
 ) : ViewModel() {
 

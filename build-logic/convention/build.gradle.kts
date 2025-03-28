@@ -132,5 +132,11 @@ gradlePlugin {
             id = "mifos.kmp.library"
             implementationClass = "KMPLibraryConventionPlugin"
         }
+
+        // koin android
+        register("androidKoin"){
+            id = "mifos.android.koin"
+            implementationClass = "KoinAndroidConventionPlugin"
+        }
     }
 }

@@ -58,13 +58,9 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -78,23 +74,17 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosFAB
 import com.mifos.core.ui.components.SelectionModeTopAppBar
-import com.mifos.core.ui.util.DevicePreviews
-import com.mifos.core.ui.util.GroupListEmptyPreviewParameterProvider
-import com.mifos.core.ui.util.GroupListErrorPreviewParameterProvider
-import com.mifos.core.ui.util.GroupListItemPreviewParameterProvider
-import com.mifos.core.ui.util.GroupListLoadingPreviewParameterProvider
-import com.mifos.core.ui.util.GroupListSuccessPreviewParameterProvider
 import com.mifos.feature.groups.R
 import com.mifos.feature.groups.syncGroupDialog.SyncGroupDialogScreen
 import com.mifos.room.entities.group.GroupEntity
-import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun GroupsListRoute(
     paddingValues: PaddingValues,
     onAddGroupClick: () -> Unit,
     onGroupClick: (groupId: Int) -> Unit,
-    viewModel: GroupsListViewModel = hiltViewModel(),
+    viewModel: GroupsListViewModel = koinViewModel(),
 ) {
     val data = viewModel.data.collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()
@@ -373,126 +363,4 @@ private fun GroupItem(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun GroupListScreenLoadingState(
-    @PreviewParameter(GroupListLoadingPreviewParameterProvider::class)
-    data: Flow<PagingData<GroupEntity>>,
-) {
-    GroupsListScreen(
-        lazyListState = rememberLazyListState(),
-        swipeRefreshState = rememberSwipeRefreshState(true),
-        selectedItems = listOf(),
-        data = data.collectAsLazyPagingItems(),
-        onAddGroupClick = {},
-        onGroupClick = {},
-        onSelectItem = {},
-        resetSelectionMode = {},
-    )
-}
-
-@Preview
-@Composable
-private fun GroupListScreenEmptyState(
-    @PreviewParameter(GroupListEmptyPreviewParameterProvider::class)
-    data: Flow<PagingData<GroupEntity>>,
-) {
-    GroupsListScreen(
-        lazyListState = rememberLazyListState(),
-        swipeRefreshState = rememberSwipeRefreshState(false),
-        selectedItems = listOf(),
-        data = data.collectAsLazyPagingItems(),
-        onAddGroupClick = {},
-        onGroupClick = {},
-        onSelectItem = {},
-        resetSelectionMode = {},
-    )
-}
-
-@Preview
-@Composable
-private fun GroupListScreenErrorState(
-    @PreviewParameter(GroupListErrorPreviewParameterProvider::class)
-    data: Flow<PagingData<GroupEntity>>,
-) {
-    GroupsListScreen(
-        lazyListState = rememberLazyListState(),
-        swipeRefreshState = rememberSwipeRefreshState(false),
-        selectedItems = listOf(),
-        data = data.collectAsLazyPagingItems(),
-        onAddGroupClick = {},
-        onGroupClick = {},
-        onSelectItem = {},
-        resetSelectionMode = {},
-    )
-}
-
-@Preview
-@Composable
-private fun GroupListScreenPopulatedAndSuccessState(
-    @PreviewParameter(GroupListSuccessPreviewParameterProvider::class)
-    data: Flow<PagingData<GroupEntity>>,
-) {
-    GroupsListScreen(
-        lazyListState = rememberLazyListState(),
-        swipeRefreshState = rememberSwipeRefreshState(false),
-        selectedItems = listOf(),
-        data = data.collectAsLazyPagingItems(),
-        onAddGroupClick = {},
-        onGroupClick = {},
-        onSelectItem = {},
-        resetSelectionMode = {},
-    )
-}
-
-@Preview
-@Composable
-private fun GroupListScreenPopulatedAndSelectedItem(
-    @PreviewParameter(GroupListSuccessPreviewParameterProvider::class)
-    data: Flow<PagingData<GroupEntity>>,
-) {
-    GroupsListScreen(
-        lazyListState = rememberLazyListState(),
-        swipeRefreshState = rememberSwipeRefreshState(false),
-        selectedItems = listOf(
-//            sampleGroups[1], sampleGroups[3]
-        ),
-        data = data.collectAsLazyPagingItems(),
-        onAddGroupClick = {},
-        onGroupClick = {},
-        onSelectItem = {},
-        resetSelectionMode = {},
-    )
-}
-
-@DevicePreviews
-@Composable
-private fun GroupItemSelectedState(
-    @PreviewParameter(GroupListItemPreviewParameterProvider::class)
-    group: GroupEntity,
-) {
-    GroupItem(
-        group = group,
-        doesSelected = true,
-        inSelectionMode = true,
-        onGroupClick = {},
-        onSelectItem = {},
-    )
-}
-
-@DevicePreviews
-@Composable
-private fun GroupItemIsNotSelectedState(
-    @PreviewParameter(GroupListItemPreviewParameterProvider::class)
-    group: GroupEntity,
-) {
-    GroupItem(
-        group = group,
-        doesSelected = false,
-        inSelectionMode = false,
-        onGroupClick = {},
-        onSelectItem = {},
-    )
 }

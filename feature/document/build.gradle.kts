@@ -28,4 +28,7 @@ dependencies {
     androidTestImplementation(projects.core.testing)
 
     implementation(libs.androidx.material)
+
+    implementation(libs.mifos.koin.android)
+    implementation(libs.koin.androidx.compose.v350)
 }

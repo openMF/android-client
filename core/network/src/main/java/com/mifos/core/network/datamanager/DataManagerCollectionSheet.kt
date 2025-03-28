@@ -20,14 +20,11 @@ import com.mifos.room.entities.collectionsheet.CollectionSheetResponse
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
 import com.mifos.room.entities.group.CenterWithAssociations
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by Tarun on 22-07-2017.
  */
-@Singleton
-class DataManagerCollectionSheet @Inject constructor(
+class DataManagerCollectionSheet(
     private val mBaseApiManager: BaseApiManager,
 ) {
     /**

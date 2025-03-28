@@ -50,7 +50,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -65,11 +64,12 @@ import com.mifos.feature.client.R
 import com.mifos.feature.client.clientChargeDialog.ChargeDialogScreen
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.flowOf
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ClientChargesScreen(
     onBackPressed: () -> Unit,
-    viewModel: ClientChargesViewModel = hiltViewModel(),
+    viewModel: ClientChargesViewModel = koinViewModel(),
 ) {
     val clientId by viewModel.clientId.collectAsStateWithLifecycle()
     val clientChargeUiState by viewModel.clientChargesUiState.collectAsStateWithLifecycle()

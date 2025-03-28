@@ -18,12 +18,11 @@ import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.client.ClientPayloadEntity
 import rx.Observable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class DataTableListRepositoryImp @Inject constructor(
+class DataTableListRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
     private val dataManager: DataManager,
     private val dataManagerClient: DataManagerClient,

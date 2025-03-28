@@ -18,15 +18,12 @@ import com.mifos.core.domain.useCases.ActivateCenterUseCase
 import com.mifos.core.domain.useCases.ActivateClientUseCase
 import com.mifos.core.domain.useCases.ActivateGroupUseCase
 import com.mifos.core.model.objects.clients.ActivatePayload
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ActivateViewModel @Inject constructor(
+class ActivateViewModel(
     private val activateClientUseCase: ActivateClientUseCase,
     private val activateCenterUseCase: ActivateCenterUseCase,
     private val activateGroupUseCase: ActivateGroupUseCase,

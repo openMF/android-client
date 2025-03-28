@@ -42,18 +42,18 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.aboutItemTextStyle
 import com.mifos.core.designsystem.theme.aboutItemTextStyleBold
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun AboutScreen(
     onBackPressed: () -> Unit,
-    viewModel: AboutViewModel = hiltViewModel(),
+    viewModel: AboutViewModel = koinViewModel(),
 ) {
     val state by viewModel.aboutUiState.collectAsStateWithLifecycle()
     val uriHandler = LocalUriHandler.current

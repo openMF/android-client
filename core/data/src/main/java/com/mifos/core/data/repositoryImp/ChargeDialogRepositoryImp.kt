@@ -14,13 +14,13 @@ import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.core.network.DataManager
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-class ChargeDialogRepositoryImp @Inject constructor(private val dataManager: DataManager) :
-    ChargeDialogRepository {
+class ChargeDialogRepositoryImp(
+    private val dataManager: DataManager,
+) : ChargeDialogRepository {
 
     override suspend fun getAllChargesV2(clientId: Int): ChargeTemplate {
         return dataManager.getAllChargesV2(clientId)

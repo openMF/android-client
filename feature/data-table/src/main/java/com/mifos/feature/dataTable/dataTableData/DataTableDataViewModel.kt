@@ -20,15 +20,12 @@ import com.mifos.core.domain.useCases.DeleteDataTableEntryUseCase
 import com.mifos.core.domain.useCases.GetDataTableInfoUseCase
 import com.mifos.feature.data_table.R
 import com.mifos.room.entities.navigation.DataTableDataNavigationArg
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class DataTableDataViewModel @Inject constructor(
+class DataTableDataViewModel(
     private val getDataTableInfoUseCase: GetDataTableInfoUseCase,
     private val deleteDataTableEntryUseCase: DeleteDataTableEntryUseCase,
     private val savedStateHandle: SavedStateHandle,

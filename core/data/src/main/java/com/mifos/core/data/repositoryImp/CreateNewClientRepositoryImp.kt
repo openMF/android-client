@@ -19,12 +19,11 @@ import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-class CreateNewClientRepositoryImp @Inject constructor(
+class CreateNewClientRepositoryImp(
     private val dataManagerClient: DataManagerClient,
     private val dataManagerOffices: DataManagerOffices,
     private val dataManagerStaff: DataManagerStaff,

@@ -18,12 +18,11 @@ import com.mifos.core.network.datamanager.DataManagerGroups
 import org.openapitools.client.models.PostCentersCenterIdResponse
 import org.openapitools.client.models.PostClientsClientIdResponse
 import rx.Observable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class ActivateRepositoryImp @Inject constructor(
+class ActivateRepositoryImp(
     private val dataManagerClient: DataManagerClient,
     private val dataManagerCenter: DataManagerCenter,
     private val dataManagerGroups: DataManagerGroups,

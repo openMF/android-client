@@ -19,13 +19,10 @@ import com.mifos.core.model.MifosAppLanguage
 import com.mifos.core.model.ThemeBrand
 import com.mifos.core.model.UserData
 import com.mifos.feature.settings.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
 
-@HiltViewModel
-class SettingsViewModel @Inject constructor(
+class SettingsViewModel(
     private val prefManager: PrefManager,
 ) : ViewModel() {
     val userData = prefManager.userData.stateIn(

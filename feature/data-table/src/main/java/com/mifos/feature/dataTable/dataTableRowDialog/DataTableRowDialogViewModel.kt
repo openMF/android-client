@@ -14,15 +14,12 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.AddDataTableEntryUseCase
 import com.mifos.feature.data_table.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class DataTableRowDialogViewModel @Inject constructor(
+class DataTableRowDialogViewModel(
     private val addDataTableEntryUseCase: AddDataTableEntryUseCase,
 ) : ViewModel() {
 

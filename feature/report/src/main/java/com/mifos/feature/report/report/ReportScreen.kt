@@ -42,18 +42,18 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.feature.report.R
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun ReportScreen(
     onBackPressed: () -> Unit,
-    viewModel: ReportViewModel = hiltViewModel(),
+    viewModel: ReportViewModel = koinViewModel(),
 ) {
     val report = viewModel.report
     val state by viewModel.reportUiState.collectAsStateWithLifecycle()

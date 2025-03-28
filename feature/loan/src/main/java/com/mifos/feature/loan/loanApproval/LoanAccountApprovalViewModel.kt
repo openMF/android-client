@@ -15,7 +15,6 @@ import com.google.gson.Gson
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.accounts.loans.LoanApprovalData
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import retrofit2.HttpException
@@ -23,13 +22,11 @@ import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
 import rx.schedulers.Schedulers
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-@HiltViewModel
-class LoanAccountApprovalViewModel @Inject constructor(
+class LoanAccountApprovalViewModel(
     private val repository: LoanAccountApprovalRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

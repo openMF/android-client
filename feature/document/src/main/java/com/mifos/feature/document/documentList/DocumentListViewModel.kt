@@ -18,15 +18,12 @@ import com.mifos.core.domain.useCases.DownloadDocumentUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.RemoveDocumentUseCase
 import com.mifos.feature.document.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class DocumentListViewModel @Inject constructor(
+class DocumentListViewModel(
     private val getDocumentsListUseCase: GetDocumentsListUseCase,
     private val downloadDocumentUseCase: DownloadDocumentUseCase,
     private val removeDocumentUseCase: RemoveDocumentUseCase,

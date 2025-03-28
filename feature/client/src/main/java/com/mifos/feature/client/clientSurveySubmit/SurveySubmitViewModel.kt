@@ -16,7 +16,6 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.model.objects.surveys.Scorecard
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -25,13 +24,11 @@ import kotlinx.coroutines.flow.stateIn
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 13/08/23.
  */
-@HiltViewModel
-class SurveySubmitViewModel @Inject constructor(
+class SurveySubmitViewModel(
     private val repository: SurveySubmitRepository,
     private val prefManager: PrefManager,
     private val savedStateHandle: SavedStateHandle,

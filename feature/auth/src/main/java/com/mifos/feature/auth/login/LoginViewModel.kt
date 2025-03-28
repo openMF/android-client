@@ -21,30 +21,25 @@ import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
 import com.mifos.feature.auth.R
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.mifos.core.apimanager.BaseApiManager
 import org.openapitools.client.models.PostAuthenticationResponse
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
 
-@HiltViewModel
-class LoginViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+class LoginViewModel(
+    private val context: Context,
     private val prefManager: PrefManager,
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val baseApiManager: BaseApiManager,
     private val loginUseCase: LoginUseCase,
-) :
-    ViewModel() {
+) : ViewModel() {
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
     val loginUiState = _loginUiState.asStateFlow()

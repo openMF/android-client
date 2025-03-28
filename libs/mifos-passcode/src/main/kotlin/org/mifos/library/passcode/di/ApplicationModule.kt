@@ -9,29 +9,13 @@
  */
 package org.mifos.library.passcode.di
 
-import android.content.Context
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import org.mifos.library.passcode.data.PasscodeManager
+import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.module
 import org.mifos.library.passcode.data.PasscodeRepository
 import org.mifos.library.passcode.data.PasscodeRepositoryImpl
-import javax.inject.Singleton
+import org.mifos.library.passcode.utility.PreferenceManager
 
-@Module
-@InstallIn(SingletonComponent::class)
-object ApplicationModule {
-    @Provides
-    @Singleton
-    fun providePasscodeManager(@ApplicationContext context: Context): PasscodeManager {
-        return PasscodeManager(context)
-    }
-
-    @Provides
-    @Singleton
-    fun providesPasscodeRepository(preferenceManager: PasscodeManager): PasscodeRepository {
-        return PasscodeRepositoryImpl(preferenceManager)
-    }
+val PasscodeModule = module {
+    single<PreferenceManager> { PreferenceManager(androidContext()) }
+    single<PasscodeRepository> { PasscodeRepositoryImpl(get()) }
 }

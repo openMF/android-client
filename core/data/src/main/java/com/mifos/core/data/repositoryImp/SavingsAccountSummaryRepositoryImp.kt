@@ -13,12 +13,11 @@ import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class SavingsAccountSummaryRepositoryImp @Inject constructor(
+class SavingsAccountSummaryRepositoryImp(
     private val dataManagerSavings: DataManagerSavings,
 ) : SavingsAccountSummaryRepository {
 

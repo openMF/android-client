@@ -17,15 +17,12 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetCenterDetailsUseCase
 import com.mifos.core.model.objects.groups.CenterInfo
 import com.mifos.feature.center.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class CenterDetailsViewModel @Inject constructor(
+class CenterDetailsViewModel(
     private val getCenterDetailsUseCase: GetCenterDetailsUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {

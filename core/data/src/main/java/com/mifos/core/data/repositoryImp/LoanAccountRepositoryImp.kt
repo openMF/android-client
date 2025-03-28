@@ -10,19 +10,18 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.LoanAccountRepository
-import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import rx.Observable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class LoanAccountRepositoryImp @Inject constructor(private val dataManagerLoan: DataManagerLoan) :
-    LoanAccountRepository {
+class LoanAccountRepositoryImp(
+    private val dataManagerLoan: DataManagerLoan,
+) : LoanAccountRepository {
 
     override suspend fun allLoans(): Observable<List<com.mifos.core.model.objects.organisations.LoanProducts>> {
         return dataManagerLoan.allLoans

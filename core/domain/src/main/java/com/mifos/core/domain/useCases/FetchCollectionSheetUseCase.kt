@@ -15,9 +15,10 @@ import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPaylo
 import com.mifos.room.entities.collectionsheet.CollectionSheetResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
-class FetchCollectionSheetUseCase @Inject constructor(private val repository: GenerateCollectionSheetRepository) {
+class FetchCollectionSheetUseCase(
+    private val repository: GenerateCollectionSheetRepository,
+) {
 
     suspend operator fun invoke(
         groupId: Int,
