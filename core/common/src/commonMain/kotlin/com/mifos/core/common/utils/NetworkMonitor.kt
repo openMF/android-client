@@ -11,6 +11,8 @@ package com.mifos.core.common.utils
 
 import kotlinx.coroutines.flow.Flow
 
+import kotlinx.serialization.Serializable
+
 /**
  * Utility for reporting app connectivity status
  */

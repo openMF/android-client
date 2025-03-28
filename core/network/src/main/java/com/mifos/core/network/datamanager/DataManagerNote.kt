@@ -11,16 +11,13 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.model.objects.Note
 import com.mifos.core.network.BaseApiManager
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This DataManager is for Managing Notes API, In which Request is going to Server
  * and In Response, We are getting Notes API Observable Response using Retrofit2
  * Created by rahul on 4/3/17.
  */
-@Singleton
-class DataManagerNote @Inject constructor(
+class DataManagerNote(
     val mBaseApiManager: BaseApiManager,
 ) {
     /**

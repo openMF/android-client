@@ -16,14 +16,11 @@ import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.helper.StaffDaoHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Created by Rajan Maurya on 7/7/16.
  */
-@Singleton
-class DataManagerStaff @Inject constructor(
+class DataManagerStaff(
     val mBaseApiManager: BaseApiManager,
 //    private val mDatabaseHelperStaff: DatabaseHelperStaff,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,

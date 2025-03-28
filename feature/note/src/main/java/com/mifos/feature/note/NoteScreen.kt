@@ -35,18 +35,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.model.objects.Note
 import com.mifos.core.ui.components.MifosEmptyUi
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun NoteScreen(
     onBackPressed: () -> Unit,
-    viewModel: NoteViewModel = hiltViewModel(),
+    viewModel: NoteViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.noteUiState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()

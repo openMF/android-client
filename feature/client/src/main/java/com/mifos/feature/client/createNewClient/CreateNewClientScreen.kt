@@ -88,7 +88,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -105,6 +104,7 @@ import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -118,7 +118,7 @@ import java.util.Objects
 internal fun CreateNewClientScreen(
     navigateBack: () -> Unit,
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
-    viewmodel: CreateNewClientViewModel = hiltViewModel(),
+    viewmodel: CreateNewClientViewModel = koinViewModel(),
 ) {
     val uiState by viewmodel.createNewClientUiState.collectAsStateWithLifecycle()
     val officeList by viewmodel.showOffices.collectAsStateWithLifecycle()

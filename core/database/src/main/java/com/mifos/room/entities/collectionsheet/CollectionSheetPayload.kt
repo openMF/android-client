@@ -15,11 +15,13 @@ import com.mifos.room.entities.client.ClientsAttendance
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 31-07-17.
  */
 @Parcelize
+@Serializable
 data class CollectionSheetPayload(
     var actualDisbursementDate: String? = null,
 

@@ -68,10 +68,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.mifos.core.designsystem.component.MifosAndroidClientIcon
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.feature.auth.R
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Aditya Gupta on 11/02/24.
@@ -83,7 +83,7 @@ internal fun LoginScreen(
     passcodeIntent: () -> Unit,
     onClickToUpdateServerConfig: () -> Unit,
     modifier: Modifier = Modifier,
-    loginViewModel: LoginViewModel = hiltViewModel(),
+    loginViewModel: LoginViewModel = koinViewModel(),
 ) {
     val state = loginViewModel.loginUiState.collectAsState().value
     val context = LocalContext.current

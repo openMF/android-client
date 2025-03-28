@@ -14,6 +14,7 @@
 package com.mifos.feature.pathTracking
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -63,12 +64,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.registerReceiver
 import androidx.core.content.ContextCompat.startActivity
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -79,11 +77,14 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.feature.path.tracking.R
+import kotlinx.serialization.json.Json
+import org.koin.androidx.compose.koinViewModel
 
+@SuppressLint("WrongConstant")
 @Composable
 fun PathTrackingScreen(
     onBackPressed: () -> Unit,
-    viewModel: PathTrackingViewModel = hiltViewModel(),
+    viewModel: PathTrackingViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
     val state by viewModel.pathTrackingUiState.collectAsStateWithLifecycle()
@@ -295,11 +296,10 @@ private fun PathTrackingItem(
 }
 
 private fun getLatLngList(latLngString: String?): List<com.mifos.core.model.objects.users.UserLatLng> {
-    val gson = Gson()
-    return gson.fromJson(
-        latLngString,
-        object : TypeToken<List<com.mifos.core.model.objects.users.UserLatLng>>() {}.type,
-    )
+    val json = Json { ignoreUnknownKeys = true }
+
+    if (latLngString.isNullOrEmpty()) return emptyList()
+    return json.decodeFromString(latLngString)
 }
 
 private class PathTrackingUiStateProvider : PreviewParameterProvider<PathTrackingUiState> {

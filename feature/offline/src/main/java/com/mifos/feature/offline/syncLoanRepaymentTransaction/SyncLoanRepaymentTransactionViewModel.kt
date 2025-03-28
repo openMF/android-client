@@ -18,7 +18,6 @@ import com.mifos.core.datastore.PrefManager
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,13 +25,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncLoanRepaymentTransactionViewModel @Inject constructor(
+class SyncLoanRepaymentTransactionViewModel(
     private val repository: SyncLoanRepaymentTransactionRepository,
     private val prefManager: PrefManager,
 ) : ViewModel() {

@@ -15,7 +15,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
@@ -25,6 +24,8 @@ import com.mifos.feature.individualCollectionSheet.individualCollectionSheet.ui.
 import com.mifos.feature.individualCollectionSheet.individualCollectionSheetDetails.IndividualCollectionSheetDetailsScreen
 import com.mifos.feature.individualCollectionSheet.paymentDetails.PaymentDetailsScreenRoute
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
  * Created by Pronay Sarker on 20/08/2024 (4:06 PM)
@@ -123,10 +124,10 @@ fun NavController.navigateToPaymentDetailsScreen(
     paymentTypeOptions: List<com.mifos.core.model.objects.account.loan.PaymentTypeOptions>,
     clientId: Int,
 ) {
-    val payloadInGsonString = Gson().toJson(payload)
-    val paymentTypeOptionNameInGsonString = Gson().toJson(paymentTypeOptionsName)
-    val loansAndClientNameInGsonString = Gson().toJson(loansAndClientName)
-    val paymentTypeOptionsInGsonString = Gson().toJson(paymentTypeOptions)
+    val payloadInGsonString = Json.encodeToString(payload)
+    val paymentTypeOptionNameInGsonString = Json.encodeToString(paymentTypeOptionsName)
+    val loansAndClientNameInGsonString = Json.encodeToString(loansAndClientName)
+    val paymentTypeOptionsInGsonString = Json.encodeToString(paymentTypeOptions)
 
     navigate(
         CollectionSheetScreens.PaymentDetailsScreen.argument(

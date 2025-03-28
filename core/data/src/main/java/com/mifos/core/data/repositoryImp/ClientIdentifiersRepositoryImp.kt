@@ -15,12 +15,11 @@ import com.mifos.core.network.datamanager.DataManagerClient
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.openapitools.client.models.DeleteClientsClientIdIdentifiersIdentifierIdResponse
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
-class ClientIdentifiersRepositoryImp @Inject constructor(
+class ClientIdentifiersRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : ClientIdentifiersRepository {
 

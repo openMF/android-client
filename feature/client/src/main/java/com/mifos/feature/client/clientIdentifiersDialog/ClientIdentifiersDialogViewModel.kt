@@ -17,15 +17,12 @@ import com.mifos.core.domain.useCases.GetClientIdentifierTemplateUseCase
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
 import com.mifos.feature.client.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ClientIdentifiersDialogViewModel @Inject constructor(
+class ClientIdentifiersDialogViewModel(
     private val getClientIdentifierTemplateUseCase: GetClientIdentifierTemplateUseCase,
     private val createClientIdentifierUseCase: CreateClientIdentifierUseCase,
 ) : ViewModel() {

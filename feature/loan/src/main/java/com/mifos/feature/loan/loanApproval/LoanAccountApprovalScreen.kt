@@ -47,7 +47,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -57,6 +56,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.network.GenericResponse
 import com.mifos.feature.loan.R
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -67,7 +67,7 @@ import java.util.Locale
 @Composable
 internal fun LoanAccountApprovalScreen(
     navigateBack: () -> Unit,
-    viewModel: LoanAccountApprovalViewModel = hiltViewModel(),
+    viewModel: LoanAccountApprovalViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.loanAccountApprovalUiState.collectAsStateWithLifecycle()
 

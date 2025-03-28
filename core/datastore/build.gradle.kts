@@ -10,7 +10,8 @@
 plugins {
     alias(libs.plugins.mifos.android.library)
     alias(libs.plugins.mifos.android.library.jacoco)
-    alias(libs.plugins.mifos.android.hilt)
+    alias(libs.plugins.mifos.android.koin)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -37,4 +38,6 @@ dependencies {
 
     // sdk client
     api(libs.fineract.client)
+
+    implementation(libs.kotlinx.serialization.json)
 }

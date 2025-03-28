@@ -17,15 +17,12 @@ import com.mifos.core.domain.useCases.GetAllChargesV2UseCase
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.feature.client.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ChargeDialogViewModel @Inject constructor(
+class ChargeDialogViewModel(
     private val getAllChargesV2UseCase: GetAllChargesV2UseCase,
     private val createChargesUseCase: CreateChargesUseCase,
 ) : ViewModel() {

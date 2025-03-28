@@ -15,7 +15,6 @@ import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -27,8 +26,7 @@ import javax.inject.Inject
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
-@HiltViewModel
-class SyncSurveysDialogViewModel @Inject constructor(
+class SyncSurveysDialogViewModel(
     private val repository: SyncSurveysDialogRepository,
 ) :
     ViewModel() {

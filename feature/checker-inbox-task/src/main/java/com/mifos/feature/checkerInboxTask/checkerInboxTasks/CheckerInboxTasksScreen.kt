@@ -31,7 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -40,6 +39,7 @@ import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.feature.checker_inbox_task.R
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Aditya Gupta on 21/03/24.
@@ -49,7 +49,7 @@ import com.mifos.feature.checker_inbox_task.R
 internal fun CheckerInboxTasksScreen(
     onBackPressed: () -> Unit,
     checkerInbox: () -> Unit,
-    checkerInboxTasksViewModel: CheckerInboxTasksViewModel = hiltViewModel(),
+    checkerInboxTasksViewModel: CheckerInboxTasksViewModel = koinViewModel(),
 ) {
     val state =
         checkerInboxTasksViewModel.checkerInboxTasksUiState.collectAsStateWithLifecycle().value

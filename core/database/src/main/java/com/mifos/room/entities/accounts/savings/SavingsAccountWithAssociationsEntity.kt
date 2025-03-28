@@ -19,6 +19,7 @@ import com.mifos.core.model.objects.account.saving.InterestCompoundingPeriodType
 import com.mifos.core.model.objects.account.saving.InterestPostingPeriodType
 import com.mifos.core.model.objects.account.saving.LockinPeriodFrequencyType
 import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
+import kotlinx.serialization.Serializable
 
 @Entity(
     tableName = "SavingsAccountWithAssociations",
@@ -37,6 +38,7 @@ import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
         ),
     ],
 )
+@Serializable
 data class SavingsAccountWithAssociationsEntity(
     @PrimaryKey
     val id: Int? = null,

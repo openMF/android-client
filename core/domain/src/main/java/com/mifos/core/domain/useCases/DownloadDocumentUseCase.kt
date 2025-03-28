@@ -14,9 +14,10 @@ import com.mifos.core.data.repository.DocumentListRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.ResponseBody
-import javax.inject.Inject
 
-class DownloadDocumentUseCase @Inject constructor(private val repository: DocumentListRepository) {
+class DownloadDocumentUseCase(
+    private val repository: DocumentListRepository,
+) {
 
     suspend operator fun invoke(
         entityType: String,

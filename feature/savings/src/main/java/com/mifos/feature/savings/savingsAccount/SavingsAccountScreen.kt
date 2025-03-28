@@ -57,7 +57,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -73,6 +72,7 @@ import com.mifos.feature.savings.R
 import com.mifos.room.entities.client.Savings
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
+import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -83,7 +83,7 @@ import java.util.Locale
 @Composable
 internal fun SavingsAccountScreen(
     navigateBack: () -> Unit,
-    viewModel: SavingAccountViewModel = hiltViewModel(),
+    viewModel: SavingAccountViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.savingAccountUiState.collectAsStateWithLifecycle()
     val savingProductsTemplate by viewModel.savingProductsTemplate.collectAsStateWithLifecycle()

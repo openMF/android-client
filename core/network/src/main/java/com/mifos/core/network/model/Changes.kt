@@ -9,13 +9,16 @@
  */
 package com.mifos.core.network.model
 
-import com.google.gson.Gson
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
+@Serializable
 data class Changes(
     val locale: String,
     val dateFormat: String,
 ) {
     override fun toString(): String {
-        return Gson().toJson(this)
+        return Json.encodeToString(this)
     }
 }

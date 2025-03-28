@@ -8,6 +8,11 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.common.utils
+import kotlinx.serialization.json.Json
+
+fun String.asServerConfig(): ServerConfig {
+    val jsonString = this.replace("'", "\"")
+    return Json.decodeFromString<ServerConfig>(jsonString)
 
 expect object LanguageHelper {
     fun onAttach(context: Any): Any?

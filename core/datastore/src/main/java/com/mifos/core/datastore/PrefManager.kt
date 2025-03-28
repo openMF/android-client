@@ -15,13 +15,13 @@ import android.preference.PreferenceManager
 import com.mifos.core.common.model.user.User
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.ServerConfig
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.mifos.core.sharedpreference.Key
 import org.mifos.core.sharedpreference.UserPreferences
 import org.openapitools.client.models.PostAuthenticationResponse
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 19/08/23.
@@ -30,8 +30,8 @@ const val USER_DETAILS = "user_details"
 const val AUTH_USERNAME = "auth_username"
 const val AUTH_PASSWORD = "auth_password"
 
-class PrefManager @Inject constructor(
-    @ApplicationContext context: Context,
+class PrefManager(
+    context: Context,
 ) : UserPreferences<User>() {
 
     private val serverConfigKey = Key.Custom("SERVER_CONFIG_KEY")
@@ -40,16 +40,16 @@ class PrefManager @Inject constructor(
         PreferenceManager.getDefaultSharedPreferences(context)
 
     override fun getUser(): User {
-        return gson.fromJson(preference.getString(USER_DETAILS, ""), User::class.java)
+        return Json.decodeFromString<User>(preference.getString(USER_DETAILS, "")!!)
     }
 
     override fun saveUser(user: User) {
-        preference.edit().putString(USER_DETAILS, gson.toJson(user)).apply()
+        preference.edit().putString(USER_DETAILS, Json.encodeToString(user)).apply()
     }
 
     // Created this to store userDetails
     fun savePostAuthenticationResponse(user: PostAuthenticationResponse) {
-        preference.edit().putString(USER_DETAILS, gson.toJson(user)).apply()
+        preference.edit().putString(USER_DETAILS, Json.encodeToString(user)).apply()
     }
 
     fun setPermissionDeniedStatus(permissionDeniedStatus: String, status: Boolean) {
@@ -78,7 +78,7 @@ class PrefManager @Inject constructor(
 
     val getServerConfig: ServerConfig =
         preference.getString(serverConfigKey.value, null)?.let {
-            gson.fromJson(it, ServerConfig::class.java)
+            Json.decodeFromString<ServerConfig>(it)
         } ?: ServerConfig.DEFAULT
 
     fun updateServerConfig(config: ServerConfig?) {

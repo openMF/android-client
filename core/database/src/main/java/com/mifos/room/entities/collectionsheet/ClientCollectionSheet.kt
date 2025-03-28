@@ -14,11 +14,13 @@ import com.mifos.core.model.objects.collectionsheets.AttendanceTypeOption
 import com.mifos.core.model.objects.collectionsheets.LoanCollectionSheet
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 06-07-2017.
  */
 @Parcelize
+@Serializable
 data class ClientCollectionSheet(
     var clientId: Int = 0,
 

@@ -45,7 +45,6 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.enums.MifosAppLanguage
 import com.mifos.core.common.utils.LanguageHelper
@@ -55,6 +54,7 @@ import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
 import com.mifos.feature.settings.R
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
+import org.koin.androidx.compose.koinViewModel
 import java.util.Locale
 
 @Composable
@@ -63,7 +63,7 @@ internal fun SettingsScreen(
     navigateToLoginScreen: () -> Unit,
     changePasscode: (String) -> Unit,
     languageChanged: () -> Unit,
-    viewModel: SettingsViewModel = hiltViewModel(),
+    viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val baseURL by viewModel.baseUrl.collectAsStateWithLifecycle()
     val tenant by viewModel.tenant.collectAsStateWithLifecycle()

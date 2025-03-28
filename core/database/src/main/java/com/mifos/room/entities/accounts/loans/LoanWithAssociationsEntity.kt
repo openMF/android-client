@@ -25,6 +25,7 @@ import com.mifos.core.model.objects.account.loan.Transaction
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 // @TypeConverters(
 //    AmortizationTypeConverter::class,
@@ -64,6 +65,7 @@ import kotlinx.parcelize.Parcelize
         ),
     ],
 )
+@Serializable
 data class LoanWithAssociationsEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,

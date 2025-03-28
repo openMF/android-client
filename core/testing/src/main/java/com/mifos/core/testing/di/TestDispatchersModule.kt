@@ -9,29 +9,13 @@
  */
 package com.mifos.core.testing.di
 
-import com.mifos.core.common.network.Dispatcher
 import com.mifos.core.common.network.MifosDispatchers
-import com.mifos.core.common.network.di.DispatchersModule
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.components.SingletonComponent
-import dagger.hilt.testing.TestInstallIn
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.test.TestDispatcher
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 
-@Module
-@TestInstallIn(
-    components = [SingletonComponent::class],
-    replaces = [DispatchersModule::class],
-)
-internal object TestDispatchersModule {
-    @Provides
-    @Dispatcher(MifosDispatchers.IO)
-    fun providesIODispatcher(testDispatcher: TestDispatcher): CoroutineDispatcher = testDispatcher
-
-    @Provides
-    @Dispatcher(MifosDispatchers.Default)
-    fun providesDefaultDispatcher(
-        testDispatcher: TestDispatcher,
-    ): CoroutineDispatcher = testDispatcher
+val TestDispatchersModule = module {
+    single<CoroutineDispatcher>(named(MifosDispatchers.IO)) { get<TestDispatcher>() }
+    single<CoroutineDispatcher>(named(MifosDispatchers.Default)) { get<TestDispatcher>() }
 }

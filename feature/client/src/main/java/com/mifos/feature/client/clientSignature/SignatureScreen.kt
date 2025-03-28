@@ -49,7 +49,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.core.graphics.applyCanvas
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.designsystem.component.MifosCircularProgress
@@ -59,6 +58,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.utility.PathState
 import com.mifos.feature.client.R
+import org.koin.androidx.compose.koinViewModel
 import java.io.ByteArrayOutputStream
 import java.io.File
 import kotlin.math.roundToInt
@@ -66,7 +66,7 @@ import kotlin.math.roundToInt
 @Composable
 internal fun SignatureScreen(
     onBackPressed: () -> Unit,
-    viewmodel: SignatureViewModel = hiltViewModel(),
+    viewmodel: SignatureViewModel = koinViewModel(),
 ) {
     val clientId by viewmodel.clientId.collectAsStateWithLifecycle()
     val state by viewmodel.signatureUiState.collectAsStateWithLifecycle()

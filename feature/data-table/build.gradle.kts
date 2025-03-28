@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.mifos.android.feature)
     alias(libs.plugins.mifos.android.library.compose)
     alias(libs.plugins.mifos.android.library.jacoco)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -36,4 +37,6 @@ dependencies {
     androidTestImplementation(projects.core.testing)
 
     implementation(libs.androidx.material)
+
+    implementation(libs.kotlinx.serialization.json)
 }

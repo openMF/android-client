@@ -11,8 +11,10 @@ package com.mifos.room.entities.client
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class ClientsAttendance(
 
     val attendanceType: Int,

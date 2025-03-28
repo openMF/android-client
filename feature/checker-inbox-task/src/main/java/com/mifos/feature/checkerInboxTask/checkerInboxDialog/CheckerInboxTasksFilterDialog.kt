@@ -43,7 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -51,13 +50,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.checker_inbox_task.R
+import org.koin.androidx.compose.koinViewModel
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -76,7 +75,7 @@ internal fun CheckerInboxTasksFilterDialog(
     action: String?,
     entity: String?,
     resourceId: String?,
-    viewModel: CheckerInboxViewModel = hiltViewModel(),
+    viewModel: CheckerInboxDialogViewmodel = koinViewModel(),
 ) {
     val searchTemplate by viewModel.searchTemplate.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = true) {

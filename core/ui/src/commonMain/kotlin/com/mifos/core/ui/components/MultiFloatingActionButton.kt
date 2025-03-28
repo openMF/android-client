@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -51,10 +52,10 @@ sealed class FabButtonState {
     }
 }
 
-data class FabButton(
-    val fabType: FabType,
-    val iconRes: DrawableResource,
-)
+sealed class FabButton(val fabType: FabType) {
+    data class DrawableFab(val type: FabType, val iconRes: DrawableResource) : FabButton(type)
+    data class VectorFab(val type: FabType, val iconRes: ImageVector) : FabButton(type)
+}
 
 @Composable
 fun FabItem(
@@ -63,16 +64,19 @@ fun FabItem(
     onFabClick: (FabType) -> Unit,
 ) {
     FloatingActionButton(
-        onClick = {
-            onFabClick(fabButton.fabType)
-        },
-        modifier = modifier
-            .size(48.dp),
+        onClick = { onFabClick(fabButton.fabType) },
+        modifier = modifier.size(48.dp),
     ) {
-        Icon(
-            painter = painterResource(fabButton.iconRes),
-            contentDescription = fabButton.fabType.name,
-        )
+        when (fabButton) {
+            is FabButton.DrawableFab -> Icon(
+                painter = painterResource(fabButton.iconRes),
+                contentDescription = fabButton.fabType.name,
+            )
+            is FabButton.VectorFab -> Icon(
+                imageVector = fabButton.iconRes,
+                contentDescription = fabButton.fabType.name,
+            )
+        }
     }
 }
 

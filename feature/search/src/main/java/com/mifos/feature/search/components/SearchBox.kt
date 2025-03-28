@@ -45,7 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
-import com.mifos.core.ui.util.DevicePreviews
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.FilterOption
 import com.mifos.feature.search.R
 import com.mifos.feature.search.SearchScreenEvent
@@ -184,7 +184,7 @@ internal fun SearchBox(
     }
 }
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun SearchBoxPreview() {
     SearchBox(
@@ -194,7 +194,7 @@ private fun SearchBoxPreview() {
     )
 }
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun SearchBoxWithValuesPreview() {
     SearchBox(

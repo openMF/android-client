@@ -12,7 +12,6 @@ package com.mifos.feature.individualCollectionSheet.individualCollectionSheetDet
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.SaveIndividualCollectionSheetUseCase
@@ -21,22 +20,20 @@ import com.mifos.core.network.model.IndividualCollectionSheetPayload
 import com.mifos.feature.collection_sheet.R
 import com.mifos.room.entities.collectionsheet.ClientCollectionSheet
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import rx.Observable
-import javax.inject.Inject
 
-@HiltViewModel
-class IndividualCollectionSheetDetailsViewModel @Inject constructor(
+class IndividualCollectionSheetDetailsViewModel(
     private val saveIndividualCollectionSheetUseCase: SaveIndividualCollectionSheetUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val arg = savedStateHandle.getStateFlow(key = Constants.INDIVIDUAL_SHEET, initialValue = "")
-    val sheet: IndividualCollectionSheet = Gson().fromJson(arg.value, IndividualCollectionSheet::class.java)
+    val sheet: IndividualCollectionSheet = Json.decodeFromString<IndividualCollectionSheet>(arg.value)
 
     private val _individualCollectionSheetDetailsUiState =
         MutableStateFlow<IndividualCollectionSheetDetailsUiState>(

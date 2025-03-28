@@ -12,10 +12,12 @@ package com.mifos.room.entities.templates.clients
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 @Entity(tableName = "ClientTemplateOptions")
 data class OptionsEntity(
     val optionType: String? = null,
@@ -29,6 +31,6 @@ data class OptionsEntity(
 
     val description: String? = null,
 
-    @SerializedName("isActive")
+    @SerialName("isActive")
     val activeStatus: Boolean = false,
 ) : Parcelable

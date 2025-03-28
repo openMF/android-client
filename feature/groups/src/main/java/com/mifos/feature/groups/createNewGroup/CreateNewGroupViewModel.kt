@@ -14,18 +14,15 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.room.entities.group.GroupPayloadEntity
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 10/08/23.
  */
-@HiltViewModel
-class CreateNewGroupViewModel @Inject constructor(
+class CreateNewGroupViewModel(
 //    private val getGroupOfficesUseCase: GetGroupOfficesUseCase,
 //    private val createNewGroupUseCase: CreateNewGroupUseCase,
     private val repository: CreateNewGroupRepository,

@@ -12,13 +12,13 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.core.network.datamanager.DataManagerDataTable
-import javax.inject.Inject
 
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
-class PathTrackingRepositoryImp @Inject constructor(private val dataManagerDataTable: DataManagerDataTable) :
-    PathTrackingRepository {
+class PathTrackingRepositoryImp(
+    private val dataManagerDataTable: DataManagerDataTable,
+) : PathTrackingRepository {
 
     override suspend fun getUserPathTracking(userId: Int): List<UserLocation> {
         return dataManagerDataTable.getUserPathTracking(userId)

@@ -51,7 +51,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
@@ -64,6 +63,7 @@ import com.mifos.feature.loan.R
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Pronay Sarker on 01/07/2024 (5:50 AM)
@@ -79,7 +79,7 @@ internal fun LoanAccountSummaryScreen(
     approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: (loanId: Int) -> Unit,
     onRepaymentClick: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
-    viewModel: LoanAccountSummaryViewModel = hiltViewModel(),
+    viewModel: LoanAccountSummaryViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.loanAccountSummaryUiState.collectAsStateWithLifecycle()
     val loanAccountNumber by viewModel.loanAccountNumber.collectAsStateWithLifecycle()

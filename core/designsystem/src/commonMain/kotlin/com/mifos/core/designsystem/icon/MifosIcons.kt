@@ -20,6 +20,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Apartment
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
@@ -121,6 +122,7 @@ object MifosIcons {
     val Finance = Icons.Outlined.Wallet
     val Profile = Icons.Outlined.AccountCircle
     val ProfileBoarder = Icons.Rounded.AccountCircle
+    val buildingIcon = Icons.Filled.Apartment
 
     val Paid: ImageVector = Icons.Default.Paid
     val Logout: ImageVector = Icons.AutoMirrored.Filled.Logout
