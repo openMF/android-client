@@ -26,8 +26,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.model.objects.SearchedEntity
-import com.mifos.core.ui.R
-import com.mifos.core.ui.components.FabButton
 import com.mifos.core.ui.components.FabButtonState
 import com.mifos.core.ui.components.FabType
 import com.mifos.core.ui.components.MultiFloatingActionButton
