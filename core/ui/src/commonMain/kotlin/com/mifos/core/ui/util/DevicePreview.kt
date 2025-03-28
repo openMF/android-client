@@ -9,7 +9,7 @@
  */
 package com.mifos.core.ui.util
 
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
  * Multipreview annotation that represents various device sizes. Add this annotation to a composable

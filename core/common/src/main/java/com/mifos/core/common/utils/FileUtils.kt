@@ -200,7 +200,7 @@ object FileUtils {
             out.close()
             inputStream.close()
         } catch (e: Exception) {
-            Log.d(LOG_TAG, e.localizedMessage)
+//            Log.d(LOG_TAG, e.localizedMessage)
         }
     }
 }

@@ -37,8 +37,7 @@ import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.core.ui.util.DevicePreviews
-import com.mifos.core.ui.util.SearchResultPreviewParameter
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.R
 import com.mifos.feature.search.SearchResultState
 
@@ -135,7 +134,7 @@ internal fun SearchResult(
     )
 }
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun SearchScreenResultLoadingPreview() {
     SearchScreenResult(
@@ -144,7 +143,7 @@ private fun SearchScreenResultLoadingPreview() {
     )
 }
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun SearchScreenResultInitialEmptyPreview() {
     SearchScreenResult(
@@ -153,7 +152,7 @@ private fun SearchScreenResultInitialEmptyPreview() {
     )
 }
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun SearchScreenResultEmptyPreview() {
     SearchScreenResult(
@@ -162,7 +161,7 @@ private fun SearchScreenResultEmptyPreview() {
     )
 }
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun SearchScreenResultErrorPreview() {
     SearchScreenResult(
@@ -171,19 +170,8 @@ private fun SearchScreenResultErrorPreview() {
     )
 }
 
-@DevicePreviews
-@Composable
-private fun SearchScreenResultSuccessPreview(
-    @PreviewParameter(SearchResultPreviewParameter::class)
-    results: List<SearchedEntity>,
-) {
-    SearchScreenResult(
-        searchResultState = SearchResultState.Success(results),
-        onResultItemClick = {},
-    )
-}
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun SearchResultPreview() {
     SearchResult(

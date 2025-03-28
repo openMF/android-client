@@ -29,7 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
-import com.mifos.core.ui.util.DevicePreviews
+import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.FilterOption
 import com.mifos.feature.search.R
 import com.mifos.feature.search.SearchScreenEvent
@@ -115,7 +115,7 @@ internal fun FilterOption(
     }
 }
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun FilterDialogPreview(
     modifier: Modifier = Modifier,
@@ -128,7 +128,7 @@ private fun FilterDialogPreview(
     )
 }
 
-@DevicePreviews
+@DevicePreview
 @Composable
 private fun FilterOptionPreview(
     modifier: Modifier = Modifier,
