@@ -7,16 +7,18 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.mifosxdroid.utils
+package com.mifos.core.common.model.user
+
+import kotlinx.serialization.Serializable
 
 /**
- * Created by Rajan Maurya on 08/07/16.
+ * Created by ishankhanna on 09/02/14.
  */
-object MifosResponseHandler {
-    fun getResponse(userStatus: Boolean): String {
-        return when (userStatus) {
-            true -> "Saved into DB Successfully"
-            false -> "created successfully"
-        }
-    }
-}
+@Serializable
+data class Role(
+    var id: Int = 0,
+
+    var name: String? = null,
+
+    var description: String? = null,
+)

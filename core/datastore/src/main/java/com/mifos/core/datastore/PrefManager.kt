@@ -17,6 +17,8 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.ServerConfig
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.mifos.core.sharedpreference.Key
 import org.mifos.core.sharedpreference.UserPreferences
 import org.openapitools.client.models.PostAuthenticationResponse
@@ -38,16 +40,16 @@ class PrefManager(
         PreferenceManager.getDefaultSharedPreferences(context)
 
     override fun getUser(): User {
-        return gson.fromJson(preference.getString(USER_DETAILS, ""), User::class.java)
+        return Json.decodeFromString<User>(preference.getString(USER_DETAILS, "")!!)
     }
 
     override fun saveUser(user: User) {
-        preference.edit().putString(USER_DETAILS, gson.toJson(user)).apply()
+        preference.edit().putString(USER_DETAILS, Json.encodeToString(user)).apply()
     }
 
     // Created this to store userDetails
     fun savePostAuthenticationResponse(user: PostAuthenticationResponse) {
-        preference.edit().putString(USER_DETAILS, gson.toJson(user)).apply()
+        preference.edit().putString(USER_DETAILS, Json.encodeToString(user)).apply()
     }
 
     fun setPermissionDeniedStatus(permissionDeniedStatus: String, status: Boolean) {
@@ -76,7 +78,7 @@ class PrefManager(
 
     val getServerConfig: ServerConfig =
         preference.getString(serverConfigKey.value, null)?.let {
-            gson.fromJson(it, ServerConfig::class.java)
+            Json.decodeFromString<ServerConfig>(it)
         } ?: ServerConfig.DEFAULT
 
     fun updateServerConfig(config: ServerConfig?) {

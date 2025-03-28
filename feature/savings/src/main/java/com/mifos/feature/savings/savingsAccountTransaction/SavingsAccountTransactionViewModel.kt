@@ -12,7 +12,6 @@ package com.mifos.feature.savings.savingsAccountTransaction
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.datastore.PrefManager
@@ -24,6 +23,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 /**
  * Created by Aditya Gupta on 13/08/23.
@@ -39,7 +39,7 @@ class SavingsAccountTransactionViewModel(
 
     private val arg = savedStateHandle.getStateFlow(key = "arg", initialValue = "")
     private val savingsTransactionData: SavingsTransactionData =
-        Gson().fromJson(arg.value, SavingsTransactionData::class.java)
+        Json.decodeFromString<SavingsTransactionData>(arg.value)
 
     val accountId = savingsTransactionData.savingsAccountWithAssociations.id
     val savingsAccountNumber = savingsTransactionData.savingsAccountWithAssociations.accountNo

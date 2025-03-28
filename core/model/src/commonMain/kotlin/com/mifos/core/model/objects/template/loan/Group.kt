@@ -11,11 +11,13 @@ package com.mifos.core.model.objects.template.loan
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by mayankjindal on 02/10/16.
  */
 @Parcelize
+@Serializable
 data class Group(
     var id: Int? = null,
 

@@ -12,11 +12,13 @@ package com.mifos.room.entities.collectionsheet
 import android.os.Parcelable
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 31-07-17.
  */
 @Parcelize
+@Serializable
 data class SavingsCollectionSheet(
     // The accountId is of String type only. It's not a mistake.
     val accountId: String? = null,

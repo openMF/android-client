@@ -9,9 +9,6 @@
  */
 package com.mifos.room.helper
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import com.mifos.core.common.network.Dispatcher
 import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.common.utils.Constants.DATA_TABLE_NAME_CLIENT
@@ -39,7 +36,9 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import java.lang.reflect.Type
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
 
 /**
  * This DatabaseHelper Managing all Database logic and staff (Saving, Update, Delete).
@@ -51,17 +50,13 @@ class ClientDaoHelper(
     @Dispatcher(MifosDispatchers.IO)
     private val ioDispatcher: CoroutineDispatcher,
 ) {
-    private val gson: Gson
-    private val type: Type
 
     init {
-        val gsonBuilder = GsonBuilder()
-        gsonBuilder.registerTypeAdapter(
-            object : TypeToken<HashMap<String, Any>>() {}.type,
-            MapDeserializer(),
-        )
-        gson = gsonBuilder.create()
-        type = object : TypeToken<HashMap<String, Any>>() {}.type
+        Json {
+            serializersModule = SerializersModule {
+                contextual(MapDeserializer)
+            }
+        }
     }
 
     /**

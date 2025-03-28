@@ -14,9 +14,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mifos.room.basemodel.APIEndPoint
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Entity(tableName = "SavingAccountDepositType")
 @Parcelize
+@Serializable
 data class SavingAccountDepositTypeEntity(
     @PrimaryKey
     val id: Int? = null,

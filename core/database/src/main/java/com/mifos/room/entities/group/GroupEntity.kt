@@ -17,6 +17,7 @@ import androidx.room.PrimaryKey
 import com.mifos.room.entities.Timeline
 import com.mifos.room.entities.client.ClientStatusEntity
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
 @Entity(
@@ -30,6 +31,7 @@ import kotlinx.parcelize.Parcelize
         ),
     ],
 )
+@Serializable
 data class GroupEntity(
     @PrimaryKey
     val id: Int? = null,

@@ -12,11 +12,13 @@ package com.mifos.room.entities.accounts.savings
 import android.os.Parcelable
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Pronay Sarker on 15/08/2024 (11:12 PM)
  */
 @Parcelize
+@Serializable
 data class SavingsTransactionData(
     @IgnoredOnParcel
     val savingsAccountWithAssociations: SavingsAccountWithAssociationsEntity = SavingsAccountWithAssociationsEntity(),

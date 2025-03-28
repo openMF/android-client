@@ -64,8 +64,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -74,6 +72,11 @@ import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.feature.dataTable.dataTableRowDialog.DataTableRowDialogScreen
 import com.mifos.feature.data_table.R
 import com.mifos.room.entities.noncore.DataTableEntity
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -215,7 +218,7 @@ fun DataTableDataContent(
     val jsonElementIterator: Iterator<JsonElement> = jsonElements.iterator()
     var dataList by rememberSaveable { mutableStateOf<List<DataTableDataItem>>(emptyList()) }
 
-    if (jsonElements.size() == 0) {
+    if (jsonElements.size == 0) {
         MifosEmptyUi(
             text = stringResource(id = R.string.feature_data_table_no_data_table_details_to_show),
             modifier = modifier,
@@ -225,11 +228,11 @@ fun DataTableDataContent(
             val dataTableDataItem = DataTableDataItem()
             val jsonElement: JsonElement = jsonElementIterator.next()
 
-            if (jsonElement.asJsonObject.has("client_id")) {
-                dataTableDataItem.clientId = jsonElement.asJsonObject.get("client_id").toString()
+            if (jsonElement.jsonObject.containsKey("client_id")) {
+                dataTableDataItem.clientId = jsonElement.jsonObject["client_id"].toString()
             }
-            if (jsonElement.asJsonObject.has("id")) {
-                dataTableDataItem.id = jsonElement.asJsonObject.get("id").toString()
+            if (jsonElement.jsonObject.containsKey("id")) {
+                dataTableDataItem.id = jsonElement.jsonObject["id"].toString()
             }
             dataList = dataList + dataTableDataItem
         }
@@ -339,7 +342,7 @@ class DataTableDataUiStateProvider : PreviewParameterProvider<DataTableDataUiSta
         get() = sequenceOf(
             DataTableDataUiState.Loading,
             DataTableDataUiState.Error(R.string.feature_data_table_failed_to_delete_data_table),
-            DataTableDataUiState.DataTableInfo(JsonArray()),
+            DataTableDataUiState.DataTableInfo(Json.parseToJsonElement(values.toString()).jsonArray),
         )
 }
 

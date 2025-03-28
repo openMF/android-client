@@ -7,15 +7,25 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.runreport
+package com.mifos.core.common.model.user
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-/**
- * Created by Tarun on 03-08-17.
- */
-@Parcelize
 @Serializable
-data class DataRow(var row: List<String> = listOf()) : Parcelable
+class User {
+    var username: String? = null
+
+    var userId = 0
+
+    var base64EncodedAuthenticationKey: String? = null
+
+    var isAuthenticated = false
+
+    var officeId = 0
+
+    var officeName: String? = null
+
+    var roles: List<Role> = ArrayList()
+
+    var permissions: List<String> = ArrayList()
+}

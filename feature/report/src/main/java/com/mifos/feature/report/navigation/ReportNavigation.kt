@@ -15,13 +15,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.feature.report.report.ReportScreen
 import com.mifos.feature.report.reportDetail.ReportDetailScreen
 import com.mifos.feature.report.runReport.RunReportScreen
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 fun NavGraphBuilder.reportNavGraph(
     navController: NavController,
@@ -87,11 +88,11 @@ fun NavGraphBuilder.reportScreenRoute(
 }
 
 fun NavController.navigateReportDetailsScreen(clientReportTypeItem: ClientReportTypeItem) {
-    val arg = Gson().toJson(clientReportTypeItem)
+    val arg = Json.encodeToString(clientReportTypeItem)
     navigate(ReportScreens.ReportDetailScreen.argument(arg))
 }
 
 fun NavController.navigateReportScreens(fullParameterListResponse: FullParameterListResponse) {
-    val arg = Gson().toJson(fullParameterListResponse)
+    val arg = Json.encodeToString(fullParameterListResponse)
     navigate(ReportScreens.ReportScreen.argument(arg))
 }

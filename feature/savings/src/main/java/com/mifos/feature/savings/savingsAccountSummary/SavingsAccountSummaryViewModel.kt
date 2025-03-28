@@ -12,7 +12,6 @@ package com.mifos.feature.savings.savingsAccountSummary
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.feature.savings.R
@@ -22,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 /**
  * Created by Aditya Gupta on 08/08/23.
@@ -34,7 +34,7 @@ class SavingsAccountSummaryViewModel(
 
     private val arg = savedStateHandle.getStateFlow(key = "arg", initialValue = "")
     val savingsNavigationData: SavingsSummaryData =
-        Gson().fromJson(arg.value, SavingsSummaryData::class.java)
+        Json.decodeFromString<SavingsSummaryData>(arg.value)
 
     private val _savingsAccountSummaryUiState =
         MutableStateFlow<SavingsAccountSummaryUiState>(SavingsAccountSummaryUiState.ShowProgressbar)

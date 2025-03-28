@@ -15,11 +15,13 @@ import com.mifos.room.entities.Timeline
 import com.mifos.room.entities.client.ClientStatusEntity
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by ishankhanna on 28/06/14.
  */
 @Parcelize
+@Serializable
 data class CenterWithAssociations(
     var id: Int? = null,
 

@@ -17,6 +17,7 @@ import androidx.room.PrimaryKey
 import com.mifos.room.entities.Timeline
 import com.mifos.room.entities.group.GroupEntity
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
 @Entity(
@@ -36,6 +37,7 @@ import kotlinx.parcelize.Parcelize
         ),
     ],
 )
+@Serializable
 data class ClientEntity(
     @PrimaryKey
     @ColumnInfo(index = true)

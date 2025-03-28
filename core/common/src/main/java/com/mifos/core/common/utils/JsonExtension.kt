@@ -8,10 +8,9 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.common.utils
-
-import com.google.gson.Gson
+import kotlinx.serialization.json.Json
 
 fun String.asServerConfig(): ServerConfig {
     val jsonString = this.replace("'", "\"")
-    return Gson().fromJson(jsonString, ServerConfig::class.java)
+    return Json.decodeFromString<ServerConfig>(jsonString)
 }

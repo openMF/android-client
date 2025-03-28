@@ -104,6 +104,7 @@ playScanner = "16.1.0"
 playService = "18.5.0"
 realmVersion = "1.13.0"
 recyclerview = "1.4.0"
+retrofit2KotlinxSerializationConverter = "1.0.0"
 roborazzi = "1.26.0"
 room = "2.7.0-rc02"
 roomKtxVersion = "2.7.0-rc02"
@@ -221,6 +222,7 @@ android-iconify-material = { module = "com.joanzapata.iconify:android-iconify-ma
 mifos-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koin-androidx-compose-v350 = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
+retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
 rxandroid = { module = "io.reactivex:rxandroid", version.ref = "rxandroidVersion" }
 rxjava = { module = "io.reactivex:rxjava", version.ref = "rxjava" }
 

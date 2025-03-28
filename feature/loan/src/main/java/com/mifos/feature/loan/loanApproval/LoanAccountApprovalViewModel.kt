@@ -11,12 +11,12 @@ package com.mifos.feature.loan.loanApproval
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.accounts.loans.LoanApprovalData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -32,7 +32,7 @@ class LoanAccountApprovalViewModel(
 ) : ViewModel() {
 
     private val arg = savedStateHandle.getStateFlow(key = "arg", initialValue = "")
-    private val loanAccountData: LoanApprovalData = Gson().fromJson(arg.value, LoanApprovalData::class.java)
+    private val loanAccountData: LoanApprovalData = Json.decodeFromString<LoanApprovalData>(arg.value)
 
     private val _loanAccountApprovalUiState =
         MutableStateFlow<LoanAccountApprovalUiState>(LoanAccountApprovalUiState.Initial)
