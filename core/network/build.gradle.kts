@@ -8,11 +8,10 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.library)
-    alias(libs.plugins.mifos.android.library.jacoco)
-    alias(libs.plugins.mifos.android.hilt)
-    alias(libs.plugins.secrets)
-    id(libs.plugins.kotlin.parcelize.get().pluginId)
+    alias(libs.plugins.mifos.kmp.library)
+    alias(libs.plugins.ktorfit)
+    id("kotlinx-serialization")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -29,38 +28,75 @@ android {
     }
 }
 
-secrets {
-    defaultPropertiesFileName = "secrets.defaults.properties"
+kotlin{
+    sourceSets{
+        commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.json)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.serialization)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.auth)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktorfit.lib)
+            implementation(libs.squareup.okio)
+        }
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.koin.android)
+        }
+        nativeMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
+        desktopMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+        }
+    }
 }
 
 dependencies {
-
-    api(projects.core.database)
-    api(projects.core.datastore)
-    api(projects.core.common)
-
-    // fineract sdk dependencies
-    implementation(libs.mifos.android.sdk.arch)
-
-    // sdk client
-    implementation(libs.fineract.client)
-
-    //Square dependencies
-    implementation("com.squareup.retrofit2:retrofit:2.9.0") {
-        // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
-        exclude(module = "okhttp")
-    }
-    implementation(libs.converter.gson)
-    implementation(libs.converter.scalars)
-    implementation(libs.adapter.rxjava)
-    implementation(libs.squareup.okhttp)
-    implementation(libs.logging.interceptor)
-
-    implementation(libs.fliptables)
-
-    //stetho dependencies
-    implementation(libs.stetho)
-    implementation(libs.stetho.okhttp3)
-
-    implementation(libs.coil.kt2)
+    add("kspCommonMainMetadata", libs.ktorfit.ksp)
+    add("kspAndroid", libs.ktorfit.ksp)
+    add("kspJs", libs.ktorfit.ksp)
+    add("kspWasmJs", libs.ktorfit.ksp)
+    add("kspDesktop", libs.ktorfit.ksp)
+    add("kspIosX64", libs.ktorfit.ksp)
+    add("kspIosArm64", libs.ktorfit.ksp)
+    add("kspIosSimulatorArm64", libs.ktorfit.ksp)
 }
+
+
+//
+//dependencies {
+//
+//    api(projects.core.database)
+//    api(projects.core.datastore)
+//    api(projects.core.common)
+//
+//    // fineract sdk dependencies
+//    implementation(libs.mifos.android.sdk.arch)
+//
+//    // sdk client
+//    implementation(libs.fineract.client)
+//
+//    //Square dependencies
+//    implementation("com.squareup.retrofit2:retrofit:2.9.0") {
+//        // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
+//        exclude(module = "okhttp")
+//    }
+//    implementation(libs.converter.gson)
+//    implementation(libs.converter.scalars)
+//    implementation(libs.adapter.rxjava)
+//    implementation(libs.squareup.okhttp)
+//    implementation(libs.logging.interceptor)
+//
+//    implementation(libs.fliptables)
+//
+//    //stetho dependencies
+//    implementation(libs.stetho)
+//    implementation(libs.stetho.okhttp3)
+//
+//    implementation(libs.coil.kt2)
+//}
+//
