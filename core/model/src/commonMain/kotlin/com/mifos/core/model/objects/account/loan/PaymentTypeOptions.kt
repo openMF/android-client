@@ -11,11 +11,13 @@ package com.mifos.core.model.objects.account.loan
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by nellyk on 3/3/2016.
  */
 @Parcelize
+@Serializable
 data class PaymentTypeOptions(
     var id: Int,
 

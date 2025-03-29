@@ -9,11 +9,11 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.google.gson.JsonArray
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.DataTableDataRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.json.JsonArray
 
 class GetDataTableInfoUseCase(
     private val repository: DataTableDataRepository,

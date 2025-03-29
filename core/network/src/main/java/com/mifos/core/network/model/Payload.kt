@@ -9,7 +9,10 @@
  */
 package com.mifos.core.network.model
 
+import kotlinx.serialization.Serializable
+
 // TODO Remove calendarId and TransactionDate from this Payload class;
+@Serializable
 open class Payload {
     var dateFormat = "dd MMMM YYYY"
     var locale = "en"

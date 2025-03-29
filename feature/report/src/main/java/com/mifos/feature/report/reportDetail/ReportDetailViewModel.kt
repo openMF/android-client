@@ -12,7 +12,6 @@ package com.mifos.feature.report.reportDetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.domain.useCases.GetReportFullParameterListUseCase
@@ -28,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 class ReportDetailViewModel(
     private val getReportFullParameterListUseCase: GetReportFullParameterListUseCase,
@@ -41,7 +41,7 @@ class ReportDetailViewModel(
     private val reportName =
         savedStateHandle.getStateFlow(key = Constants.REPORT_TYPE_ITEM, initialValue = "")
     val reportItem: ClientReportTypeItem =
-        Gson().fromJson(reportName.value, ClientReportTypeItem::class.java)
+        Json.decodeFromString<ClientReportTypeItem>(reportName.value)
 
     private val _reportDetailUiState =
         MutableStateFlow<ReportDetailUiState>(ReportDetailUiState.Loading)

@@ -10,7 +10,9 @@
 package com.mifos.room.entities.navigation
 
 import com.mifos.room.entities.noncore.DataTableEntity
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class DataTableDataNavigationArg(
 
     val tableName: String,

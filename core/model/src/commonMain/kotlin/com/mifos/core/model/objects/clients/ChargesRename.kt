@@ -9,6 +9,8 @@
  */
 package com.mifos.core.model.objects.clients
 
+import kotlinx.serialization.Serializable
+
 /**
  * Created by nellyk on 2/15/2016.
  */
@@ -16,6 +18,7 @@ package com.mifos.core.model.objects.clients
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
+@Serializable
 data class ChargesRename(
     var chargeId: Int? = null,
 

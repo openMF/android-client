@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.client.navigation
 
+import FormWidgetDTO
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -26,9 +27,7 @@ import com.mifos.feature.client.clientSignature.SignatureScreen
 import com.mifos.feature.client.clientSurveyList.SurveyListScreen
 import com.mifos.feature.client.clientSurveyQuestion.SurveyQuestionScreen
 import com.mifos.feature.client.createNewClient.CreateNewClientScreen
-import com.mifos.feature.dataTable.dataTableList.FormWidget
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
-import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import kotlin.reflect.KFunction4
@@ -44,7 +43,7 @@ fun NavGraphBuilder.clientNavGraph(
     loanAccountSelected: (Int) -> Unit,
     savingsAccountSelected: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateClient: (Int) -> Unit,
-    hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidget>>, Unit>,
+    hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
     onDocumentClicked: (Int, String) -> Unit,
     onCardClicked: (Int, List<SurveyEntity>) -> Unit,
 ) {
@@ -240,7 +239,7 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
 
 fun NavGraphBuilder.createClientRoute(
     onBackPressed: () -> Unit,
-    hasDatatables: (List<DataTableEntity>, ClientPayloadEntity, Int, MutableList<List<FormWidget>>) -> Unit,
+    hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
 ) {
     composable(
         route = ClientScreens.CreateClientScreen.route,

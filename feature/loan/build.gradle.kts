@@ -28,4 +28,6 @@ dependencies {
     androidTestImplementation(projects.core.testing)
 
     implementation(libs.androidx.material)
+
+    implementation(libs.kotlinx.serialization.json)
 }

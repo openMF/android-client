@@ -9,9 +9,12 @@
  */
 package com.mifos.core.model.objects.collectionsheets
 
+import kotlinx.serialization.Serializable
+
 /**
  * Created by ishankhanna on 16/07/14.
  */
+@Serializable
 data class CollectionFrequency(
     var id: Int? = null,
 

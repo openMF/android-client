@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.mifos.android.koin)
     alias(libs.plugins.mifos.android.library.jacoco)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -42,6 +43,8 @@ dependencies {
     api(libs.fineract.client)
 
     api(libs.androidx.paging.runtime.ktx)
+
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.kotlinx.serialization.json)

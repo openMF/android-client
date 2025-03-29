@@ -9,12 +9,12 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.google.gson.JsonArray
 import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.mappers.dataTable.GetDataTablesResponseMapper
 import com.mifos.room.entities.noncore.DataTableEntity
+import kotlinx.serialization.json.JsonArray
 import org.openapitools.client.models.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import rx.Observable
 

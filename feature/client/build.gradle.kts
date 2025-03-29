@@ -39,4 +39,6 @@ dependencies {
     implementation(libs.androidx.material)
 
     implementation(libs.maps.compose)
+
+    implementation(libs.kotlinx.serialization.json)
 }

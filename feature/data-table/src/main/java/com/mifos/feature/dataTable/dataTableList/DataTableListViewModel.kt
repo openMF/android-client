@@ -9,10 +9,11 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
+import FormSpinnerDTO
+import FormWidgetDTO
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.datastore.PrefManager
@@ -26,6 +27,9 @@ import com.mifos.room.entities.noncore.DataTablePayload
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -39,9 +43,23 @@ class DataTableListViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
+    private val json = Json {
+        serializersModule = SerializersModule {
+            polymorphic(FormWidgetDTO::class) {
+                subclass(FormSpinnerDTO::class, FormSpinnerDTO.serializer())
+            }
+
+            polymorphic(Any::class) {
+                subclass(LoansPayload::class, LoansPayload.serializer())
+                subclass(GroupLoanPayload::class, GroupLoanPayload.serializer())
+                subclass(ClientPayloadEntity::class, ClientPayloadEntity.serializer())
+            }
+        }
+    }
+
     private val args =
         savedStateHandle.getStateFlow(key = Constants.DATA_TABLE_LIST_NAV_DATA, initialValue = "")
-    val arg: DataTableListNavArgs = Gson().fromJson(args.value, DataTableListNavArgs::class.java)
+    val arg: DataTableListNavArgs = json.decodeFromString<DataTableListNavArgs>(args.value)
 
     private val _dataTableListUiState: MutableStateFlow<DataTableListUiState> =
         MutableStateFlow(DataTableListUiState.Loading)
@@ -55,7 +73,7 @@ class DataTableListViewModel(
     private var clientLoanPayload: LoansPayload? = null
     private var groupLoanPayload: GroupLoanPayload? = null
     private var clientPayload: ClientPayloadEntity? = null
-    private var formWidgetsList: MutableList<List<FormWidget>> = ArrayList()
+    private var formWidgetsList: MutableList<List<FormWidgetDTO>> = ArrayList()
 
     fun getUserStatus(): Boolean {
         return prefManager.userStatus
@@ -64,7 +82,7 @@ class DataTableListViewModel(
     fun initArgs(
         dataTables: List<DataTableEntity>,
         requestType: Int,
-        formWidgetsList: MutableList<List<FormWidget>>,
+        formWidgetsList: MutableList<List<FormWidgetDTO>>,
         payload: Any?,
     ) {
         _dataTableList.value = dataTables
@@ -167,25 +185,27 @@ class DataTableListViewModel(
         }
     }
 
-    private fun addDataTableInput(formWidgets: List<FormWidget>): HashMap<String, Any> {
+    private fun addDataTableInput(formWidgets: List<FormWidgetDTO>): HashMap<String, Any> {
         val payload = HashMap<String, Any>()
         payload[Constants.DATE_FORMAT] = "dd-mm-YYYY"
         payload[Constants.LOCALE] = "en"
         for (formWidget in formWidgets) {
             when (formWidget.returnType) {
                 FormWidget.SCHEMA_KEY_INT -> {
-                    payload[formWidget.propertyName] = if (formWidget.value
-                        == ""
-                    ) {
-                        "0"
-                    } else {
-                        formWidget.value.toInt()
-                    }
+                    payload[formWidget.propertyName] = (
+                        if (formWidget.value
+                            == ""
+                        ) {
+                            "0"
+                        } else {
+                            formWidget.value?.toInt()
+                        }
+                        )!!
                 }
 
                 FormWidget.SCHEMA_KEY_DECIMAL -> {
                     payload[formWidget.propertyName] =
-                        if (formWidget.value == "") "0.0" else formWidget.value.toDouble()
+                        (if (formWidget.value == "") "0.0" else formWidget.value?.toDouble())!!
                 }
 
                 FormWidget.SCHEMA_KEY_CODEVALUE -> {
@@ -195,7 +215,7 @@ class DataTableListViewModel(
                 }
 
                 else -> {
-                    payload[formWidget.propertyName] = formWidget.value
+                    payload[formWidget.propertyName] = formWidget.returnType
                 }
             }
         }

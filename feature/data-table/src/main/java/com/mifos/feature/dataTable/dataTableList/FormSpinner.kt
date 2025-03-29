@@ -26,7 +26,7 @@ class FormSpinner(
 ) : FormWidget(context, name) {
     private val label: TextView
     private val spinner: Spinner
-    private val spinnerValueIdMap: MutableMap<String, Int>
+    val spinnerValueIdMap: MutableMap<String, Int>
 
     init {
         label = TextView(context)

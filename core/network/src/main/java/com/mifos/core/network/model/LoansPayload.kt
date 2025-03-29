@@ -9,14 +9,14 @@
  */
 package com.mifos.core.network.model
 
-import android.os.Parcelable
 import com.mifos.room.entities.noncore.DataTablePayload
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by nellyk on 2/20/2016.
  */
-@Parcelize
+
+@Serializable
 class LoansPayload(
     var allowPartialPeriodInterestCalcualtion: Boolean? = null,
     var amortizationType: Int? = null,
@@ -52,4 +52,4 @@ class LoansPayload(
     var fundId: Int? = null,
     var linkAccountId: Int? = null,
     var dataTables: ArrayList<DataTablePayload>? = null,
-) : Parcelable
+)

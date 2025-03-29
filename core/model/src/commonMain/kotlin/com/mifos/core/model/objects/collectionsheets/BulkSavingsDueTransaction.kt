@@ -11,11 +11,13 @@ package com.mifos.core.model.objects.collectionsheets
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 31-07-17.
  */
 @Parcelize
+@Serializable
 data class BulkSavingsDueTransaction(
     var savingsId: Int,
 

@@ -16,6 +16,7 @@ package com.mifos.core.model.objects.payloads
  * This project is licensed under the open source MPL V2.
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
+
 class ChargesPayload {
     var chargeId: Int? = null
     var clientId: Int? = null

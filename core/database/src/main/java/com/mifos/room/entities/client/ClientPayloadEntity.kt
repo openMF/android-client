@@ -9,14 +9,15 @@
  */
 package com.mifos.room.entities.client
 
-import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.noncore.DataTablePayload
-import kotlinx.parcelize.IgnoredOnParcel
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 @Entity(tableName = "ClientPayload")
 data class ClientPayloadEntity(
     @PrimaryKey(autoGenerate = true)
@@ -60,6 +61,5 @@ data class ClientPayloadEntity(
 
     val locale: String? = "en",
 
-    @IgnoredOnParcel
     val datatables: List<DataTablePayload>? = null,
 ) : Parcelable

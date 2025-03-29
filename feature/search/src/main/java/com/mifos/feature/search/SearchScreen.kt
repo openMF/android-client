@@ -24,7 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.SearchedEntity
+import com.mifos.core.ui.components.FabButton
 import com.mifos.core.ui.components.FabButtonState
 import com.mifos.core.ui.components.FabType
 import com.mifos.core.ui.components.MultiFloatingActionButton
@@ -71,18 +73,18 @@ internal fun SearchScreenContent(
         floatingActionButton = {
             MultiFloatingActionButton(
                 fabButtons = listOf(
-//                    FabButton(
-//                        fabType = FabType.CLIENT,
-//                        iconRes = R.drawable.feature_search_ic_person_black_24dp,
-//                    ),
-//                    FabButton(
-//                        fabType = FabType.CENTER,
-//                        iconRes = R.drawable.feature_search_ic_centers_24dp,
-//                    ),
-//                    FabButton(
-//                        fabType = FabType.GROUP,
-//                        iconRes = R.drawable.feature_search_ic_group_black_24dp,
-//                    ),
+                    FabButton.VectorFab(
+                        type = FabType.CLIENT,
+                        iconRes = MifosIcons.Person,
+                    ),
+                    FabButton.VectorFab(
+                        type = FabType.CENTER,
+                        iconRes = MifosIcons.buildingIcon,
+                    ),
+                    FabButton.VectorFab(
+                        type = FabType.GROUP,
+                        iconRes = MifosIcons.People,
+                    ),
                 ),
                 fabButtonState = fabButtonState,
                 onFabButtonStateChange = {

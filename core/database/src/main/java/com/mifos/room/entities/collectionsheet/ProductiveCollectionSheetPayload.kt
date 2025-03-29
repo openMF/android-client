@@ -12,11 +12,13 @@ package com.mifos.room.entities.collectionsheet
 import android.os.Parcelable
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 25-07-2017.
  */
 @Parcelize
+@Serializable
 data class ProductiveCollectionSheetPayload(
     var bulkRepaymentTransactions: MutableList<BulkRepaymentTransactions> = ArrayList(),
 
