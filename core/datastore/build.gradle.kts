@@ -34,7 +34,6 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.core)
             api(projects.core.model)
-            api(projects.core.common)
         }
     }
 }
