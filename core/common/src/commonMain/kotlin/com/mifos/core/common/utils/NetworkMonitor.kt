@@ -7,7 +7,9 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.common.model.user
+package com.mifos.core.common.utils
+
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by ishankhanna on 09/02/14.
