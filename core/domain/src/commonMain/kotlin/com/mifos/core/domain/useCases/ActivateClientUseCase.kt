@@ -20,16 +20,16 @@ class ActivateClientUseCase(
     private val activateRepository: ActivateRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         clientId: Int,
         clientPayload: ActivatePayload,
     ): Flow<Resource<PostClientsClientIdResponse>> = flow {
-        emit(Resource.Loading())
         try {
+            emit(Resource.Loading())
             val response = activateRepository.activateClient(clientId, clientPayload)
             emit(Resource.Success(response))
         } catch (exception: Exception) {
             emit(Resource.Error(exception.message.toString()))
-        }.flowOn(Dispatchers.IO)
+        }
     }
 }

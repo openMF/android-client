@@ -11,6 +11,9 @@ plugins {
     alias(libs.plugins.mifos.kmp.library)
     alias(libs.plugins.mifos.android.library.jacoco)
     alias(libs.plugins.mifos.android.koin)
+    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -43,10 +46,29 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(projects.core.data)
+          //  api(projects.core.data)
             api(projects.core.model)
-            api(projects.core.common)
-            api(projects.core.network)
+          //  api(projects.core.common)
+          //  api(projects.core.network)
+
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.client.core)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+        }
+        nativeMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
+        desktopMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
         }
     }
+}
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "core.domain.generated.resources"
 }

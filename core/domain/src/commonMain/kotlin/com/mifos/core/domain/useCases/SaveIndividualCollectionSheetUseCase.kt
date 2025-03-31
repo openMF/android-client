@@ -20,7 +20,7 @@ class SaveIndividualCollectionSheetUseCase(
     private val repository: IndividualCollectionSheetDetailsRepository,
 ) {
 
-    suspend operator fun invoke(payload: IndividualCollectionSheetPayload): Flow<Resource<GenericResponse>> =
+    operator fun invoke(payload: IndividualCollectionSheetPayload): Flow<Resource<GenericResponse>> =
         flow {
             try {
                 emit(Resource.Loading())

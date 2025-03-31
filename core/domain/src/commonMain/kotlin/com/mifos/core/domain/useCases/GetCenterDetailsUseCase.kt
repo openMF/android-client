@@ -21,7 +21,7 @@ class GetCenterDetailsUseCase(
     private val repository: CenterDetailsRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         centerId: Int,
         genericResultSet: Boolean,
     ): Flow<Resource<Pair<CenterWithAssociations, List<CenterInfo>>>> = flow {

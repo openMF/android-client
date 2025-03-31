@@ -19,7 +19,7 @@ class GetClientIdentifierTemplateUseCase(
     private val repository: ClientIdentifierDialogRepository,
 ) {
 
-    suspend operator fun invoke(clientId: Int): Flow<Resource<IdentifierTemplate>> = flow {
+    operator fun invoke(clientId: Int): Flow<Resource<IdentifierTemplate>> = flow {
         try {
             emit(Resource.Loading())
             val response = repository.getClientIdentifierTemplate(clientId)

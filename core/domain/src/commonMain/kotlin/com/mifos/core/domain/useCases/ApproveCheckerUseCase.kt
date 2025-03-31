@@ -19,7 +19,7 @@ class ApproveCheckerUseCase(
     val repository: CheckerInboxRepository,
 ) {
 
-    suspend operator fun invoke(auditId: Int): Flow<Resource<GenericResponse>> = flow {
+    operator fun invoke(auditId: Int): Flow<Resource<GenericResponse>> = flow {
         try {
             emit(Resource.Loading())
             val response = repository.approveCheckerEntry(auditId)

@@ -20,7 +20,7 @@ class CreateLoanChargesUseCase(
     private val repository: LoanChargeDialogRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         loanId: Int,
         chargesPayload: ChargesPayload,
     ): Flow<Resource<ChargeCreationResponse>> = flow {

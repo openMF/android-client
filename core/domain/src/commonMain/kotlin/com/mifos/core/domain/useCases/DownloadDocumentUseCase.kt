@@ -19,7 +19,7 @@ class DownloadDocumentUseCase(
     private val repository: DocumentListRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         entityType: String,
         entityId: Int,
         documentId: Int,

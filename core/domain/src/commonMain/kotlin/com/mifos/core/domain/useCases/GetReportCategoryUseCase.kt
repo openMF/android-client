@@ -19,7 +19,7 @@ class GetReportCategoryUseCase(
     private val repository: ReportCategoryRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         reportCategory: String,
         genericResultSet: Boolean,
         parameterType: Boolean,

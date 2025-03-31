@@ -20,7 +20,7 @@ class CreateClientIdentifierUseCase(
     private val repository: ClientIdentifierDialogRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         clientId: Int,
         identifierPayload: IdentifierPayload,
     ): Flow<Resource<IdentifierCreationResponse>> = flow {

@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.flow
 
 class GetReportFullParameterListUseCase(private val repository: ReportDetailRepository) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         reportName: String,
         parameterType: Boolean,
     ): Flow<Resource<FullParameterListResponse>> = flow {

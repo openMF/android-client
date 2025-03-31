@@ -20,7 +20,7 @@ class FetchProductiveCollectionSheetUseCase(
     private val repository: GenerateCollectionSheetRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         centerId: Int,
         payload: CollectionSheetRequestPayload?,
     ): Flow<Resource<CollectionSheetResponse>> = flow {

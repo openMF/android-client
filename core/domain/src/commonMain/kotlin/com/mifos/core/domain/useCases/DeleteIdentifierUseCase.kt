@@ -19,7 +19,7 @@ class DeleteIdentifierUseCase(
     private val repository: ClientIdentifiersRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         clientId: Int,
         identifierId: Int,
     ): Flow<Resource<DeleteClientsClientIdIdentifiersIdentifierIdResponse>> = flow {

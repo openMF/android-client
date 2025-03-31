@@ -20,7 +20,7 @@ class SubmitProductiveSheetUseCase(
     private val repository: GenerateCollectionSheetRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         centerId: Int,
         payload: ProductiveCollectionSheetPayload?,
     ): Flow<Resource<GenericResponse>> = flow {

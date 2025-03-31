@@ -19,7 +19,7 @@ class GetAllChargesV2UseCase(
     private val repository: ChargeDialogRepository,
 ) {
 
-    suspend operator fun invoke(clientId: Int): Flow<Resource<ChargeTemplate>> = flow {
+    operator fun invoke(clientId: Int): Flow<Resource<ChargeTemplate>> = flow {
         try {
             emit(Resource.Loading())
             val response = repository.getAllChargesV2(clientId)

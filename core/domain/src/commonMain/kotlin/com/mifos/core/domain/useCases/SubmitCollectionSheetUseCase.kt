@@ -20,7 +20,7 @@ class SubmitCollectionSheetUseCase(
     private val repository: GenerateCollectionSheetRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         groupId: Int,
         payload: CollectionSheetPayload?,
     ): Flow<Resource<GenericResponse>> = flow {

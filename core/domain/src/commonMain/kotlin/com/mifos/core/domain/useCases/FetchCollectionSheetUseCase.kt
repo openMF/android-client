@@ -20,7 +20,7 @@ class FetchCollectionSheetUseCase(
     private val repository: GenerateCollectionSheetRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         groupId: Int,
         payload: CollectionSheetRequestPayload?,
     ): Flow<Resource<CollectionSheetResponse>> = flow {

@@ -31,8 +31,8 @@ class GetCheckerInboxBadgesUseCase(
                 }.collect {
                     emit(Resource.Success(it))
                 }
-        } catch (e: Exception) {
-            emit(Resource.Error(e.message.toString()))
+        } catch (exception: Exception) {
+            emit(Resource.Error(exception.message.toString()))
         }
     }
 }

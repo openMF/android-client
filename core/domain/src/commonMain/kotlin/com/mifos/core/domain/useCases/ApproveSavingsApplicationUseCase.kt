@@ -13,12 +13,8 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountApprovalRepository
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 /**
  * Created by Pronay Sarker on 04/08/2024 (12:46 PM)
@@ -27,27 +23,12 @@ class ApproveSavingsApplicationUseCase(
     private val repository: SavingsAccountApprovalRepository,
 ) {
 
-    suspend operator fun invoke(savingsAccountId: Int, savingsApproval: SavingsApproval?): Flow<Resource<GenericResponse>> =
+    operator fun invoke(savingsAccountId: Int, savingsApproval: SavingsApproval?): Flow<Resource<GenericResponse>> =
         callbackFlow {
             try {
                 trySend(Resource.Loading())
-
-                repository.approveSavingsApplication(savingsAccountId, savingsApproval)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(object : Subscriber<GenericResponse>() {
-                        override fun onCompleted() {}
-
-                        override fun onError(e: Throwable) {
-                            trySend(Resource.Error(e.message.toString()))
-                        }
-
-                        override fun onNext(genericResponse: GenericResponse) {
-                            trySend(Resource.Success(genericResponse))
-                        }
-                    })
-
-                awaitClose { channel.close() }
+                val response = repository.approveSavingsApplication(savingsAccountId, savingsApproval)
+                trySend(Resource.Success(response))
             } catch (exception: Exception) {
                 send(Resource.Error(exception.message.toString()))
             }

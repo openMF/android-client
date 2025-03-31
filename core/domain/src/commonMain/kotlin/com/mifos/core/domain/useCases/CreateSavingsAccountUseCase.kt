@@ -13,12 +13,8 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.room.entities.client.Savings
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 /**
  * Created by Pronay Sarker on 04/08/2024 (12:19 PM)
@@ -28,26 +24,11 @@ class CreateSavingsAccountUseCase(
     private val repository: SavingsAccountRepository,
 ) {
 
-    suspend operator fun invoke(savingsPayload: SavingsPayload?): Flow<Resource<Savings?>> = callbackFlow {
+    operator fun invoke(savingsPayload: SavingsPayload?): Flow<Resource<Savings?>> = callbackFlow {
         try {
             trySend(Resource.Loading())
-
-            repository.createSavingsAccount(savingsPayload)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Savings?>() {
-                    override fun onCompleted() {}
-
-                    override fun onError(e: Throwable) {
-                        trySend(Resource.Error(e.message.toString()))
-                    }
-
-                    override fun onNext(savings: Savings?) {
-                        trySend(Resource.Success(savings))
-                    }
-                })
-
-            awaitClose { channel.close() }
+            val response = repository.createSavingsAccount(savingsPayload)
+            trySend(Resource.Success(response))
         } catch (exception: Exception) {
             send(Resource.Error(exception.message.toString()))
         }

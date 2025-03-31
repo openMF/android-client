@@ -13,38 +13,20 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.LoanAccountRepository
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.accounts.loans.Loan
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 class CreateLoanAccountUseCase(
     private val loanAccountRepository: LoanAccountRepository,
 ) {
 
-    suspend operator fun invoke(loansPayload: LoansPayload): Flow<Resource<Loan>> = callbackFlow {
+    operator fun invoke(loansPayload: LoansPayload): Flow<Resource<Loan>> = callbackFlow {
         try {
             trySend(Resource.Loading())
-            loanAccountRepository.createLoansAccount(loansPayload)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<Loan>() {
-                    override fun onCompleted() {}
-
-                    override fun onError(exception: Throwable) {
-                        trySend(Resource.Error(exception.message.toString()))
-                    }
-
-                    override fun onNext(loans: Loan) {
-                        trySend(Resource.Success(loans))
-                    }
-                })
-
-            awaitClose { channel.close() }
+            val response = loanAccountRepository.createLoansAccount(loansPayload)
+            trySend(Resource.Success(response))
         } catch (exception: Exception) {
-            trySend(Resource.Error(exception.message.toString()))
+            send(Resource.Error(exception.message.toString()))
         }
     }
 }

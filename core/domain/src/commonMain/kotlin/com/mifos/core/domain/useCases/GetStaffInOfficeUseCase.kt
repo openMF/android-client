@@ -19,7 +19,7 @@ class GetStaffInOfficeUseCase(
     private val repository: NewIndividualCollectionSheetRepository,
 ) {
 
-    suspend operator fun invoke(officeId: Int): Flow<Resource<List<StaffEntity>>> = flow {
+    operator fun invoke(officeId: Int): Flow<Resource<List<StaffEntity>>> = flow {
         try {
             emit(Resource.Loading())
             emit(Resource.Success(repository.getStaffInOffice(officeId)))

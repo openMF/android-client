@@ -19,7 +19,7 @@ class AddClientPinpointLocationUseCase(
     private val pinPointClientRepository: PinPointClientRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         clientId: Int,
         address: com.mifos.core.model.objects.clients.ClientAddressRequest,
     ): Flow<Resource<GenericResponse>> = flow {

@@ -19,7 +19,7 @@ class GetGroupsByOfficeUseCase(
     private val repository: GenerateCollectionSheetRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         officeId: Int,
         params: Map<String, String>,
     ): Flow<Resource<List<GroupEntity>>> = flow {

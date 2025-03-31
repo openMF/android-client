@@ -19,7 +19,7 @@ class AddDataTableEntryUseCase(
     private val repository: DataTableRowDialogRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         table: String,
         entityId: Int,
         payload: Map<String, String>,

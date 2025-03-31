@@ -19,7 +19,7 @@ class FetchGroupsAssociatedWithCenterUseCase(
     private val repository: GenerateCollectionSheetRepository,
 ) {
 
-    suspend operator fun invoke(centerId: Int): Flow<Resource<CenterWithAssociations>> = flow {
+    operator fun invoke(centerId: Int): Flow<Resource<CenterWithAssociations>> = flow {
         try {
             emit(Resource.Loading())
             val response = repository.fetchGroupsAssociatedWithCenter(centerId)

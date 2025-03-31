@@ -20,16 +20,16 @@ class ActivateCenterUseCase(
     private val activateRepository: ActivateRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         centerId: Int,
         centerPayload: ActivatePayload,
     ): Flow<Resource<PostCentersCenterIdResponse>> = flow {
-        emit(Resource.Loading())
         try {
+            emit(Resource.Loading())
             val response = activateRepository.activateCenter(centerId, centerPayload)
             emit(Resource.Success(response))
         } catch (exception: Exception) {
             emit(Resource.Error(exception.message.toString()))
         }
-    }.flowOn(Dispatchers.IO)
+    }
 }

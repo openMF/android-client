@@ -19,7 +19,7 @@ class GetRunReportWithQueryUseCase(
     private val repository: ReportDetailRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         reportName: String,
         options: Map<String, String>,
     ): Flow<Resource<FullParameterListResponse>> = flow {

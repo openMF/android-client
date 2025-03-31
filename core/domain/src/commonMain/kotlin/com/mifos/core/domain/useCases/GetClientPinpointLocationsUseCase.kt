@@ -18,7 +18,7 @@ class GetClientPinpointLocationsUseCase(
     private val pinPointClientRepository: PinPointClientRepository,
 ) {
 
-    suspend operator fun invoke(clientId: Int): Flow<Resource<List<com.mifos.core.model.objects.clients.ClientAddressResponse>>> = flow {
+    operator fun invoke(clientId: Int): Flow<Resource<List<com.mifos.core.model.objects.clients.ClientAddressResponse>>> = flow {
         try {
             emit(Resource.Loading())
             val response = pinPointClientRepository.getClientPinpointLocations(clientId)

@@ -19,7 +19,7 @@ class GetCheckerTasksUseCase(
     private val repository: CheckerInboxRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         actionName: String? = null,
         entityName: String? = null,
         resourceId: Int? = null,

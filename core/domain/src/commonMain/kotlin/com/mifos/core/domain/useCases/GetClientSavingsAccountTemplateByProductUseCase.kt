@@ -12,12 +12,8 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 /**
  * Created by Pronay Sarker on 04/08/2024 (11:59 AM)
@@ -26,26 +22,11 @@ class GetClientSavingsAccountTemplateByProductUseCase(
     private val repository: SavingsAccountRepository,
 ) {
 
-    suspend operator fun invoke(clientId: Int, productId: Int): Flow<Resource<SavingProductsTemplate?>> = callbackFlow {
+    operator fun invoke(clientId: Int, productId: Int): Flow<Resource<SavingProductsTemplate?>> = callbackFlow {
         try {
             trySend(Resource.Loading())
-            repository.getClientSavingsAccountTemplateByProduct(clientId, productId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(object : Subscriber<SavingProductsTemplate?>() {
-                    override fun onCompleted() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                        trySend(Resource.Error(e.message.toString()))
-                    }
-
-                    override fun onNext(savingProductsTemplate: SavingProductsTemplate?) {
-                        trySend(Resource.Success(savingProductsTemplate))
-                    }
-                })
-
-            awaitClose { channel.close() }
+            val response = repository.getClientSavingsAccountTemplateByProduct(clientId, productId)
+            trySend(Resource.Success(response))
         } catch (exception: Exception) {
             send(Resource.Error(exception.message.toString()))
         }

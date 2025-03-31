@@ -19,7 +19,7 @@ class GetAllChargesV3UseCase(
     private val repository: LoanChargeDialogRepository,
 ) {
 
-    suspend operator fun invoke(loanId: Int): Flow<Resource<ResponseBody>> = flow {
+    operator fun invoke(loanId: Int): Flow<Resource<ResponseBody>> = flow {
         try {
             emit(Resource.Loading())
             val response = repository.getAllChargesV3(loanId)

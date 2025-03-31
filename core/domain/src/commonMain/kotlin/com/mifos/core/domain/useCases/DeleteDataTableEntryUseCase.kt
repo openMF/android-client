@@ -19,7 +19,7 @@ class DeleteDataTableEntryUseCase(
     private val repository: DataTableDataRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         table: String,
         entity: Int,
         rowId: Int,

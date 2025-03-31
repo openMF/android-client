@@ -19,7 +19,7 @@ class GetListOfLoanChargesUseCase(
     private val repository: LoanChargeRepository,
 ) {
 
-    suspend operator fun invoke(loanId: Int): Flow<Resource<List<ChargesEntity>>> = flow {
+    operator fun invoke(loanId: Int): Flow<Resource<List<ChargesEntity>>> = flow {
         try {
             emit(Resource.Loading())
             val response = repository.getListOfLoanCharges(loanId)

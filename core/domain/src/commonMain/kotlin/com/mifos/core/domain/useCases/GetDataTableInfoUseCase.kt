@@ -19,7 +19,7 @@ class GetDataTableInfoUseCase(
     private val repository: DataTableDataRepository,
 ) {
 
-    suspend operator fun invoke(table: String, entityId: Int): Flow<Resource<JsonArray>> = flow {
+    operator fun invoke(table: String, entityId: Int): Flow<Resource<JsonArray>> = flow {
         try {
             emit(Resource.Loading())
             val data = repository.getDataTableInfo(table, entityId)

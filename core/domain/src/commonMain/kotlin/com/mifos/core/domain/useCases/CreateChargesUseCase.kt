@@ -20,7 +20,7 @@ class CreateChargesUseCase(
     private val repository: ChargeDialogRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         clientId: Int,
         payload: ChargesPayload,
     ): Flow<Resource<ChargeCreationResponse>> = flow {

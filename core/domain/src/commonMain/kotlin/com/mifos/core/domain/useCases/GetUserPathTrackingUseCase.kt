@@ -19,7 +19,7 @@ class GetUserPathTrackingUseCase(
     private val repository: PathTrackingRepository,
 ) {
 
-    suspend operator fun invoke(userId: Int): Flow<Resource<List<UserLocation>>> = flow {
+    operator fun invoke(userId: Int): Flow<Resource<List<UserLocation>>> = flow {
         try {
             emit(Resource.Loading())
             val response = repository.getUserPathTracking(userId)

@@ -15,22 +15,21 @@ import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.Dispatchers
 
 class ActivateGroupUseCase(
     private val activateRepository: ActivateRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         groupId: Int,
         groupPayload: ActivatePayload,
     ): Flow<Resource<GenericResponse>> = callbackFlow {
-        emit(Resource.Loading())
         try {
+            trySend(Resource.Loading())
             val response = activateRepository.activateGroup(groupId, groupPayload)
-            emit(Resource.Success(response))
+            trySend(Resource.Success(response))
         } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
+            send(Resource.Error(exception.message.toString()))
         }
-    }.flowOn(Dispatchers.IO)
+    }
 }

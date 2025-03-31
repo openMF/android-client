@@ -19,7 +19,7 @@ class DeleteClientAddressPinpointUseCase(
     private val pinPointClientRepository: PinPointClientRepository,
 ) {
 
-    suspend operator fun invoke(clientId: Int, addressId: Int): Flow<Resource<GenericResponse>> =
+    operator fun invoke(clientId: Int, addressId: Int): Flow<Resource<GenericResponse>> =
         flow {
             try {
                 emit(Resource.Loading())

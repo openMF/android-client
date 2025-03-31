@@ -19,7 +19,7 @@ class GetRunReportProductUseCase(
     private val repository: ReportDetailRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         parameterName: String,
         currency: String,
         parameterType: Boolean,

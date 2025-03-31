@@ -19,7 +19,7 @@ class GetReportParameterDetailsUseCase(
     private val repository: ReportDetailRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         parameterName: String,
         parameterType: Boolean,
     ): Flow<Resource<FullParameterListResponse>> = flow {

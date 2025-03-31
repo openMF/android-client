@@ -19,7 +19,7 @@ class FetchCenterDetailsUseCase(
     private val repository: GenerateCollectionSheetRepository,
 ) {
 
-    suspend operator fun invoke(
+    operator fun invoke(
         format: String?,
         locale: String?,
         meetingDate: String?,
