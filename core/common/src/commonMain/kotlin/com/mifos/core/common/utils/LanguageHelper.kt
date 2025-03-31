@@ -9,11 +9,11 @@
  */
 package com.mifos.core.common.utils
 
-//import android.content.Context
-//import android.os.Build
-//import android.preference.PreferenceManager
-//import com.mifos.core.common.R
-//import java.util.Locale
+// import android.content.Context
+// import android.os.Build
+// import android.preference.PreferenceManager
+// import com.mifos.core.common.R
+// import java.util.Locale
 
 object LanguageHelper {
 //    // https://gunhansancar.com/change-language-programmatically-in-android/

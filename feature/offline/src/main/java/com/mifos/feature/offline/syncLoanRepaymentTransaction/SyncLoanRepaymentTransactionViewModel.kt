@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.FileUtils

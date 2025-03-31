@@ -510,31 +510,31 @@ private fun SavingsAccountContent(
             contentPadding = PaddingValues(),
             onClick = {
 //                if (Network.isOnline(context)) {
-                    val savingsPayload = SavingsPayload()
+                val savingsPayload = SavingsPayload()
 
-                    savingsPayload.externalId = externalId
-                    savingsPayload.locale = "en"
-                    savingsPayload.submittedOnDate = SimpleDateFormat(
-                        "dd MMMM yyyy", Locale.getDefault(),
-                    ).format(submittedOnDate)
-                    savingsPayload.dateFormat = "dd MMMM yyyy"
-                    if (isGroupAccount) {
-                        savingsPayload.groupId = groupId
-                    } else {
-                        savingsPayload.clientId = clientId
-                    }
-                    savingsPayload.productId = selectedSavingsProductID
-                    savingsPayload.fieldOfficerId = fieldOfficerId
-                    savingsPayload.nominalAnnualInterestRate = nominalAnnualInterest
-                    savingsPayload.allowOverdraft = overDraftAllowed
-                    savingsPayload.nominalAnnualInterestRateOverdraft =
-                        nominalAnnualInterestOverdraft
-                    savingsPayload.overdraftLimit = maximumOverdraftAmount
-                    savingsPayload.minOverdraftForInterestCalculation = minimumOverdraftAmount
-                    savingsPayload.enforceMinRequiredBalance = enforceMinimumBalance
-                    savingsPayload.minRequiredOpeningBalance = minimumRequiredBalance
+                savingsPayload.externalId = externalId
+                savingsPayload.locale = "en"
+                savingsPayload.submittedOnDate = SimpleDateFormat(
+                    "dd MMMM yyyy", Locale.getDefault(),
+                ).format(submittedOnDate)
+                savingsPayload.dateFormat = "dd MMMM yyyy"
+                if (isGroupAccount) {
+                    savingsPayload.groupId = groupId
+                } else {
+                    savingsPayload.clientId = clientId
+                }
+                savingsPayload.productId = selectedSavingsProductID
+                savingsPayload.fieldOfficerId = fieldOfficerId
+                savingsPayload.nominalAnnualInterestRate = nominalAnnualInterest
+                savingsPayload.allowOverdraft = overDraftAllowed
+                savingsPayload.nominalAnnualInterestRateOverdraft =
+                    nominalAnnualInterestOverdraft
+                savingsPayload.overdraftLimit = maximumOverdraftAmount
+                savingsPayload.minOverdraftForInterestCalculation = minimumOverdraftAmount
+                savingsPayload.enforceMinRequiredBalance = enforceMinimumBalance
+                savingsPayload.minRequiredOpeningBalance = minimumRequiredBalance
 
-                    createSavingsAccount.invoke(savingsPayload)
+                createSavingsAccount.invoke(savingsPayload)
 //                } else {
 //                    Toast.makeText(
 //                        context,

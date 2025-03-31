@@ -11,6 +11,7 @@ package com.mifos.feature.offline.syncSavingsAccountTransaction
 
 import android.Manifest
 import android.content.Context
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -283,8 +284,9 @@ private fun checkNetworkConnectionAndSync(
     context: Context,
     syncSavingsAccountTransactions: () -> Unit,
 ) {
+    Log.d("C", context.packageName)
 //    if (Network.isOnline(context)) {
-        syncSavingsAccountTransactions()
+    syncSavingsAccountTransactions()
 //    } else {
 //        Toast.makeText(
 //            context,

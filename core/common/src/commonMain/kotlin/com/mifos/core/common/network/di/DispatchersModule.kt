@@ -9,22 +9,20 @@
  */
 package com.mifos.core.common.network.di
 
-import com.mifos.core.common.network.MifosDispatchers
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import kotlin.coroutines.CoroutineContext
 
 val DispatchersModule = module {
     includes(ioDispatcherModule)
-    single<CoroutineContext>(named(MifosDispatchers.Default.name)) { Dispatchers.Default }
+    includes(ioContextModule)
     single<CoroutineScope>(named("ApplicationScope")) {
         CoroutineScope(SupervisorJob() + Dispatchers.Default)
     }
 }
 
-expect val ioDispatcherModule : Module
+expect val ioDispatcherModule: Module
+expect val ioContextModule: Module

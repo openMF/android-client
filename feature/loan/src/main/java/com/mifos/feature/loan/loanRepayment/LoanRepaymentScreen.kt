@@ -465,6 +465,7 @@ private fun ShowLoanRepaymentConfirmationDialog(
     context: Context,
     submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
 ) {
+    Log.d("C", context.packageName)
     AlertDialog(
         onDismissRequest = { onDismiss() },
         confirmButton = {
@@ -472,20 +473,20 @@ private fun ShowLoanRepaymentConfirmationDialog(
                 onClick = {
                     onDismiss()
 //                    if (Network.isOnline(context)) {
-                        val request = LoanRepaymentRequestEntity(
-                            accountNumber = loanAccountNumber,
-                            paymentTypeId = paymentTypeId,
-                            dateFormat = "dd MM yyyy",
-                            locale = "en",
-                            transactionAmount = total,
-                            transactionDate = SimpleDateFormat(
-                                "dd MMMM yyyy",
-                                Locale.getDefault(),
-                            ).format(
-                                repaymentDate,
-                            ),
-                        )
-                        submitPayment.invoke(request)
+                    val request = LoanRepaymentRequestEntity(
+                        accountNumber = loanAccountNumber,
+                        paymentTypeId = paymentTypeId,
+                        dateFormat = "dd MM yyyy",
+                        locale = "en",
+                        transactionAmount = total,
+                        transactionDate = SimpleDateFormat(
+                            "dd MMMM yyyy",
+                            Locale.getDefault(),
+                        ).format(
+                            repaymentDate,
+                        ),
+                    )
+                    submitPayment.invoke(request)
 //                    } else {
 //                        Toast.makeText(
 //                            context,

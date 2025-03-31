@@ -10,7 +10,6 @@
 package com.mifos.feature.loan.loanApproval
 
 import android.content.Context
-import android.net.Network
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -314,21 +313,21 @@ private fun LoanAccountApprovalContent(
                     isFieldValid(amount = transactionAmount, context = context)
                 ) {
 //                    if (Network.isOnline(context)) {
-                        val approvedOnDate = SimpleDateFormat(
-                            "dd MMMM yyyy",
-                            Locale.getDefault(),
-                        ).format(
-                            approveDate,
-                        )
+                    val approvedOnDate = SimpleDateFormat(
+                        "dd MMMM yyyy",
+                        Locale.getDefault(),
+                    ).format(
+                        approveDate,
+                    )
 
-                        onLoanApprove.invoke(
-                            com.mifos.core.model.objects.account.loan.LoanApproval(
-                                note = note,
-                                approvedOnDate = approvedOnDate,
-                                approvedLoanAmount = approvedAmount,
-                                expectedDisbursementDate = disbursementDate,
-                            ),
-                        )
+                    onLoanApprove.invoke(
+                        com.mifos.core.model.objects.account.loan.LoanApproval(
+                            note = note,
+                            approvedOnDate = approvedOnDate,
+                            approvedLoanAmount = approvedAmount,
+                            expectedDisbursementDate = disbursementDate,
+                        ),
+                    )
 //                    } else {
 //                        Toast.makeText(
 //                            context,

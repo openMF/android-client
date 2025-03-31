@@ -265,22 +265,22 @@ private fun LoanAccountDisbursementContent(
 //            ),
             onClick = {
 //                if (Network.isOnline(context)) {
-                    if (isFieldValid(amount = amount, context = context)) {
-                        val date = SimpleDateFormat(
-                            "dd MMMM yyyy",
-                            Locale.getDefault(),
-                        ).format(
-                            disbursementDate,
-                        )
-                        val loanDisbursement = LoanDisbursement(
-                            note = note,
-                            paymentId = paymentTypeId,
-                            actualDisbursementDate = date,
-                            transactionAmount = amount.toDouble(),
-                        )
+                if (isFieldValid(amount = amount, context = context)) {
+                    val date = SimpleDateFormat(
+                        "dd MMMM yyyy",
+                        Locale.getDefault(),
+                    ).format(
+                        disbursementDate,
+                    )
+                    val loanDisbursement = LoanDisbursement(
+                        note = note,
+                        paymentId = paymentTypeId,
+                        actualDisbursementDate = date,
+                        transactionAmount = amount.toDouble(),
+                    )
 
-                        onDisburseLoan.invoke(loanDisbursement)
-                    }
+                    onDisburseLoan.invoke(loanDisbursement)
+                }
 //                } else {
 //                    Toast.makeText(
 //                        context,

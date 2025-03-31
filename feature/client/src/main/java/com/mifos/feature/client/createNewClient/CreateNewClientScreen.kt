@@ -11,7 +11,6 @@ package com.mifos.feature.client.createNewClient
 
 import android.Manifest
 import android.content.Context
-import android.net.Network
 import android.net.Uri
 import android.os.Build
 import android.telephony.PhoneNumberUtils

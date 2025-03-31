@@ -51,7 +51,8 @@ class ClientDaoHelper(
     private val ioDispatcher: CoroutineDispatcher,
 ) {
 
-    init {        Json {
+    init {
+        Json {
             serializersModule = SerializersModule {
                 contextual(MapDeserializer)
             }

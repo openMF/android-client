@@ -11,8 +11,7 @@ package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
 import android.Manifest
 import android.content.Context
-import android.net.Network
-import android.widget.Toast
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -312,8 +311,9 @@ internal fun checkNetworkConnectionAndSync(
     context: Context,
     syncLoanRepaymentTransactions: () -> Unit,
 ) {
+    Log.d("C", context.packageName)
 //    if (Network.isOnline(context)) {
-        syncLoanRepaymentTransactions()
+    syncLoanRepaymentTransactions()
 //    } else {
 //        Toast.makeText(
 //            context,

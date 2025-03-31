@@ -342,37 +342,37 @@ private fun CreateNewGroupContent(
             onClick = {
                 if (validateFields(groupName, selectedOffice, context)) {
 //                    if (Network.isOnline(context)) {
-                        val activationDateInString = if (isActive) {
-                            SimpleDateFormat(
-                                "dd MMMM yyyy",
-                                Locale.getDefault(),
-                            ).format(
-                                activationDate,
-                            )
-                        } else {
-                            null
-                        }
-
-                        val submittedOnDateInString = SimpleDateFormat(
+                    val activationDateInString = if (isActive) {
+                        SimpleDateFormat(
                             "dd MMMM yyyy",
                             Locale.getDefault(),
                         ).format(
-                            submittedOnDate,
+                            activationDate,
                         )
-
-                        invokeGroupCreation.invoke(
-                            GroupPayloadEntity(
-                                name = groupName,
-                                externalId = externalId,
-                                active = isActive,
-                                activationDate = activationDateInString,
-                                submittedOnDate = submittedOnDateInString,
-                                officeId = officeId,
-                                dateFormat = "dd MMMM yyyy",
-                                locale = "en",
-                            ),
-                        )
+                    } else {
+                        null
                     }
+
+                    val submittedOnDateInString = SimpleDateFormat(
+                        "dd MMMM yyyy",
+                        Locale.getDefault(),
+                    ).format(
+                        submittedOnDate,
+                    )
+
+                    invokeGroupCreation.invoke(
+                        GroupPayloadEntity(
+                            name = groupName,
+                            externalId = externalId,
+                            active = isActive,
+                            activationDate = activationDateInString,
+                            submittedOnDate = submittedOnDateInString,
+                            officeId = officeId,
+                            dateFormat = "dd MMMM yyyy",
+                            locale = "en",
+                        ),
+                    )
+                }
 //                else {
 //                        Toast.makeText(
 //                            context,

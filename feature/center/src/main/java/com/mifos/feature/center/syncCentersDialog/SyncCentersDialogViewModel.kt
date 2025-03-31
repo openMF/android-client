@@ -15,8 +15,6 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SyncCentersDialogRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.center.R
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
@@ -163,9 +161,9 @@ class SyncCentersDialogViewModel(
                     )
                     // Updating UI
                     maxSingleSyncCenterProgressBar = (
-                            mLoanAccountList.size +
-                                    mSavingsAccountList.size + mMemberLoanAccountsList.size
-                            )
+                        mLoanAccountList.size +
+                            mSavingsAccountList.size + mMemberLoanAccountsList.size
+                        )
                     checkAccountsSyncStatusAndSyncAccounts()
                 }
         }
@@ -753,7 +751,7 @@ class SyncCentersDialogViewModel(
 // TODO: Commented out since we dont have a network connection checker now.
 
 //        if (networkUtilsWrapper.isNetworkConnected()) {
-//        taskWhenOnline.invoke()
+        taskWhenOnline.invoke()
 //        } else {
 //            _syncCentersDialogUiState.value = SyncCentersDialogUiState.Error(
 //                messageResId = R.string.feature_center_error_not_connected_internet,
@@ -775,7 +773,7 @@ class SyncCentersDialogViewModel(
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
                 savingsAccount.status?.active == true &&
-                        !savingsAccount.depositType!!.isRecurring
+                    !savingsAccount.depositType!!.isRecurring
             }
             .subscribe { savingsAccount -> accounts.add(savingsAccount) }
         return accounts
@@ -794,8 +792,8 @@ class SyncCentersDialogViewModel(
         Observable.from(savingsAccounts)
             .filter { savingsAccount ->
                 savingsAccount.depositType?.value == "Savings" &&
-                        savingsAccount.status?.active == true &&
-                        !savingsAccount.depositType!!.isRecurring
+                    savingsAccount.status?.active == true &&
+                    !savingsAccount.depositType!!.isRecurring
             }
             .subscribe { savingsAccount -> accounts.add(savingsAccount) }
         return accounts

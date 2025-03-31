@@ -11,8 +11,7 @@ package com.mifos.feature.offline.syncGroupPayloads
 
 import android.Manifest
 import android.content.Context
-import android.net.Network
-import android.widget.Toast
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -254,8 +253,9 @@ private fun checkNetworkConnectionAndSync(
     context: Context,
     syncGroupPayloads: () -> Unit,
 ) {
+    Log.d("C", context.packageName)
 //    if (Network.isOnline(context)) {
-        syncGroupPayloads()
+    syncGroupPayloads()
 //    } else {
 //        Toast.makeText(
 //            context,

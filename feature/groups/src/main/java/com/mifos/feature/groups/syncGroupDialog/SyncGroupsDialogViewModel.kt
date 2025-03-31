@@ -14,8 +14,6 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.groups.R
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
@@ -542,7 +540,7 @@ class SyncGroupsDialogViewModel(
         taskWhenOnline: () -> Unit,
     ) {
 //        if (networkUtilsWrapper.isNetworkConnected()) {
-//            taskWhenOnline.invoke()
+        taskWhenOnline.invoke()
 //        } else {
 //            _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.Error(
 //                messageResId = R.string.feature_groups_error_not_connected_internet,

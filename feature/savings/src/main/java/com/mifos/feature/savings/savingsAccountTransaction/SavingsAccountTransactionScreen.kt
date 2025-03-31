@@ -419,9 +419,9 @@ private fun SavingsAccountTransactionContent(
                 onClick = {
                     if (isAmountValid(context, amount)) {
 //                        if (Network.isOnline(context = context)) {
-                            showReviewTransactionDialog = true
+                        showReviewTransactionDialog = true
 //                        } else {
-//                            setUserOffline.invoke()
+                        setUserOffline.invoke()
 //
 //                            Toast.makeText(
 //                                context,

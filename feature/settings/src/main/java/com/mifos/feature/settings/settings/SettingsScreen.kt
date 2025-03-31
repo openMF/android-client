@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.CountDownTimer
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,7 +48,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.enums.MifosAppLanguage
-import com.mifos.core.common.utils.LanguageHelper
 import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
@@ -55,7 +55,6 @@ import com.mifos.feature.settings.R
 import com.mifos.feature.settings.syncSurvey.SyncSurveysDialog
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import org.koin.androidx.compose.koinViewModel
-import java.util.Locale
 
 @Composable
 internal fun SettingsScreen(
@@ -265,6 +264,10 @@ private fun SettingsCardItem(
 }
 
 private fun updateLanguageLocale(context: Context, language: String, isSystemLanguage: Boolean) {
+    Log.d(
+        "SettingsScreen",
+        "updateLanguageLocale: $language" + context.packageName.toString() + isSystemLanguage,
+    )
 //    if (isSystemLanguage) {
 //        LanguageHelper.setLocale(context, language)
 //    } else {

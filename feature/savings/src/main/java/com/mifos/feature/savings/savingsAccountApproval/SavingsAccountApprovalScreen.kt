@@ -223,15 +223,15 @@ private fun SavingsAccountApprovalContent(
                 .heightIn(44.dp),
             onClick = {
 //                if (Network.isOnline(context)) {
-                    approveLoan.invoke(
-                        SavingsApproval(
-                            approvedOnDate = SimpleDateFormat(
-                                "yyyy-MM-dd",
-                                Locale.getDefault(),
-                            ).format(approvalDate),
-                            note = reasonForApproval,
-                        ),
-                    )
+                approveLoan.invoke(
+                    SavingsApproval(
+                        approvedOnDate = SimpleDateFormat(
+                            "yyyy-MM-dd",
+                            Locale.getDefault(),
+                        ).format(approvalDate),
+                        note = reasonForApproval,
+                    ),
+                )
 //                } else {
 //                    Toast.makeText(
 //                        context,
