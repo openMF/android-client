@@ -9,8 +9,10 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.domain.R
 import com.mifos.core.domain.utils.ValidationResult
+import core.domain.generated.resources.Res
+import core.domain.generated.resources.core_domain_enter_credentials
+import core.domain.generated.resources.core_domain_error_username_length
 
 /**
  * Created by Aditya Gupta on 11/02/24.
@@ -22,12 +24,12 @@ class UsernameValidationUseCase {
         if (username.isEmpty()) {
             return ValidationResult(
                 success = false,
-                R.string.core_domain_enter_credentials,
+                Res.string.core_domain_enter_credentials,
             )
         } else if (username.length < 5) {
             return ValidationResult(
                 success = false,
-                R.string.core_domain_error_username_length,
+                Res.string.core_domain_error_username_length,
             )
         }
         return ValidationResult(success = true)

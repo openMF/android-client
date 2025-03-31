@@ -9,21 +9,24 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.domain.R
 import com.mifos.core.domain.utils.ValidationResult
+import core.domain.generated.resources.Res
+import core.domain.generated.resources.core_domain_error_api_path_blank
+import core.domain.generated.resources.core_domain_error_api_path_end_with
+import core.domain.generated.resources.core_domain_error_api_path_start_with
 
 class ValidateServerApiPathUseCase {
     operator fun invoke(apiPath: String): ValidationResult {
         if (apiPath.isBlank()) {
-            return ValidationResult(false, R.string.core_domain_error_api_path_blank)
+            return ValidationResult(false, Res.string.core_domain_error_api_path_blank)
         }
 
         if (!apiPath.startsWith("/")) {
-            return ValidationResult(false, R.string.core_domain_error_api_path_start_with)
+            return ValidationResult(false, Res.string.core_domain_error_api_path_start_with)
         }
 
         if (!apiPath.endsWith("/")) {
-            return ValidationResult(false, R.string.core_domain_error_api_path_end_with)
+            return ValidationResult(false, Res.string.core_domain_error_api_path_end_with)
         }
 
         return ValidationResult(true)
