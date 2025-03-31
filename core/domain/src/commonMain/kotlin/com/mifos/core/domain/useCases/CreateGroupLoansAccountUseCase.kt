@@ -14,20 +14,20 @@ import com.mifos.core.data.repository.GroupLoanAccountRepository
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.room.entities.accounts.loans.Loan
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 
 class CreateGroupLoansAccountUseCase(
     private val repository: GroupLoanAccountRepository,
 ) {
 
     operator fun invoke(loansPayload: GroupLoanPayload): Flow<Resource<Loan>> =
-        callbackFlow {
+        flow {
             try {
-                trySend(Resource.Loading())
+                emit(Resource.Loading())
                 val response = repository.createGroupLoansAccount(loansPayload)
-                trySend(Resource.Success(response))
+                emit(Resource.Success(response))
             } catch (exception: Exception) {
-                send(Resource.Error(exception.message.toString()))
+                emit(Resource.Error(exception.message.toString()))
             }
         }
 }

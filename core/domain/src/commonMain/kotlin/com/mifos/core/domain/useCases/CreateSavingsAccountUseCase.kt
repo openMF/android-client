@@ -14,7 +14,7 @@ import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.room.entities.client.Savings
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 
 /**
  * Created by Pronay Sarker on 04/08/2024 (12:19 PM)
@@ -24,13 +24,13 @@ class CreateSavingsAccountUseCase(
     private val repository: SavingsAccountRepository,
 ) {
 
-    operator fun invoke(savingsPayload: SavingsPayload?): Flow<Resource<Savings?>> = callbackFlow {
+    operator fun invoke(savingsPayload: SavingsPayload?): Flow<Resource<Savings?>> = flow {
         try {
-            trySend(Resource.Loading())
+            emit(Resource.Loading())
             val response = repository.createSavingsAccount(savingsPayload)
-            trySend(Resource.Success(response))
+            emit(Resource.Success(response))
         } catch (exception: Exception) {
-            send(Resource.Error(exception.message.toString()))
+            emit(Resource.Error(exception.message.toString()))
         }
     }
 }

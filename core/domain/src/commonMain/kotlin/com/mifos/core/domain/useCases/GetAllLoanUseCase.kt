@@ -12,19 +12,19 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.LoanAccountRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 
 class GetAllLoanUseCase(
     private val loanAccountRepository: LoanAccountRepository,
 ) {
 
-    operator fun invoke(): Flow<Resource<List<com.mifos.core.model.objects.organisations.LoanProducts>>> = callbackFlow {
+    operator fun invoke(): Flow<Resource<List<com.mifos.core.model.objects.organisations.LoanProducts>>> = flow {
         try {
-            trySend(Resource.Loading())
+            emit(Resource.Loading())
             val response = loanAccountRepository.allLoans()
-            trySend(Resource.Succes(response))
+            emit(Resource.Succes(response))
         } catch (exception: Exception) {
-            send(Resource.Error(exception.message.toString()))
+            emit(Resource.Error(exception.message.toString()))
         }
     }
 }

@@ -13,20 +13,20 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.LoanAccountRepository
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 
 class GetLoansAccountTemplateUseCase(
     private val loanAccountRepository: LoanAccountRepository,
 ) {
 
     operator fun invoke(clientId: Int, productId: Int): Flow<Resource<LoanTemplate>> =
-        callbackFlow {
+        flow {
             try {
-                trySend(Resource.Loading())
+                emit(Resource.Loading())
                 val response = loanAccountRepository.getLoansAccountTemplate(clientId, productId)
-                trySend(Resource.Success(response))
+                emit(Resource.Success(response))
             } catch (exception: Exception) {
-                send(Resource.Error(exception.message.toString()))
+                emit(Resource.Error(exception.message.toString()))
             }
         }
 }

@@ -13,16 +13,16 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.room.entities.group.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 
 class GetGroupsByCenterUseCase(private val repository: GroupListRepository) {
-    operator fun invoke(id: Int): Flow<Resource<CenterWithAssociations>> = callbackFlow {
+    operator fun invoke(id: Int): Flow<Resource<CenterWithAssociations>> = flow {
         try {
-            trySend(Resource.Loading())
+            emit(Resource.Loading())
             val response = repository.getGroupsByCenter(id)
-            trySend(Resource.Success(response))
+            emit(Resource.Success(response))
         } catch (exception: Exception) {
-            send(Resource.Error(exception.message.toString()))
+            emit(Resource.Error(exception.message.toString()))
         }
     }
 }

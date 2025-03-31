@@ -9,8 +9,7 @@
  */
 plugins {
     alias(libs.plugins.mifos.kmp.library)
-    alias(libs.plugins.mifos.android.library.jacoco)
-    alias(libs.plugins.mifos.android.koin)
+    alias(libs.plugins.mifos.kmp.koin)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)

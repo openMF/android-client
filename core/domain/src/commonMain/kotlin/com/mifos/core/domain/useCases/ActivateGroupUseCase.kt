@@ -14,7 +14,7 @@ import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 
 class ActivateGroupUseCase(
     private val activateRepository: ActivateRepository,
@@ -23,13 +23,13 @@ class ActivateGroupUseCase(
     operator fun invoke(
         groupId: Int,
         groupPayload: ActivatePayload,
-    ): Flow<Resource<GenericResponse>> = callbackFlow {
+    ): Flow<Resource<GenericResponse>> = flow {
         try {
-            trySend(Resource.Loading())
+            emit(Resource.Loading())
             val response = activateRepository.activateGroup(groupId, groupPayload)
-            trySend(Resource.Success(response))
+            emit(Resource.Success(response))
         } catch (exception: Exception) {
-            send(Resource.Error(exception.message.toString()))
+            emit(Resource.Error(exception.message.toString()))
         }
     }
 }

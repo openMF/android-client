@@ -14,7 +14,7 @@ import com.mifos.core.data.repository.SavingsAccountApprovalRepository
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 
 /**
  * Created by Pronay Sarker on 04/08/2024 (12:46 PM)
@@ -24,13 +24,13 @@ class ApproveSavingsApplicationUseCase(
 ) {
 
     operator fun invoke(savingsAccountId: Int, savingsApproval: SavingsApproval?): Flow<Resource<GenericResponse>> =
-        callbackFlow {
+        flow {
             try {
-                trySend(Resource.Loading())
+                emit(Resource.Loading())
                 val response = repository.approveSavingsApplication(savingsAccountId, savingsApproval)
-                trySend(Resource.Success(response))
+                emit(Resource.Success(response))
             } catch (exception: Exception) {
-                send(Resource.Error(exception.message.toString()))
+                emit(Resource.Error(exception.message.toString()))
             }
         }
 }

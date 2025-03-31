@@ -13,7 +13,7 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountActivateRepository
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 
 /**
  * Created by Pronay Sarker on 04/08/2024 (12:33 PM)
@@ -26,13 +26,13 @@ class ActivateSavingsUseCase(
         savingsAccountId: Int,
         request: HashMap<String, String>,
     ): Flow<Resource<GenericResponse>> =
-        callbackFlow {
+        flow {
             try {
-                trySend(Resource.Loading())
+                emit(Resource.Loading())
                 val response = repository.activateSavings(savingsAccountId, request)
-                trySend(Resource.Success(response))
+                emit(Resource.Success(response))
             } catch (exception: Exception) {
-                send(Resource.Error(exception.message.toString()))
+                emit(Resource.Error(exception.message.toString()))
             }
         }
 }

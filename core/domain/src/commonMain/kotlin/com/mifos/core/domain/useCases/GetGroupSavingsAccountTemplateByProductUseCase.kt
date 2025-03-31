@@ -13,7 +13,7 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 
 /**
  * Created by Pronay Sarker on 04/08/2024 (12:13 PM)
@@ -22,13 +22,13 @@ class GetGroupSavingsAccountTemplateByProductUseCase(
     private val repository: SavingsAccountRepository,
 ) {
 
-    operator fun invoke(groupId: Int, productId: Int): Flow<Resource<SavingProductsTemplate?>> = callbackFlow {
+    operator fun invoke(groupId: Int, productId: Int): Flow<Resource<SavingProductsTemplate?>> = flow {
         try {
-            trySend(Resource.Loading())
+            emit(Resource.Loading())
             val response = repository.getGroupSavingsAccountTemplateByProduct(groupId, productId)
-            trySend(Resource.Success(response))
+            emit(Resource.Success(response))
         } catch (exception: Exception) {
-            send(Resource.Error(exception.message.toString()))
+            emit(Resource.Error(exception.message.toString()))
         }
     }
 }

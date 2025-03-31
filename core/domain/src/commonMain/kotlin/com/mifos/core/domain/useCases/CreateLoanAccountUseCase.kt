@@ -14,19 +14,19 @@ import com.mifos.core.data.repository.LoanAccountRepository
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.accounts.loans.Loan
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 
 class CreateLoanAccountUseCase(
     private val loanAccountRepository: LoanAccountRepository,
 ) {
 
-    operator fun invoke(loansPayload: LoansPayload): Flow<Resource<Loan>> = callbackFlow {
+    operator fun invoke(loansPayload: LoansPayload): Flow<Resource<Loan>> = flow {
         try {
-            trySend(Resource.Loading())
+            emit(Resource.Loading())
             val response = loanAccountRepository.createLoansAccount(loansPayload)
-            trySend(Resource.Success(response))
+            emit(Resource.Success(response))
         } catch (exception: Exception) {
-            send(Resource.Error(exception.message.toString()))
+            emit(Resource.Error(exception.message.toString()))
         }
     }
 }

@@ -13,7 +13,7 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
 
 class CreateDocumentUseCase(
@@ -26,13 +26,13 @@ class CreateDocumentUseCase(
         name: String?,
         desc: String?,
         file: MultipartBody.Part?,
-    ): Flow<Resource<GenericResponse>> = callbackFlow {
+    ): Flow<Resource<GenericResponse>> = flow {
         try {
-            trySend(Resource.Loading())
+            emit(Resource.Loading())
             val response = repository.createDocument(entityType, entityId, name, desc, file)
-            trySend(Resource.Success(response))
+            emit(Resource.Success(response))
         } catch (exception: Exception) {
-            send(Resource.Error(exception.message.toString()))
+            emit(Resource.Error(exception.message.toString()))
         }
     }
 }

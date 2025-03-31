@@ -14,7 +14,7 @@ import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 
 /**
  * Created by Pronay Sarker on 04/08/2024 (4:41 PM)
@@ -24,9 +24,9 @@ class LoadSavingsAccountsAndTemplateUseCase(
 ) {
 
     suspend operator fun invoke(): Flow<Resource<SavingProductsAndTemplate?>> =
-        callbackFlow {
+        flow {
             try {
-                trySend(Resource.Loading())
+                emit(Resource.Loading())
 
                 Observable.combineLatest(
                     repository.savingsAccounts(),
@@ -39,17 +39,17 @@ class LoadSavingsAccountsAndTemplateUseCase(
                         override fun onCompleted() {}
 
                         override fun onError(e: Throwable) {
-                            trySend(Resource.Error(e.message.toString()))
+                            emit(Resource.Error(e.message.toString()))
                         }
 
                         override fun onNext(savingProductsAndTemplate: SavingProductsAndTemplate?) {
-                            trySend(Resource.Success(savingProductsAndTemplate))
+                            emit(Resource.Success(savingProductsAndTemplate))
                         }
                     })
 
                 awaitClose { channel.close() }
             } catch (exception: Exception) {
-                send(Resource.Error(exception.message.toString()))
+                emit(Resource.Error(exception.message.toString()))
             }
         }
 }
