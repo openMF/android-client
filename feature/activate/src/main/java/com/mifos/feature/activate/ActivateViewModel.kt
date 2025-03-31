@@ -40,13 +40,13 @@ class ActivateViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             activateClientUseCase(clientId, clientPayload).collect { result ->
                 when (result) {
-                    is Resource.Error ->
+                    is Resource.Error<*> ->
                         _activateUiState.value =
                             ActivateUiState.Error(R.string.feature_activate_failed_to_activate_client)
 
-                    is Resource.Loading -> _activateUiState.value = ActivateUiState.Loading
+                    is Resource.Loading<*> -> _activateUiState.value = ActivateUiState.Loading
 
-                    is Resource.Success ->
+                    is Resource.Success<*> ->
                         _activateUiState.value =
                             ActivateUiState.ActivatedSuccessfully(R.string.feature_activate_client)
                 }

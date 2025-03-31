@@ -11,7 +11,6 @@ package com.mifos.feature.settings.syncSurvey
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
@@ -31,8 +30,8 @@ class SyncSurveysDialogViewModel(
 ) :
     ViewModel() {
 
-    @Inject
-    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+//    @Inject
+//    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private val _syncSurveysDialogUiState =
         MutableStateFlow<SyncSurveysDialogUiState>(SyncSurveysDialogUiState.Initial)
@@ -50,7 +49,8 @@ class SyncSurveysDialogViewModel(
     private var maxSingleSyncSurveyProgressBar = 0
 
     private fun checkNetworkConnection(): Boolean {
-        return networkUtilsWrapper.isNetworkConnected()
+        return true
+//        return networkUtilsWrapper.isNetworkConnected()
     }
 
     /**

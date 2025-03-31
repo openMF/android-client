@@ -11,6 +11,7 @@ package com.mifos.feature.offline.syncCenterPayloads
 
 import android.Manifest
 import android.content.Context
+import android.net.Network
 import android.widget.Toast
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Box
@@ -46,7 +47,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Network
+//import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -225,15 +226,15 @@ private fun checkNetworkConnectionAndSync(
     context: Context,
     syncCenterPayloads: () -> Unit,
 ) {
-    if (Network.isOnline(context)) {
+//    if (Network.isOnline(context)) {
         syncCenterPayloads()
-    } else {
-        Toast.makeText(
-            context,
-            context.getString(R.string.feature_offline_error_not_connected_internet),
-            Toast.LENGTH_SHORT,
-        ).show()
-    }
+//    } else {
+//        Toast.makeText(
+//            context,
+//            context.getString(R.string.feature_offline_error_not_connected_internet),
+//            Toast.LENGTH_SHORT,
+//        ).show()
+//    }
 }
 
 @Preview(showBackground = true)

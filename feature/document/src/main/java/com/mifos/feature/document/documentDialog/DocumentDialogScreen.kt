@@ -94,11 +94,12 @@ internal fun DocumentDialogScreen(
     var fileChosen by rememberSaveable { mutableStateOf<File?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
         it?.let { uri ->
-            val filePath = FileUtils.getPathReal(context, uri)
-            filePath?.let { path ->
-                fileChosen = File(path)
-                fileName = fileChosen!!.name
-            }
+            // todo while migrating to cmp
+//            val filePath = FileUtils.getPathReal(context, uri)
+//            filePath?.let { path ->
+//                fileChosen = File(path)
+//                fileName = fileChosen!!.name
+//            }
         }
     }
     val permissionsLauncher = rememberLauncherForActivityResult(

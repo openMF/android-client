@@ -48,7 +48,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -265,7 +264,7 @@ private fun LoanAccountDisbursementContent(
 //                containerColor = if (isSystemInDarkTheme()) BluePrimaryDark else BluePrimary,
 //            ),
             onClick = {
-                if (Network.isOnline(context)) {
+//                if (Network.isOnline(context)) {
                     if (isFieldValid(amount = amount, context = context)) {
                         val date = SimpleDateFormat(
                             "dd MMMM yyyy",
@@ -282,13 +281,13 @@ private fun LoanAccountDisbursementContent(
 
                         onDisburseLoan.invoke(loanDisbursement)
                     }
-                } else {
-                    Toast.makeText(
-                        context,
-                        context.resources.getString(R.string.feature_loan_error_network_not_available),
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
+//                } else {
+//                    Toast.makeText(
+//                        context,
+//                        context.resources.getString(R.string.feature_loan_error_network_not_available),
+//                        Toast.LENGTH_SHORT,
+//                    ).show()
+//                }
             },
         ) {
             Text(text = stringResource(id = R.string.feature_loan_submit))

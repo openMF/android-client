@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.savings.savingsAccountActivate
 
+import android.net.Network
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,7 +46,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Network
+//import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -227,7 +228,7 @@ private fun SavingsAccountActivateContent(
                 .padding(horizontal = 16.dp)
                 .heightIn(46.dp),
             onClick = {
-                if (Network.isOnline(context)) {
+//                if (Network.isOnline(context)) {
                     val hashMap = HashMap<String, String>()
                     hashMap["dateFormat"] = "dd MMMM yyyy"
                     hashMap["activatedOnDate"] = SimpleDateFormat(
@@ -237,13 +238,13 @@ private fun SavingsAccountActivateContent(
                     hashMap["locale"] = "en"
 
                     activateSavings.invoke(hashMap)
-                } else {
-                    Toast.makeText(
-                        context,
-                        context.resources.getString(R.string.feature_savings_error_not_connected_internet),
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
+//                } else {
+//                    Toast.makeText(
+//                        context,
+//                        context.resources.getString(R.string.feature_savings_error_not_connected_internet),
+//                        Toast.LENGTH_SHORT,
+//                    ).show()
+//                }
             },
         ) {
             Text(text = stringResource(id = R.string.feature_savings_save))

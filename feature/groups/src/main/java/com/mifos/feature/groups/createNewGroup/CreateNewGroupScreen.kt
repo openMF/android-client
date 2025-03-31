@@ -58,7 +58,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -342,7 +341,7 @@ private fun CreateNewGroupContent(
 //            ),
             onClick = {
                 if (validateFields(groupName, selectedOffice, context)) {
-                    if (Network.isOnline(context)) {
+//                    if (Network.isOnline(context)) {
                         val activationDateInString = if (isActive) {
                             SimpleDateFormat(
                                 "dd MMMM yyyy",
@@ -373,14 +372,15 @@ private fun CreateNewGroupContent(
                                 locale = "en",
                             ),
                         )
-                    } else {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.feature_groups_error_not_connected_internet),
-                            Toast.LENGTH_SHORT,
-                        ).show()
                     }
-                }
+//                else {
+//                        Toast.makeText(
+//                            context,
+//                            context.resources.getString(R.string.feature_groups_error_not_connected_internet),
+//                            Toast.LENGTH_SHORT,
+//                        ).show()
+//                    }
+//                }
             },
         ) {
             Text(text = stringResource(id = R.string.feature_groups_submit))

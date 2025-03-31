@@ -11,6 +11,7 @@ package com.mifos.feature.offline.syncGroupPayloads
 
 import android.Manifest
 import android.content.Context
+import android.net.Network
 import android.widget.Toast
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Box
@@ -42,7 +43,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosErrorContent
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -254,15 +254,15 @@ private fun checkNetworkConnectionAndSync(
     context: Context,
     syncGroupPayloads: () -> Unit,
 ) {
-    if (Network.isOnline(context)) {
+//    if (Network.isOnline(context)) {
         syncGroupPayloads()
-    } else {
-        Toast.makeText(
-            context,
-            context.getString(R.string.feature_offline_error_not_connected_internet),
-            Toast.LENGTH_SHORT,
-        ).show()
-    }
+//    } else {
+//        Toast.makeText(
+//            context,
+//            context.getString(R.string.feature_offline_error_not_connected_internet),
+//            Toast.LENGTH_SHORT,
+//        ).show()
+//    }
 }
 
 // @Preview

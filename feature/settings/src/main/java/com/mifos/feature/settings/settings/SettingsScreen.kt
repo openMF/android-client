@@ -265,16 +265,16 @@ private fun SettingsCardItem(
 }
 
 private fun updateLanguageLocale(context: Context, language: String, isSystemLanguage: Boolean) {
-    if (isSystemLanguage) {
-        LanguageHelper.setLocale(context, language)
-    } else {
-        val systemLanguageCode = Locale.getDefault().language
-        if (MifosAppLanguage.entries.find { it.code == systemLanguageCode } == null) {
-            LanguageHelper.setLocale(context, MifosAppLanguage.ENGLISH.code)
-        } else {
-            LanguageHelper.setLocale(context, language)
-        }
-    }
+//    if (isSystemLanguage) {
+//        LanguageHelper.setLocale(context, language)
+//    } else {
+//        val systemLanguageCode = Locale.getDefault().language
+//        if (MifosAppLanguage.entries.find { it.code == systemLanguageCode } == null) {
+//            LanguageHelper.setLocale(context, MifosAppLanguage.ENGLISH.code)
+//        } else {
+//            LanguageHelper.setLocale(context, language)
+//        }
+//    }
 }
 
 private fun showRestartCountdownToast(context: Context, seconds: Int) {

@@ -12,7 +12,6 @@ package com.mifos.feature.groups.syncGroupDialog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -41,7 +40,7 @@ import rx.plugins.RxJavaPlugins
  */
 class SyncGroupsDialogViewModel(
     private val repository: SyncGroupsDialogRepository,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
+//    private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefManager: PrefManager,
 ) : ViewModel() {
 
@@ -542,14 +541,14 @@ class SyncGroupsDialogViewModel(
     private fun checkNetworkConnection(
         taskWhenOnline: () -> Unit,
     ) {
-        if (networkUtilsWrapper.isNetworkConnected()) {
-            taskWhenOnline.invoke()
-        } else {
-            _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.Error(
-                messageResId = R.string.feature_groups_error_not_connected_internet,
-                imageVector = MifosIcons.WifiOff,
-            )
-        }
+//        if (networkUtilsWrapper.isNetworkConnected()) {
+//            taskWhenOnline.invoke()
+//        } else {
+//            _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.Error(
+//                messageResId = R.string.feature_groups_error_not_connected_internet,
+//                imageVector = MifosIcons.WifiOff,
+//            )
+//        }
     }
 
     fun getActiveLoanAccounts(loanAccountList: List<LoanAccountEntity>?): List<LoanAccountEntity> {

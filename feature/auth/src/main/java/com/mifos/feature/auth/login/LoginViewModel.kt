@@ -13,7 +13,6 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Network
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.PrefManager
@@ -64,12 +63,12 @@ class LoginViewModel(
     }
 
     private fun setupPrefManger(username: String, password: String) {
-        if (Network.isOnline(context)) {
-            login(username, password)
-        } else {
+//        if (Network.isOnline(context)) {
+//            login(username, password)
+//        } else {
             _loginUiState.value =
                 LoginUiState.ShowError(R.string.feature_auth_error_not_connected_internet)
-        }
+//        }
     }
 
     fun login(username: String, password: String) {

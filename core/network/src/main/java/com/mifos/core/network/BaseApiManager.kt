@@ -179,7 +179,7 @@ class BaseApiManager(private val prefManager: PrefManager) {
                 .baseUrl(prefManager.getServerConfig.getInstanceUrl())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-                .addCallAdapterFactory(FlowCallAdapterFactory.create())
+//                .addCallAdapterFactory(FlowCallAdapterFactory.create())
                 .client(MifosOkHttpClient(prefManager).okHttpClient)
                 .build()
             init()

@@ -11,6 +11,7 @@ package com.mifos.feature.client.createNewClient
 
 import android.Manifest
 import android.content.Context
+import android.net.Network
 import android.net.Uri
 import android.os.Build
 import android.telephony.PhoneNumberUtils
@@ -90,7 +91,6 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -656,14 +656,14 @@ private fun handleSubmitClick(
         return
     }
 
-    if (!Network.isOnline(context)) {
-        Toast.makeText(
-            context,
-            context.resources.getString(R.string.feature_client_error_not_connected_internet),
-            Toast.LENGTH_SHORT,
-        ).show()
-        return
-    }
+//    if (!Network.isOnline(context)) {
+//        Toast.makeText(
+//            context,
+//            context.resources.getString(R.string.feature_client_error_not_connected_internet),
+//            Toast.LENGTH_SHORT,
+//        ).show()
+//        return
+//    }
 
     var clientPayload = createClientPayload(
         clientNames.firstName, clientNames.lastName, selectedOfficeId, staffInOffices, isActive,

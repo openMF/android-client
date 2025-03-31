@@ -10,6 +10,7 @@
 package com.mifos.feature.loan.loanApproval
 
 import android.content.Context
+import android.net.Network
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -49,7 +50,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -313,7 +313,7 @@ private fun LoanAccountApprovalContent(
                 if (isFieldValid(amount = approvedAmount, context = context) &&
                     isFieldValid(amount = transactionAmount, context = context)
                 ) {
-                    if (Network.isOnline(context)) {
+//                    if (Network.isOnline(context)) {
                         val approvedOnDate = SimpleDateFormat(
                             "dd MMMM yyyy",
                             Locale.getDefault(),
@@ -329,13 +329,13 @@ private fun LoanAccountApprovalContent(
                                 expectedDisbursementDate = disbursementDate,
                             ),
                         )
-                    } else {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.feature_loan_error_not_connected_internet),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
+//                    } else {
+//                        Toast.makeText(
+//                            context,
+//                            context.resources.getString(R.string.feature_loan_error_not_connected_internet),
+//                            Toast.LENGTH_SHORT,
+//                        ).show()
+//                    }
                 }
             },
         ) {
