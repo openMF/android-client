@@ -74,17 +74,3 @@ kotlin {
         }
     }
 }
-
-
-
-//dependencies {
-////    implementation(projects.core.model)
-//    testImplementation(libs.kotlinx.coroutines.test)
-//    testImplementation(libs.turbine)
-//    implementation(libs.kotlinx.serialization.json)
-//    androidTestImplementation(libs.androidx.junit)
-//    androidTestImplementation(libs.androidx.test.espresso.core)
-//    implementation(libs.converter.gson)
-//    api(libs.mifos.koin.android)
-//    implementation(libs.javax.inject)
-//}
