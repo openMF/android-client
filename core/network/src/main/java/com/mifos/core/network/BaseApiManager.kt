@@ -10,7 +10,6 @@
 package com.mifos.core.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.mifos.core.common.utils.FlowCallAdapterFactory
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.PrefManager
 import com.mifos.core.network.services.CenterService
