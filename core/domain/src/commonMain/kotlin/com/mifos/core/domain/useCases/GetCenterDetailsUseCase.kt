@@ -25,20 +25,18 @@ class GetCenterDetailsUseCase(
         centerId: Int,
         genericResultSet: Boolean,
     ): Flow<Resource<Pair<CenterWithAssociations, List<CenterInfo>>>> = flow {
-        try {
-            emit(Resource.Loading())
+        emit(Resource.Loading())
+    }.flatMapLatest {
             repository.getCentersGroupAndMeeting(centerId)
                 .zip(
                     repository.getCenterSummaryInfo(
                         centerId,
                         genericResultSet,
-                    ),
-                ) { centerGroup, centerInfo ->
-                    Pair(centerGroup, centerInfo)
-                }.collect {
-                    emit(Resource.Success(it))
+                    ))
+                { centerGroup, centerInfo ->
+                    Resource.Success(Pair(centerGroup, centerInfo))
                 }
-        } catch (exception: Exception) {
+        }.catch { exception ->
             emit(Resource.Error(exception.message.toString()))
         }
     }

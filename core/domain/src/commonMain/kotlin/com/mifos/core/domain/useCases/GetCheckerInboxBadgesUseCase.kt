@@ -23,16 +23,12 @@ class GetCheckerInboxBadgesUseCase(
     private val repository: CheckerInboxTasksRepository,
 ) {
     operator fun invoke(): Flow<Resource<Pair<Int, Int>>> = flow {
-        try {
-            emit(Resource.Loading())
-            repository.getCheckerTaskList()
-                .zip(repository.getRescheduleLoansTaskList()) { checkerTasks, rescheduleLoanTasks ->
-                    Pair(checkerTasks.size, rescheduleLoanTasks.size)
-                }.collect {
-                    emit(Resource.Success(it))
-                }
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
+        emit(Resource.Loading())
+    }.flatMapLatest {
+        repository.getCheckerTaskList().zip(repository.getRescheduleLoansTaskList()) { checkerTasks, rescheduleTasks ->
+            Resource.Success(Pair(checkerTasks.size, rescheduleTasks.size))
         }
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

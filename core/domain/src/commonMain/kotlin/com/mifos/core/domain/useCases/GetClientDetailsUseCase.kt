@@ -12,11 +12,10 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.room.entities.zipmodels.ClientAndClientAccounts
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
 
 /**
  * Created by Aditya Gupta on 18/03/24.
@@ -28,17 +27,15 @@ class GetClientDetailsUseCase(
 
     operator fun invoke(clientId: Int): Flow<Resource<ClientAndClientAccounts>> = flow {
         emit(Resource.Loading())
-        val clientAndClientAccounts = withContext(Dispatchers.IO) {
+
+        val clientAndClientAccounts = coroutineScope {
             val clientAccountsDeferred = async { repository.getClientAccounts(clientId) }
             val clientDeferred = async { repository.getClient(clientId) }
 
-            val clientAccounts = clientAccountsDeferred.await()
-            val client = clientDeferred.await()
-
-            ClientAndClientAccounts().apply {
-                this.client = client
-                this.clientAccounts = clientAccounts
-            }
+            ClientAndClientAccounts (
+                client = clientDeferred.await(),
+                clientAccounts = clientAccountsDeferred.await(),
+            )
         }
         emit(Resource.Success(clientAndClientAccounts))
     }.catch { exception ->

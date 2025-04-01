@@ -12,7 +12,6 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -23,33 +22,21 @@ class LoadSavingsAccountsAndTemplateUseCase(
     private val repository: SavingsAccountRepository,
 ) {
 
-    suspend operator fun invoke(): Flow<Resource<SavingProductsAndTemplate?>> =
+    operator fun invoke(): Flow<Resource<SavingProductsAndTemplate?>> =
         flow {
-            try {
-                emit(Resource.Loading())
+            emit(Resource.Loading())
 
-                Observable.combineLatest(
-                    repository.savingsAccounts(),
-                    repository.savingsAccountTemplate(),
-                ) { productSavings, template ->
-                    SavingProductsAndTemplate(productSavings, template)
-                }.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(object : Subscriber<SavingProductsAndTemplate?>() {
-                        override fun onCompleted() {}
+            val savingProductsAndTemplate = coroutineScope {
+                val savingsAccount = async { repository.savingsAccounts() }
+                val template = async { repository.savingsAccountTemplate() }
 
-                        override fun onError(e: Throwable) {
-                            emit(Resource.Error(e.message.toString()))
-                        }
-
-                        override fun onNext(savingProductsAndTemplate: SavingProductsAndTemplate?) {
-                            emit(Resource.Success(savingProductsAndTemplate))
-                        }
-                    })
-
-                awaitClose { channel.close() }
-            } catch (exception: Exception) {
-                emit(Resource.Error(exception.message.toString()))
+                SavingsProductsAndTemplate(
+                    savingsAccount = savingsAccount.await(),
+                    template = template.await(),
+                )
             }
+            emit(Resource.Success(savingProductsAndTemplate))
+        }.catch { exception ->
+            emit(Resource.Error(exception.message.toString()))
         }
 }
