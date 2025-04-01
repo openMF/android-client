@@ -9,10 +9,9 @@
  */
 package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.FileUtils.LOG_TAG
+import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.feature.offline.R
@@ -188,10 +187,11 @@ class SyncLoanRepaymentTransactionViewModel(
                 break
             } else {
                 mLoanRepaymentRequests[i].errorMessage?.let {
-                    Log.d(
-                        LOG_TAG,
-                        it,
-                    )
+                    FileUtils.logger.d { it }
+//                    Log.d(
+//                        LOG_TAG,
+//                        it,
+//                    )
                 }
             }
         }

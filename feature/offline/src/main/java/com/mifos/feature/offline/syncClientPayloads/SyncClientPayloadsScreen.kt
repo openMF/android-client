@@ -11,7 +11,7 @@ package com.mifos.feature.offline.syncClientPayloads
 
 import android.Manifest
 import android.content.Context
-import android.widget.Toast
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,7 +51,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -293,15 +292,16 @@ private fun checkNetworkConnectionAndSync(
     context: Context,
     syncClientPayloads: () -> Unit,
 ) {
-    if (Network.isOnline(context)) {
-        syncClientPayloads()
-    } else {
-        Toast.makeText(
-            context,
-            context.getString(R.string.feature_offline_error_not_connected_internet),
-            Toast.LENGTH_SHORT,
-        ).show()
-    }
+    Log.d("C", context.packageName)
+//    if (Network.isOnline(context)) {
+    syncClientPayloads()
+//    } else {
+//        Toast.makeText(
+//            context,
+//            context.getString(R.string.feature_offline_error_not_connected_internet),
+//            Toast.LENGTH_SHORT,
+//        ).show()
+//    }
 }
 
 class SyncClientPayloadsUiStateProvider : PreviewParameterProvider<SyncClientPayloadsUiState> {

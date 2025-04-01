@@ -8,8 +8,8 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.library)
-    alias(libs.plugins.mifos.android.koin)
+    alias(libs.plugins.mifos.kmp.library)
+    alias(libs.plugins.mifos.kmp.koin)
     alias(libs.plugins.mifos.android.library.jacoco)
     alias(libs.plugins.secrets)
     alias(libs.plugins.kotlin.serialization)
@@ -27,14 +27,50 @@ secrets {
     defaultPropertiesFileName = "secrets.defaults.properties"
 }
 
-dependencies {
-//    implementation(projects.core.model)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.turbine)
-    implementation(libs.kotlinx.serialization.json)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
-    implementation(libs.converter.gson)
-    api(libs.mifos.koin.android)
-    implementation(libs.javax.inject)
+kotlin {
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach {
+        it.binaries.framework {
+            isStatic = false
+            export(libs.kermit.simple)
+        }
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
+            api(libs.coil.kt)
+            api(libs.coil.core)
+            api(libs.coil.svg)
+            api(libs.coil.network.ktor)
+            api(libs.kermit.logging)
+            api(libs.squareup.okio)
+            api(libs.jb.kotlin.stdlib)
+            api(libs.kotlinx.datetime)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.koin.android)
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlinx.coroutines.test)
+        }
+        iosMain.dependencies {
+            api(libs.kermit.simple)
+        }
+        desktopMain.dependencies {
+            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.kotlin.reflect)
+        }
+        jsMain.dependencies {
+            api(libs.jb.kotlin.stdlib.js)
+            api(libs.jb.kotlin.dom)
+        }
+    }
 }

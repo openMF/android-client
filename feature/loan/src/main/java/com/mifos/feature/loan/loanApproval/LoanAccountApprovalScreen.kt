@@ -312,29 +312,29 @@ private fun LoanAccountApprovalContent(
                 if (isFieldValid(amount = approvedAmount, context = context) &&
                     isFieldValid(amount = transactionAmount, context = context)
                 ) {
-                    if (com.mifos.core.common.utils.Network.isOnline(context)) {
-                        val approvedOnDate = SimpleDateFormat(
-                            "dd MMMM yyyy",
-                            Locale.getDefault(),
-                        ).format(
-                            approveDate,
-                        )
+//                    if (Network.isOnline(context)) {
+                    val approvedOnDate = SimpleDateFormat(
+                        "dd MMMM yyyy",
+                        Locale.getDefault(),
+                    ).format(
+                        approveDate,
+                    )
 
-                        onLoanApprove.invoke(
-                            com.mifos.core.model.objects.account.loan.LoanApproval(
-                                note = note,
-                                approvedOnDate = approvedOnDate,
-                                approvedLoanAmount = approvedAmount,
-                                expectedDisbursementDate = disbursementDate,
-                            ),
-                        )
-                    } else {
-                        Toast.makeText(
-                            context,
-                            context.resources.getString(R.string.feature_loan_error_not_connected_internet),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
+                    onLoanApprove.invoke(
+                        com.mifos.core.model.objects.account.loan.LoanApproval(
+                            note = note,
+                            approvedOnDate = approvedOnDate,
+                            approvedLoanAmount = approvedAmount,
+                            expectedDisbursementDate = disbursementDate,
+                        ),
+                    )
+//                    } else {
+//                        Toast.makeText(
+//                            context,
+//                            context.resources.getString(R.string.feature_loan_error_not_connected_internet),
+//                            Toast.LENGTH_SHORT,
+//                        ).show()
+//                    }
                 }
             },
         ) {

@@ -9,10 +9,9 @@
  */
 package com.mifos.feature.offline.syncClientPayloads
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.FileUtils.LOG_TAG
+import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
 import com.mifos.core.datastore.PrefManager
 import com.mifos.room.entities.client.ClientPayloadEntity
@@ -137,10 +136,11 @@ class SyncClientPayloadsViewModel(
                 break
             } else {
                 mClientPayloads[i].errorMessage?.let {
-                    Log.d(
-                        LOG_TAG,
-                        it,
-                    )
+                    FileUtils.logger.d { it }
+//                    Log.d(
+//                        LOG_TAG,
+//                        it,
+//                    )
                 }
             }
         }

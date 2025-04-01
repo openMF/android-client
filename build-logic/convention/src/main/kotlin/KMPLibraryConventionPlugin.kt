@@ -40,6 +40,7 @@ class KMPLibraryConventionPlugin : Plugin<Project> {
             dependencies {
                 add("commonTestImplementation", libs.findLibrary("kotlin.test").get())
                 add("commonTestImplementation", libs.findLibrary("kotlinx.coroutines.test").get())
+                add("commonMainImplementation", libs.findLibrary("kotlinx.coroutines.core").get())
             }
         }
     }
