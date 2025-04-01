@@ -77,7 +77,7 @@ class SyncGroupsDialogViewModel(
     fun syncGroups() {
         var userStatus = false
         viewModelScope.launch {
-            val status = prefManager.userInfo.first().userStatus ?: false
+            val status = prefManager.userInfo.first().userStatus
             userStatus = status
         }
         if (userStatus == Constants.USER_ONLINE) {
