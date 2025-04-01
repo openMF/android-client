@@ -32,7 +32,7 @@ class GetClientDetailsUseCase(
             val clientAccountsDeferred = async { repository.getClientAccounts(clientId) }
             val clientDeferred = async { repository.getClient(clientId) }
 
-            ClientAndClientAccounts (
+            ClientAndClientAccounts(
                 client = clientDeferred.await(),
                 clientAccounts = clientAccountsDeferred.await(),
             )

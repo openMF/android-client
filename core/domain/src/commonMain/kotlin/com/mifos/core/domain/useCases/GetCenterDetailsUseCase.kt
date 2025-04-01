@@ -27,17 +27,16 @@ class GetCenterDetailsUseCase(
     ): Flow<Resource<Pair<CenterWithAssociations, List<CenterInfo>>>> = flow {
         emit(Resource.Loading())
     }.flatMapLatest {
-            repository.getCentersGroupAndMeeting(centerId)
-                .zip(
-                    repository.getCenterSummaryInfo(
-                        centerId,
-                        genericResultSet,
-                    ))
-                { centerGroup, centerInfo ->
-                    Resource.Success(Pair(centerGroup, centerInfo))
-                }
-        }.catch { exception ->
-            emit(Resource.Error(exception.message.toString()))
-        }
+        repository.getCentersGroupAndMeeting(centerId)
+            .zip(
+                repository.getCenterSummaryInfo(
+                    centerId,
+                    genericResultSet,
+                ),
+            ) { centerGroup, centerInfo ->
+                Resource.Success(Pair(centerGroup, centerInfo))
+            }
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }
