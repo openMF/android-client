@@ -15,9 +15,6 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.groups.R
-import com.mifos.core.datastore.PrefManager
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
@@ -42,10 +39,8 @@ import rx.plugins.RxJavaPlugins
  */
 class SyncGroupsDialogViewModel(
     private val repository: SyncGroupsDialogRepository,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefManager: UserPreferencesRepository,
 //    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val prefManager: PrefManager,
 ) : ViewModel() {
 
     private var mGroupList: List<GroupEntity> = emptyList()

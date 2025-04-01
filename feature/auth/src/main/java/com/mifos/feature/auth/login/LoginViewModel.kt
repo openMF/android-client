@@ -31,10 +31,8 @@ import org.openapitools.client.models.PostAuthenticationResponse
  */
 
 class LoginViewModel(
-    private val context: Context,
     private val prefManager: UserPreferencesRepository,
 //    private val context: Context,
-    private val prefManager: PrefManager,
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
 //    private val baseApiManager: BaseApiManager,
