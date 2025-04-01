@@ -9,6 +9,7 @@
  */
 package com.mifos.core.datastore.model
 
+import com.mifos.core.common.enums.MifosAppLanguage
 import kotlinx.serialization.Serializable
 
 @Serializable

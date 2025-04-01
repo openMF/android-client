@@ -13,8 +13,8 @@ import android.content.Context
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.ImageResult
+import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.datastore.model.getInstanceUrl
 import com.mifos.core.network.MifosInterceptor
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking

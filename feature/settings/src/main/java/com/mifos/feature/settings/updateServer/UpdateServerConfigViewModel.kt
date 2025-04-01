@@ -14,8 +14,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.datastore.model.ServerConfig
 import com.mifos.core.domain.useCases.ServerConfigValidatorUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted

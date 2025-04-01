@@ -9,6 +9,7 @@
  */
 package com.mifos.core.datastore.di
 
+import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.datastore.UserPreferencesDataSource
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.UserPreferencesRepositoryImpl
@@ -33,11 +34,4 @@ val PreferencesModule = module {
             unconfinedDispatcher = get(named(MifosDispatchers.Unconfined.name)),
         )
     }
-}
-
-// Should be removed after common module conversion
-enum class MifosDispatchers {
-    Default,
-    IO,
-    Unconfined,
 }
