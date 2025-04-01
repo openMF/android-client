@@ -23,12 +23,10 @@ class GetClientSavingsAccountTemplateByProductUseCase(
 ) {
 
     operator fun invoke(clientId: Int, productId: Int): Flow<Resource<SavingProductsTemplate?>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.getClientSavingsAccountTemplateByProduct(clientId, productId)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.getClientSavingsAccountTemplateByProduct(clientId, productId)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

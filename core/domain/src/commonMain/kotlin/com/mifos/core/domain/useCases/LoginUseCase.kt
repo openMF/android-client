@@ -27,12 +27,10 @@ class LoginUseCase(
         username: String,
         password: String,
     ): Flow<Resource<PostAuthenticationResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val result = loginRepository.login(username, password)
-            emit(Resource.Success(result))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val result = loginRepository.login(username, password)
+        emit(Resource.Success(result))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

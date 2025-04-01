@@ -22,11 +22,10 @@ class GetIndividualCollectionSheetUseCase(
 
     operator fun invoke(payload: RequestCollectionSheetPayload): Flow<Resource<IndividualCollectionSheet>> =
         flow {
-            try {
-                emit(Resource.Loading())
-                emit(Resource.Success(repository.getIndividualCollectionSheet(payload)))
-            } catch (exception: Exception) {
-                emit(Resource.Error(exception.message.toString()))
-            }
+            emit(Resource.Loading())
+            val response = repository.repository.getIndividualCollectionSheet(payload)
+            emit(Resource.Success(response))
+        }.catch { exception ->
+            emit(Resource.Error(exception.message.toString()))
         }
 }

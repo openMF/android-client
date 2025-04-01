@@ -24,13 +24,11 @@ class GetReportCategoryUseCase(
         genericResultSet: Boolean,
         parameterType: Boolean,
     ): Flow<Resource<List<ClientReportTypeItem>>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response =
-                repository.getReportCategories(reportCategory, genericResultSet, parameterType)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response =
+            repository.getReportCategories(reportCategory, genericResultSet, parameterType)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

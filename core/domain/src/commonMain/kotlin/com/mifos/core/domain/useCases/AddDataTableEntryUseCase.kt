@@ -24,12 +24,10 @@ class AddDataTableEntryUseCase(
         entityId: Int,
         payload: Map<String, String>,
     ): Flow<Resource<GenericResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.addDataTableEntry(table, entityId, payload)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.addDataTableEntry(table, entityId, payload)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

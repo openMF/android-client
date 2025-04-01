@@ -19,12 +19,10 @@ class GetClientPinpointLocationsUseCase(
 ) {
 
     operator fun invoke(clientId: Int): Flow<Resource<List<com.mifos.core.model.objects.clients.ClientAddressResponse>>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = pinPointClientRepository.getClientPinpointLocations(clientId)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = pinPointClientRepository.getClientPinpointLocations(clientId)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

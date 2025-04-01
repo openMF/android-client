@@ -20,12 +20,10 @@ class GetUserPathTrackingUseCase(
 ) {
 
     operator fun invoke(userId: Int): Flow<Resource<List<UserLocation>>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.getUserPathTracking(userId)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.getUserPathTracking(userId)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

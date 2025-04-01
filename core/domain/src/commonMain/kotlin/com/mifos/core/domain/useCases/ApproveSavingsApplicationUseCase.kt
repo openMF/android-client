@@ -25,12 +25,10 @@ class ApproveSavingsApplicationUseCase(
 
     operator fun invoke(savingsAccountId: Int, savingsApproval: SavingsApproval?): Flow<Resource<GenericResponse>> =
         flow {
-            try {
-                emit(Resource.Loading())
-                val response = repository.approveSavingsApplication(savingsAccountId, savingsApproval)
-                emit(Resource.Success(response))
-            } catch (exception: Exception) {
-                emit(Resource.Error(exception.message.toString()))
-            }
+            emit(Resource.Loading())
+            val response = repository.approveSavingsApplication(savingsAccountId, savingsApproval)
+            emit(Resource.Success(response))
+        }.catch { exception ->
+            emit(Resource.Error(exception.message.toString()))
         }
 }

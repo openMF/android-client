@@ -27,23 +27,21 @@ class GetClientDetailsUseCase(
 ) {
 
     operator fun invoke(clientId: Int): Flow<Resource<ClientAndClientAccounts>> = flow {
-        try {
-            emit(Resource.Loading())
-            val clientAndClientAccounts = withContext(Dispatchers.IO) {
-                val clientAccountsDeferred = async { repository.getClientAccounts(clientId) }
-                val clientDeferred = async { repository.getClient(clientId) }
+        emit(Resource.Loading())
+        val clientAndClientAccounts = withContext(Dispatchers.IO) {
+            val clientAccountsDeferred = async { repository.getClientAccounts(clientId) }
+            val clientDeferred = async { repository.getClient(clientId) }
 
-                val clientAccounts = clientAccountsDeferred.await()
-                val client = clientDeferred.await()
+            val clientAccounts = clientAccountsDeferred.await()
+            val client = clientDeferred.await()
 
-                ClientAndClientAccounts().apply {
-                    this.client = client
-                    this.clientAccounts = clientAccounts
-                }
+            ClientAndClientAccounts().apply {
+                this.client = client
+                this.clientAccounts = clientAccounts
             }
-            emit(Resource.Success(clientAndClientAccounts))
-        } catch (e: Exception) {
-            emit(Resource.Error(e.message.toString()))
         }
+        emit(Resource.Success(clientAndClientAccounts))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

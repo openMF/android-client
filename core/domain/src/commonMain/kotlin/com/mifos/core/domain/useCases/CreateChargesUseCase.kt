@@ -24,12 +24,10 @@ class CreateChargesUseCase(
         clientId: Int,
         payload: ChargesPayload,
     ): Flow<Resource<ChargeCreationResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.createCharges(clientId, payload)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.createCharges(clientId, payload)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

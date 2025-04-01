@@ -20,11 +20,10 @@ class GetStaffInOfficeUseCase(
 ) {
 
     operator fun invoke(officeId: Int): Flow<Resource<List<StaffEntity>>> = flow {
-        try {
-            emit(Resource.Loading())
-            emit(Resource.Success(repository.getStaffInOffice(officeId)))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.getStaffInOffice(officeId)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

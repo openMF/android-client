@@ -23,12 +23,10 @@ class GetRunReportWithQueryUseCase(
         reportName: String,
         options: Map<String, String>,
     ): Flow<Resource<FullParameterListResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.getRunReportWithQuery(reportName, options)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.getRunReportWithQuery(reportName, options)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

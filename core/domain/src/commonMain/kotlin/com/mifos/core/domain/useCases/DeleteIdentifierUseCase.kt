@@ -23,13 +23,11 @@ class DeleteIdentifierUseCase(
         clientId: Int,
         identifierId: Int,
     ): Flow<Resource<DeleteClientsClientIdIdentifiersIdentifierIdResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response =
-                repository.deleteClientIdentifier(clientId = clientId, identifierId = identifierId)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response =
+            repository.deleteClientIdentifier(clientId = clientId, identifierId = identifierId)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

@@ -24,12 +24,10 @@ class GetRunReportProductUseCase(
         currency: String,
         parameterType: Boolean,
     ): Flow<Resource<FullParameterListResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.getRunReportProduct(parameterName, currency, parameterType)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.getRunReportProduct(parameterName, currency, parameterType)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

@@ -20,12 +20,10 @@ class GetListOfLoanChargesUseCase(
 ) {
 
     operator fun invoke(loanId: Int): Flow<Resource<List<ChargesEntity>>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.getListOfLoanCharges(loanId)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.getListOfLoanCharges(loanId)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

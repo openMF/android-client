@@ -20,12 +20,10 @@ class GetClientIdentifierTemplateUseCase(
 ) {
 
     operator fun invoke(clientId: Int): Flow<Resource<IdentifierTemplate>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.getClientIdentifierTemplate(clientId)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.getClientIdentifierTemplate(clientId)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

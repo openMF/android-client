@@ -24,12 +24,10 @@ class ActivateCenterUseCase(
         centerId: Int,
         centerPayload: ActivatePayload,
     ): Flow<Resource<PostCentersCenterIdResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = activateRepository.activateCenter(centerId, centerPayload)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = activateRepository.activateCenter(centerId, centerPayload)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

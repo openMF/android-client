@@ -24,12 +24,10 @@ class SubmitProductiveSheetUseCase(
         centerId: Int,
         payload: ProductiveCollectionSheetPayload?,
     ): Flow<Resource<GenericResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.submitProductiveSheet(centerId, payload)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.submitProductiveSheet(centerId, payload)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

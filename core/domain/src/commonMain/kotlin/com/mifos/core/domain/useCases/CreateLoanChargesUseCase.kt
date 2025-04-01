@@ -24,12 +24,10 @@ class CreateLoanChargesUseCase(
         loanId: Int,
         chargesPayload: ChargesPayload,
     ): Flow<Resource<ChargeCreationResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.createLoanCharges(loanId, chargesPayload)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.createLoanCharges(loanId, chargesPayload)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

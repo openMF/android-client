@@ -23,12 +23,10 @@ class GetCentersInOfficeUseCase(
         id: Int,
         params: Map<String, String>,
     ): Flow<Resource<List<CenterEntity>>> = flow {
-        try {
-            emit(Resource.Loading())
-            val centers = repository.getCentersInOffice(id, params)
-            emit(Resource.Success(centers))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val centers = repository.getCentersInOffice(id, params)
+        emit(Resource.Success(centers))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

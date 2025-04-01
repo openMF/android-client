@@ -20,12 +20,10 @@ class DeleteCheckerUseCase(
 ) {
 
     operator fun invoke(auditId: Int): Flow<Resource<GenericResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.deleteCheckerEntry(auditId)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.deleteCheckerEntry(auditId)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

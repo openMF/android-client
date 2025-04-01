@@ -24,12 +24,10 @@ class ActivateGroupUseCase(
         groupId: Int,
         groupPayload: ActivatePayload,
     ): Flow<Resource<GenericResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = activateRepository.activateGroup(groupId, groupPayload)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = activateRepository.activateGroup(groupId, groupPayload)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

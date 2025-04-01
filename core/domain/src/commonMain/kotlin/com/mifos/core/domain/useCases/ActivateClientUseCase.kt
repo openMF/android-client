@@ -24,12 +24,10 @@ class ActivateClientUseCase(
         clientId: Int,
         clientPayload: ActivatePayload,
     ): Flow<Resource<PostClientsClientIdResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = activateRepository.activateClient(clientId, clientPayload)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = activateRepository.activateClient(clientId, clientPayload)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

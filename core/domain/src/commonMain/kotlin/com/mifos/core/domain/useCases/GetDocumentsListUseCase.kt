@@ -23,12 +23,10 @@ class GetDocumentsListUseCase(
         entityType: String,
         entityId: Int,
     ): Flow<Resource<List<Document>>> = flow {
-        try {
-            emit(Resource.Loading())
-            val documents = repository.getDocumentsList(entityType, entityId)
-            emit(Resource.Success(documents))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val documents = repository.getDocumentsList(entityType, entityId)
+        emit(Resource.Success(documents))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

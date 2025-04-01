@@ -20,12 +20,10 @@ class GetDataTableInfoUseCase(
 ) {
 
     operator fun invoke(table: String, entityId: Int): Flow<Resource<JsonArray>> = flow {
-        try {
-            emit(Resource.Loading())
-            val data = repository.getDataTableInfo(table, entityId)
-            emit(Resource.Success(data))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val data = repository.getDataTableInfo(table, entityId)
+        emit(Resource.Success(data))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

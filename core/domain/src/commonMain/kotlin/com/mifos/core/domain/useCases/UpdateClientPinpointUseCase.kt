@@ -24,16 +24,14 @@ class UpdateClientPinpointUseCase(
         datatableId: Int,
         address: com.mifos.core.model.objects.clients.ClientAddressRequest,
     ): Flow<Resource<GenericResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = pinPointClientRepository.updateClientPinpointLocation(
-                clientId,
-                datatableId,
-                address,
-            )
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = pinPointClientRepository.updateClientPinpointLocation(
+            clientId,
+            datatableId,
+            address,
+        )
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

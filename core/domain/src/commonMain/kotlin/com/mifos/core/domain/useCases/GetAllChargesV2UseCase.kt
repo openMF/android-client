@@ -20,12 +20,10 @@ class GetAllChargesV2UseCase(
 ) {
 
     operator fun invoke(clientId: Int): Flow<Resource<ChargeTemplate>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.getAllChargesV2(clientId)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.getAllChargesV2(clientId)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

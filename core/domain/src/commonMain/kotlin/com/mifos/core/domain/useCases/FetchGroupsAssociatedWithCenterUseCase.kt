@@ -20,12 +20,10 @@ class FetchGroupsAssociatedWithCenterUseCase(
 ) {
 
     operator fun invoke(centerId: Int): Flow<Resource<CenterWithAssociations>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.fetchGroupsAssociatedWithCenter(centerId)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.fetchGroupsAssociatedWithCenter(centerId)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

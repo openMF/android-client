@@ -25,12 +25,10 @@ class CreateSavingsAccountUseCase(
 ) {
 
     operator fun invoke(savingsPayload: SavingsPayload?): Flow<Resource<Savings?>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.createSavingsAccount(savingsPayload)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.createSavingsAccount(savingsPayload)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

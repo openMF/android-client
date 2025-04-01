@@ -21,12 +21,10 @@ class CreateLoanAccountUseCase(
 ) {
 
     operator fun invoke(loansPayload: LoansPayload): Flow<Resource<Loan>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = loanAccountRepository.createLoansAccount(loansPayload)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = loanAccountRepository.createLoansAccount(loansPayload)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

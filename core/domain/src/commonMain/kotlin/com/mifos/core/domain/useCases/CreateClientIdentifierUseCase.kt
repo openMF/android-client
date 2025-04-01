@@ -24,12 +24,10 @@ class CreateClientIdentifierUseCase(
         clientId: Int,
         identifierPayload: IdentifierPayload,
     ): Flow<Resource<IdentifierCreationResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.createClientIdentifier(clientId, identifierPayload)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.createClientIdentifier(clientId, identifierPayload)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

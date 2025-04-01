@@ -24,12 +24,10 @@ class FetchProductiveCollectionSheetUseCase(
         centerId: Int,
         payload: CollectionSheetRequestPayload?,
     ): Flow<Resource<CollectionSheetResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.fetchProductiveCollectionSheet(centerId, payload)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.fetchProductiveCollectionSheet(centerId, payload)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

@@ -27,12 +27,10 @@ class ActivateSavingsUseCase(
         request: HashMap<String, String>,
     ): Flow<Resource<GenericResponse>> =
         flow {
-            try {
-                emit(Resource.Loading())
-                val response = repository.activateSavings(savingsAccountId, request)
-                emit(Resource.Success(response))
-            } catch (exception: Exception) {
-                emit(Resource.Error(exception.message.toString()))
-            }
+            emit(Resource.Loading())
+            val response = repository.activateSavings(savingsAccountId, request)
+            emit(Resource.Success(response))
+        }.catch { exception ->
+            emit(Resource.Error(exception.message.toString()))
         }
 }

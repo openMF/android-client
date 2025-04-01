@@ -20,12 +20,10 @@ class GetAllChargesV3UseCase(
 ) {
 
     operator fun invoke(loanId: Int): Flow<Resource<ResponseBody>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.getAllChargesV3(loanId)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.getAllChargesV3(loanId)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

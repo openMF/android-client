@@ -21,12 +21,10 @@ class GetGroupLoansAccountTemplateUseCase(
 
     operator fun invoke(groupId: Int, productId: Int): Flow<Resource<GroupLoanTemplate>> =
         flow {
-            try {
-                emit(Resource.Loading())
-                val response = repository.getGroupLoansAccountTemplate(groupId, productId)
-                emit(Resource.Success(response))
-            } catch (exception: Exception) {
-                emit(Resource.Error(exception.message.toString()))
-            }
+            emit(Resource.Loading())
+            val response = repository.getGroupLoansAccountTemplate(groupId, productId)
+            emit(Resource.Success(response))
+        }.catch { exception ->
+            emit(Resource.Error(exception.message.toString()))
         }
 }

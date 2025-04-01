@@ -21,12 +21,10 @@ class GetLoansAccountTemplateUseCase(
 
     operator fun invoke(clientId: Int, productId: Int): Flow<Resource<LoanTemplate>> =
         flow {
-            try {
-                emit(Resource.Loading())
-                val response = loanAccountRepository.getLoansAccountTemplate(clientId, productId)
-                emit(Resource.Success(response))
-            } catch (exception: Exception) {
-                emit(Resource.Error(exception.message.toString()))
-            }
+            emit(Resource.Loading())
+            val response = loanAccountRepository.getLoansAccountTemplate(clientId, productId)
+            emit(Resource.Success(response))
+        }.catch { exception ->
+            emit(Resource.Error(exception.message.toString()))
         }
 }

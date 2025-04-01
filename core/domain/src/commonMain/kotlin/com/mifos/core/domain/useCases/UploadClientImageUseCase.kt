@@ -28,14 +28,12 @@ class UploadClientImageUseCase(
 ) {
 
     operator fun invoke(id: Int, pngFile: File): Flow<Resource<ResponseBody>> = flow {
-        try {
-            emit(Resource.Loading())
-            val requestFile = pngFile.asRequestBody("image/png".toMediaTypeOrNull())
-            val body = MultipartBody.Part.createFormData("file", pngFile.name, requestFile)
-            repository.uploadClientImage(id, body)
-            emit(Resource.Success(ResponseBody.create(null, "success")))
-        } catch (e: Exception) {
-            emit(Resource.Error("Unable to update image: ${e.message}"))
-        }
+        emit(Resource.Loading())
+        val requestFile = pngFile.asRequestBody("image/png".toMediaTypeOrNull())
+        val body = MultipartBody.Part.createFormData("file", pngFile.name, requestFile)
+        repository.uploadClientImage(id, body)
+        emit(Resource.Success(ResponseBody.create(null, "success")))
+    }.catch { exception ->
+        emit(Resource.Error("Unable to update image: ${exception.message}"))
     }
 }

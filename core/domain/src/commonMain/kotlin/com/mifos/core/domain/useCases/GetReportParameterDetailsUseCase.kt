@@ -23,12 +23,10 @@ class GetReportParameterDetailsUseCase(
         parameterName: String,
         parameterType: Boolean,
     ): Flow<Resource<FullParameterListResponse>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.getReportParameterDetails(parameterName, parameterType)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.getReportParameterDetails(parameterName, parameterType)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

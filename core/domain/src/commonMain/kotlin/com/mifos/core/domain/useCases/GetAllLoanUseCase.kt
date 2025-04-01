@@ -19,12 +19,10 @@ class GetAllLoanUseCase(
 ) {
 
     operator fun invoke(): Flow<Resource<List<com.mifos.core.model.objects.organisations.LoanProducts>>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = loanAccountRepository.allLoans()
-            emit(Resource.Succes(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = loanAccountRepository.allLoans()
+        emit(Resource.Succes(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

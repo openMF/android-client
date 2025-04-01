@@ -26,13 +26,11 @@ class FetchCenterDetailsUseCase(
         officeId: Int,
         staffId: Int,
     ): Flow<Resource<List<CenterDetail>>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response =
-                repository.fetchCenterDetails(format, locale, meetingDate, officeId, staffId)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response =
+            repository.fetchCenterDetails(format, locale, meetingDate, officeId, staffId)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }

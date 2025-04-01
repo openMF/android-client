@@ -24,12 +24,10 @@ class DownloadDocumentUseCase(
         entityId: Int,
         documentId: Int,
     ): Flow<Resource<ResponseBody>> = flow {
-        try {
-            emit(Resource.Loading())
-            val response = repository.downloadDocument(entityType, entityId, documentId)
-            emit(Resource.Success(response))
-        } catch (exception: Exception) {
-            emit(Resource.Error(exception.message.toString()))
-        }
+        emit(Resource.Loading())
+        val response = repository.downloadDocument(entityType, entityId, documentId)
+        emit(Resource.Success(response))
+    }.catch { exception ->
+        emit(Resource.Error(exception.message.toString()))
     }
 }
