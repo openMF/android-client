@@ -10,7 +10,6 @@
 package com.mifos.core.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.mifos.core.common.utils.FlowCallAdapterFactory
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.model.getInstanceUrl
@@ -182,7 +181,7 @@ class BaseApiManager(private val prefManager: UserPreferencesRepository) {
                 .baseUrl(instanceUrl)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-                .addCallAdapterFactory(FlowCallAdapterFactory.create())
+//                .addCallAdapterFactory(FlowCallAdapterFactory.create())
                 .client(MifosOkHttpClient(prefManager).okHttpClient)
                 .build()
             init()

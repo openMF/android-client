@@ -56,7 +56,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.Network
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -419,17 +418,17 @@ private fun SavingsAccountTransactionContent(
 //                ),
                 onClick = {
                     if (isAmountValid(context, amount)) {
-                        if (Network.isOnline(context = context)) {
-                            showReviewTransactionDialog = true
-                        } else {
-                            setUserOffline.invoke()
-
-                            Toast.makeText(
-                                context,
-                                context.resources.getString(R.string.feature_savings_error_not_connected_internet),
-                                Toast.LENGTH_SHORT,
-                            ).show()
-                        }
+//                        if (Network.isOnline(context = context)) {
+                        showReviewTransactionDialog = true
+//                        } else {
+                        setUserOffline.invoke()
+//
+//                            Toast.makeText(
+//                                context,
+//                                context.resources.getString(R.string.feature_savings_error_not_connected_internet),
+//                                Toast.LENGTH_SHORT,
+//                            ).show()
+//                        }
                     }
                 },
             ) {

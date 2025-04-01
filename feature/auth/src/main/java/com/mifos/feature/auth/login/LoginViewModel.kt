@@ -9,11 +9,9 @@
  */
 package com.mifos.feature.auth.login
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.Network
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.LoginUseCase
@@ -35,6 +33,8 @@ import org.openapitools.client.models.PostAuthenticationResponse
 class LoginViewModel(
     private val context: Context,
     private val prefManager: UserPreferencesRepository,
+//    private val context: Context,
+    private val prefManager: PrefManager,
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
 //    private val baseApiManager: BaseApiManager,
@@ -64,12 +64,13 @@ class LoginViewModel(
     }
 
     private fun setupPrefManger(username: String, password: String) {
-        if (Network.isOnline(context)) {
-            login(username, password)
-        } else {
-            _loginUiState.value =
-                LoginUiState.ShowError(R.string.feature_auth_error_not_connected_internet)
-        }
+        Log.d("sdfdf", username + password)
+//        if (Network.isOnline(context)) {
+//            login(username, password)
+//        } else {
+        _loginUiState.value =
+            LoginUiState.ShowError(R.string.feature_auth_error_not_connected_internet)
+//        }
     }
 
     fun login(username: String, password: String) {

@@ -264,6 +264,7 @@ dependencies {
     implementation(libs.coil.kt.compose)
 
     implementation(projects.cmpShared)
+    implementation(libs.mifos.koin.android)
 }
 
 dependencyGuard {

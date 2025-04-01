@@ -13,11 +13,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncCentersDialogRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.center.R
+import com.mifos.core.datastore.PrefManager
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
@@ -43,6 +43,8 @@ class SyncCentersDialogViewModel(
     private val repository: SyncCentersDialogRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefManager: UserPreferencesRepository,
+//    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val prefManager: PrefManager,
 ) : ViewModel() {
 
     private val _syncCentersDialogUiState =
@@ -757,14 +759,16 @@ class SyncCentersDialogViewModel(
     private fun checkNetworkConnection(
         taskWhenOnline: () -> Unit,
     ) {
-        if (networkUtilsWrapper.isNetworkConnected()) {
-            taskWhenOnline.invoke()
-        } else {
-            _syncCentersDialogUiState.value = SyncCentersDialogUiState.Error(
-                messageResId = R.string.feature_center_error_not_connected_internet,
-                imageVector = MifosIcons.WifiOff,
-            )
-        }
+// TODO: Commented out since we dont have a network connection checker now.
+
+//        if (networkUtilsWrapper.isNetworkConnected()) {
+        taskWhenOnline.invoke()
+//        } else {
+//            _syncCentersDialogUiState.value = SyncCentersDialogUiState.Error(
+//                messageResId = R.string.feature_center_error_not_connected_internet,
+//                imageVector = MifosIcons.WifiOff,
+//            )
+//        }
     }
 
     fun getActiveLoanAccounts(loanAccountList: List<LoanAccountEntity>?): List<LoanAccountEntity> {

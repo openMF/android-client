@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.CountDownTimer
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -262,16 +263,20 @@ private fun SettingsCardItem(
 }
 
 private fun updateLanguageLocale(context: Context, language: String, isSystemLanguage: Boolean) {
-    if (isSystemLanguage) {
-        LanguageHelper.setLocale(context, language)
-    } else {
-        val systemLanguageCode = Locale.getDefault().language
-        if (MifosAppLanguage.entries.find { it.code == systemLanguageCode } == null) {
-            LanguageHelper.setLocale(context, MifosAppLanguage.ENGLISH.code)
-        } else {
-            LanguageHelper.setLocale(context, language)
-        }
-    }
+    Log.d(
+        "SettingsScreen",
+        "updateLanguageLocale: $language" + context.packageName.toString() + isSystemLanguage,
+    )
+//    if (isSystemLanguage) {
+//        LanguageHelper.setLocale(context, language)
+//    } else {
+//        val systemLanguageCode = Locale.getDefault().language
+//        if (MifosAppLanguage.entries.find { it.code == systemLanguageCode } == null) {
+//            LanguageHelper.setLocale(context, MifosAppLanguage.ENGLISH.code)
+//        } else {
+//            LanguageHelper.setLocale(context, language)
+//        }
+//    }
 }
 
 private fun showRestartCountdownToast(context: Context, seconds: Int) {
