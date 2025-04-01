@@ -55,6 +55,7 @@ class SyncCentersDialogViewModel(
     private var mSavingsAccountList: List<SavingsAccountEntity> = emptyList()
     private var mMemberLoanAccountsList: List<LoanAccountEntity> = emptyList()
     private var mCenterList: List<CenterEntity> = emptyList()
+
 //    private val mFailedSyncCenter: MutableList<CenterEntity> = mutableListOf()
     private var mGroups: List<GroupEntity> = emptyList()
     private var mClients: List<ClientEntity> = emptyList()
@@ -128,7 +129,7 @@ class SyncCentersDialogViewModel(
 //                _syncCenterData.update { it.copy(failedSyncGroupCount = mFailedSyncCenter.size) }
 //                syncCenter()
 //            }
-            Log.d("Error",e.toString())
+            Log.d("Error", e.toString())
         } catch (throwable: Throwable) {
             Log.d("Error", throwable.message.toString())
         }

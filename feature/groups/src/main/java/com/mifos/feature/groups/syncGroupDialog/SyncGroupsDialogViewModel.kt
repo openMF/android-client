@@ -44,6 +44,7 @@ class SyncGroupsDialogViewModel(
 ) : ViewModel() {
 
     private var mGroupList: List<GroupEntity> = emptyList()
+
 //    private val mFailedSyncGroup: MutableList<GroupEntity> = mutableListOf()
     private var mClients: List<ClientEntity> = emptyList()
     private var mLoanAccountList: List<LoanAccountEntity> = emptyList()
@@ -181,7 +182,7 @@ class SyncGroupsDialogViewModel(
 //                _syncGroupData.update { it.copy(failedSyncGroupCount = mFailedSyncGroup.size) }
 //                syncGroups()
 //            }
-            Log.d("Error",e.toString())
+            Log.d("Error", e.toString())
         } catch (throwable: Throwable) {
             RxJavaPlugins.getInstance().errorHandler.handleError(throwable)
         }

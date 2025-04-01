@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.settings.syncSurvey
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.room.entities.survey.QuestionDatasEntity
@@ -38,7 +39,7 @@ class SyncSurveysDialogViewModel(
         get() = _syncSurveysDialogUiState
 
     private var mSurveyList: List<SurveyEntity> = ArrayList()
-    private val mFailedSyncSurvey: MutableList<SurveyEntity> = ArrayList()
+//    private val mFailedSyncSurvey: MutableList<SurveyEntity> = ArrayList()
     private var mQuestionDatasList: List<QuestionDatasEntity> = ArrayList()
     private var mResponseDatasList: List<ResponseDatasEntity> = ArrayList()
     private var mSurveySyncIndex = 0
@@ -177,6 +178,7 @@ class SyncSurveysDialogViewModel(
 //                    SyncSurveysDialogUiState.ShowSyncedFailedSurveys(mFailedSyncSurvey.size)
 //                checkNetworkConnectionAndSyncSurvey()
 //            }
+            Log.d("Error",e.toString())
         } catch (throwable: Throwable) {
             val errorObservable = Observable.error<Throwable>(RuntimeException("Custom error"))
             errorObservable.subscribe { println("Error: ${throwable.message}") }

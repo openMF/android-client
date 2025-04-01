@@ -42,6 +42,7 @@ class SyncClientsDialogViewModel(
 ) : ViewModel() {
 
     private var mClientList: List<ClientEntity> = ArrayList()
+
 //    private val mFailedSyncClient: MutableList<ClientEntity> = ArrayList()
     private var mLoanAccountList: List<LoanAccountEntity> = ArrayList()
     private var mSavingsAccountList: List<SavingsAccountEntity> = ArrayList()
@@ -141,7 +142,7 @@ class SyncClientsDialogViewModel(
 //                _syncClientData.update { it.copy(failedSyncGroupCount = mFailedSyncClient.size) }
 //                syncClient()
 //            }
-            Log.d("Error",e.toString())
+            Log.d("Error", e.toString())
         } catch (throwable: Throwable) {
             RxJavaPlugins.getInstance().errorHandler.handleError(throwable)
         }

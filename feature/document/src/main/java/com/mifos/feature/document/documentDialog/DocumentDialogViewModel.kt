@@ -63,7 +63,7 @@ class DocumentDialogViewModel(
 //                                _documentDialogUiState.value =
 //                                    DocumentDialogUiState.ShowError(e.message.toString())
 //                            }
-                            Log.d("Error",e.toString())
+                            Log.d("Error", e.toString())
                         } catch (throwable: Throwable) {
                             RxJavaPlugins.getInstance().errorHandler
                                 .handleError(throwable)

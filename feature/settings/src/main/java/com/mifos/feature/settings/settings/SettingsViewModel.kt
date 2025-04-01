@@ -48,7 +48,7 @@ class SettingsViewModel(
     }
 
     fun updateLanguage(language: String): Boolean {
-        return (language==MifosAppLanguage.SYSTEM_LANGUAGE.code)
+        return (language == MifosAppLanguage.SYSTEM_LANGUAGE.code)
     }
 
     fun tryUpdatingEndpoint(selectedBaseUrl: String, selectedTenant: String): Boolean {
