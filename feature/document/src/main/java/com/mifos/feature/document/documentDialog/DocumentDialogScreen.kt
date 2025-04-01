@@ -60,7 +60,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.designsystem.component.MifosCircularProgress
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -94,11 +93,12 @@ internal fun DocumentDialogScreen(
     var fileChosen by rememberSaveable { mutableStateOf<File?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
         it?.let { uri ->
-            val filePath = FileUtils.getPathReal(context, uri)
-            filePath?.let { path ->
-                fileChosen = File(path)
-                fileName = fileChosen!!.name
-            }
+            // todo while migrating to cmp
+//            val filePath = FileUtils.getPathReal(context, uri)
+//            filePath?.let { path ->
+//                fileChosen = File(path)
+//                fileName = fileChosen!!.name
+//            }
         }
     }
     val permissionsLauncher = rememberLauncherForActivityResult(

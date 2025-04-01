@@ -16,7 +16,6 @@ import android.os.StrictMode.VmPolicy
 import androidx.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
 import com.mifos.cmp.navigation.initKoin
-import com.mifos.core.common.utils.LanguageHelper.onAttach
 import com.raizlabs.android.dbflow.config.FlowConfig
 import com.raizlabs.android.dbflow.config.FlowManager
 import org.koin.android.ext.koin.androidContext
@@ -47,7 +46,7 @@ class App : MultiDexApplication() {
     }
 
     override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(onAttach(base))
+        super.attachBaseContext(base)
     }
 
     companion object {

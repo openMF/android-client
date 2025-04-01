@@ -12,11 +12,8 @@ package com.mifos.feature.client.syncClientDialog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncClientsDialogRepository
 import com.mifos.core.datastore.PrefManager
-import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.feature.client.R
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
@@ -39,7 +36,7 @@ import rx.plugins.RxJavaPlugins
  */
 class SyncClientsDialogViewModel(
     private val repository: SyncClientsDialogRepository,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
+//    private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefManager: PrefManager,
 ) : ViewModel() {
 
@@ -290,14 +287,14 @@ class SyncClientsDialogViewModel(
     private fun checkNetworkConnection(
         taskWhenOnline: () -> Unit,
     ) {
-        if (networkUtilsWrapper.isNetworkConnected()) {
-            taskWhenOnline.invoke()
-        } else {
-            _syncClientsDialogUiState.value = SyncClientsDialogUiState.Error(
-                messageResId = R.string.feature_client_error_network_not_available,
-                imageVector = MifosIcons.WifiOff,
-            )
-        }
+//        if (networkUtilsWrapper.isNetworkConnected()) {
+        taskWhenOnline.invoke()
+//        } else {
+//            _syncClientsDialogUiState.value = SyncClientsDialogUiState.Error(
+//                messageResId = R.string.feature_client_error_network_not_available,
+//                imageVector = MifosIcons.WifiOff,
+//            )
+//        }
     }
 
     fun getActiveLoanAccounts(loanAccountList: List<LoanAccountEntity>?): List<LoanAccountEntity> {

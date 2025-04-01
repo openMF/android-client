@@ -655,14 +655,14 @@ private fun handleSubmitClick(
         return
     }
 
-    if (!com.mifos.core.common.utils.Network.isOnline(context)) {
-        Toast.makeText(
-            context,
-            context.resources.getString(R.string.feature_client_error_not_connected_internet),
-            Toast.LENGTH_SHORT,
-        ).show()
-        return
-    }
+//    if (!Network.isOnline(context)) {
+//        Toast.makeText(
+//            context,
+//            context.resources.getString(R.string.feature_client_error_not_connected_internet),
+//            Toast.LENGTH_SHORT,
+//        ).show()
+//        return
+//    }
 
     var clientPayload = createClientPayload(
         clientNames.firstName, clientNames.lastName, selectedOfficeId, staffInOffices, isActive,
