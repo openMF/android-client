@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.HttpException
+//import retrofit2.HttpException
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
@@ -52,17 +52,17 @@ class DocumentDialogViewModel(
                     override fun onError(e: Throwable) {
                         val errorMessage: String?
                         try {
-                            if (e is HttpException) {
-                                errorMessage = e.response()?.errorBody()?.string()
-                                _documentDialogUiState.value = errorMessage?.let {
-                                    DocumentDialogUiState.ShowUploadError(
-                                        it,
-                                    )
-                                }!!
-                            } else {
-                                _documentDialogUiState.value =
-                                    DocumentDialogUiState.ShowError(e.message.toString())
-                            }
+//                            if (e is HttpException) {
+//                                errorMessage = e.response()?.errorBody()?.string()
+//                                _documentDialogUiState.value = errorMessage?.let {
+//                                    DocumentDialogUiState.ShowUploadError(
+//                                        it,
+//                                    )
+//                                }!!
+//                            } else {
+//                                _documentDialogUiState.value =
+//                                    DocumentDialogUiState.ShowError(e.message.toString())
+//                            }
                         } catch (throwable: Throwable) {
                             RxJavaPlugins.getInstance().errorHandler
                                 .handleError(throwable)

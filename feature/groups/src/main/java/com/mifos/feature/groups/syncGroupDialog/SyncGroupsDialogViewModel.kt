@@ -11,10 +11,11 @@ package com.mifos.feature.groups.syncGroupDialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.groups.R
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
@@ -29,10 +30,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
+//import retrofit2.HttpException
 import rx.Observable
 import rx.plugins.RxJavaPlugins
 
@@ -42,7 +44,7 @@ import rx.plugins.RxJavaPlugins
 class SyncGroupsDialogViewModel(
     private val repository: SyncGroupsDialogRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
     private var mGroupList: List<GroupEntity> = emptyList()
@@ -76,7 +78,12 @@ class SyncGroupsDialogViewModel(
      * This Method checking network connection before starting group synchronization
      */
     fun syncGroups() {
-        if (prefManager.userStatus == Constants.USER_ONLINE) {
+        var userStatus=false
+        viewModelScope.launch {
+            val status = prefManager.userInfo.firstOrNull()?.userStatus ?: false
+            userStatus=status
+        }
+        if (userStatus == Constants.USER_ONLINE) {
             checkNetworkConnection {
                 syncGroupAndUpdateUI()
             }
@@ -170,14 +177,14 @@ class SyncGroupsDialogViewModel(
      */
     private fun onAccountSyncFailed(e: Throwable) {
         try {
-            if (e is HttpException) {
-                val singleSyncGroupMax = maxSingleSyncGroupProgressBar
-                _syncGroupData.update { it.copy(singleSyncCount = singleSyncGroupMax) }
-                mFailedSyncGroup.add(mGroupList[mGroupSyncIndex])
-                mGroupSyncIndex += 1
-                _syncGroupData.update { it.copy(failedSyncGroupCount = mFailedSyncGroup.size) }
-                syncGroups()
-            }
+//            if (e is HttpException) {
+//                val singleSyncGroupMax = maxSingleSyncGroupProgressBar
+//                _syncGroupData.update { it.copy(singleSyncCount = singleSyncGroupMax) }
+//                mFailedSyncGroup.add(mGroupList[mGroupSyncIndex])
+//                mGroupSyncIndex += 1
+//                _syncGroupData.update { it.copy(failedSyncGroupCount = mFailedSyncGroup.size) }
+//                syncGroups()
+//            }
         } catch (throwable: Throwable) {
             RxJavaPlugins.getInstance().errorHandler.handleError(throwable)
         }

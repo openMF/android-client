@@ -13,19 +13,23 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.model.objects.users.User
 import com.mifos.core.common.utils.Network
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.common.utils.getInstanceUrl
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
+import com.mifos.core.datastore.model.ServerConfig
+import com.mifos.core.datastore.model.UserData
 import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
+import com.mifos.core.model.objects.clients.Role
+import com.mifos.core.network.BaseApiManager
 import com.mifos.feature.auth.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.mifos.core.apimanager.BaseApiManager
 import org.openapitools.client.models.PostAuthenticationResponse
 
 /**
@@ -34,7 +38,7 @@ import org.openapitools.client.models.PostAuthenticationResponse
 
 class LoginViewModel(
     private val context: Context,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val baseApiManager: BaseApiManager,
@@ -103,28 +107,37 @@ class LoginViewModel(
         username: String,
         password: String,
     ) {
+
         // Updating Services
-        baseApiManager.createService(
-            username = username,
-            password = password,
-            baseUrl = prefManager.getServerConfig.getInstanceUrl().dropLast(3),
-            tenant = prefManager.getServerConfig.tenant,
-            secured = false,
-        )
+//        baseApiManager.createService(
+//            username = username,
+//            password = password,
+//            baseUrl = prefManager.getServerConfig.getInstanceUrl().dropLast(3),
+//            tenant = prefManager.getServerConfig.tenant,
+//            secured = false,
+//        )
 
-        // Saving username password
-        prefManager.usernamePassword = Pair(username, password)
-        // Saving userID
-        prefManager.setUserId(user.userId!!.toInt())
-        // Saving user's token
-        prefManager.saveToken("Basic " + user.base64EncodedAuthenticationKey)
-        // Saving user
-        prefManager.savePostAuthenticationResponse(user)
+        viewModelScope.launch {
 
-        if (prefManager.getPassCodeStatus()) {
-            _loginUiState.value = LoginUiState.HomeActivityIntent
-        } else {
-            _loginUiState.value = LoginUiState.PassCodeActivityIntent
+            prefManager.updateUser(
+                User(
+                    username=username,
+                    password=password,
+                    userId=user.userId!!.toLong(),
+                    base64EncodedAuthenticationKey = user.base64EncodedAuthenticationKey,
+                    isAuthenticated = user.authenticated?:false,
+                    officeId = user.officeId!!,
+                    officeName = user.officeName,
+                    permissions = user.permissions!!
+
+                )
+            )
         }
+
+//        if (prefManager.getPassCodeStatus()) {
+//            _loginUiState.value = LoginUiState.HomeActivityIntent
+//        } else {
+//            _loginUiState.value = LoginUiState.PassCodeActivityIntent
+//        }
     }
 }

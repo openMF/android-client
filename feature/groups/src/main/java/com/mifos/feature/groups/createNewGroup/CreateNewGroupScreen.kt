@@ -94,7 +94,7 @@ internal fun CreateNewGroupScreen(
         invokeGroupCreation = { groupPayload ->
             viewModel.createGroup(groupPayload)
         },
-        onGroupCreated = { onGroupCreated(it, viewModel.getUserStatus()) },
+        onGroupCreated = { onGroupCreated(it, viewModel.userStatus) },
         getResponse = { viewModel.getResponse() },
     )
 }

@@ -15,7 +15,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncCentersDialogRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.center.R
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
@@ -31,9 +31,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
+//import retrofit2.HttpException
 import rx.Observable
 
 /**
@@ -42,7 +43,7 @@ import rx.Observable
 class SyncCentersDialogViewModel(
     private val repository: SyncCentersDialogRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
     private val _syncCentersDialogUiState =
@@ -77,7 +78,12 @@ class SyncCentersDialogViewModel(
     }
 
     fun syncCenter() {
-        if (prefManager.userStatus == Constants.USER_ONLINE) {
+        var userStatus=false
+        viewModelScope.launch {
+            val status = prefManager.userInfo.firstOrNull()?.userStatus ?: false
+            userStatus=status
+        }
+        if (userStatus == Constants.USER_ONLINE) {
             checkNetworkConnection {
                 syncCenterAndUpdateUI()
             }
@@ -118,14 +124,14 @@ class SyncCentersDialogViewModel(
      */
     private fun onAccountSyncFailed(e: Throwable) {
         try {
-            if (e is HttpException) {
-                val singleSyncCenterMax = maxSingleSyncCenterProgressBar
-                _syncCenterData.update { it.copy(singleSyncCount = singleSyncCenterMax) }
-                mFailedSyncCenter.add(mCenterList[mCenterSyncIndex])
-                mCenterSyncIndex += 1
-                _syncCenterData.update { it.copy(failedSyncGroupCount = mFailedSyncCenter.size) }
-                syncCenter()
-            }
+//            if (e is HttpException) {
+//                val singleSyncCenterMax = maxSingleSyncCenterProgressBar
+//                _syncCenterData.update { it.copy(singleSyncCount = singleSyncCenterMax) }
+//                mFailedSyncCenter.add(mCenterList[mCenterSyncIndex])
+//                mCenterSyncIndex += 1
+//                _syncCenterData.update { it.copy(failedSyncGroupCount = mFailedSyncCenter.size) }
+//                syncCenter()
+//            }
         } catch (throwable: Throwable) {
             Log.d("Error", throwable.message.toString())
         }

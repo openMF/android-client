@@ -14,9 +14,10 @@ import FormWidgetDTO
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.DataTableListRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.feature.data_table.R
@@ -26,6 +27,8 @@ import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.noncore.DataTablePayload
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -39,10 +42,23 @@ import rx.schedulers.Schedulers
  */
 class DataTableListViewModel(
     private val repository: DataTableListRepository,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
+    private var currentUserStatus: Boolean = false
+
+    private val _userStatus = MutableStateFlow(currentUserStatus)
+    val userStatus = _userStatus.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            prefManager.userInfo.collect { userData ->
+                currentUserStatus = userData?.userStatus ?: false
+                _userStatus.value = currentUserStatus
+            }
+        }
+    }
     private val json = Json {
         serializersModule = SerializersModule {
             polymorphic(FormWidgetDTO::class) {
@@ -76,7 +92,7 @@ class DataTableListViewModel(
     private var formWidgetsList: MutableList<List<FormWidgetDTO>> = ArrayList()
 
     fun getUserStatus(): Boolean {
-        return prefManager.userStatus
+            return currentUserStatus
     }
 
     fun initArgs(

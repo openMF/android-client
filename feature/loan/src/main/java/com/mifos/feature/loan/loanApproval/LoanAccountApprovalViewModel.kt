@@ -17,7 +17,7 @@ import com.mifos.room.entities.accounts.loans.LoanApprovalData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.json.Json
-import retrofit2.HttpException
+//import retrofit2.HttpException
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
@@ -49,18 +49,18 @@ class LoanAccountApprovalViewModel(
             .subscribe(object : Subscriber<GenericResponse?>() {
                 override fun onCompleted() {}
                 override fun onError(e: Throwable) {
-                    try {
-                        if (e is HttpException) {
-                            val errorMessage = e.response()?.errorBody()
-                                ?.string()
-                            _loanAccountApprovalUiState.value =
-                                LoanAccountApprovalUiState.ShowLoanApproveFailed(
-                                    errorMessage ?: "Something went wrong",
-                                )
-                        }
-                    } catch (throwable: Throwable) {
-                        RxJavaPlugins.getInstance().errorHandler.handleError(e)
-                    }
+//                    try {
+//                        if (e is HttpException) {
+//                            val errorMessage = e.response()?.errorBody()
+//                                ?.string()
+//                            _loanAccountApprovalUiState.value =
+//                                LoanAccountApprovalUiState.ShowLoanApproveFailed(
+//                                    errorMessage ?: "Something went wrong",
+//                                )
+//                        }
+//                    } catch (throwable: Throwable) {
+//                        RxJavaPlugins.getInstance().errorHandler.handleError(e)
+//                    }
                 }
 
                 override fun onNext(genericResponse: GenericResponse?) {

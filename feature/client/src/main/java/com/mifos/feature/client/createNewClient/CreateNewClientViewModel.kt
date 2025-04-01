@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.HttpException
+//import retrofit2.HttpException
 import java.io.File
 
 /**
@@ -107,12 +107,12 @@ class CreateNewClientViewModel(
                     _createNewClientUiState.value =
                         CreateNewClientUiState.ShowWaitingForCheckerApproval(0)
                 }
-            } catch (e: HttpException) {
-                val errorMessage = e.response()?.errorBody()?.string().orEmpty()
-                Log.d("CreateClient", errorMessage)
-                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
-                    "HTTP Error: $errorMessage",
-                )
+//            } catch (e: HttpException) {
+//                val errorMessage = e.response()?.errorBody()?.string().orEmpty()
+//                Log.d("CreateClient", errorMessage)
+//                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
+//                    "HTTP Error: $errorMessage",
+//                )
             } catch (e: Exception) {
                 val errorMessage = e.message.orEmpty()
                 Log.e("CreateClient", "Unexpected error", e)

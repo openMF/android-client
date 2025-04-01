@@ -14,20 +14,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.FileUtils.LOG_TAG
 import com.mifos.core.data.repository.SyncCenterPayloadsRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.center.CenterPayloadEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
 class SyncCenterPayloadsViewModel(
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
     private val repository: SyncCenterPayloadsRepository,
 ) : ViewModel() {
 
@@ -43,7 +44,12 @@ class SyncCenterPayloadsViewModel(
     private var centerSyncIndex = 0
 
     fun getUserStatus(): Boolean {
-        return prefManager.userStatus
+        var userStatus=false
+        viewModelScope.launch {
+            val status = prefManager.userInfo.firstOrNull()?.userStatus ?: false
+            userStatus=status
+        }
+        return userStatus
     }
 
     fun refreshCenterPayloads() {

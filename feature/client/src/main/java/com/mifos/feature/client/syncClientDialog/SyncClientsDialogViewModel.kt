@@ -14,7 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncClientsDialogRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.client.R
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
@@ -27,10 +27,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import rx.Observable
 import rx.plugins.RxJavaPlugins
 
@@ -40,7 +40,7 @@ import rx.plugins.RxJavaPlugins
 class SyncClientsDialogViewModel(
     private val repository: SyncClientsDialogRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
     private var mClientList: List<ClientEntity> = ArrayList()
@@ -68,7 +68,11 @@ class SyncClientsDialogViewModel(
     }
 
     fun syncClient() {
-        if (prefManager.userStatus == Constants.USER_ONLINE) {
+        var userStatus:Boolean=false
+        viewModelScope.launch {
+            userStatus=prefManager.userInfo.firstOrNull()?.userStatus ?: false
+        }
+        if (userStatus == Constants.USER_ONLINE) {
             checkNetworkConnection {
                 syncClientAndUpdateUI()
             }
@@ -131,14 +135,14 @@ class SyncClientsDialogViewModel(
 
     fun onAccountSyncFailed(e: Throwable?) {
         try {
-            if (e is HttpException) {
-                val singleSyncClientMax = maxSingleSyncClientProgressBar
-                _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
-                mFailedSyncClient.add(mClientList[mClientSyncIndex])
-                mClientSyncIndex += 1
-                _syncClientData.update { it.copy(failedSyncGroupCount = mFailedSyncClient.size) }
-                syncClient()
-            }
+//            if (e is HttpException) {
+//                val singleSyncClientMax = maxSingleSyncClientProgressBar
+//                _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
+//                mFailedSyncClient.add(mClientList[mClientSyncIndex])
+//                mClientSyncIndex += 1
+//                _syncClientData.update { it.copy(failedSyncGroupCount = mFailedSyncClient.size) }
+//                syncClient()
+//            }
         } catch (throwable: Throwable) {
             RxJavaPlugins.getInstance().errorHandler.handleError(throwable)
         }

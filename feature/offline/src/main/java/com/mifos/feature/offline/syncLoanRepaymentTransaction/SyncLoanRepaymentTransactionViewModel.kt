@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.FileUtils.LOG_TAG
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.feature.offline.R
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
@@ -31,7 +32,7 @@ import kotlinx.coroutines.launch
  */
 class SyncLoanRepaymentTransactionViewModel(
     private val repository: SyncLoanRepaymentTransactionRepository,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
     private val _syncLoanRepaymentTransactionUiState =
@@ -49,7 +50,14 @@ class SyncLoanRepaymentTransactionViewModel(
     private var mClientSyncIndex = 0
 
     fun getUserStatus(): Boolean {
-        return prefManager.userStatus
+        var userStatus:Boolean=false
+
+
+            viewModelScope.launch {
+                userStatus=prefManager.userInfo.firstOrNull()?.userStatus ?: false
+            }
+
+        return userStatus
     }
 
     fun refreshTransactions() {

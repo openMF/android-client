@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
+//import retrofit2.HttpException
 import rx.Observable
 import javax.inject.Inject
 
@@ -166,14 +166,14 @@ class SyncSurveysDialogViewModel(
      */
     private fun onAccountSyncFailed(e: Throwable) {
         try {
-            if (e is HttpException) {
-                maxSingleSyncSurveyProgressBar
-                mFailedSyncSurvey.add(mSurveyList[mSurveySyncIndex])
-                mSurveySyncIndex += 1
-                _syncSurveysDialogUiState.value =
-                    SyncSurveysDialogUiState.ShowSyncedFailedSurveys(mFailedSyncSurvey.size)
-                checkNetworkConnectionAndSyncSurvey()
-            }
+//            if (e is HttpException) {
+//                maxSingleSyncSurveyProgressBar
+//                mFailedSyncSurvey.add(mSurveyList[mSurveySyncIndex])
+//                mSurveySyncIndex += 1
+//                _syncSurveysDialogUiState.value =
+//                    SyncSurveysDialogUiState.ShowSyncedFailedSurveys(mFailedSyncSurvey.size)
+//                checkNetworkConnectionAndSyncSurvey()
+//            }
         } catch (throwable: Throwable) {
             val errorObservable = Observable.error<Throwable>(RuntimeException("Custom error"))
             errorObservable.subscribe { println("Error: ${throwable.message}") }

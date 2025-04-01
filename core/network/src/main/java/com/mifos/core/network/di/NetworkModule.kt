@@ -11,8 +11,10 @@ package com.mifos.core.network.di
 
 import coil.ImageLoader
 import coil.util.DebugLogger
-import com.mifos.core.common.utils.getInstanceUrl
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
+import com.mifos.core.datastore.model.getInstanceUrl
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
@@ -20,23 +22,29 @@ import org.koin.dsl.module
 import org.mifos.core.apimanager.BaseApiManager
 
 val NetworkModule = module {
-    single { PrefManager(androidContext()) }
+//    single { UserPreferencesRepositoryImpl(androidContext()) }
 
     single { com.mifos.core.network.BaseApiManager(get()) }
 
     single { BaseApiManager }
 
     single {
-        val prefManager: PrefManager = get()
-        val usernamePassword: Pair<String, String> = prefManager.usernamePassword
+        val prefManager: UserPreferencesRepository = get()
+
+        val user = runBlocking { prefManager.userData.first() }
+        val serverConfig = runBlocking { prefManager.getServerConfig.first() }
+
+
         val baseManager = BaseApiManager.getInstance()
-        baseManager.createService(
-            usernamePassword.first,
-            usernamePassword.second,
-            prefManager.getServerConfig.getInstanceUrl().dropLast(3),
-            prefManager.getServerConfig.tenant,
-            false,
-        )
+        if (serverConfig != null) {
+            baseManager.createService(
+                user.username ?: "",
+                user.password ?: "",
+                serverConfig.getInstanceUrl().dropLast(3) ?: "",
+                serverConfig.tenant ?: "",
+                false,
+            )
+        }
         baseManager
     }
 

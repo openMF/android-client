@@ -10,6 +10,7 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.common.utils.Page
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.mappers.centers.GetCentersResponseMapper
@@ -35,7 +36,7 @@ class DataManagerCenter(
     val mBaseApiManager: BaseApiManager,
     private val centerDatabaseHelper: CenterDaoHelper,
     private val baseApiManager: org.mifos.core.apimanager.BaseApiManager,
-    private val prefManager: com.mifos.core.datastore.PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -120,13 +121,17 @@ class DataManagerCenter(
     }
 
     suspend fun createCenter(centerPayload: CenterPayloadEntity?) {
-        when (prefManager.userStatus) {
-            false -> mBaseApiManager.centerApi.createCenter(centerPayload)
-            true ->
-                /**
-                 * Save CenterPayload in Database table.
-                 */
-                centerDatabaseHelper.saveCenterPayload(centerPayload)
+        prefManager.userInfo.collect{
+            userData->
+            when(userData.userStatus)
+            {
+                false -> mBaseApiManager.centerApi.createCenter(centerPayload)
+                true ->
+                    /**
+                     * Save CenterPayload in Database table.
+                     */
+                    centerDatabaseHelper.saveCenterPayload(centerPayload)
+            }
         }
     }
 
@@ -137,13 +142,15 @@ class DataManagerCenter(
      */
     fun getCenterWithAssociations(centerId: Int): Flow<CenterWithAssociations> {
         return flow {
-            when (prefManager.userStatus) {
-                false -> mBaseApiManager.centerApi.getAllGroupsForCenter(centerId)
-                true ->
-                    /**
-                     * Return Groups from DatabaseHelperGroups.
-                     */
-                    centerDatabaseHelper.getCenterAssociateGroups(centerId)
+            prefManager.userInfo.collect { userData ->
+                when (userData.userStatus) {
+                    false -> mBaseApiManager.centerApi.getAllGroupsForCenter(centerId)
+                    true ->
+                        /**
+                         * Return Groups from DatabaseHelperGroups.
+                         */
+                        centerDatabaseHelper.getCenterAssociateGroups(centerId)
+                }
             }
         }
     }
