@@ -144,7 +144,7 @@ fun PathTrackingScreen(
             viewModel.refreshCenterList()
         },
         refreshState = refreshState,
-        userStatus = userStatus?:false,
+        userStatus = userStatus ?: false,
         updateUserStatus = { viewModel.updateUserStatus(it) },
     )
 }

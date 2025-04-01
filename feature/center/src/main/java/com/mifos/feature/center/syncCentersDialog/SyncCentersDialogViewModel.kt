@@ -34,7 +34,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-//import retrofit2.HttpException
 import rx.Observable
 
 /**
@@ -59,7 +58,7 @@ class SyncCentersDialogViewModel(
     private var mSavingsAccountList: List<SavingsAccountEntity> = emptyList()
     private var mMemberLoanAccountsList: List<LoanAccountEntity> = emptyList()
     private var mCenterList: List<CenterEntity> = emptyList()
-    private val mFailedSyncCenter: MutableList<CenterEntity> = mutableListOf()
+//    private val mFailedSyncCenter: MutableList<CenterEntity> = mutableListOf()
     private var mGroups: List<GroupEntity> = emptyList()
     private var mClients: List<ClientEntity> = emptyList()
     private var mLoanAccountSyncStatus = false
@@ -78,10 +77,10 @@ class SyncCentersDialogViewModel(
     }
 
     fun syncCenter() {
-        var userStatus=false
+        var userStatus = false
         viewModelScope.launch {
             val status = prefManager.userInfo.firstOrNull()?.userStatus ?: false
-            userStatus=status
+            userStatus = status
         }
         if (userStatus == Constants.USER_ONLINE) {
             checkNetworkConnection {
@@ -132,6 +131,7 @@ class SyncCentersDialogViewModel(
 //                _syncCenterData.update { it.copy(failedSyncGroupCount = mFailedSyncCenter.size) }
 //                syncCenter()
 //            }
+            Log.d("Error",e.toString())
         } catch (throwable: Throwable) {
             Log.d("Error", throwable.message.toString())
         }

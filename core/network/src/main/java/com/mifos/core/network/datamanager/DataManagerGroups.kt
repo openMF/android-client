@@ -59,7 +59,7 @@ class DataManagerGroups(
      * @return Groups List page from offset to max Limit
      */
     suspend fun getGroups(paged: Boolean, offset: Int, limit: Int): Page<GroupEntity> {
-        return  when (prefManager.userInfo.firstOrNull()?.userStatus) {
+        return when (prefManager.userInfo.firstOrNull()?.userStatus) {
             false -> baseApiManager.getGroupApi().retrieveAll24(
                 null,
                 null,
@@ -134,7 +134,7 @@ class DataManagerGroups(
      */
     fun getGroup(groupId: Int): Flow<GroupEntity> {
         return prefManager.userInfo.flatMapLatest {
-            userData->
+                userData ->
             when (userData.userStatus) {
                 false -> flow { emit(mBaseApiManager.groupApi.getGroup(groupId)) }
                 true ->
@@ -144,7 +144,6 @@ class DataManagerGroups(
                     databaseHelperGroups.getGroup(groupId)
             }
         }
-
     }
 
     /**
@@ -164,7 +163,7 @@ class DataManagerGroups(
      */
     fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations> {
         return prefManager.userInfo.flatMapLatest {
-            userData->
+                userData ->
             when (userData.userStatus) {
                 false -> mBaseApiManager.groupApi.getGroupWithAssociations(groupId)
                 true ->
@@ -174,7 +173,6 @@ class DataManagerGroups(
                     databaseHelperClient.getGroupAssociateClients(groupId)
             }
         }
-
     }
 
     /**
@@ -186,7 +184,7 @@ class DataManagerGroups(
      */
     fun getGroupAccounts(groupId: Int): Flow<GroupAccounts> {
         return prefManager.userInfo.flatMapLatest {
-            userdata->
+                userdata ->
             when (userdata.userStatus) {
                 false -> flow { emit(mBaseApiManager.groupApi.getGroupAccounts(groupId)) }
                 true ->
@@ -196,7 +194,6 @@ class DataManagerGroups(
                     databaseHelperGroups.readGroupAccounts(groupId)
             }
         }
-
     }
 
     /**

@@ -12,7 +12,6 @@ package com.mifos.feature.savings.savingsAccountTransaction
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.datastore.UserPreferencesRepository

@@ -34,7 +34,7 @@ class DataManagerStaff(
      */
     fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {
         return prefManager.userInfo.flatMapLatest {
-            userData->
+                userData ->
             when (userData.userStatus) {
                 false -> flow {
                     baseApiManager.getStaffApi().retrieveAll16(
@@ -52,7 +52,6 @@ class DataManagerStaff(
                 true -> staffDaoHelper.getAllStaffOffices(officeId)
             }
         }
-
     }
 //    fun getStaffInOffice(officeId: Int): Observable<List<Staff>> {
 //        return when (prefManager.userStatus) {

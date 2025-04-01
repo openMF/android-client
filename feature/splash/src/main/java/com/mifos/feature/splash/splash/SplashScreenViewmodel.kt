@@ -32,7 +32,7 @@ class SplashScreenViewmodel(
 
     private fun checkAuthenticationStatus() = viewModelScope.launch(Dispatchers.IO) {
         delay(2000)
-        val isAuthenticatedValue=prefManager.userData.firstOrNull()?.isAuthenticated
-        _isAuthenticated.value = isAuthenticatedValue ?:false
+        val isAuthenticatedValue = prefManager.userData.firstOrNull()?.isAuthenticated
+        _isAuthenticated.value = isAuthenticatedValue ?: false
     }
 }

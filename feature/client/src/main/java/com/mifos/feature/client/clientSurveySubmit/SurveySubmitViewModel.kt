@@ -12,14 +12,12 @@ package com.mifos.feature.client.clientSurveySubmit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.surveys.Scorecard
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -45,8 +43,9 @@ class SurveySubmitViewModel(
     var userId = MutableStateFlow(0)
     init {
         viewModelScope.launch {
-            prefManager.userData.collect{
-                userId.value=it.userId.toInt()            }
+            prefManager.userData.collect {
+                userId.value = it.userId.toInt()
+            }
         }
     }
 

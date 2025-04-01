@@ -17,10 +17,8 @@ import com.mifos.room.entities.accounts.loans.LoanApprovalData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.json.Json
-//import retrofit2.HttpException
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
-import rx.plugins.RxJavaPlugins
 import rx.schedulers.Schedulers
 
 /**

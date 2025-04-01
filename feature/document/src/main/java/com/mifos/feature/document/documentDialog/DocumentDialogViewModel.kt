@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.document.documentDialog
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.mifos.core.data.repository.DocumentDialogRepository
 import com.mifos.core.network.GenericResponse
@@ -17,7 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-//import retrofit2.HttpException
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.plugins.RxJavaPlugins
@@ -50,7 +50,7 @@ class DocumentDialogViewModel(
                     }
 
                     override fun onError(e: Throwable) {
-                        val errorMessage: String?
+//                        val errorMessage: String?
                         try {
 //                            if (e is HttpException) {
 //                                errorMessage = e.response()?.errorBody()?.string()
@@ -63,6 +63,7 @@ class DocumentDialogViewModel(
 //                                _documentDialogUiState.value =
 //                                    DocumentDialogUiState.ShowError(e.message.toString())
 //                            }
+                            Log.d("Error",e.toString())
                         } catch (throwable: Throwable) {
                             RxJavaPlugins.getInstance().errorHandler
                                 .handleError(throwable)

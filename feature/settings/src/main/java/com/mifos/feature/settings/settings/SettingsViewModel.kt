@@ -12,9 +12,9 @@ package com.mifos.feature.settings.settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.datastore.model.MifosAppLanguage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.model.AppTheme
+import com.mifos.core.datastore.model.MifosAppLanguage
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.feature.settings.R
 import kotlinx.coroutines.flow.SharingStarted
@@ -48,7 +48,7 @@ class SettingsViewModel(
     }
 
     fun updateLanguage(language: String): Boolean {
-        return true
+        return (language==MifosAppLanguage.SYSTEM_LANGUAGE.code)
     }
 
     fun tryUpdatingEndpoint(selectedBaseUrl: String, selectedTenant: String): Boolean {

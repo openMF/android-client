@@ -58,7 +58,7 @@ class DataManagerSavings(
         association: String?,
     ): Flow<SavingsAccountWithAssociationsEntity?> {
         return prefManager.userInfo.flatMapLatest {
-            userData->
+                userData ->
             when (userData.userStatus) {
                 false -> mBaseApiManager.savingsApi.getSavingsAccountWithAssociations(
                     type,
@@ -73,7 +73,6 @@ class DataManagerSavings(
                     databaseHelperSavings.readSavingsAccount(savingsAccountId)
             }
         }
-
     }
 
     /**
@@ -134,7 +133,7 @@ class DataManagerSavings(
         transactionType: String?,
     ): Flow<SavingsAccountTransactionTemplateEntity?> {
         return prefManager.userInfo.flatMapLatest {
-            userData->
+                userData ->
             when (userData.userStatus) {
                 false -> mBaseApiManager.savingsApi.getSavingsAccountTransactionTemplate(
                     type,
@@ -149,7 +148,6 @@ class DataManagerSavings(
                     databaseHelperSavings.readSavingsAccountTransactionTemplate(savingsAccountId)
             }
         }
-
     }
 
     /**
@@ -201,7 +199,7 @@ class DataManagerSavings(
         request: SavingsAccountTransactionRequestEntity,
     ): Flow<SavingsAccountTransactionResponse?> {
         return prefManager.userInfo.flatMapLatest {
-            userData->
+                userData ->
             when (userData.userStatus) {
                 false -> flow {
                     emit(
@@ -227,7 +225,6 @@ class DataManagerSavings(
                         )
             }
         }
-
     }
 
     /**

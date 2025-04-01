@@ -1,3 +1,12 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.datastore
 
 import com.mifos.core.datastore.model.AppSettings
@@ -15,7 +24,7 @@ interface UserPreferencesRepository {
     val serverConfig: Flow<ServerConfig>
 
     suspend fun updateUser(user: User): Result<Unit>
-    suspend fun updateUserStatus(status:Boolean):Result<Unit>
+    suspend fun updateUserStatus(status: Boolean): Result<Unit>
     suspend fun updateSettings(appSettings: AppSettings): Result<Unit>
 
     suspend fun logOut(): Unit
@@ -27,5 +36,4 @@ interface UserPreferencesRepository {
     suspend fun updateTheme(theme: AppTheme): Result<Unit>
 
     val getServerConfig: StateFlow<ServerConfig?>
-
 }

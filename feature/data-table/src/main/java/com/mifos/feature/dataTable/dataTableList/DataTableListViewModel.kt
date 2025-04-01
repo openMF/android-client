@@ -14,7 +14,6 @@ import FormWidgetDTO
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
@@ -28,7 +27,6 @@ import com.mifos.room.entities.noncore.DataTablePayload
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -92,7 +90,7 @@ class DataTableListViewModel(
     private var formWidgetsList: MutableList<List<FormWidgetDTO>> = ArrayList()
 
     fun getUserStatus(): Boolean {
-            return currentUserStatus
+        return currentUserStatus
     }
 
     fun initArgs(

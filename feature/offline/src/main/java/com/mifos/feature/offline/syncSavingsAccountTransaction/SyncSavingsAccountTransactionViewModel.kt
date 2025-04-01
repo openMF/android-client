@@ -58,10 +58,10 @@ class SyncSavingsAccountTransactionViewModel(
     private var mTransactionsFailed = 0
 
     fun getUserStatus(): Boolean {
-        var userStatus=false
+        var userStatus = false
         viewModelScope.launch {
             val status = prefManager.userInfo.firstOrNull()?.userStatus ?: false
-            userStatus=status
+            userStatus = status
         }
         return userStatus
     }

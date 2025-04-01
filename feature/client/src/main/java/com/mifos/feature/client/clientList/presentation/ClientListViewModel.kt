@@ -47,10 +47,10 @@ class ClientListViewModel(
     }
 
     fun getClientList() {
-        var userStatus=false
+        var userStatus = false
         viewModelScope.launch {
             val status = prefManager.userInfo.firstOrNull()?.userStatus ?: false
-            userStatus=status
+            userStatus = status
         }
         if (userStatus) {
             loadClientsFromDb()

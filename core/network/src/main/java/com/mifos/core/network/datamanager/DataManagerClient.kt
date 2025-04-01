@@ -215,8 +215,8 @@ class DataManagerClient(
      * @return ClientTemplate
      */
     val clientTemplate: Flow<ClientsTemplateEntity>
-        get() =prefManager.userInfo.flatMapLatest {
-            userData->
+        get() = prefManager.userInfo.flatMapLatest {
+                userData ->
             when (prefManager.userInfo.firstOrNull()?.userStatus == true) {
                 false ->
                     mBaseApiManager.clientsApi.clientTemplate
@@ -237,7 +237,6 @@ class DataManagerClient(
                     clientDatabaseHelper.readClientTemplate()
             }
         }
-
 
     /**
      * This Method create the client by making directly request to server when User is Online

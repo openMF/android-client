@@ -28,7 +28,7 @@ class ImageLoaderUtils(
     private fun buildImageUrl(clientId: Int): String {
         val serverConfig = runBlocking { prefManager.serverConfig.firstOrNull() }
         return (
-                serverConfig?.getInstanceUrl() +
+            serverConfig?.getInstanceUrl() +
                 "clients/" +
                 clientId +
                 "/images?maxHeight=120&maxWidth=120"

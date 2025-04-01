@@ -121,10 +121,9 @@ class DataManagerCenter(
     }
 
     suspend fun createCenter(centerPayload: CenterPayloadEntity?) {
-        prefManager.userInfo.collect{
-            userData->
-            when(userData.userStatus)
-            {
+        prefManager.userInfo.collect {
+                userData ->
+            when (userData.userStatus) {
                 false -> mBaseApiManager.centerApi.createCenter(centerPayload)
                 true ->
                     /**

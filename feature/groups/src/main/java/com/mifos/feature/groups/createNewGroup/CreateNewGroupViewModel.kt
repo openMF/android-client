@@ -11,7 +11,6 @@ package com.mifos.feature.groups.createNewGroup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.group.GroupPayloadEntity
@@ -31,11 +30,11 @@ class CreateNewGroupViewModel(
     private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
-    var userStatus:Boolean=false
+    var userStatus: Boolean = false
 
     init {
         viewModelScope.launch {
-            userStatus=prefManager.userInfo.firstOrNull()?.userStatus ?: false
+            userStatus = prefManager.userInfo.firstOrNull()?.userStatus ?: false
         }
     }
 
@@ -44,7 +43,6 @@ class CreateNewGroupViewModel(
     )
     val createNewGroupUiState: StateFlow<CreateNewGroupUiState>
         get() = _createNewGroupUiState
-
 
     fun getResponse(): String {
         return when (userStatus) {

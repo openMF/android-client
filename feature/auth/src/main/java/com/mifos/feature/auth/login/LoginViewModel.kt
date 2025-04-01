@@ -13,17 +13,13 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.model.objects.users.User
 import com.mifos.core.common.utils.Network
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.datastore.model.ServerConfig
-import com.mifos.core.datastore.model.UserData
 import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
-import com.mifos.core.model.objects.clients.Role
+import com.mifos.core.model.objects.users.User
 import com.mifos.core.network.BaseApiManager
 import com.mifos.feature.auth.R
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +37,7 @@ class LoginViewModel(
     private val prefManager: UserPreferencesRepository,
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
-    private val baseApiManager: BaseApiManager,
+//    private val baseApiManager: BaseApiManager,
     private val loginUseCase: LoginUseCase,
 ) : ViewModel() {
 
@@ -107,7 +103,6 @@ class LoginViewModel(
         username: String,
         password: String,
     ) {
-
         // Updating Services
 //        baseApiManager.createService(
 //            username = username,
@@ -118,19 +113,18 @@ class LoginViewModel(
 //        )
 
         viewModelScope.launch {
-
             prefManager.updateUser(
                 User(
-                    username=username,
-                    password=password,
-                    userId=user.userId!!.toLong(),
+                    username = username,
+                    password = password,
+                    userId = user.userId!!.toLong(),
                     base64EncodedAuthenticationKey = user.base64EncodedAuthenticationKey,
-                    isAuthenticated = user.authenticated?:false,
+                    isAuthenticated = user.authenticated ?: false,
                     officeId = user.officeId!!,
                     officeName = user.officeName,
-                    permissions = user.permissions!!
+                    permissions = user.permissions!!,
 
-                )
+                ),
             )
         }
         _loginUiState.value = LoginUiState.HomeActivityIntent

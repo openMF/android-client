@@ -104,6 +104,6 @@ object KoinModules {
         featureModules,
         testingModules,
         networkModules,
-        coreDataStoreModules
+        coreDataStoreModules,
     )
 }

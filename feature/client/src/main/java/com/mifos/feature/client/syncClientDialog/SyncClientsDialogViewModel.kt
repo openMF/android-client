@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.client.syncClientDialog
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
@@ -68,9 +69,9 @@ class SyncClientsDialogViewModel(
     }
 
     fun syncClient() {
-        var userStatus:Boolean=false
+        var userStatus: Boolean = false
         viewModelScope.launch {
-            userStatus=prefManager.userInfo.firstOrNull()?.userStatus ?: false
+            userStatus = prefManager.userInfo.firstOrNull()?.userStatus ?: false
         }
         if (userStatus == Constants.USER_ONLINE) {
             checkNetworkConnection {
@@ -143,6 +144,7 @@ class SyncClientsDialogViewModel(
 //                _syncClientData.update { it.copy(failedSyncGroupCount = mFailedSyncClient.size) }
 //                syncClient()
 //            }
+            Log.d("Error",e.toString())
         } catch (throwable: Throwable) {
             RxJavaPlugins.getInstance().errorHandler.handleError(throwable)
         }

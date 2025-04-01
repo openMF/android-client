@@ -37,7 +37,6 @@ val NetworkModule = module {
         val user = runBlocking { prefManager.userData.first() }
         val serverConfig = runBlocking { prefManager.getServerConfig.first() }
 
-
         val baseManager = BaseApiManager.getInstance()
         if (serverConfig != null) {
             baseManager.createService(

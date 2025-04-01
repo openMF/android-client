@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.groups.syncGroupDialog
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.NetworkUtilsWrapper
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
@@ -34,7 +34,6 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-//import retrofit2.HttpException
 import rx.Observable
 import rx.plugins.RxJavaPlugins
 
@@ -48,7 +47,7 @@ class SyncGroupsDialogViewModel(
 ) : ViewModel() {
 
     private var mGroupList: List<GroupEntity> = emptyList()
-    private val mFailedSyncGroup: MutableList<GroupEntity> = mutableListOf()
+//    private val mFailedSyncGroup: MutableList<GroupEntity> = mutableListOf()
     private var mClients: List<ClientEntity> = emptyList()
     private var mLoanAccountList: List<LoanAccountEntity> = emptyList()
     private var mSavingsAccountList: List<SavingsAccountEntity> = emptyList()
@@ -78,10 +77,10 @@ class SyncGroupsDialogViewModel(
      * This Method checking network connection before starting group synchronization
      */
     fun syncGroups() {
-        var userStatus=false
+        var userStatus = false
         viewModelScope.launch {
             val status = prefManager.userInfo.firstOrNull()?.userStatus ?: false
-            userStatus=status
+            userStatus = status
         }
         if (userStatus == Constants.USER_ONLINE) {
             checkNetworkConnection {
@@ -185,6 +184,7 @@ class SyncGroupsDialogViewModel(
 //                _syncGroupData.update { it.copy(failedSyncGroupCount = mFailedSyncGroup.size) }
 //                syncGroups()
 //            }
+            Log.d("Error",e.toString())
         } catch (throwable: Throwable) {
             RxJavaPlugins.getInstance().errorHandler.handleError(throwable)
         }

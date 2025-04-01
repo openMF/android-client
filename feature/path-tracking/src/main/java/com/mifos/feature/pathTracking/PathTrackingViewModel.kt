@@ -12,7 +12,6 @@ package com.mifos.feature.pathTracking
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.datastore.UserPreferencesDataSource
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.GetUserPathTrackingUseCase
 import com.mifos.feature.path.tracking.R
@@ -52,7 +51,7 @@ class PathTrackingViewModel(
     }
 
     fun loadPathTracking() = viewModelScope.launch(Dispatchers.IO) {
-        var userId=prefManager.userData.firstOrNull()?.userId
+        var userId = prefManager.userData.firstOrNull()?.userId
         if (userId != null) {
             getUserPathTrackingUseCase(userId.toInt()).collect { result ->
                 when (result) {

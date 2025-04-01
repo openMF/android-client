@@ -50,12 +50,11 @@ class SyncLoanRepaymentTransactionViewModel(
     private var mClientSyncIndex = 0
 
     fun getUserStatus(): Boolean {
-        var userStatus:Boolean=false
+        var userStatus: Boolean = false
 
-
-            viewModelScope.launch {
-                userStatus=prefManager.userInfo.firstOrNull()?.userStatus ?: false
-            }
+        viewModelScope.launch {
+            userStatus = prefManager.userInfo.firstOrNull()?.userStatus ?: false
+        }
 
         return userStatus
     }
