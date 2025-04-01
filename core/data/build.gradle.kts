@@ -49,4 +49,7 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.kotlinx.serialization.json)
     testImplementation(projects.core.testing)
+
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.tracing.ktx)
 }
