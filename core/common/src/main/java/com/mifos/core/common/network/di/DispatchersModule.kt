@@ -25,6 +25,7 @@ val DispatchersModule = module {
     single<CoroutineScope>(named("ApplicationScope")) {
         CoroutineScope(SupervisorJob() + Dispatchers.Default)
     }
+    single<CoroutineDispatcher>(named(MifosDispatchers.Unconfined.name)) { Dispatchers.Unconfined }
 }
 
 val ioDispatcherModule: Module

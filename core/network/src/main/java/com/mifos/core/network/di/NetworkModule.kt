@@ -12,7 +12,9 @@ package com.mifos.core.network.di
 import coil.ImageLoader
 import coil.util.DebugLogger
 import com.mifos.core.datastore.UserPreferencesRepository
+import com.mifos.core.datastore.UserPreferencesRepositoryImpl
 import com.mifos.core.datastore.model.getInstanceUrl
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Call
@@ -22,7 +24,8 @@ import org.koin.dsl.module
 import org.mifos.core.apimanager.BaseApiManager
 
 val NetworkModule = module {
-//    single { UserPreferencesRepositoryImpl(androidContext()) }
+
+    single<UserPreferencesRepository> { UserPreferencesRepositoryImpl(get(), Dispatchers.IO, Dispatchers.Unconfined) }
 
     single { com.mifos.core.network.BaseApiManager(get()) }
 

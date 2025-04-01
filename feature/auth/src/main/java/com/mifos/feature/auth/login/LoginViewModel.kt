@@ -133,7 +133,7 @@ class LoginViewModel(
                 )
             )
         }
-
+        _loginUiState.value = LoginUiState.HomeActivityIntent
 //        if (prefManager.getPassCodeStatus()) {
 //            _loginUiState.value = LoginUiState.HomeActivityIntent
 //        } else {
