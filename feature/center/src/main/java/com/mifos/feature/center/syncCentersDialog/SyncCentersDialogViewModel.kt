@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import rx.Observable
@@ -77,7 +77,7 @@ class SyncCentersDialogViewModel(
     fun syncCenter() {
         var userStatus = false
         viewModelScope.launch {
-            val status = prefManager.userInfo.firstOrNull()?.userStatus ?: false
+            val status = prefManager.userInfo.first().userStatus
             userStatus = status
         }
         if (userStatus == Constants.USER_ONLINE) {

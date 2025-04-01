@@ -19,7 +19,7 @@ import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -64,7 +64,7 @@ class SurveyListViewModel(
                 }
                 .collect { surveyList ->
                     mDbSurveyList = surveyList
-                    if (prefManager.userInfo.firstOrNull()?.userStatus == true) {
+                    if (prefManager.userInfo.first().userStatus) {
                         for (survey in mSyncSurveyList) {
                             loadDatabaseQuestionData(survey.id, survey)
                         }

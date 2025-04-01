@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -77,7 +77,7 @@ class SyncGroupsDialogViewModel(
     fun syncGroups() {
         var userStatus = false
         viewModelScope.launch {
-            val status = prefManager.userInfo.firstOrNull()?.userStatus ?: false
+            val status = prefManager.userInfo.first().userStatus ?: false
             userStatus = status
         }
         if (userStatus == Constants.USER_ONLINE) {

@@ -28,7 +28,7 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.helper.ClientDaoHelper
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import okhttp3.MultipartBody
@@ -217,7 +217,7 @@ class DataManagerClient(
     val clientTemplate: Flow<ClientsTemplateEntity>
         get() = prefManager.userInfo.flatMapLatest {
                 userData ->
-            when (prefManager.userInfo.firstOrNull()?.userStatus == true) {
+            when (prefManager.userInfo.first().userStatus) {
                 false ->
                     mBaseApiManager.clientsApi.clientTemplate
                         .map { clientsTemplate ->
@@ -247,7 +247,7 @@ class DataManagerClient(
      * @return Client
      */
     suspend fun createClient(clientPayload: ClientPayloadEntity): Int? {
-        return if (prefManager.userInfo.firstOrNull()?.userStatus == true) {
+        return if (prefManager.userInfo.first().userStatus) {
             clientDatabaseHelper.saveClientPayloadToDB(clientPayload)
             null
         } else {

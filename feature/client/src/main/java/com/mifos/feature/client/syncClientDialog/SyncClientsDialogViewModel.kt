@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -69,7 +69,7 @@ class SyncClientsDialogViewModel(
     fun syncClient() {
         var userStatus: Boolean = false
         viewModelScope.launch {
-            userStatus = prefManager.userInfo.firstOrNull()?.userStatus ?: false
+            userStatus = prefManager.userInfo.first().userStatus
         }
         if (userStatus == Constants.USER_ONLINE) {
             checkNetworkConnection {

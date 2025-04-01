@@ -24,7 +24,7 @@ import com.mifos.room.entities.templates.loans.LoanTemplate
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import com.mifos.room.helper.LoanDaoHelper
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import rx.Observable
@@ -168,7 +168,7 @@ class DataManagerLoan(
         loanId: Int,
         request: LoanRepaymentRequestEntity,
     ): LoanRepaymentResponseEntity {
-        return when (prefManager.userInfo.firstOrNull()?.userStatus) {
+        return when (prefManager.userInfo.first().userStatus) {
             false -> mBaseApiManager.loanApi.submitPayment(loanId, request)
 
             true ->
@@ -176,7 +176,6 @@ class DataManagerLoan(
                  * Return LoanRepaymentResponse from DatabaseHelperLoan.
                  */
                 loanDaoHelper.saveLoanRepaymentTransaction(loanId, request)
-            else -> mBaseApiManager.loanApi.submitPayment(loanId, request)
         }
     }
 

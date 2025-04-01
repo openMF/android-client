@@ -23,7 +23,7 @@ import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.helper.ClientDaoHelper
 import com.mifos.room.helper.GroupsDaoHelper
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import rx.Observable
@@ -59,7 +59,7 @@ class DataManagerGroups(
      * @return Groups List page from offset to max Limit
      */
     suspend fun getGroups(paged: Boolean, offset: Int, limit: Int): Page<GroupEntity> {
-        return when (prefManager.userInfo.firstOrNull()?.userStatus) {
+        return when (prefManager.userInfo.first().userStatus) {
             false -> baseApiManager.getGroupApi().retrieveAll24(
                 null,
                 null,
@@ -217,7 +217,7 @@ class DataManagerGroups(
      * @return Group
      */
     suspend fun createGroup(groupPayload: GroupPayloadEntity): SaveResponse {
-        return when (prefManager.userInfo.firstOrNull()?.userStatus) {
+        return when (prefManager.userInfo.first().userStatus) {
             false -> mBaseApiManager.groupApi.createGroup(groupPayload)
 
             true ->
@@ -225,8 +225,6 @@ class DataManagerGroups(
                  * Save GroupPayload in Database table.
                  */
                 databaseHelperGroups.saveGroupPayload(groupPayload)
-
-            null -> TODO()
         }
     }
 

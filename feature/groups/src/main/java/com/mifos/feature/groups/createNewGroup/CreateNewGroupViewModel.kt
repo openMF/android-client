@@ -17,7 +17,7 @@ import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -34,7 +34,7 @@ class CreateNewGroupViewModel(
 
     init {
         viewModelScope.launch {
-            userStatus = prefManager.userInfo.firstOrNull()?.userStatus ?: false
+            userStatus = prefManager.userInfo.first().userStatus
         }
     }
 
