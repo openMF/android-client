@@ -83,8 +83,6 @@ class DataManagerGroups(
                  * return all clients from DatabaseHelperClient
                  */
                 databaseHelperGroups.readAllGroups(offset, limit)
-
-            null -> TODO()
         }
     }
 //    suspend fun getGroups(paged: Boolean, offset: Int, limit: Int): Observable<Page<Group>> {
