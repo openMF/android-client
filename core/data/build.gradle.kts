@@ -8,11 +8,8 @@
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 plugins {
-    alias(libs.plugins.mifos.android.library)
-    alias(libs.plugins.mifos.android.koin)
-    alias(libs.plugins.mifos.android.library.jacoco)
-    id(libs.plugins.kotlin.parcelize.get().pluginId)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.mifos.kmp.library)
 }
 
 android {
@@ -26,11 +23,22 @@ android {
     }
 }
 
+kotlin{
+    sourceSets{
+        commonMain.dependencies {
+            api(projects.core.common)
+//            api(projects.core.datastore)
+//            api(projects.core.network)
+//            api(projects.core.database)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.kotlinx.serialization.json)
+        }
+    }
+}
+
 dependencies {
-    api(projects.core.common)
-    api(projects.core.datastore)
-    api(projects.core.network)
-    api(projects.core.database)
 
     //rxjava dependencies
     api(libs.rxandroid)
