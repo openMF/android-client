@@ -13,7 +13,6 @@ import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.organisation.StaffEntity
 import retrofit2.http.GET
 import retrofit2.http.Query
-import retrofit2.HttpException
 import rx.Observable
 
 /**
