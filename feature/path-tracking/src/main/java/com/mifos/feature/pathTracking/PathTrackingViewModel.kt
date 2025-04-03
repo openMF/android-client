@@ -42,7 +42,7 @@ class PathTrackingViewModel(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = null
+            initialValue = null,
         )
 
     fun refreshCenterList() {
@@ -75,8 +75,7 @@ class PathTrackingViewModel(
                         }
                 }
             }
-        }
-        else{
+        } else {
             _pathTrackingUiState.value =
                 PathTrackingUiState.Error(R.string.feature_path_tracking_no_path_tracking_found)
         }

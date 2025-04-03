@@ -37,7 +37,7 @@ class ImageLoaderUtils(
     }
 
     suspend fun loadImage(clientId: Int): ImageResult {
-        val serverConfig =  prefManager.serverConfig.first()
+        val serverConfig = prefManager.serverConfig.first()
         val userData = prefManager.userData.first()
         val request = ImageRequest.Builder(context)
             .data(buildImageUrl(clientId))

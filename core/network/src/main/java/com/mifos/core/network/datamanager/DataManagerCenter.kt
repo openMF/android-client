@@ -122,14 +122,14 @@ class DataManagerCenter(
     }
 
     suspend fun createCenter(centerPayload: CenterPayloadEntity?) {
-            when (prefManager.userInfo.first().userStatus) {
-                false -> mBaseApiManager.centerApi.createCenter(centerPayload)
-                true ->
-                    /**
-                     * Save CenterPayload in Database table.
-                     */
-                    centerDatabaseHelper.saveCenterPayload(centerPayload)
-            }
+        when (prefManager.userInfo.first().userStatus) {
+            false -> mBaseApiManager.centerApi.createCenter(centerPayload)
+            true ->
+                /**
+                 * Save CenterPayload in Database table.
+                 */
+                centerDatabaseHelper.saveCenterPayload(centerPayload)
+        }
     }
 
     /**
@@ -139,14 +139,14 @@ class DataManagerCenter(
      */
     fun getCenterWithAssociations(centerId: Int): Flow<CenterWithAssociations> {
         return flow {
-                when (prefManager.userInfo.first().userStatus) {
-                    false -> mBaseApiManager.centerApi.getAllGroupsForCenter(centerId)
-                    true ->
-                        /**
-                         * Return Groups from DatabaseHelperGroups.
-                         */
-                        centerDatabaseHelper.getCenterAssociateGroups(centerId)
-                }
+            when (prefManager.userInfo.first().userStatus) {
+                false -> mBaseApiManager.centerApi.getAllGroupsForCenter(centerId)
+                true ->
+                    /**
+                     * Return Groups from DatabaseHelperGroups.
+                     */
+                    centerDatabaseHelper.getCenterAssociateGroups(centerId)
+            }
         }
     }
 

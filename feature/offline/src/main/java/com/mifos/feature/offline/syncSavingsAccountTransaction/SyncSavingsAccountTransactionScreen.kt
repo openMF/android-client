@@ -99,8 +99,8 @@ internal fun SyncSavingsAccountTransactionScreen(
     refreshState: Boolean,
     onRefresh: () -> Unit,
     syncSavingsAccountTransactions: () -> Unit,
-    modifier: Modifier = Modifier,
     userStatus: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     val snackbarHostState by remember { mutableStateOf(SnackbarHostState()) }
     val context = LocalContext.current
