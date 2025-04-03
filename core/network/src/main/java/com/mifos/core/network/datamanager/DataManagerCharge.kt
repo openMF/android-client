@@ -44,7 +44,7 @@ class DataManagerCharge(
      * @return Page<Charge> Page of Charge in Which List Size is according to Limit and from
      * where position is Starting according to offset</Charge>>
      */
-    suspend fun getClientCharges(
+     fun getClientCharges(
         clientId: Int,
         offset: Int,
         limit: Int,

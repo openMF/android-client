@@ -15,9 +15,12 @@ import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
@@ -30,13 +33,13 @@ class CreateNewGroupViewModel(
     private val prefManager: UserPreferencesRepository,
 ) : ViewModel() {
 
-    var userStatus: Boolean = false
-
-    init {
-        viewModelScope.launch {
-            userStatus = prefManager.userInfo.first().userStatus
-        }
-    }
+    val userStatus: StateFlow<Boolean> = prefManager.userInfo
+        .map { it.userStatus }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false
+        )
 
     private val _createNewGroupUiState = MutableStateFlow<CreateNewGroupUiState>(
         CreateNewGroupUiState.ShowProgressbar,
@@ -45,7 +48,7 @@ class CreateNewGroupViewModel(
         get() = _createNewGroupUiState
 
     fun getResponse(): String {
-        return when (userStatus) {
+        return when (userStatus.value) {
             false -> "created successfully"
             true -> "Saved into DB Successfully"
         }

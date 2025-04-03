@@ -69,6 +69,7 @@ internal fun SyncSavingsAccountTransactionScreenRoute(
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.syncSavingsAccountTransactionUiState.collectAsStateWithLifecycle()
+    val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
@@ -86,7 +87,7 @@ internal fun SyncSavingsAccountTransactionScreenRoute(
         syncSavingsAccountTransactions = {
             viewModel.syncSavingsAccountTransactions()
         },
-        getUserStatus = { viewModel.getUserStatus() },
+        userStatus = userStatus,
     )
 }
 
@@ -99,7 +100,7 @@ internal fun SyncSavingsAccountTransactionScreen(
     onRefresh: () -> Unit,
     syncSavingsAccountTransactions: () -> Unit,
     modifier: Modifier = Modifier,
-    getUserStatus: () -> Boolean,
+    userStatus: Boolean,
 ) {
     val snackbarHostState by remember { mutableStateOf(SnackbarHostState()) }
     val context = LocalContext.current
@@ -115,7 +116,7 @@ internal fun SyncSavingsAccountTransactionScreen(
         actions = {
             IconButton(
                 onClick = {
-                    when (getUserStatus()) {
+                    when (userStatus) {
                         false -> checkNetworkConnectionAndSync(
                             context,
                             syncSavingsAccountTransactions,
@@ -321,7 +322,7 @@ private fun SyncSavingsAccountTransactionScreenPreview(
         refreshState = false,
         onRefresh = {},
         syncSavingsAccountTransactions = {},
-        getUserStatus = { true },
+        userStatus = true,
     )
 }
 

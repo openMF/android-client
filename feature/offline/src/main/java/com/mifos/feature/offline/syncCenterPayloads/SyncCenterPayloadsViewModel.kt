@@ -17,10 +17,13 @@ import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.center.CenterPayloadEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
@@ -42,14 +45,13 @@ class SyncCenterPayloadsViewModel(
     private var mCenterPayloads: MutableList<CenterPayloadEntity> = mutableListOf()
     private var centerSyncIndex = 0
 
-    fun getUserStatus(): Boolean {
-        var userStatus = false
-        viewModelScope.launch {
-            val status = prefManager.userInfo.first().userStatus
-            userStatus = status
-        }
-        return userStatus
-    }
+    val userStatus: StateFlow<Boolean> = prefManager.userInfo
+        .map { it.userStatus }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false
+        )
 
     fun refreshCenterPayloads() {
         _isRefreshing.value = true

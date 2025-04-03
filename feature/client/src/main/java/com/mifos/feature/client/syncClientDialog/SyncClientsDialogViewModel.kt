@@ -67,15 +67,15 @@ class SyncClientsDialogViewModel(
     }
 
     fun syncClient() {
-        var userStatus: Boolean = false
         viewModelScope.launch {
-            userStatus = prefManager.userInfo.first().userStatus
-        }
-        if (userStatus == Constants.USER_ONLINE) {
-            checkNetworkConnection {
-                syncClientAndUpdateUI()
+            val userStatus = prefManager.userInfo.first().userStatus
+            if (userStatus == Constants.USER_ONLINE) {
+                checkNetworkConnection {
+                    syncClientAndUpdateUI()
+                }
             }
         }
+
     }
 
     private fun syncClientAndUpdateUI() {

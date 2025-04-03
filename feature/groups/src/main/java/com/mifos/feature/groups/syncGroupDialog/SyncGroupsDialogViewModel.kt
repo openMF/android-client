@@ -75,14 +75,12 @@ class SyncGroupsDialogViewModel(
      * This Method checking network connection before starting group synchronization
      */
     fun syncGroups() {
-        var userStatus = false
         viewModelScope.launch {
-            val status = prefManager.userInfo.first().userStatus
-            userStatus = status
-        }
-        if (userStatus == Constants.USER_ONLINE) {
-            checkNetworkConnection {
-                syncGroupAndUpdateUI()
+            val userStatus = prefManager.userInfo.first().userStatus
+            if (userStatus == Constants.USER_ONLINE) {
+                checkNetworkConnection {
+                    syncGroupAndUpdateUI()
+                }
             }
         }
     }
