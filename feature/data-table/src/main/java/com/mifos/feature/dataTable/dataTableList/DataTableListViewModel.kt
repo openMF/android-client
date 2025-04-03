@@ -25,8 +25,11 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.noncore.DataTablePayload
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -44,19 +47,15 @@ class DataTableListViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private var currentUserStatus: Boolean = false
+    val userStatus: StateFlow<Boolean> = prefManager.userInfo
+        .map { it.userStatus }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false
+        )
 
-    private val _userStatus = MutableStateFlow(currentUserStatus)
-    val userStatus = _userStatus.asStateFlow()
 
-    init {
-        viewModelScope.launch {
-            prefManager.userInfo.collect { userData ->
-                currentUserStatus = userData?.userStatus ?: false
-                _userStatus.value = currentUserStatus
-            }
-        }
-    }
     private val json = Json {
         serializersModule = SerializersModule {
             polymorphic(FormWidgetDTO::class) {
@@ -88,10 +87,6 @@ class DataTableListViewModel(
     private var groupLoanPayload: GroupLoanPayload? = null
     private var clientPayload: ClientPayloadEntity? = null
     private var formWidgetsList: MutableList<List<FormWidgetDTO>> = ArrayList()
-
-    fun getUserStatus(): Boolean {
-        return currentUserStatus
-    }
 
     fun initArgs(
         dataTables: List<DataTableEntity>,

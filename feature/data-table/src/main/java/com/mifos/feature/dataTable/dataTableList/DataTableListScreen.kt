@@ -67,6 +67,7 @@ fun DataTableListScreen(
     val formWidgetsList = viewModel.arg.formWidget
     val payload = viewModel.arg.payload
     val uiState by viewModel.dataTableListUiState.collectAsStateWithLifecycle()
+    val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val dataTableList by viewModel.dataTableList.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
@@ -77,7 +78,7 @@ fun DataTableListScreen(
         uiState = uiState,
         dataTableList = dataTableList ?: listOf(),
         onBackPressed = onBackPressed,
-        clientCreated = { client -> clientCreated(client, viewModel.getUserStatus()) },
+        clientCreated = { client -> clientCreated(client, userStatus) },
         onSaveClicked = { viewModel.processDataTable() },
     )
 }

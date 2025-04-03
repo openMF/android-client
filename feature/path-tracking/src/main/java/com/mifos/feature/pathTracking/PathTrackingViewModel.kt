@@ -17,8 +17,12 @@ import com.mifos.core.domain.useCases.GetUserPathTrackingUseCase
 import com.mifos.feature.path.tracking.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class PathTrackingViewModel(
@@ -33,16 +37,13 @@ class PathTrackingViewModel(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
-    private val _userStatus = MutableStateFlow<Boolean?>(null)
-    val userStatus = _userStatus.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            prefManager.userInfo.collect { userData ->
-                _userStatus.value = userData.userStatus
-            }
-        }
-    }
+    val userStatus: StateFlow<Boolean?> = prefManager.userInfo
+        .map { it.userStatus }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
 
     fun refreshCenterList() {
         _isRefreshing.value = true
@@ -51,7 +52,7 @@ class PathTrackingViewModel(
     }
 
     fun loadPathTracking() = viewModelScope.launch(Dispatchers.IO) {
-        var userId = prefManager.userData.firstOrNull()?.userId
+        val userId = prefManager.userData.firstOrNull()?.userId
         if (userId != null) {
             getUserPathTrackingUseCase(userId.toInt()).collect { result ->
                 when (result) {
@@ -75,10 +76,13 @@ class PathTrackingViewModel(
                 }
             }
         }
+        else{
+            _pathTrackingUiState.value =
+                PathTrackingUiState.Error(R.string.feature_path_tracking_no_path_tracking_found)
+        }
     }
 
     fun updateUserStatus(status: Boolean) = viewModelScope.launch(Dispatchers.IO) {
         prefManager.updateUserStatus(status)
-        _userStatus.value = status
     }
 }

@@ -22,6 +22,7 @@ import com.mifos.room.entities.group.CenterWithAssociations
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.helper.CenterDaoHelper
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import org.openapitools.client.models.PostCentersCenterIdRequest
 import org.openapitools.client.models.PostCentersCenterIdResponse
@@ -121,9 +122,7 @@ class DataManagerCenter(
     }
 
     suspend fun createCenter(centerPayload: CenterPayloadEntity?) {
-        prefManager.userInfo.collect {
-                userData ->
-            when (userData.userStatus) {
+            when (prefManager.userInfo.first().userStatus) {
                 false -> mBaseApiManager.centerApi.createCenter(centerPayload)
                 true ->
                     /**
@@ -131,7 +130,6 @@ class DataManagerCenter(
                      */
                     centerDatabaseHelper.saveCenterPayload(centerPayload)
             }
-        }
     }
 
     /**
@@ -141,8 +139,7 @@ class DataManagerCenter(
      */
     fun getCenterWithAssociations(centerId: Int): Flow<CenterWithAssociations> {
         return flow {
-            prefManager.userInfo.collect { userData ->
-                when (userData.userStatus) {
+                when (prefManager.userInfo.first().userStatus) {
                     false -> mBaseApiManager.centerApi.getAllGroupsForCenter(centerId)
                     true ->
                         /**
@@ -150,7 +147,6 @@ class DataManagerCenter(
                          */
                         centerDatabaseHelper.getCenterAssociateGroups(centerId)
                 }
-            }
         }
     }
 

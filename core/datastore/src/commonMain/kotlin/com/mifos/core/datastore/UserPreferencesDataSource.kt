@@ -101,7 +101,7 @@ class UserPreferencesDataSource(
         }
 
     val isAuthenticated: Boolean
-        get() = _userData.value.isAuthenticated == true
+        get() = _userData.value.isAuthenticated
 
     val token: String
         get() = _userData.value.base64EncodedAuthenticationKey?.let { "Basic $it" } ?: ""

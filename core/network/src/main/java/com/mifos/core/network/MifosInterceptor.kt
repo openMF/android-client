@@ -23,7 +23,7 @@ class MifosInterceptor(private val prefManager: UserPreferencesRepository) : Int
     override fun intercept(chain: Interceptor.Chain): Response {
         val chainrequest = chain.request()
         val builder = chainrequest.newBuilder()
-        val tenant = prefManager.getServerConfig.value?.tenant ?: ""
+        val tenant = prefManager.getServerConfig.value.tenant
         builder.header(HEADER_TENANT, tenant)
         val request = builder.build()
         return chain.proceed(request)

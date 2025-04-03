@@ -36,40 +36,40 @@ class UpdateServerConfigViewModel(
     private val _result = MutableSharedFlow<Boolean>()
     val result = _result.asSharedFlow()
 
-    val protocolError = snapshotFlow { _state.value?.protocol }.mapLatest {
-        validator.validateServerProtocol(it!!).message
+    val protocolError = snapshotFlow { _state.value.protocol }.mapLatest {
+        validator.validateServerProtocol(it).message
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = null,
     )
 
-    val endPointError = snapshotFlow { _state.value?.endPoint }.mapLatest {
-        validator.validateEndPoint(it!!).message
+    val endPointError = snapshotFlow { _state.value.endPoint }.mapLatest {
+        validator.validateEndPoint(it).message
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = null,
     )
 
-    val apiPathError = snapshotFlow { _state.value?.apiPath }.mapLatest {
-        validator.validateApiPath(it!!).message
+    val apiPathError = snapshotFlow { _state.value.apiPath }.mapLatest {
+        validator.validateApiPath(it).message
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = null,
     )
 
-    val portError = snapshotFlow { _state.value?.port }.mapLatest {
-        validator.validatePort(it!!).message
+    val portError = snapshotFlow { _state.value.port }.mapLatest {
+        validator.validatePort(it).message
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = null,
     )
 
-    val tenantError = snapshotFlow { _state.value?.tenant }.mapLatest {
-        validator.validateTenant(it!!).message
+    val tenantError = snapshotFlow { _state.value.tenant }.mapLatest {
+        validator.validateTenant(it).message
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
@@ -79,31 +79,31 @@ class UpdateServerConfigViewModel(
     fun onEvent(event: UpdateServerConfigEvent) {
         when (event) {
             is UpdateServerConfigEvent.UpdateProtocol -> {
-                _state.value = _state.value?.copy(
+                _state.value = _state.value.copy(
                     protocol = event.protocol,
                 )
             }
 
             is UpdateServerConfigEvent.UpdateEndPoint -> {
-                _state.value = _state.value?.copy(
+                _state.value = _state.value.copy(
                     endPoint = event.endPoint,
                 )
             }
 
             is UpdateServerConfigEvent.UpdateApiPath -> {
-                _state.value = _state.value?.copy(
+                _state.value = _state.value.copy(
                     apiPath = event.apiPath,
                 )
             }
 
             is UpdateServerConfigEvent.UpdatePort -> {
-                _state.value = _state.value?.copy(
+                _state.value = _state.value.copy(
                     port = event.port,
                 )
             }
 
             is UpdateServerConfigEvent.UpdateTenant -> {
-                _state.value = _state.value?.copy(
+                _state.value = _state.value.copy(
                     tenant = event.tenant,
                 )
             }
@@ -119,7 +119,7 @@ class UpdateServerConfigViewModel(
                     ).any { it.value != null }
 
                     if (!hasAnyError) {
-                        prefManager.updateServerConfig(_state.value!!)
+                        prefManager.updateServerConfig(_state.value)
                         _result.emit(true)
                     }
                 }

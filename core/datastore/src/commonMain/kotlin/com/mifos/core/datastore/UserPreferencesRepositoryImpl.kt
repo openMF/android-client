@@ -82,10 +82,10 @@ class UserPreferencesRepositoryImpl(
         }
     }
 
-    override val getServerConfig: StateFlow<ServerConfig?>
+    override val getServerConfig: StateFlow<ServerConfig>
         get() = preferenceManager.serverConfig.stateIn(
             scope = unconfinedScope,
-            initialValue = null,
+            initialValue = ServerConfig.DEFAULT,
             started = SharingStarted.Eagerly,
         )
 

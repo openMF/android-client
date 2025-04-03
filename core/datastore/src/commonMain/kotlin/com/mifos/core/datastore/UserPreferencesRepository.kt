@@ -35,5 +35,5 @@ interface UserPreferencesRepository {
 
     suspend fun updateTheme(theme: AppTheme): Result<Unit>
 
-    val getServerConfig: StateFlow<ServerConfig?>
+    val getServerConfig: StateFlow<ServerConfig>
 }

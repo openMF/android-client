@@ -175,7 +175,7 @@ class BaseApiManager(private val prefManager: UserPreferencesRepository) {
                 prettyPrint = true
             }
 
-            val instanceUrl = prefManager.getServerConfig.value?.getInstanceUrl() ?: "https://dev.mifos.io/fineract-provider/api/v1/"
+            val instanceUrl = prefManager.getServerConfig.value.getInstanceUrl()
             mRetrofit = Retrofit.Builder()
                 .baseUrl(instanceUrl)
                 .addConverterFactory(ScalarsConverterFactory.create())

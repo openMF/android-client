@@ -17,7 +17,10 @@ import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.surveys.Scorecard
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -40,14 +43,13 @@ class SurveySubmitViewModel(
     val surveySubmitUiState: StateFlow<SurveySubmitUiState>
         get() = _surveySubmitUiState
 
-    var userId = MutableStateFlow(0)
-    init {
-        viewModelScope.launch {
-            prefManager.userData.collect {
-                userId.value = it.userId.toInt()
-            }
-        }
-    }
+    val userId: StateFlow<Int> = prefManager.userData
+        .map { it.userId.toInt() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = 0
+        )
 
     fun submitSurvey(survey: Int, scorecardPayload: Scorecard?) {
         _surveySubmitUiState.value = SurveySubmitUiState.ShowProgressbar

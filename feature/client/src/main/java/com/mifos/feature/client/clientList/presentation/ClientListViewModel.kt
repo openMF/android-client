@@ -47,15 +47,13 @@ class ClientListViewModel(
     }
 
     fun getClientList() {
-        var userStatus = false
         viewModelScope.launch {
-            val status = prefManager.userInfo.first().userStatus
-            userStatus = status
-        }
-        if (userStatus) {
-            loadClientsFromDb()
-        } else {
-            loadClientsFromApi()
+            val userStatus = prefManager.userInfo.first().userStatus
+            if (userStatus) {
+                loadClientsFromDb()
+            } else {
+                loadClientsFromApi()
+            }
         }
     }
 

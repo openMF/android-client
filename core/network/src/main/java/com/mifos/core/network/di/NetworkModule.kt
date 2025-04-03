@@ -14,8 +14,10 @@ import coil.util.DebugLogger
 import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.UserPreferencesRepositoryImpl
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.Call
 import okhttp3.OkHttpClient
@@ -33,12 +35,10 @@ val NetworkModule = module {
 
     single {
         val prefManager: UserPreferencesRepository = get()
-
-        val user = runBlocking { prefManager.userData.first() }
-        val serverConfig = runBlocking { prefManager.getServerConfig.first() }
-
         val baseManager = BaseApiManager.getInstance()
-        if (serverConfig != null) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val user = prefManager.userData.first()
+            val serverConfig = prefManager.getServerConfig.first()
             baseManager.createService(
                 user.username ?: "",
                 user.password ?: "",
