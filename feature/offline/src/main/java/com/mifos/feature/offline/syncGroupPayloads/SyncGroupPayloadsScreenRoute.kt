@@ -56,6 +56,7 @@ internal fun SyncGroupPayloadsScreenRoute(
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.syncGroupPayloadsUiState.collectAsStateWithLifecycle()
+    val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val groupPayloadsList by viewModel.groupPayloadsList.collectAsStateWithLifecycle()
     val refreshState by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
@@ -74,7 +75,7 @@ internal fun SyncGroupPayloadsScreenRoute(
         syncGroupPayloads = {
             viewModel.syncGroupPayloadFromStart()
         },
-        userStatus = viewModel.getUserStatus(),
+        userStatus = userStatus,
     )
 }
 

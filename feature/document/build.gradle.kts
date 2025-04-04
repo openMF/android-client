@@ -31,4 +31,8 @@ dependencies {
 
     implementation(libs.mifos.koin.android)
     implementation(libs.koin.androidx.compose.v350)
+
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktorfit.lib)
 }

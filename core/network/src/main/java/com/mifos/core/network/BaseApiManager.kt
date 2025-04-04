@@ -11,7 +11,7 @@ package com.mifos.core.network
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mifos.core.common.utils.getInstanceUrl
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.network.services.CenterService
 import com.mifos.core.network.services.ChargeService
 import com.mifos.core.network.services.CheckerInboxService
@@ -40,8 +40,7 @@ import java.util.Date
 /**
  * @author fomenkoo
  */
-class BaseApiManager(private val prefManager: PrefManager) {
-
+class BaseApiManager(private val prefManager: UserPreferencesRepository) {
     init {
         createService(prefManager)
     }
@@ -159,7 +158,7 @@ class BaseApiManager(private val prefManager: PrefManager) {
             return mRetrofit!!.create(clazz)
         }
 
-        fun createService(prefManager: com.mifos.core.datastore.PrefManager) {
+        fun createService(prefManager: UserPreferencesRepository) {
             /**
              *  JsonDateSerializer is imported from com.mifos.core.network.utils.JsonDateSerializer
              *  but it required to import from org.mifos.core.utils.JsonDateSerializer in
@@ -175,8 +174,9 @@ class BaseApiManager(private val prefManager: PrefManager) {
                 prettyPrint = true
             }
 
+            val instanceUrl = prefManager.getServerConfig.value.getInstanceUrl()
             mRetrofit = Retrofit.Builder()
-                .baseUrl(prefManager.getServerConfig.getInstanceUrl())
+                .baseUrl(instanceUrl)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
 //                .addCallAdapterFactory(FlowCallAdapterFactory.create())

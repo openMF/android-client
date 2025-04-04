@@ -9,27 +9,30 @@
  */
 package com.mifos.feature.groups.syncGroupDialog
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import rx.Observable
 import rx.plugins.RxJavaPlugins
 
@@ -38,11 +41,12 @@ import rx.plugins.RxJavaPlugins
  */
 class SyncGroupsDialogViewModel(
     private val repository: SyncGroupsDialogRepository,
+    private val prefManager: UserPreferencesRepository,
 //    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val prefManager: PrefManager,
 ) : ViewModel() {
 
     private var mGroupList: List<GroupEntity> = emptyList()
+
     private val mFailedSyncGroup: MutableList<GroupEntity> = mutableListOf()
     private var mClients: List<ClientEntity> = emptyList()
     private var mLoanAccountList: List<LoanAccountEntity> = emptyList()
@@ -73,9 +77,12 @@ class SyncGroupsDialogViewModel(
      * This Method checking network connection before starting group synchronization
      */
     fun syncGroups() {
-        if (prefManager.userStatus == Constants.USER_ONLINE) {
-            checkNetworkConnection {
-                syncGroupAndUpdateUI()
+        viewModelScope.launch {
+            val userStatus = prefManager.userInfo.first().userStatus
+            if (userStatus == Constants.USER_ONLINE) {
+                checkNetworkConnection {
+                    syncGroupAndUpdateUI()
+                }
             }
         }
     }
@@ -167,7 +174,7 @@ class SyncGroupsDialogViewModel(
      */
     private fun onAccountSyncFailed(e: Throwable) {
         try {
-            if (e is HttpException) {
+            if (e is ClientRequestException || e is ServerResponseException) {
                 val singleSyncGroupMax = maxSingleSyncGroupProgressBar
                 _syncGroupData.update { it.copy(singleSyncCount = singleSyncGroupMax) }
                 mFailedSyncGroup.add(mGroupList[mGroupSyncIndex])
@@ -175,6 +182,7 @@ class SyncGroupsDialogViewModel(
                 _syncGroupData.update { it.copy(failedSyncGroupCount = mFailedSyncGroup.size) }
                 syncGroups()
             }
+            Log.d("Error", e.toString())
         } catch (throwable: Throwable) {
             RxJavaPlugins.getInstance().errorHandler.handleError(throwable)
         }

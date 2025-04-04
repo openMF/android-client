@@ -13,21 +13,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SyncClientsDialogRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import rx.Observable
 import rx.plugins.RxJavaPlugins
 
@@ -36,11 +38,12 @@ import rx.plugins.RxJavaPlugins
  */
 class SyncClientsDialogViewModel(
     private val repository: SyncClientsDialogRepository,
+    private val prefManager: UserPreferencesRepository,
 //    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val prefManager: PrefManager,
 ) : ViewModel() {
 
     private var mClientList: List<ClientEntity> = ArrayList()
+
     private val mFailedSyncClient: MutableList<ClientEntity> = ArrayList()
     private var mLoanAccountList: List<LoanAccountEntity> = ArrayList()
     private var mSavingsAccountList: List<SavingsAccountEntity> = ArrayList()
@@ -65,9 +68,12 @@ class SyncClientsDialogViewModel(
     }
 
     fun syncClient() {
-        if (prefManager.userStatus == Constants.USER_ONLINE) {
-            checkNetworkConnection {
-                syncClientAndUpdateUI()
+        viewModelScope.launch {
+            val userStatus = prefManager.userInfo.first().userStatus
+            if (userStatus == Constants.USER_ONLINE) {
+                checkNetworkConnection {
+                    syncClientAndUpdateUI()
+                }
             }
         }
     }
@@ -128,7 +134,7 @@ class SyncClientsDialogViewModel(
 
     fun onAccountSyncFailed(e: Throwable?) {
         try {
-            if (e is HttpException) {
+            if (e is ClientRequestException || e is ServerResponseException) {
                 val singleSyncClientMax = maxSingleSyncClientProgressBar
                 _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
                 mFailedSyncClient.add(mClientList[mClientSyncIndex])

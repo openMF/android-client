@@ -82,6 +82,7 @@ internal fun CreateNewGroupScreen(
     onGroupCreated: (group: SaveResponse?, userStatus: Boolean) -> Unit,
 ) {
     val uiState by viewModel.createNewGroupUiState.collectAsStateWithLifecycle()
+    val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.loadOffices()
@@ -93,7 +94,7 @@ internal fun CreateNewGroupScreen(
         invokeGroupCreation = { groupPayload ->
             viewModel.createGroup(groupPayload)
         },
-        onGroupCreated = { onGroupCreated(it, viewModel.getUserStatus()) },
+        onGroupCreated = { onGroupCreated(it, userStatus) },
         getResponse = { viewModel.getResponse() },
     )
 }
@@ -259,7 +260,7 @@ private fun CreateNewGroupContent(
             },
             onOptionSelected = { index, value ->
                 selectedOffice = value
-                officeList[index].id?.let {
+                officeList[index].id.let {
                     officeId = it
                 }
             },

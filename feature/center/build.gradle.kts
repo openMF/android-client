@@ -36,4 +36,8 @@ dependencies {
 
     //coil
     implementation(libs.coil.kt.compose)
+
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktorfit.lib)
 }

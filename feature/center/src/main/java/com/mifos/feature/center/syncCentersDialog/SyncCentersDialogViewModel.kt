@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SyncCentersDialogRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
@@ -22,15 +22,17 @@ import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import rx.Observable
 
 /**
@@ -38,8 +40,8 @@ import rx.Observable
  */
 class SyncCentersDialogViewModel(
     private val repository: SyncCentersDialogRepository,
+    private val prefManager: UserPreferencesRepository,
 //    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val prefManager: PrefManager,
 ) : ViewModel() {
 
     private val _syncCentersDialogUiState =
@@ -55,6 +57,7 @@ class SyncCentersDialogViewModel(
     private var mSavingsAccountList: List<SavingsAccountEntity> = emptyList()
     private var mMemberLoanAccountsList: List<LoanAccountEntity> = emptyList()
     private var mCenterList: List<CenterEntity> = emptyList()
+
     private val mFailedSyncCenter: MutableList<CenterEntity> = mutableListOf()
     private var mGroups: List<GroupEntity> = emptyList()
     private var mClients: List<ClientEntity> = emptyList()
@@ -74,9 +77,12 @@ class SyncCentersDialogViewModel(
     }
 
     fun syncCenter() {
-        if (prefManager.userStatus == Constants.USER_ONLINE) {
-            checkNetworkConnection {
-                syncCenterAndUpdateUI()
+        viewModelScope.launch {
+            val userStatus = prefManager.userInfo.first().userStatus
+            if (userStatus == Constants.USER_ONLINE) {
+                checkNetworkConnection {
+                    syncCenterAndUpdateUI()
+                }
             }
         }
     }
@@ -115,7 +121,7 @@ class SyncCentersDialogViewModel(
      */
     private fun onAccountSyncFailed(e: Throwable) {
         try {
-            if (e is HttpException) {
+            if (e is ClientRequestException || e is ServerResponseException) {
                 val singleSyncCenterMax = maxSingleSyncCenterProgressBar
                 _syncCenterData.update { it.copy(singleSyncCount = singleSyncCenterMax) }
                 mFailedSyncCenter.add(mCenterList[mCenterSyncIndex])

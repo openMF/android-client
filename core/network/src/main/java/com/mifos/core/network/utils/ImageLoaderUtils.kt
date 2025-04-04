@@ -13,18 +13,23 @@ import android.content.Context
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.ImageResult
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.common.utils.getInstanceUrl
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.network.MifosInterceptor
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.runBlocking
 
 class ImageLoaderUtils(
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
     private val imageLoader: ImageLoader,
     private val context: Context,
 ) {
 
     private fun buildImageUrl(clientId: Int): String {
+        val serverConfig = runBlocking { prefManager.serverConfig.firstOrNull() }
         return (
-            prefManager.getInstanceUrl() +
+            serverConfig?.getInstanceUrl() +
                 "clients/" +
                 clientId +
                 "/images?maxHeight=120&maxWidth=120"
@@ -32,10 +37,12 @@ class ImageLoaderUtils(
     }
 
     suspend fun loadImage(clientId: Int): ImageResult {
+        val serverConfig = prefManager.serverConfig.first()
+        val userData = prefManager.userData.first()
         val request = ImageRequest.Builder(context)
             .data(buildImageUrl(clientId))
-            .addHeader(MifosInterceptor.HEADER_TENANT, prefManager.getTenant())
-            .addHeader(MifosInterceptor.HEADER_AUTH, prefManager.getToken())
+            .addHeader(MifosInterceptor.HEADER_TENANT, serverConfig.tenant)
+            .addHeader(MifosInterceptor.HEADER_AUTH, userData.base64EncodedAuthenticationKey.orEmpty())
             .addHeader("Accept", "application/octet-stream")
             .build()
         return imageLoader.execute(request)

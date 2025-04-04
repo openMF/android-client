@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
@@ -23,6 +24,8 @@ import com.mifos.room.entities.templates.loans.LoanTemplate
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import com.mifos.room.helper.LoanDaoHelper
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import rx.Observable
 
@@ -33,7 +36,7 @@ class DataManagerLoan(
     val mBaseApiManager: BaseApiManager,
 //    val mDatabaseHelperLoan: DatabaseHelperLoan,
     val loanDaoHelper: LoanDaoHelper,
-    private val prefManager: com.mifos.core.datastore.PrefManager,
+    private val prefManager: UserPreferencesRepository,
 ) {
     /**
      * This Method sending the Request to REST API if UserStatus is 0 and
@@ -50,13 +53,15 @@ class DataManagerLoan(
      * @return LoanWithAssociation
      */
     fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity?> {
-        return when (prefManager.userStatus) {
-            false -> flow { emit(mBaseApiManager.loanApi.getLoanByIdWithAllAssociations(loanId)) }
-            true ->
-                /**
-                 * offline Mode, Return LoanWithAssociation from LoanDaoHelper.
-                 */
-                loanDaoHelper.getLoanById(loanId)
+        return prefManager.userInfo.flatMapLatest { userData ->
+            when (userData.userStatus) {
+                false -> flow { emit(mBaseApiManager.loanApi.getLoanByIdWithAllAssociations(loanId)) }
+                true ->
+                    /**
+                     * offline Mode, Return LoanWithAssociation from LoanDaoHelper.
+                     */
+                    loanDaoHelper.getLoanById(loanId)
+            }
         }
     }
 
@@ -108,13 +113,15 @@ class DataManagerLoan(
      * @return LoanRepaymentTemplate
      */
     fun getLoanRepayTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity?> {
-        return flow {
-            when (prefManager.userStatus) {
-                false -> mBaseApiManager.loanApi.getLoanRepaymentTemplate(loanId)
-                /**
-                 * Return LoanRepaymentTemplate from DatabaseHelperLoan.
-                 */
-                true -> loanDaoHelper.getLoanRepayTemplate(loanId)
+        return prefManager.userInfo.flatMapLatest { userData ->
+            flow {
+                when (userData.userStatus) {
+                    false -> mBaseApiManager.loanApi.getLoanRepaymentTemplate(loanId)
+                    /**
+                     * Return LoanRepaymentTemplate from DatabaseHelperLoan.
+                     */
+                    true -> loanDaoHelper.getLoanRepayTemplate(loanId)
+                }
             }
         }
     }
@@ -159,7 +166,7 @@ class DataManagerLoan(
         loanId: Int,
         request: LoanRepaymentRequestEntity,
     ): LoanRepaymentResponseEntity {
-        return when (prefManager.userStatus) {
+        return when (prefManager.userInfo.first().userStatus) {
             false -> mBaseApiManager.loanApi.submitPayment(loanId, request)
 
             true ->

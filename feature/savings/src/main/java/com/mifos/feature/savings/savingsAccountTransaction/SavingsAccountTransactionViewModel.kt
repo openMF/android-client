@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import com.mifos.room.entities.accounts.savings.SavingsTransactionData
@@ -32,7 +32,7 @@ class SavingsAccountTransactionViewModel(
 //    private val getSavingsAccountTransactionTemplateUseCase: GetSavingsAccountTransactionTemplateUseCase,
 //    private val processTransactionUseCase: ProcessTransactionUseCase,
 //    private val getSavingsAccountTransactionUseCase: GetSavingsAccountTransactionUseCase,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
     private val repository: SavingsAccountTransactionRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -52,7 +52,9 @@ class SavingsAccountTransactionViewModel(
     val savingsAccountTransactionUiState: StateFlow<SavingsAccountTransactionUiState> get() = _savingsAccountTransactionUiState
 
     fun setUserOffline() {
-        prefManager.userStatus = Constants.USER_OFFLINE
+        viewModelScope.launch {
+            prefManager.updateUserStatus(Constants.USER_OFFLINE)
+        }
     }
 
     fun loadSavingAccountTemplate() {

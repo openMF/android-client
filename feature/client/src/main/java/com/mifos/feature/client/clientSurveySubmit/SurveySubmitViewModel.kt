@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.data.repository.SurveySubmitRepository
-import com.mifos.core.datastore.PrefManager
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.surveys.Scorecard
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,19 +30,11 @@ import rx.schedulers.Schedulers
  */
 class SurveySubmitViewModel(
     private val repository: SurveySubmitRepository,
-    private val prefManager: PrefManager,
+    private val prefManager: UserPreferencesRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val clientId = savedStateHandle.getStateFlow(key = Constants.CLIENT_ID, initialValue = -1)
-
-    val userId = prefManager.userDetails.map {
-        it?.userId?.toInt() ?: 0
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Eagerly,
-        initialValue = 0,
-    )
 
     private val _surveySubmitUiState =
         MutableStateFlow<SurveySubmitUiState>(SurveySubmitUiState.Initial)
@@ -50,24 +42,29 @@ class SurveySubmitViewModel(
     val surveySubmitUiState: StateFlow<SurveySubmitUiState>
         get() = _surveySubmitUiState
 
+    val userId: StateFlow<Int> = prefManager.userData
+        .map { it.userId.toInt() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = 0,
+        )
+
     fun submitSurvey(survey: Int, scorecardPayload: Scorecard?) {
         _surveySubmitUiState.value = SurveySubmitUiState.ShowProgressbar
         repository.submitScore(survey, scorecardPayload)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(
-                object : Subscriber<Scorecard>() {
-                    override fun onCompleted() {}
-                    override fun onError(e: Throwable) {
-                        _surveySubmitUiState.value =
-                            SurveySubmitUiState.ShowError(e.message.toString())
-                    }
+            .subscribe(object : Subscriber<Scorecard>() {
+                override fun onCompleted() {}
+                override fun onError(e: Throwable) {
+                    _surveySubmitUiState.value = SurveySubmitUiState.ShowError(e.message.toString())
+                }
 
-                    override fun onNext(scorecard: Scorecard) {
-                        _surveySubmitUiState.value =
-                            SurveySubmitUiState.ShowSurveySubmittedSuccessfully(scorecard)
-                    }
-                },
-            )
+                override fun onNext(scorecard: Scorecard) {
+                    _surveySubmitUiState.value =
+                        SurveySubmitUiState.ShowSurveySubmittedSuccessfully(scorecard)
+                }
+            })
     }
 }
