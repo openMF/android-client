@@ -9,12 +9,13 @@
  */
 package com.mifos.feature.settings.syncSurvey
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -40,7 +41,7 @@ class SyncSurveysDialogViewModel(
 
     private var mSurveyList: List<SurveyEntity> = ArrayList()
 
-//    private val mFailedSyncSurvey: MutableList<SurveyEntity> = ArrayList()
+    private val mFailedSyncSurvey: MutableList<SurveyEntity> = ArrayList()
     private var mQuestionDatasList: List<QuestionDatasEntity> = ArrayList()
     private var mResponseDatasList: List<ResponseDatasEntity> = ArrayList()
     private var mSurveySyncIndex = 0
@@ -171,15 +172,14 @@ class SyncSurveysDialogViewModel(
      */
     private fun onAccountSyncFailed(e: Throwable) {
         try {
-//            if (e is HttpException) {
-//                maxSingleSyncSurveyProgressBar
-//                mFailedSyncSurvey.add(mSurveyList[mSurveySyncIndex])
-//                mSurveySyncIndex += 1
-//                _syncSurveysDialogUiState.value =
-//                    SyncSurveysDialogUiState.ShowSyncedFailedSurveys(mFailedSyncSurvey.size)
-//                checkNetworkConnectionAndSyncSurvey()
-//            }
-            Log.d("Error", e.toString())
+            if (e is ClientRequestException || e is ServerResponseException) {
+                maxSingleSyncSurveyProgressBar
+                mFailedSyncSurvey.add(mSurveyList[mSurveySyncIndex])
+                mSurveySyncIndex += 1
+                _syncSurveysDialogUiState.value =
+                    SyncSurveysDialogUiState.ShowSyncedFailedSurveys(mFailedSyncSurvey.size)
+                checkNetworkConnectionAndSyncSurvey()
+            }
         } catch (throwable: Throwable) {
             val errorObservable = Observable.error<Throwable>(RuntimeException("Custom error"))
             errorObservable.subscribe { println("Error: ${throwable.message}") }

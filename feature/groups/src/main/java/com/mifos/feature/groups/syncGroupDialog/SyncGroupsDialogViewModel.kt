@@ -21,6 +21,8 @@ import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +47,7 @@ class SyncGroupsDialogViewModel(
 
     private var mGroupList: List<GroupEntity> = emptyList()
 
-//    private val mFailedSyncGroup: MutableList<GroupEntity> = mutableListOf()
+    private val mFailedSyncGroup: MutableList<GroupEntity> = mutableListOf()
     private var mClients: List<ClientEntity> = emptyList()
     private var mLoanAccountList: List<LoanAccountEntity> = emptyList()
     private var mSavingsAccountList: List<SavingsAccountEntity> = emptyList()
@@ -172,14 +174,14 @@ class SyncGroupsDialogViewModel(
      */
     private fun onAccountSyncFailed(e: Throwable) {
         try {
-//            if (e is HttpException) {
-//                val singleSyncGroupMax = maxSingleSyncGroupProgressBar
-//                _syncGroupData.update { it.copy(singleSyncCount = singleSyncGroupMax) }
-//                mFailedSyncGroup.add(mGroupList[mGroupSyncIndex])
-//                mGroupSyncIndex += 1
-//                _syncGroupData.update { it.copy(failedSyncGroupCount = mFailedSyncGroup.size) }
-//                syncGroups()
-//            }
+            if (e is ClientRequestException || e is ServerResponseException) {
+                val singleSyncGroupMax = maxSingleSyncGroupProgressBar
+                _syncGroupData.update { it.copy(singleSyncCount = singleSyncGroupMax) }
+                mFailedSyncGroup.add(mGroupList[mGroupSyncIndex])
+                mGroupSyncIndex += 1
+                _syncGroupData.update { it.copy(failedSyncGroupCount = mFailedSyncGroup.size) }
+                syncGroups()
+            }
             Log.d("Error", e.toString())
         } catch (throwable: Throwable) {
             RxJavaPlugins.getInstance().errorHandler.handleError(throwable)

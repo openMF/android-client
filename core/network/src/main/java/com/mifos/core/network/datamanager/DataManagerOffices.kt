@@ -45,8 +45,7 @@ class DataManagerOffices(
     }
 
     val offices: Flow<List<OfficeEntity>>
-        get() = prefManager.userInfo.flatMapLatest {
-                userData ->
+        get() = prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
                 false -> flow {
                     baseApiManager.getOfficeApi().retrieveOffices(null, null, null)

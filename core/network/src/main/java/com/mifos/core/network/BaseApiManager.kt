@@ -41,7 +41,6 @@ import java.util.Date
  * @author fomenkoo
  */
 class BaseApiManager(private val prefManager: UserPreferencesRepository) {
-
     init {
         createService(prefManager)
     }

@@ -131,8 +131,7 @@ class DataManagerGroups(
      * @return Group
      */
     fun getGroup(groupId: Int): Flow<GroupEntity> {
-        return prefManager.userInfo.flatMapLatest {
-                userData ->
+        return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
                 false -> flow { emit(mBaseApiManager.groupApi.getGroup(groupId)) }
                 true ->
@@ -160,8 +159,7 @@ class DataManagerGroups(
      * @return GroupWithAssociations
      */
     fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations> {
-        return prefManager.userInfo.flatMapLatest {
-                userData ->
+        return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
                 false -> mBaseApiManager.groupApi.getGroupWithAssociations(groupId)
                 true ->
@@ -181,8 +179,7 @@ class DataManagerGroups(
      * @return GroupAccounts
      */
     fun getGroupAccounts(groupId: Int): Flow<GroupAccounts> {
-        return prefManager.userInfo.flatMapLatest {
-                userdata ->
+        return prefManager.userInfo.flatMapLatest { userdata ->
             when (userdata.userStatus) {
                 false -> flow { emit(mBaseApiManager.groupApi.getGroupAccounts(groupId)) }
                 true ->

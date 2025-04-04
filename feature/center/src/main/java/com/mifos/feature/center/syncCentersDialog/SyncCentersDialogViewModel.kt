@@ -22,6 +22,8 @@ import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,7 +58,7 @@ class SyncCentersDialogViewModel(
     private var mMemberLoanAccountsList: List<LoanAccountEntity> = emptyList()
     private var mCenterList: List<CenterEntity> = emptyList()
 
-//    private val mFailedSyncCenter: MutableList<CenterEntity> = mutableListOf()
+    private val mFailedSyncCenter: MutableList<CenterEntity> = mutableListOf()
     private var mGroups: List<GroupEntity> = emptyList()
     private var mClients: List<ClientEntity> = emptyList()
     private var mLoanAccountSyncStatus = false
@@ -75,14 +77,12 @@ class SyncCentersDialogViewModel(
     }
 
     fun syncCenter() {
-        var userStatus = false
         viewModelScope.launch {
-            val status = prefManager.userInfo.first().userStatus
-            userStatus = status
-        }
-        if (userStatus == Constants.USER_ONLINE) {
-            checkNetworkConnection {
-                syncCenterAndUpdateUI()
+            val userStatus = prefManager.userInfo.first().userStatus
+            if (userStatus == Constants.USER_ONLINE) {
+                checkNetworkConnection {
+                    syncCenterAndUpdateUI()
+                }
             }
         }
     }
@@ -121,15 +121,14 @@ class SyncCentersDialogViewModel(
      */
     private fun onAccountSyncFailed(e: Throwable) {
         try {
-//            if (e is HttpException) {
-//                val singleSyncCenterMax = maxSingleSyncCenterProgressBar
-//                _syncCenterData.update { it.copy(singleSyncCount = singleSyncCenterMax) }
-//                mFailedSyncCenter.add(mCenterList[mCenterSyncIndex])
-//                mCenterSyncIndex += 1
-//                _syncCenterData.update { it.copy(failedSyncGroupCount = mFailedSyncCenter.size) }
-//                syncCenter()
-//            }
-            Log.d("Error", e.toString())
+            if (e is ClientRequestException || e is ServerResponseException) {
+                val singleSyncCenterMax = maxSingleSyncCenterProgressBar
+                _syncCenterData.update { it.copy(singleSyncCount = singleSyncCenterMax) }
+                mFailedSyncCenter.add(mCenterList[mCenterSyncIndex])
+                mCenterSyncIndex += 1
+                _syncCenterData.update { it.copy(failedSyncGroupCount = mFailedSyncCenter.size) }
+                syncCenter()
+            }
         } catch (throwable: Throwable) {
             Log.d("Error", throwable.message.toString())
         }

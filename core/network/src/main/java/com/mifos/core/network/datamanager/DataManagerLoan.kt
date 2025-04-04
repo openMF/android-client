@@ -53,8 +53,7 @@ class DataManagerLoan(
      * @return LoanWithAssociation
      */
     fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity?> {
-        return prefManager.userInfo.flatMapLatest {
-                userData ->
+        return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
                 false -> flow { emit(mBaseApiManager.loanApi.getLoanByIdWithAllAssociations(loanId)) }
                 true ->
@@ -114,8 +113,7 @@ class DataManagerLoan(
      * @return LoanRepaymentTemplate
      */
     fun getLoanRepayTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity?> {
-        return prefManager.userInfo.flatMapLatest {
-                userData ->
+        return prefManager.userInfo.flatMapLatest { userData ->
             flow {
                 when (userData.userStatus) {
                     false -> mBaseApiManager.loanApi.getLoanRepaymentTemplate(loanId)

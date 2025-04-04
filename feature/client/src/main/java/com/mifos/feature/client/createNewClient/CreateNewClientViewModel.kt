@@ -18,6 +18,8 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -106,12 +108,18 @@ class CreateNewClientViewModel(
                     _createNewClientUiState.value =
                         CreateNewClientUiState.ShowWaitingForCheckerApproval(0)
                 }
-//            } catch (e: HttpException) {
-//                val errorMessage = e.response()?.errorBody()?.string().orEmpty()
-//                Log.d("CreateClient", errorMessage)
-//                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
-//                    "HTTP Error: $errorMessage",
-//                )
+            } catch (e: ClientRequestException) {
+                val errorMessage = e.message
+                Log.d("CreateClient", errorMessage)
+                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
+                    "HTTP Error: $errorMessage",
+                )
+            } catch (e: ServerResponseException) {
+                val errorMessage = e.message
+                Log.d("CreateClient", errorMessage)
+                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(
+                    "HTTP Error: $errorMessage",
+                )
             } catch (e: Exception) {
                 val errorMessage = e.message.orEmpty()
                 Log.e("CreateClient", "Unexpected error", e)

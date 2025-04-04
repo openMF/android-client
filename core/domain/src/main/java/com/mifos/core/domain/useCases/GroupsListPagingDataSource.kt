@@ -38,8 +38,6 @@ class GroupsListPagingDataSource(
                 prevKey = if (currentOffset <= 0) null else currentOffset - limit,
                 nextKey = if (groups.isEmpty()) null else currentOffset + limit,
             )
-//        } catch (e: HttpException) {
-//            LoadResult.Error(e)
         } catch (e: IOException) {
             LoadResult.Error(e)
         } catch (e: Exception) {

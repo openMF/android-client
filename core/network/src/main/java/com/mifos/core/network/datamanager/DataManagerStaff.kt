@@ -33,8 +33,7 @@ class DataManagerStaff(
      * @return
      */
     fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {
-        return prefManager.userInfo.flatMapLatest {
-                userData ->
+        return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
                 false -> flow {
                     baseApiManager.getStaffApi().retrieveAll16(

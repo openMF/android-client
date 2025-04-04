@@ -28,8 +28,17 @@ import org.mifos.core.apimanager.BaseApiManager
 
 val NetworkModule = module {
 
-    single<UserPreferencesRepository> { UserPreferencesRepositoryImpl(get(), get(named(
-        MifosDispatchers.IO.name)), get(named(MifosDispatchers.Unconfined))) }
+    single<UserPreferencesRepository> {
+        UserPreferencesRepositoryImpl(
+            get(),
+            get(
+                named(
+                    MifosDispatchers.IO.name,
+                ),
+            ),
+            get(named(MifosDispatchers.Unconfined)),
+        )
+    }
 
     single { com.mifos.core.network.BaseApiManager(get()) }
 

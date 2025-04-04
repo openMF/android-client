@@ -40,16 +40,13 @@ class CenterListViewModel(
     val centerListUiState = _centerListUiState.asStateFlow()
 
     fun getCenterList() {
-        var userStatus = false
         viewModelScope.launch {
-            val status = prefManager.userInfo.first().userStatus
-            userStatus = status
-        }
-
-        if (userStatus) {
-            loadCentersFromDb()
-        } else {
-            loadCentersFromApi()
+            val userStatus = prefManager.userInfo.first().userStatus
+            if (userStatus) {
+                loadCentersFromDb()
+            } else {
+                loadCentersFromApi()
+            }
         }
     }
 

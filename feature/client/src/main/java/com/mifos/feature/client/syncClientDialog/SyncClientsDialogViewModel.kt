@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.client.syncClientDialog
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
@@ -20,6 +19,8 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,7 +44,7 @@ class SyncClientsDialogViewModel(
 
     private var mClientList: List<ClientEntity> = ArrayList()
 
-//    private val mFailedSyncClient: MutableList<ClientEntity> = ArrayList()
+    private val mFailedSyncClient: MutableList<ClientEntity> = ArrayList()
     private var mLoanAccountList: List<LoanAccountEntity> = ArrayList()
     private var mSavingsAccountList: List<SavingsAccountEntity> = ArrayList()
     private var mLoanAccountSyncStatus = false
@@ -133,15 +134,14 @@ class SyncClientsDialogViewModel(
 
     fun onAccountSyncFailed(e: Throwable?) {
         try {
-//            if (e is HttpException) {
-//                val singleSyncClientMax = maxSingleSyncClientProgressBar
-//                _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
-//                mFailedSyncClient.add(mClientList[mClientSyncIndex])
-//                mClientSyncIndex += 1
-//                _syncClientData.update { it.copy(failedSyncGroupCount = mFailedSyncClient.size) }
-//                syncClient()
-//            }
-            Log.d("Error", e.toString())
+            if (e is ClientRequestException || e is ServerResponseException) {
+                val singleSyncClientMax = maxSingleSyncClientProgressBar
+                _syncClientData.update { it.copy(singleSyncCount = singleSyncClientMax) }
+                mFailedSyncClient.add(mClientList[mClientSyncIndex])
+                mClientSyncIndex += 1
+                _syncClientData.update { it.copy(failedSyncGroupCount = mFailedSyncClient.size) }
+                syncClient()
+            }
         } catch (throwable: Throwable) {
             RxJavaPlugins.getInstance().errorHandler.handleError(throwable)
         }

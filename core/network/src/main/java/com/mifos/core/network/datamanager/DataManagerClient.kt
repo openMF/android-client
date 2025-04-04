@@ -215,8 +215,7 @@ class DataManagerClient(
      * @return ClientTemplate
      */
     val clientTemplate: Flow<ClientsTemplateEntity>
-        get() = prefManager.userInfo.flatMapLatest {
-                userData ->
+        get() = prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
                 false ->
                     mBaseApiManager.clientsApi.clientTemplate

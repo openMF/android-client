@@ -13,7 +13,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
-import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
@@ -36,7 +35,7 @@ class LoginViewModel(
 //    private val context: Context,
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
-    private val baseApiManager: BaseApiManager,
+//    private val baseApiManager: BaseApiManager,
     private val loginUseCase: LoginUseCase,
 ) : ViewModel() {
 
@@ -104,13 +103,13 @@ class LoginViewModel(
         password: String,
     ) {
         // Updating Services
-        baseApiManager.createService(
-            username = username,
-            password = password,
-            baseUrl = prefManager.getServerConfig.value.getInstanceUrl().dropLast(3),
-            tenant = prefManager.getServerConfig.value.tenant,
-            secured = false,
-        )
+//        baseApiManager.createService(
+//            username = username,
+//            password = password,
+//            baseUrl = prefManager.getServerConfig.value.getInstanceUrl().dropLast(3),
+//            tenant = prefManager.getServerConfig.value.tenant,
+//            secured = false,
+//        )
 
         viewModelScope.launch {
             prefManager.updateUser(
