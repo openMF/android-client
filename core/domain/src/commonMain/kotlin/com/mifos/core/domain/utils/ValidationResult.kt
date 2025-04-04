@@ -17,5 +17,5 @@ data class ValidationResult(
 
     val success: Boolean,
 
-    val message: Int? = null,
+    val message: String? = null,
 )

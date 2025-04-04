@@ -9,8 +9,10 @@
  */
 package com.mifos.core.domain.useCases
 
+import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.LoanAccountRepository
+import com.mifos.core.model.objects.organisations.LoanProducts
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -18,11 +20,13 @@ class GetAllLoanUseCase(
     private val loanAccountRepository: LoanAccountRepository,
 ) {
 
-    operator fun invoke(): Flow<Resource<List<com.mifos.core.model.objects.organisations.LoanProducts>>> = flow {
-        emit(Resource.Loading())
-        val response = loanAccountRepository.allLoans()
-        emit(Resource.Succes(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
+    operator fun invoke(): Flow<Resource<List<LoanProducts>>> = flow {
+        try {
+            emit(Resource.Loading())
+            val response = loanAccountRepository.allLoans()
+            emit(Resource.Succes(response))
+        } catch (exception: Exception) {
+            emit(Resource.Error(MFErrorParser.errorMessage(exception)))
+        }
     }
 }

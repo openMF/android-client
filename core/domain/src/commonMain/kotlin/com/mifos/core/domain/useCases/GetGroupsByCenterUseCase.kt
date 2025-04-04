@@ -17,10 +17,12 @@ import kotlinx.coroutines.flow.flow
 
 class GetGroupsByCenterUseCase(private val repository: GroupListRepository) {
     operator fun invoke(id: Int): Flow<Resource<CenterWithAssociations>> = flow {
-        emit(Resource.Loading())
-        val response = repository.getGroupsByCenter(id)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
+        try {
+            emit(Resource.Loading())
+            val response = repository.getGroupsByCenter(id)
+            emit(Resource.Success(response))
+        } catch (exception: Exception) {
+            emit(Resource.Error(exception.message.toString()))
+        }
     }
 }

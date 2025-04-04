@@ -13,6 +13,7 @@ import com.mifos.core.domain.utils.ValidationResult
 import core.domain.generated.resources.Res
 import core.domain.generated.resources.core_domain_enter_credentials
 import core.domain.generated.resources.core_domain_error_username_length
+import org.jetbrains.compose.resources.getString
 
 /**
  * Created by Aditya Gupta on 11/02/24.
@@ -20,16 +21,16 @@ import core.domain.generated.resources.core_domain_error_username_length
 
 class UsernameValidationUseCase {
 
-    operator fun invoke(username: String): ValidationResult {
+    suspend operator fun invoke(username: String): ValidationResult {
         if (username.isEmpty()) {
             return ValidationResult(
                 success = false,
-                Res.string.core_domain_enter_credentials,
+                getString(Res.string.core_domain_enter_credentials),
             )
         } else if (username.length < 5) {
             return ValidationResult(
                 success = false,
-                Res.string.core_domain_error_username_length,
+                getString(Res.string.core_domain_error_username_length),
             )
         }
         return ValidationResult(success = true)

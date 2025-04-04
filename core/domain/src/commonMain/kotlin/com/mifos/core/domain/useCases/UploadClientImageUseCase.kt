@@ -13,27 +13,23 @@ import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ClientDetailsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.ResponseBody
-import java.io.File
-
-/**
- * Created by Aditya Gupta on 18/03/24.
- */
 
 class UploadClientImageUseCase(
     private val repository: ClientDetailsRepository,
 ) {
 
-    operator fun invoke(id: Int, pngFile: File): Flow<Resource<ResponseBody>> = flow {
+    operator fun invoke(id: Int, pngFile: PlatformFile): Flow<Resource<String>> = flow {
         emit(Resource.Loading())
-        val requestFile = pngFile.asRequestBody("image/png".toMediaTypeOrNull())
-        val body = MultipartBody.Part.createFormData("file", pngFile.name, requestFile)
+        val body = pngFile.toMultipartData()
         repository.uploadClientImage(id, body)
-        emit(Resource.Success(ResponseBody.create(null, "success")))
+        emit(Resource.Success("Image uploaded successfully"))
     }.catch { exception ->
-        emit(Resource.Error("Unable to update image: ${exception.message}"))
+        emit(Resource.Error("Unable to upload image: ${exception.message}"))
     }
 }
+
+expect class PlatformFile {
+    fun toMultipartData(): MultipartData
+}
+
+expect class MultipartData

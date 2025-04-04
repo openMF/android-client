@@ -9,6 +9,7 @@
  */
 package com.mifos.core.domain.useCases
 
+import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.model.objects.payloads.SavingsPayload
@@ -25,10 +26,12 @@ class CreateSavingsAccountUseCase(
 ) {
 
     operator fun invoke(savingsPayload: SavingsPayload?): Flow<Resource<Savings?>> = flow {
-        emit(Resource.Loading())
-        val response = repository.createSavingsAccount(savingsPayload)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
+        try {
+            emit(Resource.Loading())
+            val response = repository.createSavingsAccount(savingsPayload)
+            emit(Resource.Success(response))
+        } catch (exception: Exception) {
+            emit(Resource.Error(MFErrorParser.errorMessage(exception)))
+        }
     }
 }

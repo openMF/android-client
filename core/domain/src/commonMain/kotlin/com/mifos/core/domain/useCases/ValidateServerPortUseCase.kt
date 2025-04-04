@@ -13,15 +13,16 @@ import com.mifos.core.domain.utils.ValidationResult
 import core.domain.generated.resources.Res
 import core.domain.generated.resources.core_domain_error_port_blank
 import core.domain.generated.resources.core_domain_error_port_invalid
+import org.jetbrains.compose.resources.getString
 
 class ValidateServerPortUseCase {
-    operator fun invoke(port: String): ValidationResult {
+    suspend operator fun invoke(port: String): ValidationResult {
         return if (port.isBlank()) {
-            ValidationResult(false, Res.string.core_domain_error_port_blank)
+            ValidationResult(false, getString(Res.string.core_domain_error_port_blank))
         } else {
             val convertedPort = port.toIntOrNull()
             if (convertedPort == null || convertedPort !in 1..65535) {
-                ValidationResult(false, Res.string.core_domain_error_port_invalid)
+                ValidationResult(false, getString(Res.string.core_domain_error_port_invalid))
             } else {
                 ValidationResult(true)
             }

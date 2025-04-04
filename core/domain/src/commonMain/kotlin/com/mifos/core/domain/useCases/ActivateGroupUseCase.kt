@@ -9,6 +9,7 @@
  */
 package com.mifos.core.domain.useCases
 
+import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
@@ -24,10 +25,12 @@ class ActivateGroupUseCase(
         groupId: Int,
         groupPayload: ActivatePayload,
     ): Flow<Resource<GenericResponse>> = flow {
-        emit(Resource.Loading())
-        val response = activateRepository.activateGroup(groupId, groupPayload)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
+        try {
+            emit(Resource.Loading())
+            val response = activateRepository.activateGroup(groupId, groupPayload)
+            emit(Resource.Success(response))
+        } catch (exception: Exception) {
+            emit(Resource.Error(MFErrorParser.errorMessage(exception)))
+        }
     }
 }

@@ -9,6 +9,7 @@
  */
 package com.mifos.core.domain.useCases
 
+import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
@@ -23,10 +24,12 @@ class GetClientSavingsAccountTemplateByProductUseCase(
 ) {
 
     operator fun invoke(clientId: Int, productId: Int): Flow<Resource<SavingProductsTemplate?>> = flow {
-        emit(Resource.Loading())
-        val response = repository.getClientSavingsAccountTemplateByProduct(clientId, productId)
-        emit(Resource.Success(response))
-    }.catch { exception ->
-        emit(Resource.Error(exception.message.toString()))
+        try {
+            emit(Resource.Loading())
+            val response = repository.getClientSavingsAccountTemplateByProduct(clientId, productId)
+            emit(Resource.Success(response))
+        } catch (exception: Exception) {
+            emit(Resource.Error(MFErrorParser.errorMessage(exception)))
+        }
     }
 }

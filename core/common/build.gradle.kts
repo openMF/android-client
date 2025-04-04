@@ -42,6 +42,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            api(projects.core.model)
+
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
             api(libs.coil.kt)
@@ -52,6 +54,8 @@ kotlin {
             api(libs.squareup.okio)
             api(libs.jb.kotlin.stdlib)
             api(libs.kotlinx.datetime)
+
+            implementation(libs.ktor.client.core)
         }
 
         androidMain.dependencies {

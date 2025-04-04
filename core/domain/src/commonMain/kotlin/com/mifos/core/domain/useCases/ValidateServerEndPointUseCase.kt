@@ -13,18 +13,19 @@ import com.mifos.core.domain.utils.ValidationResult
 import core.domain.generated.resources.Res
 import core.domain.generated.resources.core_domain_error_endpoint_blank
 import core.domain.generated.resources.core_domain_error_endpoint_invalid
+import org.jetbrains.compose.resources.getString
 
 class ValidateServerEndPointUseCase {
-    operator fun invoke(endPoint: String): ValidationResult {
+    suspend operator fun invoke(endPoint: String): ValidationResult {
         val regex =
             Regex("^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$")
 
         if (endPoint.isBlank()) {
-            return ValidationResult(false, Res.string.core_domain_error_endpoint_blank)
+            return ValidationResult(false, getString(Res.string.core_domain_error_endpoint_blank))
         }
 
         if (!regex.matches(endPoint)) {
-            return ValidationResult(false, Res.string.core_domain_error_endpoint_invalid)
+            return ValidationResult(false, getString(Res.string.core_domain_error_endpoint_invalid))
         }
 
         return ValidationResult(true)

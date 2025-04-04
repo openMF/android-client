@@ -13,15 +13,16 @@ import com.mifos.core.domain.utils.ValidationResult
 import core.domain.generated.resources.Res
 import core.domain.generated.resources.core_domain_error_protocol_blank
 import core.domain.generated.resources.core_domain_error_protocol_invalid
+import org.jetbrains.compose.resources.getString
 
 class ValidateServerProtocolUseCase {
 
-    operator fun invoke(protocol: String): ValidationResult {
+    suspend operator fun invoke(protocol: String): ValidationResult {
         val protocolRegex = Regex("^(http://|https://)$")
 
         return when {
-            protocol.isBlank() -> ValidationResult(false, Res.string.core_domain_error_protocol_blank)
-            !protocolRegex.matches(protocol) -> ValidationResult(false, Res.string.core_domain_error_protocol_invalid)
+            protocol.isBlank() -> ValidationResult(false, getString(Res.string.core_domain_error_protocol_blank))
+            !protocolRegex.matches(protocol) -> ValidationResult(false, getString(Res.string.core_domain_error_protocol_invalid))
             else -> ValidationResult(true)
         }
     }

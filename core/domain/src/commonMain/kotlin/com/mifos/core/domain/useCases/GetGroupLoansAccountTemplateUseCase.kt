@@ -9,6 +9,7 @@
  */
 package com.mifos.core.domain.useCases
 
+import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.GroupLoanAccountRepository
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
@@ -21,10 +22,12 @@ class GetGroupLoansAccountTemplateUseCase(
 
     operator fun invoke(groupId: Int, productId: Int): Flow<Resource<GroupLoanTemplate>> =
         flow {
-            emit(Resource.Loading())
-            val response = repository.getGroupLoansAccountTemplate(groupId, productId)
-            emit(Resource.Success(response))
-        }.catch { exception ->
-            emit(Resource.Error(exception.message.toString()))
+            try {
+                emit(Resource.Loading())
+                val response = repository.getGroupLoansAccountTemplate(groupId, productId)
+                emit(Resource.Success(response))
+            } catch (exception: Exception) {
+                emit(Resource.Error(MFErrorParser.errorMessage(exception)))
+            }
         }
 }

@@ -9,6 +9,7 @@
  */
 package com.mifos.core.domain.useCases
 
+import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.common.utils.Resource
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
@@ -24,19 +25,21 @@ class LoadSavingsAccountsAndTemplateUseCase(
 
     operator fun invoke(): Flow<Resource<SavingProductsAndTemplate?>> =
         flow {
-            emit(Resource.Loading())
+            try {
+                emit(Resource.Loading())
 
-            val savingProductsAndTemplate = coroutineScope {
-                val savingsAccount = async { repository.savingsAccounts() }
-                val template = async { repository.savingsAccountTemplate() }
+                val savingProductsAndTemplate = coroutineScope {
+                    val savingsAccount = async { repository.savingsAccounts() }
+                    val template = async { repository.savingsAccountTemplate() }
 
-                SavingsProductsAndTemplate(
-                    savingsAccount = savingsAccount.await(),
-                    template = template.await(),
-                )
+                    SavingsProductsAndTemplate(
+                        savingsAccount = savingsAccount.await(),
+                        template = template.await(),
+                    )
+                }
+                emit(Resource.Success(savingProductsAndTemplate))
+            } catch (exception: Exception) {
+                emit(Resource.Error(MFErrorParser.errorMessage(exception)))
             }
-            emit(Resource.Success(savingProductsAndTemplate))
-        }.catch { exception ->
-            emit(Resource.Error(exception.message.toString()))
         }
 }

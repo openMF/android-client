@@ -51,17 +51,17 @@ kotlin {
           //  api(projects.core.network)
 
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.ktor.client.core)
+            implementation(compose.components.resources)
         }
 
         androidMain.dependencies {
-            implementation(libs.ktor.client.okhttp)
+            implementation(libs.squareup.okhttp)
+            implementation(libs.androidx.paging.runtime.ktx)
         }
         nativeMain.dependencies {
-            implementation(libs.ktor.client.darwin)
         }
         desktopMain.dependencies {
-            implementation(libs.ktor.client.okhttp)
+            implementation(libs.squareup.okhttp)
         }
     }
 }

@@ -13,6 +13,7 @@ import com.mifos.core.domain.utils.ValidationResult
 import core.domain.generated.resources.Res
 import core.domain.generated.resources.core_domain_enter_credentials
 import core.domain.generated.resources.core_domain_error_password_length
+import org.jetbrains.compose.resources.getString
 
 /**
  * Created by Aditya Gupta on 11/02/24.
@@ -20,16 +21,16 @@ import core.domain.generated.resources.core_domain_error_password_length
 
 class PasswordValidationUseCase {
 
-    operator fun invoke(password: String): ValidationResult {
+    suspend operator fun invoke(password: String): ValidationResult {
         if (password.isEmpty()) {
             return ValidationResult(
                 success = false,
-                Res.string.core_domain_enter_credentials,
+                getString(Res.string.core_domain_enter_credentials),
             )
         } else if (password.length < 6) {
             return ValidationResult(
                 success = false,
-                Res.string.core_domain_error_password_length,
+                getString(Res.string.core_domain_error_password_length),
             )
         }
         return ValidationResult(success = true)
