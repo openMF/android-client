@@ -13,11 +13,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Resource
+import com.mifos.core.common.utils.getInstanceUrl
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
 import com.mifos.core.model.objects.users.User
+import com.mifos.core.network.BaseApiManager
 import com.mifos.feature.auth.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +36,7 @@ class LoginViewModel(
 //    private val context: Context,
     private val usernameValidationUseCase: UsernameValidationUseCase,
     private val passwordValidationUseCase: PasswordValidationUseCase,
-//    private val baseApiManager: BaseApiManager,
+    private val baseApiManager: BaseApiManager,
     private val loginUseCase: LoginUseCase,
 ) : ViewModel() {
 
@@ -102,13 +104,13 @@ class LoginViewModel(
         password: String,
     ) {
         // Updating Services
-//        baseApiManager.createService(
-//            username = username,
-//            password = password,
-//            baseUrl = prefManager.getServerConfig.getInstanceUrl().dropLast(3),
-//            tenant = prefManager.getServerConfig.tenant,
-//            secured = false,
-//        )
+        baseApiManager.createService(
+            username = username,
+            password = password,
+            baseUrl = prefManager.getServerConfig.value.getInstanceUrl().dropLast(3),
+            tenant = prefManager.getServerConfig.value.tenant,
+            secured = false,
+        )
 
         viewModelScope.launch {
             prefManager.updateUser(
@@ -125,7 +127,7 @@ class LoginViewModel(
                 ),
             )
         }
-        _loginUiState.value = LoginUiState.HomeActivityIntent
+
 //        if (prefManager.getPassCodeStatus()) {
 //            _loginUiState.value = LoginUiState.HomeActivityIntent
 //        } else {

@@ -29,7 +29,7 @@ import org.mifos.core.apimanager.BaseApiManager
 val NetworkModule = module {
 
     single<UserPreferencesRepository> { UserPreferencesRepositoryImpl(get(), get(named(
-        MifosDispatchers.IO.name)), get(named(MifosDispatchers.Unconfined.name))) }
+        MifosDispatchers.IO.name)), get(named(MifosDispatchers.Unconfined))) }
 
     single { com.mifos.core.network.BaseApiManager(get()) }
 
@@ -44,8 +44,8 @@ val NetworkModule = module {
             baseManager.createService(
                 user.username ?: "",
                 user.password ?: "",
-                serverConfig.getInstanceUrl().dropLast(3) ?: "",
-                serverConfig.tenant ?: "",
+                serverConfig.getInstanceUrl().dropLast(3),
+                serverConfig.tenant,
                 false,
             )
         }
